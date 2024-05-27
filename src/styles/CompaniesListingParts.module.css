@@ -1,0 +1,50 @@
+svg {
+    height: 1.5rem;
+}
+
+.companies_Listing_Parts{
+    background-color: var(--table-bg-color);
+    height: fit-content;
+    width: fit-content;
+    #caption{
+        background-color: var(--table-bg-color);
+        padding: .5rem;
+        display: flex;
+        justify-content: space-between;
+        color: white;
+        font-size: 1.5rem;
+    }
+    table {
+        border-collapse: separate;
+        th {
+            text-transform: capitalize;
+            background-color: var(--table-th-color);
+            /* color: white; */
+        }
+        td {
+            background-color: white;
+            >svg{
+                margin: 0 auto;
+            }
+            
+            >:last-child{
+                display: flex;
+                justify-content: space-between;
+            }
+    }
+    th,td{
+        padding: 0 1rem;
+    }
+    
+    tfoot{
+        >tr{
+            width: 100%;
+            >td{
+                background: var(--table-bg-color);
+            }
+        }
+    }
+
+}
+
+}

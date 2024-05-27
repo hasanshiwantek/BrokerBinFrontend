@@ -1,0 +1,141 @@
+button {
+  background-color: transparent;
+  outline: none;
+  border: none;
+}
+.headerFixed {
+  top: 0;
+  position: sticky;
+  background: white;
+  z-index: 5;
+  width: 100%;
+}
+.header {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border-top: 0.5rem solid var(--primary-color);
+  #logo {
+    > img {
+      height: 5rem;
+      margin-right: 5rem;
+    }
+  }
+  .search_container {
+    .search_btn {
+      background-color: var(--primary-color);
+      text-transform: capitalize;
+      outline: none;
+      border: none;
+      padding: 0.7rem;
+      margin-left: 1rem;
+      color: var(--font-color);
+    }
+    #search {
+      width: 25rem;
+      padding: 0.5rem;
+      border: 2px solid var(--box-shadow);
+      outline: none;
+    }
+    #search:focus {
+      border: 2px solid black;
+    }
+  }
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--primary-color);
+  > ul {
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    text-transform: capitalize;
+    > li {
+      position: relative;
+      display: flex;
+      align-items: center;
+      font-size: 1.5rem;
+      padding: 0.3rem 1.5rem;
+      color: var(--font-color);
+    }
+
+    > li:hover {
+      height: 100%;
+      background: rgb(202, 99, 202);
+    }
+  }
+  .onHoverMenuIconUp {
+    display: none;
+  }
+
+}
+.navbar_search_options {
+  color: black !important;
+}
+.nav_tools {
+  > li {
+    height: 100%;
+    padding: 0.3rem 0.5rem;
+  }
+  @media only screen and (max-width: 54.375em) {
+    margin-left: auto;
+  }
+}
+
+.dropdownMenu {
+  display: none;
+
+  ul {
+    width: max-content;
+    li {
+      padding: 1rem;
+    }
+  }
+}
+nav > ul > li:hover .dropdownMenu {
+  display: block;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: var(--dropdown-bg-color);
+  color: black;
+  box-shadow: 1px 1px 1rem 1px var(--box-shadow);
+  z-index: 1;
+  ul {
+    li:hover {
+      color: var(--font-color);
+      background: var(--primary-color);
+    }
+  }
+}
+
+nav > ul > li:hover {
+  .onHoverMenuIconUp {
+    display: block;
+  }
+  .onHoverMenuIconDown {
+    display: none;
+  }
+}
+
+.nav_links {
+  > :first-child {
+    display: none;
+  }
+  @media only screen and (max-width: 54.375em) {
+    > :first-child {
+      display: block;
+    }
+    > :not(:first-child) {
+      display: none;
+    }
+  }
+  /* &_Hamburger{
+    display: none;
+  @media only screen and (max-width: 54.375em) {
+      display: block;
+    }
+  } */
+}

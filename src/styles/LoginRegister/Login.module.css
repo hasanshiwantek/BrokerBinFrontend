@@ -1,0 +1,169 @@
+.bg {
+  height: 100vh;
+  width: 100%;
+  background: linear-gradient(
+    to right,
+    var(--table-outer-color) 60%,
+    var(--primary-color) 40%
+  );
+  position: relative;
+}
+
+.loginContainer {
+  box-shadow: 1rem 1rem 2rem 2rem rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 50%;
+  left: 60%;
+  transform: translate(-50%, -50%);
+  border-radius: 1rem;
+  padding: 4rem;
+  background: white;
+  width: fit-content;
+  font-size: 1.5rem;
+  &_head {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 2rem;
+    h1 {
+      font-size: 2.5rem;
+    }
+    p {
+      font-size: 1.1rem;
+    }
+  }
+  &_form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    &_fields {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      input {
+        padding: 1rem;
+        width: 30rem;
+      }
+    }
+
+    &_forgotPassword {
+      display: flex;
+      justify-content: space-between;
+      a {
+        color: #696cf5;
+      }
+    }
+    &_eyeSlash {
+      display: flex;
+      position: relative;
+      button {
+        position: absolute;
+        top: 0;
+        right: 2%;
+        height: 100%;
+        color: black;
+        svg {
+          height: 2rem;
+          width: 2rem;
+        }
+      }
+    }
+    &_rememberMe {
+      display: flex;
+      gap: 1rem;
+    }
+    > button {
+      background: #696cf5;
+      padding: 1rem;
+      border-radius: 0.4rem;
+    }
+  }
+  &_bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+    &_creatAnAccount {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2px;
+      a {
+        color: #696cf5;
+      }
+    }
+    &_divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      /* margin-top: 1rem; */
+    }
+
+    &_divider::before,
+    &_divider::after {
+      content: "";
+      flex: 1;
+      border-bottom: 1px solid #333;
+    }
+
+    &_divider::before {
+      margin-right: 0.5em;
+    }
+
+    &_divider::after {
+      margin-left: 0.5em;
+    }
+
+    &_divider-text {
+      white-space: nowrap;
+      color: #333;
+      font-weight: bold;
+    }
+
+    &_socials {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      svg {
+        border-radius: 0.5rem;
+        background: var(--box-shadow);
+        width: 3rem;
+        height: 3rem;
+        padding: 0.5rem;
+      }
+    }
+  }
+}
+
+.forgotPasswordPopup {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &_body {
+    height: min-content;
+    width: 30rem;
+    padding: 4rem;
+    /* aspect-ratio: 1; */
+    background: white;
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      /* width: 100%; */
+      h1{
+        background: #fafcff;
+      }
+      button{
+        background: var(--primary-color);
+        padding: 1rem;
+      }
+    }
+  }
+}

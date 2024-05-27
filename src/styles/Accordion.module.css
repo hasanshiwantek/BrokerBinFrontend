@@ -1,0 +1,88 @@
+.accordion {
+  background: white;
+  color: black;
+  padding: 1rem;
+  height: 50vh;
+  overflow-y: scroll;
+}
+
+.accordionPanel {
+  /* padding: .5rem; */
+  border: 1px solid #fff;
+  margin-bottom: 0.3rem;
+  background: linear-gradient(to top, #f5f5f5ff, #ebebebff);
+  border-radius: 3px;
+  outline: 1px solid rgb(189, 176, 159);
+}
+
+.accordion h2 {
+  margin: 0;
+}
+
+.accordionTrigger {
+  background: transparent;
+  border: none;
+  font: inherit;
+  color: inherit;
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.accordionTrigger:focus {
+  outline: none;
+}
+
+.accordionTrigger::after {
+  transform: rotate(90deg);
+  align-self: center;
+}
+
+.accordionBtnToggle {
+  font-size: 3rem;
+  transform: rotate(270deg);
+}
+.accordionBtnToggle[aria-expanded="true"] {
+  transform: rotate(0deg);
+}
+
+.accordionContent {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+  table {
+    min-width: 100%;
+    > thead {
+      tr {
+        color: white;
+        background: var(--table-th-color);
+      }
+    }
+    > tbody {
+      tr {
+        > td:has(input) {
+          text-align: center;
+        }
+      }
+    }
+    tr,
+    td {
+      border: 1px solid black;
+    }
+  }
+}
+
+.accordionContent[aria-hidden="false"] {
+  /* max-height: 1000px;  */
+  max-height: fit-content;
+}
+
+.accordionContent > div {
+  padding: 1rem 3rem;
+  background: white;
+  button {
+    color: black;
+    margin-right: 1rem;
+  }
+}

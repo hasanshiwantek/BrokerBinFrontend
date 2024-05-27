@@ -1,0 +1,11 @@
+.form{
+    background: pink;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    button{
+        background: orange;
+        color: white;
+        padding: 1rem;
+    }
+}

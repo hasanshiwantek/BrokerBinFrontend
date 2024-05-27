@@ -1,0 +1,28 @@
+.pieChartBg{
+    background: var(--table-bg-color);
+    padding: 1rem;
+    margin-bottom: 5rem;
+}
+.pieChart{
+    display: flex;
+    justify-content: space-between;
+    background: white;
+    padding: 2rem;
+    >*{
+        text-align: center;
+        font-size: 1.3rem;
+    }
+    >div{
+        >:nth-child(2){
+            font-size: 1rem;
+        }
+    }
+
+}
+
+.closeGraph{
+    display: flex;
+    align-items: center;
+    color: blue;
+    font-size: 1.8rem;
+}

@@ -1,0 +1,129 @@
+h1 {
+  font-size: 1.8rem;
+  font-weight: 500;
+}
+.mainLayout {
+  display: flex;
+  /* flex: 1; */
+  margin: 5rem 2.5rem;
+  gap: 1rem;
+  /* width: 10%; */
+  
+}
+.cartListLayout {
+  min-width: 25%;
+  background: var(--table-outer-color);
+  padding: 1rem;
+  > a {
+    font-size: 1.5rem;
+  }
+  > :nth-child(1) {
+    color: blue;
+    padding-right: 1rem;
+  }
+}
+.cartList {
+  border-top: 2px solid var(--table-th-color);
+  background: white;
+  > * {
+    padding: 1rem;
+  }
+  &_list {
+    display: flex;
+    flex-direction: column;
+    &_btn {
+      margin-left: auto;
+      button {
+        margin: 0 0.5rem;
+        background: var(--primary-color);
+        padding: 0.5rem;
+        font-size: 1.5rem;
+      }
+    }
+  }
+  &_key {
+    /* margin-top: 5rem; */
+
+    &_details {
+      padding: 1rem 4rem;
+
+      > div {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        > div {
+          display: flex;
+          align-items: center;
+        }
+      }
+      &_pp {
+        color: red;
+        text-align: center;
+        background: #ffa6a6ff;
+        padding: 0.5rem;
+      }
+    }
+  }
+  &_action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    &_select {
+      padding: 0.5rem;
+      border: 1px solid black;
+    }
+  }
+  &_parts {
+    &_scroll {
+      height: 10rem;
+      overflow: hidden;
+      overflow-y: scroll;
+      table {
+        min-width: 100%;
+      }
+    }
+  }
+}
+.cartLay{
+  flex: 1;
+}
+.cartLayout {
+  background: var(--table-outer-color);
+  padding: 0 1rem;
+  /* min-width: 100%; */
+  flex: 1;
+  &_options {
+    display: flex;
+    background: var(--table-bg-color);
+    button {
+      font-size: 1.2rem;
+      color: white;
+      background: var(--primary-color);
+      padding: 0.5rem;
+      margin-right: 1rem;
+    }
+  }
+  &_filter {
+    display: flex;
+    align-items: center;
+    h1 {
+      font-size: 1.5rem;
+      color: white;
+      margin-right: 1rem;
+    }
+    select {
+      margin-right: 5rem;
+    }
+  }
+  &_info {
+    margin-top: 1rem;
+    ol {
+      margin-left: 5rem;
+    }
+    &_btn {
+      font-size: 1.8rem;
+      background: transparent;
+      color: violet;
+    }
+  }
+}

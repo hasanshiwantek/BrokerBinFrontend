@@ -1,0 +1,77 @@
+.layout {
+  display: flex;
+  margin: 3rem;
+  padding: 1rem;
+}
+
+.productTableBtn {
+  font-size: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  button{
+    color: black;
+  }
+}
+
+.productTableDetail {
+  padding: 2rem 1rem;
+  background: var(--table-bg-color);
+  > :first-child {
+    font-size: 1.5rem;
+    color: white;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    /* @media only screen and (max-width:52.8125em) {
+      display: flex;
+      >thead>tr{
+        display: flex;
+      }
+    }  */
+
+    th {
+      text-transform: capitalize;
+      background-color: var(--table-th-color);
+      color: white;
+      text-align: left;
+    }
+    td {
+      background-color: white;
+      > svg {
+        margin: 0 auto;
+      }
+    }
+    th,
+    td {
+      padding: 0 0.8rem;
+      a {
+        cursor: pointer;
+        color: blue;
+      }
+    }
+    thead,
+    tfoot {
+      > tr {
+        > th:nth-child(2) {
+          span {
+            display: flex;
+            align-items: center;
+          }
+        }
+      }
+    }
+  }
+}
+
+.tableArea {
+  margin: 5rem 2rem;
+  /* width: 70%; */
+}
+.productTable {
+  background-color: var(--table-outer-color);
+  padding: 0 1rem;
+  margin-bottom: 20rem;
+}

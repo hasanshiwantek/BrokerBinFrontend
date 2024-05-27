@@ -1,0 +1,105 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-color: #f06622ff;
+  --font-color: white;
+  --secondary-bgColor: #e8e8e8ff;
+  --table-bg-color: #bfbfbfff;
+  --table-th-color: #45575cff;
+  --table-outer-color: #e8e8e8ff;
+  --box-shadow: #bfbfbfff;
+  --dropdown-bg-color: rgb(255, 255, 255);
+  --popup-bg-color: #3d3d3dc9;
+  --grid-template-column-rfq: 13rem 1fr;
+  @media only screen and (max-width: 40.625em) {
+    --grid-template-column-rfq: 15% 1fr;
+  }
+  @media only screen and (max-width: 37.5em) {
+    --grid-template-column-rfq: 20% 1fr;
+  }
+}
+
+*,
+*::after,
+*::before {
+  box-sizing: inherit;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  font-size: 62.5%;
+  box-sizing: border-box;
+
+  @media only screen and (max-width: 84.375em) {
+    font-size: 60%;
+  }
+  @media only screen and (max-width: 80.9375em) {
+    font-size: 55%;
+  }
+  @media only screen and (max-width: 74.375em) {
+    font-size: 50%;
+  }
+  @media only screen and (max-width: 67.5em) {
+    font-size: 45%;
+  }
+  @media only screen and (max-width: 60.625em) {
+    font-size: 40%;
+  }
+  @media only screen and (max-width: 48em) {
+    font-size: 35%;
+  }
+  /* @media only screen and (max-width:81.25em) {
+    font-size: 48%;
+  }
+  @media only screen and (max-width:75em) {
+    font-size: 42%;
+  }
+  @media only screen and (max-width:65.9375em) {
+    font-size: 39%;
+  }
+  @media only screen and (max-width:59.375em) {
+    font-size: 32%;
+  }
+  @media only screen and (max-width:54.6875em) {
+    font-size: 28%;
+  } */
+  /* @media only screen and (max-width:52.8125em) {
+    font-size: 25%;
+  } */
+  /* @media only screen and (max-width:51.5625em) {
+    font-size: 22%;
+  }
+  @media only screen and (max-width:50.0625em) {
+    font-size: 18%;
+  } */
+}
+body {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  text-transform: capitalize;
+  font-family: Arial, Helvetica, Verdana, sans-serif;
+}
+button {
+  background: var(--primary-color);
+  color: var(--font-color);
+  text-transform: capitalize;
+}
+a {
+  text-transform: capitalize;
+}
+input {
+  text-transform: lowercase;
+  border: 1px solid var(--table-bg-color);
+}
+input:checkbox {
+  height: 0.1rem;
+  display: flex;
+}
+textarea {
+  border: 1px solid var(--table-bg-color);
+}
