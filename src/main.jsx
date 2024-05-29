@@ -27,6 +27,7 @@ import ProtectedRoute from "./components/LoginRegister/Authentication/ProtectedR
 import NotFound from "./components/LoginRegister/Authentication/NotFound.jsx";
 import PublicRoute from "./components/LoginRegister/Authentication/PublicRoute.jsx";
 import Form from "./Form.jsx";
+import TextEditor from "./components/TextEditor.jsx";
 const router = createBrowserRouter([
   {
     element: <PublicRoute />, // Wrap public routes in PublicRoute
@@ -192,6 +193,10 @@ const router = createBrowserRouter([
   {
     path: "/worldmap",
     element: <MyWorldMap />,
+  },
+  {
+    path: "/texteditor",
+    element: <TextEditor />,
   },
   // ],
   // },

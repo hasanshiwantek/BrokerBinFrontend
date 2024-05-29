@@ -1,8 +1,13 @@
 input {
   padding: 0.8rem;
+  color: black;
 }
+
 select {
   border: 1px solid var(--box-shadow);
+  option {
+    color: black;
+  }
 }
 
 .rfqPopUp {
@@ -129,8 +134,15 @@ select {
         }
         &_label,
         &_Addfields {
-          display: grid;
-          grid-template-columns: repeat(7, 10rem);
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+
+          div {
+            display: grid;
+            grid-template-columns: repeat(7, 10rem);
+          }
+
           @media only screen and (max-width: 40.625em) {
             grid-template-columns: repeat(7, 9rem);
             /* font-size: 1.5rem; */
