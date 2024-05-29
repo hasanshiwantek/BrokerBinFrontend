@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import css from "../../styles/LoginRegister/Register.module.css";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const navigate = useNavigate();
   const [formPassword, setFormPassword] = useState({
     password: "",
     confirmPassword: "",
@@ -75,6 +77,7 @@ const Register = () => {
           setResponseOk(true);
           setTimeout(() => {
             setResponseOk(false);
+            navigate("/");
           }, 5000);
           // Handle successful registration (e.g., redirect to another page, show success message, etc.)
         } else {
@@ -97,7 +100,7 @@ const Register = () => {
   return responseOk ? (
     <div className={css.responseOk}>
       <h1>Congratulations 🎉, you are registered successfully</h1>
-      <h3>You will receive an confirmation mail soon! 🥳</h3>
+      <h3>Now you are redirection to login page!</h3>
     </div>
   ) : (
     <div className={css.body}>

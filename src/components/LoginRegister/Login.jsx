@@ -139,7 +139,11 @@ const Login = () => {
             <input type="checkbox" name="rememberMe" id="rememberMe" />
             <label>Remember me</label>
           </span>
-          {errorMessage && <p className={css.error}>{errorMessage}</p>}
+          {errorMessage && (
+            <p style={{ color: "red" }} className={css.error}>
+              {errorMessage}
+            </p>
+          )}
           <button type="submit">Sign in</button>
         </form>
         <div className={css.loginContainer_bottom}>

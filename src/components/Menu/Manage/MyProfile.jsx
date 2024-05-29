@@ -53,13 +53,14 @@ const MyProfile = () => {
     formData.sigcheckFax ? `${formData.faxNumber}` : "",
     formData.sigcheckIM ? `${formData.specialty}` : "",
   ]
-  .filter(Boolean)
-  .join("\n")
-  // Filter out empty strings and join with newline
-  console.log(textAreaContent);
+    .filter(Boolean)
+    .join("\n"); // Filter out empty strings and join with newline
+
+  const cleanInput = (input) => input.trimStart().replace(/\s+/g, " ");
+
   const handleChange = (e) => {
     const { name, type, checked, value } = e.target;
-    const val = type === "checkbox" ? checked : value; // Use checked for checkboxes, value for other inputs
+    const val = type === "checkbox" ? checked : cleanInput(value); // Use checked for checkboxes, value for other inputs
     setFormData((prevFormData) => ({ ...prevFormData, [name]: val }));
   };
 
@@ -82,22 +83,26 @@ const MyProfile = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
-    // console.log(Object.fromEntries(formData.entries()));
-    let data = Object.fromEntries(formData.entries());
-    // .map(([key, value]) => {
-    //   if (typeof value === "string") {
-    //     value = value.replace(/\s+/g, " ").trim();
-    //   }
-    //   return [key, value];
-    // })
+
+    // let data = Object.fromEntries(formData.entries());
+    const data = Object.fromEntries(
+      Object.entries(Object.fromEntries(formData.entries())).map(
+        ([key, value]) => {
+          if (key === "signature" || key === "customSignature") {
+            value = value
+              .split("\n")
+              .filter(Boolean)
+              .map((item) => item.replace(/\s+/g, " ").trim());
+          } else if (typeof value === "string") {
+            value = value.replace(/\s+/g, " ").trim();
+          }
+          return [key, value];
+        }
+      )
+    );
 
     if (customSignature) {
-      data.customSignature = data.customSignature.split("\n").filter(Boolean);
-      // .map((text) => text.replace(/\s+/g, " "));
-
       delete data.signature;
-    } else {
-      data.signature = textAreaContent.split("\n");
     }
 
     // Converting string 'true' or 'false' to a boolean and then to integer 0 or 1
