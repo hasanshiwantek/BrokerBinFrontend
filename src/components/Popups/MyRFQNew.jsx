@@ -3,6 +3,7 @@ import css from "../../styles/Menu/Manage/MyRFQNew.module.css";
 import AddCircle from "../../svgs/AddCircle";
 import Attach from "../../svgs/Attach";
 import { MdRemoveCircle } from "react-icons/md";
+import TextEditor from "../TextEditor";
 
 const AddParts = ({ part, onUpdate, onRemove }) => {
   const handleRemove = (event) => {
@@ -21,26 +22,25 @@ const AddParts = ({ part, onUpdate, onRemove }) => {
       <div>
         <input
           type="text"
-          value={part.partNumber}
+          value={part.model}
           onChange={(e) => handleInputChange("partNumber", e.target.value)}
         />
         <input
           type="text"
-          value={part.heciClei}
+          value={part.heci}
           onChange={(e) => handleInputChange("heciClei", e.target.value)}
         />
         <select
           value={part.mfg}
           onChange={(e) => handleInputChange("mfg", e.target.value)}
         >
-          <option value="SPARKLE POWER"></option>
+          <option value={part.mfg}>{part.mfg}</option>
         </select>
         <select
-          value={part.condition}
+          value={part.cond}
           onChange={(e) => handleInputChange("condition", e.target.value)}
         >
-          <option value="ANY">ANY</option>
-          <option value="NEW">NEW</option>
+          <option value={part.cond}>{part.cond}</option>
           {/* Additional options */}
         </select>
         <input
@@ -63,20 +63,47 @@ const AddParts = ({ part, onUpdate, onRemove }) => {
   );
 };
 
-const MyRFQNew = ({ setPopUpRfq }) => {
+const MyRFQNew = ({ setPopUpRfq, selectedProducts }) => {
   const [total, received, sent] = [110, 90, 0];
-  const [parts, setParts] = useState([
-    {
-      id: 0,
-      partNumber: "",
-      heciClei: "",
-      mfg: "",
-      condition: "",
-      quantity: "",
-      targetPrice: "",
-      terms: "",
-    },
-  ]);
+  const [comment, setComment] = useState(""); // State to hold the value of the text editor
+
+  const handleCommentChange = (content, delta, source, editor) => {
+    const text = editor.getHTML();
+    // getText()
+    // this.setState({ content: text });
+    // console.log(text);
+    // setComment(editor.getText()); // This sets the inner HTML content from the editor to the state
+    // console.log(text);
+
+    setComment(text); // Use editor.getHTML() to get the HTML content
+
+    // console.log(comment);
+  };
+
+  // make sure only unique models goes to rfq.
+  const filterUniqueModels = (data) => {
+    const uniqueModels = new Set();
+    return data.filter((item) => {
+      if (uniqueModels.has(item.model)) {
+        return false;
+      } else {
+        uniqueModels.add(item.model);
+        return true;
+      }
+    });
+  };
+  // console.log(filterUniqueModels);
+
+  const filteredData = filterUniqueModels(selectedProducts);
+
+  const [parts, setParts] = useState(filteredData);
+  const [selectedProductsBCC, setSelectedProductsBCC] =
+    useState(selectedProducts);
+
+  const removeBCC = (e, id) => {
+    e.stopPropagation();
+    setSelectedProductsBCC((prev) => prev.filter((item) => item.id !== id));
+  };
 
   // Function to handle adding new parts
   const addPart = () => {
@@ -133,7 +160,22 @@ const MyRFQNew = ({ setPopUpRfq }) => {
     const form = new FormData(event.target);
     const data = Object.fromEntries(form.entries());
     data.parts = parts;
+    data.comment = comment;
+    data.poInHand == "on" ? (data.poInHand = 1) : (data.poInHand = 0);
+    data.sendCopyToMyself == "on"
+      ? (data.sendCopyToMyself = 1)
+      : (data.sendCopyToMyself = 0);
+    data.sendToMyVendorsList == "on"
+      ? (data.sendToMyVendorsList = 1)
+      : (data.sendToMyVendorsList = 0);
+    data.sendToStockingVendorsIn == "on"
+      ? (data.sendToStockingVendorsIn = 1)
+      : (data.sendToStockingVendorsIn = 0);
+    data.partialOrderQuotesAccepted == "on"
+      ? (data.partialOrderQuotesAccepted = 1)
+      : (data.partialOrderQuotesAccepted = 0);
     console.log(data);
+    data.bcc = selectedProductsBCC.map((item) => item.contact)
   };
 
   return (
@@ -177,7 +219,20 @@ const MyRFQNew = ({ setPopUpRfq }) => {
                     </span>
                     <span>
                       <label htmlFor="">BCC:</label>
-                      <strong>Rob Osgood</strong>
+                      <span className={css.rfqBody_Main_left_receptions_bcc}>
+                        {selectedProductsBCC.map((item) => {
+                          return (
+                            <span
+                              key={item.id}
+                              onClick={(e) => removeBCC(e, item.id)}
+                              
+                            >
+                              <MdRemoveCircle />
+                              <strong>{item.contact}</strong>
+                            </span>
+                          );
+                        })}
+                      </span>
                     </span>
                     <span>
                       <label htmlFor="">Subject:</label>
@@ -221,12 +276,12 @@ const MyRFQNew = ({ setPopUpRfq }) => {
                   </div>
                   <div className={css.rfqBody_Main_left_comments}>
                     <label htmlFor="">comments</label>
-                    <textarea
-                      name="comments"
-                      id="comments"
-                      cols="30"
-                      rows="10"
-                    ></textarea>
+                    {/* <textarea name="comments"> */}
+                    <TextEditor
+                      handleCommentChange={handleCommentChange}
+                      comment={comment}
+                    />
+                    {/* </textarea> */}
                   </div>
                   <div className={css.rfqBody_Main_left_bottom}>
                     <div></div>
@@ -283,14 +338,18 @@ const MyRFQNew = ({ setPopUpRfq }) => {
                               id="send_all_vendors_region"
                               name="send_all_vendors_region"
                             >
-                              <option value="">All Regions</option>
-                              <option value="0">North America</option>
-                              <option value="4">Europe</option>
-                              <option value="2">Africa</option>
-                              <option value="6">Asia</option>
-                              <option value="3">Middle East</option>
-                              <option value="5">Oceania</option>
-                              <option value="1">South America</option>
+                              <option value="All Regions">All Regions</option>
+                              <option value="North America">
+                                North America
+                              </option>
+                              <option value="Europe">Europe</option>
+                              <option value="Africa">Africa</option>
+                              <option value="Asia">Asia</option>
+                              <option value="Middle East">Middle East</option>
+                              <option value="Oceania">Oceania</option>
+                              <option value="South America">
+                                South America
+                              </option>
                             </select>
                           </span>
                         </td>

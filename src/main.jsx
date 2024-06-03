@@ -43,7 +43,7 @@ const router = createBrowserRouter([
     ],
   },
   // {
-  // element: <ProtectedRoute />, // Wrap protected routes in ProtectedRoute
+  //   element: <ProtectedRoute />, // Wrap protected routes in ProtectedRoute
   // children: [
   {
     path: "/",
@@ -92,15 +92,15 @@ const router = createBrowserRouter([
       </>
     ),
   },
-  // {
-  //   path: "/compinfo",
-  //   element: (
-  //     <>
-  //       <Header />
-  //       <CompanyDetails />
-  //     </>
-  //   ),
-  // },
+  {
+    path: "/compinfo",
+    element: (
+      <>
+        <Header />
+        <CompanyDetails />
+      </>
+    ),
+  },
   {
     path: "/rfq",
     element: (

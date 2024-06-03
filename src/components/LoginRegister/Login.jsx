@@ -21,12 +21,12 @@ const Login = () => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
-    console.log(data);
-    console.log(JSON.stringify(data));
+    // console.log(data);
+    // console.log(JSON.stringify(data));
 
     try {
       const response = await fetch(
-        "https://brokerbinbackend.advertsedge.com/api/user/login",
+        "https://brokerbinbackend.advertsedge.com/api/user/logins",
         {
           method: "POST",
           headers: {
@@ -39,7 +39,6 @@ const Login = () => {
       );
 
       const result = await response.json();
-
       if (response.ok) {
         // console.log("Login successful", result);
         const user = result.data.user.firstName;
@@ -66,7 +65,7 @@ const Login = () => {
       setErrorMessage("An error occurred, please try again later.");
     }
 
-    e.target.reset();
+    // e.target.reset();
   };
 
   // useEffect(() => {

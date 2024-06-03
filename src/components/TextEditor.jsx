@@ -2,28 +2,46 @@ import React, { useState } from "react";
 import ReactQuill from "react-quill"; // ES6
 import "react-quill/dist/quill.snow.css"; // ES6
 
-const TextEditor = () => {
-  const [value, setValue] = useState("");
-
+const TextEditor = ({ comment, handleCommentChange }) => {
   const modules = {
     toolbar: [
-      ["bold", "italic"], // toggled buttons
-      ["link"], // link
+      [{ header: "1" }, { header: "2" }, { font: [] }],
+      [{ size: [] }],
+      ["bold", "italic", "underline", "strike", "blockquote"],
+      [
+        { list: "ordered" },
+        { list: "bullet" },
+        { indent: "-1" },
+        { indent: "+1" },
+      ],
+      ["link", "image", "video"],
+      ["clean"],
     ],
   };
 
   const formats = [
+    "header",
+    "font",
+    "size",
     "bold",
     "italic",
-    "link", // formats corresponding to the modules
+    "underline",
+    "strike",
+    "blockquote",
+    "list",
+    "bullet",
+    "indent",
+    "link",
+    "image",
+    "video",
   ];
 
   return (
     <div>
       <ReactQuill
-        theme="snow"
-        value={value}
-        onChange={setValue}
+        // theme="snow"
+        value={comment}
+        onChange={handleCommentChange}
         modules={modules}
         formats={formats}
       />

@@ -1,6 +1,7 @@
 input {
   padding: 0.8rem;
   color: black;
+  text-transform: initial;
 }
 
 select {
@@ -105,6 +106,15 @@ select {
           label {
             /* margin-right: 1rem; */
             text-align: right;
+          }
+        }
+        &_bcc {
+          display: flex;
+          gap: 1rem;
+          span {
+            display: flex;
+            gap: 0.3rem;
+            align-items: center;
           }
         }
       }
