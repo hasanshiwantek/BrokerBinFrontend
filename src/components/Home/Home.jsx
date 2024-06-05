@@ -37,7 +37,7 @@ const Home = () => {
             <img src={person} alt="person" />
             <h3>
               welcome back,
-              {user}
+              {user.user.firstName}
             </h3>
             <BiDotsHorizontalRounded />
           </div>

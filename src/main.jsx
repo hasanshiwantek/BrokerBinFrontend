@@ -42,164 +42,164 @@ const router = createBrowserRouter([
       },
     ],
   },
-  // {
-  //   element: <ProtectedRoute />, // Wrap protected routes in ProtectedRoute
-  // children: [
   {
-    path: "/",
-    element: (
-      <>
-        <Header />
-        <Home />
-      </>
-    ),
+    element: <ProtectedRoute />, // Wrap protected routes in ProtectedRoute
+    children: [
+      {
+        path: "/",
+        element: (
+          <>
+            <Header />
+            <Home />
+          </>
+        ),
+      },
+      {
+        path: "/cartpart",
+        element: (
+          <>
+            <Header />
+            <Cart />
+          </>
+        ),
+      },
+      {
+        path: "/search",
+        element: (
+          <>
+            <div>
+              <Header />
+            </div>
+            <SearchProduct />
+          </>
+        ),
+      },
+      {
+        path: "/myprofile",
+        element: (
+          <>
+            <Header />
+            <MyProfile />
+          </>
+        ),
+      },
+      {
+        path: "/myprofile/Options",
+        element: (
+          <>
+            <Header />
+            <Options />
+          </>
+        ),
+      },
+      {
+        path: "/compinfo",
+        element: (
+          <>
+            <Header />
+            <CompanyDetails />
+          </>
+        ),
+      },
+      {
+        path: "/rfq",
+        element: (
+          <>
+            <Header />
+            <MyRFQ />
+          </>
+        ),
+      },
+      {
+        path: "/inventory",
+        element: (
+          <>
+            <Header />
+            <Inventory />
+          </>
+        ),
+      },
+      {
+        path: "/inventory/Upload",
+        element: (
+          <>
+            <Header />
+            <Inventory />
+          </>
+        ),
+      },
+      {
+        path: "/inventory/Edit-Delete",
+        element: (
+          <>
+            <Header />
+            <EditDelete />
+          </>
+        ),
+      },
+      {
+        path: "/inventory/Add",
+        element: (
+          <>
+            <Header />
+            <Add />
+          </>
+        ),
+      },
+      {
+        path: "/inventory/Export-Remove",
+        element: (
+          <>
+            <Header />
+            <ExportRemove />
+          </>
+        ),
+      },
+      {
+        path: "/venblock",
+        element: (
+          <>
+            <Header />
+            <VenBlock />
+          </>
+        ),
+      },
+      {
+        path: "/venprice",
+        element: (
+          <>
+            <Header />
+            <VenPrice />
+          </>
+        ),
+      },
+      {
+        path: "/advanced",
+        element: (
+          <>
+            <Header />
+            <Advanced />
+          </>
+        ),
+      },
+      {
+        path: "/map",
+        element: <Map />,
+      },
+      {
+        path: "/form",
+        element: <Form />,
+      },
+      {
+        path: "/worldmap",
+        element: <MyWorldMap />,
+      },
+      {
+        path: "/texteditor",
+        element: <TextEditor />,
+      },
+    ],
   },
-  {
-    path: "/cartpart",
-    element: (
-      <>
-        <Header />
-        <Cart />
-      </>
-    ),
-  },
-  {
-    path: "/search",
-    element: (
-      <>
-        <div>
-          <Header />
-        </div>
-        <SearchProduct />
-      </>
-    ),
-  },
-  {
-    path: "/myprofile",
-    element: (
-      <>
-        <Header />
-        <MyProfile />
-      </>
-    ),
-  },
-  {
-    path: "/myprofile/Options",
-    element: (
-      <>
-        <Header />
-        <Options />
-      </>
-    ),
-  },
-  {
-    path: "/compinfo",
-    element: (
-      <>
-        <Header />
-        <CompanyDetails />
-      </>
-    ),
-  },
-  {
-    path: "/rfq",
-    element: (
-      <>
-        <Header />
-        <MyRFQ />
-      </>
-    ),
-  },
-  {
-    path: "/inventory",
-    element: (
-      <>
-        <Header />
-        <Inventory />
-      </>
-    ),
-  },
-  {
-    path: "/inventory/Upload",
-    element: (
-      <>
-        <Header />
-        <Inventory />
-      </>
-    ),
-  },
-  {
-    path: "/inventory/Edit-Delete",
-    element: (
-      <>
-        <Header />
-        <EditDelete />
-      </>
-    ),
-  },
-  {
-    path: "/inventory/Add",
-    element: (
-      <>
-        <Header />
-        <Add />
-      </>
-    ),
-  },
-  {
-    path: "/inventory/Export-Remove",
-    element: (
-      <>
-        <Header />
-        <ExportRemove />
-      </>
-    ),
-  },
-  {
-    path: "/venblock",
-    element: (
-      <>
-        <Header />
-        <VenBlock />
-      </>
-    ),
-  },
-  {
-    path: "/venprice",
-    element: (
-      <>
-        <Header />
-        <VenPrice />
-      </>
-    ),
-  },
-  {
-    path: "/advanced",
-    element: (
-      <>
-        <Header />
-        <Advanced />
-      </>
-    ),
-  },
-  {
-    path: "/map",
-    element: <Map />,
-  },
-  {
-    path: "/form",
-    element: <Form />,
-  },
-  {
-    path: "/worldmap",
-    element: <MyWorldMap />,
-  },
-  {
-    path: "/texteditor",
-    element: <TextEditor />,
-  },
-  // ],
-  // },
   {
     path: "*",
     element: <NotFound />,

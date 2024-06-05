@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import css from "../../../styles/Menu/Manage/MyProfile.module.css";
 import personalPhoto from "../../../imgs/logo/shadow.png";
-
+import Cookies from "js-cookie";
 const MyProfile = () => {
+  const token = Cookies.get("token");
+  const user = JSON.parse(localStorage.getItem("user"));
   // document.cookie = "sessionID=abc123; path=/";
-  document.cookie =
-    "username=JohnDoe; expires=Fri, 31 Dec 2023 23:59:59 GMT; path=/";
+  // document.cookie =
+  //   "username=JohnDoe; expires=Fri, 31 Dec 2023 23:59:59 GMT; path=/";
   const [customSignature, setcustomSignature] = useState(true);
   const [fileBase64, setFileBase64] = useState("");
 
@@ -29,8 +31,8 @@ const MyProfile = () => {
     currentPassword: "",
     newPassword: "",
     confirmNewPassword: "",
-    // customSignature: true,
-    // signature: "",
+    // customSignature: [],
+    // signature: [],
     sigcheckName: true,
     sigcheckEmailAddress: true,
     sigcheckPosition: true,
@@ -56,6 +58,54 @@ const MyProfile = () => {
     .filter(Boolean)
     .join("\n"); // Filter out empty strings and join with newline
 
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        "https://brokerbinbackend.advertsedge.com/api/user/fetch",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data.data);
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          firstName: data.data.firstName || "",
+          lastName: data.data.lastName || "",
+          position: data.data.position || "",
+          experience: data.data.experience || "",
+          specialty: data.data.specialty || "",
+          emailAddress: data.data.emailAddress || "",
+          skype: data.data.skype || "",
+          whatsapp: data.data.whatsapp || "",
+          trillian: data.data.trillian || "",
+          facebook: data.data.facebook || "",
+          twitter: data.data.twitter || "",
+          linkedin: data.data.linkedin || "",
+          directNumber: data.data.directNumber || "",
+          tollFree: data.data.tollFree || "",
+          cellular: data.data.cellular || "",
+          faxNumber: data.data.faxNumber || "",
+          // customSignature: data.data.customSignature || "",
+        }));
+      } else {
+        console.error("Failed to fetch data");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+  // fetchData();
+
   const cleanInput = (input) => input.trimStart().replace(/\s+/g, " ");
 
   const handleChange = (e) => {
@@ -80,7 +130,7 @@ const MyProfile = () => {
     }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
 
@@ -135,6 +185,10 @@ const MyProfile = () => {
     }
 
     // If all password fields are filled, ensure the new passwords match
+    // if (data.currentPassword !== currentPassword) {
+    //   alert("Incorrect current password.");
+    //   return; // Stop the form submission
+    // }
     if (
       filledPasswords.length === passwordFields.length &&
       data.newPassword !== data.confirmNewPassword
@@ -166,7 +220,30 @@ const MyProfile = () => {
       return;
     }
 
-    console.log(data);
+    try {
+      const id = user.user.id;
+      const response = await fetch(
+        `https://brokerbinbackend.advertsedge.com/api/user/edit/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+      console.log(data);
+      // const result = await response.json();
+      if (response.ok) {
+        alert("Your profile has been updated!");
+        // window.location.reload();  
+      } else {
+        alert("Incorrect Password");
+      }
+    } catch (err) {
+      console.log("Error during login", err);
+    }
   };
 
   const checkAll = () => {

@@ -26,11 +26,11 @@ const Login = () => {
 
     try {
       const response = await fetch(
-        "https://brokerbinbackend.advertsedge.com/api/user/logins",
+        "https://brokerbinbackend.advertsedge.com/api/user/login",
         {
           method: "POST",
           headers: {
-            // 'Authorization': `Bearer ${token}`,
+            // Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           // Use the JavaScript function JSON.stringify() to convert it into a string.
@@ -40,8 +40,9 @@ const Login = () => {
 
       const result = await response.json();
       if (response.ok) {
+        
         // console.log("Login successful", result);
-        const user = result.data.user.firstName;
+        const user = result.data;
         const { access_token } = result.data;
         // console.log(result.data.user.firstName, result.data.user.lastName);
         // console.log(result.data.access_token);

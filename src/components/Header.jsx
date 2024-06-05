@@ -24,7 +24,7 @@ const Header = () => {
   const [toggle, setToggle] = useState(true);
   const navigate = useNavigate();
   const handleLogout = () => {
-    // localStorage.removeItem("user"); // Remove the token from local storage
+    localStorage.removeItem("user"); // Remove the token from local storage
     Cookies.remove('token');
     navigate("/login", { replace: true }); // Redirect to the login page and replace the history
   };

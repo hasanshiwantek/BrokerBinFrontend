@@ -33,7 +33,6 @@ const SearchBarWithCalendar = () => {
 
   const handleChangeFrom = (date) => {
     setFromDate(date);
-    console.log(date);
     setShowDatePickerFrom(false);
   };
   const handleChangeTo = (date) => {
@@ -55,15 +54,16 @@ const SearchBarWithCalendar = () => {
   };
 
   return (
-    <div style={{display:'flex',alignItems:'center',gap:'0.2rem'}}>
+    <div style={{ display: "flex", alignItems: "center", gap: "0.2rem" }}>
       <div style={{ position: "relative" }} ref={fromInputRef}>
         <input
           type="text"
           onFocus={handleFocusFrom}
           onBlur={handleBlurFrom}
           onChange={handleInputChangeFrom}
-          value={fromDate ? fromDate.toLocaleDateString("en-CA") : ""}
-          style={{height: "1rem"}}
+          value={fromDate ? fromDate.toLocaleDateString("en-US") : ""}
+          style={{ height: "1rem" }}
+          name="fromDate"
         />
         {showDatePickerFrom && (
           <div style={{ position: "absolute", top: "100%", left: "0" }}>
@@ -83,8 +83,9 @@ const SearchBarWithCalendar = () => {
           onFocus={handleFocusTo}
           onBlur={handleBlurTo}
           onChange={handleInputChangeTo}
-          value={toDate ? toDate.toLocaleDateString("en-CA") : ""}
-          style={{height: "1rem"}}
+          value={toDate ? toDate.toLocaleDateString("en-US") : ""}
+          style={{ height: "1rem" }}
+          name="toDate"
         />
         {showDatePickerTo && (
           <div style={{ position: "absolute", top: "100%", left: "0" }}>
