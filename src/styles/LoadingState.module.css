@@ -1,0 +1,77 @@
+.body {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loadingSpinner {
+  height: 10em;
+  aspect-ratio: 1;
+  /* border: 1px solid; */
+  position: relative;
+  animation: spinner 1.5s linear infinite;
+  span {
+    display: block;
+    height: 2rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+  }
+  > :nth-child(1) {
+    position: absolute;
+    top: 20%;
+    left: 5%;
+    background: #f06622;
+  }
+  > :nth-child(2) {
+    position: absolute;
+    top: 0%;
+    left: 38%;
+    background: #f06622;
+  }
+  > :nth-child(3) {
+    position: absolute;
+    top: 20%;
+    right: 5%;
+    background: #f06622;
+  }
+  > :nth-child(4) {
+    position: absolute;
+    background: #f06622;
+    bottom: 20%;
+    left: 5%;
+  }
+  > :nth-child(5) {
+    position: absolute;
+    bottom: 0%;
+    left: 38%;
+    background: #f06622;
+  }
+  > :nth-child(6) {
+    position: absolute;
+    bottom: 20%;
+    right: 5%;
+    background: #f06622;
+  }
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  /* 25% {
+    transform: rotate(90deg);
+  } */
+  50% {
+    transform: rotate(180deg);
+  }
+  /* 75% {
+    transform: rotate(270deg);
+  } */
+  100% {
+    transform: rotate(-180deg);
+  }
+}

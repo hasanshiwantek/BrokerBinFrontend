@@ -1,208 +1,268 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Cart from "./components/Tools/Cart.jsx";
-// import ProductsTable from "./components/RfqTable.jsx";
-import MyProfile from "./components/Menu/Manage/MyProfile.jsx";
-import Options from "./components/Menu/Manage/Options.jsx";
-import CompanyDetails from "./components/Popups/CompanyDetails/CompanyDetails.jsx";
-import MyRFQ from "./components/Menu/Manage/MyRFQ.jsx";
-import SearchProduct from "./components/Menu/Manage/SearchProduct.jsx";
-import Inventory from "./components/Menu/Manage/Inventory/Inventory.jsx";
-import Advanced from "./components/Menu/Search/Advanced.jsx";
-import Header from "./components/Header.jsx";
-import EditDelete from "./components/Menu/Manage/Inventory/EditDelete.jsx";
-import Add from "./components/Menu/Manage/Inventory/Add.jsx";
-import ExportRemove from "./components/Menu/Manage/Inventory/ExportRemove.jsx";
-import VenBlock from "./components/Menu/Manage/Inventory/VenBlock.jsx";
-import VenPrice from "./components/Menu/Manage/Inventory/VenPrice.jsx";
-import Home from "./components/Home/Home.jsx";
-import Login from "./components/LoginRegister/Login.jsx";
-import Register from "./components/LoginRegister/Register.jsx";
-import Map from "./components/Map/Map.jsx";
-// import WorldMap from "./components/Map/MyWorldMap.jsx";
-import MyWorldMap from "./components/Map/MyWorldMap.jsx";
+
+import PublicRoute from "./components/LoginRegister/Authentication/PublicRoute";
 import ProtectedRoute from "./components/LoginRegister/Authentication/ProtectedRoute";
 import NotFound from "./components/LoginRegister/Authentication/NotFound.jsx";
-import PublicRoute from "./components/LoginRegister/Authentication/PublicRoute.jsx";
-import Form from "./Form.jsx";
-import TextEditor from "./components/TextEditor.jsx";
+import LoadingState from "./LoadingState.jsx";
+import LoadingState2 from "./LoadingState2.jsx";
+
+// Lazy load components
+const Login = lazy(() => import("./components/LoginRegister/Login.jsx"));
+const Register = lazy(() => import("./components/LoginRegister/Register.jsx"));
+const Header = lazy(() => import("./components/Header.jsx"));
+const Home = lazy(() => import("./components/Home/Home.jsx"));
+const Cart = lazy(() => import("./components/Tools/Cart.jsx"));
+const SearchProduct = lazy(() =>
+  import("./components/Menu/Manage/SearchProduct.jsx")
+);
+const MyProfile = lazy(() => import("./components/Menu/Manage/MyProfile.jsx"));
+const Options = lazy(() => import("./components/Menu/Manage/Options.jsx"));
+const CompanyDetails = lazy(() =>
+  import("./components/Popups/CompanyDetails/CompanyDetails.jsx")
+);
+const MyRFQ = lazy(() => import("./components/Menu/Manage/MyRFQ.jsx"));
+const Inventory = lazy(() =>
+  import("./components/Menu/Manage/Inventory/Inventory.jsx")
+);
+const EditDelete = lazy(() =>
+  import("./components/Menu/Manage/Inventory/EditDelete.jsx")
+);
+const Add = lazy(() => import("./components/Menu/Manage/Inventory/Add.jsx"));
+const ExportRemove = lazy(() =>
+  import("./components/Menu/Manage/Inventory/ExportRemove.jsx")
+);
+const VenBlock = lazy(() =>
+  import("./components/Menu/Manage/Inventory/VenBlock.jsx")
+);
+const VenPrice = lazy(() =>
+  import("./components/Menu/Manage/Inventory/VenPrice.jsx")
+);
+const Advanced = lazy(() => import("./components/Menu/Search/Advanced.jsx"));
+const Map = lazy(() => import("./components/Map/Map.jsx"));
+const MyWorldMap = lazy(() => import("./components/Map/MyWorldMap.jsx"));
+const Form = lazy(() => import("./Form.jsx"));
+const TextEditor = lazy(() => import("./components/TextEditor.jsx"));
+
 const router = createBrowserRouter([
   {
-    element: <PublicRoute />, // Wrap public routes in PublicRoute
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <PublicRoute />
+      </Suspense>
+    ), // Wrap public routes in PublicRoute
     children: [
       {
         path: "/login",
-        element: <Login />,
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Login />
+          </Suspense>
+        ),
       },
       {
         path: "/register",
-        element: <Register />,
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Register />
+          </Suspense>
+        ),
       },
     ],
   },
   {
-    element: <ProtectedRoute />, // Wrap protected routes in ProtectedRoute
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <ProtectedRoute />
+      </Suspense>
+    ), // Wrap protected routes in ProtectedRoute
     children: [
       {
         path: "/",
         element: (
-          <>
+          <Suspense fallback={<LoadingState />}>
             <Header />
             <Home />
-          </>
+          </Suspense>
         ),
+      },
+      {
+        path: "/loading",
+        element: <LoadingState />,
+      },
+      {
+        path: "/loading2",
+        element: <LoadingState2 />,
       },
       {
         path: "/cartpart",
         element: (
-          <>
+          <Suspense fallback={<LoadingState />}>
             <Header />
             <Cart />
-          </>
+          </Suspense>
         ),
       },
       {
         path: "/search",
         element: (
-          <>
-            <div>
-              <Header />
-            </div>
+          <Suspense fallback={<LoadingState />}>
+            <Header />
             <SearchProduct />
-          </>
+          </Suspense>
         ),
       },
       {
         path: "/myprofile",
         element: (
-          <>
+          <Suspense fallback={<LoadingState />}>
             <Header />
             <MyProfile />
-          </>
+          </Suspense>
         ),
       },
       {
         path: "/myprofile/Options",
         element: (
-          <>
+          <Suspense fallback={<LoadingState />}>
             <Header />
             <Options />
-          </>
+          </Suspense>
         ),
       },
       {
         path: "/compinfo",
         element: (
-          <>
+          <Suspense fallback={<LoadingState />}>
             <Header />
             <CompanyDetails />
-          </>
+          </Suspense>
         ),
       },
       {
         path: "/rfq",
         element: (
-          <>
+          <Suspense fallback={<LoadingState />}>
             <Header />
             <MyRFQ />
-          </>
+          </Suspense>
         ),
       },
       {
         path: "/inventory",
         element: (
-          <>
+          <Suspense fallback={<LoadingState />}>
             <Header />
             <Inventory />
-          </>
+          </Suspense>
         ),
       },
       {
         path: "/inventory/Upload",
         element: (
-          <>
+          <Suspense fallback={<LoadingState />}>
             <Header />
             <Inventory />
-          </>
+          </Suspense>
         ),
       },
       {
         path: "/inventory/Edit-Delete",
         element: (
-          <>
+          <Suspense fallback={<LoadingState />}>
             <Header />
             <EditDelete />
-          </>
+          </Suspense>
         ),
       },
       {
         path: "/inventory/Add",
         element: (
-          <>
+          <Suspense fallback={<LoadingState />}>
             <Header />
             <Add />
-          </>
+          </Suspense>
         ),
       },
       {
         path: "/inventory/Export-Remove",
         element: (
-          <>
+          <Suspense fallback={<LoadingState />}>
             <Header />
             <ExportRemove />
-          </>
+          </Suspense>
         ),
       },
       {
         path: "/venblock",
         element: (
-          <>
+          <Suspense fallback={<LoadingState />}>
             <Header />
             <VenBlock />
-          </>
+          </Suspense>
         ),
       },
       {
         path: "/venprice",
         element: (
-          <>
+          <Suspense fallback={<LoadingState />}>
             <Header />
             <VenPrice />
-          </>
+          </Suspense>
         ),
       },
       {
         path: "/advanced",
         element: (
-          <>
+          <Suspense fallback={<LoadingState />}>
             <Header />
             <Advanced />
-          </>
+          </Suspense>
         ),
       },
       {
         path: "/map",
-        element: <Map />,
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Map />
+          </Suspense>
+        ),
       },
       {
         path: "/form",
-        element: <Form />,
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Form />
+          </Suspense>
+        ),
       },
       {
         path: "/worldmap",
-        element: <MyWorldMap />,
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <MyWorldMap />
+          </Suspense>
+        ),
       },
       {
         path: "/texteditor",
-        element: <TextEditor />,
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <TextEditor />
+          </Suspense>
+        ),
       },
     ],
   },
   {
     path: "*",
-    element: <NotFound />,
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <NotFound />
+      </Suspense>
+    ),
   },
 ]);
 

@@ -40,10 +40,11 @@ const Login = () => {
 
       const result = await response.json();
       if (response.ok) {
-        
         // console.log("Login successful", result);
         const user = result.data;
+        console.log(user);
         const { access_token } = result.data;
+        const { id } = result.data.user;
         // console.log(result.data.user.firstName, result.data.user.lastName);
         // console.log(result.data.access_token);
 
@@ -51,6 +52,7 @@ const Login = () => {
         // Use the JavaScript function JSON.stringify() to convert it into a string.
         // localStorage.setItem("token", JSON.stringify(token));
         Cookies.set("token", access_token, { expires: 1, secure: true });
+        Cookies.set("user_id", id, { expires: 1, secure: true });
         // Cookies.set('token', access_token, { expires: 1 / 1440 }); // There are 1440 minutes in a day
         // Cookies.set("token", access_token, { expires: 1 });
         localStorage.setItem("user", JSON.stringify(user));
