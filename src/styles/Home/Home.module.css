@@ -49,6 +49,8 @@
       > img {
         height: 5rem;
         border-radius: 50%;
+        aspect-ratio: 1;
+        object-fit: cover;
       }
     }
     > :nth-child(4) {

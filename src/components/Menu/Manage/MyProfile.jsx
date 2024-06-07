@@ -3,6 +3,7 @@ import css from "../../../styles/Menu/Manage/MyProfile.module.css";
 import personalPhoto from "../../../imgs/logo/shadow.png";
 import Cookies from "js-cookie";
 import LoadingState from "../../../LoadingState";
+
 const MyProfile = () => {
   const token = Cookies.get("token");
   const userId = Cookies.get("user_id");
@@ -14,6 +15,7 @@ const MyProfile = () => {
   const [customSignature, setcustomSignature] = useState(true);
   const [fileBase64, setFileBase64] = useState("");
   const [blurWhileLoading, setBlurWhileLoading] = useState(false);
+  const [initialData, setInitialData] = useState({});
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -101,6 +103,7 @@ const MyProfile = () => {
           customSignature: data.data.customSignature || "",
           signature: data.data.signature || "",
         }));
+        setInitialData(data.data);
         setBlurWhileLoading(true);
       } else {
         console.error("Failed to fetch data");
@@ -109,10 +112,10 @@ const MyProfile = () => {
       console.log(err);
     }
   };
+
   useEffect(() => {
     fetchData();
   }, []);
-  // fetchData();
 
   const cleanInput = (input) => input.trimStart().replace(/\s+/g, " ");
 
@@ -124,27 +127,37 @@ const MyProfile = () => {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const base64String = e.target.result
-          .replace("data:", "")
-          .replace(/^.+,/, "");
-        setFileBase64(base64String); // Store base64 string
-      };
-      reader.readAsDataURL(file);
+    const extension = String(file.name).split(".").pop().toLowerCase(); // Ensure the extension check is case-insensitive
+    const allowedExtensions = ["jpeg", "jpg", "png", "webp"];
+    console.log(file);
+
+    if (allowedExtensions.includes(extension)) {
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const base64String = e.target.result
+            .replace("data:", "")
+            .replace(/^.+,/, "");
+          setFileBase64(base64String); // Store base64 string
+        };
+        reader.readAsDataURL(file);
+      } else {
+        setFileBase64("");
+      }
     } else {
+      alert("Format should be a jpeg, jpg, png, or webp");
+      event.target.value = ""; // Clear the selected file input
       setFileBase64("");
     }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const formData = new FormData(event.target);
+    const formDataApi = new FormData(event.target);
 
     // let data = Object.fromEntries(formData.entries());
     const data = Object.fromEntries(
-      Object.entries(Object.fromEntries(formData.entries())).map(
+      Object.entries(Object.fromEntries(formDataApi.entries())).map(
         ([key, value]) => {
           if (key === "signature" || key === "customSignature") {
             value = value
@@ -168,7 +181,7 @@ const MyProfile = () => {
 
     // Encoding the file content in base64 and assigning it to the appropriate field
     if (fileBase64) {
-      console.log(fileBase64);
+      // console.log(fileBase64);
       // assuming `fileBase64` is defined and holds the base64 string of the file
       data.profileImage = { base64: fileBase64 };
     } else {
@@ -230,7 +243,15 @@ const MyProfile = () => {
       alert("Password cannot contain the username.");
       return;
     }
+    // console.log(formData);
 
+    Object.keys(data).forEach((key) => {
+      if (data[key] === initialData[key]) {
+        delete data[key];
+      }
+    });
+
+    console.log(data);
     try {
       const response = await fetch(
         `https://brokerbinbackend.advertsedge.com/api/user/edit/${id}`,
@@ -243,7 +264,7 @@ const MyProfile = () => {
           body: JSON.stringify(data),
         }
       );
-      console.log(data);
+      // console.log(data);
       // const result = await response.json();
       if (response.ok) {
         alert("Your profile has been updated!");
