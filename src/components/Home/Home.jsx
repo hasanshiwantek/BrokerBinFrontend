@@ -18,7 +18,7 @@ const Home = () => {
 
   // JSON.parse() to convert the string into a JavaScript object
   const localStorageUser = JSON.parse(localStorage.getItem("user"));
-  const id = localStorageUser.user.id || userId;
+  const id = userId || localStorageUser.user.id;
 
   const fetchData = async () => {
     try {
@@ -113,7 +113,7 @@ const Home = () => {
                     </ul>
                   </li>
                   <li className={css.gridHome1_MemberDetail_list_options}>
-                    <a href="#">RFQ</a>
+                    <a href="/rfq">RFQ</a>
                     <ul>
                       <li className={css.gridHome1_MemberDetail_list_numbers}>
                         <a href="#">

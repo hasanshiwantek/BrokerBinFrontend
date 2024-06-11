@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import css from "../../../styles/Menu/Manage/MyProfile.module.css";
 import personalPhoto from "../../../imgs/logo/shadow.png";
 import Cookies from "js-cookie";
@@ -9,9 +9,6 @@ const MyProfile = () => {
   const userId = Cookies.get("user_id");
   const user = JSON.parse(localStorage.getItem("user"));
   const id = user.user.id || userId;
-  // document.cookie = "sessionID=abc123; path=/";
-  // document.cookie =
-  //   "username=JohnDoe; expires=Fri, 31 Dec 2023 23:59:59 GMT; path=/";
   const [customSignature, setcustomSignature] = useState(true);
   const [fileBase64, setFileBase64] = useState("");
   const [blurWhileLoading, setBlurWhileLoading] = useState(false);
@@ -53,7 +50,7 @@ const MyProfile = () => {
 
   const textAreaContent = [
     formData.sigcheckName ? `${formData.firstName} ${formData.lastName}` : "",
-    formData.sigcheckEmailAddress ? `${formData.emailAddress}` : "",
+    formData.sigcheckEmailAddress ? `${formData.email}` : "",
     formData.sigcheckPosition ? `${formData.position}` : "",
     formData.sigcheckPhone ? `${formData.phoneNumber}` : "",
     formData.sigcheckCell ? `${formData.cellular}` : "",
@@ -63,7 +60,11 @@ const MyProfile = () => {
     formData.sigcheckIM ? `${formData.specialty}` : "",
   ]
     .filter(Boolean)
-    .join("\n"); // Filter out empty strings and join with newline
+    .join("\n");
+
+  const customTextAreaContent = initialData?.customSignature
+    ?.filter(Boolean)
+    .join("\n");
 
   const fetchData = async () => {
     try {
@@ -81,6 +82,7 @@ const MyProfile = () => {
       if (response.ok) {
         const data = await response.json();
         console.log(data.data);
+
         setFormData((prevFormData) => ({
           ...prevFormData,
           firstName: data.data.firstName || "",
@@ -100,8 +102,8 @@ const MyProfile = () => {
           cellular: data.data.cellular || "",
           faxNumber: data.data.faxNumber || "",
           profileImage: data.data.profileImage || "",
-          customSignature: data.data.customSignature || "",
-          signature: data.data.signature || "",
+          customSignature: data.data.customSignature || [],
+          signature: data.data.signature || [],
         }));
         setInitialData(data.data);
         setBlurWhileLoading(true);
@@ -114,20 +116,20 @@ const MyProfile = () => {
   };
 
   useEffect(() => {
-    fetchData();
+    // fetchData();
   }, []);
 
   const cleanInput = (input) => input.trimStart().replace(/\s+/g, " ");
 
   const handleChange = (e) => {
     const { name, type, checked, value } = e.target;
-    const val = type === "checkbox" ? checked : cleanInput(value); // Use checked for checkboxes, value for other inputs
+    const val = type === "checkbox" ? checked : cleanInput(value);
     setFormData((prevFormData) => ({ ...prevFormData, [name]: val }));
   };
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    const extension = String(file.name).split(".").pop().toLowerCase(); // Ensure the extension check is case-insensitive
+    const extension = String(file.name).split(".").pop().toLowerCase();
     const allowedExtensions = ["jpeg", "jpg", "png", "webp"];
     console.log(file);
 
@@ -138,7 +140,7 @@ const MyProfile = () => {
           const base64String = e.target.result
             .replace("data:", "")
             .replace(/^.+,/, "");
-          setFileBase64(base64String); // Store base64 string
+          setFileBase64(base64String);
         };
         reader.readAsDataURL(file);
       } else {
@@ -146,7 +148,7 @@ const MyProfile = () => {
       }
     } else {
       alert("Format should be a jpeg, jpg, png, or webp");
-      event.target.value = ""; // Clear the selected file input
+      event.target.value = "";
       setFileBase64("");
     }
   };
@@ -155,7 +157,6 @@ const MyProfile = () => {
     event.preventDefault();
     const formDataApi = new FormData(event.target);
 
-    // let data = Object.fromEntries(formData.entries());
     const data = Object.fromEntries(
       Object.entries(Object.fromEntries(formDataApi.entries())).map(
         ([key, value]) => {
@@ -176,19 +177,14 @@ const MyProfile = () => {
       delete data.signature;
     }
 
-    // Converting string 'true' or 'false' to a boolean and then to integer 0 or 1
     data.useCustomSignature = data.useCustomSignature === "true" ? 1 : 0;
 
-    // Encoding the file content in base64 and assigning it to the appropriate field
     if (fileBase64) {
-      // console.log(fileBase64);
-      // assuming `fileBase64` is defined and holds the base64 string of the file
-      data.profileImage = { base64: fileBase64 };
+      data.personalPhoto = { base64: fileBase64 };
     } else {
-      delete data.profileImage;
+      delete data.personalPhoto;
     }
 
-    // Validate password fields
     const passwordFields = [
       "currentPassword",
       "newPassword",
@@ -197,7 +193,6 @@ const MyProfile = () => {
     const passwordValues = passwordFields.map((field) => data[field] || "");
     const filledPasswords = passwordValues.filter((value) => value !== "");
 
-    // If any password field is filled, ensure all are filled
     if (
       filledPasswords.length > 0 &&
       filledPasswords.length < passwordFields.length
@@ -205,24 +200,17 @@ const MyProfile = () => {
       alert(
         "Please fill in all password fields to update your password, or leave all empty if no update is intended."
       );
-      return; // Stop the form submission
+      return;
     }
 
-    // If all password fields are filled, ensure the new passwords match
-    // if (data.currentPassword !== currentPassword) {
-    //   alert("Incorrect current password.");
-    //   return; // Stop the form submission
-    // }
     if (
       filledPasswords.length === passwordFields.length &&
       data.newPassword !== data.confirmNewPassword
     ) {
       alert("New passwords do not match.");
-      return; // Stop the form submission
+      return;
     }
-    // If all password fields are filled, ensure the current password is correct
 
-    // Remove password fields if empty
     passwordFields.forEach((field) => {
       if (data[field] === "") {
         delete data[field];
@@ -243,15 +231,14 @@ const MyProfile = () => {
       alert("Password cannot contain the username.");
       return;
     }
-    // console.log(formData);
 
     Object.keys(data).forEach((key) => {
       if (data[key] === initialData[key]) {
         delete data[key];
       }
     });
-
     console.log(data);
+
     try {
       const response = await fetch(
         `https://brokerbinbackend.advertsedge.com/api/user/edit/${id}`,
@@ -264,11 +251,10 @@ const MyProfile = () => {
           body: JSON.stringify(data),
         }
       );
-      // console.log(data);
-      // const result = await response.json();
+
       if (response.ok) {
         alert("Your profile has been updated!");
-        // window.location.reload();
+        // fetchData();
       } else {
         alert("Incorrect Password");
       }
@@ -316,7 +302,6 @@ const MyProfile = () => {
               <p>my profile</p>
               <span>
                 <input type="submit" value="submit changes" />
-                {/* <button type="button">submit changes</button> */}
                 <button type="button">view profile</button>
               </span>
             </div>
@@ -427,7 +412,7 @@ const MyProfile = () => {
                     <div>
                       <img
                         src={
-                          formData.profileImage
+                          formData?.profileImage
                             ? formData.profileImage
                             : personalPhoto
                         }
@@ -438,8 +423,8 @@ const MyProfile = () => {
                   <div>
                     <input
                       type="file"
-                      name="profileImage"
-                      id="profileImage"
+                      name="personalPhoto"
+                      id="personalPhoto"
                       onChange={handleFileChange}
                     />
                     <button type="submit">Submit Changes</button>
@@ -719,6 +704,7 @@ const MyProfile = () => {
                         <textarea
                           name="customSignature"
                           id="customSignature"
+                          defaultValue={customTextAreaContent}
                         ></textarea>
                       ) : (
                         <textarea

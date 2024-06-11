@@ -19,18 +19,18 @@ const ScheduleNewUpload = () => {
           <div className={css.inventory_main_scheduleUpload}>
             <span>
               <label>Time (CDT / CST)</label>
-              <input type="time" name="" id="" />
+              <input type="time" name="scheduleTime" id="" />
             </span>
             <span>
               <label>status</label>
-              <select>
+              <select value="stauts">
                 <option value="stock">stock</option>
                 <option value="distribution">distribution</option>
               </select>
             </span>
             <span>
               <label>uploader</label>
-              <input type="text" />
+              <input type="text" name="uploader" />
             </span>
           </div>
           <div className={css.inventory_main_scheduleUpload_addFile}>
@@ -79,7 +79,7 @@ const ScheduleNewUpload = () => {
                   </span>
                   <span>
                     <label>Password</label>
-                    <input type="text" />
+                    <input type="password" />
                   </span>
                 </div>
                 <div
@@ -87,7 +87,10 @@ const ScheduleNewUpload = () => {
                     css.inventory_main_scheduleUpload_addFile_toggle_btn
                   }
                 >
-                  <button type="button">add</button>
+                  <button type="button">
+                    <input type="submit" value="Add" />
+                    {/* add */}
+                  </button>
                   <button
                     type="button"
                     onClick={() => setToggleAddFile((prev) => !prev)}
@@ -98,8 +101,11 @@ const ScheduleNewUpload = () => {
               </div>
             )}
           </div>
-          <button type="button" className={css.inventory_main_scheduleUpload_footer}>
-              create
+          <button
+            type="button"
+            className={css.inventory_main_scheduleUpload_footer}
+          >
+            create
           </button>
         </>
       )}
