@@ -45,7 +45,7 @@ const Map = lazy(() => import("./components/Map/Map.jsx"));
 const MyWorldMap = lazy(() => import("./components/Map/MyWorldMap.jsx"));
 const Form = lazy(() => import("./Form.jsx"));
 const TextEditor = lazy(() => import("./components/TextEditor.jsx"));
-
+import Crousel from "./Crousel.jsx"
 const router = createBrowserRouter([
   {
     element: (
@@ -243,6 +243,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingState />}>
             <MyWorldMap />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/crousel",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Crousel />
           </Suspense>
         ),
       },

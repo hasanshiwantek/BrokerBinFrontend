@@ -13,6 +13,7 @@ const MyProfile = () => {
   const [fileBase64, setFileBase64] = useState("");
   const [blurWhileLoading, setBlurWhileLoading] = useState(false);
   const [initialData, setInitialData] = useState({});
+  // const [whileSubmitForm, setWhileSubmitForm] = useState(false);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -116,7 +117,7 @@ const MyProfile = () => {
   };
 
   useEffect(() => {
-    // fetchData();
+    fetchData();
   }, []);
 
   const cleanInput = (input) => input.trimStart().replace(/\s+/g, " ");
@@ -155,6 +156,7 @@ const MyProfile = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setBlurWhileLoading(false);
     const formDataApi = new FormData(event.target);
 
     const data = Object.fromEntries(
@@ -253,7 +255,9 @@ const MyProfile = () => {
       );
 
       if (response.ok) {
-        alert("Your profile has been updated!");
+        // alert("Your profile has been updated!");
+        window.location.reload();
+        setBlurWhileLoading(true);
         // fetchData();
       } else {
         alert("Incorrect Password");
@@ -301,7 +305,11 @@ const MyProfile = () => {
             <div className={css.profileBtn}>
               <p>my profile</p>
               <span>
-                <input type="submit" value="submit changes" />
+                <input
+                  type="submit"
+                  value="submit changes"
+                  // disabled={whileSubmitForm}
+                />
                 <button type="button">view profile</button>
               </span>
             </div>

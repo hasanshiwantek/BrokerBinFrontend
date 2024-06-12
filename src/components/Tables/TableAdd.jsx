@@ -1,6 +1,96 @@
-import React from "react";
+import React, { useState } from "react";
 
-const TableAdd = ({ inventoryAddTable }) => {
+const TableAdd = ({ inventoryAddTable, setAddInventory }) => {
+  const [data, setData] = useState([
+    {
+      partModel: "",
+      heciClei: "",
+      mfg: "",
+      price: "",
+      quantity: "",
+      status: "stock",
+      productDescription: "",
+      cond: "new",
+    },
+    {
+      partModel: "",
+      heciClei: "",
+      mfg: "",
+      price: "",
+      quantity: "",
+      status: "stock",
+      productDescription: "",
+      cond: "new",
+    },
+    {
+      partModel: "",
+      heciClei: "",
+      mfg: "",
+      price: "",
+      quantity: "",
+      status: "stock",
+      productDescription: "",
+      cond: "new",
+    },
+    {
+      partModel: "",
+      heciClei: "",
+      mfg: "",
+      price: "",
+      quantity: "",
+      status: "stock",
+      productDescription: "",
+      cond: "new",
+    },
+    {
+      partModel: "",
+      heciClei: "",
+      mfg: "",
+      price: "",
+      quantity: "",
+      status: "stock",
+      productDescription: "",
+      cond: "new",
+    },
+    {
+      partModel: "",
+      heciClei: "",
+      mfg: "",
+      price: "",
+      quantity: "",
+      status: "stock",
+      productDescription: "",
+      cond: "new",
+    },
+    {
+      partModel: "",
+      heciClei: "",
+      mfg: "",
+      price: "",
+      quantity: "",
+      status: "stock",
+      productDescription: "",
+      cond: "new",
+    },
+    {
+      partModel: "",
+      heciClei: "",
+      mfg: "",
+      price: "",
+      quantity: "",
+      status: "stock",
+      productDescription: "",
+      cond: "new",
+    },
+  ]);
+
+  const handleChange = (e, i) => {
+    const updatedFiles = [...data];
+    updatedFiles[i][e.target.name] = e.target.value;
+    setData(updatedFiles);
+    setAddInventory(updatedFiles);
+  };
+
   return (
     <table>
       <thead>
@@ -11,44 +101,77 @@ const TableAdd = ({ inventoryAddTable }) => {
         </tr>
       </thead>
       <tbody>
-        {new Array(inventoryAddTable.length).fill(null).map((item, i) => {
+        {data.map((item, i) => {
           return (
             <tr key={i}>
               <td>
-                <input type="text" />
+                <input
+                  type="text"
+                  name="partModel"
+                  onChange={(e) => handleChange(e, i)}
+                />
               </td>
               <td>
-                <input type="text" />
+                <input
+                  type="text"
+                  name="heciClei"
+                  onChange={(e) => handleChange(e, i)}
+                />
+              </td>
+
+              <td>
+                <input
+                  type="text"
+                  name="mfg"
+                  onChange={(e) => handleChange(e, i)}
+                />
               </td>
               <td>
-                <input type="text" />
+                <input
+                  type="text"
+                  name="price"
+                  onChange={(e) => handleChange(e, i)}
+                />
               </td>
               <td>
-                <input type="text" />
+                <input
+                  type="text"
+                  name="quantity"
+                  onChange={(e) => handleChange(e, i)}
+                />
               </td>
               <td>
-                <input type="text" />
-              </td>
-              <td>
-                <select>
-                  <option value="2">Stock</option>
-                  <option value="1">DIST</option>
+                <select
+                  name="status"
+                  value={item.status}
+                  onChange={(e) => handleChange(e, i)}
+                >
+                  <option value="stock">Stock</option>
+                  <option value="dist">DIST</option>
                 </select>
               </td>
               <td>
-                <input type="text" />
+                <input
+                  name="productDescription"
+                  type="text"
+                  onChange={(e) => handleChange(e, i)}
+                />
               </td>
               <td>
-                <select>
-                  <option> NEW</option>
-                  <option> ASIS</option>
-                  <option> EXC</option>
-                  <option> F/S</option>
-                  <option> NOB</option>
-                  <option> REF</option>
-                  <option> OEMREF</option>
-                  <option> REP</option>
-                  <option> USED</option>
+                <select
+                  name="cond"
+                  value={item.cond}
+                  onChange={(e) => handleChange(e, i)}
+                >
+                  <option value="new">NEW</option>
+                  <option value="asis">ASIS</option>
+                  <option value="exc">EXC</option>
+                  <option value="f/s">F/S</option>
+                  <option value="nob">NOB</option>
+                  <option value="ref">REF</option>
+                  <option value="oemref">OEMREF</option>
+                  <option value="rep">REP</option>
+                  <option value="used">USED</option>
                 </select>
               </td>
             </tr>
