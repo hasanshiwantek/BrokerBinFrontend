@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import css from "../../../../styles/Menu/Manage/Inventory/Inventory.module.css";
 import TableAdd from "../../../Tables/TableAdd";
-import { inventoryAddTable } from "../../../../data/tableData";
 import InventoryButtons from "./InventoryButtons";
+import { useDispatch, useSelector } from "react-redux";
 
 const Add = () => {
-  const [addInventory, setAddInventory] = useState(null);
-  const handleSubmit = (event) => {
+  const { inventoryAddData, token } = useSelector(
+    (state) => state.inventoryStore
+  );
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
     const formDataObject = Object.fromEntries(formData.entries());
@@ -19,9 +21,9 @@ const Add = () => {
     });
 
     // If addInventory object exist or we can say data is coming from the formData object.
-    if (addInventory) {
+    if (inventoryAddData) {
       // Filtered out those data object where even a single field in filled to processed further.
-      const filteredAddInventory = addInventory.filter(
+      const filteredAddInventory = inventoryAddData.filter(
         (e, i) =>
           e.heciClei !== "" ||
           e.mfg !== "" ||
@@ -53,6 +55,28 @@ const Add = () => {
     } else {
       alert("Please fill in the inventory data.");
     }
+
+    try {
+      const response = await fetch(
+        "https://brokerbinbackend.advertsedge.com/api/inventory/add",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(formDataObject),
+        }
+      );
+
+      if (response.ok) {
+        alert("Success to add inventory data.");
+      } else {
+        alert("Failed to add inventory data.");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -67,11 +91,7 @@ const Add = () => {
               </button>
               <button type="button">telecom</button>
             </div>
-            <TableAdd
-              inventoryAddTable={inventoryAddTable}
-              handleSubmit={handleSubmit}
-              setAddInventory={setAddInventory}
-            />
+            <TableAdd />
             <div className={css.inventory_add_main_bottom}>
               <button type="button">
                 <input type="submit" value="save" />

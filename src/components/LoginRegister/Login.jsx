@@ -52,7 +52,7 @@ const Login = () => {
         // Store the token in local storage
         // Use the JavaScript function JSON.stringify() to convert it into a string.
         // localStorage.setItem("token", JSON.stringify(token));
-        Cookies.set("token", access_token, { expires: 1 / 24, secure: true });
+        Cookies.set("token", access_token, { expires: 1, secure: true });
         // Cookies.set("token", "kaif abbas", { expires: 1 / 24, secure: true });
         Cookies.set("user_id", id, { expires: 1, secure: true });
         // Cookies.set('token', access_token, { expires: 1 / 1440 }); // There are 1440 minutes in a day

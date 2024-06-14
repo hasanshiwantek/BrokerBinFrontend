@@ -1,94 +1,27 @@
-import React, { useState } from "react";
+import React from "react";
+import { inventoryAddTable } from "../../data/tableData";
+import { useDispatch, useSelector } from "react-redux";
+import { setInventoryAddData } from "../../ReduxStore/InventorySlice";
 
-const TableAdd = ({ inventoryAddTable, setAddInventory }) => {
-  const [data, setData] = useState([
-    {
-      partModel: "",
-      heciClei: "",
-      mfg: "",
-      price: "",
-      quantity: "",
-      status: "stock",
-      productDescription: "",
-      cond: "new",
-    },
-    {
-      partModel: "",
-      heciClei: "",
-      mfg: "",
-      price: "",
-      quantity: "",
-      status: "stock",
-      productDescription: "",
-      cond: "new",
-    },
-    {
-      partModel: "",
-      heciClei: "",
-      mfg: "",
-      price: "",
-      quantity: "",
-      status: "stock",
-      productDescription: "",
-      cond: "new",
-    },
-    {
-      partModel: "",
-      heciClei: "",
-      mfg: "",
-      price: "",
-      quantity: "",
-      status: "stock",
-      productDescription: "",
-      cond: "new",
-    },
-    {
-      partModel: "",
-      heciClei: "",
-      mfg: "",
-      price: "",
-      quantity: "",
-      status: "stock",
-      productDescription: "",
-      cond: "new",
-    },
-    {
-      partModel: "",
-      heciClei: "",
-      mfg: "",
-      price: "",
-      quantity: "",
-      status: "stock",
-      productDescription: "",
-      cond: "new",
-    },
-    {
-      partModel: "",
-      heciClei: "",
-      mfg: "",
-      price: "",
-      quantity: "",
-      status: "stock",
-      productDescription: "",
-      cond: "new",
-    },
-    {
-      partModel: "",
-      heciClei: "",
-      mfg: "",
-      price: "",
-      quantity: "",
-      status: "stock",
-      productDescription: "",
-      cond: "new",
-    },
-  ]);
+const TableAdd = () => {
+  const inventoryAddData = useSelector(
+    (state) => state.inventoryStore.inventoryAddData
+  );
+  const dispatch = useDispatch();
 
   const handleChange = (e, i) => {
-    const updatedFiles = [...data];
-    updatedFiles[i][e.target.name] = e.target.value;
-    setData(updatedFiles);
-    setAddInventory(updatedFiles);
+    // The error Cannot assign to read only property 'partModel' of object '#<Object>' occurs because the inventoryAddData state object is being directly mutated, which is not allowed in Redux. To solve this, we need to make a deep copy of the state object before modifying it.Here, I'll provide a solution using a deep copy with JavaScript's spread operator and the map method.
+    const updatedFiles = inventoryAddData.map((item, index) => {
+      if (index === i) {
+        return {
+          ...item,
+          [e.target.name]: e.target.value,
+        };
+      }
+      return item;
+    });
+
+    dispatch(setInventoryAddData(updatedFiles));
   };
 
   return (
@@ -101,13 +34,14 @@ const TableAdd = ({ inventoryAddTable, setAddInventory }) => {
         </tr>
       </thead>
       <tbody>
-        {data.map((item, i) => {
+        {inventoryAddData.map((item, i) => {
           return (
             <tr key={i}>
               <td>
                 <input
                   type="text"
                   name="partModel"
+                  value={item.partModel}
                   onChange={(e) => handleChange(e, i)}
                 />
               </td>
@@ -115,14 +49,15 @@ const TableAdd = ({ inventoryAddTable, setAddInventory }) => {
                 <input
                   type="text"
                   name="heciClei"
+                  value={item.heciClei}
                   onChange={(e) => handleChange(e, i)}
                 />
               </td>
-
               <td>
                 <input
                   type="text"
                   name="mfg"
+                  value={item.mfg}
                   onChange={(e) => handleChange(e, i)}
                 />
               </td>
@@ -130,6 +65,7 @@ const TableAdd = ({ inventoryAddTable, setAddInventory }) => {
                 <input
                   type="text"
                   name="price"
+                  value={item.price}
                   onChange={(e) => handleChange(e, i)}
                 />
               </td>
@@ -137,6 +73,7 @@ const TableAdd = ({ inventoryAddTable, setAddInventory }) => {
                 <input
                   type="text"
                   name="quantity"
+                  value={item.quantity}
                   onChange={(e) => handleChange(e, i)}
                 />
               </td>
@@ -154,6 +91,7 @@ const TableAdd = ({ inventoryAddTable, setAddInventory }) => {
                 <input
                   name="productDescription"
                   type="text"
+                  value={item.productDescription}
                   onChange={(e) => handleChange(e, i)}
                 />
               </td>

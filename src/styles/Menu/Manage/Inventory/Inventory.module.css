@@ -21,7 +21,6 @@
   }
   select {
     border: 1px solid;
-    padding: 1rem 0;
   }
   &_btn {
     display: flex;
@@ -232,6 +231,14 @@
         text-align: left;
         background: var(--table-th-color);
         color: white;
+      }
+      td {
+        input,
+        select {
+          height: 3rem;
+          /* padding: 1rem; */
+          font-size: 1.2rem;
+        }
       }
     }
     &_top {

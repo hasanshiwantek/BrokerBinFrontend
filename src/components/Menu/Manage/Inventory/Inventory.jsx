@@ -3,15 +3,19 @@ import css from "../../../../styles/Menu/Manage/Inventory/Inventory.module.css";
 import AddAnotherFile from "./AddAnotherFile";
 import ScheduleNewUpload from "./ScheduleNewUpload";
 import InventoryButtons from "./InventoryButtons";
+import { useSelector } from "react-redux";
 
 const Inventory = () => {
-  const [inventoryFile, setInventoryFile] = useState([]);
+  const addAnotherFiles = useSelector(
+    (state) => state.inventoryStore.addAnotherFiles
+  );
+  // const [inventoryFile, setInventoryFile] = useState([]);
 
   const submitInventoryBtn = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const formDataObject = Object.fromEntries(formData.entries());
-    const filteredInventoryFile = inventoryFile.filter(
+    const filteredInventoryFile = addAnotherFiles.filter(
       (e, i) => e.file !== null
     );
     formDataObject.inventoryFile = filteredInventoryFile;
@@ -25,7 +29,7 @@ const Inventory = () => {
         <div className={css.inventory_main}>
           <form onSubmit={submitInventoryBtn}>
             <h1>upload inventory</h1>
-            <AddAnotherFile setInventoryFile={setInventoryFile} />
+            <AddAnotherFile />
             <p className={css.inventory_main_desc}>
               or
               <span>

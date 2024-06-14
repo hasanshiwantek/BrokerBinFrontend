@@ -1,44 +1,61 @@
-import React, { useState } from "react";
+import React from "react";
 import css from "../../../../styles/Menu/Manage/Inventory/Inventory.module.css";
 import { BiMinus, BiPlus } from "react-icons/bi";
+import { useDispatch, useSelector } from "react-redux";
+import { setAddAnotherFiles } from "../../../../ReduxStore/InventorySlice";
 
-const AddAnotherFile = ({ setInventoryFile }) => {
-  const [files, setFiles] = useState([{ file: null, status: "Stock" }]);
+const AddAnotherFile = () => {
+  const addAnotherFiles = useSelector(
+    (state) => state.inventoryStore.addAnotherFiles
+  );
+  const dispatch = useDispatch();
 
   const handleFileChange = (e, index) => {
     const file = e.target.files[0];
-    const updatedFiles = [...files];
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
         const base64String = e.target.result
           .replace("data:", "")
           .replace(/^.+,/, "");
-        updatedFiles[index].file = base64String;
-        setFiles(updatedFiles);
-        setInventoryFile(updatedFiles);
+        const updatedFiles = addAnotherFiles.map((item, i) => {
+          if (index === i) {
+            return { ...item, file: base64String };
+          }
+          return item;
+        });
+        dispatch(setAddAnotherFiles(updatedFiles));
       };
       reader.readAsDataURL(file);
     } else {
-      updatedFiles[index].file = null;
-      setFiles(updatedFiles);
+      const updatedFiles = addAnotherFiles.map((item, i) => {
+        if (index === i) {
+          return { ...item, file: null };
+        }
+        return item;
+      });
+      dispatch(setAddAnotherFiles(updatedFiles));
     }
   };
 
   const handleStatusChange = (e, index) => {
-    const updatedFiles = [...files];
-    updatedFiles[index].status = e.target.value;
-    setFiles(updatedFiles);
+    const updatedFiles = addAnotherFiles.map((item, i) => {
+      if (index === i) {
+        return { ...item, status: e.target.value };
+      }
+      return item;
+    });
+    dispatch(setAddAnotherFiles(updatedFiles));
   };
 
   const addFileField = () => {
-    setFiles([...files, { file: null, status: "Stock" }]);
+    const updatedFiles = [...addAnotherFiles, { file: null, status: "Stock" }];
+    dispatch(setAddAnotherFiles(updatedFiles));
   };
 
   const removeFileField = (index) => {
-    const updatedFiles = files.filter((_, i) => i !== index);
-    setFiles(updatedFiles);
-    setInventoryFile(updatedFiles);
+    const updatedFiles = addAnotherFiles.filter((_, i) => i !== index);
+    dispatch(setAddAnotherFiles(updatedFiles));
   };
 
   return (
@@ -50,10 +67,9 @@ const AddAnotherFile = ({ setInventoryFile }) => {
         </button>
       </div>
       <div className={css.AddAnotherFile_uploads}>
-        {files.map((file, i) => (
+        {addAnotherFiles.map((file, i) => (
           <div className={css.AddAnotherFile_uploads_div} key={i}>
             <label>Excel or CSV*</label>
-
             <input type="file" onChange={(e) => handleFileChange(e, i)} />
             <select
               value={file.status}

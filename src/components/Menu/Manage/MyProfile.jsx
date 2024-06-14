@@ -1,53 +1,23 @@
 import React, { useEffect, useState } from "react";
 import css from "../../../styles/Menu/Manage/MyProfile.module.css";
 import personalPhoto from "../../../imgs/logo/shadow.png";
-import Cookies from "js-cookie";
 import LoadingState from "../../../LoadingState";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchUserData,
+  setFormData,
+  setCustomSignature,
+  setBlurWhileLoading,
+  submitUserData,
+} from "../../../ReduxStore/ProfleSlice";
 
 const MyProfile = () => {
-  const token = Cookies.get("token");
-  const userId = Cookies.get("user_id");
-  const user = JSON.parse(localStorage.getItem("user"));
-  const id = user.user.id || userId;
-  const [customSignature, setcustomSignature] = useState(true);
+  const { token, user_id, user } = useSelector((state) => state.profileStore);
+  const id = user?.user?.id || user_id;
+  const dispatch = useDispatch();
   const [fileBase64, setFileBase64] = useState("");
-  const [blurWhileLoading, setBlurWhileLoading] = useState(false);
-  const [initialData, setInitialData] = useState({});
-  // const [whileSubmitForm, setWhileSubmitForm] = useState(false);
-
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    position: "",
-    experience: "",
-    specialty: "",
-    email: "",
-    skype: "",
-    whatsapp: "",
-    trillian: "",
-    facebook: "",
-    twitter: "",
-    linkedin: "",
-    phoneNumber: "",
-    tollFree: "",
-    cellular: "",
-    faxNumber: "",
-    currentPassword: "",
-    newPassword: "",
-    confirmNewPassword: "",
-    profileImage: "",
-    customSignature: [],
-    signature: [],
-    sigcheckName: true,
-    sigcheckEmailAddress: true,
-    sigcheckPosition: true,
-    sigcheckPhone: true,
-    sigcheckCell: true,
-    sigcheckCompany: true,
-    sigcheckToll: true,
-    sigcheckFax: true,
-    sigcheckIM: true,
-  });
+  const { formData, initialData, blurWhileLoading, customSignature } =
+    useSelector((state) => state.profileStore);
 
   const textAreaContent = [
     formData.sigcheckName ? `${formData.firstName} ${formData.lastName}` : "",
@@ -67,73 +37,22 @@ const MyProfile = () => {
     ?.filter(Boolean)
     .join("\n");
 
-  const fetchData = async () => {
-    try {
-      const response = await fetch(
-        `https://brokerbinbackend.advertsedge.com/api/user/fetch/${id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data.data);
-
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          firstName: data.data.firstName || "",
-          lastName: data.data.lastName || "",
-          position: data.data.position || "",
-          experience: data.data.experience || "",
-          specialty: data.data.specialty || "",
-          email: data.data.email || "",
-          skype: data.data.skype || "",
-          whatsapp: data.data.whatsapp || "",
-          trillian: data.data.trillian || "",
-          facebook: data.data.facebook || "",
-          twitter: data.data.twitter || "",
-          linkedin: data.data.linkedin || "",
-          phoneNumber: data.data.phoneNumber || "",
-          tollFree: data.data.tollFree || "",
-          cellular: data.data.cellular || "",
-          faxNumber: data.data.faxNumber || "",
-          profileImage: data.data.profileImage || "",
-          customSignature: data.data.customSignature || [],
-          signature: data.data.signature || [],
-        }));
-        setInitialData(data.data);
-        setBlurWhileLoading(true);
-      } else {
-        console.error("Failed to fetch data");
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   useEffect(() => {
-    fetchData();
-  }, []);
+    dispatch(fetchUserData({ id, token }));
+  }, [dispatch, id, token]);
 
   const cleanInput = (input) => input.trimStart().replace(/\s+/g, " ");
 
   const handleChange = (e) => {
     const { name, type, checked, value } = e.target;
     const val = type === "checkbox" ? checked : cleanInput(value);
-    setFormData((prevFormData) => ({ ...prevFormData, [name]: val }));
+    dispatch(setFormData({ ...formData, [name]: val }));
   };
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     const extension = String(file.name).split(".").pop().toLowerCase();
     const allowedExtensions = ["jpeg", "jpg", "png", "webp"];
-    console.log(file);
-
     if (allowedExtensions.includes(extension)) {
       if (file) {
         const reader = new FileReader();
@@ -156,7 +75,7 @@ const MyProfile = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setBlurWhileLoading(false);
+    dispatch(setBlurWhileLoading(false));
     const formDataApi = new FormData(event.target);
 
     const data = Object.fromEntries(
@@ -179,7 +98,7 @@ const MyProfile = () => {
       delete data.signature;
     }
 
-    data.useCustomSignature = data.useCustomSignature === "true" ? 1 : 0;
+    data.useCustomSignature = data.useCustomSignature ? 1 : 0;
 
     if (fileBase64) {
       data.personalPhoto = { base64: fileBase64 };
@@ -239,61 +158,43 @@ const MyProfile = () => {
         delete data[key];
       }
     });
+
     console.log(data);
 
-    try {
-      const response = await fetch(
-        `https://brokerbinbackend.advertsedge.com/api/user/edit/${id}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
-
-      if (response.ok) {
-        // alert("Your profile has been updated!");
-        window.location.reload();
-        setBlurWhileLoading(true);
-        // fetchData();
-      } else {
-        alert("Incorrect Password");
-      }
-    } catch (err) {
-      console.log("Error during login", err);
-    }
+    dispatch(setFormData(data));
+    dispatch(submitUserData({ id, token, data }));
   };
 
   const checkAll = () => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      sigcheckName: true,
-      sigcheckEmailAddress: true,
-      sigcheckPosition: true,
-      sigcheckPhone: true,
-      sigcheckCell: true,
-      sigcheckCompany: true,
-      sigcheckToll: true,
-      sigcheckFax: true,
-      sigcheckIM: true,
-    }));
+    dispatch(
+      setFormData({
+        sigcheckName: true,
+        sigcheckEmailAddress: true,
+        sigcheckPosition: true,
+        sigcheckPhone: true,
+        sigcheckCell: true,
+        sigcheckCompany: true,
+        sigcheckToll: true,
+        sigcheckFax: true,
+        sigcheckIM: true,
+      })
+    );
   };
+
   const unCheckAll = () => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      sigcheckName: false,
-      sigcheckEmailAddress: false,
-      sigcheckPosition: false,
-      sigcheckPhone: false,
-      sigcheckCell: false,
-      sigcheckCompany: false,
-      sigcheckToll: false,
-      sigcheckFax: false,
-      sigcheckIM: false,
-    }));
+    dispatch(
+      setFormData({
+        sigcheckName: false,
+        sigcheckEmailAddress: false,
+        sigcheckPosition: false,
+        sigcheckPhone: false,
+        sigcheckCell: false,
+        sigcheckCompany: false,
+        sigcheckToll: false,
+        sigcheckFax: false,
+        sigcheckIM: false,
+      })
+    );
   };
 
   return (
@@ -305,11 +206,7 @@ const MyProfile = () => {
             <div className={css.profileBtn}>
               <p>my profile</p>
               <span>
-                <input
-                  type="submit"
-                  value="submit changes"
-                  // disabled={whileSubmitForm}
-                />
+                <input type="submit" value="submit changes" />
                 <button type="button">view profile</button>
               </span>
             </div>
@@ -701,9 +598,10 @@ const MyProfile = () => {
                         type="checkbox"
                         name="useCustomSignature"
                         id="useCustomSignature"
-                        value={customSignature}
                         checked={customSignature}
-                        onChange={() => setcustomSignature((prev) => !prev)}
+                        onChange={() =>
+                          dispatch(setCustomSignature(!customSignature))
+                        }
                       />
                     </span>
                     <span>
@@ -758,7 +656,6 @@ const MyProfile = () => {
                       />
                     </div>
                   </div>
-
                   <div className={css.profileInfo_form_updatePassword_right}>
                     <fieldset>
                       <legend>Password Requirements</legend>
