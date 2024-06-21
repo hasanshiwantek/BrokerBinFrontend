@@ -1,9 +1,7 @@
 import React, { useEffect } from "react";
 import css from "../../styles/Popup/RfqTablePopUp.module.css";
-import { IoCloseCircle } from "react-icons/io5";
 
-const RfqTablePopUp = ({ setTogglePopUp }) => {
-
+const RfqTablePopUp = ({ setTogglePopUp, rfqPopBoxInfo }) => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       const rfqNew = document.querySelector(`.${css.RfqTablePopUp_body}`);
@@ -27,6 +25,10 @@ const RfqTablePopUp = ({ setTogglePopUp }) => {
     };
   }, [setTogglePopUp]);
 
+  const printRfq = () => {
+    window.print();
+  };
+
   return (
     <div className={css.RfqTablePopUp}>
       <div className={css.RfqTablePopUp_body}>
@@ -35,12 +37,16 @@ const RfqTablePopUp = ({ setTogglePopUp }) => {
             close
           </button>
         </div>
-        <div className={css.RfqTablePopUp_body_mail}>
-          <label>to:</label>
-          <p>kaifabbas,CTS</p>
-          <label>from:</label>
-          <p>hasanmujtaba,newtown</p>
-        </div>
+        {rfqPopBoxInfo.map((item) => {
+          return (
+            <div key={item.id} className={css.RfqTablePopUp_body_mail}>
+              <label>to:</label>
+              <p>{item.to}</p>
+              <label>from:</label>
+              <p>{item.from}</p>
+            </div>
+          );
+        })}
         <div className={css.RfqTablePopUp_body_content}>
           <strong>their_request - Still looking for these parts? (New)</strong>
           <table>
@@ -56,17 +62,21 @@ const RfqTablePopUp = ({ setTogglePopUp }) => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>
-                  <u>C9200L-48P-4X-E</u>
-                </td>
-                <td>no</td>
-                <td>CISCO </td>
-                <td>NEW</td>
-                <td>20</td>
-                <td>120</td>
-                <td>yes</td>
-              </tr>
+              {rfqPopBoxInfo.map((item) => {
+                return (
+                  <tr key={item.id}>
+                    <td>
+                      <u>{item.model}</u>
+                    </td>
+                    <td>no</td>
+                    <td>{item.mfg}</td>
+                    <td>{item.cond}</td>
+                    <td>{item.quantity}</td>
+                    <td>{item.price}</td>
+                    <td>yes</td>
+                  </tr>
+                );
+              })}
             </tbody>
             <tfoot>
               <tr>
@@ -88,7 +98,9 @@ const RfqTablePopUp = ({ setTogglePopUp }) => {
           </table>
         </div>
         <div className={css.RfqTablePopUp_body_btn}>
-          <button type="button">print</button>
+          <button type="button" onClick={printRfq}>
+            print
+          </button>
           <button type="button">reply</button>
           <button type="button">forward</button>
           <button type="button">archive</button>

@@ -7,47 +7,21 @@ import { BsStarFill } from "react-icons/bs";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import ToggleStats from "./ToggleStats";
 import HoverPieChart from "./HoverPieChart";
-import Cookies from "js-cookie";
 import LoadingState2 from "../../LoadingState2";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserData } from "../../ReduxStore/ProfleSlice";
 
 const Home = () => {
-  const token = Cookies.get("token");
-  const userId = Cookies.get("user_id");
-  const [user, setUser] = useState(null);
-  const [blurWhileLoading, setBlurWhileLoading] = useState(false);
+  const { blurWhileLoading, initialData, token, user_id, user } = useSelector(
+    (state) => state.profileStore
+  );
 
-  // JSON.parse() to convert the string into a JavaScript object
-  const localStorageUser = JSON.parse(localStorage.getItem("user"));
-  const id = userId || localStorageUser.user.id;
+  const id = user?.user?.id || user_id;
 
-  const fetchData = async () => {
-    try {
-      const response = await fetch(
-        `https://brokerbinbackend.advertsedge.com/api/user/fetch/${id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data.data);
-        setUser(data.data);
-        setBlurWhileLoading(true);
-      } else {
-        console.error("Failed to fetch data");
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    fetchData();
+    dispatch(fetchUserData({ token, id }));
   }, []);
 
   const bomFileRef = useRef(null);
@@ -74,12 +48,16 @@ const Home = () => {
             <div className={css.gridHome1_MemberDetail}>
               <div className={css.gridHome1_MemberDetail_profile}>
                 <img
-                  src={user?.profileImage ? user.profileImage : person}
+                  src={
+                    initialData?.profileImage
+                      ? initialData.profileImage
+                      : person
+                  }
                   alt="person"
                 />
                 <h3>
                   welcome back,
-                  {user.firstName}
+                  {initialData.firstName}
                 </h3>
                 <BiDotsHorizontalRounded />
               </div>

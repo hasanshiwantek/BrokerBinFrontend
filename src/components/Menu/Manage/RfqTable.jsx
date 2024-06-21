@@ -4,7 +4,6 @@ import { tableData } from "../../../data/tableData";
 import SearchComponent from "../../SearchComponent.jsx";
 import { AiFillMail } from "react-icons/ai";
 import RfqTablePopUp from "../../Popups/RfqTablePopUp.jsx";
-import { Pagination } from "@mui/material";
 
 const RfqTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -15,6 +14,7 @@ const RfqTable = () => {
   const [togglePopUp, setTogglePopUp] = useState(false);
   const [rfqMail, setRfqMail] = useState([]);
   const [rfqMailCheckAll, setRfqMailCheckAll] = useState(false);
+  const [rfqPopBoxInfo, setRfqpopBoxInfo] = useState(null);
 
   const prevPage = () => {
     if (currentPage === 1) {
@@ -33,38 +33,42 @@ const RfqTable = () => {
   const now = new Date();
   const date = `${
     now.getHours() > 12
-      ? `0` +
-        (now.getHours() % 12) +
+      ? (now.getHours() % 12) +
         `:` +
         (now.getMinutes() < 9 ? `0` + now.getMinutes() : now.getMinutes()) +
         `PM`
-      : now.getHours() + `AM`
-  } ${now.getFullYear()}/${now.getMonth()}/${now.getDate()}`;
+      : `0` +
+        now.getHours() +
+        `:` +
+        (now.getMinutes() < 9 ? `0` + now.getMinutes() : now.getMinutes()) +
+        `AM`
+  } ${now.getDate()}/${now.getMonth()}/${now.getFullYear()}`;
 
-  const handleShowPopupRfq = (event) => {
-    // event.preventDefault();
+  const handleShowPopupRfq = (event, { id }) => {
+    event.stopPropagation(); // Prevent the event from propagating to the row click event
     setTogglePopUp((prev) => !prev);
+    setRfqpopBoxInfo(currentItems.filter((item) => item.id === id));
   };
 
-  // const handleCheckboxClick = (event, id) => {
-  //   // event.stopPropagation(); // Prevent the event from propagating to the row click event
-  //   if (event.target.checked) {
-  //     const mails = currentItems.filter((m) => m.id === id);
-  //     setRfqMail((prev) => [...prev, ...mails]);
-  //   } else {
-  //     setRfqMail((prev) => prev.filter((e) => e.id !== id));
-  //   }
-  // };
+  const handleCheckboxClick = (event, id) => {
+    event.stopPropagation(); // Prevent the event from propagating to the row click event
+    if (event.target.checked) {
+      const mails = currentItems.filter((m) => m.id === id);
+      setRfqMail((prev) => [...prev, ...mails]);
+    } else {
+      setRfqMail((prev) => prev.filter((e) => e.id !== id));
+    }
+  };
 
-  // const handleCheckboxClickAll = (event) => {
-  //   // event.stopPropagation(); // Prevent the event from propagating to the row click event
-  //   setRfqMailCheckAll(event.target.checked);
-  //   if (event.target.checked) {
-  //     setRfqMail(currentItems);
-  //   } else {
-  //     setRfqMail([]);
-  //   }
-  // };
+  const handleCheckboxClickAll = (event) => {
+    event.stopPropagation(); // Prevent the event from propagating to the row click event
+    setRfqMailCheckAll(event.target.checked);
+    if (event.target.checked) {
+      setRfqMail(currentItems);
+    } else {
+      setRfqMail([]);
+    }
+  };
 
   return (
     <>
@@ -88,7 +92,7 @@ const RfqTable = () => {
                           type="checkbox"
                           name=""
                           id=""
-                          // onChange={handleCheckboxClickAll}
+                          onChange={handleCheckboxClickAll}
                           checked={rfqMailCheckAll}
                         />
                         status
@@ -103,22 +107,25 @@ const RfqTable = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {currentItems.map((e, i) => (
+                  {currentItems.map((e) => (
                     <tr
                       className={css.tableData}
-                      key={i}
-                      onClick={handleShowPopupRfq}
+                      key={e.id}
+                      onClick={(event) => {
+                        handleShowPopupRfq(event, e);
+                      }}
                     >
                       <td>
                         <input
                           type="checkbox"
                           name="addToCart"
                           id="addToCart"
-                          // onClick={(event) => handleCheckboxClick(event, e.id)}
-                          // checked={
-                          //   rfqMail.some((mail) => mail.id === e.id) ||
-                          //   rfqMailCheckAll
-                          // }
+                          onClick={(event) => event.stopPropagation()}
+                          onChange={(event) => handleCheckboxClick(event, e.id)}
+                          checked={
+                            rfqMail.some((mail) => mail.id === e.id) ||
+                            rfqMailCheckAll
+                          }
                         />
                         <p>(0|1)</p>
                         <AiFillMail />
@@ -128,9 +135,9 @@ const RfqTable = () => {
                       <td>
                         Lorem ipsum dolor sit amet consectetur adipisicing elit.
                       </td>
-                      <td>kaif abbas</td>
+                      <td>{e.from}</td>
                       <td>
-                        <a href="#">{e.company}</a>
+                        <a>{e.company}</a>
                       </td>
                       <td>{date}</td>
                     </tr>
@@ -144,8 +151,8 @@ const RfqTable = () => {
                           type="checkbox"
                           name=""
                           id=""
-                          // onChange={handleCheckboxClickAll}
-                          // checked={rfqMailCheckAll}
+                          onChange={handleCheckboxClickAll}
+                          checked={rfqMailCheckAll}
                         />
                         status
                       </span>
@@ -179,7 +186,12 @@ const RfqTable = () => {
           </div>
         </div>
       </div>
-      {togglePopUp && <RfqTablePopUp setTogglePopUp={setTogglePopUp} />}
+      {togglePopUp && (
+        <RfqTablePopUp
+          setTogglePopUp={setTogglePopUp}
+          rfqPopBoxInfo={rfqPopBoxInfo}
+        />
+      )}
     </>
   );
 };

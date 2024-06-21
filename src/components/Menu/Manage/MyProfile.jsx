@@ -12,12 +12,19 @@ import {
 } from "../../../ReduxStore/ProfleSlice";
 
 const MyProfile = () => {
-  const { token, user_id, user } = useSelector((state) => state.profileStore);
+  const {
+    token,
+    user_id,
+    user,
+    formData,
+    initialData,
+    blurWhileLoading,
+    customSignature,
+  } = useSelector((state) => state.profileStore);
+
   const id = user?.user?.id || user_id;
   const dispatch = useDispatch();
   const [fileBase64, setFileBase64] = useState("");
-  const { formData, initialData, blurWhileLoading, customSignature } =
-    useSelector((state) => state.profileStore);
 
   const textAreaContent = [
     formData.sigcheckName ? `${formData.firstName} ${formData.lastName}` : "",

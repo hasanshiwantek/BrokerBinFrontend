@@ -1,10 +1,15 @@
 .layout {
   display: flex;
   justify-content: center;
+  @media print {
+    display: none;
+  }
 }
+
 .rfqTable {
   width: 55vw;
 }
+
 .rfqTableBtn_top {
   font-size: 1.5rem;
   display: flex;
@@ -18,7 +23,7 @@
   align-items: center;
   background-color: var(--table-bg-color);
   padding: 0 1rem;
-  >:first-child{
+  > :first-child {
     display: flex;
     gap: 1rem;
     padding: 0.5rem 0;
@@ -131,18 +136,13 @@
   margin-left: 0.5rem;
 }
 
-.pagination{
-  nav{
-    ul{
-      display: flex;
-    }
+.pagination {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 1.5rem;
+  button {
+    background: transparent;
+    color: white;
+    border-bottom: 1px solid white;
   }
-  /* display: flex; */
-  /* gap: 0.5rem; */
-  /* font-size: 1.5rem; */
-  /* button{ */
-    /* background: transparent; */
-    /* color: white; */
-    /* border-bottom: 1px solid white; */
-  /* } */
 }

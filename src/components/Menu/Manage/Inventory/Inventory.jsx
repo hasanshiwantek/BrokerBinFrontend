@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import css from "../../../../styles/Menu/Manage/Inventory/Inventory.module.css";
 import AddAnotherFile from "./AddAnotherFile";
 import ScheduleNewUpload from "./ScheduleNewUpload";
@@ -63,12 +63,12 @@ const Inventory = () => {
               className={css.inventory_main_submitBtn}
             />
             <h1 className={css.inventory_main_AutoUploadh1}>Auto Uploads</h1>
-            <ScheduleNewUpload />
-            <div className={css.inventory_main_footer}>
-              <h1>Current Uploads</h1>
-              <p>No Auto Uploads are currently scheduled for your company</p>
-            </div>
           </form>
+          <ScheduleNewUpload />
+          <div className={css.inventory_main_footer}>
+            <h1>Current Uploads</h1>
+            <p>No Auto Uploads are currently scheduled for your company</p>
+          </div>
         </div>
       </div>
     </>

@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useEffect, useRef } from "react";
 import React, { useState } from "react";
 import css from "../styles/Header.module.css";
 import logo from "../imgs/logo/broker_header_logo.jpg";
@@ -22,16 +22,40 @@ import Cookies from "js-cookie";
 
 const Header = () => {
   const [toggle, setToggle] = useState(true);
+  const [mobileNavToggle, setMobileNavToggle] = useState(false);
+
   const navigate = useNavigate();
+
   const handleLogout = () => {
     localStorage.removeItem("user"); // Remove the token from local storage
-    Cookies.remove('token');
+    Cookies.remove("token");
     navigate("/login", { replace: true }); // Redirect to the login page and replace the history
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const menu = document.querySelector(`.${css.nav_Mobile}`);
+      const hamburger = document.querySelector(`.${css.nav_links_Hamburger}`);
+      if (
+        menu &&
+        hamburger &&
+        !menu.contains(event.target) &&
+        !hamburger.contains(event.target)
+      ) {
+        setMobileNavToggle(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
   return (
     <>
-      <div className={css.headerFixed}>
+      <div className={`${css.headerFixed} ${css.noPrint}`}>
         <header className={css.header}>
           <a href="/" id={css.logo}>
             <img src={logo} alt="logo" />
@@ -51,18 +75,140 @@ const Header = () => {
             </button>
           </div>
         </header>
-        <nav>
+        <nav className={css.nav}>
           <ul className={css.nav_links}>
             <li className={css.nav_links_Hamburger}>
-              <GiHamburgerMenu />
+              <GiHamburgerMenu
+                onClick={() => setMobileNavToggle((prev) => !prev)}
+              />
+
+              {mobileNavToggle && (
+                <div className={css.nav_Mobile_bg}>
+                  <nav className={css.nav_Mobile}>
+                    <button type="button" id={css.closeMobileMenu}>
+                      X
+                    </button>
+                    <ul className={css.nav_Mobile_links}>
+                      {/* <li>
+              <BsTools />
+              <BiSolidDownArrow className={css.onHoverMenuIconDown} />
+              <BiSolidUpArrow className={css.onHoverMenuIconUp} />
+            </li> */}
+                      <li>
+                        <div>
+                          <a>main</a>
+                          <BiSolidDownArrow
+                            className={css.onHoverMenuIconDown}
+                          />
+                          <BiSolidUpArrow className={css.onHoverMenuIconUp} />
+                        </div>
+                        <div>
+                          <ul>
+                            <li>
+                              <a href="/">Home</a>
+                            </li>
+                            <li>
+                              <a href="#">help</a>
+                            </li>
+                            <li>
+                              <a href="#">contact</a>
+                            </li>
+                            <li>
+                              <a href="#">ethics</a>
+                            </li>
+                            <li>
+                              <a href="#">site map</a>
+                            </li>
+                            <li>
+                              <a href="#">badges</a>
+                            </li>
+                          </ul>
+                        </div>
+                      </li>
+                      <li>
+                        <div>
+                          <a>search</a>
+                          <BiSolidDownArrow
+                            className={css.onHoverMenuIconDown}
+                          />
+                          <BiSolidUpArrow className={css.onHoverMenuIconUp} />
+                        </div>
+                        <div>
+                          <ul>
+                            <li>
+                              <a href="/advanced">inventory</a>
+                            </li>
+                            <li>
+                              <a href="#">services</a>
+                            </li>
+                            <li>
+                              <a href="#">company</a>
+                            </li>
+                            <li>
+                              <a href="#">person</a>
+                            </li>
+                            <li>
+                              <a href="#">techSpecs</a>
+                            </li>
+                            <li>
+                              <a href="#">nsn</a>
+                            </li>
+                            <li>
+                              <a href="#">alt#</a>
+                            </li>
+                          </ul>
+                        </div>
+                      </li>
+                      <li>
+                        <div>
+                          <a>manage</a>
+                          <BiSolidDownArrow
+                            className={css.onHoverMenuIconDown}
+                          />
+                          <BiSolidUpArrow className={css.onHoverMenuIconUp} />
+                        </div>
+                        <div>
+                          <ul>
+                            <li>
+                              <a href="/inventory">Inventory</a>
+                            </li>
+                            <li>
+                              <a href="rfq">My RFQs</a>
+                            </li>
+                            <li>
+                              <a href="#">My Contacts</a>
+                            </li>
+                            <li>
+                              <a href="#">My BOM</a>
+                            </li>
+                            <li>
+                              <a href="/myprofile">My Profile</a>
+                            </li>
+                            <li>
+                              <a href="#">My Company</a>
+                            </li>
+                            <li>
+                              <a href="#">My Services</a>
+                            </li>
+                            <li>
+                              <a href="/venprice">Vendor Pricing</a>
+                            </li>
+                          </ul>
+                        </div>
+                      </li>
+                      <li onClick={handleLogout}>
+                        <BiLogOut />
+                        logout
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              )}
             </li>
             <li>
               <BsTools />
               <BiSolidDownArrow className={css.onHoverMenuIconDown} />
-              <BiSolidUpArrow
-                //
-                className={css.onHoverMenuIconUp}
-              />
+              <BiSolidUpArrow className={css.onHoverMenuIconUp} />
             </li>
             <li>
               <a href="/">main</a>
@@ -91,7 +237,7 @@ const Header = () => {
                 </ul>
               </div>
             </li>
-            <li>
+            {/* <li>
               <a href="/">tools</a>
               <BiSolidDownArrow className={css.onHoverMenuIconDown} />
               <BiSolidUpArrow className={css.onHoverMenuIconUp} />
@@ -117,7 +263,7 @@ const Header = () => {
                   </li>
                 </ul>
               </div>
-            </li>
+            </li> */}
             <li>
               <a href="/search">search</a>
               <BiSolidDownArrow className={css.onHoverMenuIconDown} />
@@ -181,7 +327,7 @@ const Header = () => {
                 </ul>
               </div>
             </li>
-            <li>
+            {/* <li>
               <a href="/">reports</a>
               <BiSolidDownArrow className={css.onHoverMenuIconDown} />
               <BiSolidUpArrow className={css.onHoverMenuIconUp} />
@@ -201,8 +347,8 @@ const Header = () => {
                   </li>
                 </ul>
               </div>
-            </li>
-            <li>
+            </li> */}
+            {/* <li>
               <a href="/">broadcast</a>
               <BiSolidDownArrow className={css.onHoverMenuIconDown} />
               <BiSolidUpArrow className={css.onHoverMenuIconUp} />
@@ -222,7 +368,7 @@ const Header = () => {
                   </li>
                 </ul>
               </div>
-            </li>
+            </li> */}
             <li onClick={handleLogout}>
               <BiLogOut />
               logout
@@ -251,18 +397,18 @@ const Header = () => {
             </li>
             {toggle && (
               <>
-                <li>
+                {/* <li>
                   <AiOutlineMail />
                 </li>
                 <li>
                   <BsFillTelephonePlusFill />
-                </li>
+                </li> */}
                 <li>
                   <a href="/cartpart">
                     <BsCartFill />
                   </a>
                 </li>
-                <li>
+                {/* <li>
                   <BsClockFill />
                 </li>
                 <li>
@@ -279,9 +425,9 @@ const Header = () => {
                 </li>
                 <li>
                   <FiTarget />
-                </li>
+                </li> */}
                 <li className={css.navbar_search_options}>
-                  <select>
+                  <select name="navbarSearchOptions">
                     <option value="">MFG Filter</option>
                     <option value="3COM">3COM</option>
                     <option value="APPLE">APPLE</option>

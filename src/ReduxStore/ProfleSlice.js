@@ -38,6 +38,9 @@ export const submitUserData = createAsyncThunk(
 );
 
 const initialState = {
+  user: JSON.parse(localStorage.getItem("user")),
+  token: Cookies.get("token"),
+  user_id: Cookies.get("user_id"),
   formData: {
     firstName: "",
     lastName: "",
@@ -72,8 +75,6 @@ const initialState = {
     sigcheckIM: true,
   },
   initialData: {},
-  user_id: Cookies.get("user_id"),
-  token: Cookies.get("token"),
   blurWhileLoading: false,
   customSignature: true,
   error: null,
