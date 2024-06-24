@@ -1,18 +1,23 @@
 import React, { useEffect } from "react";
 import css from "../../styles/Popup/RfqTablePopUp.module.css";
+import { setTogglePopUp } from "../../ReduxStore/RfqSlice";
+import { useDispatch, useSelector } from "react-redux";
 
-const RfqTablePopUp = ({ setTogglePopUp, rfqPopBoxInfo }) => {
+const RfqTablePopUp = () => {
+  const { rfqPopBoxInfo } = useSelector((state) => state.rfqStore);
+  const dispatch = useDispatch();
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       const rfqNew = document.querySelector(`.${css.RfqTablePopUp_body}`);
       if (rfqNew && !rfqNew.contains(event.target)) {
-        setTogglePopUp((prev) => !prev);
+        dispatch(setTogglePopUp());
       }
     };
 
     const escKeyToggle = (event) => {
       if (event.key === "Escape") {
-        setTogglePopUp((prev) => !prev);
+        dispatch(setTogglePopUp());
       }
     };
 

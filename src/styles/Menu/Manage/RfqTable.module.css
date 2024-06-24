@@ -95,6 +95,10 @@
       > tr {
         td {
           padding: 0.5rem;
+          svg {
+            height: 1.5rem;
+            width: 1.5rem;
+          }
         }
       }
       > :nth-child(odd) {

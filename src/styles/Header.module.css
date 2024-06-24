@@ -164,10 +164,11 @@ nav > ul > li:hover {
 
 #closeMobileMenu {
   position: absolute;
-  top: 1rem;
+  top: 0.5rem;
   right: 1rem;
+  margin-left: auto;
   font-size: 2rem;
-  color: var(--font-color);
+  color: black;
   cursor: pointer;
 }
 
@@ -175,19 +176,35 @@ nav > ul > li:hover {
   height: 100vh;
   width: 40vw;
   padding: 4rem 0rem;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 10;
+  position: relative;
+  /* top: 0; */
+  /* left: 0; */
+  /* z-index: 10; */
   overflow-y: scroll;
   background: white;
-  color: black;
   
   &_links {
     display: flex;
     flex-direction: column;
     /* @media only screen and (max-width: 54.375em) {
     } */
+    
+    &_ul {
+      /* ul > a  {
+        padding: 1rem 4rem;
+      } */
+      ul > a > li {
+        color: black;
+        /* color: var(--primary-color); */
+        padding: 1rem 4rem;
+      }
+      ul > a > li:hover {
+        background: var(--primary-color);
+        color: inherit;
+        /* background: pink; */
+      }
+    }
+
     > li {
       > div:first-of-type {
         display: flex;
@@ -196,19 +213,7 @@ nav > ul > li:hover {
         padding: 1rem 2rem;
         /* background: olivedrab; */
         background: var(--primary-color);
-      }
-      > div:nth-child(2) {
-        a{
-          
-          padding: 0rem 4rem;
-        }
-        ul > li {
-          padding: 1rem 0rem;
-        }
-        ul > li:hover {
-          background: var(--primary-color);
-          /* background: pink; */
-        }
+        cursor: pointer;
       }
     }
     > li:last-of-type {

@@ -225,7 +225,7 @@ const MyProfile = () => {
                       <span>Personal Info</span>
                     </a>
                   </li>
-                  <li>
+                  {/* <li>
                     <a href="/myprofile/Options">
                       <span>Options</span>
                     </a>
@@ -244,7 +244,7 @@ const MyProfile = () => {
                     <a href="/">
                       <span>Broadcast Filters</span>
                     </a>
-                  </li>
+                  </li> */}
                 </ul>
               </div>
               <div className={css.profileInfo_form}>

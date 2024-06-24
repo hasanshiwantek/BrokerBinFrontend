@@ -19,10 +19,18 @@ import { BiLogOut, BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setMobileNavToggle,
+  setDropdownOpen,
+  setToolToggle,
+} from "../ReduxStore/HomeSlice";
 
 const Header = () => {
-  const [toggle, setToggle] = useState(true);
-  const [mobileNavToggle, setMobileNavToggle] = useState(false);
+  const { mobileNavToggle, dropdownOpen, toolToggle } = useSelector(
+    (state) => state.homeStore
+  );
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
@@ -32,26 +40,24 @@ const Header = () => {
     navigate("/login", { replace: true }); // Redirect to the login page and replace the history
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      const menu = document.querySelector(`.${css.nav_Mobile}`);
-      const hamburger = document.querySelector(`.${css.nav_links_Hamburger}`);
-      if (
-        menu &&
-        hamburger &&
-        !menu.contains(event.target) &&
-        !hamburger.contains(event.target)
-      ) {
-        setMobileNavToggle(false);
-      }
-    };
+  const handleDropdownToggle = (menu) => {
+    dispatch(setDropdownOpen(menu));
+  };
 
-    document.addEventListener("click", handleClickOutside);
+  // useEffect(() => {
+  //   const handleClickOutside = (event) => {
+  //     const menu = document.querySelector(`.${css.nav_Mobile}`);
+  //     if (menu && !menu.contains(event.target)) {
+  //       dispatch(setMobileNavToggle());
+  //     }
+  //   };
 
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, []);
+  //   document.addEventListener("click", handleClickOutside);
+
+  //   return () => {
+  //     document.removeEventListener("click", handleClickOutside);
+  //   };
+  // }, [setMobileNavToggle]);
 
   return (
     <>
@@ -78,14 +84,16 @@ const Header = () => {
         <nav className={css.nav}>
           <ul className={css.nav_links}>
             <li className={css.nav_links_Hamburger}>
-              <GiHamburgerMenu
-                onClick={() => setMobileNavToggle((prev) => !prev)}
-              />
+              <GiHamburgerMenu onClick={() => dispatch(setMobileNavToggle())} />
 
               {mobileNavToggle && (
                 <div className={css.nav_Mobile_bg}>
                   <nav className={css.nav_Mobile}>
-                    <button type="button" id={css.closeMobileMenu}>
+                    <button
+                      type="button"
+                      id={css.closeMobileMenu}
+                      onClick={() => dispatch(setMobileNavToggle())}
+                    >
                       X
                     </button>
                     <ul className={css.nav_Mobile_links}>
@@ -95,106 +103,120 @@ const Header = () => {
               <BiSolidUpArrow className={css.onHoverMenuIconUp} />
             </li> */}
                       <li>
-                        <div>
+                        <div onClick={() => handleDropdownToggle("main")}>
                           <a>main</a>
-                          <BiSolidDownArrow
-                            className={css.onHoverMenuIconDown}
-                          />
-                          <BiSolidUpArrow className={css.onHoverMenuIconUp} />
+                          {dropdownOpen.main ? (
+                            <BiSolidUpArrow />
+                          ) : (
+                            <BiSolidDownArrow />
+                          )}
                         </div>
-                        <div>
-                          <ul>
-                            <li>
-                              <a href="/">Home</a>
-                            </li>
-                            <li>
-                              <a href="#">help</a>
-                            </li>
-                            <li>
-                              <a href="#">contact</a>
-                            </li>
-                            <li>
-                              <a href="#">ethics</a>
-                            </li>
-                            <li>
-                              <a href="#">site map</a>
-                            </li>
-                            <li>
-                              <a href="#">badges</a>
-                            </li>
-                          </ul>
-                        </div>
+                        {dropdownOpen.main && (
+                          <div className={css.nav_Mobile_links_ul}>
+                            <ul>
+                              <a href="/">
+                                <li>Home</li>
+                              </a>
+                              <a href="#">
+                                <li>help</li>
+                              </a>
+                              <a href="#">
+                                <li>contact</li>
+                              </a>
+                              <a href="#">
+                                <li>ethics</li>
+                              </a>
+                              <a href="#">
+                                <li>site map</li>
+                              </a>
+                              <a href="#">
+                                <li>badges</li>
+                              </a>
+                            </ul>
+                          </div>
+                        )}
                       </li>
                       <li>
-                        <div>
+                        <div onClick={() => handleDropdownToggle("search")}>
                           <a>search</a>
-                          <BiSolidDownArrow
-                            className={css.onHoverMenuIconDown}
-                          />
-                          <BiSolidUpArrow className={css.onHoverMenuIconUp} />
+                          {dropdownOpen.main ? (
+                            <BiSolidUpArrow />
+                          ) : (
+                            <BiSolidDownArrow />
+                          )}
                         </div>
-                        <div>
-                          <ul>
-                            <li>
-                              <a href="/advanced">inventory</a>
-                            </li>
-                            <li>
-                              <a href="#">services</a>
-                            </li>
-                            <li>
-                              <a href="#">company</a>
-                            </li>
-                            <li>
-                              <a href="#">person</a>
-                            </li>
-                            <li>
-                              <a href="#">techSpecs</a>
-                            </li>
-                            <li>
-                              <a href="#">nsn</a>
-                            </li>
-                            <li>
-                              <a href="#">alt#</a>
-                            </li>
-                          </ul>
-                        </div>
+                        {dropdownOpen.search && (
+                          <div className={css.nav_Mobile_links_ul}>
+                            <ul>
+                              <a href="/advanced">
+                                <li>inventory</li>
+                              </a>
+                              <a href="#">
+                                <li>services</li>
+                              </a>
+
+                              <a href="#">
+                                <li>company</li>
+                              </a>
+
+                              <a href="#">
+                                <li>person</li>
+                              </a>
+
+                              <a href="#">
+                                <li>techSpecs</li>
+                              </a>
+
+                              <a href="#">
+                                <li>nsn</li>
+                              </a>
+
+                              <a href="#">
+                                <li>alt</li>
+                              </a>
+                            </ul>
+                          </div>
+                        )}
                       </li>
                       <li>
-                        <div>
+                        <div onClick={() => handleDropdownToggle("manage")}>
                           <a>manage</a>
-                          <BiSolidDownArrow
-                            className={css.onHoverMenuIconDown}
-                          />
-                          <BiSolidUpArrow className={css.onHoverMenuIconUp} />
+                          {dropdownOpen.main ? (
+                            <BiSolidUpArrow />
+                          ) : (
+                            <BiSolidDownArrow />
+                          )}
                         </div>
-                        <div>
-                          <ul>
-                            <li>
-                              <a href="/inventory">Inventory</a>
-                            </li>
-                            <li>
-                              <a href="rfq">My RFQs</a>
-                            </li>
-                            <li>
-                              <a href="#">My Contacts</a>
-                            </li>
-                            <li>
-                              <a href="#">My BOM</a>
-                            </li>
-                            <li>
-                              <a href="/myprofile">My Profile</a>
-                            </li>
-                            <li>
-                              <a href="#">My Company</a>
-                            </li>
-                            <li>
-                              <a href="#">My Services</a>
-                            </li>
-                            <li>
-                              <a href="/venprice">Vendor Pricing</a>
-                            </li>
-                          </ul>
-                        </div>
+                        {dropdownOpen.manage && (
+                          <div className={css.nav_Mobile_links_ul}>
+                            <ul>
+                              <a href="/inventory">
+                                <li>Inventory</li>
+                              </a>
+                              <a href="rfq">
+                                <li>My RFQs</li>
+                              </a>
+                              <a href="#">
+                                <li>My Contacts</li>
+                              </a>
+                              <a href="#">
+                                <li>My BOM</li>
+                              </a>
+                              <a href="/myprofile">
+                                <li>My Profile</li>
+                              </a>
+                              <a href="#">
+                                <li>My Company</li>
+                              </a>
+                              <a href="#">
+                                <li>My Services</li>
+                              </a>
+                              <a href="/venprice">
+                                <li>Vendor Pricing</li>
+                              </a>
+                            </ul>
+                          </div>
+                        )}
                       </li>
                       <li onClick={handleLogout}>
                         <BiLogOut />
@@ -377,10 +399,10 @@ const Header = () => {
           <ul className={css.nav_tools}>
             <li>
               tools
-              {toggle ? (
+              {toolToggle ? (
                 <button
                   type="button"
-                  onClick={() => setToggle(!toggle)}
+                  onClick={() => dispatch(setToolToggle())}
                   className="tools-toggle"
                 >
                   <BsToggleOn style={{ color: "white" }} />
@@ -388,14 +410,14 @@ const Header = () => {
               ) : (
                 <button
                   type="button"
-                  onClick={() => setToggle(!toggle)}
+                  onClick={() => dispatch(setToolToggle())}
                   className="tools-toggle"
                 >
                   <BsToggleOff style={{ color: "white" }} />
                 </button>
               )}
             </li>
-            {toggle && (
+            {toolToggle && (
               <>
                 {/* <li>
                   <AiOutlineMail />

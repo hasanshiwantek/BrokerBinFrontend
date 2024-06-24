@@ -2,32 +2,42 @@ import React, { memo, useState } from "react";
 import css from "../../../styles/Menu/Manage/RfqTable.module.css";
 import { tableData } from "../../../data/tableData";
 import SearchComponent from "../../SearchComponent.jsx";
-import { AiFillMail } from "react-icons/ai";
+import { AiFillMail, AiOutlineMail } from "react-icons/ai";
 import RfqTablePopUp from "../../Popups/RfqTablePopUp.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setTogglePopUp,
+  setRfqPopBoxInfo,
+  setRfqMail,
+  setRfqMailCheckAll,
+  setCurrentPageNext,
+  setCurrentPagePrev,
+} from "../../../ReduxStore/RfqSlice.js";
+import { IoMail, IoMailOpen } from "react-icons/io5";
 
 const RfqTable = () => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const { togglePopUp, rfqMail, rfqMailCheckAll, currentPage } = useSelector(
+    (state) => state.rfqStore
+  );
+  const dispatch = useDispatch();
+
   const itemsPerPage = 20;
   const sliceTo = currentPage * itemsPerPage;
   const sliceFrom = sliceTo - itemsPerPage;
   const currentItems = tableData.slice(sliceFrom, sliceTo);
-  const [togglePopUp, setTogglePopUp] = useState(false);
-  const [rfqMail, setRfqMail] = useState([]);
-  const [rfqMailCheckAll, setRfqMailCheckAll] = useState(false);
-  const [rfqPopBoxInfo, setRfqpopBoxInfo] = useState(null);
 
   const prevPage = () => {
     if (currentPage === 1) {
       return;
     }
-    setCurrentPage((prev) => prev - 1);
+    dispatch(setCurrentPagePrev());
   };
 
   const nextPage = () => {
     if (currentPage === Math.ceil(tableData.length / itemsPerPage)) {
       return;
     }
-    setCurrentPage((prev) => prev + 1);
+    dispatch(setCurrentPageNext());
   };
 
   const now = new Date();
@@ -46,27 +56,27 @@ const RfqTable = () => {
 
   const handleShowPopupRfq = (event, { id }) => {
     event.stopPropagation(); // Prevent the event from propagating to the row click event
-    setTogglePopUp((prev) => !prev);
-    setRfqpopBoxInfo(currentItems.filter((item) => item.id === id));
+    dispatch(setTogglePopUp());
+    dispatch(setRfqPopBoxInfo(currentItems.filter((item) => item.id === id)));
   };
 
   const handleCheckboxClick = (event, id) => {
     event.stopPropagation(); // Prevent the event from propagating to the row click event
     if (event.target.checked) {
       const mails = currentItems.filter((m) => m.id === id);
-      setRfqMail((prev) => [...prev, ...mails]);
+      dispatch(setRfqMail([...rfqMail, ...mails]));
     } else {
-      setRfqMail((prev) => prev.filter((e) => e.id !== id));
+      dispatch(setRfqMail(rfqMail.filter((e) => e.id !== id)));
     }
   };
 
   const handleCheckboxClickAll = (event) => {
     event.stopPropagation(); // Prevent the event from propagating to the row click event
-    setRfqMailCheckAll(event.target.checked);
+    dispatch(setRfqMailCheckAll(event.target.checked));
     if (event.target.checked) {
-      setRfqMail(currentItems);
+      dispatch(setRfqMail(currentItems));
     } else {
-      setRfqMail([]);
+      dispatch(setRfqMail([]));
     }
   };
 
@@ -128,7 +138,7 @@ const RfqTable = () => {
                           }
                         />
                         <p>(0|1)</p>
-                        <AiFillMail />
+                        {!e.read ? <IoMail /> : <IoMailOpen />}
                       </td>
                       <td>{e.quantity}</td>
                       <td>{e.model}</td>
@@ -186,12 +196,7 @@ const RfqTable = () => {
           </div>
         </div>
       </div>
-      {togglePopUp && (
-        <RfqTablePopUp
-          setTogglePopUp={setTogglePopUp}
-          rfqPopBoxInfo={rfqPopBoxInfo}
-        />
-      )}
+      {togglePopUp && <RfqTablePopUp />}
     </>
   );
 };

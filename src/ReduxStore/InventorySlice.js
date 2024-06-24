@@ -89,7 +89,7 @@ const initialState = {
   addAnotherFiles: [{ file: null, status: "Stock" }],
 };
 
-export const InventorySlice = createSlice({
+const InventorySlice = createSlice({
   name: "inventoryStore",
   initialState,
   reducers: {
