@@ -12,29 +12,30 @@ const AddAnotherFile = () => {
 
   const handleFileChange = (e, index) => {
     const file = e.target.files[0];
+
+    const fileSupported = ["xlsx", "csv", "xls"];
+
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const base64String = e.target.result
-          .replace("data:", "")
-          .replace(/^.+,/, "");
-        const updatedFiles = addAnotherFiles.map((item, i) => {
-          if (index === i) {
-            return { ...item, file: base64String };
-          }
-          return item;
-        });
-        dispatch(setAddAnotherFiles(updatedFiles));
-      };
-      reader.readAsDataURL(file);
-    } else {
-      const updatedFiles = addAnotherFiles.map((item, i) => {
-        if (index === i) {
-          return { ...item, file: null };
-        }
-        return item;
-      });
-      dispatch(setAddAnotherFiles(updatedFiles));
+      if (fileSupported.includes(file.name.split(".").pop().toLowerCase())) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const base64String = e.target.result
+            .replace("data:", "")
+            .replace(/^.+,/, "");
+          const updatedFiles = addAnotherFiles.map((item, i) => {
+            if (index === i) {
+              return { ...item, file: base64String };
+            }
+            return item;
+          });
+          dispatch(setAddAnotherFiles(updatedFiles));
+        };
+        reader.readAsDataURL(file);
+      } else {
+        e.target.value = "";
+        alert("Format should be only .xlsx or .csv");
+        return;
+      }
     }
   };
 

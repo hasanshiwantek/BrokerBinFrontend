@@ -3,13 +3,13 @@ import css from "../../../../styles/Menu/Manage/Inventory/Inventory.module.css";
 import AddAnotherFile from "./AddAnotherFile";
 import ScheduleNewUpload from "./ScheduleNewUpload";
 import InventoryButtons from "./InventoryButtons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { sendInventoryFile } from "../../../../ReduxStore/InventorySlice";
 
 const Inventory = () => {
-  const addAnotherFiles = useSelector(
-    (state) => state.inventoryStore.addAnotherFiles
-  );
-  // const [inventoryFile, setInventoryFile] = useState([]);
+  const { addAnotherFiles } = useSelector((state) => state.inventoryStore);
+  const { token } = useSelector((state) => state.profileStore);
+  const dispatch = useDispatch();
 
   const submitInventoryBtn = (e) => {
     e.preventDefault();
@@ -18,7 +18,8 @@ const Inventory = () => {
     const filteredInventoryFile = addAnotherFiles.filter(
       (e, i) => e.file !== null
     );
-    formDataObject.inventoryFile = filteredInventoryFile;
+    formDataObject.uploadFile = filteredInventoryFile;
+    dispatch(sendInventoryFile({ token, formDataObject }));
     console.log(formDataObject);
   };
 

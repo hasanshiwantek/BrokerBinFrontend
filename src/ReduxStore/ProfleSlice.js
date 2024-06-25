@@ -5,18 +5,23 @@ import Cookies from "js-cookie";
 export const fetchUserData = createAsyncThunk(
   "profileStore/fetchUserData",
   async ({ id, token }) => {
-    console.log(id, token);
-    const response = await axios.get(
-      `https://brokerbinbackend.advertsedge.com/api/user/fetch/${id}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    console.log(response.data.data);
-    return response.data.data;
+    try {
+      const response = await axios.get(
+        `https://brokerbinbackend.advertsedge.com/api/user/fetc/${id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data.data;
+    } catch (error) {
+      console.error(
+        "Error while fetching user data:",
+        error.response?.data || error.message
+      );
+    }
   }
 );
 
@@ -126,7 +131,7 @@ const profileSlice = createSlice({
         };
       })
       .addCase(submitUserData.rejected, (state, action) => {
-        // state.error = action.error.message;
+        state.error = action.error.message;
         state.blurWhileLoading = false;
       });
   },

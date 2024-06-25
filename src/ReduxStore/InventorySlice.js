@@ -1,4 +1,30 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+
+export const sendInventoryFile = createAsyncThunk(
+  "inventoryStore/sendInventoryFile",
+  async ({ token, formDataObject }) => {
+    try {
+      const response = await axios.post(
+        "https://brokerbinbackend.advertsedge.com/api/inventory/upload",
+        formDataObject,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error uploading inventory file:",
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  }
+);
 
 const initialState = {
   // Add inventory data
@@ -101,6 +127,18 @@ const InventorySlice = createSlice({
       // state.addAnotherFiles.push(action.payload);
       state.addAnotherFiles = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(sendInventoryFile.pending, (state) => {
+        console.log("sending");
+      })
+      .addCase(sendInventoryFile.fulfilled, (state, action) => {
+        console.log(action.payload);
+      })
+      .addCase(sendInventoryFile.rejected, (state, action) => {
+        console.log(action.error.message);
+      });
   },
 });
 

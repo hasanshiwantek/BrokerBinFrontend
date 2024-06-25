@@ -167,7 +167,6 @@ const MyProfile = () => {
     });
 
     console.log(data);
-
     dispatch(setFormData(data));
     dispatch(submitUserData({ id, token, data }));
   };
