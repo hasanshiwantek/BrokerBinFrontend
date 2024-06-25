@@ -7,7 +7,7 @@ export const fetchUserData = createAsyncThunk(
   async ({ id, token }) => {
     try {
       const response = await axios.get(
-        `https://brokerbinbackend.advertsedge.com/api/user/fetc/${id}`,
+        `https://brokerbinbackend.advertsedge.com/api/user/fetch/${id}`,
         {
           headers: {
             "Content-Type": "application/json",
