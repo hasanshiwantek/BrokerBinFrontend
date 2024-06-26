@@ -3,13 +3,16 @@ import css from "../styles/Filter.module.css";
 import { counts, partVariance, searchHistory } from "../data/tableData";
 import { BsToggleOn } from "react-icons/bs";
 import { FaWindowClose } from "react-icons/fa";
+import { setFilterToggle } from "../ReduxStore/SearchProductSlice";
+import { useDispatch } from "react-redux";
 
-const Filter = ({ handleFilterToggle }) => {
+const Filter = () => {
+  const dispatch = useDispatch();
   return (
     <div className={css.filterSection}>
       <div id={css.advancedFilters}>
         <div>
-          <button type="button" onClick={handleFilterToggle}>
+          <button type="button" onClick={() => dispatch(setFilterToggle())}>
             advanced filters
             <FaWindowClose />
           </button>

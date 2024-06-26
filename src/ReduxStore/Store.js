@@ -3,6 +3,7 @@ import inventoryReducer from "./InventorySlice";
 import profileReducer from "./ProfleSlice";
 import homeReducer from "./HomeSlice";
 import rfqReducer from "./RfqSlice";
+import searchProductReducer from "./SearchProductSlice";
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     profileStore: profileReducer,
     homeStore: homeReducer,
     rfqStore: rfqReducer,
+    searchProductStore: searchProductReducer,
   },
 });
 

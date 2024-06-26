@@ -16,18 +16,22 @@ import { AiFillCloseSquare } from "react-icons/ai";
 import { IoPersonAdd, IoPersonRemove } from "react-icons/io5";
 import { BsStarFill } from "react-icons/bs";
 import { useEffect } from "react";
+import { setTogglePopUp } from "../../../ReduxStore/SearchProductSlice";
+import { useDispatch } from "react-redux";
 
-const CompanyDetails = ({ setTogglePopUp }) => {
+const CompanyDetails = () => {
+  const dispatch = useDispatch();
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       const popupInfo = document.querySelector(`.${css.Popup_Info}`);
       if (popupInfo && !popupInfo.contains(event.target)) {
-        setTogglePopUp((prev) => !prev);
+        dispatch(setTogglePopUp());
       }
     };
     const escKeyToggle = (event) => {
       if (event.key === "Escape") {
-        setTogglePopUp((prev) => !prev);
+        dispatch(setTogglePopUp());
       }
     };
 
@@ -53,7 +57,7 @@ const CompanyDetails = ({ setTogglePopUp }) => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setTogglePopUp((prev) => !prev)}
+                  onClick={() => dispatch(setTogglePopUp())}
                 >
                   <AiFillCloseSquare />
                 </button>

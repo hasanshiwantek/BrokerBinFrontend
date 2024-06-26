@@ -16,7 +16,7 @@ const ProductTableBtn = ({setGraphToggle,setFilterToggle}) => {
       {popUpRfq && <MyRFQNew setPopUpRfq={setPopUpRfq} />}
       <button
         type="button"
-        // onClick={() => setGraphToggle((prev) => !prev)}
+        onClick={() => setGraphToggle((prev) => !prev)}
       >
         Add
       </button>

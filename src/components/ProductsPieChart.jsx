@@ -3,11 +3,14 @@ import css from "../styles/ProductsPieChart.module.css";
 import { PieChart, Pie, Tooltip } from "recharts";
 import { breakdown } from "../data/tableData";
 import { FaWindowClose } from "react-icons/fa";
+import { setGraphToggle } from "../ReduxStore/SearchProductSlice";
+import { useDispatch } from "react-redux";
 
-const ProductsPieChart = ({ setGraphToggle }) => {
+const ProductsPieChart = () => {
   const renderCustomizedLabel = ({ name }) => {
     return name;
   };
+  const dispatch = useDispatch();
 
   return (
     <div className={css.pieChartBg}>
@@ -16,7 +19,7 @@ const ProductsPieChart = ({ setGraphToggle }) => {
       <button
         type="button"
         className={css.closeGraph}
-        onClick={() => setGraphToggle((prev) => !prev)}
+        onClick={() => dispatch(setGraphToggle())}
       >
         <p>Graph</p>
         <FaWindowClose />

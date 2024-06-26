@@ -1,9 +1,11 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import css from "../../styles/Menu/Manage/MyRFQNew.module.css";
 import AddCircle from "../../svgs/AddCircle";
 import Attach from "../../svgs/Attach";
 import { MdRemoveCircle } from "react-icons/md";
 import TextEditor from "../TextEditor";
+import { setPopUpRfq } from "../../ReduxStore/SearchProductSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const AddParts = ({ part, onUpdate, onRemove }) => {
   const handleRemove = (event) => {
@@ -63,7 +65,9 @@ const AddParts = ({ part, onUpdate, onRemove }) => {
   );
 };
 
-const MyRFQNew = ({ setPopUpRfq, selectedProducts }) => {
+const MyRFQNew = () => {
+  const { selectedProducts } = useSelector((store) => store.searchProductStore);
+  const dispatch = useDispatch();
   const [total, received, sent] = [110, 90, 0];
   const [comment, setComment] = useState(""); // State to hold the value of the text editor
 
@@ -136,13 +140,13 @@ const MyRFQNew = ({ setPopUpRfq, selectedProducts }) => {
     const handleClickOutside = (event) => {
       const rfqNew = document.querySelector(`.${css.rfqNew}`);
       if (rfqNew && !rfqNew.contains(event.target)) {
-        setPopUpRfq((prev) => !prev);
+        dispatch(setPopUpRfq());
       }
     };
 
     const escKeyToggle = (event) => {
       if (event.key === "Escape") {
-        setPopUpRfq((prev) => !prev);
+        dispatch(setPopUpRfq());
       }
     };
 
@@ -175,7 +179,7 @@ const MyRFQNew = ({ setPopUpRfq, selectedProducts }) => {
       ? (data.partialOrderQuotesAccepted = 1)
       : (data.partialOrderQuotesAccepted = 0);
     console.log(data);
-    data.bcc = selectedProductsBCC.map((item) => item.contact)
+    data.bcc = selectedProductsBCC.map((item) => item.contact);
   };
 
   return (
@@ -184,10 +188,7 @@ const MyRFQNew = ({ setPopUpRfq, selectedProducts }) => {
         <form action="" method="post" onSubmit={submitHandle}>
           <div className={css.rfqNew}>
             <div className={css.rfqBody_closeBtn}>
-              <button
-                type="button"
-                onClick={() => setPopUpRfq((prev) => !prev)}
-              >
+              <button type="button" onClick={() => dispatch(setPopUpRfq())}>
                 close
               </button>
             </div>
@@ -225,7 +226,6 @@ const MyRFQNew = ({ setPopUpRfq, selectedProducts }) => {
                             <span
                               key={item.id}
                               onClick={(e) => removeBCC(e, item.id)}
-                              
                             >
                               <MdRemoveCircle />
                               <strong>{item.contact}</strong>
