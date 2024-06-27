@@ -10,16 +10,20 @@ import {
   setBlurWhileLoading,
   submitUserData,
 } from "../../../ReduxStore/ProfleSlice";
+import ErrorStatus from "../../Error/ErrorStatus";
+import Cookies from "js-cookie";
 
 const MyProfile = () => {
+  const token = Cookies.get("token");
+  const user_id = Cookies.get("user_id");
+
   const {
-    token,
-    user_id,
     user,
     formData,
     initialData,
     blurWhileLoading,
     customSignature,
+    error,
   } = useSelector((state) => state.profileStore);
 
   const id = user?.user?.id || user_id;
@@ -202,6 +206,14 @@ const MyProfile = () => {
       })
     );
   };
+
+  if (error) {
+    return (
+      <>
+        <ErrorStatus error={error} />
+      </>
+    );
+  }
 
   return (
     <>

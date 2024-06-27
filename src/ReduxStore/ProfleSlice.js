@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import Cookies from "js-cookie";
 
 export const fetchUserData = createAsyncThunk(
   "profileStore/fetchUserData",
@@ -21,6 +20,7 @@ export const fetchUserData = createAsyncThunk(
         "Error while fetching user data:",
         error.response?.data || error.message
       );
+      throw "Error while fetching user data:" || error;
     }
   }
 );
@@ -28,24 +28,30 @@ export const fetchUserData = createAsyncThunk(
 export const submitUserData = createAsyncThunk(
   "profileStore/submitUserData",
   async ({ id, token, data }) => {
-    const response = await axios.put(
-      `https://brokerbinbackend.advertsedge.com/api/user/edit/${id}`,
-      JSON.stringify(data),
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    return response.data.data;
+    try {
+      const response = await axios.put(
+        `https://brokerbinbackend.advertsedge.com/api/user/edits/${id}`,
+        JSON.stringify(data),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data.data;
+    } catch (error) {
+      console.error(
+        "Error while submitting user data:",
+        error.response?.data || error.message
+      );
+      throw "Error while submitting user data:" || error;
+    }
   }
 );
 
 const initialState = {
   user: JSON.parse(localStorage.getItem("user")),
-  token: Cookies.get("token"),
-  user_id: Cookies.get("user_id"),
   formData: {
     firstName: "",
     lastName: "",
@@ -108,29 +114,30 @@ const profileSlice = createSlice({
         state.blurWhileLoading = false;
       })
       .addCase(fetchUserData.fulfilled, (state, action) => {
+        state.blurWhileLoading = true;
         state.initialData = action.payload;
         state.formData = {
           ...state.formData,
           ...action.payload,
         };
-        state.blurWhileLoading = true;
       })
       .addCase(fetchUserData.rejected, (state, action) => {
+        state.blurWhileLoading = true;
         state.error = action.error.message;
-        state.blurWhileLoading = false;
       })
       .addCase(submitUserData.pending, (state) => {
         state.blurWhileLoading = false;
       })
       .addCase(submitUserData.fulfilled, (state, action) => {
-        state.blurWhileLoading = true;
         state.initialData = action.payload;
         state.formData = {
           ...state.formData,
           ...action.payload,
         };
+        state.blurWhileLoading = true;
       })
       .addCase(submitUserData.rejected, (state, action) => {
+        console.log(action.error.message);
         state.error = action.error.message;
         state.blurWhileLoading = false;
       });

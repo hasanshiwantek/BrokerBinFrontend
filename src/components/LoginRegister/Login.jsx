@@ -4,6 +4,7 @@ import css from "../../styles/LoginRegister/Login.module.css";
 import { FaFacebookF, FaGooglePlusG, FaEye, FaEyeSlash } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import Cookies from "js-cookie";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
   const [passwordShown, setPasswordShown] = useState(false);
@@ -11,6 +12,7 @@ const Login = () => {
   const [forgotPassword, setForgotPassword] = useState(false);
   const navigate = useNavigate();
   const popUpRef = useRef();
+  const dispatch = useDispatch();
 
   const togglePasswordVisibility = () => {
     setPasswordShown(!passwordShown);
@@ -21,9 +23,6 @@ const Login = () => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
-    // console.log(data);
-    // console.log(JSON.stringify(data));
-
     try {
       const response = await fetch(
         "https://brokerbinbackend.advertsedge.com/api/user/login",
@@ -40,23 +39,12 @@ const Login = () => {
 
       const result = await response.json();
       if (response.ok) {
-        // console.log("Login successful", result);
         const user = result.data;
-        console.log(user);
         const { access_token } = result.data;
         const { id } = result.data.user;
-        console.log(id);
-        // console.log(result.data.user.firstName, result.data.user.lastName);
-        // console.log(result.data.access_token);
 
-        // Store the token in local storage
-        // Use the JavaScript function JSON.stringify() to convert it into a string.
-        // localStorage.setItem("token", JSON.stringify(token));
         Cookies.set("token", access_token, { expires: 1, secure: true });
-        // Cookies.set("token", "kaif abbas", { expires: 1 / 24, secure: true });
         Cookies.set("user_id", id, { expires: 1, secure: true });
-        // Cookies.set('token', access_token, { expires: 1 / 1440 }); // There are 1440 minutes in a day
-        // Cookies.set("token", access_token, { expires: 1 });
         localStorage.setItem("user", JSON.stringify(user));
 
         // Redirect the user to another page (e.g., dashboard)
@@ -69,17 +57,15 @@ const Login = () => {
       console.error("Error during login", error);
       setErrorMessage("An error occurred, please try again later.");
     }
-
-    // e.target.reset();
   };
 
   // useEffect(() => {
-  const handleClick = (e) => {
-    if (popUpRef.current && !popUpRef.current.contains(e.target)) {
-      setForgotPassword((prev) => !prev);
-    }
-  };
-  document.addEventListener("click", handleClick);
+  // const handleClick = (e) => {
+  //   if (popUpRef.current && !popUpRef.current.contains(e.target)) {
+  //     setForgotPassword((prev) => !prev);
+  //   }
+  // };
+  // document.addEventListener("click", handleClick);
 
   //   return () => {
   //     document.removeEventListener("click", handleClick);
@@ -148,7 +134,13 @@ const Login = () => {
               {errorMessage}
             </p>
           )}
+          {/* {!whileLogin ? ( */}
           <button type="submit">Sign in</button>
+          {/* ) : ( */}
+          {/* <button type="submit" disabled style={{ background: "red" }}> */}
+          {/* Sign in */}
+          {/* </button> */}
+          {/* )} */}
         </form>
         <div className={css.loginContainer_bottom}>
           <span className={css.loginContainer_bottom_creatAnAccount}>

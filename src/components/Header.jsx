@@ -37,6 +37,7 @@ const Header = () => {
   const handleLogout = () => {
     localStorage.removeItem("user"); // Remove the token from local storage
     Cookies.remove("token");
+    Cookies.remove("user_id");
     navigate("/login", { replace: true }); // Redirect to the login page and replace the history
   };
 

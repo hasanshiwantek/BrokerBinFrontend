@@ -5,9 +5,12 @@ import ScheduleNewUpload from "./ScheduleNewUpload";
 import InventoryButtons from "./InventoryButtons";
 import { useDispatch, useSelector } from "react-redux";
 import { sendInventoryFile } from "../../../../ReduxStore/InventorySlice";
+import ErrorStatus from "../../../Error/ErrorStatus";
 
 const Inventory = () => {
-  const { addAnotherFiles } = useSelector((state) => state.inventoryStore);
+  const { addAnotherFiles, error } = useSelector(
+    (state) => state.inventoryStore
+  );
   const { token } = useSelector((state) => state.profileStore);
   const dispatch = useDispatch();
 
@@ -19,9 +22,17 @@ const Inventory = () => {
       (e, i) => e.file !== null
     );
     formDataObject.uploadFile = filteredInventoryFile;
-    dispatch(sendInventoryFile({ token, formDataObject }));
-    console.log(formDataObject);
+    if (formDataObject.uploadFile.length > 0) {
+      dispatch(sendInventoryFile({ token, formDataObject }));
+    } else {
+      alert("Please fill all required fields");
+      return; // stop the function execution and return early if the form is not valid.
+    }
   };
+
+  if (error) {
+    return <ErrorStatus error={error} />;
+  }
 
   return (
     <>

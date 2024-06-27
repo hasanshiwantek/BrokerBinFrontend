@@ -21,7 +21,7 @@ export const sendInventoryFile = createAsyncThunk(
         "Error uploading inventory file:",
         error.response?.data || error.message
       );
-      throw error;
+      throw "Error uploading inventory file:" || error;
     }
   }
 );
@@ -113,6 +113,7 @@ const initialState = {
 
   // another file button
   addAnotherFiles: [{ file: null, status: "Stock" }],
+  error: null,
 };
 
 const InventorySlice = createSlice({
@@ -138,6 +139,7 @@ const InventorySlice = createSlice({
       })
       .addCase(sendInventoryFile.rejected, (state, action) => {
         console.log(action.error.message);
+        state.error = action.error.message;
       });
   },
 });

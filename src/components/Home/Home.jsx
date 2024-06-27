@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import css from "../../styles/Home/Home.module.css";
 import person from "../../imgs/logo/shadow.png";
 import spares from "../../imgs/logo/spares.png";
@@ -7,12 +7,17 @@ import { BsStarFill } from "react-icons/bs";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import ToggleStats from "./ToggleStats";
 import HoverPieChart from "./HoverPieChart";
-import LoadingState2 from "../../LoadingState2";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserData } from "../../ReduxStore/ProfleSlice";
+import LoadingState from "../../LoadingState";
+import ErrorStatus from "../Error/ErrorStatus";
+import Cookies from "js-cookie";
 
 const Home = () => {
-  const { blurWhileLoading, initialData, token, user_id, user } = useSelector(
+  const token = Cookies.get("token");
+  const user_id = Cookies.get("user_id");
+
+  const { blurWhileLoading, initialData, user, error } = useSelector(
     (state) => state.profileStore
   );
 
@@ -21,7 +26,8 @@ const Home = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchUserData({ token, id }));
+    console.log(id);
+    dispatch(fetchUserData({ id, token }));
   }, []);
 
   const bomFileRef = useRef(null);
@@ -33,10 +39,15 @@ const Home = () => {
     bomFileRef.current.click();
   };
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  if (error) {
+    return <ErrorStatus error={error} />;
+  }
+
   return (
     <>
       {!blurWhileLoading ? (
-        <LoadingState2 />
+        <LoadingState />
       ) : (
         <div className={css.gridHome}>
           <div className={css.gridHome1}>
