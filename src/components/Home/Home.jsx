@@ -12,10 +12,14 @@ import { fetchUserData } from "../../ReduxStore/ProfleSlice";
 import LoadingState from "../../LoadingState";
 import ErrorStatus from "../Error/ErrorStatus";
 import Cookies from "js-cookie";
+import { searchProductQuery } from "../../ReduxStore/SearchProductSlice";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const token = Cookies.get("token");
   const user_id = Cookies.get("user_id");
+
+  const navigate = useNavigate();
 
   const { blurWhileLoading, initialData, user, error } = useSelector(
     (state) => state.profileStore
@@ -43,6 +47,21 @@ const Home = () => {
   if (error) {
     return <ErrorStatus error={error} />;
   }
+
+  const searchProduct = (event) => {
+    event.preventDefault();
+
+    const form = new FormData(event.target);
+    const formData = Object.fromEntries(form.entries());
+
+    // split by " " and turn into array of string.
+    formData.searchStrings = formData.searchStrings.split(" ");
+    const data = formData;
+    // console.log(data);
+    dispatch(
+      searchProductQuery({ data, token, callback: () => navigate("/search") })
+    );
+  };
 
   return (
     <>
@@ -244,37 +263,46 @@ const Home = () => {
                 {/* <div className={css.gridHome2_Details_Upper_Ad}></div> */}
                 <div className={css.gridHome2_Details_Upper_Right}>
                   <div className={css.gridHome2_Details_Upper_Right_PartSearch}>
-                    <h1>Parts Search</h1>
-                    <textarea
-                      name="parts"
-                      id="dashboard-searchbox"
-                      cols="30"
-                      rows="10"
-                      placeholder="(List multiple search strings separated by returns for the same search category)"
-                      style={{ height: "10rem" }}
-                    ></textarea>
-                    <div>
-                      <button
-                        type="button"
-                        id={css.gridHome2_Details_Upper_Right_PartSearch_btn}
-                      >
-                        submit
-                      </button>
+                    <form method="post" onSubmit={searchProduct}>
+                      <h1>Parts Search</h1>
+                      <textarea
+                        name="searchStrings"
+                        id="dashboard-searchbox"
+                        cols="30"
+                        rows="10"
+                        placeholder="(List multiple search strings separated by returns for the same search category)"
+                        style={{ height: "10rem" }}
+                      ></textarea>
                       <div>
-                        <label>
-                          part#
-                          <input type="radio" name="clm" value="partclei" />
-                        </label>
-                        <label>
-                          HECI / CLEI
-                          <input type="radio" name="clm" value="partclei" />
-                        </label>
-                        <label>
-                          keyword
-                          <input type="radio" name="clm" value="partclei" />
-                        </label>
+                        <input
+                          id={css.gridHome2_Details_Upper_Right_PartSearch_btn}
+                          type="submit"
+                          value="submit"
+                        />
+                        <div>
+                          <label>
+                            part#
+                            <input type="radio" name="searchBy" value="part" />
+                          </label>
+                          <label>
+                            HECI / CLEI
+                            <input
+                              type="radio"
+                              name="searchBy"
+                              value="heciClei"
+                            />
+                          </label>
+                          <label>
+                            keyword
+                            <input
+                              type="radio"
+                              name="searchBy"
+                              value="keyword"
+                            />
+                          </label>
+                        </div>
                       </div>
-                    </div>
+                    </form>
                   </div>
                   <div className={css.gridHome2_Details_Upper_Right_Bom}>
                     <div>

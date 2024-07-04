@@ -24,7 +24,7 @@ const AddParts = ({ part, onUpdate, onRemove }) => {
       <div>
         <input
           type="text"
-          value={part.model}
+          value={part.partModel}
           onChange={(e) => handleInputChange("partNumber", e.target.value)}
         />
         <input
@@ -88,17 +88,18 @@ const MyRFQNew = () => {
   const filterUniqueModels = (data) => {
     const uniqueModels = new Set();
     return data.filter((item) => {
-      if (uniqueModels.has(item.model)) {
+      if (uniqueModels.has(item.partModel)) {
         return false;
       } else {
-        uniqueModels.add(item.model);
+        uniqueModels.add(item.partModel);
         return true;
       }
     });
   };
-  // console.log(filterUniqueModels);
-
+  
+  // filtered Unique models because we don't want to send RFQ with same model numbers.
   const filteredData = filterUniqueModels(selectedProducts);
+  console.log(filteredData);
 
   const [parts, setParts] = useState(filteredData);
   const [selectedProductsBCC, setSelectedProductsBCC] =
@@ -178,8 +179,8 @@ const MyRFQNew = () => {
     data.partialOrderQuotesAccepted == "on"
       ? (data.partialOrderQuotesAccepted = 1)
       : (data.partialOrderQuotesAccepted = 0);
+    data.bcc = selectedProductsBCC.map((item) => item.mfg);
     console.log(data);
-    data.bcc = selectedProductsBCC.map((item) => item.contact);
   };
 
   return (
@@ -228,7 +229,7 @@ const MyRFQNew = () => {
                               onClick={(e) => removeBCC(e, item.id)}
                             >
                               <MdRemoveCircle />
-                              <strong>{item.contact}</strong>
+                              <strong>{item.mfg}</strong>
                             </span>
                           );
                         })}

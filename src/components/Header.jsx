@@ -25,11 +25,20 @@ import {
   setDropdownOpen,
   setToolToggle,
 } from "../ReduxStore/HomeSlice";
+import { searchProductQuery } from "../ReduxStore/SearchProductSlice";
+import { Link } from "react-router-dom";
 
 const Header = () => {
+  const token = Cookies.get("token");
+
   const { mobileNavToggle, dropdownOpen, toolToggle } = useSelector(
     (state) => state.homeStore
   );
+
+  const { waitSearchResponse } = useSelector(
+    (state) => state.searchProductStore
+  );
+
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
@@ -60,26 +69,43 @@ const Header = () => {
   //   };
   // }, [setMobileNavToggle]);
 
+  const searchProduct = (event) => {
+    event.preventDefault();
+
+    const form = new FormData(event.target);
+    const formData = Object.fromEntries(form.entries());
+
+    // split by " " and turn into array of string.
+    formData.searchStrings = formData.searchStrings.split(" ");
+    const data = formData;
+
+    dispatch(
+      searchProductQuery({ data, token, callback: () => navigate("/search") })
+    );
+  };
+
   return (
     <>
       <div className={`${css.headerFixed} ${css.noPrint}`}>
         <header className={css.header}>
-          <a href="/" id={css.logo}>
+          <Link to={"/"} id={css.logo}>
             <img src={logo} alt="logo" />
-          </a>
+          </Link>
           <div className={css.search_container}>
-            <input
-              type="search"
-              name="search"
-              id={css.search}
-              placeholder="What are you looking for?"
-            />
-            <button type="button" className={css.search_btn}>
-              search
-            </button>
-            <button type="button" className={css.search_btn}>
-              keyword
-            </button>
+            <form method="post" onSubmit={searchProduct}>
+              <input
+                type="search"
+                name="searchStrings"
+                id={css.search}
+                placeholder="What are you looking for?"
+              />
+              {/* <button type="button" className={css.search_btn}> */}
+              <input type="submit" value="search" className={css.search_btn} />
+              {/* </button> */}
+              <button type="button" className={css.search_btn}>
+                keyword
+              </button>
+            </form>
           </div>
         </header>
         <nav className={css.nav}>
@@ -105,7 +131,7 @@ const Header = () => {
             </li> */}
                       <li>
                         <div onClick={() => handleDropdownToggle("main")}>
-                          <a>main</a>
+                          <Link>main</Link>
                           {dropdownOpen.main ? (
                             <BiSolidUpArrow />
                           ) : (
@@ -115,31 +141,31 @@ const Header = () => {
                         {dropdownOpen.main && (
                           <div className={css.nav_Mobile_links_ul}>
                             <ul>
-                              <a href="/">
+                              <Link to={"/"}>
                                 <li>Home</li>
-                              </a>
-                              <a href="#">
+                              </Link>
+                              <Link>
                                 <li>help</li>
-                              </a>
-                              <a href="#">
+                              </Link>
+                              <Link>
                                 <li>contact</li>
-                              </a>
-                              <a href="#">
+                              </Link>
+                              <Link>
                                 <li>ethics</li>
-                              </a>
-                              <a href="#">
+                              </Link>
+                              <Link>
                                 <li>site map</li>
-                              </a>
-                              <a href="#">
+                              </Link>
+                              <Link>
                                 <li>badges</li>
-                              </a>
+                              </Link>
                             </ul>
                           </div>
                         )}
                       </li>
                       <li>
                         <div onClick={() => handleDropdownToggle("search")}>
-                          <a>search</a>
+                          <Link>search</Link>
                           {dropdownOpen.main ? (
                             <BiSolidUpArrow />
                           ) : (
@@ -149,39 +175,39 @@ const Header = () => {
                         {dropdownOpen.search && (
                           <div className={css.nav_Mobile_links_ul}>
                             <ul>
-                              <a href="/advanced">
+                              <Link to={"/advanced"}>
                                 <li>inventory</li>
-                              </a>
-                              <a href="#">
+                              </Link>
+                              <Link>
                                 <li>services</li>
-                              </a>
+                              </Link>
 
-                              <a href="#">
+                              <Link>
                                 <li>company</li>
-                              </a>
+                              </Link>
 
-                              <a href="#">
+                              <Link>
                                 <li>person</li>
-                              </a>
+                              </Link>
 
-                              <a href="#">
+                              <Link>
                                 <li>techSpecs</li>
-                              </a>
+                              </Link>
 
-                              <a href="#">
+                              <Link>
                                 <li>nsn</li>
-                              </a>
+                              </Link>
 
-                              <a href="#">
+                              <Link>
                                 <li>alt</li>
-                              </a>
+                              </Link>
                             </ul>
                           </div>
                         )}
                       </li>
                       <li>
                         <div onClick={() => handleDropdownToggle("manage")}>
-                          <a>manage</a>
+                          <Link>manage</Link>
                           {dropdownOpen.main ? (
                             <BiSolidUpArrow />
                           ) : (
@@ -191,30 +217,30 @@ const Header = () => {
                         {dropdownOpen.manage && (
                           <div className={css.nav_Mobile_links_ul}>
                             <ul>
-                              <a href="/inventory">
+                              <Link to={"/inventory"}>
                                 <li>Inventory</li>
-                              </a>
-                              <a href="rfq">
+                              </Link>
+                              <Link to={"/rfq"}>
                                 <li>My RFQs</li>
-                              </a>
-                              <a href="#">
+                              </Link>
+                              <Link>
                                 <li>My Contacts</li>
-                              </a>
-                              <a href="#">
+                              </Link>
+                              <Link>
                                 <li>My BOM</li>
-                              </a>
-                              <a href="/myprofile">
+                              </Link>
+                              <Link to={"/myprofile"}>
                                 <li>My Profile</li>
-                              </a>
-                              <a href="#">
+                              </Link>
+                              <Link>
                                 <li>My Company</li>
-                              </a>
-                              <a href="#">
+                              </Link>
+                              <Link>
                                 <li>My Services</li>
-                              </a>
-                              <a href="/venprice">
+                              </Link>
+                              <Link to={"/venprice"}>
                                 <li>Vendor Pricing</li>
-                              </a>
+                              </Link>
                             </ul>
                           </div>
                         )}
@@ -234,29 +260,29 @@ const Header = () => {
               <BiSolidUpArrow className={css.onHoverMenuIconUp} />
             </li>
             <li>
-              <a href="/">main</a>
+              <Link>main</Link>
               <BiSolidDownArrow className={css.onHoverMenuIconDown} />
               <BiSolidUpArrow className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
                 <ul>
-                  <li>
-                    <a href="/">Home</a>
-                  </li>
-                  <li>
-                    <a href="#">help</a>
-                  </li>
-                  <li>
-                    <a href="#">contact</a>
-                  </li>
-                  <li>
-                    <a href="#">ethics</a>
-                  </li>
-                  <li>
-                    <a href="#">site map</a>
-                  </li>
-                  <li>
-                    <a href="#">badges</a>
-                  </li>
+                  <Link to={"/"}>
+                    <li>Home</li>
+                  </Link>
+                  <Link>
+                    <li>help</li>
+                  </Link>
+                  <Link>
+                    <li>contact</li>
+                  </Link>
+                  <Link>
+                    <li>ethics</li>
+                  </Link>
+                  <Link>
+                    <li>site map</li>
+                  </Link>
+                  <Link>
+                    <li>badges</li>
+                  </Link>
                 </ul>
               </div>
             </li>
@@ -267,86 +293,86 @@ const Header = () => {
               <div className={css.dropdownMenu}>
                 <ul>
                   <li>
-                    <a href="#">Tools</a>
+                    <Link>Tools</a>
                   </li>
                   <li>
-                    <a href="#">My Vendors</a>
+                    <Link>My Vendors</a>
                   </li>
                   <li>
-                    <a href="#">My Contacts</a>
+                    <Link>My Contacts</a>
                   </li>
                   <li>
-                    <a href="#">Hot List</a>
+                    <Link>Hot List</a>
                   </li>
                   <li>
-                    <a href="#">Partners</a>
+                    <Link>Partners</a>
                   </li>
                   <li>
-                    <a href="#">Events</a>
+                    <Link>Events</a>
                   </li>
                 </ul>
               </div>
             </li> */}
             <li>
-              <a href="/search">search</a>
+              <Link>search</Link>
               <BiSolidDownArrow className={css.onHoverMenuIconDown} />
               <BiSolidUpArrow className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
                 <ul>
-                  <li>
-                    <a href="/advanced">inventory</a>
-                  </li>
-                  <li>
-                    <a href="#">services</a>
-                  </li>
-                  <li>
-                    <a href="#">company</a>
-                  </li>
-                  <li>
-                    <a href="#">person</a>
-                  </li>
-                  <li>
-                    <a href="#">techSpecs</a>
-                  </li>
-                  <li>
-                    <a href="#">nsn</a>
-                  </li>
-                  <li>
-                    <a href="#">alt#</a>
-                  </li>
+                  <Link to="/inventory">
+                    <li>inventory</li>
+                  </Link>
+                  <Link>
+                    <li>services</li>
+                  </Link>
+                  <Link>
+                    <li>company</li>
+                  </Link>
+                  <Link>
+                    <li>person</li>
+                  </Link>
+                  <Link>
+                    <li>techSpecs</li>
+                  </Link>
+                  <Link>
+                    <li>nsn</li>
+                  </Link>
+                  <Link>
+                    <li>alt#</li>
+                  </Link>
                 </ul>
               </div>
             </li>
             <li>
-              <a href="/">manage</a>
+              <Link>manage</Link>
               <BiSolidDownArrow className={css.onHoverMenuIconDown} />
               <BiSolidUpArrow className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
                 <ul>
-                  <li>
-                    <a href="/inventory">Inventory</a>
-                  </li>
-                  <li>
-                    <a href="rfq">My RFQs</a>
-                  </li>
-                  <li>
-                    <a href="#">My Contacts</a>
-                  </li>
-                  <li>
-                    <a href="#">My BOM</a>
-                  </li>
-                  <li>
-                    <a href="/myprofile">My Profile</a>
-                  </li>
-                  <li>
-                    <a href="#">My Company</a>
-                  </li>
-                  <li>
-                    <a href="#">My Services</a>
-                  </li>
-                  <li>
-                    <a href="/venprice">Vendor Pricing</a>
-                  </li>
+                  <Link to={"/inventory"}>
+                    <li>Inventory</li>
+                  </Link>
+                  <Link to={"/rfq"}>
+                    <li>My RFQs</li>
+                  </Link>
+                  <Link>
+                    <li>My Contacts</li>
+                  </Link>
+                  <Link>
+                    <li>My BOM</li>
+                  </Link>
+                  <Link to={"/myprofile"}>
+                    <li>My Profile</li>
+                  </Link>
+                  <Link>
+                    <li>My Company</li>
+                  </Link>
+                  <Link>
+                    <li>My Services</li>
+                  </Link>
+                  <Link to={"/venprice"}>
+                    <li>Vendor Pricing</li>
+                  </Link>
                 </ul>
               </div>
             </li>
@@ -357,16 +383,16 @@ const Header = () => {
               <div className={css.dropdownMenu}>
                 <ul>
                   <li>
-                    <a href="#">Company</a>
+                    <Link>Company</a>
                   </li>
                   <li>
-                    <a href="#">Site Wide</a>
+                    <Link>Site Wide</a>
                   </li>
                   <li>
-                    <a href="#">Email</a>
+                    <Link>Email</a>
                   </li>
                   <li>
-                    <a href="#">Service Directory Stats</a>
+                    <Link>Service Directory Stats</a>
                   </li>
                 </ul>
               </div>
@@ -378,16 +404,16 @@ const Header = () => {
               <div className={css.dropdownMenu}>
                 <ul>
                   <li>
-                    <a href="#">send</a>
+                    <Link>send</a>
                   </li>
                   <li>
-                    <a href="#">view</a>
+                    <Link>view</a>
                   </li>
                   <li>
-                    <a href="#">set filters</a>
+                    <Link>set filters</a>
                   </li>
                   <li>
-                    <a href="#">history</a>
+                    <Link>history</a>
                   </li>
                 </ul>
               </div>
@@ -427,9 +453,9 @@ const Header = () => {
                   <BsFillTelephonePlusFill />
                 </li> */}
                 <li>
-                  <a href="/cartpart">
+                  <Link to={"/cartpart"}>
                     <BsCartFill />
-                  </a>
+                  </Link>
                 </li>
                 {/* <li>
                   <BsClockFill />

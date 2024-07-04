@@ -1,4 +1,4 @@
-import React, { memo, useState, useCallback } from "react";
+import React, { memo, useState, useCallback, useEffect } from "react";
 import css from "../../../styles/SearchProducts.module.css";
 import { tableData } from "../../../data/tableData";
 import Filter from "../../Filter";
@@ -17,13 +17,29 @@ import {
   setPopUpRfq,
   setTogglePopUp,
   setSelectedProducts,
+  setSearchResponse,
+  setCurrentPagePrev,
+  setCurrentPageNext,
 } from "../../../ReduxStore/SearchProductSlice";
 
 const SearchProduct = () => {
-  const { companiesListingParts, graphToggle, filterToggle, togglePopUp } =
-    useSelector((store) => store.searchProductStore);
+  const {
+    companiesListingParts,
+    graphToggle,
+    filterToggle,
+    togglePopUp,
+    searchResponse,
+  } = useSelector((store) => store.searchProductStore);
 
   const dispatch = useDispatch();
+
+  // Load search response from local storage if available
+  useEffect(() => {
+    const storedSearchResponse = localStorage.getItem("searchResponse");
+    if (storedSearchResponse) {
+      dispatch(setSearchResponse(JSON.parse(storedSearchResponse)));
+    }
+  }, [dispatch]);
 
   const handleShowPopupMyRFQNew = useCallback((event) => {
     event.stopPropagation(); // Stop the click event from propagating to the document
@@ -34,16 +50,22 @@ const SearchProduct = () => {
     <>
       <div className={css.layout}>
         {filterToggle && <Filter />}
-        <div className={css.tableArea}>
-          {graphToggle && <ProductsPieChart />}
-          <div className={css.productTable}>
-            <ProductTableBtn
-              handleShowPopupMyRFQNew={handleShowPopupMyRFQNew}
-            />
-            <MemoizedProductTableDetail />
+        {searchResponse.length == 0 ? (
+          <div className={css.searchResult}>
+            Found {searchResponse.length} results
           </div>
-          {companiesListingParts && <CompaniesListingParts />}
-        </div>
+        ) : (
+          <div className={css.tableArea}>
+            {graphToggle && <ProductsPieChart />}
+            <div className={css.productTable}>
+              <ProductTableBtn
+                handleShowPopupMyRFQNew={handleShowPopupMyRFQNew}
+              />
+              <MemoizedProductTableDetail />
+            </div>
+            {companiesListingParts && <CompaniesListingParts />}
+          </div>
+        )}
       </div>
       {togglePopUp && <CompanyDetails />}
     </>
@@ -51,7 +73,9 @@ const SearchProduct = () => {
 };
 
 const ProductTableBtn = memo(({ handleShowPopupMyRFQNew }) => {
-  const { popUpRfq } = useSelector((store) => store.searchProductStore);
+  const { popUpRfq, searchResponse } = useSelector(
+    (store) => store.searchProductStore
+  );
 
   const dispatch = useDispatch();
 
@@ -74,8 +98,16 @@ const ProductTableBtn = memo(({ handleShowPopupMyRFQNew }) => {
 });
 
 const ProductTableDetail = memo(() => {
-  const { selectedProducts } = useSelector((store) => store.searchProductStore);
+  const { selectedProducts, searchResponse, currentPage, itemsPerPage } =
+    useSelector((store) => store.searchProductStore);
+
+  const paginatedSearchResponse = searchResponse.slice(
+    currentPage * itemsPerPage,
+    itemsPerPage * (currentPage + 1)
+  );
+
   const dispatch = useDispatch();
+
   const handleShowPopupCompanyDetails = (event) => {
     event.stopPropagation(); // Stop the click event from propagating to the document
     dispatch(setTogglePopUp());
@@ -91,7 +123,7 @@ const ProductTableDetail = memo(() => {
         return selectedProducts.filter((product) => product.id !== id);
       } else {
         // Add product if not selected
-        const selectedProduct = tableData.find((item) => item.id === id);
+        const selectedProduct = searchResponse.find((item) => item.id === id);
         return [...selectedProducts, selectedProduct];
       }
     };
@@ -133,7 +165,7 @@ const ProductTableDetail = memo(() => {
           </tr>
         </thead>
         <tbody>
-          {tableData.map((e, i) => (
+          {paginatedSearchResponse.map((e, i) => (
             <tr className={css.tableData} key={i}>
               <td>
                 <input
@@ -152,7 +184,7 @@ const ProductTableDetail = memo(() => {
                 <FaEye />
               </td>
               <td>{e.country}</td>
-              <td>{e.model}</td>
+              <td>{e.partModel}</td>
               <td>
                 <MdShowChart />
               </td>
@@ -170,7 +202,7 @@ const ProductTableDetail = memo(() => {
               <td>{e.price}</td>
               <td>{e.quantity}</td>
               <td>{e.age}</td>
-              <td>{e.description}</td>
+              <td>{e.productDescription}</td>
             </tr>
           ))}
         </tbody>
@@ -197,6 +229,27 @@ const ProductTableDetail = memo(() => {
           </tr>
         </tfoot>
       </table>
+      <div className={css.tablePagination}>
+        <button
+          type="button"
+          onClick={() => dispatch(setCurrentPagePrev())}
+          disabled={currentPage === 0}
+        >
+          Previous
+        </button>
+        <span>
+          {currentPage + 1}/{Math.ceil(searchResponse.length / itemsPerPage)}
+        </span>
+        <button
+          type="button"
+          onClick={() => dispatch(setCurrentPageNext())}
+          disabled={
+            currentPage === Math.ceil(searchResponse.length / itemsPerPage) - 1
+          }
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 });
