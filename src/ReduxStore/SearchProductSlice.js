@@ -17,10 +17,7 @@ export const searchProductQuery = createAsyncThunk(
         }
       );
 
-      localStorage.setItem("searchResponse", JSON.stringify(response.data));
-
       if (callback) callback();
-      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error(
@@ -43,6 +40,7 @@ const initialState = {
   error: null,
   currentPage: 0,
   itemsPerPage: 20,
+  gettingProducts: false,
 };
 
 const searchProductSlice = createSlice({
@@ -76,19 +74,25 @@ const searchProductSlice = createSlice({
     setCurrentPageNext: (state, action) => {
       state.currentPage += 1;
     },
+    setGettingProducts: (state, action) => {
+      state.gettingProducts != state.gettingProducts;
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(searchProductQuery.pending, (state) => {
         state.error = null;
         console.log("Searching...");
+        state.gettingProducts = false;
       })
       .addCase(searchProductQuery.fulfilled, (state, action) => {
         state.searchResponse = action.payload;
+        state.gettingProducts = true;
       })
       .addCase(searchProductQuery.rejected, (state, action) => {
         state.error = action.error.message;
         console.error("Error while searching:", action.error.message);
+        state.gettingProducts = false;
       });
   },
 });

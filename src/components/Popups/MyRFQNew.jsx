@@ -96,7 +96,7 @@ const MyRFQNew = () => {
       }
     });
   };
-  
+
   // filtered Unique models because we don't want to send RFQ with same model numbers.
   const filteredData = filterUniqueModels(selectedProducts);
   console.log(filteredData);

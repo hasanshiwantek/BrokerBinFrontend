@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 const Filter = () => {
   const { searchResponse } = useSelector((store) => store.searchProductStore);
-  console.log(searchResponse);
+
   const dispatch = useDispatch();
 
   const manufacturerCount = {};

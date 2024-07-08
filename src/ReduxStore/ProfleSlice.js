@@ -30,7 +30,7 @@ export const submitUserData = createAsyncThunk(
   async ({ id, token, data }) => {
     try {
       const response = await axios.put(
-        `https://brokerbinbackend.advertsedge.com/api/user/edits/${id}`,
+        `https://brokerbinbackend.advertsedge.com/api/user/edit/${id}`,
         JSON.stringify(data),
         {
           headers: {

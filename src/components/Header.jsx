@@ -1,5 +1,5 @@
-import { memo, useEffect, useRef } from "react";
-import React, { useState } from "react";
+import { memo } from "react";
+import React from "react";
 import css from "../styles/Header.module.css";
 import logo from "../imgs/logo/broker_header_logo.jpg";
 import { AiFillFile, AiOutlineMail, AiOutlinePlus } from "react-icons/ai";
@@ -25,7 +25,10 @@ import {
   setDropdownOpen,
   setToolToggle,
 } from "../ReduxStore/HomeSlice";
-import { searchProductQuery } from "../ReduxStore/SearchProductSlice";
+import {
+  searchProductQuery,
+  setSelectedProducts,
+} from "../ReduxStore/SearchProductSlice";
 import { Link } from "react-router-dom";
 
 const Header = () => {
@@ -33,10 +36,6 @@ const Header = () => {
 
   const { mobileNavToggle, dropdownOpen, toolToggle } = useSelector(
     (state) => state.homeStore
-  );
-
-  const { waitSearchResponse } = useSelector(
-    (state) => state.searchProductStore
   );
 
   const dispatch = useDispatch();
@@ -79,9 +78,26 @@ const Header = () => {
     formData.searchStrings = formData.searchStrings.split(" ");
     const data = formData;
 
+    if (formData.searchStrings == "") {
+      alert("Blank search is not allowed");
+      return;
+    }
+
+    // Update URL with search query
+    // If i don't do that then the searchProductQuery will be triggered 2 time one for the previous search and on for the new search.
+    // Because it takes query from url so if url is not updated before dispatch it first take previous than the new query!
+    navigate(`/search?q=${encodeURIComponent(data.searchStrings)}`);
+
+    // Dispatch search action
     dispatch(
-      searchProductQuery({ data, token, callback: () => navigate("/search") })
+      searchProductQuery({
+        data,
+        token,
+        callback: () =>
+          navigate(`/search?q=${encodeURIComponent(data.searchStrings)}`),
+      })
     );
+    dispatch(setSelectedProducts([]));
   };
 
   return (

@@ -1,4 +1,4 @@
-import React, { memo, useState, useCallback, useEffect } from "react";
+import React, { memo, useCallback, useEffect } from "react";
 import css from "../../../styles/SearchProducts.module.css";
 import { tableData } from "../../../data/tableData";
 import Filter from "../../Filter";
@@ -11,6 +11,7 @@ import { MdShowChart } from "react-icons/md";
 import { BiBlock } from "react-icons/bi";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
+import Cookies from "js-cookie";
 import {
   setGraphToggle,
   setFilterToggle,
@@ -20,31 +21,42 @@ import {
   setSearchResponse,
   setCurrentPagePrev,
   setCurrentPageNext,
+  searchProductQuery,
 } from "../../../ReduxStore/SearchProductSlice";
+import { useLocation, useNavigate } from "react-router-dom";
+import LoadingState from "../../../LoadingState";
 
 const SearchProduct = () => {
+  const token = Cookies.get("token");
+  const location = useLocation();
+
   const {
     companiesListingParts,
     graphToggle,
     filterToggle,
     togglePopUp,
     searchResponse,
+    gettingProducts,
   } = useSelector((store) => store.searchProductStore);
 
   const dispatch = useDispatch();
+  const query = new URLSearchParams(location.search).get("q");
 
-  // Load search response from local storage if available
   useEffect(() => {
-    const storedSearchResponse = localStorage.getItem("searchResponse");
-    if (storedSearchResponse) {
-      dispatch(setSearchResponse(JSON.parse(storedSearchResponse)));
+    if (query) {
+      dispatch(
+        searchProductQuery({
+          // send object of data with key "searchStrings" and value as an array of search query parameters
+          data: { searchStrings: query.split(",") },
+          token,
+        })
+      );
     }
-  }, [dispatch]);
+  }, [query, dispatch]);
 
-  const handleShowPopupMyRFQNew = useCallback((event) => {
-    event.stopPropagation(); // Stop the click event from propagating to the document
-    dispatch(setPopUpRfq());
-  }, []);
+  if (!gettingProducts) {
+    return <LoadingState />;
+  }
 
   return (
     <>
@@ -52,16 +64,16 @@ const SearchProduct = () => {
         {filterToggle && <Filter />}
         {searchResponse.length == 0 ? (
           <div className={css.searchResult}>
-            Found {searchResponse.length} results
+            <h1 style={{ fontSize: "5rem", marginLeft: "5rem" }}>
+              <strong>Found {searchResponse.length} results</strong>
+            </h1>
           </div>
         ) : (
           <div className={css.tableArea}>
             {graphToggle && <ProductsPieChart />}
             <div className={css.productTable}>
-              <ProductTableBtn
-                handleShowPopupMyRFQNew={handleShowPopupMyRFQNew}
-              />
-              <MemoizedProductTableDetail />
+              <ProductTableBtn />
+              <ProductTableDetail />
             </div>
             {companiesListingParts && <CompaniesListingParts />}
           </div>
@@ -72,12 +84,15 @@ const SearchProduct = () => {
   );
 };
 
-const ProductTableBtn = memo(({ handleShowPopupMyRFQNew }) => {
-  const { popUpRfq, searchResponse } = useSelector(
-    (store) => store.searchProductStore
-  );
+const ProductTableBtn = memo(() => {
+  const { popUpRfq } = useSelector((store) => store.searchProductStore);
 
   const dispatch = useDispatch();
+
+  const handleShowPopupMyRFQNew = useCallback((event) => {
+    event.stopPropagation(); // Stop the click event from propagating to the document
+    dispatch(setPopUpRfq());
+  }, []);
 
   return (
     <div className={css.productTableBtn}>
@@ -253,7 +268,5 @@ const ProductTableDetail = memo(() => {
     </div>
   );
 });
-
-const MemoizedProductTableDetail = memo(ProductTableDetail);
 
 export default SearchProduct;
