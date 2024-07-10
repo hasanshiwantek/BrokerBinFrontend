@@ -22,7 +22,7 @@ const Add = () => {
 
     // If addInventory object exist or we can say data is coming from the formData object.
     if (inventoryAddData) {
-      // Filtered out those data object where even a single field in filled to processed further.
+      // Filtered out those data object where even a single field is filled to processed further.
       const filteredAddInventory = inventoryAddData.filter(
         (e, i) =>
           e.heciClei !== "" ||
@@ -50,8 +50,10 @@ const Add = () => {
         alert("Please fill in the inventory data.");
         return;
       }
-      formDataObject.addInventory = filteredAddInventory;
-      console.log(formDataObject);
+
+      formDataObject.addInventory = filteredAddInventory
+
+      
     } else {
       alert("Please fill in the inventory data.");
     }

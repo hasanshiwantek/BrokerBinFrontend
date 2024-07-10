@@ -68,6 +68,9 @@ const searchProductSlice = createSlice({
     setSelectedProducts: (state, action) => {
       state.selectedProducts = action.payload;
     },
+    setCurrentPage: (state, action) => {
+      state.currentPage = 0;
+    },
     setCurrentPagePrev: (state, action) => {
       state.currentPage -= 1;
     },
@@ -107,6 +110,7 @@ export const {
   setSearchResponse,
   setCurrentPagePrev,
   setCurrentPageNext,
+  setCurrentPage,
 } = searchProductSlice.actions;
 
 export default searchProductSlice.reducer;

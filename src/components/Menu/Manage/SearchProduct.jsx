@@ -22,6 +22,7 @@ import {
   setCurrentPagePrev,
   setCurrentPageNext,
   searchProductQuery,
+  setCurrentPage,
 } from "../../../ReduxStore/SearchProductSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import LoadingState from "../../../LoadingState";
@@ -51,6 +52,7 @@ const SearchProduct = () => {
           token,
         })
       );
+      dispatch(setCurrentPage());
     }
   }, [query, dispatch]);
 
