@@ -32,6 +32,9 @@ button {
   }
   .search_container {
     display: flex;
+    form{
+      display: flex;
+    }
     .search_btn {
       background-color: var(--primary-color);
       text-transform: capitalize;
@@ -46,7 +49,7 @@ button {
       padding: 0.5rem;
       border: 2px solid var(--box-shadow);
       outline: none;
-      @media only screen and (max-width: 54.375em) {
+      @media only screen and (max-width: 23.4375em) {
         width: 100%;
       }
     }

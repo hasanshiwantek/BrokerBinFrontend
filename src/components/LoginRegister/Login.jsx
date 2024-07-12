@@ -115,6 +115,7 @@ const Login = () => {
                 name="password"
                 placeholder="Enter your password"
                 required
+                autoComplete="true"
               />
               <button
                 onClick={togglePasswordVisibility}

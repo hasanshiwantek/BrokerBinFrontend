@@ -86,6 +86,7 @@ const Header = () => {
     // Update URL with search query
     // If i don't do that then the searchProductQuery will be triggered 2 time one for the previous search and on for the new search.
     // Because it takes query from url so if url is not updated before dispatch it first take previous than the new query!
+    console.log('Navigating and dispatching searchProductQuery');
     navigate(`/search?q=${encodeURIComponent(data.searchStrings)}`);
 
     // Dispatch search action

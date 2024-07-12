@@ -26,6 +26,8 @@ import {
 } from "../../../ReduxStore/SearchProductSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import LoadingState from "../../../LoadingState";
+import SchemaComponent from "../../../SchemaComponent";
+import { Helmet } from "react-helmet-async";
 
 const SearchProduct = () => {
   const token = Cookies.get("token");
@@ -42,9 +44,11 @@ const SearchProduct = () => {
 
   const dispatch = useDispatch();
   const query = new URLSearchParams(location.search).get("q");
+  const searchQuery = `http://localhost:5173/search?${query.split(",")}`;
 
   useEffect(() => {
     if (query) {
+      console.log("Dispatching searchProductQuery");
       dispatch(
         searchProductQuery({
           // send object of data with key "searchStrings" and value as an array of search query parameters
@@ -62,6 +66,15 @@ const SearchProduct = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Search Product</title>
+        <meta
+          name="description"
+          content="Search products for products matching the search criteria and return results as an array of products results."
+        />
+        <meta name="robots" content="noindex" />
+        <link rel="canonical" href={searchQuery} />
+      </Helmet>
       <div className={css.layout}>
         {filterToggle && <Filter />}
         {searchResponse.length == 0 ? (
@@ -118,10 +131,14 @@ const ProductTableDetail = memo(() => {
   const { selectedProducts, searchResponse, currentPage, itemsPerPage } =
     useSelector((store) => store.searchProductStore);
 
+  console.log(searchResponse);
+
   const paginatedSearchResponse = searchResponse.slice(
     currentPage * itemsPerPage,
     itemsPerPage * (currentPage + 1)
   );
+
+  // console.log(paginatedSearchResponse)
 
   const dispatch = useDispatch();
 
@@ -152,122 +169,126 @@ const ProductTableDetail = memo(() => {
   };
 
   return (
-    <div className={css.productTableDetail}>
-      {[tableData[0]].map((e) => (
-        <p key={e.model}>
-          Part #:{e.model} : {e.mfg},Inc : {e.mfg} {e.model}
-        </p>
-      ))}
-      <table>
-        <thead>
-          <tr>
-            <th>Cart</th>
-            <th>
-              <span>
-                <FaShieldAlt />
-                Company
-              </span>
-            </th>
-            <th>PVR</th>
-            <th>Ctry</th>
-            <th>Part / Model</th>
-            <th>History</th>
-            <th>TS</th>
-            <th>Mfg</th>
-            <th>Cond</th>
-            <th>Price</th>
-            <th>Qty</th>
-            <th>Age</th>
-            <th>Product Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedSearchResponse.map((e, i) => (
-            <tr className={css.tableData} key={i}>
-              <td>
-                <input
-                  type="checkbox"
-                  name="addToCart"
-                  id={e.id}
-                  // value={select}
-                  checked={isSelected(e.id)}
-                  onChange={() => selectProduct(e.id)}
-                />
-              </td>
-              <td>
-                <a onClick={handleShowPopupCompanyDetails}>{e.company}</a>
-              </td>
-              <td>
-                <FaEye />
-              </td>
-              <td>{e.country}</td>
-              <td>{e.partModel}</td>
-              <td>
-                <MdShowChart />
-              </td>
-              <td>
-                {e.ts ? (
-                  <IoCheckmarkCircle
-                    style={{ color: "var(--primary-color)" }}
-                  />
-                ) : (
-                  <BiBlock />
-                )}
-              </td>
-              <td>{e.mfg}</td>
-              <td>{e.cond}</td>
-              <td>{e.price}</td>
-              <td>{e.quantity}</td>
-              <td>{e.age}</td>
-              <td>{e.productDescription}</td>
+    <>
+      <SchemaComponent product={searchResponse[0]} />
+      <div className={css.productTableDetail}>
+        {[paginatedSearchResponse[0]].map((e) => (
+          <p key={e.model}>
+            Part #:{e.mfg} : {e.mfg},Inc : {e.mfg} {e.partModel}
+          </p>
+        ))}
+        <table>
+          <thead>
+            <tr>
+              <th>Cart</th>
+              <th>
+                <span>
+                  <FaShieldAlt />
+                  Company
+                </span>
+              </th>
+              <th>PVR</th>
+              <th>Ctry</th>
+              <th>Part / Model</th>
+              <th>History</th>
+              <th>TS</th>
+              <th>Mfg</th>
+              <th>Cond</th>
+              <th>Price</th>
+              <th>Qty</th>
+              <th>Age</th>
+              <th>Product Description</th>
             </tr>
-          ))}
-        </tbody>
-        <tfoot>
-          <tr>
-            <th>Cart</th>
-            <th>
-              <span>
-                <FaShieldAlt />
-                Company
-              </span>
-            </th>
-            <th>PVR</th>
-            <th>Ctry</th>
-            <th>Part / Model</th>
-            <th>History</th>
-            <th>TS</th>
-            <th>Mfg</th>
-            <th>Cond</th>
-            <th>Price</th>
-            <th>Qty</th>
-            <th>Age</th>
-            <th>Product Description</th>
-          </tr>
-        </tfoot>
-      </table>
-      <div className={css.tablePagination}>
-        <button
-          type="button"
-          onClick={() => dispatch(setCurrentPagePrev())}
-          disabled={currentPage === 0}
-        >
-          Previous
-        </button>
-        <span>
-          {currentPage + 1}/{Math.ceil(searchResponse.length / itemsPerPage)}
-        </span>
-        <button
-          type="button"
-          onClick={() => dispatch(setCurrentPageNext())}
-          disabled={
-            currentPage === Math.ceil(searchResponse.length / itemsPerPage) - 1
-          }
-        >
-          Next
-        </button>
+          </thead>
+          <tbody>
+            {paginatedSearchResponse.map((e, i) => (
+              <tr className={css.tableData} key={i}>
+                <td>
+                  <input
+                    type="checkbox"
+                    name="addToCart"
+                    id={e.id}
+                    // value={select}
+                    checked={isSelected(e.id)}
+                    onChange={() => selectProduct(e.id)}
+                  />
+                </td>
+                <td>
+                  <a onClick={handleShowPopupCompanyDetails}>{e.company}</a>
+                </td>
+                <td>
+                  <FaEye />
+                </td>
+                <td>{e.country}</td>
+                <td>{e.partModel}</td>
+                <td>
+                  <MdShowChart />
+                </td>
+                <td>
+                  {e.ts ? (
+                    <IoCheckmarkCircle
+                      style={{ color: "var(--primary-color)" }}
+                    />
+                  ) : (
+                    <BiBlock />
+                  )}
+                </td>
+                <td>{e.mfg}</td>
+                <td>{e.cond}</td>
+                <td>{e.price}</td>
+                <td>{e.quantity}</td>
+                <td>{e.age}</td>
+                <td>{e.productDescription}</td>
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr>
+              <th>Cart</th>
+              <th>
+                <span>
+                  <FaShieldAlt />
+                  Company
+                </span>
+              </th>
+              <th>PVR</th>
+              <th>Ctry</th>
+              <th>Part / Model</th>
+              <th>History</th>
+              <th>TS</th>
+              <th>Mfg</th>
+              <th>Cond</th>
+              <th>Price</th>
+              <th>Qty</th>
+              <th>Age</th>
+              <th>Product Description</th>
+            </tr>
+          </tfoot>
+        </table>
+        <div className={css.tablePagination}>
+          <button
+            type="button"
+            onClick={() => dispatch(setCurrentPagePrev())}
+            disabled={currentPage === 0}
+          >
+            ◀️
+          </button>
+          <span>
+            {currentPage + 1}/{Math.ceil(searchResponse.length / itemsPerPage)}
+          </span>
+          <button
+            type="button"
+            onClick={() => dispatch(setCurrentPageNext())}
+            disabled={
+              currentPage ===
+              Math.ceil(searchResponse.length / itemsPerPage) - 1
+            }
+          >
+            ▶️
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 });
 

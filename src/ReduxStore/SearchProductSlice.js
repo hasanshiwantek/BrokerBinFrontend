@@ -85,7 +85,6 @@ const searchProductSlice = createSlice({
     builder
       .addCase(searchProductQuery.pending, (state) => {
         state.error = null;
-        console.log("Searching...");
         state.gettingProducts = false;
       })
       .addCase(searchProductQuery.fulfilled, (state, action) => {
