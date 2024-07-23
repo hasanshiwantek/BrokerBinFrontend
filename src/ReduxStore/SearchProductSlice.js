@@ -88,7 +88,7 @@ const searchProductSlice = createSlice({
         state.gettingProducts = false;
       })
       .addCase(searchProductQuery.fulfilled, (state, action) => {
-        state.searchResponse = action.payload;
+        state.searchResponse = action.payload.data;
         state.gettingProducts = true;
       })
       .addCase(searchProductQuery.rejected, (state, action) => {
