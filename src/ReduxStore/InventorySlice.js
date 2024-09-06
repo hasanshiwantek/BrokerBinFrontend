@@ -6,7 +6,7 @@ export const sendInventoryFile = createAsyncThunk(
   async ({ token, formDataObject }) => {
     try {
       const response = await axios.post(
-        "https://brokerbinbackend.advertsedge.com/api/inventory/upload",
+        "https://brokerbin.shiwantek.com/api/inventory/upload",
         formDataObject,
         {
           headers: {

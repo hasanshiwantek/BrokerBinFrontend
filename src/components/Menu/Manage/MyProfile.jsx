@@ -236,12 +236,12 @@ const MyProfile = () => {
                       <span>Personal Info</span>
                     </a>
                   </li>
-                  {/* <li>
+                  <li>
                     <a href="/myprofile/Options">
                       <span>Options</span>
                     </a>
                   </li>
-                  <li>
+                  {/* <li>
                     <a href="/">
                       <span>My Vendors</span>
                     </a>

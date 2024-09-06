@@ -1,0 +1,188 @@
+.outerPadding {
+  padding: 10rem;
+}
+.formTypeLayout {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  font-size: 1.2rem;
+}
+
+.broadcastForm {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  max-width: 80vw;
+  margin: auto;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+h3 {
+  font-size: 18px;
+  /* margin-bottom: 10px; */
+}
+
+.broadcastTypes,
+.categories {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+/* button {
+  padding: 1rem 2rem;
+  font-size: 2rem;
+  border: 1px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: black;
+} */
+
+button:hover {
+  background-color: #f1f1f1;
+}
+
+button.selected {
+  border: 1px solid #007bff;
+  color: #007bff;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  span {
+    display: flex;
+    gap: 1rem;
+  }
+}
+
+.actions button {
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+.actions button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+.actions button:not(:disabled) {
+  background-color: #007bff;
+  color: white;
+  border: none;
+}
+
+.actions button:not(:disabled):hover {
+  background-color: #0056b3;
+}
+
+.headings {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.file_upload_container {
+  > div:not(:first-of-type) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    label {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      border: 1px solid black;
+      width: 50%;
+      padding: 1rem;
+      > div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  }
+}
+
+.toggleCategories {
+  &_btn {
+    display: flex;
+    gap: 1rem;
+    button {
+      color: black;
+      border: 1px solid #e8e8e8;
+    }
+  }
+}
+
+.mainFields {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  &_1,
+  &_2 {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    div {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      > select,
+      input {
+        padding: 0.8rem;
+        border: 1px solid #cacaca;
+      }
+    }
+  }
+  &_3 {
+    display: flex;
+    justify-content: space-between;
+    > div {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      /* flex-direction: column; */
+      /* flex: 1; */
+    }
+  }
+}
+
+.createABroadcast {
+  display: flex;
+  flex-direction: column;
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    input,
+    textarea {
+      padding: 0.8rem;
+      border: 1px solid #cacaca;
+    }
+  }
+}
+
+.toggleFieldsLayout {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  border: 1px solid #b5b7b9;
+  padding: 1rem;
+  margin-top: 2rem;
+  span {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

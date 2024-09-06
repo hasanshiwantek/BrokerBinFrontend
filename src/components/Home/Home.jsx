@@ -14,7 +14,6 @@ import ErrorStatus from "../Error/ErrorStatus";
 import Cookies from "js-cookie";
 import { searchProductQuery } from "../../ReduxStore/SearchProductSlice";
 import { useNavigate } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 
 const Home = () => {
   const token = Cookies.get("token");
@@ -25,6 +24,8 @@ const Home = () => {
   const { blurWhileLoading, initialData, user, error } = useSelector(
     (state) => state.profileStore
   );
+
+  const { page, pageSize } = useSelector((store) => store.searchProductStore);
 
   const id = user?.user?.id || user_id;
 
@@ -58,10 +59,35 @@ const Home = () => {
     // split by " " and turn into array of string.
     formData.searchStrings = formData.searchStrings.split(" ");
     const data = formData;
-    // console.log(data);
-    dispatch(
-      searchProductQuery({ data, token, callback: () => navigate("/search") })
-    );
+
+    // Retrieve search parameters from the URL
+    const searchParams = new URLSearchParams(location.search);
+    const query = searchParams.getAll("searchStrings[]");
+
+    useEffect(() => {
+      if (query.length > 0 && token && !gettingProducts) {
+        const searchQuery = query
+          .map((term) => `searchStrings[]=${encodeURIComponent(term)}`)
+          .join("&");
+        const url = `/inventory/search?page=${page}&pageSize=${pageSize}&${searchStringsQuery}`;
+        console.log("Dispatching searchProductQuery with URL:", searchQuery);
+
+        dispatch(
+          searchProductQuery({
+            data: { searchStrings: query },
+            token,
+            page,
+            pageSize,
+            searchStrings: searchQuery,
+            callback: () => navigate(url),
+          })
+        );
+
+        if (page !== 0) {
+          dispatch(setCurrentPage(0)); // Reset to first page only if it's not already 0
+        }
+      }
+    }, [query, token, page, pageSize]);
   };
 
   return (
@@ -70,15 +96,6 @@ const Home = () => {
         <LoadingState />
       ) : (
         <>
-          <Helmet>
-            <title>Home</title>
-            <meta
-              name="description"
-              content="BrokerBin.com, the world's largest B2B database. One network, one marketplace for all IT professionals, resellers, and wholesaler."
-            />
-            <meta name="robots" content="noindex" />
-            <link rel="canonical" href="http://localhost:5173/" />
-          </Helmet>
           <div className={css.gridHome}>
             <div className={css.gridHome1}>
               <div className={css.gridHome1_Bar}>

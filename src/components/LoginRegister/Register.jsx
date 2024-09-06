@@ -60,7 +60,7 @@ const Register = () => {
 
       try {
         const response = await fetch(
-          "https://brokerbinbackend.advertsedge.com/api/user/register",
+          "https://brokerbin.shiwantek.com/api/user/register",
           {
             method: "POST",
             headers: {
@@ -635,19 +635,35 @@ const Register = () => {
                   type="checkbox"
                   name="companyCategory"
                   value="Reseller"
+                  id="Reseller"
                 />
                 <label htmlFor="Reseller">Reseller</label>
               </span>
               <span className={css.contact_form_fields_companyCategory}>
-                <input type="checkbox" name="companyCategory" value="Broker" />
+                <input
+                  type="checkbox"
+                  name="companyCategory"
+                  value="Broker"
+                  id="Broker"
+                />
                 <label htmlFor="Broker">Broker</label>
               </span>
               <span className={css.contact_form_fields_companyCategory}>
-                <input type="checkbox" name="companyCategory" value="Dealer" />
+                <input
+                  type="checkbox"
+                  name="companyCategory"
+                  value="Dealer"
+                  id="Dealer"
+                />
                 <label htmlFor="Dealer">Dealer</label>
               </span>
               <span className={css.contact_form_fields_companyCategory}>
-                <input type="checkbox" name="companyCategory" value="VAR" />
+                <input
+                  type="checkbox"
+                  name="companyCategory"
+                  value="VAR"
+                  id="VAR"
+                />
                 <label htmlFor="VAR">VAR</label>
               </span>
               <span className={css.contact_form_fields_companyCategory}>
@@ -655,6 +671,7 @@ const Register = () => {
                   type="checkbox"
                   name="companyCategory"
                   value="Distributor"
+                  id="Distributor"
                 />
                 <label htmlFor="Distributor">Distributor</label>
               </span>
@@ -665,6 +682,7 @@ const Register = () => {
                   type="checkbox"
                   name="companyCategory"
                   value="Service Center"
+                  id="Service Center"
                 />
                 <label htmlFor="Service Center">Service Center</label>
               </span>
@@ -677,11 +695,17 @@ const Register = () => {
                   type="checkbox"
                   name="companyCategory"
                   value="Integrator"
+                  id="Integrator"
                 />
                 <label htmlFor="Integrator">Integrator</label>
               </span>
               <span className={css.contact_form_fields_companyCategory}>
-                <input type="checkbox" name="companyCategory" value="Retail" />
+                <input
+                  type="checkbox"
+                  name="companyCategory"
+                  value="Retail"
+                  id="Retail"
+                />
                 <label htmlFor="Retail">Retail</label>
               </span>
             </span>
@@ -694,16 +718,16 @@ const Register = () => {
                 id="termsOfService"
                 required
               />
-              <p>Agree to our</p>
+              <label htmlFor="termsOfService">Agree to our</label>
               <a href="#">Terms of Service</a>
             </span>
             {errors.form && <p style={{ color: "red" }}>{errors.form}</p>}
             <button type="submit">Submit Application</button>
             <p className={css.submitBtn_login}>
-              Already have an account?{" "}
+              Already have an account?
               <a href="/login">
                 <u>Login</u>
-              </a>{" "}
+              </a>
             </p>
           </div>
         </form>

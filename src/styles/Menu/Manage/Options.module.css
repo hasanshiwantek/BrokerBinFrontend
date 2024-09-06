@@ -1,3 +1,153 @@
 fieldset {
   border: 1px solid black;
 }
+
+.options_form {
+  background: #fff;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  select {
+    border: 1px solid #8b8b8b;
+    padding: 0.5rem;
+  }
+  h1 {
+    font-size: 2rem;
+  }
+  > div {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 3rem;
+    gap: 2rem;
+  }
+  .receiveMatchYourHits {
+    > div {
+      display: flex;
+      gap: 1rem;
+      span {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+    }
+  }
+  .onlyReceiveMatch {
+    display: flex;
+    flex-direction: column;
+    > div:nth-child(1) {
+      display: flex;
+      gap: 1rem;
+      padding-bottom: 5px;
+      margin-bottom: 5px;
+      border-bottom: 5px solid #e8e8e8;
+    }
+    button {
+      color: white;
+      background: var(--primary-color);
+      padding: 1rem;
+    }
+  }
+  .resultsDisplaySettings,
+  .otherSettings {
+    &_fields {
+      display: flex;
+      justify-content: center;
+      ul {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        li {
+          display: flex;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 1rem;
+          text-align: right;
+          align-items: center;
+        }
+      }
+    }
+  }
+  .customPartSearchDisplay {
+    &_fields {
+      display: flex;
+      justify-content: center;
+      /* align-items: center; */
+      ul {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        li {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 0.5rem;
+          padding: 0 1rem;
+        }
+      }
+    }
+  }
+  .preferredBrokerbinUse {
+    display: flex;
+    &_fields {
+      ul {
+        display: flex;
+        gap: 1rem;
+        margin-left: 15rem;
+        li {
+          display: flex;
+          gap: 1rem;
+        }
+      }
+    }
+  }
+  .resultsByTheseConditions {
+    &_fields {
+      ul {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(10rem, 1fr));
+        justify-items: center;
+        gap: 1rem;
+        li {
+          display: grid;
+          grid-template-columns: 5rem 1fr;
+        }
+      }
+    }
+  }
+}
+
+.checkboxContainer {
+  border: 1px solid pink;
+  overflow-y: scroll;
+  height: 20rem;
+  padding: 3rem;
+}
+
+.checkbox {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  /* height: 100%; */
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    label {
+      font-weight: normal;
+    }
+    input[type="checkbox"] {
+      margin-right: 0.5rem;
+    }
+  }
+  &_btn {
+    display: flex;
+    justify-content: end;
+  }
+}
+
+.checkbox_btn{
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}

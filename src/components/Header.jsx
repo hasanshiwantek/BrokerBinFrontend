@@ -26,6 +26,7 @@ import {
   setToolToggle,
 } from "../ReduxStore/HomeSlice";
 import {
+  searchProductHistory,
   searchProductQuery,
   setSelectedProducts,
 } from "../ReduxStore/SearchProductSlice";
@@ -33,74 +34,64 @@ import { Link } from "react-router-dom";
 
 const Header = () => {
   const token = Cookies.get("token");
-
   const { mobileNavToggle, dropdownOpen, toolToggle } = useSelector(
     (state) => state.homeStore
   );
 
-  const dispatch = useDispatch();
+  const { page, pageSize } = useSelector((store) => store.searchProductStore);
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("user"); // Remove the token from local storage
+    localStorage.removeItem("user");
     Cookies.remove("token");
     Cookies.remove("user_id");
-    navigate("/login", { replace: true }); // Redirect to the login page and replace the history
+    navigate("/login", { replace: true });
   };
 
   const handleDropdownToggle = (menu) => {
     dispatch(setDropdownOpen(menu));
   };
 
-  // useEffect(() => {
-  //   const handleClickOutside = (event) => {
-  //     const menu = document.querySelector(`.${css.nav_Mobile}`);
-  //     if (menu && !menu.contains(event.target)) {
-  //       dispatch(setMobileNavToggle());
-  //     }
-  //   };
-
-  //   document.addEventListener("click", handleClickOutside);
-
-  //   return () => {
-  //     document.removeEventListener("click", handleClickOutside);
-  //   };
-  // }, [setMobileNavToggle]);
-
-  const searchProduct = (event) => {
+  const searchProduct = async (event) => {
     event.preventDefault();
-
     const form = new FormData(event.target);
     const formData = Object.fromEntries(form.entries());
 
-    // split by " " and turn into array of string.
-    formData.searchStrings = formData.searchStrings.split(" ");
-    const data = formData;
-
-    if (formData.searchStrings == "") {
+    if (formData.searchStrings.trim() === "") {
       alert("Blank search is not allowed");
       return;
     }
 
-    // Update URL with search query
-    // If i don't do that then the searchProductQuery will be triggered 2 time one for the previous search and on for the new search.
-    // Because it takes query from url so if url is not updated before dispatch it first take previous than the new query!
-    console.log('Navigating and dispatching searchProductQuery');
-    navigate(`/search?q=${encodeURIComponent(data.searchStrings)}`);
+    const searchString = formData.searchStrings
+      .split(" ")
+      .filter(Boolean)
+      .join(",");
+    console.log(searchString);
 
-    // Dispatch search action
-    dispatch(
-      searchProductQuery({
-        data,
-        token,
-        callback: () =>
-          navigate(`/search?q=${encodeURIComponent(data.searchStrings)}`),
-      })
-    );
+    const url = "/inventory/search";
+
+    // Dispatch the search query action and navigate to the search page
+    // dispatch(
+    //   searchProductQuery({
+    //     token,
+    //     page,
+    //     pageSize,
+    //     search: searchString,
+    //     // callback: () => navigate(url),
+    //   })
+    // );
+
+    dispatch(searchProductHistory({ token }));
+
+    // Clear selected products
     dispatch(setSelectedProducts([]));
-  };
 
+    // Navigate to the search results page
+    // Pass search query as a state through the navigation
+    navigate(url, { state: searchString, replace: true });
+  };
   return (
     <>
       <div className={`${css.headerFixed} ${css.noPrint}`}>
@@ -393,48 +384,48 @@ const Header = () => {
                 </ul>
               </div>
             </li>
-            {/* <li>
+            <li>
               <a href="/">reports</a>
               <BiSolidDownArrow className={css.onHoverMenuIconDown} />
               <BiSolidUpArrow className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
                 <ul>
                   <li>
-                    <Link>Company</a>
+                    <Link>Company</Link>
                   </li>
                   <li>
-                    <Link>Site Wide</a>
+                    <Link>Site Wide</Link>
                   </li>
                   <li>
-                    <Link>Email</a>
+                    <Link>Email</Link>
                   </li>
                   <li>
-                    <Link>Service Directory Stats</a>
+                    <Link>Service Directory Stats</Link>
                   </li>
                 </ul>
               </div>
-            </li> */}
-            {/* <li>
-              <a href="/">broadcast</a>
+            </li>
+            <li>
+              <Link to={"/"}>broadcast</Link>
               <BiSolidDownArrow className={css.onHoverMenuIconDown} />
               <BiSolidUpArrow className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
                 <ul>
+                  <Link to={"/sendbroad"}>
+                    <li>send</li>
+                  </Link>
                   <li>
-                    <Link>send</a>
+                    <Link>view</Link>
                   </li>
                   <li>
-                    <Link>view</a>
+                    <Link>set filters</Link>
                   </li>
                   <li>
-                    <Link>set filters</a>
-                  </li>
-                  <li>
-                    <Link>history</a>
+                    <Link>history</Link>
                   </li>
                 </ul>
               </div>
-            </li> */}
+            </li>
             <li onClick={handleLogout}>
               <BiLogOut />
               logout

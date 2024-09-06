@@ -4,6 +4,7 @@ import profileReducer from "./ProfleSlice";
 import homeReducer from "./HomeSlice";
 import rfqReducer from "./RfqSlice";
 import searchProductReducer from "./SearchProductSlice";
+import broadcastReducer from "./BroadCast";
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     homeStore: homeReducer,
     rfqStore: rfqReducer,
     searchProductStore: searchProductReducer,
+    broadcastStore: broadcastReducer,
   },
 });
 

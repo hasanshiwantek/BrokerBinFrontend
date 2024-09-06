@@ -40,16 +40,17 @@ const VenBlock = lazy(() =>
 const VenPrice = lazy(() =>
   import("./components/Menu/Manage/Inventory/VenPrice.jsx")
 );
+const Send = lazy(() => import("./components/Menu/Broadcast/Send/Send.jsx"));
+
 const Advanced = lazy(() => import("./components/Menu/Search/Advanced.jsx"));
 const Map = lazy(() => import("./components/Map/Map.jsx"));
 const MyWorldMap = lazy(() => import("./components/Map/MyWorldMap.jsx"));
 const Form = lazy(() => import("./Form.jsx"));
 const TextEditor = lazy(() => import("./components/TextEditor.jsx"));
-import Crousel from "./Crousel.jsx";
 
+import Crousel from "./Crousel.jsx";
 import { Provider } from "react-redux";
 import store from "./ReduxStore/Store.js";
-import { HelmetProvider } from "react-helmet-async";
 
 const router = createBrowserRouter([
   {
@@ -111,7 +112,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/search",
+        path: "/inventory/search",
         element: (
           <Suspense fallback={<LoadingState />}>
             <Header />
@@ -267,6 +268,15 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
+      {
+        path: "/sendbroad",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <Send />
+          </Suspense>
+        ),
+      },
     ],
   },
   {
@@ -281,10 +291,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <HelmetProvider>
-      <Provider store={store}>
-        <RouterProvider router={router} />
-      </Provider>
-    </HelmetProvider>
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>
 );

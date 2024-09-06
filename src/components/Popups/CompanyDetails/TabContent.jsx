@@ -6,9 +6,17 @@ import companyContact from "../../../imgs/logo/companyContact.jpg";
 import shadow from "../../../imgs/logo/shadow.png";
 import { MdPersonRemoveAlt1 } from "react-icons/md";
 import { BsStarFill } from "react-icons/bs";
+import { useSelector } from "react-redux";
 
 const TabContent = () => {
   const [toggleTabs, setToggleTabs] = useState(1);
+
+  const { popupCompanyDetail } = useSelector(
+    (store) => store.searchProductStore
+  );
+
+  console.log([popupCompanyDetail[0].addedBy.company.company_images][0]);
+  
 
   return (
     <>
@@ -357,15 +365,17 @@ const TabContent = () => {
           <div className={css.Popup_Info_Main_right_tabs_photos}>
             <h1>company photos</h1>
             <div className={css.Popup_Info_Main_right_tabs_photos_img}>
-              <div>
-                <img src={companyPhoto} alt="company photo" />
-              </div>
-              <div>
-                <img src={companyContact} alt="company photo" />
-              </div>
-              <div>
-                <img src={shadow} alt="company photo" />
-              </div>
+              {[popupCompanyDetail[0].addedBy.company.company_images][0].map(
+                (image) => {
+                  console.log(image.image);
+                  
+                  return (
+                    <div key={image.id}>
+                      <img src={image.image} alt="company photo" />
+                    </div>
+                  );
+                }
+              )}
             </div>
           </div>
         </div>

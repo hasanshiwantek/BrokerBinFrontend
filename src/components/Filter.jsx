@@ -1,40 +1,63 @@
 import { React, memo } from "react";
 import css from "../styles/Filter.module.css";
-import { counts, partVariance, searchHistory } from "../data/tableData";
+import { partVariance } from "../data/tableData";
 import { BsToggleOn } from "react-icons/bs";
 import { FaWindowClose } from "react-icons/fa";
-import { setFilterToggle } from "../ReduxStore/SearchProductSlice";
 import { useDispatch, useSelector } from "react-redux";
+import Cookies from "js-cookie";
+import {
+  searchProductFilter,
+  setFilterToggle,
+} from "../ReduxStore/SearchProductSlice";
 
 const Filter = () => {
-  const { searchResponse } = useSelector((store) => store.searchProductStore);
+  const token = Cookies.get("token");
+  const { searchResponse, searchHistory } = useSelector(
+    (store) => store.searchProductStore
+  );
 
   const dispatch = useDispatch();
 
   const manufacturerCount = {};
-  searchResponse.forEach((item) => {
+  searchResponse?.data?.forEach((item) => {
     const manufacturer = item.mfg;
     manufacturerCount[manufacturer] =
       (manufacturerCount[manufacturer] || 0) + 1;
   });
 
   const conditionCount = {};
-  searchResponse.forEach((item) => {
+  searchResponse?.data?.forEach((item) => {
     const condition = item.cond;
     conditionCount[condition] = (conditionCount[condition] || 0) + 1;
   });
 
   const regionCount = {};
-  searchResponse.forEach((item) => {
-    const region = item.region;
+  searchResponse?.data?.forEach((item) => {
+    const region = item?.addedBy?.company?.country;
     regionCount[region] = (regionCount[region] || 0) + 1;
   });
 
   const countryCount = {};
-  searchResponse.forEach((item) => {
-    const country = item.country;
+  searchResponse?.data?.forEach((item) => {
+    const country = item?.addedBy?.company?.region;
     countryCount[country] = (countryCount[country] || 0) + 1;
   });
+
+  const submitProductFilter = (event) => {
+    event.preventDefault();
+    let filters = {};
+    const formData = new FormData(event.target);
+
+    formData.forEach((value, key) => {
+      if (filters[key]) {
+        filters[key].push(value);
+      } else {
+        filters[key] = [value];
+      }
+    });
+
+    dispatch(searchProductFilter({ token, filters }));
+  };
 
   return (
     <div className={css.filterSection}>
@@ -52,92 +75,115 @@ const Filter = () => {
           </button>
         </div>
       </div>
-      <div className={css.interSection}>
-        <div>
-          <h6>Manufacturer</h6>
-          <button type="button">-</button>
+      <form onSubmit={submitProductFilter}>
+        <div className={css.interSection}>
+          <div>
+            <h6>Manufacturer</h6>
+            <button type="button">-</button>
+          </div>
+          <div>
+            {Object.entries(manufacturerCount).map(([mfg, count]) => {
+              return (
+                <div key={mfg}>
+                  <input type="checkbox" name="mfg" value={mfg} id={mfg} />
+                  <label htmlFor={mfg}>
+                    {mfg} ({count})
+                  </label>
+                </div>
+              );
+            })}
+          </div>
         </div>
-        <div>
-          {Object.entries(manufacturerCount).map(([key, value]) => {
-            return (
-              <div key={key}>
-                <input type="checkbox" name={key} />
-                <p>
-                  {key} ({value})
-                </p>
-              </div>
-            );
-          })}
+        <div className={css.interSection}>
+          <div>
+            <h6>Condition</h6>
+            <button type="button">-</button>
+          </div>
+          <div>
+            {Object.entries(conditionCount).map(([cond, count]) => {
+              return (
+                <div key={cond}>
+                  <input type="checkbox" name="cond" value={cond} id={cond} />
+                  <label htmlFor={cond}>
+                    {cond} ({count})
+                  </label>
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
-      <div className={css.interSection}>
-        <div>
-          <h6>Condition</h6>
-          <button type="button">-</button>
+        <div className={css.interSection}>
+          <div>
+            <h6>Region</h6>
+            <button type="button">-</button>
+          </div>
+          <div>
+            {Object.entries(regionCount).map(([region, count]) => {
+              return (
+                <div key={region}>
+                  <input
+                    type="checkbox"
+                    name="company_region"
+                    value={region}
+                    id={region}
+                  />
+                  <label htmlFor={region}>
+                    {region} ({count})
+                  </label>
+                </div>
+              );
+            })}
+          </div>
         </div>
-        <div>
-          {Object.entries(conditionCount).map(([key, value]) => {
-            return (
-              <div key={key}>
-                <input type="checkbox" name={key} />
-                <p>
-                  {key} ({value})
-                </p>
-              </div>
-            );
-          })}
+        <div className={css.interSection}>
+          <div>
+            <h6>Country</h6>
+            <button type="button">-</button>
+          </div>
+          <div>
+            {Object.entries(countryCount).map(([country, count]) => {
+              return (
+                <div key={country}>
+                  <input
+                    type="checkbox"
+                    name="company_country"
+                    value={country}
+                    id={country}
+                  />
+                  <label htmlFor={country}>
+                    {country} ({count})
+                  </label>
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
-      <div className={css.interSection}>
-        <div>
-          <h6>Region</h6>
-          <button type="button">-</button>
-        </div>
-        <div>
-          {Object.entries(regionCount).map(([key, value]) => {
-            return (
-              <div key={key}>
-                <input type="checkbox" name={key} />
-                <p>
-                  {key} ({value})
-                </p>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-      <div className={css.interSection}>
-        <div>
-          <h6>Country</h6>
-          <button type="button">-</button>
-        </div>
-        <div>
-          {Object.entries(countryCount).map(([key, value]) => {
-            return (
-              <div key={key}>
-                <input type="checkbox" name={key} />
-                <p>
-                  {key} ({value})
-                </p>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-      <button type="button" id={css.applyFilter}>
-        apply filters
-      </button>
+        <input type="submit" id={css.applyFilter} value="Apply Filter" />
+      </form>
+
       <div className={css.interSection}>
         <div>
           <h6>Search History</h6>
           <button type="button">-</button>
         </div>
         <div className={css.searchHistory}>
-          {searchHistory.map((e, i) => {
+          {searchHistory.map((e) => {
+            const searchedDate = new Date(e.searched_at);
+            const referenceDate = new Date();
+
+            // Check if both dates are on the same day
+            const isToday =
+              searchedDate.toDateString() === referenceDate.toDateString();
+
+            const notToday =
+              referenceDate.getDate() -
+              searchedDate.getDate();
+
             return (
-              <div key={i}>
-                <span>{e.product.slice(0, 15)}</span>
-                <span>{e.time}</span>
+              <div key={e.id}>
+                <span>{e.query}</span>
+                {isToday && <span>today</span>}
+                {!isToday && <span>{notToday}</span>}
               </div>
             );
           })}

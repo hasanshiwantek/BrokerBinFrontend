@@ -3,28 +3,79 @@ import axios from "axios";
 
 export const searchProductQuery = createAsyncThunk(
   "searchProductStore/searchProductQuery",
-  async ({ data, token, callback }) => {
+  async ({ token, page, pageSize, search }) => {
     try {
-      // Perform API call to fetch products
       const response = await axios.post(
-        "https://brokerbinbackend.advertsedge.com/api/inventory/search",
-        JSON.stringify(data),
+        `https://brokerbin.shiwantek.com/api/inventory/search`,
+        JSON.stringify({ page, pageSize, search }),
         {
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         }
       );
 
-      if (callback) callback();
+      // console.log(response)
       return response.data;
     } catch (error) {
       console.error(
         "Error while searching product:",
         error.response?.data || error.message
       );
-      throw "Error while fetching user data:" || error;
+      throw error.response?.data || error.message;
+    }
+  }
+);
+
+export const searchProductFilter = createAsyncThunk(
+  "searchProductStore/searchProductFilter",
+  async ({ token, filters }) => {
+    try {
+      const response = await axios.post(
+        `https://brokerbin.shiwantek.com/api/inventory/fetch`,
+        JSON.stringify(filters),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log(response);
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error while searching product:",
+        error.response?.data || error.message
+      );
+      throw error.response?.data || error.message;
+    }
+  }
+);
+
+export const searchProductHistory = createAsyncThunk(
+  "searchProductStore/searchProductHistory",
+  async ({ token }) => {
+    try {
+      const response = await axios.get(
+        `https://brokerbin.shiwantek.com/api/inventory/search/history`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      return response.data.history;
+    } catch (error) {
+      console.error(
+        "Error while searching product:",
+        error.response?.data || error.message
+      );
+      throw error.response?.data || error.message;
     }
   }
 );
@@ -35,12 +86,15 @@ const initialState = {
   filterToggle: true,
   popUpRfq: false,
   togglePopUp: false,
-  selectedProducts: [],
   searchResponse: [],
+  popupCompanyDetail: [],
+  selectedProducts: [],
+  searchHistory: [],
   error: null,
-  currentPage: 0,
-  itemsPerPage: 20,
+  page: 1,
+  pageSize: 20,
   gettingProducts: false,
+  gettingHistory: false,
 };
 
 const searchProductSlice = createSlice({
@@ -63,38 +117,67 @@ const searchProductSlice = createSlice({
       state.togglePopUp = !state.togglePopUp;
     },
     setSearchResponse: (state, action) => {
-      state.searchResponse = action.payload;
+      state.searchResponse = action.payload.data;
+    },
+    setPopupCompanyDetail: (state, action) => {
+      state.popupCompanyDetail = action.payload;
     },
     setSelectedProducts: (state, action) => {
       state.selectedProducts = action.payload;
     },
     setCurrentPage: (state, action) => {
-      state.currentPage = 0;
+      state.page = 1;
     },
     setCurrentPagePrev: (state, action) => {
-      state.currentPage -= 1;
+      state.page -= 1;
     },
     setCurrentPageNext: (state, action) => {
-      state.currentPage += 1;
+      state.page += 1;
     },
-    setGettingProducts: (state, action) => {
-      state.gettingProducts != state.gettingProducts;
+    setGettingProducts: (state) => {
+      state.gettingProducts = !state.gettingProducts;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(searchProductQuery.pending, (state) => {
+        state.gettingProducts = true; // Set to true when starting the fetch
         state.error = null;
-        state.gettingProducts = false;
       })
       .addCase(searchProductQuery.fulfilled, (state, action) => {
-        state.searchResponse = action.payload.data;
-        state.gettingProducts = true;
+        state.searchResponse = action.payload;
+        state.gettingProducts = false; // Set to false after fetching is done
       })
       .addCase(searchProductQuery.rejected, (state, action) => {
         state.error = action.error.message;
         console.error("Error while searching:", action.error.message);
-        state.gettingProducts = false;
+        state.gettingProducts = false; // Set to false if the fetch fails
+      })
+      .addCase(searchProductFilter.pending, (state) => {
+        state.gettingProducts = true; // Set to true when starting the fetch
+        state.error = null;
+      })
+      .addCase(searchProductFilter.fulfilled, (state, action) => {
+        state.searchResponse = action.payload;
+        state.gettingProducts = false; // Set to false after fetching is done
+      })
+      .addCase(searchProductFilter.rejected, (state, action) => {
+        state.error = action.error.message;
+        console.error("Error while filtering:", action.error.message);
+        state.gettingProducts = false; // Set to false if the fetch fails
+      })
+      .addCase(searchProductHistory.pending, (state) => {
+        state.gettingHistory = true; // Set to true when starting the fetch
+        state.error = null;
+      })
+      .addCase(searchProductHistory.fulfilled, (state, action) => {
+        state.searchHistory = action.payload;
+        state.gettingHistory = false; // Set to false after fetching is done
+      })
+      .addCase(searchProductHistory.rejected, (state, action) => {
+        state.error = action.error.message;
+        console.error("Error while fetching history:", action.error.message);
+        state.gettingHistory = false; // Set to false if the fetch fails
       });
   },
 });
@@ -110,6 +193,7 @@ export const {
   setCurrentPagePrev,
   setCurrentPageNext,
   setCurrentPage,
+  setPopupCompanyDetail,
 } = searchProductSlice.actions;
 
 export default searchProductSlice.reducer;

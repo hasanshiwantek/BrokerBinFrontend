@@ -2,18 +2,24 @@ import React, { useState } from "react";
 import css from "../../../styles/Popup/CompanyDetails.module.css";
 import PlusSquare from "../../../svgs/PlusSquare";
 import { companySideInformation } from "../../../data/tableData";
+import { useSelector } from "react-redux";
 const TabInformation = () => {
   const [toggleTabOne, setToggleTabOne] = useState(true);
   const [toggleTabTwo, setToggleTabTwo] = useState(true);
   const [toggleTabThree, setToggleTabThree] = useState(true);
   const { companyInformation, PrimaryContactInformation, SalesInformation } =
     companySideInformation;
+  const { popupCompanyDetail } = useSelector(
+    (store) => store.searchProductStore
+  );
 
   return (
     <>
       <div className={css.Popup_Info_Main_left_companySideInformation}>
         <ul className={css.Popup_Info_Main_left_companySideInformation_tabs}>
-          <li className={css.Popup_Info_Main_left_companySideInformation_tabs_li}>
+          <li
+            className={css.Popup_Info_Main_left_companySideInformation_tabs_li}
+          >
             <h3>Company Information</h3>
             <span onClick={() => setToggleTabOne((prev) => !prev)}>
               <PlusSquare />
@@ -22,34 +28,40 @@ const TabInformation = () => {
           <div
             className={toggleTabOne === true ? css.showContent : css.content}
           >
-            {companyInformation.map((e, i) => {
+            {[popupCompanyDetail[0].addedBy.company].map((e, i) => {
               return (
-                  <ul key={e}>
-                    <span>
-                      <li>Employees:</li>
-                      <li>{e.Employees}</li>
-                    </span>
-                    <span>
-                      <li>Member Since:</li>
-                      <li>{e["Member Since"]}</li>
-                    </span>
-                    <span>
-                      <li>Open:</li>
-                      <li>{e.Open}</li>
-                    </span>
-                    <span>
-                      <li>Close:</li>
-                      <li>{e.Close}</li>
-                    </span>
-                    <span>
-                      <li>Inventory Listed:</li>
-                      <li>{e["Inventory Listed"]}</li>
-                    </span>
-                  </ul>
+                <ul key={e}>
+                  <span>
+                    <li>Employees:</li>
+                    <li>{e.total_employees}</li>
+                  </span>
+                  <span>
+                    <li>Member Since:</li>
+                    <li>{e.member_since}</li>
+                  </span>
+                  <span>
+                    <li>Open:</li>
+                    <li>{e.open_timing}</li>
+                  </span>
+                  <span>
+                    <li>Close:</li>
+                    <li>{e.close}</li>
+                  </span>
+                  <span>
+                    <li>Inventory Listed:</li>
+                    <li>Not Present</li>
+                  </span>
+                  <span>
+                    <li>Broadcasts:</li>
+                    <li>Not Present</li>
+                  </span>
+                </ul>
               );
             })}
           </div>
-          <li className={css.Popup_Info_Main_left_companySideInformation_tabs_li}>
+          <li
+            className={css.Popup_Info_Main_left_companySideInformation_tabs_li}
+          >
             <h3>Primary Contact Information</h3>
             <span onClick={() => setToggleTabTwo((prev) => !prev)}>
               <PlusSquare />
@@ -86,7 +98,9 @@ const TabInformation = () => {
               );
             })}
           </div>
-          <li className={css.Popup_Info_Main_left_companySideInformation_tabs_li}>
+          <li
+            className={css.Popup_Info_Main_left_companySideInformation_tabs_li}
+          >
             <h3>Sales Information</h3>
             <span onClick={() => setToggleTabThree((prev) => !prev)}>
               <PlusSquare />

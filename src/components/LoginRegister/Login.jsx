@@ -25,7 +25,7 @@ const Login = () => {
     const data = Object.fromEntries(formData.entries());
     try {
       const response = await fetch(
-        "https://brokerbinbackend.advertsedge.com/api/user/login",
+        "https://brokerbin.shiwantek.com/api/user/login",
         {
           method: "POST",
           headers: {
@@ -128,7 +128,7 @@ const Login = () => {
           </span>
           <span className={css.loginContainer_form_rememberMe}>
             <input type="checkbox" name="rememberMe" id="rememberMe" />
-            <label>Remember me</label>
+            <label htmlFor="rememberMe">Remember me</label>
           </span>
           {errorMessage && (
             <p style={{ color: "red" }} className={css.error}>

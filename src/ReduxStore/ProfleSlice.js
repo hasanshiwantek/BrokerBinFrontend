@@ -6,7 +6,7 @@ export const fetchUserData = createAsyncThunk(
   async ({ id, token }) => {
     try {
       const response = await axios.get(
-        `https://brokerbinbackend.advertsedge.com/api/user/fetch/${id}`,
+        `https://brokerbin.shiwantek.com/api/user/fetch/${id}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -30,7 +30,32 @@ export const submitUserData = createAsyncThunk(
   async ({ id, token, data }) => {
     try {
       const response = await axios.put(
-        `https://brokerbinbackend.advertsedge.com/api/user/edit/${id}`,
+        `https://brokerbin.shiwantek.com/api/user/edit/${id}`,
+        JSON.stringify(data),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data.data;
+    } catch (error) {
+      console.error(
+        "Error while submitting user data:",
+        error.response?.data || error.message
+      );
+      throw "Error while submitting user data:" || error;
+    }
+  }
+);
+
+export const submitUserOptions = createAsyncThunk(
+  "profileStore/submitUserOptions",
+  async ({ id, token, data }) => {
+    try {
+      const response = await axios.put(
+        `https://brokerbin.shiwantek.com/api/user/edit/${id}`,
         JSON.stringify(data),
         {
           headers: {
@@ -85,6 +110,44 @@ const initialState = {
     sigcheckFax: true,
     sigcheckIM: true,
   },
+  optionFormData: {
+    hourly: false,
+    daily: false,
+    my_regions_filter: [],
+    my_countries_filter: [],
+    my_states_filter: [],
+    regions_filter: [],
+    countries_filter: [],
+    states_filter: [],
+    language: "english",
+    sortPreferences: [
+      { sortBy: "", sortOrder: "ASC" }, // Default preferences for Sorting 1
+      { sortBy: "", sortOrder: "ASC" }, // Sorting 2
+      { sortBy: "", sortOrder: "ASC" }, // Sorting 3
+    ],
+    sortLock: "0",
+    multiplePartSearch: "1",
+    itemsPerPage: "20",
+    alternateRowColors: false,
+    showBorders: false,
+    showFilters: "2",
+    displayFiltersPosition: "2",
+    showDetails: false,
+    forceDescriptions: false,
+    doubleVision: false,
+    showHistoryGraphs: true,
+    preferredBrokerBin: "1",
+    receiveRFQEmails: "1",
+    fontSize: "8",
+    extendedCompanyInfo: "1",
+    contactMethod: "1",
+    showContactInfo: "1",
+    receiveSiteEmails: "0",
+    receiveUpdates: "0",
+    cfilterfNEW:false,
+    cfilterfASIS:false,
+
+  },
   initialData: {},
   blurWhileLoading: false,
   customSignature: true,
@@ -98,6 +161,12 @@ const profileSlice = createSlice({
     setFormData: (state, action) => {
       state.formData = {
         ...state.formData,
+        ...action.payload,
+      };
+    },
+    setOptionFormData: (state, action) => {
+      state.optionFormData = {
+        ...state.optionFormData,
         ...action.payload,
       };
     },
@@ -144,7 +213,11 @@ const profileSlice = createSlice({
   },
 });
 
-export const { setFormData, setCustomSignature, setBlurWhileLoading } =
-  profileSlice.actions;
+export const {
+  setFormData,
+  setOptionFormData,
+  setCustomSignature,
+  setBlurWhileLoading,
+} = profileSlice.actions;
 
 export default profileSlice.reducer;

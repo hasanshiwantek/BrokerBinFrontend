@@ -1,5 +1,5 @@
 import React from "react";
-import { Helmet } from "react-helmet-async";
+// import { Helmet } from "react-helmet-async";
 
 const SchemaComponent = ({ product }) => {
   const schemaData = {
@@ -24,9 +24,9 @@ const SchemaComponent = ({ product }) => {
   };
 
   return (
-    <Helmet>
+    // <Helmet>
       <script type="application/ld+json">{JSON.stringify(schemaData)}</script>
-    </Helmet>
+    // </Helmet>
   );
 };
 
