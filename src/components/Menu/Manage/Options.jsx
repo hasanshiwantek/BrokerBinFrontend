@@ -5,6 +5,7 @@ import OnlyReceiveMatch from "./OnlyReceiveMatch";
 import OnlyDisplay from "./OnlyDisplay";
 import { useDispatch, useSelector } from "react-redux";
 import { setOptionFormData } from "../../../ReduxStore/ProfleSlice";
+import { Link } from "react-router-dom";
 
 const Options = () => {
   const { optionFormData } = useSelector((state) => state.profileStore);
@@ -63,14 +64,29 @@ const Options = () => {
             <div className={myProfile.profileInfo_links}>
               <ul>
                 <li>
-                  <a href="/myprofile">
+                  <Link to={"/myprofile"}>
                     <span>Personal Info</span>
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/myprofile/Options">
+                  <Link to={"/myprofile/Options"}>
                     <span>Options</span>
-                  </a>
+                  </Link>
+                </li>
+                <li>
+                  <Link to={"/myprofile/MyVendors"}>
+                    <span>My Vendors</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link>
+                    <span>My Contacts</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link>
+                    <span>Broadcast Filters</span>
+                  </Link>
                 </li>
               </ul>
             </div>

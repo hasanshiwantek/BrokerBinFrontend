@@ -1,0 +1,28 @@
+.basicFormLayout {
+  margin: 4rem 8rem;
+  > form {
+    display: flex;
+  }
+  > h1 {
+    font-size: 2rem;
+  }
+}
+
+.basic {
+  background: var(--table-bg-color);
+  padding: 0 1rem;
+  margin: 0 auto;
+  &_links {
+    ul {
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      padding: 0.5rem;
+    }
+  }
+  &_form {
+    background: white;
+    padding: 1rem;
+  }
+}

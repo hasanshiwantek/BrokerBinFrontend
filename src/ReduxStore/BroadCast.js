@@ -3,19 +3,20 @@ import axios from "axios";
 
 export const sendBroadcast = createAsyncThunk(
   "broadcastStore/sendBroadcast",
-  async ({ data, token }) => {
+  async ({ token, data }) => {
     try {
       const response = await axios.post(
         "https://brokerbin.shiwantek.com/api/broadcast/store",
-        JSON.stringify(data),
+        data,
         {
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      return response;
+
+      return response.data;
     } catch (error) {
       console.error(
         "Error while fetching user data:",

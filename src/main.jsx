@@ -41,16 +41,18 @@ const VenPrice = lazy(() =>
   import("./components/Menu/Manage/Inventory/VenPrice.jsx")
 );
 const Send = lazy(() => import("./components/Menu/Broadcast/Send/Send.jsx"));
-
 const Advanced = lazy(() => import("./components/Menu/Search/Advanced.jsx"));
 const Map = lazy(() => import("./components/Map/Map.jsx"));
 const MyWorldMap = lazy(() => import("./components/Map/MyWorldMap.jsx"));
 const Form = lazy(() => import("./Form.jsx"));
 const TextEditor = lazy(() => import("./components/TextEditor.jsx"));
+const MyVendors = lazy(() => import("./components/Menu/Tools/MyVendors.jsx"));
 
 import Crousel from "./Crousel.jsx";
 import { Provider } from "react-redux";
 import store from "./ReduxStore/Store.js";
+import Contact from "./components/Menu/Main/Contact.jsx";
+import Ethics from "./components/Menu/Main/Ethics.jsx";
 
 const router = createBrowserRouter([
   {
@@ -274,6 +276,33 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <Send />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/feedback",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <Contact />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/ethics",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <Ethics />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/myprofile/MyVendors",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <MyVendors />
           </Suspense>
         ),
       },

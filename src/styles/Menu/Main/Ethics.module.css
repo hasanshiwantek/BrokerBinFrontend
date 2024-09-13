@@ -1,0 +1,116 @@
+.ethics_form {
+  width: 30vw;
+  padding: 2rem;
+
+  &_header {
+    > h1 {
+      font-size: 2rem;
+    }
+    > div {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+
+  &_fields {
+    > ul {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      list-style-type: decimal;
+      list-style-position: inside;
+      > li {
+        input {
+          width: 30%;
+          padding: 0.5rem;
+        }
+        > textarea {
+          width: 100%;
+        }
+        > div {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          justify-content: center;
+          > span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+          }
+        }
+      }
+    }
+    &_search {
+      > span:nth-child(2) {
+        background: orange;
+        position: relative;
+      }
+    }
+    &_files {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1rem;
+      li {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+    }
+  }
+}
+
+.ethics {
+  &_btn {
+    display: flex;
+    gap: 2rem;
+    justify-content: space-between;
+    > button,
+    > input {
+      color: white;
+      background: var(--primary-color);
+      padding: 0.5rem 1rem;
+      font-size: 1.5rem;
+    }
+  }
+}
+
+.error {
+  font-size: 1.5rem;
+  color: red;
+}
+
+.compnaySearch {
+  position: absolute;
+  z-index: 2;
+  ul {
+    background: white;
+    width: 15rem;
+    /* min-height: min-content; */
+    max-height: 20rem;
+    overflow-y: scroll;
+    border: 1px solid rgb(85, 85, 85);
+    > li {
+      padding: 0.5rem;
+    }
+    > li:nth-child(even) {
+      background-color: rgb(207, 207, 207);
+    }
+    > li:hover {
+      background-color: rgb(102, 142, 252);
+      color: white;
+    }
+  }
+}
+
+.companyItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  > p:nth-child(2) {
+    display: flex;
+    gap: 1px;
+    text-transform: uppercase;
+  }
+}

@@ -12,6 +12,7 @@ import {
 } from "../../../ReduxStore/ProfleSlice";
 import ErrorStatus from "../../Error/ErrorStatus";
 import Cookies from "js-cookie";
+import { Link } from "react-router-dom";
 
 const MyProfile = () => {
   const token = Cookies.get("token");
@@ -232,30 +233,30 @@ const MyProfile = () => {
               <div className={css.profileInfo_links}>
                 <ul>
                   <li>
-                    <a href="/myprofile">
+                    <Link to={"/myprofile"}>
                       <span>Personal Info</span>
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="/myprofile/Options">
+                    <Link to={"/myprofile/Options"}>
                       <span>Options</span>
-                    </a>
+                    </Link>
                   </li>
-                  {/* <li>
-                    <a href="/">
+                  <li>
+                    <Link to={"/myprofile/MyVendors"}>
                       <span>My Vendors</span>
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="/">
+                    <Link>
                       <span>My Contacts</span>
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="/">
+                    <Link>
                       <span>Broadcast Filters</span>
-                    </a>
-                  </li> */}
+                    </Link>
+                  </li>
                 </ul>
               </div>
               <div className={css.profileInfo_form}>

@@ -158,7 +158,7 @@ const Header = () => {
                               <Link>
                                 <li>contact</li>
                               </Link>
-                              <Link>
+                              <Link to={"/ethics"}>
                                 <li>ethics</li>
                               </Link>
                               <Link>
@@ -279,10 +279,10 @@ const Header = () => {
                   <Link>
                     <li>help</li>
                   </Link>
-                  <Link>
+                  <Link to={"/feedback"}>
                     <li>contact</li>
                   </Link>
-                  <Link>
+                  <Link to={"/ethics"}>
                     <li>ethics</li>
                   </Link>
                   <Link>
@@ -294,33 +294,33 @@ const Header = () => {
                 </ul>
               </div>
             </li>
-            {/* <li>
+            <li>
               <a href="/">tools</a>
               <BiSolidDownArrow className={css.onHoverMenuIconDown} />
               <BiSolidUpArrow className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
                 <ul>
                   <li>
-                    <Link>Tools</a>
+                    <Link>Tools</Link>
                   </li>
                   <li>
-                    <Link>My Vendors</a>
+                    <Link to={"/myprofile/MyVendors"}>My Vendors</Link>
                   </li>
                   <li>
-                    <Link>My Contacts</a>
+                    <Link>My Contacts</Link>
                   </li>
                   <li>
-                    <Link>Hot List</a>
+                    <Link>Hot List</Link>
                   </li>
                   <li>
-                    <Link>Partners</a>
+                    <Link>Partners</Link>
                   </li>
                   <li>
-                    <Link>Events</a>
+                    <Link>Events</Link>
                   </li>
                 </ul>
               </div>
-            </li> */}
+            </li>
             <li>
               <Link>search</Link>
               <BiSolidDownArrow className={css.onHoverMenuIconDown} />

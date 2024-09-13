@@ -23,6 +23,7 @@ const Inventory = () => {
     );
     formDataObject.uploadFile = filteredInventoryFile;
     if (formDataObject.uploadFile.length > 0) {
+      console.log(formDataObject);
       dispatch(sendInventoryFile({ token, formDataObject }));
     } else {
       alert("Please fill all required fields");
