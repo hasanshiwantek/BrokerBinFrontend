@@ -23,6 +23,7 @@
     "apexcharts": "^3.46.0",
     "axios": "^1.7.2",
     "chart.js": "^4.4.2",
+    "d3-geo": "^3.1.1",
     "google-map-react": "^2.2.1",
     "highcharts": "^11.4.1",
     "highcharts-react-official": "^3.2.1",
@@ -45,7 +46,9 @@
     "react-redux": "^9.1.2",
     "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^6.22.2",
+    "react-simple-maps": "^3.0.0",
     "react-svg-worldmap": "^2.0.0-alpha.16",
+    "react-tooltip": "^5.28.0",
     "recharts": "^2.12.2",
     "redux-thunk": "^3.1.0",
     "sort-by": "^0.0.2"
@@ -53,6 +56,7 @@
   "devDependencies": {
     "@types/react": "^18.2.56",
     "@types/react-dom": "^18.2.19",
+    "@types/react-simple-maps": "^3.0.6",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.17",
     "eslint": "^8.56.0",

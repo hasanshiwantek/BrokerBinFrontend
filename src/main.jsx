@@ -47,12 +47,15 @@ const MyWorldMap = lazy(() => import("./components/Map/MyWorldMap.jsx"));
 const Form = lazy(() => import("./Form.jsx"));
 const TextEditor = lazy(() => import("./components/TextEditor.jsx"));
 const MyVendors = lazy(() => import("./components/Menu/Tools/MyVendors.jsx"));
+const MyContact = lazy(() => import("./components/Menu/Tools/MyContact.jsx"));
 
 import Crousel from "./Crousel.jsx";
 import { Provider } from "react-redux";
 import store from "./ReduxStore/Store.js";
 import Contact from "./components/Menu/Main/Contact.jsx";
 import Ethics from "./components/Menu/Main/Ethics.jsx";
+import SvgMap from "./components/SvgMap.jsx";
+
 
 const router = createBrowserRouter([
   {
@@ -305,6 +308,19 @@ const router = createBrowserRouter([
             <MyVendors />
           </Suspense>
         ),
+      },
+      {
+        path: "/myprofile/MyContact",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <MyContact />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/svgmap",
+        element: <SvgMap />,
       },
     ],
   },

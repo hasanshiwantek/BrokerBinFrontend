@@ -164,97 +164,6 @@
   }
 }
 
-.AddAnotherFile {
-  &_Btn {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 1rem;
-  }
-  &_uploads {
-    display: flex;
-    flex-direction: column;
-    /* align-items: center; */
-    gap: 1rem;
-    select {
-      padding: 1rem 0;
-    }
-    &_div {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      button {
-        padding: 1rem 0.5rem;
-        background: var(--primary-color);
-      }
-    }
-  }
-}
-
-.editDeleteTable {
-  table {
-    width: 100%;
-    text-align: left;
-    border-collapse: separate;
-    th {
-      color: white;
-      background: var(--table-th-color);
-    }
-    tbody {
-      background: white;
-    }
-  }
-  &_top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: var(--box-shadow);
-    padding: 0 0.5rem;
-    span {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-    }
-  }
-  &_bottom {
-    background: var(--box-shadow);
-    display: flex;
-    gap: 1rem;
-  }
-}
-
-.inventory_add {
-  &_main {
-    table {
-      border-collapse: separate;
-      th {
-        text-align: left;
-        background: var(--table-th-color);
-        color: white;
-      }
-      td {
-        input,
-        select {
-          height: 3rem;
-          font-size: 1.2rem;
-        }
-      }
-    }
-    &_top {
-      display: flex;
-      justify-content: space-between;
-      background: var(--box-shadow);
-    }
-    &_bottom {
-      background: var(--box-shadow);
-    }
-  }
-}
-
-.active {
-  color: red; /* Example style for active link */
-}
-
 .vendor {
   background: white;
   padding: 2rem;
@@ -326,39 +235,58 @@
         flex-direction: column;
         border-left: 1px solid #d6d5d5;
         padding-left: 1rem;
+        flex: 1;
         > span {
           display: grid;
           grid-template-columns: 8rem 1fr;
           justify-items: flex-start;
         }
       }
-      &_display {
+      &_notesRating {
         display: flex;
         flex-direction: column;
-        align-items: center;
+        justify-content: center;
+        gap: 1rem;
       }
       &_notes {
         display: flex;
         flex-direction: column;
-        flex: 1;
+        flex-basis: 30%;
+        position: relative;
         > span:nth-child(2) {
           > textarea {
             width: 100%;
           }
         }
         > span:nth-child(3) {
-          margin-left: auto;
+          position: absolute;
+          right: 5%;
+          bottom: 10%;
+          > button {
+            padding: 0.5rem 1rem;
+          }
+          /* margin-left: auto; */
         }
+      }
+      &_rating {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
       }
       &_actions {
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 1rem;
-        svg {
+        > button {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 2rem;
           height: 3rem;
           width: 3rem;
-          color: black;
+          color: white;
+          background: black;
         }
       }
     }

@@ -3,20 +3,21 @@ import axios from "axios";
 
 export const searchProductQuery = createAsyncThunk(
   "searchProductStore/searchProductQuery",
-  async ({ token, page, pageSize, search }) => {
+  async ({ token, page, search }) => {
+    console.log({search});
     try {
-      const response = await axios.post(
-        `https://brokerbin.shiwantek.com/api/inventory/search`,
-        JSON.stringify({ page, pageSize, search }),
+      const response = await axios.get(
+        `https://brokerbinbackend.shiwantek.com/api/inventory/search?page=${page}`,
+        { search },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
         }
       );
 
-      // console.log(response)
+      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error(
@@ -31,10 +32,11 @@ export const searchProductQuery = createAsyncThunk(
 export const searchProductFilter = createAsyncThunk(
   "searchProductStore/searchProductFilter",
   async ({ token, filters }) => {
+    console.log(filters);
     try {
       const response = await axios.post(
-        `https://brokerbin.shiwantek.com/api/inventory/fetch`,
-        JSON.stringify(filters),
+        `https://brokerbinbackend.shiwantek.com/api/inventory/fetch`,
+        filters,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -43,9 +45,10 @@ export const searchProductFilter = createAsyncThunk(
         }
       );
 
-      console.log(response);
-      return response.data;
+      console.log(response.data);
+      return response.data.data;
     } catch (error) {
+      console.log(error);
       console.error(
         "Error while searching product:",
         error.response?.data || error.message
@@ -60,7 +63,32 @@ export const searchProductHistory = createAsyncThunk(
   async ({ token }) => {
     try {
       const response = await axios.get(
-        `https://brokerbin.shiwantek.com/api/inventory/search/history`,
+        `https://brokerbinbackend.shiwantek.com/api/inventory/search/history`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      return response.data.history;
+    } catch (error) {
+      console.error(
+        "Error while searching product:",
+        error.response?.data || error.message
+      );
+      throw error.response?.data || error.message;
+    }
+  }
+);
+
+export const addToHotList = createAsyncThunk(
+  "searchProductStore/searchProductHistory",
+  async ({ token }) => {
+    try {
+      const response = await axios.get(
+        `https://brokerbinbackend.shiwantek.com/api/hot-lists/store`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -86,7 +114,8 @@ const initialState = {
   filterToggle: true,
   popUpRfq: false,
   togglePopUp: false,
-  searchResponse: [],
+  searchResponseMatched: [],
+  searchResponseNotMatched: [],
   popupCompanyDetail: [],
   selectedProducts: [],
   searchHistory: [],
@@ -117,7 +146,7 @@ const searchProductSlice = createSlice({
       state.togglePopUp = !state.togglePopUp;
     },
     setSearchResponse: (state, action) => {
-      state.searchResponse = action.payload.data;
+      state.searchResponseMatched = action.payload.data;
     },
     setPopupCompanyDetail: (state, action) => {
       state.popupCompanyDetail = action.payload;
@@ -145,7 +174,8 @@ const searchProductSlice = createSlice({
         state.error = null;
       })
       .addCase(searchProductQuery.fulfilled, (state, action) => {
-        state.searchResponse = action.payload;
+        state.searchResponseMatched = action.payload.matchedResults;
+        state.searchResponseNotMatched = action.payload.notFoundKeywords;
         state.gettingProducts = false; // Set to false after fetching is done
       })
       .addCase(searchProductQuery.rejected, (state, action) => {
@@ -158,7 +188,8 @@ const searchProductSlice = createSlice({
         state.error = null;
       })
       .addCase(searchProductFilter.fulfilled, (state, action) => {
-        state.searchResponse = action.payload;
+        console.log(action.payload);
+        state.searchResponseMatched = action.payload;
         state.gettingProducts = false; // Set to false after fetching is done
       })
       .addCase(searchProductFilter.rejected, (state, action) => {

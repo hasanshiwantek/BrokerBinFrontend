@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from "react";
 import myProfile from "../../../styles/Menu/Manage/MyProfile.module.css";
-import css from "../../../styles/Menu/Tools/MyVendors.module.css";
+import css from "../../../styles/Menu/Tools/MyContact.module.css";
 import { companyList } from "../../../data/tableData";
 import { AiFillMail } from "react-icons/ai";
 import { MdPeople, MdPersonAddAlt1, MdPersonRemove } from "react-icons/md";
 import { BsGlobeAmericas } from "react-icons/bs";
 import { Link } from "react-router-dom";
-import SearchCompany from "../Main/SearchCompany";
-import SearchMyVendor from "./SearchMyVendor";
+import SearchMyContact from "./SearchMyContact";
 import { useDispatch, useSelector } from "react-redux";
 import { getMyVendors, removeMyVendors } from "../../../ReduxStore/ToolsSlice";
 import Cookies from "js-cookie";
 import { FaUsers } from "react-icons/fa";
 import { CiSquareRemove } from "react-icons/ci";
 
-const MyVendors = () => {
+const MyContact = () => {
   const token = Cookies.get("token");
   let [viewAsCompany, setViewAsCompany] = useState(true);
   let [viewAsShow, setViewAsShow] = useState(false);
@@ -106,7 +105,7 @@ const MyVendors = () => {
           <div className={css.vendor_view}>
             <div className={css.searchVendor}>
               <div className={css.searchVendor_search}>
-                <SearchMyVendor />
+                <SearchMyContact />
               </div>
             </div>
             <div>
@@ -164,9 +163,7 @@ const MyVendors = () => {
                           <div className={css.myVendor_company_list_main_img}>
                             <img src={vendor.company.image} alt="vendor logo" />
                             <span>
-                              <AiFillMail />
                               <p>{vendor.company.name}</p>
-                              <BsGlobeAmericas />
                             </span>
                           </div>
                           <div className={css.myVendor_company_list_main_info}>
@@ -199,36 +196,59 @@ const MyVendors = () => {
                             </span>
                           </div>
                           <div
-                            className={css.myVendor_company_list_main_display}
+                            className={
+                              css.myVendor_company_list_main_notesRating
+                            }
                           >
-                            <FaUsers />
-                            <button type="button">never</button>
-                          </div>
-                          <div className={css.myVendor_company_list_main_notes}>
-                            <span>
-                              <strong>Notes:</strong>
-                            </span>
-                            <span>
-                              <textarea
-                                name="notes"
-                                id="notes"
-                                cols={10}
-                                rows={6}
-                              ></textarea>
-                            </span>
-                            <span>
-                              <button type="button">save</button>
-                            </span>
+                            <div
+                              className={css.myVendor_company_list_main_notes}
+                            >
+                              <span>
+                                <strong>Notes:</strong>
+                              </span>
+                              <span>
+                                <textarea
+                                  name="notes"
+                                  id="notes"
+                                  cols={10}
+                                  rows={6}
+                                ></textarea>
+                              </span>
+                              <span>
+                                <button
+                                  type="button"
+                                  className={
+                                    css.myVendor_company_list_main_notes_btn
+                                  }
+                                >
+                                  save
+                                </button>
+                              </span>
+                            </div>
+                            <div
+                              className={css.myVendor_company_list_main_rating}
+                            >
+                              <input
+                                type="range"
+                                name="ratingContact"
+                                id="ratingContact"
+                                min={0}
+                                max={5}
+                              />
+                              <span>My Rating: 4</span>
+                            </div>
                           </div>
                           <div
                             className={css.myVendor_company_list_main_actions}
                           >
-                            <MdPersonRemove />
-                            <CiSquareRemove
+                            <button
+                              type="button"
                               onClick={() =>
                                 removeFromMyVendors(vendor.company.id)
                               }
-                            />
+                            >
+                              X
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -324,4 +344,4 @@ const MyVendors = () => {
   );
 };
 
-export default MyVendors;
+export default MyContact;

@@ -10,7 +10,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 
-const SearchMyVendor = () => {
+const SearchMyContact = () => {
   const token = Cookies.get("token");
   const [searchTerm, setSearchTerm] = useState("");
   const [showList, setShowList] = useState(false);
@@ -129,4 +129,4 @@ const SearchMyVendor = () => {
   );
 };
 
-export default SearchMyVendor;
+export default SearchMyContact;

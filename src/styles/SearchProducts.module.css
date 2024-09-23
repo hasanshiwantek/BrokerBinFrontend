@@ -4,6 +4,11 @@
   padding: 1rem;
 }
 
+.layoutTables {
+  display: flex;
+  flex-direction: column;
+}
+
 .productTableBtn {
   font-size: 1.5rem;
   display: flex;
@@ -83,4 +88,39 @@
   gap: 1rem;
   margin-top: 1rem;
   font-size: 1.5rem;
+}
+
+.searchResult {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.searchProductAddToHotList {
+  &_main {
+    background: #e8e8e8;
+    padding: 2rem;
+    width: fit-content;
+    &_bg {
+      background: #bfbfbf;
+      color: white;
+      > div {
+        background: white;
+        color: black;
+        padding: 1rem;
+        > span {
+          display: grid;
+          grid-template-columns: 1rem 1fr;
+        }
+      }
+      > span {
+        padding-left: 0.5rem;
+        button {
+          padding: 0.5rem;
+          background: var(--primary-color);
+        }
+      }
+    }
+  }
 }

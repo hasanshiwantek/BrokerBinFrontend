@@ -68,9 +68,9 @@ const Header = () => {
       .split(" ")
       .filter(Boolean)
       .join(",");
-    console.log(searchString);
+    // console.log(searchString);
 
-    const url = "/inventory/search";
+    const url = `/inventory/search?page=${page}`;
 
     // Dispatch the search query action and navigate to the search page
     // dispatch(
@@ -307,7 +307,7 @@ const Header = () => {
                     <Link to={"/myprofile/MyVendors"}>My Vendors</Link>
                   </li>
                   <li>
-                    <Link>My Contacts</Link>
+                    <Link to={"/myprofile/MyContact"}>My Contacts</Link>
                   </li>
                   <li>
                     <Link>Hot List</Link>

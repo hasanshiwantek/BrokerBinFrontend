@@ -7,6 +7,7 @@ import CompanyDetails from "../../Popups/CompanyDetails/CompanyDetails";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { useLocation } from "react-router-dom";
+
 import {
   searchProductQuery,
   setCurrentPage,
@@ -27,6 +28,7 @@ import { BiBlock } from "react-icons/bi";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import MyRFQNew from "../../Popups/MyRFQNew";
 import ErrorStatus from "../../Error/ErrorStatus";
+import AddToHotList from "./AddToHotList";
 
 const SearchProduct = () => {
   const token = Cookies.get("token");
@@ -34,7 +36,8 @@ const SearchProduct = () => {
   const searchString = location.state || {};
 
   const {
-    searchResponse,
+    searchResponseMatched,
+    searchResponseNotMatched,
     gettingProducts,
     gettingHistory,
     error,
@@ -45,24 +48,24 @@ const SearchProduct = () => {
     companiesListingParts,
     togglePopUp,
   } = useSelector((store) => store.searchProductStore);
+  // console.log(searchResponseMatched,searchResponseNotMatched);
 
   const dispatch = useDispatch();
 
   // Effect 2: Perform the search query when the page or query changes
   useEffect(() => {
     // Dispatch the search query
-    console.log("Product Search");
+    // console.log("Product Search");
+    // console.log(searchString);
     dispatch(
       searchProductQuery({
         token,
         page,
-        pageSize,
         search: searchString,
       })
     );
-    
-    dispatch(searchProductHistory({ token }));
 
+    dispatch(searchProductHistory({ token }));
   }, [token, page, pageSize, searchString, dispatch]);
 
   if (gettingProducts) {
@@ -80,22 +83,25 @@ const SearchProduct = () => {
   return (
     <div className={css.layout}>
       {filterToggle && <Filter />}
-      {searchResponse?.data?.length === 0 ? (
-        <div className={css.searchResult}>
-          <h1 style={{ fontSize: "5rem", marginLeft: "5rem" }}>
-            <strong>Found {searchResponse?.data?.length} results</strong>
-          </h1>
-        </div>
-      ) : (
-        <div className={css.tableArea}>
-          {graphToggle && <ProductsPieChart />}
-          <div className={css.productTable}>
-            <ProductTableBtn />
-            <ProductTableDetail />
+      {/* If there are products that are not matched with search query */}
+      <div className={css.layoutTables}>
+        {searchResponseNotMatched?.length > 0 && (
+          <div className={css.searchResult}>
+            <AddToHotList />
           </div>
-          {companiesListingParts && <CompaniesListingParts />}
-        </div>
-      )}
+        )}
+        {/* Products those are matched with search query */}
+        {searchResponseMatched?.length > 0 && (
+          <div className={css.tableArea}>
+            {graphToggle && <ProductsPieChart />}
+            <div className={css.productTable}>
+              <ProductTableBtn />
+              <ProductTableDetail />
+            </div>
+            {companiesListingParts && <CompaniesListingParts />}
+          </div>
+        )}
+      </div>
       {togglePopUp && <CompanyDetails />}
     </div>
   );
@@ -132,15 +138,14 @@ const ProductTableBtn = React.memo(() => {
 });
 
 const ProductTableDetail = React.memo(() => {
-  const { selectedProducts, searchResponse, page, pageSize } = useSelector(
-    (store) => store.searchProductStore
-  );
+  const { selectedProducts, searchResponseMatched, page, pageSize } =
+    useSelector((store) => store.searchProductStore);
 
   const dispatch = useDispatch();
 
   const handleShowPopupCompanyDetails = (event, id) => {
     event.stopPropagation();
-    const companyDetail = searchResponse.data.filter((e) => e.id === id);
+    const companyDetail = searchResponseMatched?.filter((e) => e.id === id);
     dispatch(setPopupCompanyDetail(companyDetail));
     dispatch(setTogglePopUp());
   };
@@ -153,7 +158,7 @@ const ProductTableDetail = React.memo(() => {
       ) {
         return selectedProducts.filter((product) => product.id !== id);
       } else {
-        const selectedProduct = searchResponse?.data?.find(
+        const selectedProduct = searchResponseMatched?.find(
           (item) => item.id === id
         );
         return [...selectedProducts, selectedProduct];
@@ -193,7 +198,7 @@ const ProductTableDetail = React.memo(() => {
           </tr>
         </thead>
         <tbody>
-          {searchResponse?.data?.map((e, i) => (
+          {searchResponseMatched?.map((e, i) => (
             <tr className={css.tableData} key={i}>
               <td>
                 <input
@@ -273,12 +278,14 @@ const ProductTableDetail = React.memo(() => {
           ⬅️
         </button>
         <span>
-          {page}/{searchResponse?.lastPage}
+          {page}/{Math.floor(searchResponseMatched?.length / pageSize) + 1}
         </span>
         <button
           type="button"
           onClick={() => dispatch(setCurrentPageNext())}
-          disabled={page === searchResponse?.lastPage}
+          disabled={
+            page === Math.floor(searchResponseMatched?.length / pageSize) + 1
+          }
         >
           ➡️
         </button>

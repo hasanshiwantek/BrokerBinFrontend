@@ -9,36 +9,40 @@ import {
   searchProductFilter,
   setFilterToggle,
 } from "../ReduxStore/SearchProductSlice";
+import { useLocation } from "react-router-dom";
 
 const Filter = () => {
   const token = Cookies.get("token");
-  const { searchResponse, searchHistory } = useSelector(
+  const location = useLocation();
+  const searchString = location.state || {};
+  // console.log(searchString);
+  const { searchResponseMatched, searchHistory, page, pageSize } = useSelector(
     (store) => store.searchProductStore
   );
 
   const dispatch = useDispatch();
 
   const manufacturerCount = {};
-  searchResponse?.data?.forEach((item) => {
+  searchResponseMatched?.forEach((item) => {
     const manufacturer = item.mfg;
     manufacturerCount[manufacturer] =
       (manufacturerCount[manufacturer] || 0) + 1;
   });
 
   const conditionCount = {};
-  searchResponse?.data?.forEach((item) => {
+  searchResponseMatched?.forEach((item) => {
     const condition = item.cond;
     conditionCount[condition] = (conditionCount[condition] || 0) + 1;
   });
 
   const regionCount = {};
-  searchResponse?.data?.forEach((item) => {
+  searchResponseMatched?.forEach((item) => {
     const region = item?.addedBy?.company?.country;
     regionCount[region] = (regionCount[region] || 0) + 1;
   });
 
   const countryCount = {};
-  searchResponse?.data?.forEach((item) => {
+  searchResponseMatched?.forEach((item) => {
     const country = item?.addedBy?.company?.region;
     countryCount[country] = (countryCount[country] || 0) + 1;
   });
@@ -55,6 +59,14 @@ const Filter = () => {
         filters[key] = [value];
       }
     });
+
+    for (let key in filters) {
+      if (Array.isArray(filters[key])) {
+        filters[key] = filters[key].join(",");
+      }
+    }
+
+    console.log(filters);
 
     dispatch(searchProductFilter({ token, filters }));
   };
@@ -175,9 +187,7 @@ const Filter = () => {
             const isToday =
               searchedDate.toDateString() === referenceDate.toDateString();
 
-            const notToday =
-              referenceDate.getDate() -
-              searchedDate.getDate();
+            const notToday = referenceDate.getDate() - searchedDate.getDate();
 
             return (
               <div key={e.id}>
