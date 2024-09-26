@@ -1,0 +1,45 @@
+.supplyAndDemand {
+  margin: 5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 5rem;
+  > h1 {
+    color: red;
+    font-size: 3rem;
+  }
+  h3 {
+    font-size: 2rem;
+  }
+}
+
+.supplyAndDemand h3 {
+  margin-bottom: 10px;
+}
+
+.supplyAndDemand table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.supplyAndDemand th,
+.supplyAndDemand td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.supplyAndDemand th {
+  background-color: #616161;
+  color: white;
+}
+
+.recentSearches table,
+.siteStock table,
+.companyStock table {
+  width: 80%;
+}
+
+.companyStock td {
+  color: red;
+}

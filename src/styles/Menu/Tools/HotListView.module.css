@@ -1,0 +1,149 @@
+.container {
+    width: 80%;
+    margin: 20px auto;
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+/* Tabs */
+
+
+.tabs ul {
+    display: flex;
+    justify-content: flex-start;
+    gap: 20px;
+    font-size: 18px;
+  }
+/* .tabs ul {
+    display: flex;
+    justify-content: flex-start;
+    gap: 20px;
+    font-size: 18px;
+    list-style: none;
+    padding: 0;
+}
+
+.tabs ul li a {
+    text-decoration: none;
+    color: black;
+    padding: 8px 16px;
+} */
+
+.tabs ul li a:hover {
+    color: blue;
+}
+
+/* Active tab highlight */
+.activeTab {
+    font-weight: bold;
+    color: #f06622;
+}
+
+/* Table Wrapper */
+.tableWrapper {
+    margin-top: 20px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.tableHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: lightgray;
+    margin-bottom: 10px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    border: 1px solid gray;
+    padding: 3px;
+    text-align: left;
+}
+.table th {
+    background-color: #4a575a;
+    color: white;
+  }
+.broadcastButton,
+.deleteButton,
+.previewButton,
+.tabTitle {
+    background-color: #f06622;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.broadcastButton:hover,
+.deleteButton:hover,
+.previewButton:hover {
+    background-color: darkorange;
+}
+.subTitle{
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.manufacturerDropdown{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.manufacturerDropdown span{
+    color: #fff;
+    font-weight: bold;
+}
+
+/* Action Buttons */
+.actionButtons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* Footer styling */
+.footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    font-size: 13px;
+}
+
+.footer a {
+    color: rgb(92, 92, 189);
+    text-decoration: none;
+    padding: 8px;
+    font-weight: 400;
+}
+
+.p {
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    color: rgb(92, 92, 189);
+}
+
+.learnMore {
+    margin-top: 20px;
+}
+
+.learnMore a {
+    text-decoration: none;
+    color: blue;
+}
+
+.learnMore a:hover {
+    text-decoration: underline;
+}
+    

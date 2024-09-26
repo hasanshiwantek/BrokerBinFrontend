@@ -1,0 +1,47 @@
+.section {
+  margin-bottom: 30px;
+
+  &_qualities {
+    span {
+      display: flex;
+      gap: 1rem;
+      font-weight: 600;
+    }
+  }
+
+  h3 {
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+}
+
+.buttons {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+.display {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  input[type="text"],
+  select {
+    flex: 1;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+  }
+}
+
+.orangeButton {
+  background-color: var(--primary-color);
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.orangeButton:hover {
+  background-color: darkorange;
+}

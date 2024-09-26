@@ -1,0 +1,40 @@
+.container {
+  margin: 2rem 0;
+  width: 90%;
+  background: #e8e8e8;
+  overflow-x: scroll;
+  padding: 1rem;
+}
+
+.topSearches {
+  background: #bfbfbf;
+  > h3 {
+    padding: 1rem 0;
+    color: white;
+  }
+  > table {
+    width: 100%;
+    border-collapse: collapse;
+    /* margin-bottom: 20px; */
+    thead,
+    tfoot {
+      th {
+        background-color: #454545;
+        color: white;
+      }
+    }
+    thead,
+    tfoot,
+    tbody {
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 1px;
+        text-align: left;
+      }
+      td {
+        background: white;
+      }
+    }
+  }
+}

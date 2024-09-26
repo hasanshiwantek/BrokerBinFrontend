@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 import React from "react";
 import css from "../styles/Header.module.css";
 import logo from "../imgs/logo/broker_header_logo.jpg";
@@ -34,14 +34,17 @@ import { Link } from "react-router-dom";
 
 const Header = () => {
   const token = Cookies.get("token");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [searchType, setSearchType] = useState();
+
+  const { hoverCompanyDetail } = useSelector(
+    (store) => store.searchProductStore
+  );
+
   const { mobileNavToggle, dropdownOpen, toolToggle } = useSelector(
     (state) => state.homeStore
   );
-
-  const { page, pageSize } = useSelector((store) => store.searchProductStore);
-
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -54,7 +57,7 @@ const Header = () => {
     dispatch(setDropdownOpen(menu));
   };
 
-  const searchProduct = async (event) => {
+  const searchProduct = (event) => {
     event.preventDefault();
     const form = new FormData(event.target);
     const formData = Object.fromEntries(form.entries());
@@ -68,30 +71,29 @@ const Header = () => {
       .split(" ")
       .filter(Boolean)
       .join(",");
-    // console.log(searchString);
 
-    const url = `/inventory/search?page=${page}`;
-
-    // Dispatch the search query action and navigate to the search page
-    // dispatch(
-    //   searchProductQuery({
-    //     token,
-    //     page,
-    //     pageSize,
-    //     search: searchString,
-    //     // callback: () => navigate(url),
-    //   })
-    // );
-
-    dispatch(searchProductHistory({ token }));
-
+    console.log(searchString);
+    console.log(searchType);
     // Clear selected products
     dispatch(setSelectedProducts([]));
 
-    // Navigate to the search results page
-    // Pass search query as a state through the navigation
-    navigate(url, { state: searchString, replace: true });
+    // Search products history.
+    dispatch(searchProductHistory({ token }));
+
+    // Navigate to the search results page with 'page' and 'search' or 'keyword' parameters
+    if (searchType === "search") {
+      const url = `/inventory/search?page=1&query=${encodeURIComponent(
+        searchString
+      )}`;
+      navigate(url, { replace: true });
+    } else if (searchType === "keyword") {
+      const url = `/inventory/search?page=1&partModel=${encodeURIComponent(
+        searchString
+      )}`;
+      navigate(url, { replace: true });
+    }
   };
+
   return (
     <>
       <div className={`${css.headerFixed} ${css.noPrint}`}>
@@ -100,21 +102,65 @@ const Header = () => {
             <img src={logo} alt="logo" />
           </Link>
           <div className={css.search_container}>
-            <form method="post" onSubmit={searchProduct}>
+            <form onSubmit={searchProduct}>
               <input
                 type="search"
                 name="searchStrings"
                 id={css.search}
                 placeholder="What are you looking for?"
               />
-              {/* <button type="button" className={css.search_btn}> */}
-              <input type="submit" value="search" className={css.search_btn} />
-              {/* </button> */}
-              <button type="button" className={css.search_btn}>
+              <button
+                type="submit"
+                onClick={() => setSearchType("search")}
+                className={css.search_btn}
+              >
+                search
+              </button>
+              <button
+                type="submit"
+                onClick={() => setSearchType("keyword")}
+                className={css.search_btn}
+              >
                 keyword
               </button>
             </form>
           </div>
+          {hoverCompanyDetail &&
+            hoverCompanyDetail?.map((detail) => {
+              return (
+                <div key={detail.id} className={css.hoverCompanyDetail}>
+                  <div className={css.hoverCompanyDetail_details}>
+                    <span>
+                      <span>
+                        <strong>{detail.name}</strong>
+                      </span>
+                    </span>
+                    <span>
+                      <p>ph:</p>
+                      <p>{detail.phone_num}</p>
+                    </span>
+                    <span>
+                      <p>loc:</p>
+                      <p>{detail.address}</p>
+                    </span>
+                    <span>
+                      <p>
+                        {detail.open_timing}-{detail.close}
+                      </p>
+                      <p>
+                        ship:
+                        {detail.shipping_deadline
+                          ? detail.shipping_deadline
+                          : "3PM"}
+                      </p>
+                    </span>
+                  </div>
+                  <div className={css.hoverCompanyDetail_img}>
+                    <img src={detail.image} alt="companyLogo" />
+                  </div>
+                </div>
+              );
+            })}
         </header>
         <nav className={css.nav}>
           <ul className={css.nav_links}>
@@ -310,7 +356,7 @@ const Header = () => {
                     <Link to={"/myprofile/MyContact"}>My Contacts</Link>
                   </li>
                   <li>
-                    <Link>Hot List</Link>
+                    <Link to={"/hotList/add"}>Hot List</Link>
                   </li>
                   <li>
                     <Link>Partners</Link>
@@ -390,9 +436,9 @@ const Header = () => {
               <BiSolidUpArrow className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
                 <ul>
-                  <li>
-                    <Link>Company</Link>
-                  </li>
+                  <Link to={"/reports/Company"}>
+                    <li>Company</li>
+                  </Link>
                   <li>
                     <Link>Site Wide</Link>
                   </li>

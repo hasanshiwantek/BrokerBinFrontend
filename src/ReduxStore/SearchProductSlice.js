@@ -4,11 +4,14 @@ import axios from "axios";
 export const searchProductQuery = createAsyncThunk(
   "searchProductStore/searchProductQuery",
   async ({ token, page, search }) => {
-    console.log({search});
+    console.log(search);
     try {
-      const response = await axios.get(
-        `https://brokerbinbackend.shiwantek.com/api/inventory/search?page=${page}`,
-        { search },
+      const response = await axios.post(
+        `https://brokerbinbackend.shiwantek.com/api/inventory/search`,
+        {
+          page, // Send 'page' in the request body
+          search, // Send 'search' in the request body
+        },
         {
           headers: {
             "Content-Type": "application/json",
@@ -17,7 +20,35 @@ export const searchProductQuery = createAsyncThunk(
         }
       );
 
-      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error while searching product:",
+        error.response?.data || error.message
+      );
+      throw error.response?.data || error.message;
+    }
+  }
+);
+export const searchByKeyword = createAsyncThunk(
+  "searchProductStore/searchByKeyword",
+  async ({ token, page, partModel }) => {
+    console.log(partModel);
+    try {
+      const response = await axios.post(
+        `https://brokerbinbackend.shiwantek.com/api/inventory/partmodel`,
+        {
+          page, // Send 'page' in the request body
+          partModel, // Send 'partModel' in the request body
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       return response.data;
     } catch (error) {
       console.error(
@@ -84,11 +115,13 @@ export const searchProductHistory = createAsyncThunk(
 );
 
 export const addToHotList = createAsyncThunk(
-  "searchProductStore/searchProductHistory",
-  async ({ token }) => {
+  "searchProductStore/addToHotList",
+  async ({ token, hotlists }) => {
+    console.log(JSON.stringify({ hotlists }));
     try {
-      const response = await axios.get(
+      const response = await axios.post(
         `https://brokerbinbackend.shiwantek.com/api/hot-lists/store`,
+        JSON.stringify({ hotlists }),
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -97,7 +130,7 @@ export const addToHotList = createAsyncThunk(
         }
       );
 
-      return response.data.history;
+      return response.data;
     } catch (error) {
       console.error(
         "Error while searching product:",
@@ -117,11 +150,13 @@ const initialState = {
   searchResponseMatched: [],
   searchResponseNotMatched: [],
   popupCompanyDetail: [],
+  hoverCompanyDetail: [],
   selectedProducts: [],
   searchHistory: [],
   error: null,
   page: 1,
   pageSize: 20,
+  totalCount: 0,
   gettingProducts: false,
   gettingHistory: false,
 };
@@ -166,6 +201,9 @@ const searchProductSlice = createSlice({
     setGettingProducts: (state) => {
       state.gettingProducts = !state.gettingProducts;
     },
+    setHoverCompanyDetail: (state, action) => {
+      state.hoverCompanyDetail = [action.payload];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -174,13 +212,32 @@ const searchProductSlice = createSlice({
         state.error = null;
       })
       .addCase(searchProductQuery.fulfilled, (state, action) => {
-        state.searchResponseMatched = action.payload.matchedResults;
+        state.searchResponseMatched = action.payload.data;
         state.searchResponseNotMatched = action.payload.notFoundKeywords;
+        state.totalCount = action.payload.totalCount;
         state.gettingProducts = false; // Set to false after fetching is done
       })
       .addCase(searchProductQuery.rejected, (state, action) => {
         state.error = action.error.message;
         console.error("Error while searching:", action.error.message);
+        state.gettingProducts = false; // Set to false if the fetch fails
+      })
+      .addCase(searchByKeyword.pending, (state) => {
+        state.gettingProducts = true; // Set to true when starting the fetch
+        state.error = null;
+      })
+      .addCase(searchByKeyword.fulfilled, (state, action) => {
+        state.searchResponseMatched = action.payload.foundItems;
+        state.searchResponseNotMatched = action.payload.notFoundPartModels;
+        state.totalCount = action.payload.totalCount;
+        state.gettingProducts = false; // Set to false after fetching is done
+      })
+      .addCase(searchByKeyword.rejected, (state, action) => {
+        state.error = action.error.message;
+        console.error(
+          "Error while searching by keyword:",
+          action.error.message
+        );
         state.gettingProducts = false; // Set to false if the fetch fails
       })
       .addCase(searchProductFilter.pending, (state) => {
@@ -209,6 +266,20 @@ const searchProductSlice = createSlice({
         state.error = action.error.message;
         console.error("Error while fetching history:", action.error.message);
         state.gettingHistory = false; // Set to false if the fetch fails
+      })
+      .addCase(addToHotList.pending, (state) => {
+        // state.gettingHistory = true; // Set to true when starting the fetch
+        // state.error = null;
+      })
+      .addCase(addToHotList.fulfilled, (state, action) => {
+        // state.searchHistory = action.payload;
+        console.log(action.payload);
+        state.gettingHistory = false; // Set to false after fetching is done
+      })
+      .addCase(addToHotList.rejected, (state, action) => {
+        state.error = action.error.message;
+        console.error("Error while adding to hotlist:", action.error.message);
+        state.gettingHistory = false; // Set to false if the fetch fails
       });
   },
 });
@@ -225,6 +296,7 @@ export const {
   setCurrentPageNext,
   setCurrentPage,
   setPopupCompanyDetail,
+  setHoverCompanyDetail,
 } = searchProductSlice.actions;
 
 export default searchProductSlice.reducer;

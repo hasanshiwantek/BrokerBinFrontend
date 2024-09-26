@@ -503,3 +503,29 @@
     text-transform: uppercase;
   }
 }
+
+.searchCompanyInventory {
+  width: 100%;
+  > div {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    /* span{
+      input{
+        padding: 0.5rem;
+      }
+    } */
+    }
+  .Searchbutton {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .orangeButton {
+    background-color: var(--primary-color);
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+}

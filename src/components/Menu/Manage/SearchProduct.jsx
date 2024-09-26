@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import css from "../../../styles/SearchProducts.module.css";
 import Filter from "../../Filter";
 import CompaniesListingParts from "../../CompaniesListingParts";
@@ -6,7 +6,7 @@ import ProductsPieChart from "../../ProductsPieChart";
 import CompanyDetails from "../../Popups/CompanyDetails/CompanyDetails";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import {
   searchProductQuery,
@@ -20,6 +20,8 @@ import {
   setPopUpRfq,
   setGraphToggle,
   searchProductHistory,
+  setHoverCompanyDetail,
+  searchByKeyword,
 } from "../../../ReduxStore/SearchProductSlice";
 import LoadingState from "../../../LoadingState";
 import { FaEye, FaShieldAlt } from "react-icons/fa";
@@ -33,40 +35,65 @@ import AddToHotList from "./AddToHotList";
 const SearchProduct = () => {
   const token = Cookies.get("token");
   const location = useLocation();
-  const searchString = location.state || {};
+  const dispatch = useDispatch();
 
+  // Extract 'page' and 'searchString' from URL
+  const queryParams = new URLSearchParams(location.search);
+  const page = parseInt(queryParams.get("page")) || 1;
+  const searchString = queryParams.get("query") || "";
+  const partModel = queryParams.get("partModel") || "";
+  console.log("Query" + searchString);
+  console.log("PartModel" + partModel);
   const {
     searchResponseMatched,
     searchResponseNotMatched,
     gettingProducts,
     gettingHistory,
     error,
-    page,
-    pageSize,
     filterToggle,
     graphToggle,
     companiesListingParts,
     togglePopUp,
   } = useSelector((store) => store.searchProductStore);
-  // console.log(searchResponseMatched,searchResponseNotMatched);
 
-  const dispatch = useDispatch();
-
-  // Effect 2: Perform the search query when the page or query changes
+  // Fetch data whenever 'page' or 'searchString' changes
   useEffect(() => {
-    // Dispatch the search query
-    // console.log("Product Search");
-    // console.log(searchString);
-    dispatch(
-      searchProductQuery({
-        token,
-        page,
-        search: searchString,
-      })
-    );
+    if (!searchString && !partModel) {
+      return;
+    }
+
+    if (!partModel) {
+      dispatch(
+        searchProductQuery({
+          token,
+          page,
+          search: searchString,
+        })
+      );
+    } else {
+      dispatch(
+        searchByKeyword({
+          token,
+          page,
+          partModel: partModel,
+        })
+      );
+    }
 
     dispatch(searchProductHistory({ token }));
-  }, [token, page, pageSize, searchString, dispatch]);
+  }, [token, page, searchString, dispatch]);
+
+  // Ensure 'searchString' exists before proceeding
+  if (!searchString && !partModel) {
+    // Handle the case where 'searchString' is not available
+    // You might want to redirect or show an error
+    return <div>No search query provided.</div>;
+  }
+  // else if (!searchString && !partModel) {
+  //   // Handle the case where 'searchString' is not available
+  //   // You might want to redirect or show an error
+  //   return <div>No search query provided.</div>;
+  // }
 
   if (gettingProducts) {
     return <LoadingState />;
@@ -84,10 +111,15 @@ const SearchProduct = () => {
     <div className={css.layout}>
       {filterToggle && <Filter />}
       {/* If there are products that are not matched with search query */}
-      <div className={css.layoutTables}>
+      <div
+        className={css.layoutTables}
+        style={searchResponseMatched?.length <= 0 ? { margin: "0 auto" } : null}
+      >
         {searchResponseNotMatched?.length > 0 && (
           <div className={css.searchResult}>
-            <AddToHotList />
+            {searchResponseNotMatched.map((search) => {
+              return <AddToHotList item={search} key={search} />;
+            })}
           </div>
         )}
         {/* Products those are matched with search query */}
@@ -138,14 +170,31 @@ const ProductTableBtn = React.memo(() => {
 });
 
 const ProductTableDetail = React.memo(() => {
-  const { selectedProducts, searchResponseMatched, page, pageSize } =
-    useSelector((store) => store.searchProductStore);
-
+  const location = useLocation();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  // Extract 'page' and 'searchString' from URL
+  const queryParams = new URLSearchParams(location.search);
+  const page = parseInt(queryParams.get("page")) || 1;
+  const searchString = queryParams.get("query") || "";
+  const partModel = queryParams.get("partModel") || "";
+
+  const {
+    selectedProducts,
+    searchResponseMatched,
+    pageSize,
+    totalCount,
+    hoverCompanyDetail,
+  } = useSelector((store) => store.searchProductStore);
+
+  console.log(hoverCompanyDetail);
+  const totalPages = Math.ceil(totalCount / pageSize);
 
   const handleShowPopupCompanyDetails = (event, id) => {
     event.stopPropagation();
     const companyDetail = searchResponseMatched?.filter((e) => e.id === id);
+    console.log(companyDetail);
     dispatch(setPopupCompanyDetail(companyDetail));
     dispatch(setTogglePopUp());
   };
@@ -165,6 +214,42 @@ const ProductTableDetail = React.memo(() => {
       }
     };
     dispatch(setSelectedProducts(filteredProducts()));
+  };
+
+  const handleHoverCompanyDetail = (event, id) => {
+    const companyDetail = searchResponseMatched?.find((e) => e.id === id);
+    dispatch(setHoverCompanyDetail(companyDetail?.addedBy?.company));
+  };
+
+  // Handle pagination
+  const handlePrevPage = () => {
+    const newPage = page - 1;
+    if (!partModel) {
+      const url = `/inventory/search?page=${newPage}&query=${encodeURIComponent(
+        searchString
+      )}`;
+      navigate(url, { replace: true });
+    } else {
+      const url = `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(
+        partModel
+      )}`;
+      navigate(url, { replace: true });
+    }
+  };
+
+  const handleNextPage = () => {
+    const newPage = page + 1;
+    if (!partModel) {
+      const url = `/inventory/search?page=${newPage}&query=${encodeURIComponent(
+        searchString
+      )}`;
+      navigate(url, { replace: true });
+    } else {
+      const url = `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(
+        partModel
+      )}`;
+      navigate(url, { replace: true });
+    }
   };
 
   const isSelected = (id) => {
@@ -213,6 +298,9 @@ const ProductTableDetail = React.memo(() => {
                 <a
                   onClick={(event) =>
                     handleShowPopupCompanyDetails(event, e.id)
+                  }
+                  onMouseEnter={(event) =>
+                    handleHoverCompanyDetail(event, e.id)
                   }
                 >
                   {e.mfg}
@@ -270,22 +358,16 @@ const ProductTableDetail = React.memo(() => {
         </tfoot>
       </table>
       <div className={css.tablePagination}>
-        <button
-          type="button"
-          onClick={() => dispatch(setCurrentPagePrev())}
-          disabled={page === 1}
-        >
+        <button type="button" onClick={handlePrevPage} disabled={page === 1}>
           ⬅️
         </button>
         <span>
-          {page}/{Math.floor(searchResponseMatched?.length / pageSize) + 1}
+          {page}/{totalPages}
         </span>
         <button
           type="button"
-          onClick={() => dispatch(setCurrentPageNext())}
-          disabled={
-            page === Math.floor(searchResponseMatched?.length / pageSize) + 1
-          }
+          onClick={handleNextPage}
+          disabled={page === totalPages}
         >
           ➡️
         </button>

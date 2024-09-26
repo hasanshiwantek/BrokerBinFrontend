@@ -20,6 +20,7 @@ const SearchProduct = lazy(() =>
 );
 const MyProfile = lazy(() => import("./components/Menu/Manage/MyProfile.jsx"));
 const Options = lazy(() => import("./components/Menu/Manage/Options.jsx"));
+const BroadcastFilters = lazy(() => import("./components/Menu/Manage/BroadcastFilter/BroadcastFilters.jsx"));
 const CompanyDetails = lazy(() =>
   import("./components/Popups/CompanyDetails/CompanyDetails.jsx")
 );
@@ -48,6 +49,32 @@ const Form = lazy(() => import("./Form.jsx"));
 const TextEditor = lazy(() => import("./components/TextEditor.jsx"));
 const MyVendors = lazy(() => import("./components/Menu/Tools/MyVendors.jsx"));
 const MyContact = lazy(() => import("./components/Menu/Tools/MyContact.jsx"));
+const Company = lazy(() => import("./components/Menu/Reports/Company.jsx"));
+const SiteWide = lazy(() => import("./components/Menu/Reports/SiteWide.jsx"));
+const Email = lazy(() => import("./components/Menu/Reports/Email.jsx"));
+const MatchYourHits = lazy(() =>
+  import("./components/Menu/Reports/MatchYourHits.jsx")
+);
+const SupplyAndDemand = lazy(() =>
+  import("./components/Menu/Reports/SupplyAndDemand.jsx")
+);
+const TopSearches = lazy(() =>
+  import("./components/Menu/Reports/TopSearches.jsx")
+);
+const CompanyInventory = lazy(() =>
+  import("./components/Menu/Reports/CompanyInventory.jsx")
+);
+const TopSearchWithManufacturer = lazy(() =>
+  import("./components/Menu/Reports/TopSearchWithManufacturer.jsx")
+);
+
+const HotListAdd = lazy(() => import("./components/Menu/Tools/HotListAdd.jsx"));
+const HotListView = lazy(() =>
+  import("./components/Menu/Tools/HotListView.jsx")
+);
+const HotListEdit = lazy(() =>
+  import("./components/Menu/Tools/HotListEdit.jsx")
+);
 
 import Crousel from "./Crousel.jsx";
 import { Provider } from "react-redux";
@@ -55,7 +82,6 @@ import store from "./ReduxStore/Store.js";
 import Contact from "./components/Menu/Main/Contact.jsx";
 import Ethics from "./components/Menu/Main/Ethics.jsx";
 import SvgMap from "./components/SvgMap.jsx";
-
 
 const router = createBrowserRouter([
   {
@@ -140,6 +166,15 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <Options />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/myprofile/broadcastfilter",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <BroadcastFilters />
           </Suspense>
         ),
       },
@@ -315,6 +350,105 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <MyContact />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/reports/Company",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <Company />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/reports/sitewide",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <SiteWide />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/reports/email",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <Email />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/reports/MatchYourHits",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <MatchYourHits />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/reports/SupplyAndDemand",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <SupplyAndDemand />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/reports/TopSearches",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <TopSearches />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/reports/companyInventory",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <CompanyInventory />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/reports/topSearchWithManufacturer",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <TopSearchWithManufacturer />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/hotlist/add",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <HotListAdd />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/hotlist/view",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <HotListView />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/hotlist/edit",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <HotListEdit />
           </Suspense>
         ),
       },

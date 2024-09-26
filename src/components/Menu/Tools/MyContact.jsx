@@ -91,7 +91,7 @@ const MyContact = () => {
                 </Link>
               </li>
               <li>
-                <Link>
+                <Link to={"/myprofile/broadcastfilter"}>
                   <span>Broadcast Filters</span>
                 </Link>
               </li>

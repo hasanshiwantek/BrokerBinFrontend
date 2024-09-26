@@ -248,12 +248,12 @@ const MyProfile = () => {
                     </Link>
                   </li>
                   <li>
-                    <Link>
+                    <Link to={"/myprofile/MyContact"}>
                       <span>My Contacts</span>
                     </Link>
                   </li>
                   <li>
-                    <Link>
+                    <Link to={"/myprofile/broadcastfilter"}>
                       <span>Broadcast Filters</span>
                     </Link>
                   </li>

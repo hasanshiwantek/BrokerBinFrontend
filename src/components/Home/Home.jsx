@@ -12,7 +12,7 @@ import { fetchUserData } from "../../ReduxStore/ProfleSlice";
 import LoadingState from "../../LoadingState";
 import ErrorStatus from "../Error/ErrorStatus";
 import Cookies from "js-cookie";
-import { searchProductQuery } from "../../ReduxStore/SearchProductSlice";
+import { searchProductHistory, searchProductQuery, setSelectedProducts } from "../../ReduxStore/SearchProductSlice";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
@@ -57,37 +57,25 @@ const Home = () => {
     const formData = Object.fromEntries(form.entries());
 
     // split by " " and turn into array of string.
-    formData.searchStrings = formData.searchStrings.split(" ");
-    const data = formData;
 
-    // Retrieve search parameters from the URL
-    const searchParams = new URLSearchParams(location.search);
-    const query = searchParams.getAll("searchStrings[]");
+    if (formData.searchStrings.trim() === "") {
+      alert("Blank search is not allowed");
+      return;
+    }
 
-    useEffect(() => {
-      if (query.length > 0 && token && !gettingProducts) {
-        const searchQuery = query
-          .map((term) => `searchStrings[]=${encodeURIComponent(term)}`)
-          .join("&");
-        const url = `/inventory/search?page=${page}&pageSize=${pageSize}&${searchStringsQuery}`;
-        console.log("Dispatching searchProductQuery with URL:", searchQuery);
+    const searchString = formData.searchStrings.split("\n").join(",");
 
-        dispatch(
-          searchProductQuery({
-            data: { searchStrings: query },
-            token,
-            page,
-            pageSize,
-            searchStrings: searchQuery,
-            callback: () => navigate(url),
-          })
-        );
+    // Clear selected products
+    dispatch(setSelectedProducts([]));
 
-        if (page !== 0) {
-          dispatch(setCurrentPage(0)); // Reset to first page only if it's not already 0
-        }
-      }
-    }, [query, token, page, pageSize]);
+    // Search products history.
+    dispatch(searchProductHistory({ token }));
+
+    // Navigate to the search results page with 'page' and 'search' parameters
+    const url = `/inventory/search?page=1&search=${encodeURIComponent(
+      searchString
+    )}`;
+    navigate(url, { replace: true });
   };
 
   return (

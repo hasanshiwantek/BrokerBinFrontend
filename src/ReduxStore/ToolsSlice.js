@@ -136,13 +136,96 @@ export const removeMyVendors = createAsyncThunk(
   }
 );
 
+export const addHotListItem = createAsyncThunk(
+  "toolsStore/addHotListItem",
+  async ({ hotlists, token }) => {
+    console.log({ hotlists });
+
+    try {
+      const response = await axios.post(
+        "https://brokerbinbackend.shiwantek.com/api/hot-lists/store",
+        { hotlists },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response.data.data);
+      return response.data.data;
+    } catch (error) {
+      throw new Error("Error searching company name");
+    }
+  }
+);
+
+export const showHotListItem = createAsyncThunk(
+  "toolsStore/addHotListItem",
+  async ({ token }) => {
+    console.log(token);
+    try {
+      const response = await axios.get(
+        "https://brokerbinbackend.shiwantek.com/api/hot-lists",
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("HotListdata:", response.data);
+      return response.data.data;
+    } catch (error) {
+      throw new Error("Error searching company name");
+    }
+  }
+);
+
+export const editHotListItem = createAsyncThunk(
+  "toolsStore/editHotListItem",
+  async ({ token, hotlists }) => {
+    console.log("HotListItem:", hotlists);
+    try {
+      const response = await axios.post(
+        "https://brokerbinbackend.shiwantek.com/api/hot-lists/update",
+        { hotlists },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("HotListdata:", response.data);
+      return response.data.data;
+    } catch (error) {
+      console.error("Error:", error);
+      throw new Error("Error updating hot list");
+    }
+  }
+);
+
 const initialState = {
   tools: [],
   searchCompanies: [],
   searchMyVendor: [],
   myVendor: [],
+  myHotListItems: [],
+  broadcastFilters: {
+    daily_broadcast: 0,
+    broadcasts: 0,
+    type_of_broadcast: ["wtb", "rfq"],
+    mfg: ["kaif"],
+    categories: ["hardware"],
+    services: ["seo"],
+    groupings: ["bulk"],
+    region: ["uk"],
+    country: ["use"],
+  },
   loading: false,
 };
+
 const ToolsSlice = createSlice({
   name: "toolsStore",
   initialState,
@@ -158,6 +241,15 @@ const ToolsSlice = createSlice({
     },
     setEmptySearchCompanies(state, action) {
       state.searchMyVendor = [];
+    },
+    // showHotList(state, action) {
+    //   state.myHotListItems.push(action.payload);
+    // },
+    setBroadcastFilters: (state, action) => {
+      state.broadcastFilters = {
+        ...state.broadcastFilters,
+        ...action.payload,
+      };
     },
   },
   extraReducers: (builder) => {
@@ -231,11 +323,43 @@ const ToolsSlice = createSlice({
       .addCase(removeMyVendors.rejected, (state, action) => {
         console.error("Error searching company name", action.error);
         state.loading = true;
+      })
+      .addCase(showHotListItem.pending, (state) => {
+        console.log("Searching...");
+        state.loading = true;
+      })
+      .addCase(showHotListItem.fulfilled, (state, action) => {
+        console.log(action.payload);
+        state.loading = false;
+        state.myHotListItems = action.payload;
+      })
+      .addCase(showHotListItem.rejected, (state, action) => {
+        console.error("Error searching company name", action.error);
+        state.loading = true;
+      })
+      .addCase(editHotListItem.pending, (state) => {
+        console.log("Searching...");
+        state.loading = true;
+      })
+      .addCase(editHotListItem.fulfilled, (state, action) => {
+        console.log(action.payload);
+        state.loading = false;
+        state.myHotListItems = action.payload;
+      })
+      .addCase(editHotListItem.rejected, (state, action) => {
+        console.error("Error searching company name", action.error);
+        state.loading = true;
       });
   },
 });
 
-export const { addTool, removeTool, setMyVendor, setEmptySearchCompanies } =
-  ToolsSlice.actions;
+export const {
+  addTool,
+  removeTool,
+  setMyVendor,
+  setEmptySearchCompanies,
+  showHotList,
+  setBroadcastFilters,
+} = ToolsSlice.actions;
 
 export default ToolsSlice.reducer;
