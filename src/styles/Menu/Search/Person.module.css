@@ -1,0 +1,75 @@
+.main {
+    width: 200px;
+}
+
+.formContainer {
+    padding: 20px;
+    background-color: white;
+    width: 100%;
+    max-width: 400px; /* Limit the width of the form */
+    margin: 2px auto;
+}
+
+h2 {
+    font-size: 18px;
+    text-align: left;
+}
+
+.personForm {
+    display: flex;
+    flex-direction: column;
+    gap: 14px; /* Add space between form rows */
+}
+
+.formRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.formRow label {
+    width: 30%; /* Adjust width of the label */
+    font-size: 12px;
+}
+
+.formRow input, .formRow select {
+    width: 70%; /* Adjust width of the input/select */
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-right: 35%;
+}
+
+.buttonContainer {
+    text-align: right;
+}
+
+.submitButton {
+    background-color: #e65b00;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.submitButton:hover {
+    background-color: #d45500;
+}
+
+
+.footerlinks{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .footerlinks li{
+    list-style: none;
+    color: #3A57AB;;
+  }
+  .footerlinks li a{
+    font-size: 11px;
+  }

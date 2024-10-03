@@ -1,0 +1,11 @@
+.broadCast-sec{
+    border: 2px solid black;
+    /* font-size: 13px; */
+    /* font-weight: 500;      */
+    padding: 13px 15%;
+    width: 90%;
+}
+
+span{
+    display: inline-block;
+}

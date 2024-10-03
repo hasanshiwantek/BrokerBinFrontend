@@ -75,6 +75,70 @@ export const submitUserOptions = createAsyncThunk(
   }
 );
 
+
+
+// export const submitUserSearch = createAsyncThunk(
+//   "profileStore/submitUserSearch ",
+//   async ({data, token }) => {
+//     console.log({data});
+//     try {
+//       const response = await axios.post(
+//         "https://brokerbinbackend.shiwantek.com/api/user/search",
+//          data,
+        
+//         {
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//             "Content-Type": "application/json",
+//           },
+//         }
+//       );
+//       console.log("Search data from redux:",response.data);
+      
+//       return response.data.data;
+//     } catch (error) {
+//       console.error(
+
+//         "Request failed with error from front-end:", error,
+//         error.response?.data || error.message
+
+//       );
+//       throw "Error while submitting user data:" || error;
+//     }
+//   }
+
+// );
+
+
+
+
+
+export const submitUserSearch = createAsyncThunk(
+  "profileStore/submitUserSearch",
+  async ({ data, token }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        "https://brokerbinbackend.shiwantek.com/api/user/search",
+        {data},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Search response data from front-end:", response.data);
+      console.log(response.data.data);
+      
+      return response.data.data;
+    } catch (error) {
+      console.error("Request failed with error from front-end:", error);
+      return rejectWithValue(error.toString());
+    }
+  }
+);
+
+
 const initialState = {
   user: JSON.parse(localStorage.getItem("user")),
   formData: {
@@ -152,6 +216,7 @@ const initialState = {
   blurWhileLoading: false,
   customSignature: true,
   error: null,
+  searchUserData:[]
 };
 
 const profileSlice = createSlice({
@@ -206,6 +271,23 @@ const profileSlice = createSlice({
         state.blurWhileLoading = true;
       })
       .addCase(submitUserData.rejected, (state, action) => {
+        console.log(action.error.message);
+        state.error = action.error.message;
+        state.blurWhileLoading = false;
+      })
+      .addCase(submitUserSearch.pending, (state) => {
+        state.blurWhileLoading = false;
+        console.log("Pending....");
+        
+      })
+      .addCase(submitUserSearch.fulfilled, (state, action) => {
+        // state.searchUserData = action.payload,
+        state.blurWhileLoading = true;
+        state.searchUserData=action.payload
+        console.log("Fulfilled....");
+
+      })
+      .addCase(submitUserSearch.rejected, (state, action) => {
         console.log(action.error.message);
         state.error = action.error.message;
         state.blurWhileLoading = false;

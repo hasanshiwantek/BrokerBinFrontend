@@ -314,7 +314,7 @@ const Header = () => {
               <BiSolidUpArrow className={css.onHoverMenuIconUp} />
             </li>
             <li>
-              <Link>main</Link>
+              <Link to={"/"}>main</Link>
               <BiSolidDownArrow className={css.onHoverMenuIconDown} />
               <BiSolidUpArrow className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
@@ -322,7 +322,7 @@ const Header = () => {
                   <Link to={"/"}>
                     <li>Home</li>
                   </Link>
-                  <Link>
+                  <Link to={"/help"}>
                     <li>help</li>
                   </Link>
                   <Link to={"/feedback"}>
@@ -331,23 +331,23 @@ const Header = () => {
                   <Link to={"/ethics"}>
                     <li>ethics</li>
                   </Link>
-                  <Link>
+                  <Link to={"/sitemap"}>
                     <li>site map</li>
                   </Link>
-                  <Link>
+                  <Link to={"/badges"}>
                     <li>badges</li>
                   </Link>
                 </ul>
               </div>
             </li>
             <li>
-              <a href="/">tools</a>
+              <a href="/tools">tools</a>
               <BiSolidDownArrow className={css.onHoverMenuIconDown} />
               <BiSolidUpArrow className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
                 <ul>
                   <li>
-                    <Link>Tools</Link>
+                    <Link to={"/tools"}>Tools</Link>
                   </li>
                   <li>
                     <Link to={"/myprofile/MyVendors"}>My Vendors</Link>
@@ -359,16 +359,16 @@ const Header = () => {
                     <Link to={"/hotList/add"}>Hot List</Link>
                   </li>
                   <li>
-                    <Link>Partners</Link>
+                    <Link to={"https://brokerbin.com/partners"}  target="blank">Partners</Link>
                   </li>
                   <li>
-                    <Link>Events</Link>
+                    <Link to={"https://www.brokerbinroadshow.com/"} target="blank">Events</Link>
                   </li>
                 </ul>
               </div>
             </li>
             <li>
-              <Link>search</Link>
+              <Link to={"/search"}>search</Link>
               <BiSolidDownArrow className={css.onHoverMenuIconDown} />
               <BiSolidUpArrow className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
@@ -379,10 +379,10 @@ const Header = () => {
                   <Link>
                     <li>services</li>
                   </Link>
-                  <Link>
+                  <Link to={"/searchcompany"}>
                     <li>company</li>
                   </Link>
-                  <Link>
+                  <Link to={"/person"}>
                     <li>person</li>
                   </Link>
                   <Link>
@@ -398,7 +398,7 @@ const Header = () => {
               </div>
             </li>
             <li>
-              <Link>manage</Link>
+              <Link to={'/manage'}>manage</Link>
               <BiSolidDownArrow className={css.onHoverMenuIconDown} />
               <BiSolidUpArrow className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
@@ -408,10 +408,7 @@ const Header = () => {
                   </Link>
                   <Link to={"/rfq"}>
                     <li>My RFQs</li>
-                  </Link>
-                  <Link>
-                    <li>My Contacts</li>
-                  </Link>
+                  </Link >
                   <Link>
                     <li>My BOM</li>
                   </Link>
@@ -421,7 +418,7 @@ const Header = () => {
                   <Link>
                     <li>My Company</li>
                   </Link>
-                  <Link>
+                  <Link to={"/manage/my-services"}>
                     <li>My Services</li>
                   </Link>
                   <Link to={"/venprice"}>
@@ -440,10 +437,10 @@ const Header = () => {
                     <li>Company</li>
                   </Link>
                   <li>
-                    <Link>Site Wide</Link>
+                    <Link to={"/reports/sitewide"}>Site Wide</Link>
                   </li>
                   <li>
-                    <Link>Email</Link>
+                    <Link to={"/reports/email"}>Email</Link>
                   </li>
                   <li>
                     <Link>Service Directory Stats</Link>
@@ -464,7 +461,7 @@ const Header = () => {
                     <Link>view</Link>
                   </li>
                   <li>
-                    <Link>set filters</Link>
+                    <Link to={"/myprofile/broadcastfilter"}>set filters</Link>
                   </li>
                   <li>
                     <Link>history</Link>

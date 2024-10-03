@@ -79,8 +79,10 @@ const Contact = () => {
         <div className={basic.basic}>
           <div className={basic.basic_links}>
             <ul>
-              <li>
-                <span>Help</span>
+            <li>
+                <Link to={"/help"}>
+                  <span>Help</span>
+                </Link>
               </li>
               <li>
                 <Link to={"/feedback"}>
@@ -96,7 +98,9 @@ const Contact = () => {
                 <span>Site Map</span>
               </li>
               <li>
+                <Link to={"/badges"}>
                 <span>Badges</span>
+                </Link>
               </li>
             </ul>
           </div>

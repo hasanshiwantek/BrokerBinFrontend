@@ -11,6 +11,7 @@ const Options = () => {
   const { optionFormData } = useSelector((state) => state.profileStore);
   const dispatch = useDispatch();
   // State to manage the entire form
+console.log(optionFormData);
 
   // Handler for sorting changes
   const handleSortingChange = (index, field, value) => {

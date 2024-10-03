@@ -1,53 +1,437 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import myProfile from "../../../../styles/Menu/Manage/MyProfile.module.css";
 import css from "../../../../styles/Menu/Manage/BroadcastFilters/BroadcastFilters.module.css";
 import Categories from "./Categories";
+import style from "../../../../styles/Menu/Manage/BroadcastFilters/BroadcastFilters.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { setOptionFormData } from "../../../../ReduxStore/ProfleSlice";
 import { Link } from "react-router-dom";
+import { setBroadcastFilters } from "../../../../ReduxStore/ToolsSlice";
+import { broadCastFilters, fetchBroadCastFilters } from "../../../../ReduxStore/BroadCast";
+import Cookies from "js-cookie";
+import { useForm } from "react-hook-form";
+
 
 const Options = () => {
-  const { broadcastFilters } = useSelector((state) => state.toolsStore);
+
+  // Categories Section logic
+
+
+  const [onlyReceiveMatch, setOnlyReceiveMatch] = useState({
+    computers: true,
+    telecom: false,
+    mobileDevice: false,
+  });
+
+  const [selectedCategories, setSelectedCategories] = useState([]);
+
+  const toggleOnlyReceiveMatch = (type) => {
+    setOnlyReceiveMatch({
+      computers: false,
+      telecom: false,
+      mobileDevice: false,
+      [type]: true,
+    });
+  };
+
+  const handleCheckboxChange = (value) => {
+    const updatedCategories = selectedCategories.includes(value)
+      ? selectedCategories.filter((item) => item !== value)
+      : [...selectedCategories, value];
+    setSelectedCategories(updatedCategories);
+  };
+
+  const toggleAllCheckboxes = (items, checkAll) => {
+    if (checkAll) {
+      // Add all items from this category
+      const newItems = items.filter(item => !selectedCategories.includes(item));
+      setSelectedCategories([...selectedCategories, ...newItems]);
+    } else {
+      // Remove all items from this category
+      const remainingItems = selectedCategories.filter(item => !items.includes(item));
+      setSelectedCategories(remainingItems);
+    }
+  };
+
+  const computers = [
+    "North America",
+    "South America",
+    "Europe",
+    "Africa",
+    "Middle East",
+    "Oceania",
+    "Asia",
+  ];
+
+  const telecom = [
+    "Aruba",
+    "Afghanistan",
+    "Angola",
+    "Anguilla",
+    "Albania",
+    "Andorra",
+    "Netherlands Antilles",
+    "United Arab Emirates",
+    "Argentina",
+    "Armenia",
+    "American Samoa",
+    "Antarctica",
+    "French Southern Territories",
+    "Antigua and Barbuda",
+    "Australia",
+    "Austria",
+    "Azerbaijan",
+    "Burundi",
+    "Belgium",
+    "Benin",
+    "Burkina Faso",
+    "Bangladesh",
+    "Bulgaria",
+    "Bahrain",
+    "Bahamas",
+    "Bosnia and Herzegowina",
+    "Belarus",
+    "Belize",
+    "Bermuda",
+    "Bolivia",
+    "Brazil",
+    "Barbados",
+    "Brunei Darussalam",
+    "Bhutan",
+    "Bouvet Island",
+    "Botswana",
+    "Central African Republic",
+    "Canada",
+    "Cocos (Keeling) Islands",
+    "Switzerland",
+    "Chile",
+    "China",
+    "Cote d'Ivoire",
+    "Cameroon",
+    "Democratic Republic of the Congo",
+    "Congo",
+    "Cook Islands",
+    "Colombia",
+    "Comoros",
+    "Cape Verde",
+    "Costa Rica",
+    "Christmas Island",
+    "Cayman Islands",
+    "Cyprus",
+    "Czech Republic",
+    "Germany",
+    "Djibouti",
+    "Dominica",
+    "Denmark",
+    "Dominican Republic",
+    "Algeria",
+    "Ecuador",
+    "Egypt",
+    "Eritrea",
+    "Western Sahara",
+    "Spain",
+    "Estonia",
+    "Ethiopia",
+    "Finland",
+    "Fiji",
+    "Falkland Islands (Malvinas)",
+    "France",
+    "Faroe Islands",
+    "Micronesia, Federated States of",
+    "France, Metropolitan",
+    "Gabon",
+    "United Kingdom",
+    "Georgia",
+    "Ghana",
+    "Gibraltar",
+    "Guinea",
+    "Guadeloupe",
+    "Gambia",
+    "Guinea-Bissau",
+    "Equatorial Guinea",
+    "Greece",
+    "Grenada",
+    "Greenland",
+    "Guatemala",
+    "French Guiana",
+    "Guam",
+    "Guyana",
+    "Hong Kong",
+    "Heard and Mc Donald Islands",
+    "Honduras",
+    "Croatia (local name: Hrvatska)",
+    "Haiti",
+    "Hungary",
+    "Indonesia",
+    "India",
+    "British Indian Ocean Territory",
+    "Ireland",
+    "Iraq",
+    "Iceland",
+    "Israel",
+    "Italy",
+    "Jamaica",
+    "Jordan",
+    "Japan",
+    "Kazakhstan",
+    "Kenya",
+    "Kyrgyzstan",
+    "Cambodia",
+    "Kiribati",
+    "Saint Kitts and Nevis",
+    "Korea, Republic of",
+    "Kosova, Republic of",
+    "Kuwait",
+    "Lao People's Democratic Republic",
+    "Lebanon",
+    "Liberia",
+    "Libya",
+    "Saint Lucia",
+    "Liechtenstein",
+    "Sri Lanka",
+    "Lesotho",
+    "Lithuania",
+    "Luxembourg",
+    "Latvia",
+    "Macau",
+    "Morocco",
+    "Monaco",
+    "Moldova, Republic of",
+    "Madagascar",
+    "Maldives",
+    "Mexico",
+    "Marshall Islands",
+    "Macedonia, The Former Yugoslav Republic of",
+    "Mali",
+    "Malta",
+    "Myanmar",
+    "Mongolia",
+    "Northern Mariana Islands",
+    "Mozambique",
+    "Mauritania",
+    "Montserrat",
+    "Martinique",
+    "Mauritius",
+    "Malawi",
+    "Malaysia",
+    "Mayotte",
+    "Namibia",
+    "New Caledonia",
+    "Niger",
+    "Norfolk Island",
+    "Nigeria",
+    "Nicaragua",
+    "Niue",
+    "Netherlands",
+    "Norway",
+    "Nepal",
+    "Nauru",
+    "New Zealand",
+    "Oman",
+    "Pakistan",
+    "Panama",
+    "Pitcairn",
+    "Peru",
+    "Philippines",
+    "Palau",
+    "Papua New Guinea",
+    "Poland",
+    "Puerto Rico",
+    "Portugal",
+    "Paraguay",
+    "French Polynesia",
+    "Qatar",
+    "Reunion",
+    "Romania",
+    "Russian Federation",
+    "Rwanda",
+    "Saudi Arabia",
+    "Sudan",
+    "Senegal",
+    "Singapore",
+    "South Georgia and the South Sandwich Islands",
+    "St. Helena",
+    "Svalbard and Jan Mayen Islands",
+    "Solomon Islands",
+    "Sierra Leone",
+    "El Salvador",
+    "San Marino",
+    "Somalia",
+    "St. Pierre and Miquelon",
+    "Serbia",
+    "South Sudan",
+    "Sao Tome and Principe",
+    "Suriname",
+    "Slovakia (Slovak Republic)",
+    "Slovenia",
+    "Sweden",
+    "Swaziland",
+    "Seychelles",
+    "Turks and Caicos Islands",
+    "Chad",
+    "Togo",
+    "Thailand",
+    "Tajikistan",
+    "Tokelau",
+    "Turkmenistan",
+    "East Timor",
+    "Tonga",
+    "Trinidad and Tobago",
+    "Tunisia",
+    "Turkey",
+    "Tuvalu",
+    "Taiwan",
+    "Tanzania, United Republic of",
+    "Uganda",
+    "Ukraine",
+    "United States Minor Outlying Islands",
+    "Uruguay",
+    "United States",
+    "Uzbekistan",
+    "Vatican City State (Holy See)",
+    "Saint Vincent and the Grenadines",
+    "Venezuela",
+    "Virgin Islands (British)",
+    "Virgin Islands (U.S.)",
+    "Vietnam",
+    "Vanuatu",
+    "Wallis and Futuna Islands",
+    "Samoa",
+    "Yemen",
+    "Yugoslavia",
+    "South Africa",
+    "Zaire",
+    "Zambia",
+    "Zimbabwe",
+  ];
+
+  const mobileDevice = [
+    "Alabama",
+    "Alaska",
+    "Arizona",
+    "Arkansas",
+    "California",
+    "Colorado",
+    "Connecticut",
+    "Delaware",
+    "Florida",
+    "Georgia",
+    "Hawaii",
+    "Idaho",
+    "Illinois",
+    "Indiana",
+    "Iowa",
+    "Kansas",
+    "Kentucky",
+    "Louisiana",
+    "Maine",
+    "Maryland",
+    "Massachusetts",
+    "Michigan",
+    "Minnesota",
+    "Mississippi",
+    "Missouri",
+    "Montana",
+    "Nebraska",
+    "Nevada",
+    "New Hampshire",
+    "New Jersey",
+    "New Mexico",
+    "New York",
+    "North Carolina",
+    "North Dakota",
+    "Ohio",
+    "Oklahoma",
+    "Oregon",
+    "Pennsylvania",
+    "Rhode Island",
+    "South Carolina",
+    "South Dakota",
+    "Tennessee",
+    "Texas",
+    "Utah",
+    "Vermont",
+    "Virginia",
+    "Washington",
+    "West Virginia",
+    "Wisconsin",
+    "Wyoming",
+  ];
+
+  // End Categories logic
   const dispatch = useDispatch();
+  const token = Cookies.get("token");
+  const [dailyBroadcast, setDailyBroadcast] = useState(false);
+  const [broadcasts, setBroadcasts] = useState(false);
 
-  // // Handler for sorting changes
-  // const handleSortingChange = (index, field, value) => {
-  //   // Make a copy of sortPreferences and update the field
-  //   const updatedSortPreferences = [...optionFormData.sortPreferences];
-  //   updatedSortPreferences[index] = {
-  //     ...updatedSortPreferences[index],
-  //     [field]: value,
-  //   };
+  const items = useSelector(state => state.broadcastStore.filters);
+  console.log("Filters:", items);
+  
+  useEffect(() => {
+    if(token){
+      dispatch(fetchBroadCastFilters({ token }))
+    }
+    
+  }, [dispatch,token]);
+ 
 
-  //   // Dispatch the updated sortPreferences array
-  //   dispatch(
-  //     setOptionFormData({
-  //       sortPreferences: updatedSortPreferences,
-  //     })
-  //   );
-  // };
 
-  // // General change handler for inputs
-  // const handleChange = (e) => {
-  //   const { name, value, type, checked } = e.target;
 
-  //   // For checkboxes, use `checked` value, otherwise use `value`
-  //   dispatch(
-  //     setOptionFormData({
-  //       ...optionFormData,
-  //       [name]: type === "checkbox" ? checked : value,
-  //     })
-  //   );
-  // };
 
-  // // Form submit handler
+
+  const handleSelectChange = (event) => {
+    const { name, value } = event.target;
+    // Convert '1' or '0' from the select element directly to boolean
+    const booleanValue = value === '1';
+    if (name === "daily_broadcast") {
+      setDailyBroadcast(booleanValue);
+    } else if (name === "broadcasts") {
+      setBroadcasts(booleanValue);
+    }
+  };
+
+
+ 
+
   const submitBroadcastFilters = (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData);
-    console.log(data);
-    // You can send the `formData` to your backend here.
-  };
+    // Get all values from checkboxes or multi-select inputs
+    const categories = formData.getAll('categories');
+    const services = formData.getAll('services');
+    const groupings = formData.getAll('groupings');
+    const region = formData.getAll('regions');
+    const country = formData.getAll('broadcountry_from');
+    const type_of_broadcast = formData.getAll('type_of_broadcast');
+
+
+    // Package the data
+    const transformedData = {
+      daily_broadcast: dailyBroadcast, // direct boolean value
+      broadcasts: broadcasts, // direct boolean value
+      type_of_broadcast,  // Already an array from getAll if checkboxes are named correctly
+      categories,
+      services,
+      groupings,
+      region,
+      country
+    };
+
+
+  
+    const data = transformedData
+      
+   
+    dispatch(broadCastFilters({ data, token }))
+
+    console.log(transformedData);
+
+
+
+
+    
+
+  }
 
   return (
     <>
@@ -95,24 +479,27 @@ const Options = () => {
               <div className={css.broadcastFilters_emailSettings}>
                 <h3>Email Settings</h3>
                 <div>
-                  <span>
-                    <label htmlFor="summary">Daily Broadcast Summary</label>
-                    <select name="summary" id="summary">
-                      <option selected="selected" value="0">
-                        Off
-                      </option>
-                      <option value="1">Normal</option>
-                    </select>
-                  </span>
-                  <span>
-                    <label htmlFor="broadcast">Broadcast</label>
-                    <select name="broadcast" id="broadcast">
-                      <option selected="selected" value="0">
-                        Off
-                      </option>
+                  <div>
+                    <label>Daily Broadcast Summary</label>
+                    <select name="daily_broadcast" value={dailyBroadcast ? "1" : "0"} onChange={handleSelectChange}>
+                      <option value="0">Off</option>
                       <option value="1">On</option>
                     </select>
-                  </span>
+                  </div>
+
+
+                  <div>
+                    <label>Broadcast</label>
+                    <select name="broadcasts" value={broadcasts ? "1" : "0"} onChange={handleSelectChange}>
+                      <option value="0">Off</option>
+                      <option value="1" >On</option>
+                    </select>
+                  </div>
+
+
+
+
+
                   <span>
                     <label htmlFor="multicast">Multicast</label>
                     <select name="multicast" id="multicast">
@@ -138,15 +525,15 @@ const Options = () => {
                 <div>
                   <span>
                     <label htmlFor="wtb">Want To Buy (WTB)</label>
-                    <input type="checkbox" name="wtb" id="wtb" />
+                    <input type="checkbox" name="type_of_broadcast" value="wtb" id="wtb" />
                   </span>
                   <span>
                     <label htmlFor="rfq">Request For Quote (RFQ)</label>
-                    <input type="checkbox" name="rfq" id="rfq" />
+                    <input type="checkbox" name="type_of_broadcast" value="wts" id="wts" />
                   </span>
                   <span>
                     <label htmlFor="wts">Want To Sell (WTS)</label>
-                    <input type="checkbox" name="wts" id="wts" />
+                    <input type="checkbox" name="type_of_broadcast" value="rfq" id="rfq" />
                   </span>
                 </div>
                 <div className={css.checkBtn}>
@@ -156,7 +543,84 @@ const Options = () => {
               </div>
               <div className={css.broadcastFilters_categories}>
                 <h3>In The Following Categories</h3>
-                <Categories />
+                {/* <Categories /> */}
+
+                {/*   Categories Data */}
+
+
+
+                <div className={css.onlyReceiveMatch}>
+                  <div className={css.categoriesToggleButton}>
+                    <button type="button" onClick={() => toggleOnlyReceiveMatch("computers")}>computers</button>
+                    <button type="button" onClick={() => toggleOnlyReceiveMatch("telecom")}>telecom</button>
+                    <button type="button" onClick={() => toggleOnlyReceiveMatch("mobileDevice")}>mobileDevice</button>
+                  </div>
+                  {onlyReceiveMatch.computers && (
+                    <div>
+                      <ul className={css.checkbox}>
+                        {computers.map((item) => (
+                          <li key={item}>
+                            <input
+                              type="checkbox"
+                              id={"comp_" + item}
+                              name="categories"
+                              value={item}
+                              checked={selectedCategories.includes(item)}
+                              onChange={() => handleCheckboxChange(item)}
+                            />
+                            <label htmlFor={"comp_" + item}>{item}</label>
+                          </li>
+                        ))}
+                      </ul>
+                      <button type="button" onClick={() => toggleAllCheckboxes(computers, true)}>Check All</button>
+                      <button type="button" onClick={() => toggleAllCheckboxes(computers, false)}>Uncheck All</button>
+                    </div>
+                  )}
+                  {onlyReceiveMatch.telecom && (
+                    <div>
+                      <ul className={css.checkbox}>
+                        {telecom.map((item) => (
+                          <li key={item}>
+                            <input
+                              type="checkbox"
+                              id={"tele_" + item}
+                              name="categories"
+                              value={item}
+                              checked={selectedCategories.includes(item)}
+                              onChange={() => handleCheckboxChange(item)}
+                            />
+                            <label htmlFor={"tele_" + item}>{item}</label>
+                          </li>
+                        ))}
+                      </ul>
+                      <button type="button" onClick={() => toggleAllCheckboxes(telecom, true)}>Check All</button>
+                      <button type="button" onClick={() => toggleAllCheckboxes(telecom, false)}>Uncheck All</button>
+                    </div>
+                  )}
+                  {onlyReceiveMatch.mobileDevice && (
+                    <div>
+                      <ul className={css.checkbox}>
+                        {mobileDevice.map((item) => (
+                          <li key={item}>
+                            <input
+                              type="checkbox"
+                              id={"mobile_" + item}
+                              name="categories"
+                              value={item}
+                              checked={selectedCategories.includes(item)}
+                              onChange={() => handleCheckboxChange(item)}
+                            />
+                            <label htmlFor={"mobile_" + item}>{item}</label>
+                          </li>
+                        ))}
+                      </ul>
+                      <button type="button" onClick={() => toggleAllCheckboxes(mobileDevice, true)}>Check All</button>
+                      <button type="button" onClick={() => toggleAllCheckboxes(mobileDevice, false)}>Uncheck All</button>
+                    </div>
+                  )}
+                </div>
+
+
               </div>
               <div className={css.broadcastFilters_services}>
                 <h3>For The Following Services</h3>
@@ -164,251 +628,239 @@ const Options = () => {
                   <li>
                     <span>
                       <label htmlFor="asset_recovery">Asset Recovery</label>
-                      <input type="checkbox" name="asset_recovery" />
+                      <input type="checkbox" name="services" value="Asset Recovery" id="asset_recovery" />
                     </span>
                     <span>
                       <label htmlFor="backup">Backup</label>
-                      <input type="checkbox" name="backup" />
+                      <input type="checkbox" name="services" value="Backup" id="backup" />
                     </span>
                     <span>
                       <label htmlFor="call_center">Call Center</label>
-                      <input type="checkbox" name="call_center" />
+                      <input type="checkbox" name="services" value="Call Center" id="call_center" />
                     </span>
                   </li>
                   <li>
                     <span>
                       <label htmlFor="cloud_assessment">Cloud Assessment</label>
-                      <input type="checkbox" name="cloud_assessment" />
+                      <input type="checkbox" name="services" value="Cloud Assessment" id="cloud_assessment" />
                     </span>
                     <span>
                       <label htmlFor="cloud_migration">Cloud Migration</label>
-                      <input type="checkbox" name="cloud_migration" />
+                      <input type="checkbox" name="services" value="Cloud Migration" id="cloud_migration" />
                     </span>
                     <span>
                       <label htmlFor="cloud_services">Cloud Services</label>
-                      <input type="checkbox" name="cloud_services" />
+                      <input type="checkbox" name="services" value="Cloud Services" id="cloud_services" />
                     </span>
                   </li>
                   <li>
                     <span>
                       <label htmlFor="conferencing">Conferencing</label>
-                      <input type="checkbox" name="conferencing" />
+                      <input type="checkbox" name="services" value="Conferencing" id="conferencing" />
                     </span>
                     <span>
                       <label htmlFor="daas">DaaS</label>
-                      <input type="checkbox" name="daas" />
+                      <input type="checkbox" name="services" value="DaaS" id="daas" />
                     </span>
                     <span>
                       <label htmlFor="data_destruction">Data Destruction</label>
-                      <input type="checkbox" name="data_destruction" />
+                      <input type="checkbox" name="services" value="Data Destruction" id="data_destruction" />
                     </span>
                   </li>
                   <li>
                     <span>
                       <label htmlFor="data_recovery">Data Recovery</label>
-                      <input type="checkbox" name="data_recovery" />
+                      <input type="checkbox" name="services" value="Data Recovery" id="data_recovery" />
                     </span>
                     <span>
                       <label htmlFor="deinstallation">Deinstallation</label>
-                      <input type="checkbox" name="deinstallation" />
+                      <input type="checkbox" name="services" value="Deinstallation" id="deinstallation" />
                     </span>
                     <span>
-                      <label htmlFor="delivery_duty_paid">
-                        Delivery Duty Paid
-                      </label>
-                      <input type="checkbox" name="delivery_duty_paid" />
+                      <label htmlFor="delivery_duty_paid">Delivery Duty Paid</label>
+                      <input type="checkbox" name="services" value="Delivery Duty Paid" id="delivery_duty_paid" />
                     </span>
                   </li>
                   <li>
                     <span>
-                      <label htmlFor="disaster_recovery">
-                        Disaster Recovery
-                      </label>
-                      <input type="checkbox" name="disaster_recovery" />
+                      <label htmlFor="disaster_recovery">Disaster Recovery</label>
+                      <input type="checkbox" name="services" value="Disaster Recovery" id="disaster_recovery" />
                     </span>
                     <span>
                       <label htmlFor="engineering">Engineering</label>
-                      <input type="checkbox" name="engineering" />
+                      <input type="checkbox" name="services" value="Engineering" id="engineering" />
                     </span>
                     <span>
                       <label htmlFor="fiber">Fiber</label>
-                      <input type="checkbox" name="fiber" />
+                      <input type="checkbox" name="services" value="Fiber" id="fiber" />
                     </span>
                   </li>
                   <li>
                     <span>
                       <label htmlFor="hardware_audits">Hardware Audits</label>
-                      <input type="checkbox" name="hardware_audits" />
+                      <input type="checkbox" name="services" value="Hardware Audits" id="hardware_audits" />
                     </span>
                     <span>
                       <label htmlFor="hosted_exchange">Hosted Exchange</label>
-                      <input type="checkbox" name="hosted_exchange" />
+                      <input type="checkbox" name="services" value="Hosted Exchange" id="hosted_exchange" />
                     </span>
                     <span>
                       <label htmlFor="hosting">Hosting</label>
-                      <input type="checkbox" name="hosting" />
+                      <input type="checkbox" name="services" value="Hosting" id="hosting" />
                     </span>
                   </li>
                   <li>
                     <span>
                       <label htmlFor="iaas">IaaS</label>
-                      <input type="checkbox" name="iaas" />
+                      <input type="checkbox" name="services" value="IaaS" id="iaas" />
                     </span>
                     <span>
-                      <label htmlFor="import_export">Import / Export</label>
-                      <input type="checkbox" name="import_export" />
+                      <label htmlFor="import_export">Import/Export</label>
+                      <input type="checkbox" name="services" value="Import/Export" id="import_export" />
                     </span>
                     <span>
-                      <label htmlFor="import_export_record">
-                        Import / Export of Record
-                      </label>
-                      <input type="checkbox" name="import_export_record" />
+                      <label htmlFor="import_export_record">Import/Export of Record</label>
+                      <input type="checkbox" name="services" value="Import/Export of Record" id="import_export_record" />
                     </span>
                   </li>
                   <li>
                     <span>
                       <label htmlFor="installation">Installation</label>
-                      <input type="checkbox" name="installation" />
+                      <input type="checkbox" name="services" value="Installation" id="installation" />
                     </span>
                     <span>
                       <label htmlFor="internet">Internet</label>
-                      <input type="checkbox" name="internet" />
+                      <input type="checkbox" name="services" value="Internet" id="internet" />
                     </span>
                     <span>
-                      <label htmlFor="inventory_management">
-                        Inventory Management
-                      </label>
-                      <input type="checkbox" name="inventory_management" />
+                      <label htmlFor="inventory_management">Inventory Management</label>
+                      <input type="checkbox" name="services" value="Inventory Management" id="inventory_management" />
                     </span>
                   </li>
                   <li>
                     <span>
                       <label htmlFor="it_management">IT Management</label>
-                      <input type="checkbox" name="it_management" />
+                      <input type="checkbox" name="services" value="IT Management" id="it_management" />
                     </span>
                     <span>
                       <label htmlFor="itad">ITAD</label>
-                      <input type="checkbox" name="itad" />
+                      <input type="checkbox" name="services" value="ITAD" id="itad" />
                     </span>
                     <span>
                       <label htmlFor="leasing">Leasing</label>
-                      <input type="checkbox" name="leasing" />
+                      <input type="checkbox" name="services" value="Leasing" id="leasing" />
                     </span>
                   </li>
                   <li>
                     <span>
                       <label htmlFor="logistics">Logistics</label>
-                      <input type="checkbox" name="logistics" />
+                      <input type="checkbox" name="services" value="Logistics" id="logistics" />
                     </span>
                     <span>
                       <label htmlFor="maintenance">Maintenance</label>
-                      <input type="checkbox" name="maintenance" />
+                      <input type="checkbox" name="services" value="Maintenance" id="maintenance" />
                     </span>
                     <span>
                       <label htmlFor="managed_services">Managed Services</label>
-                      <input type="checkbox" name="managed_services" />
+                      <input type="checkbox" name="services" value="Managed Services" id="managed_services" />
                     </span>
                   </li>
                   <li>
                     <span>
-                      <label htmlFor="network_management">
-                        Network Management
-                      </label>
-                      <input type="checkbox" name="network_management" />
+                      <label htmlFor="network_management">Network Management</label>
+                      <input type="checkbox" name="services" value="Network Management" id="network_management" />
                     </span>
                     <span>
                       <label htmlFor="networking">Networking</label>
-                      <input type="checkbox" name="networking" />
+                      <input type="checkbox" name="services" value="Networking" id="networking" />
                     </span>
                     <span>
                       <label htmlFor="packaging">Packaging</label>
-                      <input type="checkbox" name="packaging" />
+                      <input type="checkbox" name="services" value="Packaging" id="packaging" />
                     </span>
                   </li>
                   <li>
                     <span>
                       <label htmlFor="pay_per_click">Pay Per Click</label>
-                      <input type="checkbox" name="pay_per_click" />
+                      <input type="checkbox" name="services" value="Pay Per Click" id="pay_per_click" />
                     </span>
                     <span>
                       <label htmlFor="recycling_scrap">Recycling / Scrap</label>
-                      <input type="checkbox" name="recycling_scrap" />
+                      <input type="checkbox" name="services" value="Recycling / Scrap" id="recycling_scrap" />
                     </span>
                     <span>
                       <label htmlFor="rental">Rental</label>
-                      <input type="checkbox" name="rental" />
+                      <input type="checkbox" name="services" value="Rental" id="rental" />
                     </span>
                   </li>
                   <li>
                     <span>
                       <label htmlFor="repair">Repair</label>
-                      <input type="checkbox" name="repair" />
+                      <input type="checkbox" name="services" value="Repair" id="repair" />
                     </span>
                     <span>
                       <label htmlFor="sdn">SDN</label>
-                      <input type="checkbox" name="sdn" />
+                      <input type="checkbox" name="services" value="SDN" id="sdn" />
                     </span>
                     <span>
                       <label htmlFor="security">Security</label>
-                      <input type="checkbox" name="security" />
+                      <input type="checkbox" name="services" value="Security" id="security" />
                     </span>
                   </li>
                   <li>
                     <span>
                       <label htmlFor="seo">SEO</label>
-                      <input type="checkbox" name="seo" />
+                      <input type="checkbox" name="services" value="SEO" id="seo" />
                     </span>
-
                     <span>
                       <label htmlFor="shipping">Shipping</label>
-                      <input type="checkbox" name="shipping" />
+                      <input type="checkbox" name="services" value="Shipping" id="shipping" />
                     </span>
-
                     <span>
                       <label htmlFor="software">Software</label>
-                      <input type="checkbox" name="software" />
+                      <input type="checkbox" name="services" value="Software" id="software" />
                     </span>
                   </li>
                   <li>
                     <span>
                       <label htmlFor="solutions">Solutions</label>
-                      <input type="checkbox" name="solutions" />
+                      <input type="checkbox" name="services" value="Solutions" id="solutions" />
                     </span>
                     <span>
                       <label htmlFor="sort_and_settle">Sort and Settle</label>
-                      <input type="checkbox" name="sort_and_settle" />
+                      <input type="checkbox" name="services" value="Sort and Settle" id="sort_and_settle" />
                     </span>
                     <span>
                       <label htmlFor="storage">Storage</label>
-                      <input type="checkbox" name="storage" />
+                      <input type="checkbox" name="services" value="Storage" id="storage" />
                     </span>
                   </li>
                   <li>
                     <span>
                       <label htmlFor="testing_facility">Testing Facility</label>
-                      <input type="checkbox" name="testing_facility" />
+                      <input type="checkbox" name="services" value="Testing Facility" id="testing_facility" />
                     </span>
                     <span>
                       <label htmlFor="vdi">VDI</label>
-                      <input type="checkbox" name="vdi" />
+                      <input type="checkbox" name="services" value="VDI" id="vdi" />
                     </span>
                     <span>
                       <label htmlFor="voip">VoIP</label>
-                      <input type="checkbox" name="voip" />
+                      <input type="checkbox" name="services" value="VoIP" id="voip" />
                     </span>
                   </li>
                   <li>
                     <span>
                       <label htmlFor="wan_mpls">WAN / MPLS</label>
-                      <input type="checkbox" name="wan_mpls" />
+                      <input type="checkbox" name="services" value="WAN / MPLS" id="wan_mpls" />
                     </span>
                     <span>
                       <label htmlFor="tems">TEMs</label>
-                      <input type="checkbox" name="tems" />
+                      <input type="checkbox" name="services" value="TEMs" id="tems" />
                     </span>
                     <span>
                       <label htmlFor="web_services">Web Services</label>
-                      <input type="checkbox" name="web_services" />
+                      <input type="checkbox" name="services" value="Web Services" id="web_services" />
                     </span>
                   </li>
                 </ul>
@@ -422,22 +874,22 @@ const Options = () => {
                 <ul>
                   <li>
                     <span>
-                      <label htmlFor="bulk">bulk</label>
-                      <input type="checkbox" name="bulk" id="bulk" />
+                      <label htmlFor="bulk">Bulk</label>
+                      <input type="checkbox" name="groupings" value="Bulk" id="bulk" />
                     </span>
                     <span>
-                      <label htmlFor="container">container</label>
-                      <input type="checkbox" name="container" id="container" />
+                      <label htmlFor="container">Container</label>
+                      <input type="checkbox" name="groupings" value="Container" id="container" />
                     </span>
                   </li>
                   <li>
                     <span>
-                      <label htmlFor="pallet">pallet</label>
-                      <input type="checkbox" name="pallet" id="pallet" />
+                      <label htmlFor="pallet">Pallet</label>
+                      <input type="checkbox" name="groupings" value="Pallet" id="pallet" />
                     </span>
                     <span>
-                      <label htmlFor="wholeUnit">wholeUnit</label>
-                      <input type="checkbox" name="wholeUnit" id="wholeUnit" />
+                      <label htmlFor="wholeUnit">Whole Unit</label>
+                      <input type="checkbox" name="groupings" value="Whole Unit" id="wholeUnit" />
                     </span>
                   </li>
                 </ul>
@@ -454,49 +906,37 @@ const Options = () => {
                     <li>
                       <span>
                         <label htmlFor="NorthAmerica">North America</label>
-                        <input
-                          type="checkbox"
-                          name="NorthAmerica"
-                          id="NorthAmerica"
-                        />
+                        <input type="checkbox" name="regions" value="North America" id="NorthAmerica" />
                       </span>
                       <span>
                         <label htmlFor="MiddleEast">Middle East</label>
-                        <input
-                          type="checkbox"
-                          name="MiddleEast"
-                          id="MiddleEast"
-                        />
+                        <input type="checkbox" name="regions" value="Middle East" id="MiddleEast" />
                       </span>
                     </li>
                     <li>
                       <span>
                         <label htmlFor="SouthAmerica">South America</label>
-                        <input
-                          type="checkbox"
-                          name="SouthAmerica"
-                          id="SouthAmerica"
-                        />
+                        <input type="checkbox" name="regions" value="South America" id="SouthAmerica" />
                       </span>
                       <span>
                         <label htmlFor="Europe">Europe</label>
-                        <input type="checkbox" name="Europe" id="Europe" />
+                        <input type="checkbox" name="regions" value="Europe" id="Europe" />
                       </span>
                     </li>
                     <li>
                       <span>
                         <label htmlFor="Africa">Africa</label>
-                        <input type="checkbox" name="Africa" id="Africa" />
+                        <input type="checkbox" name="regions" value="Africa" id="Africa" />
                       </span>
                       <span>
                         <label htmlFor="Oceania">Oceania</label>
-                        <input type="checkbox" name="Oceania" id="Oceania" />
+                        <input type="checkbox" name="regions" value="Oceania" id="Oceania" />
                       </span>
                     </li>
                     <li>
                       <span>
                         <label htmlFor="Asia">Asia</label>
-                        <input type="checkbox" name="Asia" id="Asia" />
+                        <input type="checkbox" name="regions" value="Asia" id="Asia" />
                       </span>
                     </li>
                     <li>
@@ -776,54 +1216,42 @@ const Options = () => {
                   </div>
                 </div>
                 <div className={css.broadcastFilters_outgoing}>
-                  <h3>From The Following Regions / Country</h3>
+                  <h3>Default Outgoing Settings</h3>
                   <ul>
                     <li>
                       <span>
                         <label htmlFor="NorthAmerica">North America</label>
-                        <input
-                          type="checkbox"
-                          name="NorthAmerica"
-                          id="NorthAmerica"
-                        />
+                        <input type="checkbox" name="regions" value="North America" id="NorthAmerica" />
                       </span>
                       <span>
                         <label htmlFor="MiddleEast">Middle East</label>
-                        <input
-                          type="checkbox"
-                          name="MiddleEast"
-                          id="MiddleEast"
-                        />
+                        <input type="checkbox" name="regions" value="Middle East" id="MiddleEast" />
                       </span>
                     </li>
                     <li>
                       <span>
                         <label htmlFor="SouthAmerica">South America</label>
-                        <input
-                          type="checkbox"
-                          name="SouthAmerica"
-                          id="SouthAmerica"
-                        />
+                        <input type="checkbox" name="regions" value="South America" id="SouthAmerica" />
                       </span>
                       <span>
                         <label htmlFor="Europe">Europe</label>
-                        <input type="checkbox" name="Europe" id="Europe" />
+                        <input type="checkbox" name="regions" value="Europe" id="Europe" />
                       </span>
                     </li>
                     <li>
                       <span>
                         <label htmlFor="Africa">Africa</label>
-                        <input type="checkbox" name="Africa" id="Africa" />
+                        <input type="checkbox" name="regions" value="Africa" id="Africa" />
                       </span>
                       <span>
                         <label htmlFor="Oceania">Oceania</label>
-                        <input type="checkbox" name="Oceania" id="Oceania" />
+                        <input type="checkbox" name="regions" value="Oceania" id="Oceania" />
                       </span>
                     </li>
                     <li>
                       <span>
                         <label htmlFor="Asia">Asia</label>
-                        <input type="checkbox" name="Asia" id="Asia" />
+                        <input type="checkbox" name="regions" value="Asia" id="Asia" />
                       </span>
                     </li>
                     <li>
@@ -1149,3 +1577,16 @@ const Options = () => {
 };
 
 export default Options;
+
+
+
+
+
+
+
+
+
+
+
+
+

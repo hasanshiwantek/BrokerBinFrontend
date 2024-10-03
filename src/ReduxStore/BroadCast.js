@@ -27,12 +27,77 @@ export const sendBroadcast = createAsyncThunk(
   }
 );
 
+
+export const broadCastFilters = createAsyncThunk(
+  "broadcastStore/broadCastFilters",
+  async ({ data, token }) => {
+    console.log({data})
+
+    try {
+      const response = await axios.post(
+        "https://brokerbinbackend.shiwantek.com/api/bfilters/store",
+        data,
+        
+        
+        {
+          headers: {
+           "Content-Type": "application/json", 
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log(response.data);
+      
+      return response.data;
+
+    } catch (error) {
+      console.error(
+        "Error while fetching user data:",
+        error.response?.data || error.message
+      );
+      throw "Error while sending broadcast:" || error;
+    }
+  }
+);
+
+
+export const fetchBroadCastFilters = createAsyncThunk(
+  "broadcastStore/fetchBroadCastFilters",
+  async ({token }) => {
+    console.log(token)
+
+    try {
+      const response = await axios.get(
+        "https://brokerbinbackend.shiwantek.com/api/bfilters/show",
+        {
+          headers: {
+           "Content-Type": "application/json", 
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log(response.data);
+      
+      return response.data;
+
+    } catch (error) {
+      throw new Error("Error searching User");
+    }
+  }
+);
+
+
+
+
 const initialState = {
   computerSelection: [],
   telecomSelection: [],
   mobileDevicesSelection: [],
   companiesSelection: [],
   regionSelection: [],
+  filters:[],
 };
 
 const broadcastSlice = createSlice({
@@ -55,10 +120,35 @@ const broadcastSlice = createSlice({
       state.regionSelection = action.payload;
     },
   },
-  //   extraReducers: (builder) => {
-  // builder.addcase()
-  // Add reducers for other actions here.
-  //   },
+    extraReducers: (builder) => {
+      builder
+      .addCase(broadCastFilters.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(broadCastFilters.fulfilled, (state, action) => {
+        state.isLoading = false;
+        // Optionally update state with the result
+        state.someData = action.payload;
+      })
+      .addCase(broadCastFilters.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message;
+      })
+      .addCase(fetchBroadCastFilters.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchBroadCastFilters.fulfilled, (state, action) => {
+        state.isLoading = false;
+        //Update state with the result
+        state.filters = action.payload;
+      })
+      .addCase(fetchBroadCastFilters.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message;
+      });
+    },
 });
 export const {
   setComputerSelection,

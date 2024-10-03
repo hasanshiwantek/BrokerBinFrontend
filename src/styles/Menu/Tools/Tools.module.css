@@ -1,0 +1,135 @@
+.toolsContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 items in a row */
+    gap: 20px;
+    margin-top: 20px;
+    padding: 20px 30px;
+  }
+  
+  @media (max-width: 1024px) {
+    .toolsContainer {
+      grid-template-columns: repeat(2, 1fr); /* 2 items in a row for medium screens */
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .toolsContainer {
+      grid-template-columns: 1fr; /* 1 item in a row for smaller screens */
+    }
+  }
+  
+  .toolCard {
+    background-color: white;
+    border: 1px solid #333;
+    border-top: 2px solid rgb(189, 81, 18);
+    border-radius: 4px; /* Rounded corners like in the image */
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: transform 0.3s ease;
+  }
+  
+
+  
+  .toolCard img {
+    width: 40px; /* Smaller icon size */
+    height: 40px;
+    margin: auto;
+    margin-top: -36px;
+  }
+  
+  .toolCard h3 {
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 12px; /* Similar heading size as the image */
+    font-weight: bold;
+  }
+  
+  .toolCard p, .toolCard ul {
+    font-size: 11px;
+    color: #555;
+  }
+  
+  .toolCard ul {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 10px;
+  }
+  
+  .toolCard ul li {
+    margin-bottom: 5px;
+  }
+  
+  .toolCard ul li a {
+    color: #007bff; /* Link color */
+    text-decoration: none;
+  }
+  
+  .toolCard ul li a:hover {
+    text-decoration: underline; /* Underline on hover */
+  }
+
+  .badgesContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0;
+    background-color: white;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: stretch;
+
+  }
+  
+  .badgeText {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 11%;
+    margin-top: 31px;
+  }
+  
+  .badgeText h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .now {
+    color: green;
+  }
+  
+  .viewAllLink {
+    color: #00a3e0;
+    font-size: 14px;
+    text-decoration: none;
+    margin-top: 5px;
+  }
+  
+  .viewAllLink:hover {
+    text-decoration: underline;
+  }
+  
+  .badgeIcons {
+    display: flex;
+    gap: 15px; /* Spacing between the icons */
+  }
+  
+  .badgeIcon {
+    height: 6vh;
+  }
+
+  .footerlinks{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .footerlinks li{
+    list-style: none;
+    color: #3A57AB;;
+  }
+  .footerlinks li a{
+    font-size: 11px;
+  }

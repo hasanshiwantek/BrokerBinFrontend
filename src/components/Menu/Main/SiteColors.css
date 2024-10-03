@@ -1,0 +1,56 @@
+.boxes {
+    display: flex;
+    align-items: flex-start;
+    /* Align items from the top */
+}
+
+.box-sec {
+    display: flex;
+    flex-direction: column;
+    /* Stack the boxes vertically */
+}
+
+.box-content {
+    display: flex;
+    flex-direction: column;
+    /* Stack the text vertically */
+    margin-left: 4px;
+    /* Add space between boxes and text */
+}
+
+.box1,
+.box2,
+.box3,
+.box4 {
+    width: 30px;
+    height: 20px;
+    border: 1px solid black;
+    /* Add a black border to match the picture */
+}
+
+.box1 {
+    background-color: #edf7e1;
+    /* Light green (MyVendors Show First) */
+}
+
+.box2 {
+    background-color: #fff7b2;
+    /* Light yellow (MyVendors Caution) */
+}
+
+.box3 {
+    background-color: black;
+    /* Black (MyVendors Show Never) */
+}
+
+.box4 {
+    background-color: #fff7b2;
+    /* Light yellow (Supply & Demand Product In Stock) */
+}
+
+.box-content p {
+    color: rgb(218, 19, 19);
+    /* Red color for text */
+    margin-bottom: -5px;
+    /* Reduce margin between the text */
+}

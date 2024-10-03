@@ -22,7 +22,7 @@ const HotListEdit = () => {
     const formData = new FormData(e.target);
     const rows = [];
     for (let i = 0; i < items.length; i++) {
-      const partModel = formData.get(`partModel_${i}`);
+      const partModel = formData.get(`partModel_${i}`);   
       if (partModel) {
         rows.push({
           id: items[i].id,

@@ -118,8 +118,10 @@ const Ethics = () => {
         <div className={basic.basic}>
           <div className={basic.basic_links}>
             <ul>
-              <li>
-                <span>Help</span>
+            <li>
+                <Link to={"/help"}>
+                  <span>Help</span>
+                </Link>
               </li>
               <li>
                 <Link to={"/feedback"}>
@@ -131,11 +133,16 @@ const Ethics = () => {
                   <span>Ethics</span>
                 </Link>
               </li>
-              <li>
+              <Link to={"/sitemap"}>
+              <li >
                 <span>Site Map</span>
               </li>
+              </Link>
+
               <li>
+                <Link to={"/badges"}>
                 <span>Badges</span>
+                </Link>
               </li>
             </ul>
           </div>

@@ -439,3 +439,27 @@
     }
   }
 }
+
+
+.vanBlock{
+display: flex;
+justify-content: space-evenly;
+align-items: center;
+gap:80px;
+}
+
+.vanBlock_view img{
+  height: 35vh;
+  width: 90vw;
+  margin-top: 20px;
+}
+
+.vendorContent p{
+  font-size: 1.6rem;
+  color: rgb(48, 45, 45);
+}
+
+.vendorContent h2{
+  font-weight: bold;
+  font-size: 1.8rem;
+}

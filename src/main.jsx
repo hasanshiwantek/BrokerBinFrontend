@@ -28,6 +28,29 @@ const MyRFQ = lazy(() => import("./components/Menu/Manage/MyRFQ.jsx"));
 const Inventory = lazy(() =>
   import("./components/Menu/Manage/Inventory/Inventory.jsx")
 );
+const Search = lazy(() =>
+  import("./components/Menu/Search/Search.jsx")
+);
+const SearchCompany = lazy(() =>
+  import("./components/Menu/Search/Company.jsx")
+);
+const SearchResult = lazy(() =>
+  import("./components/Menu/Search/SearchResults.jsx")
+);
+
+
+
+const Manage = lazy(() =>
+  import("./components/Menu/Manage/Manage.jsx")
+);
+const MyServices = lazy(() =>
+  import("./components/Menu/Manage/MyServices.jsx")
+);
+
+
+const Person = lazy(() =>
+  import("./components/Menu/Search/Person.jsx")
+);
 const EditDelete = lazy(() =>
   import("./components/Menu/Manage/Inventory/EditDelete.jsx")
 );
@@ -42,11 +65,12 @@ const VenPrice = lazy(() =>
   import("./components/Menu/Manage/Inventory/VenPrice.jsx")
 );
 const Send = lazy(() => import("./components/Menu/Broadcast/Send/Send.jsx"));
-const Advanced = lazy(() => import("./components/Menu/Search/Advanced.jsx"));
+// const Advanced = lazy(() => import("./components/Menu/Search/Advanced.jsx"));
 const Map = lazy(() => import("./components/Map/Map.jsx"));
 const MyWorldMap = lazy(() => import("./components/Map/MyWorldMap.jsx"));
 const Form = lazy(() => import("./Form.jsx"));
 const TextEditor = lazy(() => import("./components/TextEditor.jsx"));
+const Tools=lazy(()=>import("./components/Menu/Tools/Tools.jsx"))
 const MyVendors = lazy(() => import("./components/Menu/Tools/MyVendors.jsx"));
 const MyContact = lazy(() => import("./components/Menu/Tools/MyContact.jsx"));
 const Company = lazy(() => import("./components/Menu/Reports/Company.jsx"));
@@ -81,7 +105,11 @@ import { Provider } from "react-redux";
 import store from "./ReduxStore/Store.js";
 import Contact from "./components/Menu/Main/Contact.jsx";
 import Ethics from "./components/Menu/Main/Ethics.jsx";
+import Help from "./components/Menu/Main/Help.jsx";
 import SvgMap from "./components/SvgMap.jsx";
+import Badges from "./components/Menu/Main/Badges.jsx";
+import SiteMap from "./components/Menu/Main/SiteMap.jsx";
+
 
 const router = createBrowserRouter([
   {
@@ -197,6 +225,62 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/search",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <Search />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/searchcompany",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <SearchCompany />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/person",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <Person/>
+          </Suspense>
+        ),
+      },
+      {
+        path: "/search-result",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <SearchResult/>
+          </Suspense>
+        ),
+      },
+      {
+        path: "/manage",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <Manage/>
+          </Suspense>
+        ),
+      },
+
+      {
+        path: "/manage/my-services",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <MyServices/>
+          </Suspense>
+        ),
+      },
+
+      {
         path: "/inventory",
         element: (
           <Suspense fallback={<LoadingState />}>
@@ -259,15 +343,15 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
-      {
-        path: "/advanced",
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Header />
-            <Advanced />
-          </Suspense>
-        ),
-      },
+      // {
+      //   path: "/advanced",
+      //   element: (
+      //     <Suspense fallback={<LoadingState />}>
+      //       <Header />
+      //       <Advanced />
+      //     </Suspense>
+      //   ),
+      ,
       {
         path: "/map",
         element: (
@@ -318,6 +402,15 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/help",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <Help />
+          </Suspense>
+        ),
+      },
+      {
         path: "/feedback",
         element: (
           <Suspense fallback={<LoadingState />}>
@@ -332,6 +425,33 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <Ethics />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/badges",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <Badges/>
+          </Suspense>
+        ),
+      },
+      {
+        path: "/sitemap",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <SiteMap/>
+          </Suspense>
+        ),
+      },
+      {
+        path: "/tools",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <Tools/>
           </Suspense>
         ),
       },
