@@ -2,8 +2,9 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* 3 items in a row */
     gap: 20px;
-    margin-top: 20px;
+    /* margin-top: 20px; */
     padding: 20px 30px;
+    border: 8px solid #e8e8e8;;
   }
   
   @media (max-width: 1024px) {
@@ -21,7 +22,8 @@
   .toolCard {
     background-color: white;
     border: 1px solid #333;
-    border-top: 2px solid rgb(189, 81, 18);
+    border-top: 2px solid  #ef6421;
+    ;
     border-radius: 4px; /* Rounded corners like in the image */
     padding: 20px;
     text-align: center;
@@ -32,8 +34,8 @@
 
   
   .toolCard img {
-    width: 40px; /* Smaller icon size */
-    height: 40px;
+    width: 50px; /* Smaller icon size */
+    height: 50px;
     margin: auto;
     margin-top: -36px;
   }
@@ -116,7 +118,7 @@
   }
   
   .badgeIcon {
-    height: 6vh;
+    height: 4vh;
   }
 
   .footerlinks{

@@ -5,17 +5,17 @@
     width: 100%;
 }
 
-main{
+.main-sec{
     border: none;
 }
 .sections {
     display: flex; /* Use flexbox to lay out the sections */
     justify-content: space-between; /* Space between sections */
     align-items: flex-start; /* Align items to the top */
-    border: 5px solid lightgray; /* Border for the sections */
+    border: 10px solid lightgray; /* Border for the sections */
     background-color: #f9f9f9; /* Light background for the sections */
     padding: 20px; /* Padding inside the sections */
-    width: 93vw;
+    width: 90vw;
 }
 
 #box1, #box2, #box3, #box4, #box5, #box6, #box7 {
@@ -35,7 +35,7 @@ main{
 }
 
 .sections li {
-    font-size: 11px; /* Font size for list items */
+    font-size: 12px; /* Font size for list items */
     font-weight: 500; /* Font weight */
     color: #333; /* Darker color for readability */
     margin: 2px 0; /* Space between list items */

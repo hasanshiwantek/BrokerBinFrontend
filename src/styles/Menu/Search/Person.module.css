@@ -1,13 +1,15 @@
 .main {
     width: 200px;
+
 }
 
 .formContainer {
     padding: 20px;
     background-color: white;
     width: 100%;
-    max-width: 400px; /* Limit the width of the form */
+    max-width: 400px; 
     margin: 2px auto;
+
 }
 
 h2 {

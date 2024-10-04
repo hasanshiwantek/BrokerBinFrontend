@@ -8,7 +8,7 @@ import styles from "../../../styles/Menu/Search/Person.module.css"
 const SiteMap = () => {
     return (
         <>
-            <main>
+            <main className='main-sec'>
                 <nav className='menu-bar'>
                     <ul>
                         <li><Link to={'/help'}>Help</Link></li>

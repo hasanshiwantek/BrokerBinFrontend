@@ -6,7 +6,7 @@ const MyServices = () => {
     <>
     <div className="service-text" style={{textAlign:"center",marginTop:"30px"}}>
         <h1 style={{color:"red",fontWeight:"bold"}}>Admin Access Only</h1>
-        <h2  style={{color:"red",fontWeight:"bold"}}>Non-admin users can still search the service directory. To search: <span  style={{color:"black",fontWeight:"bold"}}>Click here</span></h2>
+        <h1  style={{color:"red",fontWeight:"bold"}}>Non-admin users can still search the service directory. To search: <span  style={{color:"black",fontWeight:"bold"}}>Click here</span></h1>
  
     </div>
     <footer>

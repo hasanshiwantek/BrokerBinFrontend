@@ -32,6 +32,15 @@ import {
 } from "../ReduxStore/SearchProductSlice";
 import { Link } from "react-router-dom";
 
+import dp1 from "../assets/drop-down1.svg"
+import dp2 from "../assets/drop-down-2.svg"
+import dp3 from "../assets/drop-down3.svg"
+import dp4 from "../assets/drop-down4.svg"
+import dp5 from "../assets/drop-down5.svg"
+import dp6 from "../assets/drop-down6.svg"
+
+
+
 const Header = () => {
   const token = Cookies.get("token");
   const dispatch = useDispatch();
@@ -308,11 +317,41 @@ const Header = () => {
                 </div>
               )}
             </li>
+
+
             <li>
               <BsTools />
               <BiSolidDownArrow className={css.onHoverMenuIconDown} />
               <BiSolidUpArrow className={css.onHoverMenuIconUp} />
+
+              <div className={css.dropdownMenu} style={{marginLeft:"10px"}}>
+                <ul>
+                  <Link to={"/myprofile/MyVendors"}>
+                    <li>
+                      <img src={dp1} alt="" srcset="" />........
+                    </li>
+                  </Link>
+                  <Link to={"/feedback"}>
+                    <li><img src={dp2} alt="" srcset="" style={{color:"black"}}/>........</li>
+                  </Link>
+                  <Link to={"/hotlist/view"}>
+                    <li><img src={dp3} alt="dsd" srcset="" style={{color:"black"}}/>........</li>
+                  </Link>
+                  <Link to={"/inventory"}>
+                    <li><img src={dp6} alt="" srcset="" style={{color:"black"}}/>........</li>
+                  </Link>
+                  <Link to={"/"}>
+                    <li><img src={dp5} alt="" srcset="" style={{color:"black"}}/>........</li>
+                  </Link>
+              
+                </ul>
+              </div>
             </li>
+
+
+
+
+
             <li>
               <Link to={"/"}>main</Link>
               <BiSolidDownArrow className={css.onHoverMenuIconDown} />
@@ -356,7 +395,7 @@ const Header = () => {
                     <Link to={"/myprofile/MyContact"}>My Contacts</Link>
                   </li>
                   <li>
-                    <Link to={"/hotList/add"}>Hot List</Link>
+                    <Link to={"/hotList/view"}>Hot List</Link>
                   </li>
                   <li>
                     <Link to={"https://brokerbin.com/partners"}  target="blank">Partners</Link>
@@ -376,7 +415,7 @@ const Header = () => {
                   <Link to="/inventory">
                     <li>inventory</li>
                   </Link>
-                  <Link>
+                  <Link to={"/services"}>
                     <li>services</li>
                   </Link>
                   <Link to={"/searchcompany"}>
@@ -497,18 +536,18 @@ const Header = () => {
             </li>
             {toolToggle && (
               <>
-                {/* <li>
+                <li>
                   <AiOutlineMail />
                 </li>
                 <li>
                   <BsFillTelephonePlusFill />
-                </li> */}
+                </li>
                 <li>
                   <Link to={"/cartpart"}>
                     <BsCartFill />
                   </Link>
                 </li>
-                {/* <li>
+                <li>
                   <BsClockFill />
                 </li>
                 <li>
@@ -525,7 +564,7 @@ const Header = () => {
                 </li>
                 <li>
                   <FiTarget />
-                </li> */}
+                </li>
                 <li className={css.navbar_search_options}>
                   <select name="navbarSearchOptions">
                     <option value="">MFG Filter</option>

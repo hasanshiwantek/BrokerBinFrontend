@@ -14,7 +14,6 @@ import ErrorStatus from "../Error/ErrorStatus";
 import Cookies from "js-cookie";
 import { searchProductHistory, searchProductQuery, setSelectedProducts } from "../../ReduxStore/SearchProductSlice";
 import { useNavigate } from "react-router-dom";
-
 const Home = () => {
   const token = Cookies.get("token");
   const user_id = Cookies.get("user_id");

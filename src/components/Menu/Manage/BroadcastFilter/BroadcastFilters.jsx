@@ -365,7 +365,7 @@ const Options = () => {
   const [broadcasts, setBroadcasts] = useState(false);
 
   const items = useSelector(state => state.broadcastStore.filters);
-  console.log("Filters:", items);
+  console.log("Filters:", items.data);
   
   useEffect(() => {
     if(token){
@@ -1577,6 +1577,15 @@ const Options = () => {
 };
 
 export default Options;
+
+
+
+
+
+
+
+
+
 
 
 

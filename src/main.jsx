@@ -37,6 +37,9 @@ const SearchCompany = lazy(() =>
 const SearchResult = lazy(() =>
   import("./components/Menu/Search/SearchResults.jsx")
 );
+const Services = lazy(() =>
+  import("./components/Menu/Search/Services.jsx")
+);
 
 
 
@@ -260,6 +263,16 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
+      {
+        path: "/services",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <Services/>
+          </Suspense>
+        ),
+      },
+      
       {
         path: "/manage",
         element: (

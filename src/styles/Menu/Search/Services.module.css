@@ -1,0 +1,112 @@
+.servicesContainer {
+    padding: 20px ;
+    margin: 20px 12px;
+    border: 4px solid #ef6421;
+    width: 78vw;
+    margin-left: 180px;
+  }
+  .servicesContainer h2{
+    text-align: center;
+    border: 4px solid #ef6421;
+    /* position: absolute; */
+    /* top: 19%; */
+    /* right: 41%; */
+    font-weight: bold;
+    font-size: 3.5rem;
+    color: #363636;
+    padding: 9px 2px;
+  }
+  .servicesList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 42px 20%;
+    /* align-items: center; */
+  }
+
+  
+  .serviceItem {
+    width: 30%;
+    border-radius: 8px;
+    padding: 10px;
+  }
+  
+  h3 {
+    font-size: 1.8em;
+    margin-bottom: 10px;
+    color: #ef6421;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  li {
+    font-size: 0.9em;
+    color: #363636;
+    font-size: 1.3em;
+    cursor: pointer;
+  }
+
+  h3:hover{
+    color: #363636;
+  }
+  
+
+  .secondContainer{
+    padding: 20px ;
+    border: 4px solid #ef6421;
+    width: 78vw;
+    margin: auto;
+  }
+  .memberSec{
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+    gap: 15%;
+    margin-top: 30px;
+    padding: 5px;
+  }
+
+  .memberSec li{
+    list-style: none;
+    color: #ef6421;
+    font-size: 1.8em;
+    padding: 8px 3px;
+
+  }
+  .memberSec li:hover{
+    color: #363636;
+
+  }
+
+  .memberSec p{
+    color: #363636;
+    font-size: 1.5em;
+  }
+.head{
+  text-align: center;
+  border: 4px solid #ef6421;
+  /* position: absolute; */
+  /* top: 306%; */
+  /* left: 37%; */
+  font-weight: bold;
+  font-size: 3.5rem;
+  color: #363636;
+
+}
+
+
+.headSection{
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 10%;
+}
+.headSection a{
+  font-size: 3rem;
+  color: #428bca ;
+  font-weight: bold;
+  margin: 10px 12px;
+}

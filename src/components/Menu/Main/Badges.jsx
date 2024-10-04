@@ -35,7 +35,12 @@ const Badges = () => {
                     <li>
                         <Link to={'/ethics'}>Ethics</Link>
                     </li>
-                    <li>Site Map</li>
+                    <li>
+                        <Link to={"/sitemap"}>
+                        Site Map
+                        </Link>
+                        
+                        </li>
                     <li>
                         <Link to={'/badges'}>Badges</Link>
                     </li>
