@@ -16,6 +16,9 @@
     flex-direction: column;
   }
 }
+button:hover{
+  color: white !important;
+}
 
 .gridHome1 {
   background: var(--font-color);
@@ -198,6 +201,7 @@
           text-transform: uppercase;
           padding: 0.5rem;
           background: var(--primary-color);
+          border: 2px solid var(--primary-color);
         }
         > div {
           display: grid;
@@ -266,6 +270,7 @@
         }
         > a:hover {
           border-bottom: 2px solid var(--primary-color);
+          
         }
       }
     }
@@ -384,4 +389,20 @@
 }
 .inactiveIndexLabel {
   opacity: 0.3;
+}
+
+
+.footerlinks{
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.footerlinks li{
+  list-style: none;
+  color: #3A57AB;;
+}
+.footerlinks li a{
+  font-size: 11px;
 }

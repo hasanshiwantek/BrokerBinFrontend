@@ -14,6 +14,7 @@ import ErrorStatus from "../Error/ErrorStatus";
 import Cookies from "js-cookie";
 import { searchProductHistory, searchProductQuery, setSelectedProducts } from "../../ReduxStore/SearchProductSlice";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 const Home = () => {
   const token = Cookies.get("token");
   const user_id = Cookies.get("user_id");
@@ -163,7 +164,7 @@ const Home = () => {
                       </ul>
                     </li>
                     <li className={css.gridHome1_MemberDetail_list_options}>
-                      <a href="#">my contacts</a>
+                      <Link to="/feedback">my contacts</Link>
                       <ul>
                         <li className={css.gridHome1_MemberDetail_list_numbers}>
                           <a href="#">
@@ -176,7 +177,7 @@ const Home = () => {
                       </ul>
                     </li>
                     <li className={css.gridHome1_MemberDetail_list_options}>
-                      <a href="#">my vendors</a>
+                      <Link to="/myprofile/MyVendors">my vendors</Link>
                       <ul>
                         <li className={css.gridHome1_MemberDetail_list_numbers}>
                           <a href="#">
@@ -189,7 +190,7 @@ const Home = () => {
                       </ul>
                     </li>
                     <li className={css.gridHome1_MemberDetail_list_options}>
-                      <a href="#">hot list</a>
+                      <Link to="/hotlist/view">hot list</Link>
                       <ul>
                         <li className={css.gridHome1_MemberDetail_list_numbers}>
                           <a href="#">
@@ -369,6 +370,16 @@ const Home = () => {
               </div>
             </div>
           </div>
+
+          <footer>
+                <div className={css.footerlinks}>
+                    <li><a href="/">Advertising Programs</a></li>
+                    <li><a href="/">Business Solutions</a></li>
+                    <li><a href="/">About BrokerBin.com</a></li>
+                    <li>©2024 Privacy</li>
+                </div>
+            </footer>
+
         </>
       )}
     </>

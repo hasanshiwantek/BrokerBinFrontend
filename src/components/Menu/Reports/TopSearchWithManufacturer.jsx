@@ -68,7 +68,7 @@ const TopSearchWithManufacturer = () => {
             <Link to={"/reports/email"}>Email</Link>
           </li>
           <li>
-            <Link>Stats</Link>
+            <Link to={"/reports/serviceStats"}>Stats</Link>
           </li>
         </ul>
       </div>

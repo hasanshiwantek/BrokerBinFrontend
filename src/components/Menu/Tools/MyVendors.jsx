@@ -112,8 +112,8 @@ const MyVendors = () => {
             <div>
               <p>view by</p>
               <select onChange={handleChange}>
-                <option value="company">Company</option>
                 <option value="show">Display</option>
+                <option value="company">Company</option>
                 <option value="country">Country</option>
                 <option value="state">State</option>
               </select>
@@ -320,6 +320,15 @@ const MyVendors = () => {
           </div>
         </div>
       </div>
+
+      <footer>
+                <div className={css.footerlinks}>
+                    <li><a href="/">Advertising Programs</a></li>
+                    <li><a href="/">Business Solutions</a></li>
+                    <li><a href="/">About BrokerBin.com</a></li>
+                    <li>©2024 Privacy</li>
+                </div>
+            </footer>
     </>
   );
 };

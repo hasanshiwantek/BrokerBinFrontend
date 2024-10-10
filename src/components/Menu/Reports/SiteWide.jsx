@@ -12,6 +12,9 @@ import Cookies from "js-cookie";
 import SearchCompanyInventory from "./SearchCompanyInventory";
 
 const SiteWide = () => {
+
+
+
   const [selectedManufacturer, setSelectedManufacturer] = useState("");
   console.log(selectedManufacturer);
   const token = Cookies.get("token");
@@ -61,6 +64,8 @@ const SiteWide = () => {
   };
 
   return (
+<>
+
     <div className={style.container}>
       {/* Navigation Tabs */}
       <div className={style.navTabs}>
@@ -75,7 +80,7 @@ const SiteWide = () => {
             <Link to={"/reports/email"}>Email</Link>
           </li>
           <li>
-            <Link>Stats</Link>
+            <Link to={"/reports/serviceStats"}>Stats</Link>
           </li>
         </ul>
       </div>
@@ -710,6 +715,18 @@ const SiteWide = () => {
         </div>
       </div>
     </div>
+
+
+    <footer>
+                <div className={css.footerlinks}>
+                    <li><a href="/">Advertising Programs</a></li>
+                    <li><a href="/">Business Solutions</a></li>
+                    <li><a href="/">About BrokerBin.com</a></li>
+                    <li>©2024 Privacy</li>
+                </div>
+            </footer>
+</>
+
   );
 };
 

@@ -104,6 +104,10 @@ button {
   }
 }
 
+.venIcon{
+  font-weight: 700;
+}
+
 .dropdownMenu {
   display: none;
 

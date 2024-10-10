@@ -1,45 +1,62 @@
-import { React, useEffect } from "react";
+import { React, useEffect, useState } from "react";
 import css from "../../../styles/Menu/Tools/HotList.module.css";
-import { showHotListItem } from "../../../ReduxStore/ToolsSlice";
+import { showHotListItem, editHotListItem } from "../../../ReduxStore/ToolsSlice";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
-import { editHotListItem } from "../../../ReduxStore/ToolsSlice";
 
 const HotListEdit = () => {
   const token = Cookies.get("token");
   const dispatch = useDispatch();
-
   const items = useSelector((state) => state.toolsStore.myHotListItems);
-  console.log("items:", items);
+
+  // State to hold the editable hot list items
+  const [editableItems, setEditableItems] = useState([]);
 
   useEffect(() => {
     dispatch(showHotListItem({ token }));
   }, [dispatch, token]);
 
+  // Update editable items when items are fetched
+  useEffect(() => {
+    setEditableItems(items);
+  }, [items]);
+
+  // Function to handle changes in input fields
+  const handleChange = (index, field, value) => {
+    const updatedItems = [...editableItems];
+    updatedItems[index] = {
+      ...updatedItems[index],
+      [field]: value, // Update the specific field
+    };
+    setEditableItems(updatedItems); // Update state with modified items
+  };
+
+  // Function to handle form submission
   const updateHotList = (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const rows = [];
-    for (let i = 0; i < items.length; i++) {
-      const partModel = formData.get(`partModel_${i}`);   
-      if (partModel) {
-        rows.push({
-          id: items[i].id,
-          partModel: formData.get(`partModel_${i}`),
-          heciClei: formData.get(`heciClei_${i}`),
-          mfg: formData.get(`mfg_${i}`),
-          cond: formData.get(`cond_${i}`),
-          productDescription: formData.get(`productDescription_${i}`),
-        });
-      }
-    }
 
-    console.log(rows);
+    const hotlists = editableItems
+      .map((item) => ({
+        id: item.id,
+        partModel: item.part_model,
+        heciClei: item.heciClei,
+        mfg: item.manufacturer,
+        cond: item.condition,
+        productDescription: item.product_description,
+      }))
+      .filter(
+        (item) =>
+          item.partModel ||
+          item.heciClei ||
+          item.mfg ||
+          item.cond ||
+          item.productDescription
+      ); // Filter out rows where all fields are empty
 
-    const hotlists = rows;
     dispatch(editHotListItem({ token, hotlists }));
   };
+
   return (
     <>
       <div className={css.container}>
@@ -85,52 +102,54 @@ const HotListEdit = () => {
                   <th>Product Description</th>
                 </tr>
               </thead>
-
-              {items.map((item, index) => {
-                return (
-                  <tbody key={index}>
-                    <tr>
-                      <td>
-                        <input
-                          type="text"
-                          name={`partModel_${index}`}
-                          defaultValue={item.part_model}
-                        />
-                      </td>
-                      <td>
-                        <input
-                          type="text"
-                          name={`heciClei_${index}`}
-                          defaultValue={item.heciClei}
-                        />
-                      </td>
-                      <td>
-                        <input
-                          type="text"
-                          name={`mfg_${index}`}
-                          defaultValue={item.manufacturer}
-                        />
-                      </td>
-                      <td>
-                        <select
-                          name={`cond_${index}`}
-                          defaultValue={item.condition}
-                        >
-                          <option value="New">New</option>
-                          <option value="Used">Used</option>
-                        </select>
-                      </td>
-                      <td>
-                        <input
-                          type="text"
-                          name={`productDescription_${index}`}
-                          defaultValue={item.product_description}
-                        />
-                      </td>
-                    </tr>
-                  </tbody>
-                );
-              })}
+              <tbody>
+                {editableItems.map((item, index) => (
+                  <tr key={item.id}>
+                    <td>
+                      <input
+                        type="text"
+                        name={`partModel_${index}`}
+                        value={item.part_model} // Controlled value
+                        onChange={(e) => handleChange(index, 'part_model', e.target.value)} // Handle change
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        name={`heciClei_${index}`}
+                        value={item.heciClei} // Controlled value
+                        onChange={(e) => handleChange(index, 'heciClei', e.target.value)} // Handle change
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        name={`mfg_${index}`}
+                        value={item.manufacturer} // Controlled value
+                        onChange={(e) => handleChange(index, 'manufacturer', e.target.value)} // Handle change
+                      />
+                    </td>
+                    <td>
+                      <select
+                        name={`cond_${index}`}
+                        value={item.condition} // Controlled value
+                        onChange={(e) => handleChange(index, 'condition', e.target.value)} // Handle change
+                      >
+                        <option value="New">New</option>
+                        <option value="Used">Used</option>
+                      </select>
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        name={`productDescription_${index}`}
+                        value={item.product_description} // Controlled value
+                        onChange={(e) => handleChange(index, 'product_description', e.target.value)} // Handle change
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
             </table>
 
             <div className={css.saveButtonContainer}>

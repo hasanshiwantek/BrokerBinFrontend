@@ -21,6 +21,7 @@ const SearchProduct = lazy(() =>
 const MyProfile = lazy(() => import("./components/Menu/Manage/MyProfile.jsx"));
 const Options = lazy(() => import("./components/Menu/Manage/Options.jsx"));
 const BroadcastFilters = lazy(() => import("./components/Menu/Manage/BroadcastFilter/BroadcastFilters.jsx"));
+const MyBroadcast = lazy(() => import("./components/Menu/Broadcast/MyBroadCast.jsx"));
 const CompanyDetails = lazy(() =>
   import("./components/Popups/CompanyDetails/CompanyDetails.jsx")
 );
@@ -79,6 +80,8 @@ const MyContact = lazy(() => import("./components/Menu/Tools/MyContact.jsx"));
 const Company = lazy(() => import("./components/Menu/Reports/Company.jsx"));
 const SiteWide = lazy(() => import("./components/Menu/Reports/SiteWide.jsx"));
 const Email = lazy(() => import("./components/Menu/Reports/Email.jsx"));
+const ServiceStats = lazy(() => import("./components/Menu/Reports/ServiceStats.jsx"));
+
 const MatchYourHits = lazy(() =>
   import("./components/Menu/Reports/MatchYourHits.jsx")
 );
@@ -112,6 +115,7 @@ import Help from "./components/Menu/Main/Help.jsx";
 import SvgMap from "./components/SvgMap.jsx";
 import Badges from "./components/Menu/Main/Badges.jsx";
 import SiteMap from "./components/Menu/Main/SiteMap.jsx";
+
 
 
 const router = createBrowserRouter([
@@ -206,6 +210,15 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <BroadcastFilters />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/broadcasts",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <MyBroadcast />
           </Suspense>
         ),
       },
@@ -510,6 +523,15 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <Email />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/reports/serviceStats",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <ServiceStats />
           </Suspense>
         ),
       },

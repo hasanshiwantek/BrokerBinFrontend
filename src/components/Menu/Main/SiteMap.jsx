@@ -22,98 +22,107 @@ const SiteMap = () => {
                     <div className='sections'>
                         <div id="box1">
                             <ul>
-                                <li><img src={siteIcon} alt="icon" /> Main</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Home</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Help</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Contact</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Site Map</li>
+                                <Link to={"/"}> <li><img src={siteIcon} alt="icon" /> Main</li>
+                                </Link>
+                                <Link to={"/"}>
+                                    <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Home</li>
+                                </Link>
+                                <Link to={"/help"}>
+                                    <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Help</li>
+                                </Link>
+                                <Link to={"/feedback"}>
+                                    <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Contact</li>
+                                </Link>
+                                <Link to={"/sitemap"}>
+                                    <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Site Map</li>
+                                </Link>
                             </ul>
                         </div>
                         <div id="box2">
                             <ul>
-                                <li><img src={siteIcon} alt="icon" /> Tools</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> My Vendors</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Hot List</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Track Shipment</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Part Cart</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> More Tools...</li>
+                               <Link to={"/tools"}> <li><img src={siteIcon} alt="icon" /> Tools</li></Link>
+                               <Link to={"/myprofile/MyVendors"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> My Vendors</li></Link>
+                               <Link to={"/hotlist/view"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Hot List</li></Link>
+                               <Link> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Track Shipment</li></Link>
+                               <Link to={"/cartpart"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Part Cart</li></Link>
+                               <Link to={"/tools"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> More Tools...</li></Link>
                             </ul>
                         </div>
                         <div id="box3">
                             <ul>
-                                <li><img src={siteIcon} alt="icon" /> Search</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Inventory</li>
-                                <li style={{ marginLeft: "24px" }}><img src={siteIcon} alt="icon" /> Multiple Part</li>
-                                <li style={{ marginLeft: "24px" }}><img src={siteIcon} alt="icon" /> Advanced Part</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Company</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Person</li>
+                               <Link to={"/search"}> <li><img src={siteIcon} alt="icon" /> Search</li></Link>
+                                <Link to={"/inventory"}><li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Inventory</li></Link>
+                               <Link > <li style={{ marginLeft: "24px" }}><img src={siteIcon} alt="icon" /> Multiple Part</li></Link>
+                               <Link> <li style={{ marginLeft: "24px" }}><img src={siteIcon} alt="icon" /> Advanced Part</li></Link>
+                               <Link to={"/reports/Company"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Company</li></Link>
+                               <Link to={"/person"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Person</li></Link>
                             </ul>
                         </div>
                         <div id="box4">
                             <ul>
-                                <li><img src={siteIcon} alt="icon" /> Manage</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Manage Inventory</li>
-                                <li style={{ marginLeft: "16px" }}><img src={siteIcon} alt="icon" /> Upload</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Email Parts List</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Example.xls</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Example.csv</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Auto updated settings</li>
-                                <li><img src={siteIcon} alt="icon" /> Edit</li>
-                                <li><img src={siteIcon} alt="icon" /> Add</li>
-                                <li><img src={siteIcon} alt="icon" /> Export/Remove</li>
-                                <li><img src={siteIcon} alt="icon" /> My Profile</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Personal Info</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Options</li>
-                                <li style={{ marginLeft: "18px" }}><img src={siteIcon} alt="icon" /> BroadCast</li>
-                                <li style={{ marginLeft: "18px" }}><img src={siteIcon} alt="icon" /> Email</li>
-                                <li><img src={siteIcon} alt="icon" />Supply & Demand</li>
-                                <li><img src={siteIcon} alt="icon" /> Multiple Part Search</li>
-                                <li><img src={siteIcon} alt="icon" /> My Vendors</li>
-                                <li><img src={siteIcon} alt="icon" />Broadcast Filters</li>
-                                <li><img src={siteIcon} alt="icon" />Company Role</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" />Company Info</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Contacts</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Options [Admin]</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Billing Info [Admin]</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Accounts [Admin]</li>
+                               <Link to={"/manage"}> <li><img src={siteIcon} alt="icon" /> Manage</li></Link>
+                               <Link to={"/inventory"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Manage Inventory</li></Link>
+                              <Link to={"/inventory/Upload"}>  <li style={{ marginLeft: "16px" }}><img src={siteIcon} alt="icon" /> Upload</li></Link>
+                               <Link > <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Email Parts List</li></Link>
+                               <Link to={'/help'}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Example.xls</li></Link>
+                               <Link to={"/help"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Example.csv</li></Link>
+                               <Link> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Auto updated settings</li></Link>
+                               <Link to={"/inventory/Edit-Delete"}> <li><img src={siteIcon} alt="icon" /> Edit</li></Link>
+                               <Link to={"/inventory/Add"}> <li><img src={siteIcon} alt="icon" /> Add</li></Link>
+                               <Link to={"/inventory/Export-Remove"}> <li><img src={siteIcon} alt="icon" /> Export/Remove</li></Link>
+                               <Link to={"/myprofile"}> <li><img src={siteIcon} alt="icon" /> My Profile</li></Link>
+                               <Link to={"/myprofile"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Personal Info</li></Link>
+                               <Link to={"/myprofile/Options"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Options</li></Link>
+                               <Link to={"/myprofile/broadcastfilter"}> <li style={{ marginLeft: "18px" }}><img src={siteIcon} alt="icon" /> BroadCast</li></Link>
+                               <Link to={"/reports/email"}> <li style={{ marginLeft: "18px" }}><img src={siteIcon} alt="icon" /> Email</li></Link>
+                               <Link to={"/reports/Company"}> <li><img src={siteIcon} alt="icon" />Supply & Demand</li></Link>
+                               <Link to={"/reports/Company"} > <li><img src={siteIcon} alt="icon" /> Multiple Part Search</li></Link>
+                               <Link to={"/myprofile/MyVendors"}> <li><img src={siteIcon} alt="icon" /> My Vendors</li></Link>
+                               <Link to={"/myprofile/broadcastfilter"}> <li><img src={siteIcon} alt="icon" />Broadcast Filters</li></Link>
+                               <Link > <li><img src={siteIcon} alt="icon" />Company Profile</li></Link>
+                               <Link> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" />Company Info</li></Link>
+                               <Link> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Contacts</li></Link>
+                               <Link> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Options [Admin]</li></Link>
+                              <Link>  <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Billing Info [Admin]</li></Link>
+                               <Link> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Accounts [Admin]</li></Link>
 
 
-                                
+
                             </ul>
                         </div>
                         <div id="box5">
                             <ul>
-                                <li><img src={siteIcon} alt="icon" /> Reports</li>
-                                <li><img src={siteIcon} alt="icon" /> Company</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Company Inventory</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> My Inventory</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Want To Buy</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Want To Sell</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" />MYH Basic</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> MYH Detailed</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> show My Vendors</li>
-                                <li><img src={siteIcon} alt="icon" /> SiteWide</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" />Top 200 - 30 Days</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Top 200 - 7 Days</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" />Top 200 Yesterday</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" />Want To Buy</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" />Want To Sell</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" />Supply & Demand</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Company Inventory</li>
-                                <li><img src={siteIcon} alt="icon" /> Email</li>
+                               <Link to={"/reports/email"}> <li Lim><img src={siteIcon} alt="icon" /> Reports</li></Link>
+                               <Link to={"/reports/Company"}> <li Lim><img src={siteIcon} alt="icon" /> Company</li></Link>
+                                <Link><li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Company Inventory</li></Link>
+                               <Link> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> My Inventory</li></Link>
+                               <Link> <li  style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Want To Buy</li></Link>
+                               <Link> <li  style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Want To Sell</li></Link>
+                               <Link> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" />MYH Basic</li></Link>
+                               <Link> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> MYH Detailed</li></Link>
+                               <Link> <li  tyle={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> show My Vendors</li></Link>
+                              <Link to={"/reports/sitewide"}>  <li><img src={siteIcon} alt="icon" /> SiteWide</li></Link>
+                               <Link> <li  style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" />Top 200 - 30 Days</li></Link>
+                              <Link>  <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Top 200 - 7 Days</li></Link>
+                               <Link> <li  style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" />Top 200 Yesterday</li></Link>
+                               <Link> <li  style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" />Want To Buy</li></Link>
+                               <Link> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" />Want To Sell</li></Link>
+                               <Link> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" />Supply & Demand</li></Link>
+                               <Link> <li  style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Company Inventory</li></Link>
+                               <Link to={"/reports/email"}> <li><img src={siteIcon} alt="icon" /> Email</li></Link>
 
                             </ul>
                         </div>
                         <div id="box6">
                             <ul>
-                                <li><img src={siteIcon} alt="icon" /> Broadcast</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Send Broadcast</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> View</li>
-                                <li style={{ marginLeft: "20px" }}><img src={siteIcon} alt="icon" /> Want to buy</li>
-                                <li style={{ marginLeft: "20px" }}><img src={siteIcon} alt="icon" /> Want to sell</li>
+                               <Link to={"/broadcasts"}> <li><img src={siteIcon} alt="icon" /> Broadcast</li></Link>
+                               <Link to={"/sendbroad"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Send Broadcast</li></Link>
+                              <Link to={"/broadcasts"}>  <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> View</li></Link>
+                               <Link> <li style={{ marginLeft: "20px" }}><img src={siteIcon} alt="icon" /> Want to buy</li></Link>
+                               <Link> <li style={{ marginLeft: "20px" }}><img src={siteIcon} alt="icon" /> Want to sell</li></Link>
 
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Set Filters</li>
-                                <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> History</li>
+                               <Link to={"/myprofile/broadcastfilter"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Set Filters</li></Link>
+                                <Link><li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> History</li></Link>
                             </ul>
                         </div>
                         <div id="box7">
@@ -124,11 +133,11 @@ const SiteMap = () => {
                     </div>
                 </div>
                 <div className="footer">
-                <div className="footer-content">
-                    <p>Copyright 2024 BrokerBin.com</p>
-                    <p>Questions / Comments</p>
+                    <div className="footer-content">
+                        <p>Copyright 2024 BrokerBin.com</p>
+                        <Link to={"/feedback"}><p>Questions / Comments</p></Link>
+                    </div>
                 </div>
-            </div>
             </main>
             <footer>
                 <div className={styles.footerlinks}>
@@ -138,7 +147,7 @@ const SiteMap = () => {
                     <li>©2024 Privacy</li>
                 </div>
             </footer>
-         
+
         </>
     );
 }
