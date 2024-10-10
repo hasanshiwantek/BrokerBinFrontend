@@ -110,3 +110,18 @@
   font-weight: bold;
   margin: 10px 12px;
 }
+
+.footerlinks{
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.footerlinks li{
+  list-style: none;
+  color: #3A57AB;;
+}
+.footerlinks li a{
+  font-size: 11px;
+}

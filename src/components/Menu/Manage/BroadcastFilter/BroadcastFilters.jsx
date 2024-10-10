@@ -366,14 +366,14 @@ const Options = () => {
 
   const items = useSelector(state => state.broadcastStore.filters);
   console.log("Filters:", items.data);
-  
+
   useEffect(() => {
     if(token){
       dispatch(fetchBroadCastFilters({ token }))
     }
-    
+
   }, [dispatch,token]);
- 
+
 
 
 
@@ -391,7 +391,7 @@ const Options = () => {
   };
 
 
- 
+
 
   const submitBroadcastFilters = (event) => {
     event.preventDefault();
@@ -418,10 +418,10 @@ const Options = () => {
     };
 
 
-  
+
     const data = transformedData
-      
-   
+
+
     dispatch(broadCastFilters({ data, token }))
 
     console.log(transformedData);
@@ -429,7 +429,7 @@ const Options = () => {
 
 
 
-    
+
 
   }
 
@@ -1577,6 +1577,1481 @@ const Options = () => {
 };
 
 export default Options;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import React, { useState, useEffect } from "react";
+// import myProfile from "../../../../styles/Menu/Manage/MyProfile.module.css";
+// import css from "../../../../styles/Menu/Manage/BroadcastFilters/BroadcastFilters.module.css";
+// import Categories from "./Categories";
+// import style from "../../../../styles/Menu/Manage/BroadcastFilters/BroadcastFilters.module.css";
+// import { useDispatch, useSelector } from "react-redux";
+// import { setOptionFormData } from "../../../../ReduxStore/ProfleSlice";
+// import { Link } from "react-router-dom";
+// import { setBroadcastFilters } from "../../../../ReduxStore/ToolsSlice";
+// import { broadCastFilters, fetchBroadCastFilters } from "../../../../ReduxStore/BroadCast";
+// import Cookies from "js-cookie";
+// import { useForm } from "react-hook-form";
+
+
+// const Options = () => {
+//   const [onlyReceiveMatch, setOnlyReceiveMatch] = useState({
+//     computers: true,
+//     telecom: false,
+//     mobileDevice: false,
+//   });
+
+//   const [selectedCategories, setSelectedCategories] = useState([]);
+//   const [filters, setFilters] = useState([]);
+
+
+
+
+
+//   const handleSelectChange = (event) => {
+//     const { name, value } = event.target;
+//     // Convert '1' or '0' from the select element directly to boolean
+//     const booleanValue = value === '1';
+//     if (name === "daily_broadcast") {
+//       setDailyBroadcast(booleanValue);
+//     } else if (name === "broadcasts") {
+//       setBroadcasts(booleanValue);
+//     }
+//   };
+
+// const toggleOnlyReceiveMatch = (type) => {
+//       setOnlyReceiveMatch({
+//         computers: false,
+//         telecom: false,
+//         mobileDevice: false,
+//         [type]: true,
+//       });
+//     };
+
+//   const dispatch = useDispatch();
+//   const token = Cookies.get("token");
+
+//   useEffect(() => {
+//     if (token) {
+//       dispatch(fetchBroadCastFilters({ token }));
+//     }
+//   }, [dispatch, token]);
+
+//   const items = useSelector(state => state.broadcastStore.filters) || {};
+//   console.log("Filters:", items);
+
+//   const filtersArray = Array.isArray(items.data) ? items.data : [];
+//   console.log(filtersArray);
+
+//   useEffect(() => {
+//     // Create a new array of filters with parsed values
+//     const updatedFiltersArray = filtersArray.map((filter) => ({
+//       ...filter,
+//       categories: JSON.parse(filter.categories || '[]'),
+//       broadcountry_from: JSON.parse(filter.broadcountry_from || '[]'),
+//       services: JSON.parse(filter.services || '[]'),
+//       groupings: JSON.parse(filter.groupings || '[]'),
+//       region: JSON.parse(filter.region || '[]'),
+//       type_of_broadcast: JSON.parse(filter.type_of_broadcast || '[]'),
+//     }));
+
+//     // Use the new array as needed in the component's state
+//     setFilters(updatedFiltersArray);
+//   }, [filtersArray]);
+
+//   const handleCheckboxChange = (value) => {
+//     const updatedCategories = selectedCategories.includes(value)
+//       ? selectedCategories.filter((item) => item !== value)
+//       : [...selectedCategories, value];
+//     setSelectedCategories(updatedCategories);
+//   };
+
+
+
+//   const handleChange = (index, field, value) => {
+//     const updatedFilters = filters.map((filter, idx) => {
+//       if (index === idx) {
+//         return {
+//           ...filter,
+//           [field]: filter[field].includes(value)
+//             ? filter[field].filter(item => item !== value)
+//             : [...filter[field], value]
+//         };
+//       }
+//       return filter;
+//     });
+
+//     setFilters(updatedFilters);
+//   };
+
+
+
+
+
+//   const toggleAllCheckboxes = (items, checkAll) => {
+//     if (checkAll) {
+//       const newItems = items.filter(item => !selectedCategories.includes(item));
+//       setSelectedCategories([...selectedCategories, ...newItems]);
+//     } else {
+//       const remainingItems = selectedCategories.filter(item => !items.includes(item));
+//       setSelectedCategories(remainingItems);
+//     }
+//   };
+
+//   const submitBroadcastFilters = (e) => {
+//     e.preventDefault();
+//     const formData = new FormData(e.target);
+//     const updatedFilters = filters.map((filter, index) => ({
+//       id: filter.id,
+//       daily_broadcast: formData.get(`daily_broadcast_${index}`) === '1',
+//       broadcasts: formData.get(`broadcasts_${index}`) === '1',
+//       type_of_broadcast: formData.getAll(`type_of_broadcast_${index}`),
+//       categories: formData.get(`categories_${index}`),
+//       services: formData.get(`services_${index}`),
+//       groupings: formData.get(`groupings_${index}`),
+//       regions: formData.get(`regions_${index}`),
+//       broadcountry_from: formData.get(`broadcountry_from_${index}`),
+//     }));
+
+//     const data = { filters: updatedFilters };
+//     dispatch(broadCastFilters({ token, data }));
+//   };
+//   const computers = [
+//     "North America",
+//     "South America",
+//     "Europe",
+//     "Africa",
+//     "Middle East",
+//     "Oceania",
+//     "Asia",
+//   ];
+
+//   const telecom = [
+//     "Aruba",
+//     "Afghanistan",
+//     "Angola",
+//     "Anguilla",
+//     "Albania",
+//     "Andorra",
+//     "Netherlands Antilles",
+//     "United Arab Emirates",
+//     "Argentina",
+//     "Armenia",
+//     "American Samoa",
+//     "Antarctica",
+//     "French Southern Territories",
+//     "Antigua and Barbuda",
+//     "Australia",
+//     "Austria",
+//     "Azerbaijan",
+//     "Burundi",
+//     "Belgium",
+//     "Benin",
+//     "Burkina Faso",
+//     "Bangladesh",
+//     "Bulgaria",
+//     "Bahrain",
+//     "Bahamas",
+//     "Bosnia and Herzegowina",
+//     "Belarus",
+//     "Belize",
+//     "Bermuda",
+//     "Bolivia",
+//     "Brazil",
+//     "Barbados",
+//     "Brunei Darussalam",
+//     "Bhutan",
+//     "Bouvet Island",
+//     "Botswana",
+//     "Central African Republic",
+//     "Canada",
+//     "Cocos (Keeling) Islands",
+//     "Switzerland",
+//     "Chile",
+//     "China",
+//     "Cote d'Ivoire",
+//     "Cameroon",
+//     "Democratic Republic of the Congo",
+//     "Congo",
+//     "Cook Islands",
+//     "Colombia",
+//     "Comoros",
+//     "Cape Verde",
+//     "Costa Rica",
+//     "Christmas Island",
+//     "Cayman Islands",
+//     "Cyprus",
+//     "Czech Republic",
+//     "Germany",
+//     "Djibouti",
+//     "Dominica",
+//     "Denmark",
+//     "Dominican Republic",
+//     "Algeria",
+//     "Ecuador",
+//     "Egypt",
+//     "Eritrea",
+//     "Western Sahara",
+//     "Spain",
+//     "Estonia",
+//     "Ethiopia",
+//     "Finland",
+//     "Fiji",
+//     "Falkland Islands (Malvinas)",
+//     "France",
+//     "Faroe Islands",
+//     "Micronesia, Federated States of",
+//     "France, Metropolitan",
+//     "Gabon",
+//     "United Kingdom",
+//     "Georgia",
+//     "Ghana",
+//     "Gibraltar",
+//     "Guinea",
+//     "Guadeloupe",
+//     "Gambia",
+//     "Guinea-Bissau",
+//     "Equatorial Guinea",
+//     "Greece",
+//     "Grenada",
+//     "Greenland",
+//     "Guatemala",
+//     "French Guiana",
+//     "Guam",
+//     "Guyana",
+//     "Hong Kong",
+//     "Heard and Mc Donald Islands",
+//     "Honduras",
+//     "Croatia (local name: Hrvatska)",
+//     "Haiti",
+//     "Hungary",
+//     "Indonesia",
+//     "India",
+//     "British Indian Ocean Territory",
+//     "Ireland",
+//     "Iraq",
+//     "Iceland",
+//     "Israel",
+//     "Italy",
+//     "Jamaica",
+//     "Jordan",
+//     "Japan",
+//     "Kazakhstan",
+//     "Kenya",
+//     "Kyrgyzstan",
+//     "Cambodia",
+//     "Kiribati",
+//     "Saint Kitts and Nevis",
+//     "Korea, Republic of",
+//     "Kosova, Republic of",
+//     "Kuwait",
+//     "Lao People's Democratic Republic",
+//     "Lebanon",
+//     "Liberia",
+//     "Libya",
+//     "Saint Lucia",
+//     "Liechtenstein",
+//     "Sri Lanka",
+//     "Lesotho",
+//     "Lithuania",
+//     "Luxembourg",
+//     "Latvia",
+//     "Macau",
+//     "Morocco",
+//     "Monaco",
+//     "Moldova, Republic of",
+//     "Madagascar",
+//     "Maldives",
+//     "Mexico",
+//     "Marshall Islands",
+//     "Macedonia, The Former Yugoslav Republic of",
+//     "Mali",
+//     "Malta",
+//     "Myanmar",
+//     "Mongolia",
+//     "Northern Mariana Islands",
+//     "Mozambique",
+//     "Mauritania",
+//     "Montserrat",
+//     "Martinique",
+//     "Mauritius",
+//     "Malawi",
+//     "Malaysia",
+//     "Mayotte",
+//     "Namibia",
+//     "New Caledonia",
+//     "Niger",
+//     "Norfolk Island",
+//     "Nigeria",
+//     "Nicaragua",
+//     "Niue",
+//     "Netherlands",
+//     "Norway",
+//     "Nepal",
+//     "Nauru",
+//     "New Zealand",
+//     "Oman",
+//     "Pakistan",
+//     "Panama",
+//     "Pitcairn",
+//     "Peru",
+//     "Philippines",
+//     "Palau",
+//     "Papua New Guinea",
+//     "Poland",
+//     "Puerto Rico",
+//     "Portugal",
+//     "Paraguay",
+//     "French Polynesia",
+//     "Qatar",
+//     "Reunion",
+//     "Romania",
+//     "Russian Federation",
+//     "Rwanda",
+//     "Saudi Arabia",
+//     "Sudan",
+//     "Senegal",
+//     "Singapore",
+//     "South Georgia and the South Sandwich Islands",
+//     "St. Helena",
+//     "Svalbard and Jan Mayen Islands",
+//     "Solomon Islands",
+//     "Sierra Leone",
+//     "El Salvador",
+//     "San Marino",
+//     "Somalia",
+//     "St. Pierre and Miquelon",
+//     "Serbia",
+//     "South Sudan",
+//     "Sao Tome and Principe",
+//     "Suriname",
+//     "Slovakia (Slovak Republic)",
+//     "Slovenia",
+//     "Sweden",
+//     "Swaziland",
+//     "Seychelles",
+//     "Turks and Caicos Islands",
+//     "Chad",
+//     "Togo",
+//     "Thailand",
+//     "Tajikistan",
+//     "Tokelau",
+//     "Turkmenistan",
+//     "East Timor",
+//     "Tonga",
+//     "Trinidad and Tobago",
+//     "Tunisia",
+//     "Turkey",
+//     "Tuvalu",
+//     "Taiwan",
+//     "Tanzania, United Republic of",
+//     "Uganda",
+//     "Ukraine",
+//     "United States Minor Outlying Islands",
+//     "Uruguay",
+//     "United States",
+//     "Uzbekistan",
+//     "Vatican City State (Holy See)",
+//     "Saint Vincent and the Grenadines",
+//     "Venezuela",
+//     "Virgin Islands (British)",
+//     "Virgin Islands (U.S.)",
+//     "Vietnam",
+//     "Vanuatu",
+//     "Wallis and Futuna Islands",
+//     "Samoa",
+//     "Yemen",
+//     "Yugoslavia",
+//     "South Africa",
+//     "Zaire",
+//     "Zambia",
+//     "Zimbabwe",
+//   ];
+
+//   const mobileDevice = [
+//     "Alabama",
+//     "Alaska",
+//     "Arizona",
+//     "Arkansas",
+//     "California",
+//     "Colorado",
+//     "Connecticut",
+//     "Delaware",
+//     "Florida",
+//     "Georgia",
+//     "Hawaii",
+//     "Idaho",
+//     "Illinois",
+//     "Indiana",
+//     "Iowa",
+//     "Kansas",
+//     "Kentucky",
+//     "Louisiana",
+//     "Maine",
+//     "Maryland",
+//     "Massachusetts",
+//     "Michigan",
+//     "Minnesota",
+//     "Mississippi",
+//     "Missouri",
+//     "Montana",
+//     "Nebraska",
+//     "Nevada",
+//     "New Hampshire",
+//     "New Jersey",
+//     "New Mexico",
+//     "New York",
+//     "North Carolina",
+//     "North Dakota",
+//     "Ohio",
+//     "Oklahoma",
+//     "Oregon",
+//     "Pennsylvania",
+//     "Rhode Island",
+//     "South Carolina",
+//     "South Dakota",
+//     "Tennessee",
+//     "Texas",
+//     "Utah",
+//     "Vermont",
+//     "Virginia",
+//     "Washington",
+//     "West Virginia",
+//     "Wisconsin",
+//     "Wyoming",
+//   ];
+
+
+//   return (
+//     <>
+//       <div className={myProfile.profileLayout}>
+//         <form onSubmit={submitBroadcastFilters}>
+//           <div className={myProfile.profileBtn}>
+//             <p>my profile</p>
+//             <span>
+//               <input type="submit" value="submit changes" />
+//               <button type="button">view profile</button>
+//             </span>
+//           </div>
+//           <div className={myProfile.profileInfo}>
+//             <div className={myProfile.profileInfo_links}>
+//               <ul>
+//                 <li>
+//                   <Link to={"/myprofile"}>
+//                     <span>Personal Info</span>
+//                   </Link>
+//                 </li>
+//                 <li>
+//                   <Link to={"/myprofile/Options"}>
+//                     <span>Options</span>
+//                   </Link>
+//                 </li>
+//                 <li>
+//                   <Link to={"/myprofile/MyVendors"}>
+//                     <span>My Vendors</span>
+//                   </Link>
+//                 </li>
+//                 <li>
+//                   <Link to={"/myprofile/MyContact"}>
+//                     <span>My Contacts</span>
+//                   </Link>
+//                 </li>
+//                 <li>
+//                   <Link to={"/myprofile/broadcastfilter"}>
+//                     <span>Broadcast Filters</span>
+//                   </Link>
+//                 </li>
+//               </ul>
+//             </div>
+//             <div className={css.broadcastFilters}>
+//               <h1>Standard Filters</h1>
+
+
+//               {filters.length > 0 ? (
+//                 filters.map((val, index) => (
+             
+//                   <div key={index}>
+
+
+//                     <div className={css.broadcastFilters_emailSettings}>
+//                       <h3>Email Settings</h3>
+//                       <div>
+//                         <div>
+//                           <label>Daily Broadcast Summary</label>
+//                           <select name={`daily_broadcast_${index}`} value={val.daily_broadcast ? "1" : "0"}  onChange={e => handleChange(index, "daily_broadcast", e.target.value === "1")}>
+//                             <option value="0">Off</option>
+//                             <option value="1">On</option>
+//                           </select>
+//                         </div>
+
+
+//                         <div>
+//                           <label>Broadcast</label>
+//                           <select name={`broadcasts_${index}`} value={val.broadcasts  ? "1" : "0"}    onChange={e => handleChange(index, "daily_broadcast", e.target.value === "1")}>
+//                             <option value="0">Off</option>
+//                             <option value="1" >On</option>
+//                           </select>
+//                         </div>
+
+
+
+
+
+//                         <span>
+//                           <label htmlFor="multicast">Multicast</label>
+//                           <select name="multicast" id="multicast">
+//                             <option selected="selected" value="0">
+//                               Off
+//                             </option>
+//                             <option value="1">On</option>
+//                           </select>
+//                         </span>
+//                         <span>
+//                           <label htmlFor="servicecast">Servicecast</label>
+//                           <select name="servicecast" id="servicecast">
+//                             <option value="0">Off</option>
+//                             <option selected="selected" value="1">
+//                               On
+//                             </option>
+//                           </select>
+//                         </span>
+//                       </div>
+
+//                       <div className={css.broadcastFilters_typeOfBroadcast}>
+//                         <h3>Receive The Following Type Of Broadcast</h3>
+//                         <div>
+//                           <span>
+//                             <label htmlFor="wtb">Want To Buy (WTB)</label>
+//                             <input type="checkbox" name={`type_of_broadcast_${index}`} value="wtb" id="wtb" checked={val.type_of_broadcast.includes("wtb")}  onChange={() => handleChange(index, "type_of_broadcast", "WTB")} />
+//                           </span>
+//                           <span>
+//                             <label htmlFor="rfq">Request For Quote (RFQ)</label>
+//                             <input type="checkbox" name={`type_of_broadcast_${index}`} value="rfq" id="rfq" checked={val.type_of_broadcast.includes("rfq")}  onChange={() => handleChange(index, "type_of_broadcast", "RFQ")} />
+//                           </span>
+//                           <span>
+//                             <label htmlFor="wts">Want To Sell (WTS)</label>
+//                             <input type="checkbox" name={`type_of_broadcast_${index}`} value="wts" id="wts" checked={val.type_of_broadcast.includes("wts")} onChange={() => handleChange(index, "type_of_broadcast", "WTS")}  />
+//                           </span>
+//                         </div>
+//                         <div className={css.checkBtn}>
+//                           <button type="button">check all</button>
+//                           <button type="button">uncheck all</button>
+//                         </div>
+//                       </div>
+
+//                     </div>
+
+//                     <div className={css.broadcastFilters_categories}>
+//                       <h3>In The Following Categories</h3>
+//                       <div className={css.onlyReceiveMatch}>
+//                         <div className={css.categoriesToggleButton}>
+//                           <button type="button" onClick={() => toggleOnlyReceiveMatch("computers")}>computers</button>
+//                           <button type="button" onClick={() => toggleOnlyReceiveMatch("telecom")}>telecom</button>
+//                           <button type="button" onClick={() => toggleOnlyReceiveMatch("mobileDevice")}>mobileDevice</button>
+//                         </div>
+//                         {onlyReceiveMatch.computers && (
+//                           <div>
+//                             <ul className={css.checkbox}>
+//                               {computers.map((item) => (
+//                                      <li key={item}>
+//                                      <input
+//                                        type="checkbox"
+//                                        id={"comp_" + item}
+//                                        name={`categories_${index}`}
+//                                        checked={val.categories.includes(item)}
+//                                        onChange={() => handleCheckboxChange(item)}
+//                                      />
+//                                      <label htmlFor={"comp_" + item}>{item}</label>
+//                                    </li>
+//                               ))}
+//                             </ul>
+//                             <button type="button" onClick={() => toggleAllCheckboxes(computers, true)}>Check All</button>
+//                             <button type="button" onClick={() => toggleAllCheckboxes(computers, false)}>Uncheck All</button>
+//                           </div>
+//                         )}
+//                         {onlyReceiveMatch.telecom && (
+//                           <div>
+//                             <ul className={css.checkbox}>
+//                               {telecom.map((item) => (
+//                                      <li key={item}>
+//                                      <input
+//                                        type="checkbox"
+//                                        id={"tele_" + item}
+//                                        name={`categories_${index}`}
+//                                        checked={val.categories.includes(item)}
+//                                        onChange={() => handleCheckboxChange(item)}
+//                                      />
+//                                      <label htmlFor={"tele_" + item}>{item}</label>
+//                                    </li>
+//                               ))}
+//                             </ul>
+//                             <button type="button" onClick={() => toggleAllCheckboxes(telecom, true)}>Check All</button>
+//                             <button type="button" onClick={() => toggleAllCheckboxes(telecom, false)}>Uncheck All</button>
+//                           </div>
+//                         )}
+//                         {onlyReceiveMatch.mobileDevice && (
+//                           <div>
+//                             <ul className={css.checkbox}>
+//                               {mobileDevice.map((item) => (
+//                             <li key={item}>
+//                             <input
+//                               type="checkbox"
+//                               id={"mobile_" + item}
+//                               name={`categories_${index}`}
+//                               checked={val.categories.includes(item)}
+//                               onChange={() => handleCheckboxChange(item)}
+//                             />
+//                             <label htmlFor={"mobile_" + item}>{item}</label>
+//                           </li>
+//                               ))}
+//                             </ul>
+//                             <button type="button" onClick={() => toggleAllCheckboxes(mobileDevice, true)}>Check All</button>
+//                             <button type="button" onClick={() => toggleAllCheckboxes(mobileDevice, false)}>Uncheck All</button>
+//                           </div>
+//                         )}
+//                       </div>
+
+
+//                     </div>
+
+
+
+
+//                     <div className={css.broadcastFilters_services}>
+//   <h3>For The Following Services</h3>
+//   <ul>
+//     {[
+//       "Asset Recovery",
+//       "Backup",
+//       "Call Center",
+//       "Cloud Assessment",
+//       "Cloud Migration",
+//       "Cloud Services",
+//       "Conferencing",
+//       "DaaS",
+//       "Data Destruction",
+//       "Data Recovery",
+//       "Deinstallation",
+//       "Delivery Duty Paid",
+//       "Disaster Recovery",
+//       "Engineering",
+//       "Fiber",
+//       "Hardware Audits",
+//       "Hosted Exchange",
+//       "Hosting",
+//       "IaaS",
+//       "Import/Export",
+//       "Import/Export of Record",
+//       "Installation",
+//       "Internet",
+//       "Inventory Management",
+//       "IT Management",
+//       "ITAD",
+//       "Leasing",
+//       "Logistics",
+//       "Maintenance",
+//       "Managed Services",
+//       "Network Management",
+//       "Networking",
+//       "Packaging",
+//       "Pay Per Click",
+//       "Recycling / Scrap",
+//       "Rental",
+//       "Repair",
+//       "SDN",
+//       "Security",
+//       "SEO",
+//       "Shipping",
+//       "Software",
+//       "Solutions",
+//       "Sort and Settle",
+//       "Storage",
+//       "Testing Facility",
+//       "VDI",
+//       "VoIP",
+//       "WAN / MPLS",
+//       "TEMs",
+//       "Web Services",
+//     ].map((service, idx) => (
+//       <li key={idx}>
+//         <span>
+//           <label htmlFor={`services_${idx}`}>{service}</label>
+//           <input
+//             type="checkbox"
+//             name={`services_${idx}`}
+//             value={service}
+//             id={`services_${idx}`}
+//             checked={val.services.includes(service)}
+//             onChange={() => handleChange(index, "services", service)} 
+//           />
+//         </span>
+//       </li>
+//     ))}
+//   </ul>
+//   <div className={css.checkBtn}>
+//     <button type="button" onClick={() => toggleAllCheckboxes(service, true)}>Check All</button>
+//     <button type="button" onClick={() => toggleAllCheckboxes(service, false)}>Uncheck All</button>
+//   </div>
+// </div>
+
+
+//                     <div className={css.broadcastFilters_grouping}>
+//                       <h3>With The Following Groupings</h3>
+//                       <ul>
+//                         <li>
+//                           <span>
+//                             <label htmlFor="bulk">Bulk</label>
+//                             <input type="checkbox"  name={`groupings_${index}`} checked={val.groupings.includes("Bulk")} id="bulk"     onChange={() => handleChange(index, "groupings", "Bulk")} />
+//                           </span>
+//                           <span>
+//                             <label htmlFor="container">Container</label>
+//                             <input type="checkbox" name={`groupings_${index}`} checked={val.groupings.includes("Container")} id="container"    onChange={() => handleChange(index, "groupings", "Container")}  />
+//                           </span>
+//                         </li>
+//                         <li>
+//                           <span>
+//                             <label htmlFor="pallet">Pallet</label>
+//                             <input type="checkbox" name={`groupings_${index}`} checked={val.groupings.includes("Pallet")} id="pallet"  onChange={() => handleChange(index, "groupings", "Pallet")}  />
+//                           </span>
+//                           <span>
+//                             <label htmlFor="wholeUnit">Whole Unit</label>
+//                             <input type="checkbox" name={`groupings_${index}`} checked={val.groupings.includes("Whole Unit")} id="wholeUnit"  onChange={() => handleChange(index, "groupings", "Whole Unit")}  />
+//                           </span>
+//                         </li>
+//                       </ul>
+//                       <div className={css.checkBtn}>
+//                         <button type="button">check all</button>
+//                         <button type="button">uncheck all</button>
+//                       </div>
+//                     </div>
+
+
+
+
+
+
+//                     <div className={css.broadcastFilters_AdvancedFilters}>
+//                       <h1>Advanced Filters</h1>
+//                       <div className={css.broadcastFilters_regionCountry}>
+//                         <h3>From The Following Regions / Country</h3>
+//                         <ul>
+//                           <li>
+//                             <span>
+//                               <label htmlFor="NorthAmerica">North America</label>
+//                               <input type="checkbox"  name={`regions_${index}`} checked={val.region.includes("North America")} id="NorthAmerica"  />
+//                             </span>
+//                             <span>
+//                               <label htmlFor="MiddleEast">Middle East</label>
+//                               <input type="checkbox" name={`regions_${index}`} checked={val.region.includes("Middle East")} id="MiddleEast"/>
+//                             </span>
+//                           </li>
+//                           <li>
+//                             <span>
+//                               <label htmlFor="SouthAmerica">South America</label>
+//                               <input type="checkbox"  name={`regions_${index}`} checked={val.region.includes("South America")} id="SouthAmerica"  />
+//                             </span>
+//                             <span>
+//                               <label htmlFor="Europe">Europe</label>
+//                               <input type="checkbox" name={`regions_${index}`} checked={val.region.includes("Europe")} id="Europe"/>
+//                             </span>
+//                           </li>
+//                           <li>
+//                             <span>
+//                               <label htmlFor="Africa">Africa</label>
+//                               <input type="checkbox" name={`regions_${index}`} checked={val.region.includes("Africa")} id="Africa"  />
+//                             </span>
+//                             <span>
+//                               <label htmlFor="Oceania">Oceania</label>
+//                               <input type="checkbox" name={`regions_${index}`} checked={val.region.includes("Oceania")} id="Oceania" />
+//                             </span>
+//                           </li>
+//                           <li>
+//                             <span>
+//                               <label htmlFor="Asia">Asia</label>
+//                               <input type="checkbox" name={`regions_${index}`} checked={val.region.includes("Asia")} id="Asia"/>
+//                             </span>
+//                           </li>
+//                           <li>
+//                             <label htmlFor={`broadcountry_from_${index}`}>or country</label>
+//                             <select name={`broadcountry_from_${index}`} value={val.broadcountry_from} id={`broadcountry_from_${index}`}>
+//                               <option value="">N/A </option>
+//                               <option value="USA">USA </option>
+//                               <option value="ALB">ALBANIA </option>
+//                               <option value="DZA">ALGERIA </option>
+//                               <option value="ASM">AMERICAN SAMOA </option>
+//                               <option value="AND">ANDORRA </option>
+//                               <option value="AGO">ANGOLA </option>
+//                               <option value="AIA">ANGUILLA </option>
+//                               <option value="ATA">ANTARCTICA </option>
+//                               <option value="ATG">ANTIGUA AND BARBUDA </option>
+//                               <option value="ARG">ARGENTINA </option>
+//                               <option value="ARM">ARMENIA </option>
+//                               <option value="ABW">ARUBA </option>
+//                               <option value="AUS">AUSTRALIA </option>
+//                               <option value="AUT">AUSTRIA </option>
+//                               <option value="AZE">AZERBAIJAN </option>
+//                               <option value="BHS">BAHAMAS </option>
+//                               <option value="BHR">BAHRAIN </option>
+//                               <option value="BGD">BANGLADESH </option>
+//                               <option value="BRB">BARBADOS </option>
+//                               <option value="BLR">BELARUS </option>
+//                               <option value="BEL">BELGIUM </option>
+//                               <option value="BLZ">BELIZE </option>
+//                               <option value="BEN">BENIN </option>
+//                               <option value="BMU">BERMUDA </option>
+//                               <option value="BTN">BHUTAN </option>
+//                               <option value="BOL">BOLIVIA </option>
+//                               <option value="BIH">BOSNIA AND HERZEGOWINA </option>
+//                               <option value="BWA">BOTSWANA </option>
+//                               <option value="BVT">BOUVET ISLAND </option>
+//                               <option value="BRA">BRAZIL </option>
+//                               <option value="IOT">
+//                                 BRITISH INDIAN OCEAN TERRITORY{" "}
+//                               </option>
+//                               <option value="BRN">BRUNEI DARUSSALAM </option>
+//                               <option value="BGR">BULGARIA </option>
+//                               <option value="BFA">BURKINA FASO </option>
+//                               <option value="BDI">BURUNDI </option>
+//                               <option value="KHM">CAMBODIA </option>
+//                               <option value="CMR">CAMEROON </option>
+//                               <option value="CAN">CANADA </option>
+//                               <option value="CPV">CAPE VERDE </option>
+//                               <option value="CYM">CAYMAN ISLANDS </option>
+//                               <option value="CAF">CENTRAL AFRICAN REPUBLIC </option>
+//                               <option value="TCD">CHAD </option>
+//                               <option value="CHL">CHILE </option>
+//                               <option value="CHN">CHINA </option>
+//                               <option value="CXR">CHRISTMAS ISLAND </option>
+//                               <option value="CCK">COCOS (KEELING) ISLANDS </option>
+//                               <option value="COL">COLOMBIA </option>
+//                               <option value="COM">COMOROS </option>
+//                               <option value="COG">CONGO </option>
+//                               <option value="COK">COOK ISLANDS </option>
+//                               <option value="CRI">COSTA RICA </option>
+//                               <option value="CIV">COTE D'IVOIRE </option>
+//                               <option value="HRV">
+//                                 CROATIA (local name Hrvatska){" "}
+//                               </option>
+//                               <option value="CYP">CYPRUS </option>
+//                               <option value="CZE">CZECH REPUBLIC </option>
+//                               <option value="DNK">DENMARK </option>
+//                               <option value="DJI">DJIBOUTI </option>
+//                               <option value="DMA">DOMINICA </option>
+//                               <option value="DOM">DOMINICAN REPUBLIC </option>
+//                               <option value="TMP">EAST TIMOR </option>
+//                               <option value="ECU">ECUADOR </option>
+//                               <option value="EGY">EGYPT </option>
+//                               <option value="SLV">EL SALVADOR </option>
+//                               <option value="GNQ">EQUATORIAL GUINEA </option>
+//                               <option value="ERI">ERITREA </option>
+//                               <option value="EST">ESTONIA </option>
+//                               <option value="ETH">ETHIOPIA </option>
+//                               <option value="FLK">
+//                                 FALKLAND ISLANDS (MALVINAS){" "}
+//                               </option>
+//                               <option value="FRO">FAROE ISLANDS </option>
+//                               <option value="FJI">FIJI </option>
+//                               <option value="FIN">FINLAND </option>
+//                               <option value="FRA">FRANCE </option>
+//                               <option value="FXX">FRANCE, METROPOLITAN </option>
+//                               <option value="GUF">FRENCH GUIANA </option>
+//                               <option value="PYF">FRENCH POLYNESIA </option>
+//                               <option value="ATF">
+//                                 FRENCH SOUTHERN TERRITORIES{" "}
+//                               </option>
+//                               <option value="GAB">GABON </option>
+//                               <option value="GMB">GAMBIA </option>
+//                               <option value="GEO">GEORGIA </option>
+//                               <option value="DEU">GERMANY </option>
+//                               <option value="GHA">GHANA </option>
+//                               <option value="GIB">GIBRALTAR </option>
+//                               <option value="GRC">GREECE </option>
+//                               <option value="GRL">GREENLAND </option>
+//                               <option value="GRD">GRENADA </option>
+//                               <option value="GLP">GUADELOUPE </option>
+//                               <option value="GUM">GUAM </option>
+//                               <option value="GTM">GUATEMALA </option>
+//                               <option value="GIN">GUINEA </option>
+//                               <option value="GNB">GUINEA-BISSAU </option>
+//                               <option value="GUY">GUYANA </option>
+//                               <option value="HTI">HAITI </option>
+//                               <option value="HMD">
+//                                 HEARD AND MC DONALD ISLANDS{" "}
+//                               </option>
+//                               <option value="HND">HONDURAS </option>
+//                               <option value="HKG">HONG KONG </option>
+//                               <option value="HUN">HUNGARY </option>
+//                               <option value="ISL">ICELAND </option>
+//                               <option value="IND">INDIA </option>
+//                               <option value="IDN">INDONESIA </option>
+//                               <option value="IRQ">IRAQ </option>
+//                               <option value="IRL">IRELAND </option>
+//                               <option value="ISR">ISRAEL </option>
+//                               <option value="ITA">ITALY </option>
+//                               <option value="JAM">JAMAICA </option>
+//                               <option value="JPN">JAPAN </option>
+//                               <option value="JOR">JORDAN </option>
+//                               <option value="KAZ">KAZAKHSTAN </option>
+//                               <option value="KEN">KENYA </option>
+//                               <option value="KIR">KIRIBATI </option>
+//                               <option value="KOR">KOREA, REPUBLIC OF </option>
+//                               <option value="KWT">KUWAIT </option>
+//                               <option value="KGZ">KYRGYZSTAN </option>
+//                               <option value="LAO">
+//                                 LAO PEOPLE'S DEMOCRATIC REPUBLIC{" "}
+//                               </option>
+//                               <option value="LVA">LATVIA </option>
+//                               <option value="LBN">LEBANON </option>
+//                               <option value="LSO">LESOTHO </option>
+//                               <option value="LBR">LIBERIA </option>
+//                               <option value="LBY">LIBYA </option>
+//                               <option value="LIE">LIECHTENSTEIN </option>
+//                               <option value="LTU">LITHUANIA </option>
+//                               <option value="LUX">LUXEMBOURG </option>
+//                               <option value="MAC">MACAU </option>
+//                               <option value="MKD">
+//                                 MACEDONIA, THE FORMER YUGOSLAV{" "}
+//                               </option>
+//                               <option value="MDG">MADAGASCAR </option>
+//                               <option value="MWI">MALAWI </option>
+//                               <option value="MYS">MALAYSIA </option>
+//                               <option value="MDV">MALDIVES </option>
+//                               <option value="MLI">MALI </option>
+//                               <option value="MLT">MALTA </option>
+//                               <option value="MHL">MARSHALL ISLANDS </option>
+//                               <option value="MTQ">MARTINIQUE </option>
+//                               <option value="MRT">MAURITANIA </option>
+//                               <option value="MUS">MAURITIUS </option>
+//                               <option value="MYT">MAYOTTE </option>
+//                               <option value="MEX">MEXICO </option>
+//                               <option value="FSM">
+//                                 MICRONESIA, FEDERATED STATES OF{" "}
+//                               </option>
+//                               <option value="MDA">MOLDOVA, REPUBLIC OF </option>
+//                               <option value="MCO">MONACO </option>
+//                               <option value="MNG">MONGOLIA </option>
+//                               <option value="MSR">MONTSERRAT </option>
+//                               <option value="MAR">MOROCCO </option>
+//                               <option value="MOZ">MOZAMBIQUE </option>
+//                               <option value="MMR">MYANMAR </option>
+//                               <option value="NAM">NAMIBIA </option>
+//                               <option value="NRU">NAURU </option>
+//                               <option value="NPL">NEPAL </option>
+//                               <option value="NLD">NETHERLANDS </option>
+//                               <option value="ANT">NETHERLANDS ANTILLES </option>
+//                               <option value="NCL">NEW CALEDONIA </option>
+//                               <option value="NZL">NEW ZEALAND </option>
+//                               <option value="NIC">NICARAGUA </option>
+//                               <option value="NER">NIGER </option>
+//                               <option value="NGA">NIGERIA </option>
+//                               <option value="NIU">NIUE </option>
+//                               <option value="NFK">NORFOLK ISLAND </option>
+//                               <option value="MNP">NORTHERN MARIANA ISLANDS </option>
+//                               <option value="NOR">NORWAY </option>
+//                               <option value="OMN">OMAN </option>
+//                               <option value="PAK">PAKISTAN </option>
+//                               <option value="PLW">PALAU </option>
+//                               <option value="PAN">PANAMA </option>
+//                               <option value="PNG">PAPUA NEW GUINEA </option>
+//                               <option value="PRY">PARAGUAY </option>
+//                               <option value="PER">PERU </option>
+//                               <option value="PHL">PHILIPPINES </option>
+//                               <option value="PCN">PITCAIRN </option>
+//                               <option value="POL">POLAND </option>
+//                               <option value="PRT">PORTUGAL </option>
+//                               <option value="PRI">PUERTO RICO </option>
+//                               <option value="QAT">QATAR </option>
+//                               <option value="REU">REUNION </option>
+//                               <option value="ROM">ROMANIA </option>
+//                               <option value="RUS">RUSSIAN FEDERATION </option>
+//                               <option value="RWA">RWANDA </option>
+//                               <option value="KNA">SAINT KITTS AND NEVIS </option>
+//                               <option value="LCA">SAINT LUCIA </option>
+//                               <option value="VCT">
+//                                 SAINT VINCENT AND THE GRENADIN{" "}
+//                               </option>
+//                               <option value="WSM">SAMOA </option>
+//                               <option value="SMR">SAN MARINO </option>
+//                               <option value="STP">SAO TOME AND PRINCIPE </option>
+//                               <option value="SAU">SAUDI ARABIA </option>
+//                               <option value="SEN">SENEGAL </option>
+//                               <option value="SRB">SERBIA </option>
+//                               <option value="SYC">SEYCHELLES </option>
+//                               <option value="SLE">SIERRA LEONE </option>
+//                               <option value="SGP">SINGAPORE </option>
+//                               <option value="SVK">SLOVAKIA (Slovak Republic) </option>
+//                               <option value="SVN">SLOVENIA </option>
+//                               <option value="SLB">SOLOMON ISLANDS </option>
+//                               <option value="SOM">SOMALIA </option>
+//                               <option value="ZAF">SOUTH AFRICA </option>
+//                               <option value="SGS">
+//                                 SOUTH GEORGIA AND THE SOUTH SA{" "}
+//                               </option>
+//                               <option value="ESP">SPAIN </option>
+//                               <option value="LKA">SRI LANKA </option>
+//                               <option value="SHN">ST. HELENA </option>
+//                               <option value="SPM">ST. PIERRE AND MIQUELON </option>
+//                               <option value="SDN">SUDAN </option>
+//                               <option value="SUR">SURINAME </option>
+//                               <option value="SJM">
+//                                 SVALBARD AND JAN MAYEN ISLANDS{" "}
+//                               </option>
+//                               <option value="SWZ">SWAZILAND </option>
+//                               <option value="SWE">SWEDEN </option>
+//                               <option value="CHE">SWITZERLAND </option>
+//                               <option value="TWN">TAIWAN </option>
+//                               <option value="TJK">TAJIKISTAN </option>
+//                               <option value="TZA">
+//                                 TANZANIA, UNITED REPUBLIC OF{" "}
+//                               </option>
+//                               <option value="THA">THAILAND </option>
+//                               <option value="TGO">TOGO </option>
+//                               <option value="TKL">TOKELAU </option>
+//                               <option value="TON">TONGA </option>
+//                               <option value="TTO">TRINIDAD AND TOBAGO </option>
+//                               <option value="TUN">TUNISIA </option>
+//                               <option value="TUR">TURKEY </option>
+//                               <option value="TKM">TURKMENISTAN </option>
+//                               <option value="TCA">TURKS AND CAICOS ISLANDS </option>
+//                               <option value="TUV">TUVALU </option>
+//                               <option value="UGA">UGANDA </option>
+//                               <option value="UKR">UKRAINE </option>
+//                               <option value="ARE">UNITED ARAB EMIRATES </option>
+//                               <option value="GBR">UNITED KINGDOM </option>
+//                               <option value="USA">USA </option>
+//                               <option value="UMI">
+//                                 UNITED STATES MINOR OUTLYING I{" "}
+//                               </option>
+//                               <option value="URY">URUGUAY </option>
+//                               <option value="UZB">UZBEKISTAN </option>
+//                               <option value="VUT">VANUATU </option>
+//                               <option value="VAT">
+//                                 VATICAN CITY STATE (HOLY SEE){" "}
+//                               </option>
+//                               <option value="VEN">VENEZUELA </option>
+//                               <option value="VNM">VIET NAM </option>
+//                               <option value="VGB">VIRGIN ISLANDS (BRITISH) </option>
+//                               <option value="VIR">VIRGIN ISLANDS (U.S.) </option>
+//                               <option value="WLF">WALLIS AND FUTUNA ISLANDS </option>
+//                               <option value="ESH">WESTERN SAHARA </option>
+//                               <option value="YEM">YEMEN </option>
+//                               <option value="YUG">YUGOSLAVIA </option>
+//                               <option value="ZAR">ZAIRE </option>
+//                               <option value="ZMB">ZAMBIA </option>
+//                               <option value="ZWE">ZIMBABWE </option>
+//                             </select>
+//                           </li>
+//                         </ul>
+//                         <div className={css.checkBtn}>
+//                           <button type="button">check all</button>
+//                           <button type="button">uncheck all</button>
+//                         </div>
+//                       </div>
+//                       <div className={css.broadcastFilters_outgoing}>
+//                         <h3>Default Outgoing Settings</h3>
+//                         <ul>
+//                           <li>
+//                             <span>
+//                               <label htmlFor="NorthAmerica">North America</label>
+//                               <input type="checkbox" name={`regions_${index}`} checked={val.region.includes("North America")} id="NorthAmerica" />
+//                             </span>
+//                             <span>
+//                               <label htmlFor="MiddleEast">Middle East</label>
+//                               <input type="checkbox" name={`regions_${index}`} checked={val.region.includes("Middle East")} id="MiddleEast" />
+//                             </span>
+//                           </li>
+//                           <li>
+//                             <span>
+//                               <label htmlFor="SouthAmerica">South America</label>
+//                               <input type="checkbox"  name={`regions_${index}`} checked={val.region.includes("South America")} id="SouthAmerica"/>
+//                             </span>
+//                             <span>
+//                               <label htmlFor="Europe">Europe</label>
+//                               <input type="checkbox" name={`regions_${index}`} checked={val.region.includes("Europe")} id="Europe" />
+//                             </span>
+//                           </li>
+//                           <li>
+//                             <span>
+//                               <label htmlFor="Africa">Africa</label>
+//                               <input type="checkbox"  name={`regions_${index}`} checked={val.region.includes("Africa")} id="Africa"/>
+//                             </span>
+//                             <span>
+//                               <label htmlFor="Oceania">Oceania</label>
+//                               <input type="checkbox" name={`regions_${index}`} checked={val.region.includes("Oceania")} id="Oceania" />
+//                             </span>
+//                           </li>
+//                           <li>
+//                             <span>
+//                               <label htmlFor="Asia">Asia</label>
+//                               <input type="checkbox" name={`regions_${index}`} checked={val.region.includes("Asia")} id="Asia" />
+//                             </span>
+//                           </li>
+//                           <li>
+//                             <label htmlFor="orCountry">or country</label>
+//                             <select name={`broadcountry_from_${index}`} value={val.broadcountry_from} id={`broadcountry_from_${index}`}>
+//                               <option value="">N/A </option>
+//                               <option value="USA">USA </option>
+//                               <option value="ALB">ALBANIA </option>
+//                               <option value="DZA">ALGERIA </option>
+//                               <option value="ASM">AMERICAN SAMOA </option>
+//                               <option value="AND">ANDORRA </option>
+//                               <option value="AGO">ANGOLA </option>
+//                               <option value="AIA">ANGUILLA </option>
+//                               <option value="ATA">ANTARCTICA </option>
+//                               <option value="ATG">ANTIGUA AND BARBUDA </option>
+//                               <option value="ARG">ARGENTINA </option>
+//                               <option value="ARM">ARMENIA </option>
+//                               <option value="ABW">ARUBA </option>
+//                               <option value="AUS">AUSTRALIA </option>
+//                               <option value="AUT">AUSTRIA </option>
+//                               <option value="AZE">AZERBAIJAN </option>
+//                               <option value="BHS">BAHAMAS </option>
+//                               <option value="BHR">BAHRAIN </option>
+//                               <option value="BGD">BANGLADESH </option>
+//                               <option value="BRB">BARBADOS </option>
+//                               <option value="BLR">BELARUS </option>
+//                               <option value="BEL">BELGIUM </option>
+//                               <option value="BLZ">BELIZE </option>
+//                               <option value="BEN">BENIN </option>
+//                               <option value="BMU">BERMUDA </option>
+//                               <option value="BTN">BHUTAN </option>
+//                               <option value="BOL">BOLIVIA </option>
+//                               <option value="BIH">BOSNIA AND HERZEGOWINA </option>
+//                               <option value="BWA">BOTSWANA </option>
+//                               <option value="BVT">BOUVET ISLAND </option>
+//                               <option value="BRA">BRAZIL </option>
+//                               <option value="IOT">
+//                                 BRITISH INDIAN OCEAN TERRITORY{" "}
+//                               </option>
+//                               <option value="BRN">BRUNEI DARUSSALAM </option>
+//                               <option value="BGR">BULGARIA </option>
+//                               <option value="BFA">BURKINA FASO </option>
+//                               <option value="BDI">BURUNDI </option>
+//                               <option value="KHM">CAMBODIA </option>
+//                               <option value="CMR">CAMEROON </option>
+//                               <option value="CAN">CANADA </option>
+//                               <option value="CPV">CAPE VERDE </option>
+//                               <option value="CYM">CAYMAN ISLANDS </option>
+//                               <option value="CAF">CENTRAL AFRICAN REPUBLIC </option>
+//                               <option value="TCD">CHAD </option>
+//                               <option value="CHL">CHILE </option>
+//                               <option value="CHN">CHINA </option>
+//                               <option value="CXR">CHRISTMAS ISLAND </option>
+//                               <option value="CCK">COCOS (KEELING) ISLANDS </option>
+//                               <option value="COL">COLOMBIA </option>
+//                               <option value="COM">COMOROS </option>
+//                               <option value="COG">CONGO </option>
+//                               <option value="COK">COOK ISLANDS </option>
+//                               <option value="CRI">COSTA RICA </option>
+//                               <option value="CIV">COTE D'IVOIRE </option>
+//                               <option value="HRV">
+//                                 CROATIA (local name Hrvatska){" "}
+//                               </option>
+//                               <option value="CYP">CYPRUS </option>
+//                               <option value="CZE">CZECH REPUBLIC </option>
+//                               <option value="DNK">DENMARK </option>
+//                               <option value="DJI">DJIBOUTI </option>
+//                               <option value="DMA">DOMINICA </option>
+//                               <option value="DOM">DOMINICAN REPUBLIC </option>
+//                               <option value="TMP">EAST TIMOR </option>
+//                               <option value="ECU">ECUADOR </option>
+//                               <option value="EGY">EGYPT </option>
+//                               <option value="SLV">EL SALVADOR </option>
+//                               <option value="GNQ">EQUATORIAL GUINEA </option>
+//                               <option value="ERI">ERITREA </option>
+//                               <option value="EST">ESTONIA </option>
+//                               <option value="ETH">ETHIOPIA </option>
+//                               <option value="FLK">
+//                                 FALKLAND ISLANDS (MALVINAS){" "}
+//                               </option>
+//                               <option value="FRO">FAROE ISLANDS </option>
+//                               <option value="FJI">FIJI </option>
+//                               <option value="FIN">FINLAND </option>
+//                               <option value="FRA">FRANCE </option>
+//                               <option value="FXX">FRANCE, METROPOLITAN </option>
+//                               <option value="GUF">FRENCH GUIANA </option>
+//                               <option value="PYF">FRENCH POLYNESIA </option>
+//                               <option value="ATF">
+//                                 FRENCH SOUTHERN TERRITORIES{" "}
+//                               </option>
+//                               <option value="GAB">GABON </option>
+//                               <option value="GMB">GAMBIA </option>
+//                               <option value="GEO">GEORGIA </option>
+//                               <option value="DEU">GERMANY </option>
+//                               <option value="GHA">GHANA </option>
+//                               <option value="GIB">GIBRALTAR </option>
+//                               <option value="GRC">GREECE </option>
+//                               <option value="GRL">GREENLAND </option>
+//                               <option value="GRD">GRENADA </option>
+//                               <option value="GLP">GUADELOUPE </option>
+//                               <option value="GUM">GUAM </option>
+//                               <option value="GTM">GUATEMALA </option>
+//                               <option value="GIN">GUINEA </option>
+//                               <option value="GNB">GUINEA-BISSAU </option>
+//                               <option value="GUY">GUYANA </option>
+//                               <option value="HTI">HAITI </option>
+//                               <option value="HMD">
+//                                 HEARD AND MC DONALD ISLANDS{" "}
+//                               </option>
+//                               <option value="HND">HONDURAS </option>
+//                               <option value="HKG">HONG KONG </option>
+//                               <option value="HUN">HUNGARY </option>
+//                               <option value="ISL">ICELAND </option>
+//                               <option value="IND">INDIA </option>
+//                               <option value="IDN">INDONESIA </option>
+//                               <option value="IRQ">IRAQ </option>
+//                               <option value="IRL">IRELAND </option>
+//                               <option value="ISR">ISRAEL </option>
+//                               <option value="ITA">ITALY </option>
+//                               <option value="JAM">JAMAICA </option>
+//                               <option value="JPN">JAPAN </option>
+//                               <option value="JOR">JORDAN </option>
+//                               <option value="KAZ">KAZAKHSTAN </option>
+//                               <option value="KEN">KENYA </option>
+//                               <option value="KIR">KIRIBATI </option>
+//                               <option value="KOR">KOREA, REPUBLIC OF </option>
+//                               <option value="KWT">KUWAIT </option>
+//                               <option value="KGZ">KYRGYZSTAN </option>
+//                               <option value="LAO">
+//                                 LAO PEOPLE'S DEMOCRATIC REPUBLIC{" "}
+//                               </option>
+//                               <option value="LVA">LATVIA </option>
+//                               <option value="LBN">LEBANON </option>
+//                               <option value="LSO">LESOTHO </option>
+//                               <option value="LBR">LIBERIA </option>
+//                               <option value="LBY">LIBYA </option>
+//                               <option value="LIE">LIECHTENSTEIN </option>
+//                               <option value="LTU">LITHUANIA </option>
+//                               <option value="LUX">LUXEMBOURG </option>
+//                               <option value="MAC">MACAU </option>
+//                               <option value="MKD">
+//                                 MACEDONIA, THE FORMER YUGOSLAV{" "}
+//                               </option>
+//                               <option value="MDG">MADAGASCAR </option>
+//                               <option value="MWI">MALAWI </option>
+//                               <option value="MYS">MALAYSIA </option>
+//                               <option value="MDV">MALDIVES </option>
+//                               <option value="MLI">MALI </option>
+//                               <option value="MLT">MALTA </option>
+//                               <option value="MHL">MARSHALL ISLANDS </option>
+//                               <option value="MTQ">MARTINIQUE </option>
+//                               <option value="MRT">MAURITANIA </option>
+//                               <option value="MUS">MAURITIUS </option>
+//                               <option value="MYT">MAYOTTE </option>
+//                               <option value="MEX">MEXICO </option>
+//                               <option value="FSM">
+//                                 MICRONESIA, FEDERATED STATES OF{" "}
+//                               </option>
+//                               <option value="MDA">MOLDOVA, REPUBLIC OF </option>
+//                               <option value="MCO">MONACO </option>
+//                               <option value="MNG">MONGOLIA </option>
+//                               <option value="MSR">MONTSERRAT </option>
+//                               <option value="MAR">MOROCCO </option>
+//                               <option value="MOZ">MOZAMBIQUE </option>
+//                               <option value="MMR">MYANMAR </option>
+//                               <option value="NAM">NAMIBIA </option>
+//                               <option value="NRU">NAURU </option>
+//                               <option value="NPL">NEPAL </option>
+//                               <option value="NLD">NETHERLANDS </option>
+//                               <option value="ANT">NETHERLANDS ANTILLES </option>
+//                               <option value="NCL">NEW CALEDONIA </option>
+//                               <option value="NZL">NEW ZEALAND </option>
+//                               <option value="NIC">NICARAGUA </option>
+//                               <option value="NER">NIGER </option>
+//                               <option value="NGA">NIGERIA </option>
+//                               <option value="NIU">NIUE </option>
+//                               <option value="NFK">NORFOLK ISLAND </option>
+//                               <option value="MNP">NORTHERN MARIANA ISLANDS </option>
+//                               <option value="NOR">NORWAY </option>
+//                               <option value="OMN">OMAN </option>
+//                               <option value="PAK">PAKISTAN </option>
+//                               <option value="PLW">PALAU </option>
+//                               <option value="PAN">PANAMA </option>
+//                               <option value="PNG">PAPUA NEW GUINEA </option>
+//                               <option value="PRY">PARAGUAY </option>
+//                               <option value="PER">PERU </option>
+//                               <option value="PHL">PHILIPPINES </option>
+//                               <option value="PCN">PITCAIRN </option>
+//                               <option value="POL">POLAND </option>
+//                               <option value="PRT">PORTUGAL </option>
+//                               <option value="PRI">PUERTO RICO </option>
+//                               <option value="QAT">QATAR </option>
+//                               <option value="REU">REUNION </option>
+//                               <option value="ROM">ROMANIA </option>
+//                               <option value="RUS">RUSSIAN FEDERATION </option>
+//                               <option value="RWA">RWANDA </option>
+//                               <option value="KNA">SAINT KITTS AND NEVIS </option>
+//                               <option value="LCA">SAINT LUCIA </option>
+//                               <option value="VCT">
+//                                 SAINT VINCENT AND THE GRENADIN{" "}
+//                               </option>
+//                               <option value="WSM">SAMOA </option>
+//                               <option value="SMR">SAN MARINO </option>
+//                               <option value="STP">SAO TOME AND PRINCIPE </option>
+//                               <option value="SAU">SAUDI ARABIA </option>
+//                               <option value="SEN">SENEGAL </option>
+//                               <option value="SRB">SERBIA </option>
+//                               <option value="SYC">SEYCHELLES </option>
+//                               <option value="SLE">SIERRA LEONE </option>
+//                               <option value="SGP">SINGAPORE </option>
+//                               <option value="SVK">SLOVAKIA (Slovak Republic) </option>
+//                               <option value="SVN">SLOVENIA </option>
+//                               <option value="SLB">SOLOMON ISLANDS </option>
+//                               <option value="SOM">SOMALIA </option>
+//                               <option value="ZAF">SOUTH AFRICA </option>
+//                               <option value="SGS">
+//                                 SOUTH GEORGIA AND THE SOUTH SA{" "}
+//                               </option>
+//                               <option value="ESP">SPAIN </option>
+//                               <option value="LKA">SRI LANKA </option>
+//                               <option value="SHN">ST. HELENA </option>
+//                               <option value="SPM">ST. PIERRE AND MIQUELON </option>
+//                               <option value="SDN">SUDAN </option>
+//                               <option value="SUR">SURINAME </option>
+//                               <option value="SJM">
+//                                 SVALBARD AND JAN MAYEN ISLANDS{" "}
+//                               </option>
+//                               <option value="SWZ">SWAZILAND </option>
+//                               <option value="SWE">SWEDEN </option>
+//                               <option value="CHE">SWITZERLAND </option>
+//                               <option value="TWN">TAIWAN </option>
+//                               <option value="TJK">TAJIKISTAN </option>
+//                               <option value="TZA">
+//                                 TANZANIA, UNITED REPUBLIC OF{" "}
+//                               </option>
+//                               <option value="THA">THAILAND </option>
+//                               <option value="TGO">TOGO </option>
+//                               <option value="TKL">TOKELAU </option>
+//                               <option value="TON">TONGA </option>
+//                               <option value="TTO">TRINIDAD AND TOBAGO </option>
+//                               <option value="TUN">TUNISIA </option>
+//                               <option value="TUR">TURKEY </option>
+//                               <option value="TKM">TURKMENISTAN </option>
+//                               <option value="TCA">TURKS AND CAICOS ISLANDS </option>
+//                               <option value="TUV">TUVALU </option>
+//                               <option value="UGA">UGANDA </option>
+//                               <option value="UKR">UKRAINE </option>
+//                               <option value="ARE">UNITED ARAB EMIRATES </option>
+//                               <option value="GBR">UNITED KINGDOM </option>
+//                               <option value="USA">USA </option>
+//                               <option value="UMI">
+//                                 UNITED STATES MINOR OUTLYING I{" "}
+//                               </option>
+//                               <option value="URY">URUGUAY </option>
+//                               <option value="UZB">UZBEKISTAN </option>
+//                               <option value="VUT">VANUATU </option>
+//                               <option value="VAT">
+//                                 VATICAN CITY STATE (HOLY SEE){" "}
+//                               </option>
+//                               <option value="VEN">VENEZUELA </option>
+//                               <option value="VNM">VIET NAM </option>
+//                               <option value="VGB">VIRGIN ISLANDS (BRITISH) </option>
+//                               <option value="VIR">VIRGIN ISLANDS (U.S.) </option>
+//                               <option value="WLF">WALLIS AND FUTUNA ISLANDS </option>
+//                               <option value="ESH">WESTERN SAHARA </option>
+//                               <option value="YEM">YEMEN </option>
+//                               <option value="YUG">YUGOSLAVIA </option>
+//                               <option value="ZAR">ZAIRE </option>
+//                               <option value="ZMB">ZAMBIA </option>
+//                               <option value="ZWE">ZIMBABWE </option>
+//                             </select>
+//                           </li>
+//                         </ul>
+//                         <div className={css.checkBtn}>
+//                           <button type="button">check all</button>
+//                           <button type="button">uncheck all</button>
+//                         </div>
+//                       </div>
+//                       <div className={css.broadcastFilters_outgoingVendor}>
+//                         <h3>Outgoing Vendor Filters</h3>
+//                         <ul>
+//                           <li>
+//                             <span>
+//                               <label htmlFor="toMyVendorOnly">
+//                                 To My Vendor Only
+//                               </label>
+//                               <input
+//                                 type="checkbox"
+//                                 id="toMyVendorOnly"
+//                                 name="toMyVendorOnly"
+//                                 value="toMyVendorOnly"
+//                               />
+//                             </span>
+//                           </li>
+//                         </ul>
+//                       </div>
+//                       <div className={css.broadcastFilters_companyFilter}>
+//                         <h3>
+//                           Company Filters (Max of 25/Overrides My Vendor settings.)
+//                         </h3>
+//                         <ul>
+//                           <li>
+//                             <span>
+//                               <label htmlFor="companySearch">Company Search</label>
+//                               <input
+//                                 type="search"
+//                                 id="companySearch"
+//                                 name="companySearch"
+//                                 value="companySearch"
+//                               />
+//                               <button type="button">add</button>
+//                             </span>
+//                           </li>
+//                         </ul>
+//                       </div>
+//                     </div>
+
+//                   </div>
+//                 ))
+//               ) : (
+//                 <p>Loading...</p>
+//               )}
+
+
+//             </div>
+//           </div>
+//         </form>
+//       </div>
+//     </>
+//   );
+// };
+
+// export default Options;
+
+
+
+
+
+
+
+
+
+
 
 
 

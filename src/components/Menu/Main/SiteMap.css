@@ -35,9 +35,9 @@
 }
 
 .sections li {
-    font-size: 12px; /* Font size for list items */
+    font-size: 13px; /* Font size for list items */
     font-weight: 500; /* Font weight */
-    color: #333; /* Darker color for readability */
+    color: #989898;
     margin: 2px 0; /* Space between list items */
     display: flex; /* Use flexbox for icon and text */
     align-items: center; /* Center icon and text vertically */

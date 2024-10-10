@@ -1,0 +1,134 @@
+
+
+.mainContainer {
+    width: 40%;
+    margin: 5rem auto;
+    background-color: #e8e8e8;
+    border: 1px solid #ddd;
+    padding: 1rem;
+    font-family: Arial, sans-serif;
+    h3 {
+      font-size: 2rem;
+    }
+  }
+  
+  .navTabs {
+    border-bottom: 1px solid #ddd;
+    > ul {
+      display: flex;
+      gap: 2rem;
+      padding: 1rem 0;
+      /* justify-content: space-around; */
+      /* border-bottom: 2px solid #ddd; */
+      /* padding-bottom: 10px; */
+      li a {
+        font-size: 2rem;
+      }
+      li:hover {
+        color: #007bff;
+      }
+    }
+  }
+  
+  .mainBody {
+    background: white;
+  }
+  
+
+  .checkboxGroup {
+    display: flex; /* Use flexbox for horizontal alignment */
+    flex-wrap: wrap; /* Allow wrapping to the next line if space is insufficient */
+    gap: 20px; /* Space between checkboxes */
+  }
+  
+
+form{
+    padding: 10px 20px;
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+  }
+  
+  h1{
+    color: #444;
+    font-size: 1.3em;
+    font-weight: 700;
+  }
+  .section {
+    margin-bottom: 20px;
+    padding: 10px 12px;
+  }
+  
+  .section label {
+    display: block;
+    margin: 5px 0;
+    font-size: 13px;
+  }
+  
+  .checkboxGroup label {
+    margin-right: 20px;
+  }
+  
+  .container select {
+    width: 30%;
+    padding: 8px;
+    margin-top: 5px;
+    box-sizing: border-box;
+    outline: 1px solid lightgray;
+  }
+
+  input[type="checkbox"] {
+    margin-right: 5px;
+  }
+  
+  .section button {
+    padding: 10px 20px;
+    background-color: #f45900;
+    border: 2px solid #f45900;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: white;
+    color: #f45900;
+    border: 2px solid #f45900;
+  }
+
+  .emailSec{
+    background-color: #bfbfbf;
+    font-size: 8pt;
+    padding: 0 4px;
+    white-space: nowrap;
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+  }
+  .emailSec h4{
+    color: white;
+    font-size: 1.4em;
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .serviceSection{
+    outline: 1px solid lightgray;
+
+  }
+
+  .footerlinks{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .footerlinks li{
+    list-style: none;
+    color: #3A57AB;;
+  }
+  .footerlinks li a{
+    font-size: 11px;
+  }

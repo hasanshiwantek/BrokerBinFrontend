@@ -12,6 +12,8 @@ import {
   BsToggleOff,
   BsToggleOn,
   BsTools,
+  BsCoin,
+  // FaCoins,
 } from "react-icons/bs";
 import { MdFileUpload } from "react-icons/md";
 import { FiTarget } from "react-icons/fi";
@@ -38,6 +40,7 @@ import dp3 from "../assets/drop-down3.svg"
 import dp4 from "../assets/drop-down4.svg"
 import dp5 from "../assets/drop-down5.svg"
 import dp6 from "../assets/drop-down6.svg"
+// import vendorIcon from "../assets/vendor-pricing.svg"
 
 
 
@@ -467,7 +470,7 @@ const Header = () => {
               </div>
             </li>
             <li>
-              <a href="/">reports</a>
+              <a href="/reports/email">reports</a>
               <BiSolidDownArrow className={css.onHoverMenuIconDown} />
               <BiSolidUpArrow className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
@@ -482,22 +485,22 @@ const Header = () => {
                     <Link to={"/reports/email"}>Email</Link>
                   </li>
                   <li>
-                    <Link>Service Directory Stats</Link>
+                    <Link to={"/reports/serviceStats"} >Service Directory Stats</Link>
                   </li>
                 </ul>
               </div>
             </li>
             <li>
-              <Link to={"/"}>broadcast</Link>
+              <Link to={"/broadcasts"}>broadcast</Link>
               <BiSolidDownArrow className={css.onHoverMenuIconDown} />
               <BiSolidUpArrow className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
                 <ul>
                   <Link to={"/sendbroad"}>
                     <li>send</li>
-                  </Link>
+                  </Link >
                   <li>
-                    <Link>view</Link>
+                    <Link  to={"/broadcasts"}>view</Link>
                   </li>
                   <li>
                     <Link to={"/myprofile/broadcastfilter"}>set filters</Link>
@@ -546,6 +549,9 @@ const Header = () => {
                   <Link to={"/cartpart"}>
                     <BsCartFill />
                   </Link>
+                </li>
+                <li >
+                  <BsCoin className={css.venIcon}/>
                 </li>
                 <li>
                   <BsClockFill />

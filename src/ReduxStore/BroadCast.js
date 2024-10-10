@@ -91,13 +91,44 @@ export const fetchBroadCastFilters = createAsyncThunk(
 
 
 
+export const fetchBroadCastData = createAsyncThunk(
+  "broadcastStore/fetchBroadCastData",
+  async ({token }) => {
+    console.log(token)
+
+    try {
+      const response = await axios.get(
+        "https://brokerbinbackend.shiwantek.com/api/broadcast",
+        {
+          headers: {
+           "Content-Type": "application/json", 
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log(response.data);
+      
+      return response.data;
+
+    } catch (error) {
+      throw new Error("Error searching User");
+    }
+  }
+);
+
+
+
+
+
 const initialState = {
   computerSelection: [],
   telecomSelection: [],
   mobileDevicesSelection: [],
   companiesSelection: [],
   regionSelection: [],
-  filters:[],
+  filters: [],
+  broadCastData:[]
 };
 
 const broadcastSlice = createSlice({
@@ -129,7 +160,8 @@ const broadcastSlice = createSlice({
       .addCase(broadCastFilters.fulfilled, (state, action) => {
         state.isLoading = false;
         // Optionally update state with the result
-        state.someData = action.payload;
+        // state.filters = action.payload;
+
       })
       .addCase(broadCastFilters.rejected, (state, action) => {
         state.isLoading = false;
@@ -145,6 +177,19 @@ const broadcastSlice = createSlice({
         state.filters = action.payload;
       })
       .addCase(fetchBroadCastFilters.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message;
+      })
+      .addCase(fetchBroadCastData.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchBroadCastData.fulfilled, (state, action) => {
+        state.isLoading = false;
+        //Update state with the result
+        state.broadCastData = action.payload;
+      })
+      .addCase(fetchBroadCastData.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
       });
