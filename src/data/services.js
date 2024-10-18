@@ -360,3 +360,7 @@ export const servicesList = [
     { id: "other", label: "Other", value: "Other" },
   ];
   
+
+  
+
+  export const initialMFGs = ["3COM", "3DLABS", "3M", "3RD PARTY", "3WARE", "A-POWER", "AAEON", "ABBOT", "ABIT", "ABLECOM"];

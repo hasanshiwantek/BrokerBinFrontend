@@ -575,7 +575,7 @@ const BroadcastForm = () => {
                   <button type="button" onClick={cancelAllActions}>
                     Cancel
                   </button>
-                  <input type="submit" value="SEND" />
+                  <input type="submit" value="SEND" style={{cursor:"pointer"}} />
                 </span>
               </div>
             </div>
