@@ -116,13 +116,6 @@ const Options = () => {
     }));
   };
 
-  // const handleBroadcastTypeChange = (value) => {
-  //   setSelectedBroadcastTypes((prev) =>
-  //     prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value]
-  //   );
-  // };
-
-
 
   const toggleAllCheckboxes = (name, items, checkAll) => {
     setBroadcastFilterState((prevState) => {
@@ -153,10 +146,6 @@ const Options = () => {
     });
   };
 
-
- 
-
-
   const dispatch = useDispatch();
   const token = Cookies.get("token");
 
@@ -186,8 +175,6 @@ const Options = () => {
     }
   }, [dispatch, token]);
 
-
-
   const handleSelectChange = (event) => {
     const { name, value } = event.target;
     const booleanValue = value === "1";
@@ -216,9 +203,9 @@ const Options = () => {
     }
   };
 
-
   const submitBroadcastFilters = (event) => {
     event.preventDefault();
+    if (!isBroadcastSelected) return;
 
     const combinedRegions = [
       ...new Set([
@@ -261,6 +248,8 @@ const Options = () => {
 
     dispatch(broadCastFilters({ data: transformedData, token }));
   };
+
+  const isBroadcastSelected = broadcastFilterState.selectedBroadcastTypes.length > 0;
 
 
   return (
@@ -387,6 +376,7 @@ const Options = () => {
                           selectedItems={broadcastFilterState.selectedCategories}
                           handleCheckboxChange={handleCheckboxChange}
                           toggleAllCheckboxes={toggleAllCheckboxes}
+                          disabled={!isBroadcastSelected}
                           title="Computer Categories"
                           name="selectedCategories"
                         />
@@ -401,6 +391,7 @@ const Options = () => {
                           selectedItems={broadcastFilterState.selectedCategories}
                           handleCheckboxChange={handleCheckboxChange}
                           toggleAllCheckboxes={toggleAllCheckboxes}
+                          disabled={!isBroadcastSelected}
                           title="Telecom Categories"
                           name="selectedCategories"
                         />
@@ -415,6 +406,7 @@ const Options = () => {
                           selectedItems={broadcastFilterState.selectedCategories}
                           handleCheckboxChange={handleCheckboxChange}
                           toggleAllCheckboxes={toggleAllCheckboxes}
+                          disabled={!isBroadcastSelected}
                           title="Mobile Device Categories"
                           name="selectedCategories"
                         />
@@ -433,6 +425,7 @@ const Options = () => {
                     selectedItems={broadcastFilterState.selectedServices}
                     handleCheckboxChange={handleCheckboxChange}
                     toggleAllCheckboxes={toggleAllCheckboxes}
+                    disabled={!isBroadcastSelected}
                     title="For The Following Services"
                     name="selectedServices" // Differentiates between services and groupings
                   />
@@ -447,6 +440,7 @@ const Options = () => {
                     selectedItems={broadcastFilterState.selectedGroupings}
                     handleCheckboxChange={handleCheckboxChange}
                     toggleAllCheckboxes={toggleAllCheckboxes}
+                    disabled={!isBroadcastSelected}
                     title="With The Following Groupings"
                     name="selectedGroupings" // Differentiates between services and groupings
                   />
@@ -464,7 +458,8 @@ const Options = () => {
                       items={regionsList}
                       selectedItems={broadcastFilterState.selectedRegions}
                       handleCheckboxChange={handleCheckboxChange}
-                    toggleAllCheckboxes={toggleAllCheckboxes}
+                      toggleAllCheckboxes={toggleAllCheckboxes}
+                      disabled={!isBroadcastSelected}
                       selectType="checkbox"
                       showCheckAll={true}
                       name="selectedRegions"
@@ -477,6 +472,7 @@ const Options = () => {
                       dropdownOptions={countriesList}
                       selectedDropdownValue={broadcastFilterState.selectedCountry}
                       handleDropdownChange={handleDropdownChange}
+                      disabled={!isBroadcastSelected}
                       selectType="dropdown"
                       showCheckAll={false}
                     />
@@ -491,7 +487,8 @@ const Options = () => {
                       items={regionsList}
                       selectedItems={broadcastFilterState.selectedOutgoingRegions}
                       handleCheckboxChange={handleCheckboxChange}
-                    toggleAllCheckboxes={toggleAllCheckboxes}
+                      toggleAllCheckboxes={toggleAllCheckboxes}
+                      disabled={!isBroadcastSelected}
                       selectType="checkbox"
                       showCheckAll={true}
                       name="selectedOutgoingRegions"
@@ -504,6 +501,7 @@ const Options = () => {
                       dropdownOptions={countriesList}
                       selectedDropdownValue={broadcastFilterState.selectedOutgoingCountry}
                       handleDropdownChange={handleOutgoingCountry}
+                      disabled={!isBroadcastSelected}
                       selectType="dropdown"
                       showCheckAll={false}
                     />
@@ -559,31 +557,3 @@ const Options = () => {
 
 
 export default Options;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
