@@ -87,6 +87,7 @@ const UniversalSelector = ({
   handleDropdownChange,
   name,
   toggleAllCheckboxes,
+  disabled,
 }) => {
   return (
     <div>
@@ -104,6 +105,7 @@ const UniversalSelector = ({
                   checked={selectedItems.includes(item.value || item)} // Ensure selectedItems matches item.value
                   onChange={() => handleCheckboxChange(name, item.value || item)} // Use item.value or item consistently
                   id={item.value || item}
+                  disabled={disabled}
                 />
               </span>
             </li>
@@ -117,6 +119,7 @@ const UniversalSelector = ({
           id="dropdown"
           value={selectedDropdownValue || ''}
           onChange={(e) => handleDropdownChange(e.target.value)}
+          disabled={disabled}
         >
           {dropdownOptions.map((option) => (
             <option key={option.value} value={option.value}>
