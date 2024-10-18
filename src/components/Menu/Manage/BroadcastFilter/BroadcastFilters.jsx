@@ -5,12 +5,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { broadCastFilters, fetchBroadCastFilters } from "../../../../ReduxStore/BroadCast";
 import Cookies from "js-cookie";
-import { servicesList, regionsList, countriesList, groupingsList, telecom, mobileDevice, computers } from "../../../../data/services";
+import { servicesList, regionsList, countriesList, groupingsList, telecom, mobileDevice, computers,initialMFGs } from "../../../../data/services";
 import CheckboxList from "./CheckboxList";
 import UniversalSelector from "./UniversalSelector";
+import MFGFilter from "./MFGFilter";
 
 const Options = () => {
 
+  // Existing states and handlers...
+  const [mfg, setIncludedMFGs] = useState([]);
+
+  // Handler to update the included manufacturers
+  const handleIncludedMFGsChange = (newIncludedMFGs) => {
+      setIncludedMFGs(newIncludedMFGs);
+  };
+  const filteredIncludedMFGs = mfg.filter(mfg => mfg !== "-ALL MFG's-");
 
   const [broadcastFilterState, setBroadcastFilterState] = useState({
     selectedCategories: [],
@@ -45,10 +54,13 @@ const Options = () => {
     });
   };
 
+
+
+
   const handleCheckboxChange = (name, value) => {
     setBroadcastFilterState((prevState) => {
       let updatedItems;
-  
+
       // Handle 'selectedCategories' (this includes computers, telecom, mobileDevice)
       if (name === "selectedCategories" || name === "telecom" || name === "mobileDevice") {
         updatedItems = prevState.selectedCategories.includes(value)
@@ -56,7 +68,7 @@ const Options = () => {
           : [...prevState.selectedCategories, value];
         return { ...prevState, selectedCategories: updatedItems }; // Always update 'selectedCategories'
       }
-  
+
       // Handle 'selectedServices'
       if (name === "selectedServices") {
         updatedItems = prevState.selectedServices.includes(value)
@@ -64,7 +76,7 @@ const Options = () => {
           : [...prevState.selectedServices, value];
         return { ...prevState, selectedServices: updatedItems };
       }
-  
+
       // Handle 'selectedGroupings'
       if (name === "selectedGroupings") {
         updatedItems = prevState.selectedGroupings.includes(value)
@@ -72,7 +84,7 @@ const Options = () => {
           : [...prevState.selectedGroupings, value];
         return { ...prevState, selectedGroupings: updatedItems };
       }
-  
+
       // Handle 'selectedRegions'
       if (name === "selectedRegions") {
         updatedItems = prevState.selectedRegions.includes(value)
@@ -80,7 +92,7 @@ const Options = () => {
           : [...prevState.selectedRegions, value];
         return { ...prevState, selectedRegions: updatedItems };
       }
-  
+
       // Handle 'selectedOutgoingRegions'
       if (name === "selectedOutgoingRegions") {
         updatedItems = prevState.selectedOutgoingRegions.includes(value)
@@ -88,7 +100,7 @@ const Options = () => {
           : [...prevState.selectedOutgoingRegions, value];
         return { ...prevState, selectedOutgoingRegions: updatedItems };
       }
-  
+
       // Handle 'selectedBroadcastTypes'
       if (name === "type_of_broadcast") {  // Added condition
         updatedItems = prevState.selectedBroadcastTypes.includes(value)
@@ -97,7 +109,7 @@ const Options = () => {
         return { ...prevState, selectedBroadcastTypes: updatedItems };
 
       }
-  
+
       return prevState; // Return the previous state if no matches
     });
   };
@@ -128,14 +140,14 @@ const Options = () => {
     setBroadcastFilterState((prevState) => {
       // Ensure items is an array of strings or objects
       const itemValues = items.map((item) => (typeof item === "object" ? item.value : item));
-  
+
       const currentSelection = prevState[name] || [];
-  
+
       console.log("Current selection:", currentSelection);
       console.log("Items to toggle:", itemValues);
-  
+
       let updatedItems;
-  
+
       if (checkAll) {
         // Add all items
         updatedItems = [...new Set([...currentSelection, ...itemValues])];
@@ -143,9 +155,9 @@ const Options = () => {
         // Remove all items
         updatedItems = currentSelection.filter((item) => !itemValues.includes(item));
       }
-  
+
       console.log("Updated selection:", updatedItems);
-  
+
       return {
         ...prevState,
         [name]: updatedItems,
@@ -154,7 +166,7 @@ const Options = () => {
   };
 
 
- 
+
 
 
   const dispatch = useDispatch();
@@ -243,6 +255,7 @@ const Options = () => {
       groupings: broadcastFilterState.selectedGroupings,
       region: combinedRegions,
       country: combinedCountries,
+      mfg: filteredIncludedMFGs, // Include the selected manufacturers
     };
 
     // Save to local storage
@@ -261,6 +274,10 @@ const Options = () => {
 
     dispatch(broadCastFilters({ data: transformedData, token }));
   };
+
+
+
+
 
 
   return (
@@ -371,6 +388,10 @@ const Options = () => {
                   </span>
                 </div>
               </div>
+              <div>
+                <MFGFilter onIncludedMFGsChange={handleIncludedMFGsChange} />
+            </div>
+
               <div className={css.broadcastFilters_categories}>
                 <h1>In The Following Categories</h1>
                 <div className={css.onlyReceiveMatch}>
@@ -464,7 +485,7 @@ const Options = () => {
                       items={regionsList}
                       selectedItems={broadcastFilterState.selectedRegions}
                       handleCheckboxChange={handleCheckboxChange}
-                    toggleAllCheckboxes={toggleAllCheckboxes}
+                      toggleAllCheckboxes={toggleAllCheckboxes}
                       selectType="checkbox"
                       showCheckAll={true}
                       name="selectedRegions"
@@ -491,7 +512,7 @@ const Options = () => {
                       items={regionsList}
                       selectedItems={broadcastFilterState.selectedOutgoingRegions}
                       handleCheckboxChange={handleCheckboxChange}
-                    toggleAllCheckboxes={toggleAllCheckboxes}
+                      toggleAllCheckboxes={toggleAllCheckboxes}
                       selectType="checkbox"
                       showCheckAll={true}
                       name="selectedOutgoingRegions"
