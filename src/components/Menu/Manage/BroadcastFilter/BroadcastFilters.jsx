@@ -205,6 +205,7 @@ const Options = () => {
 
   const submitBroadcastFilters = (event) => {
     event.preventDefault();
+    if (!isBroadcastSelected) return;
 
     const combinedRegions = [
       ...new Set([
@@ -556,31 +557,3 @@ const Options = () => {
 
 
 export default Options;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
