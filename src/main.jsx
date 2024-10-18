@@ -22,6 +22,8 @@ const MyProfile = lazy(() => import("./components/Menu/Manage/MyProfile.jsx"));
 const Options = lazy(() => import("./components/Menu/Manage/Options.jsx"));
 const BroadcastFilters = lazy(() => import("./components/Menu/Manage/BroadcastFilter/BroadcastFilters.jsx"));
 const MyBroadcast = lazy(() => import("./components/Menu/Broadcast/MyBroadCast.jsx"));
+const BroadCastHistory = lazy(() => import("./components/Menu/Broadcast/BroadCastHistory.jsx"));
+
 const CompanyDetails = lazy(() =>
   import("./components/Popups/CompanyDetails/CompanyDetails.jsx")
 );
@@ -40,6 +42,11 @@ const SearchResult = lazy(() =>
 );
 const Services = lazy(() =>
   import("./components/Menu/Search/Services.jsx")
+);
+
+
+const FeedBackProfile = lazy(() =>
+  import("./components/Menu/Search/FeedBackProfile.jsx")
 );
 
 
@@ -223,6 +230,15 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/broadcasthistory",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <BroadCastHistory/>
+          </Suspense>
+        ),
+      },
+      {
         path: "/compinfo",
         element: (
           <Suspense fallback={<LoadingState />}>
@@ -282,6 +298,15 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <Services/>
+          </Suspense>
+        ),
+      },
+      {
+        path: "/feedbackprofile",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <FeedBackProfile/>
           </Suspense>
         ),
       },

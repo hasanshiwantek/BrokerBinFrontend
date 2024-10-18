@@ -51,7 +51,9 @@ const Tools = () => {
           <div className={styles.toolCard}>
             <img src={additionalimg} alt="Additional Products" />
             <h3>Additional Products</h3>
-            <p>Product Guide</p>
+            <ul>
+            <li>Product Guide</li>
+            </ul>
           </div>
 
           <div className={styles.toolCard}>

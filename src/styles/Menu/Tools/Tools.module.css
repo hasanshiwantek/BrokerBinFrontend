@@ -60,10 +60,17 @@
   
   .toolCard ul li {
     margin-bottom: 5px;
+    cursor: pointer;
+    color: #000;
+    font-size: 1.2em;
+  }
+  .toolCard ul li:hover{
+    /* border-bottom: 1px solid var(--primary-color); */
+    text-decoration: underline var(--primary-color);
   }
   
   .toolCard ul li a {
-    color: #007bff; /* Link color */
+    color: #007bff; 
     text-decoration: none;
   }
   

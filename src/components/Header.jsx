@@ -12,7 +12,8 @@ import {
   BsToggleOff,
   BsToggleOn,
   BsTools,
-  BsCoin,
+  BsDatabaseFill ,
+  BsPeopleFill,
   // FaCoins,
 } from "react-icons/bs";
 import { MdFileUpload } from "react-icons/md";
@@ -343,7 +344,7 @@ const Header = () => {
                   <Link to={"/inventory"}>
                     <li><img src={dp6} alt="" srcset="" style={{color:"black"}}/>........</li>
                   </Link>
-                  <Link to={"/"}>
+                  <Link to={"/reports/Company"}>
                     <li><img src={dp5} alt="" srcset="" style={{color:"black"}}/>........</li>
                   </Link>
               
@@ -354,7 +355,7 @@ const Header = () => {
 
 
 
-
+{/* Toggle Menus */}
             <li>
               <Link to={"/"}>main</Link>
               <BiSolidDownArrow className={css.onHoverMenuIconDown} />
@@ -440,7 +441,7 @@ const Header = () => {
               </div>
             </li>
             <li>
-              <Link to={'/manage'}>manage</Link>
+              <Link to={'/inventory'}>manage</Link>
               <BiSolidDownArrow className={css.onHoverMenuIconDown} />
               <BiSolidUpArrow className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
@@ -506,12 +507,12 @@ const Header = () => {
                     <Link to={"/myprofile/broadcastfilter"}>set filters</Link>
                   </li>
                   <li>
-                    <Link>history</Link>
+                    <Link to={"/broadcasthistory"}>history</Link>
                   </li>
                 </ul>
               </div>
             </li>
-            <li onClick={handleLogout}>
+            <li onClick={handleLogout} style={{cursor:"pointer"}}>
               <BiLogOut />
               logout
             </li>
@@ -523,7 +524,7 @@ const Header = () => {
                 <button
                   type="button"
                   onClick={() => dispatch(setToolToggle())}
-                  className="tools-toggle"
+                  className={css.tools_toggle}
                 >
                   <BsToggleOn style={{ color: "white" }} />
                 </button>
@@ -551,7 +552,9 @@ const Header = () => {
                   </Link>
                 </li>
                 <li >
-                  <BsCoin className={css.venIcon}/>
+                <Link to={"/venprice"}>
+                  <BsDatabaseFill />
+                </Link>
                 </li>
                 <li>
                   <BsClockFill />
@@ -560,16 +563,29 @@ const Header = () => {
                   <BsStarFill />
                 </li>
                 <li>
+                  <Link to={"/myprofile/MyVendors"}>
+                  <BsPeopleFill/>
+                  </Link>
+                </li>
+                <li>
+                  <Link to={"/myprofile/MyContact"}>
                   <BsPersonFill />
+                  </Link>
                 </li>
                 <li>
+                  <Link to={"/hotList/view"}>
                   <AiFillFile />
+                  </Link>
                 </li>
                 <li>
+                  <Link to={"/inventory"}>
                   <MdFileUpload />
+                  </Link>
                 </li>
                 <li>
+                  <Link to={"/reports/Company"}>
                   <FiTarget />
+                  </Link>
                 </li>
                 <li className={css.navbar_search_options}>
                   <select name="navbarSearchOptions">

@@ -22,7 +22,7 @@
       list-style-position: inside;
       > li {
         input {
-          width: 30%;
+          width: 60%;
           padding: 0.5rem;
         }
         > textarea {

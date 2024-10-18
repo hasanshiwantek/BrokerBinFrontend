@@ -91,11 +91,11 @@ form{
     cursor: pointer;
   }
   
-  button:hover {
+  /* button:hover {
     background-color: white;
     color: #f45900;
     border: 2px solid #f45900;
-  }
+  } */
 
   .emailSec{
     background-color: #bfbfbf;

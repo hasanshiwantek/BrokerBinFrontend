@@ -545,3 +545,117 @@
 .footerlinks li a{
   font-size: 11px;
 }
+
+
+.myVendor_company_name_list_specified{
+  border: 1px solid black;
+  margin: 10px;
+}
+
+
+
+
+
+
+
+
+
+
+.companyCard {
+  display: flex;
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin-bottom: 20px;
+  align-items: stretch;
+  background-color: #fff;
+  gap: 10px;
+  width: 46vw;
+
+}
+
+.companyInfo {
+  flex: 2;
+  display: flex;
+  gap: 20px;
+}
+
+.companyLogo img {
+  width: 170px;
+  height: auto;
+}
+
+.companyDetails {
+  flex: 1;
+}
+
+.companyDetails p {
+  margin: 5px 0;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.rating span {
+  font-size: 14px;
+}
+
+.companyAction {
+  flex: 0.5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap:  10px;
+}
+
+/* .companySec{
+  background-color: lightgrey ;
+padding: 10px 12px;
+border: 1px solid gray;
+} */
+
+.firstButton {
+  background-color: #f25f5c;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.companyNotes {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.companyNotes textarea {
+  width: 100%;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
+  resize: none;
+}
+
+.saveButton {
+  margin-top: 10px;
+  background-color: #4caf50;
+  color: white;
+  padding: 5px !important ;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 50px;
+}
+
+.removeIcon {
+  color: #f25f5c;
+  font-size: 24px;
+  cursor: pointer;
+  margin-top: 10px;
+}

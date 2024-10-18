@@ -107,6 +107,9 @@
     cursor: pointer;
   }
   
+  .saveButton:hover{
+    color: #f06622ff !important;
+  }
   /* Footer styling */
   .footer {
     display: flex;
@@ -135,3 +138,11 @@
 
   }
   
+
+  .tabTitle:hover{
+    color: #fff !important;
+  }
+
+  .saveButton:hover{
+    color: #fff !important;
+  }

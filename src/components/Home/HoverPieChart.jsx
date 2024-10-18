@@ -4,7 +4,7 @@ import css from "../../styles/Home/Home.module.css";
 import MyPieChart from "./MyPieChart";
 import { FaRegCircle } from "react-icons/fa";
 import zIndex from "@mui/material/styles/zIndex";
-
+import { Link } from "react-router-dom";
 const HoverPieChart = () => {
   const pieColor = pieChartData.datasets[0].backgroundColor;
   const [chartData, setChartData] = useState(pieChartData);
@@ -65,9 +65,9 @@ const HoverPieChart = () => {
             </div>
           );
         })}
-        <a href="#" className={css.gridHome2_Details_Bottom_Chart_data_btn}>
+        <Link to={"/sendbroad"} className={css.gridHome2_Details_Bottom_Chart_data_btn}>
           SEND BROADCAST
-        </a>
+        </Link>
       </div>
     </>
   );

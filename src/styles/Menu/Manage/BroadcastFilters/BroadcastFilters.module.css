@@ -13,7 +13,9 @@
     gap: 1rem;
   }
   h1 {
-    font-size: 3rem;
+    color: #444;
+    font-size: 1.5em;
+    font-weight: 700;
   }
   h3 {
     font-size: 2rem;
@@ -83,6 +85,9 @@
   }
 }
 
+.broadcastFilters label{
+  font-weight:500;
+}
 .categoriesToggleButton {
   display: flex;
   gap: 1rem;
@@ -101,4 +106,77 @@
     color: black;
     font-weight: 600;
   }
+}
+
+
+
+
+
+
+
+.broadcastFilters_emailSettings_row {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px; /* Adjust this for the spacing between elements */
+  flex-wrap: wrap; /* This will allow items to wrap if screen size is smaller */
+}
+
+.broadcastFilters_item {
+  display: flex;
+  flex-direction: row !important;
+  gap: 20px;
+}
+
+.broadcastFilters_item label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.broadcastFilters_item select {
+  padding: 5px;
+  width: 7%;
+
+}
+ 
+
+
+
+
+.checkbox ul {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  padding: 10px;
+  gap: 10px;
+}
+
+.checkbox ul li span label{
+  margin-right: 5px;
+}
+
+.checkbox input[type="checkbox"] {
+  margin-right: 20px;
+}
+
+/* .categoriesToggleButton {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+} */
+
+.categoriesToggleButton button {
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.broadcastFilters_categories {
+  margin-bottom: 30px;
+}
+
+
+
+.groupCheckbox ul{
+  display: grid;
+  grid-template-columns: auto auto ;
+  /* padding: 10px; */
+  /* gap: 10px; */
 }

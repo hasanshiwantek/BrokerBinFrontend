@@ -87,8 +87,7 @@
     background-color: #f06622;
 }
 .subTitle{
-    color: white;
-    font-weight: bold;
+    color: black;
     font-size: 15px;
     margin-left: 10px;
 }
@@ -100,8 +99,7 @@
 }
 
 .manufacturerDropdown span{
-    color: #fff;
-    font-weight: bold;
+    color: black;
 }
 
 /* Action Buttons */
@@ -133,57 +131,10 @@
     color: rgb(92, 92, 189);
 }
 
-.learnMore {
-    margin-top: 20px;
-}
 
-.learnMore a {
-    text-decoration: none;
-    color: blue;
-}
-
-.learnMore a:hover {
-    text-decoration: underline;
-}
-    
-
-
-.guideContainer {
-    padding: 30px 166px;
-    margin-top: 20px;
-    width: 64vw;
-
-}
-
-.instructions {
-    margin-top: 10px;
-}
-
-.instructions ul, .instructions ol {
-    list-style-type: none;
-    padding: 0;
-    font-size: 12px;
-}
-
-.instructions li {
-    padding: 5px 0;
-}
-
-h2, h3 {
-    color: #333;
-}
-
-p {
-    font-size: 12px;
-    color: #666;
-}
-
-
-.tabTitle:hover{
-    color: #fff !important ;
-}
-
-
-.subTitle:hover{
-    color: #f06622 !important ;
+.partSearchSec{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
 }

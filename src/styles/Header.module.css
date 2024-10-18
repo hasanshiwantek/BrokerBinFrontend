@@ -60,6 +60,9 @@ button {
   }
 }
 
+.tools_toggle path:hover{
+  color: white !important;
+}
 .nav {
   display: flex;
   justify-content: space-between;
@@ -97,15 +100,12 @@ button {
 .nav_tools {
   > li {
     height: 100%;
-    padding: 0.3rem 0.5rem;
+    padding: 0.1rem ;
+
   }
   @media only screen and (max-width: 54.375em) {
     margin-left: auto;
   }
-}
-
-.venIcon{
-  font-weight: 700;
 }
 
 .dropdownMenu {

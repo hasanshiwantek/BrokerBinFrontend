@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import css from "../../styles/Home/Home.module.css";
 import person from "../../imgs/logo/shadow.png";
 import spares from "../../imgs/logo/spares.png";
-import { MdMail } from "react-icons/md";
+import { MdContactPage,MdHandshake, MdManageAccounts  } from "react-icons/md";
 import { BsStarFill } from "react-icons/bs";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import ToggleStats from "./ToggleStats";
@@ -86,11 +86,24 @@ const Home = () => {
         <>
           <div className={css.gridHome}>
             <div className={css.gridHome1}>
-              <div className={css.gridHome1_Bar}>
-                <MdMail />
-                <p>service directory</p>
-                <BiDotsHorizontalRounded />
-              </div>
+
+            <div className={`mailSection ${css.mailSection}`}>
+<div className={css.gridHome1_Bar}>
+        <MdContactPage />
+        <p>Service Directory</p>
+        <BiDotsHorizontalRounded />
+        <div className={css.manageDropdown}>
+          <ul>
+           <Link to={"/search"}> <li>Search</li></Link>
+           <Link to={"/manage/my-services"}> <li>Manage my Services</li></Link>
+     
+          </ul>
+        </div>
+      </div>
+      </div>
+
+
+              
               <div className={css.gridHome1_MemberDetail}>
                 <div className={css.gridHome1_MemberDetail_profile}>
                   <img
@@ -243,7 +256,7 @@ const Home = () => {
                   </div>
                   {/* </div> */}
                   <div className={css.gridHome1_MemberDetail_comments}>
-                    <a href="#">
+                    <Link to={"/feedbackprofile"}>
                       Comments{" "}
                       <span>
                         {(1)
@@ -251,7 +264,7 @@ const Home = () => {
                           .toString()
                           .padStart(2, "0")}
                       </span>
-                    </a>
+                    </Link>
                     <a href="#" className={css.newW}>
                       New
                       <span>
@@ -276,16 +289,49 @@ const Home = () => {
             </div>
             <div className={css.gridHome2}>
               <div className={css.gridHome2_Bar}>
-                <div>
+                {/* <div >
                   <MdMail />
                   <p>manage</p>
                   <BiDotsHorizontalRounded />
-                </div>
-                <div>
-                  <MdMail />
-                  <p>manage</p>
-                  <BiDotsHorizontalRounded />
-                </div>
+                </div> */}
+
+<div className={`mailSection ${css.mailSection}`}>
+        <MdManageAccounts />
+        <p>manage</p>
+        <BiDotsHorizontalRounded />
+        <div className={css.manageDropdown}>
+          <ul>
+           <Link to={"/inventory"}> <li>Inventory</li></Link>
+           <Link to={"/rfq"}> <li>My RFQs</li></Link>
+           <Link> <li>My BOM</li></Link>
+           <Link to={"/myprofile"}> <li>My Profile</li></Link>
+           <Link> <li>My Company</li></Link>
+           <Link to={"/manage/my-services"}> <li>My Services</li></Link>
+           <Link to={"/venprice"}> <li>Vendor Pricing</li></Link>
+
+          </ul>
+        </div>
+      </div>
+
+
+
+
+
+      <div className={`mailSection ${css.mailSection}`}>
+        <MdHandshake/>
+        <p>Safe Trading Center</p>
+        <BiDotsHorizontalRounded />
+        <div className={css.manageDropdown}>
+          <ul>
+           <Link to={"/ethics"}> <li>Ethics Complaint</li></Link>
+           <Link to={"/feedback"}> <li>Report an Issue</li></Link>
+           <Link> <li>Watch List Companies</li></Link>
+
+          </ul>
+        </div>
+      </div>
+
+
               </div>
               <div className={css.gridHome2_Details}>
                 <div className={css.gridHome2_Details_Upper}>
@@ -372,13 +418,13 @@ const Home = () => {
           </div>
 
           <footer>
-                <div className={css.footerlinks}>
-                    <li><a href="/">Advertising Programs</a></li>
-                    <li><a href="/">Business Solutions</a></li>
-                    <li><a href="/">About BrokerBin.com</a></li>
-                    <li>©2024 Privacy</li>
-                </div>
-            </footer>
+            <div className={css.footerlinks}>
+              <li><a href="/">Advertising Programs</a></li>
+              <li><a href="/">Business Solutions</a></li>
+              <li><a href="/">About BrokerBin.com</a></li>
+              <li>©2024 Privacy</li>
+            </div>
+          </footer>
 
         </>
       )}
