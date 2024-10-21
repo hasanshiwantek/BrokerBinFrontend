@@ -594,12 +594,12 @@ const Options = () => {
               </div>
 
 
-<div className={css.btnGroup}>
-  <div  className={css.btnGroupSec}>
-    <button onClick={clearBroadCastFields}>Reset</button>
-    <button onClick={submitBroadcastFilters}>Submit Changes</button>
-  </div>
-</div>
+              <div className={css.btnGroup}>
+                <div  className={css.btnGroupSec}>
+                  <button onClick={clearBroadCastFields}>Reset</button>
+                  <button onClick={submitBroadcastFilters}>Submit Changes</button>
+                </div>
+              </div>
 
 
 
