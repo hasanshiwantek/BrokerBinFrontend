@@ -3,7 +3,6 @@ import { initialMFGs } from '../../../../data/services';
 import css from "../../../../styles/Menu/Manage/BroadcastFilters/BroadcastFilters.module.css";
 
 const MFGFilter = ({ onIncludedMFGsChange }) => {
-
     const [availableMFGs, setAvailableMFGs] = useState([...initialMFGs]);
     const [includedMFGs, setIncludedMFGs] = useState(["-ALL MFG's-"]);
     const [selectedAvailable, setSelectedAvailable] = useState([]);
@@ -57,9 +56,9 @@ const MFGFilter = ({ onIncludedMFGsChange }) => {
                         </select>
                     </div>
                     <div className={css.mfgbuttons}>
-                        <button onClick={moveToLeft}>&gt;&gt;</button>
-                        <button onClick={moveToRight}>&lt;&lt;</button>
-                        <button onClick={reset}>Reset</button>
+                        <p onClick={moveToLeft}>&gt;&gt;</p>
+                        <p onClick={moveToRight}>&lt;&lt;</p>
+                        <p onClick={reset}>Reset</p>
                     </div>
                     <div>
                         <select multiple className={css.listBox} value={selectedAvailable} onChange={(e) => handlesSelectChange(setSelectedAvailable, e)}>
