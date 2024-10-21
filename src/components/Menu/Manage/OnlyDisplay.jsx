@@ -14,18 +14,30 @@ const OnlyDisplay = () => {
     state: false,
   });
 
-  const toggleOnlyReceiveMatch = (type) => {
-    const updatedStates = {
-      region: false,
-      country: false,
-      state: false,
-    };
+  // const toggleOnlyReceiveMatch = (type) => {
+  //   const updatedStates = {
+  //     region: false,
+  //     country: false,
+  //     state: false,
+  //   };
 
-    setOnlyReceiveMatch((prev) => ({
-      ...updatedStates,
-      [type]: true,
-    }));
+  //   setOnlyReceiveMatch((prev) => ({
+  //     ...updatedStates,
+  //     [type]: true,
+  //   }));
+  // };
+
+
+
+  const toggleOnlyReceiveMatch = (type) => {
+    setOnlyReceiveMatch({
+      region: type === "region",
+      country: type === "country",
+      state: type === "state",
+    });
   };
+
+
 
   const handleCheckboxChange = (category, value) => {
     // Get the current array of selected items for the category
@@ -361,13 +373,13 @@ const OnlyDisplay = () => {
   return (
     <div className={css.onlyReceiveMatch}>
       <div className={css.onlyReceiveMatchBtn}>
-        <button type="button" onClick={() => toggleOnlyReceiveMatch("region")}>
+        <button type="button" onClick={() => toggleOnlyReceiveMatch("region")}   className={`${css.button} ${onlyReceiveMatch.region ? css.active : ""}`}    >
           Region
         </button>
-        <button type="button" onClick={() => toggleOnlyReceiveMatch("country")}>
+        <button type="button" onClick={() => toggleOnlyReceiveMatch("country")} className={`${css.button} ${onlyReceiveMatch.country ? css.active : ""}`}   >
           Country
         </button>
-        <button type="button" onClick={() => toggleOnlyReceiveMatch("state")}>
+        <button type="button" onClick={() => toggleOnlyReceiveMatch("state")}  className={`${css.button} ${onlyReceiveMatch.state ? css.active : ""}`}  >
           State
         </button>
       </div>

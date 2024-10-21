@@ -218,14 +218,23 @@ fieldset {
 
 
 .onlyReceiveMatchBtn button {
-  color: #444 !important;
+  color: #444  ;
   /* display: inline-block !important; */
-  margin: 0 5px !important;
-  padding: 8px !important;
-  background-color: #bfbfbf !important;
-  border: 1px solid #bfbfbf !important;
-  font-weight: 900;
+  margin: 0 5px ;
+  padding: 8px ;
+  background-color: #bfbfbf ;
+  border: 1px solid #bfbfbf ;
+  font-weight: 700;
 }
+
+
+.onlyReceiveMatchBtn button.active {
+  background-color:#fff;
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color) ;
+}
+
+
 
 .customPartSearchDisplay label {
   color: #900;

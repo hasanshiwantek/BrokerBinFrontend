@@ -293,7 +293,25 @@ const profileSlice = createSlice({
         console.log(action.error.message);
         state.error = action.error.message;
         state.blurWhileLoading = false;
-      });
+      })
+
+      .addCase(submitUserOptions.pending, (state) => {
+        state.blurWhileLoading = false;
+        console.log("Pending....");
+        
+      })
+      .addCase(submitUserOptions.fulfilled, (state, action) => {
+        state.blurWhileLoading = true;
+        // state.searchUserData=action.payload
+        console.log("Fulfilled....");
+
+      })
+      .addCase(submitUserOptions.rejected, (state, action) => {
+        console.log(action.error.message);
+        state.error = action.error.message;
+        state.blurWhileLoading = false;
+      })
+      
   },
 });
 
