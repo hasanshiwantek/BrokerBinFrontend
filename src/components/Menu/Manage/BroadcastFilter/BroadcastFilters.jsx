@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { broadCastFilters, fetchBroadCastFilters } from "../../../../ReduxStore/BroadCast";
 import Cookies from "js-cookie";
-import { servicesList, regionsList, countriesList, groupingsList, telecom, mobileDevice, computers,initialMFGs } from "../../../../data/services";
+import { servicesList, regionsList, countriesList, groupingsList, telecom, mobileDevice, computers, initialMFGs } from "../../../../data/services";
 import CheckboxList from "./CheckboxList";
 import UniversalSelector from "./UniversalSelector";
 import MFGFilter from "./MFGFilter";
@@ -17,7 +17,7 @@ const Options = () => {
 
   // Handler to update the included manufacturers
   const handleIncludedMFGsChange = (newIncludedMFGs) => {
-      setIncludedMFGs(newIncludedMFGs);
+    setIncludedMFGs(newIncludedMFGs);
   };
   const filteredIncludedMFGs = mfg.filter(mfg => mfg !== "-ALL MFG's-");
 
@@ -260,10 +260,31 @@ const Options = () => {
     );
 
     dispatch(broadCastFilters({ data: transformedData, token }));
-  };
 
+    alert("Form Data Submitted!")
+  };
   const isBroadcastSelected = broadcastFilterState.selectedBroadcastTypes.length > 0;
 
+// Handler for clearing all the fields
+  const clearBroadCastFields =()=>{
+    setBroadcastFilterState({
+      selectedCategories: [],
+      selectedServices: [],
+      selectedGroupings: [],
+      selectedRegions: [],
+      selectedOutgoingRegions: [],
+      selectedCountry: [],
+      selectedOutgoingCountry: [],
+      selectedBroadcastTypes: [],
+      dailyBroadcast: false,
+      broadcasts: false,
+      multicast: false,
+      servicecast: false,
+
+    })
+    setIncludedMFGs([]);
+    alert("All fields have been reset!");
+  }
 
   return (
     <>
@@ -272,7 +293,7 @@ const Options = () => {
           <div className={myProfile.profileBtn}>
             <p>my profile</p>
             <span>
-              <input type="submit" value="submit changes" />
+              <input type="submit" value="submit changes" className={css.sumbitBtn} />
               <button type="button">view profile</button>
             </span>
           </div>
@@ -375,7 +396,7 @@ const Options = () => {
               </div>
               <div>
                 <MFGFilter onIncludedMFGsChange={handleIncludedMFGsChange} />
-            </div>
+              </div>
 
               <div className={css.broadcastFilters_categories}>
                 <h1>In The Following Categories</h1>
@@ -564,6 +585,32 @@ const Options = () => {
                   </ul>
                 </div>
               </div>
+
+
+              <div className={css.lastSec}>
+                <div>
+                  <p>Click On The  <Link to={"/myprofile/MyVendors"}><span >My Vendors  </span></Link> Link to manage or stop receiving Broadcasts from a vendor.</p>
+                  <p>
+                    <span style={{ color: "red" }}>1</span>Must be selected to receive Multicast (multiple part broadcast) emails that don't have a specific mfg.
+                  </p>
+                  <p>
+                    <span style={{ color: "red" }}>2</span>Must be selected to receive Servicecast (service related broadcast) emails.
+                  </p>
+                </div>
+              </div>
+
+
+<div className={css.btnGroup}>
+  <div  className={css.btnGroupSec}>
+    <button onClick={clearBroadCastFields}>Reset</button>
+    <button onClick={submitBroadcastFilters}>Submit Changes</button>
+  </div>
+</div>
+
+
+
+
+
             </div>
           </div>
         </form>
