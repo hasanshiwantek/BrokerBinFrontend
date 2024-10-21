@@ -29,7 +29,7 @@ const Categories = () => {
     }));
   };
 
-  // Function to handle checkbox changes for computers, countries, or states
+  // Function to handle checkbox individually.
   const handleCheckboxChange = (category, value) => {
     // Get the current array of selected items for the category
     const selectedItems = broadcastFilters[category];

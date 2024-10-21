@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { broadCastFilters, fetchBroadCastFilters } from "../../../../ReduxStore/BroadCast";
 import Cookies from "js-cookie";
-import { servicesList, regionsList, countriesList, groupingsList, telecom, mobileDevice, computers,initialMFGs } from "../../../../data/services";
+import { servicesList, regionsList, countriesList, groupingsList, telecom, mobileDevice, computers, initialMFGs } from "../../../../data/services";
 import CheckboxList from "./CheckboxList";
 import UniversalSelector from "./UniversalSelector";
 import MFGFilter from "./MFGFilter";
@@ -34,8 +34,8 @@ const Options = () => {
     broadcasts: false,
     multicast: false,
     servicecast: false,
-
   });
+
   // const [dailyBroadcast, setDailyBroadcast] = useState(false);
   // const [broadcasts, setBroadcasts] = useState(false);
 
@@ -56,7 +56,7 @@ const Options = () => {
 
 
 
-
+// Function to handle checkbox individually.
   const handleCheckboxChange = (name, value) => {
     setBroadcastFilterState((prevState) => {
       let updatedItems;
@@ -69,7 +69,6 @@ const Options = () => {
         return { ...prevState, selectedCategories: updatedItems }; // Always update 'selectedCategories'
       }
 
-      // Handle 'selectedServices'
       if (name === "selectedServices") {
         updatedItems = prevState.selectedServices.includes(value)
           ? prevState.selectedServices.filter((item) => item !== value)
@@ -77,7 +76,6 @@ const Options = () => {
         return { ...prevState, selectedServices: updatedItems };
       }
 
-      // Handle 'selectedGroupings'
       if (name === "selectedGroupings") {
         updatedItems = prevState.selectedGroupings.includes(value)
           ? prevState.selectedGroupings.filter((item) => item !== value)
@@ -85,7 +83,6 @@ const Options = () => {
         return { ...prevState, selectedGroupings: updatedItems };
       }
 
-      // Handle 'selectedRegions'
       if (name === "selectedRegions") {
         updatedItems = prevState.selectedRegions.includes(value)
           ? prevState.selectedRegions.filter((item) => item !== value)
@@ -93,7 +90,6 @@ const Options = () => {
         return { ...prevState, selectedRegions: updatedItems };
       }
 
-      // Handle 'selectedOutgoingRegions'
       if (name === "selectedOutgoingRegions") {
         updatedItems = prevState.selectedOutgoingRegions.includes(value)
           ? prevState.selectedOutgoingRegions.filter((item) => item !== value)
@@ -101,8 +97,7 @@ const Options = () => {
         return { ...prevState, selectedOutgoingRegions: updatedItems };
       }
 
-      // Handle 'selectedBroadcastTypes'
-      if (name === "type_of_broadcast") {  // Added condition
+      if (name === "type_of_broadcast") {  
         updatedItems = prevState.selectedBroadcastTypes.includes(value)
           ? prevState.selectedBroadcastTypes.filter((item) => item !== value)
           : [...prevState.selectedBroadcastTypes, value];
@@ -127,7 +122,6 @@ const Options = () => {
       selectedOutgoingCountry: [value], // Update selectedOutgoingCountry in the state
     }));
   };
-
 
   const toggleAllCheckboxes = (name, items, checkAll) => {
     setBroadcastFilterState((prevState) => {
