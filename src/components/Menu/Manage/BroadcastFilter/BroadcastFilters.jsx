@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import myProfile from "../../../../styles/Menu/Manage/MyProfile.module.css";
 import css from "../../../../styles/Menu/Manage/BroadcastFilters/BroadcastFilters.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link,NavLink } from "react-router-dom";
 import { broadCastFilters, fetchBroadCastFilters } from "../../../../ReduxStore/BroadCast";
 import Cookies from "js-cookie";
 import { servicesList, regionsList, countriesList, groupingsList, telecom, mobileDevice, computers, initialMFGs } from "../../../../data/services";
@@ -301,31 +301,47 @@ const Options = () => {
           </div>
           <div className={myProfile.profileInfo}>
             <div className={myProfile.profileInfo_links}>
-              <ul>
+            <ul>
                 <li>
-                  <Link to={"/myprofile"}>
+                  <NavLink
+                    to="/myprofile"
+                    end  // This ensures the exact match for /myprofile
+                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                  >
                     <span>Personal Info</span>
-                  </Link>
+                  </NavLink>
                 </li>
                 <li>
-                  <Link to={"/myprofile/Options"}>
+                  <NavLink
+                    to="/myprofile/Options"
+                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                  >
                     <span>Options</span>
-                  </Link>
+                  </NavLink>
                 </li>
                 <li>
-                  <Link to={"/myprofile/MyVendors"}>
+                  <NavLink
+                    to="/myprofile/MyVendors"
+                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                  >
                     <span>My Vendors</span>
-                  </Link>
+                  </NavLink>
                 </li>
                 <li>
-                  <Link to={"/myprofile/MyContact"}>
+                  <NavLink
+                    to="/myprofile/MyContact"
+                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                  >
                     <span>My Contacts</span>
-                  </Link>
+                  </NavLink>
                 </li>
                 <li>
-                  <Link to={"/myprofile/broadcastfilter"}>
+                  <NavLink
+                    to="/myprofile/broadcastfilter"
+                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                  >
                     <span>Broadcast Filters</span>
-                  </Link>
+                  </NavLink>
                 </li>
               </ul>
             </div>

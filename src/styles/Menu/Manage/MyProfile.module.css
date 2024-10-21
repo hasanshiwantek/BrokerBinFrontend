@@ -38,7 +38,7 @@ input{
 }
 
 .profileInfo {
-  background: var(--table-bg-color);
+  background:#e8e8e8;
   padding: 0 1rem 1rem;
   margin: 0 auto;
   &_links {
@@ -47,8 +47,9 @@ input{
       display: flex;
       align-items: center;
       gap: 2rem;
-      padding: 0.5rem;
+      padding: 0.9rem;
     }
+  
   }
   &_form {
     background: white;
@@ -74,7 +75,7 @@ input{
           display: grid;
           grid-template-columns: 1fr 1fr;
           margin-bottom: 10px;
-          font-size: 1.3rem;
+          font-size: 1.5rem;
           align-items: center;
           label {
             padding: 0.5rem;
@@ -190,6 +191,11 @@ input{
     }
   }
 }
+ 
+.profileInfo_links a.active {
+  color: #428bca;
+  font-weight: bold;
+}   
 
 
 .footerlinks{
@@ -205,4 +211,9 @@ input{
 }
 .footerlinks li a{
   font-size: 11px;
+}
+
+.profileInfo_links ul li span{
+  font-size: 15px;
+  font-weight: 4500;
 }

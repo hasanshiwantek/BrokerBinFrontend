@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import css from "../../../styles/Menu/Manage/Options.module.css";
 import { setOptionFormData } from "../../../ReduxStore/ProfleSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { NavLink } from "react-router-dom";
 
 const OnlyReceiveMatch = () => {
 
@@ -17,18 +18,41 @@ const OnlyReceiveMatch = () => {
     state: false,
   });
 
-  const toggleOnlyReceiveMatch = (type) => {
-    const updatedStates = {
-      region: false,
-      country: false,
-      state: false,
-    };
+  // const toggleOnlyReceiveMatch = (type) => {
+  //   const updatedStates = {
+  //     region: false,
+  //     country: false,
+  //     state: false,
+  //   };
 
-    setOnlyReceiveMatch((prev) => ({
-      ...updatedStates,
-      [type]: true,
-    }));
+
+
+
+  //   setOnlyReceiveMatch((prev) => ({
+  //     ...updatedStates,
+  //     [type]: true,
+  //   }));
+  // };
+
+
+
+
+
+
+  const toggleOnlyReceiveMatch = (type) => {
+    setOnlyReceiveMatch({
+      region: type === "region",
+      country: type === "country",
+      state: type === "state",
+    });
   };
+
+
+
+
+
+
+
 
   // Function to handle checkbox changes for regions, countries, or states
   const handleCheckboxChange = (category, value) => {
@@ -365,15 +389,18 @@ const OnlyReceiveMatch = () => {
   return (
     <div className={css.onlyReceiveMatch}>
       <div className={css.onlyReceiveMatchBtn}>
-        <button type="button" onClick={() => toggleOnlyReceiveMatch("region")} >
-          Region
-        </button>
-        <button type="button" onClick={() => toggleOnlyReceiveMatch("country")}>
-          Country
-        </button>
-        <button type="button" onClick={() => toggleOnlyReceiveMatch("state")}>
-          State
-        </button>
+          <button type="button" onClick={() => toggleOnlyReceiveMatch("region")}    className={`${css.button} ${onlyReceiveMatch.region ? css.active : ""}`}>
+            Region
+          </button>
+
+          <button type="button" onClick={() => toggleOnlyReceiveMatch("country")}  className={`${css.button} ${onlyReceiveMatch.country ? css.active : ""}`}>
+            Country
+          </button>
+
+          <button type="button" onClick={() => toggleOnlyReceiveMatch("state")}   className={`${css.button} ${onlyReceiveMatch.state ? css.active : ""}`}>
+            State
+          </button>
+
       </div>
       {onlyReceiveMatch.region && (
         <div>
