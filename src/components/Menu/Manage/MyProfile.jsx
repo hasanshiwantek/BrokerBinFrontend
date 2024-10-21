@@ -12,7 +12,7 @@ import {
 } from "../../../ReduxStore/ProfleSlice";
 import ErrorStatus from "../../Error/ErrorStatus";
 import Cookies from "js-cookie";
-import { Link } from "react-router-dom";
+import { Link,NavLink } from "react-router-dom";
 
 const MyProfile = () => {
   const token = Cookies.get("token");
@@ -231,33 +231,49 @@ const MyProfile = () => {
             </div>
             <div className={css.profileInfo}>
               <div className={css.profileInfo_links}>
-                <ul>
-                  <li>
-                    <Link to={"/myprofile"}>
-                      <span>Personal Info</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to={"/myprofile/Options"}>
-                      <span>Options</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to={"/myprofile/MyVendors"}>
-                      <span>My Vendors</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to={"/myprofile/MyContact"}>
-                      <span>My Contacts</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to={"/myprofile/broadcastfilter"}>
-                      <span>Broadcast Filters</span>
-                    </Link>
-                  </li>
-                </ul>
+              <ul>
+                <li>
+                  <NavLink
+                    to="/myprofile"
+                    end  // This ensures the exact match for /myprofile
+                    className={({ isActive }) => (isActive ? css.active : '')}
+                  >
+                    <span>Personal Info</span>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/myprofile/Options"
+                    className={({ isActive }) => (isActive ? css.active : '')}
+                  >
+                    <span>Options</span>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/myprofile/MyVendors"
+                    className={({ isActive }) => (isActive ? css.active : '')}
+                  >
+                    <span>My Vendors</span>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/myprofile/MyContact"
+                    className={({ isActive }) => (isActive ? css.active : '')}
+                  >
+                    <span>My Contacts</span>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/myprofile/broadcastfilter"
+                    className={({ isActive }) => (isActive ? css.active : '')}
+                  >
+                    <span>Broadcast Filters</span>
+                  </NavLink>
+                </li>
+              </ul>
               </div>
               <div className={css.profileInfo_form}>
                 <div className={css.profileInfo_form_personalInfo}>

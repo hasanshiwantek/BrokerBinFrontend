@@ -4,14 +4,16 @@ import css from "../../../styles/Menu/Manage/Options.module.css";
 import OnlyReceiveMatch from "./OnlyReceiveMatch";
 import OnlyDisplay from "./OnlyDisplay";
 import { useDispatch, useSelector } from "react-redux";
-import { setOptionFormData } from "../../../ReduxStore/ProfleSlice";
-import { Link } from "react-router-dom";
+import { setOptionFormData, submitUserOptions } from "../../../ReduxStore/ProfleSlice";
+import { Link, NavLink } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const Options = () => {
   const { optionFormData } = useSelector((state) => state.profileStore);
   const dispatch = useDispatch();
+
   // State to manage the entire form
-  console.log(optionFormData);
+  // console.log(optionFormData);
 
   // Handler for sorting changes
   const handleSortingChange = (index, field, value) => {
@@ -46,7 +48,7 @@ const Options = () => {
   // Form submit handler
   const submitMyProfileOptions = (event) => {
     event.preventDefault();
-    console.log(optionFormData);
+    console.log("FormData:", optionFormData);
     // You can send the `formData` to your backend here.
   };
 
@@ -65,29 +67,45 @@ const Options = () => {
             <div className={myProfile.profileInfo_links}>
               <ul>
                 <li>
-                  <Link to={"/myprofile"}>
+                  <NavLink
+                    to="/myprofile"
+                    end  // This ensures the exact match for /myprofile
+                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                  >
                     <span>Personal Info</span>
-                  </Link>
+                  </NavLink>
                 </li>
                 <li>
-                  <Link to={"/myprofile/Options"}>
+                  <NavLink
+                    to="/myprofile/Options"
+                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                  >
                     <span>Options</span>
-                  </Link>
+                  </NavLink>
                 </li>
                 <li>
-                  <Link to={"/myprofile/MyVendors"}>
+                  <NavLink
+                    to="/myprofile/MyVendors"
+                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                  >
                     <span>My Vendors</span>
-                  </Link>
+                  </NavLink>
                 </li>
                 <li>
-                  <Link to={"/myprofile/MyContact"}>
+                  <NavLink
+                    to="/myprofile/MyContact"
+                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                  >
                     <span>My Contacts</span>
-                  </Link>
+                  </NavLink>
                 </li>
                 <li>
-                  <Link to={"/myprofile/broadcastfilter"}>
+                  <NavLink
+                    to="/myprofile/broadcastfilter"
+                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                  >
                     <span>Broadcast Filters</span>
-                  </Link>
+                  </NavLink>
                 </li>
               </ul>
             </div>
@@ -574,17 +592,23 @@ const Options = () => {
       </div>
 
 
-      
-<footer>
-                <div className={css.footerlinks}>
-                    <li><a href="/">Advertising Programs</a></li>
-                    <li><a href="/">Business Solutions</a></li>
-                    <li><a href="/">About BrokerBin.com</a></li>
-                    <li>©2024 Privacy</li>
-                </div>
-            </footer>
+
+      <footer>
+        <div className={css.footerlinks}>
+          <li><a href="/">Advertising Programs</a></li>
+          <li><a href="/">Business Solutions</a></li>
+          <li><a href="/">About BrokerBin.com</a></li>
+          <li>©2024 Privacy</li>
+        </div>
+      </footer>
     </>
   );
 };
 
 export default Options;
+
+
+
+
+
+
