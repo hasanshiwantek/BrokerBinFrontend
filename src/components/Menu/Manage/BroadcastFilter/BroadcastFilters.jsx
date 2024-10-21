@@ -265,8 +265,8 @@ const Options = () => {
   };
   const isBroadcastSelected = broadcastFilterState.selectedBroadcastTypes.length > 0;
 
-// Handler for clearing all the fields
-  const clearBroadCastFields =()=>{
+  // Handler for clearing all the fields
+  const clearBroadCastFields = () => {
     setBroadcastFilterState({
       selectedCategories: [],
       selectedServices: [],
@@ -294,7 +294,9 @@ const Options = () => {
             <p>my profile</p>
             <span>
               <input type="submit" value="submit changes" className={css.sumbitBtn} />
-              <button type="button">view profile</button>
+              <Link to={"/compinfo"}>
+                <button type="button">view profile</button>
+              </Link>
             </span>
           </div>
           <div className={myProfile.profileInfo}>
@@ -394,7 +396,7 @@ const Options = () => {
                   </span>
                 </div>
               </div>
-              <div>
+              <div >
                 <MFGFilter onIncludedMFGsChange={handleIncludedMFGsChange} />
               </div>
 
@@ -600,12 +602,12 @@ const Options = () => {
               </div>
 
 
-<div className={css.btnGroup}>
-  <div  className={css.btnGroupSec}>
-    <button onClick={clearBroadCastFields}>Reset</button>
-    <button onClick={submitBroadcastFilters}>Submit Changes</button>
-  </div>
-</div>
+              <div className={css.btnGroup}>
+                <div className={css.btnGroupSec}>
+                  <button onClick={clearBroadCastFields}>Reset</button>
+                  <button onClick={submitBroadcastFilters}>Submit Changes</button>
+                </div>
+              </div>
 
 
 
@@ -615,6 +617,19 @@ const Options = () => {
           </div>
         </form>
       </div>
+
+
+
+
+      
+<footer>
+                <div className={css.footerlinks}>
+                    <li><a href="/">Advertising Programs</a></li>
+                    <li><a href="/">Business Solutions</a></li>
+                    <li><a href="/">About BrokerBin.com</a></li>
+                    <li>©2024 Privacy</li>
+                </div>
+            </footer>
     </>
   );
 };

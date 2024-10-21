@@ -360,7 +360,7 @@ const OnlyDisplay = () => {
 
   return (
     <div className={css.onlyReceiveMatch}>
-      <div>
+      <div className={css.onlyReceiveMatchBtn}>
         <button type="button" onClick={() => toggleOnlyReceiveMatch("region")}>
           Region
         </button>

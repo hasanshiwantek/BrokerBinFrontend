@@ -4,27 +4,40 @@ fieldset {
 
 .options_form {
   background: #fff;
-  padding: 1rem;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 2rem;
+  width: 37vw;
+
   select {
     border: 1px solid #8b8b8b;
     padding: 0.5rem;
   }
+
   h1 {
-    font-size: 2rem;
+    color: #444;
+    font-size: 1.5em;
+    font-weight: 700;
+    width: 33vw;
+
   }
-  > div {
+
+  >div {
     display: flex;
     flex-direction: column;
-    margin-bottom: 3rem;
+    margin-bottom: 4rem;
     gap: 2rem;
+
   }
+
   .receiveMatchYourHits {
-    > div {
+    >div {
       display: flex;
-      gap: 1rem;
+      gap: 2rem;
+      margin-left: 20px;
+
+      /* justify-content: space-evenly; */
       span {
         display: flex;
         align-items: center;
@@ -32,31 +45,37 @@ fieldset {
       }
     }
   }
+
   .onlyReceiveMatch {
     display: flex;
     flex-direction: column;
-    > div:nth-child(1) {
+
+    >div:nth-child(1) {
       display: flex;
       gap: 1rem;
       padding-bottom: 5px;
       margin-bottom: 5px;
       border-bottom: 5px solid #e8e8e8;
     }
+
     button {
       color: white;
       background: var(--primary-color);
       padding: 1rem;
     }
   }
+
   .resultsDisplaySettings,
   .otherSettings {
     &_fields {
       display: flex;
       justify-content: center;
+
       ul {
         display: flex;
         flex-direction: column;
         gap: 1rem;
+
         li {
           display: flex;
           display: grid;
@@ -68,15 +87,18 @@ fieldset {
       }
     }
   }
+
   .customPartSearchDisplay {
     &_fields {
       display: flex;
       justify-content: center;
+
       /* align-items: center; */
       ul {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 1rem;
+
         li {
           display: flex;
           align-items: center;
@@ -87,13 +109,16 @@ fieldset {
       }
     }
   }
+
   .preferredBrokerbinUse {
     display: flex;
+
     &_fields {
       ul {
         display: flex;
         gap: 1rem;
         margin-left: 15rem;
+
         li {
           display: flex;
           gap: 1rem;
@@ -101,6 +126,7 @@ fieldset {
       }
     }
   }
+
   .resultsByTheseConditions {
     &_fields {
       ul {
@@ -108,6 +134,7 @@ fieldset {
         grid-template-columns: repeat(3, minmax(10rem, 1fr));
         justify-items: center;
         gap: 1rem;
+
         li {
           display: grid;
           grid-template-columns: 5rem 1fr;
@@ -118,36 +145,125 @@ fieldset {
 }
 
 .checkboxContainer {
-  border: 1px solid pink;
+  /* border: 1px solid pink; */
   overflow-y: scroll;
   height: 20rem;
   padding: 3rem;
+  width: 34vw
 }
 
 .checkbox {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
+
   /* height: 100%; */
   li {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+
     label {
       font-weight: normal;
     }
+
     input[type="checkbox"] {
       margin-right: 0.5rem;
+
     }
   }
+
   &_btn {
     display: flex;
     justify-content: end;
   }
 }
 
-.checkbox_btn{
+.checkbox_btn {
   display: flex;
   gap: 1rem;
   margin-top: 1rem;
+}
+
+.optionsBtnGroup button {
+  margin: 5px;
+  padding: 6px 10px;
+  cursor: pointer;
+  color: white;
+  background-color: var(--primary-color);
+}
+
+.optionsBtnGroupSec {
+  display: flex;
+  flex-direction: column;
+  /* Keeps the rows stacked vertically */
+  justify-content: center;
+  margin-left: 50px;
+  padding: 10px 12px;
+}
+
+.optionsBtnGroupSec>div {
+  display: flex;
+  /* Aligns the span and button in each row horizontally */
+  align-items: center;
+  /* Ensures vertical alignment between span and button */
+  margin-bottom: 10px;
+  /* Adds space between rows */
+}
+
+.optionsBtnGroupSec>div>span {
+  margin-right: 10px;
+  /* Adds some space between the span and the button */
+}
+
+
+.onlyReceiveMatchBtn button {
+  color: #444 !important;
+  /* display: inline-block !important; */
+  margin: 0 5px !important;
+  padding: 8px !important;
+  background-color: #bfbfbf !important;
+  border: 1px solid #bfbfbf !important;
+  font-weight: 900;
+}
+
+.customPartSearchDisplay label {
+  color: #900;
+}
+
+.options_form label {
+  font-weight: 500 !important;
+}
+
+.btnGroup button {
+  margin: 5px;
+  padding: 6px 10px;
+  cursor: pointer;
+  color: white;
+  background-color: var(--primary-color);
+}
+
+.btnGroupSec {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+.footerlinks {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.footerlinks li {
+  list-style: none;
+  color: #3A57AB;
+  ;
+}
+
+.footerlinks li a {
+  font-size: 11px;
 }
