@@ -4,6 +4,9 @@ import { setOptionFormData } from "../../../ReduxStore/ProfleSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const OnlyReceiveMatch = () => {
+
+
+
   const { optionFormData } = useSelector((state) => state.profileStore);
 
   const dispatch = useDispatch();
@@ -361,8 +364,8 @@ const OnlyReceiveMatch = () => {
 
   return (
     <div className={css.onlyReceiveMatch}>
-      <div>
-        <button type="button" onClick={() => toggleOnlyReceiveMatch("region")}>
+      <div className={css.onlyReceiveMatchBtn}>
+        <button type="button" onClick={() => toggleOnlyReceiveMatch("region")} >
           Region
         </button>
         <button type="button" onClick={() => toggleOnlyReceiveMatch("country")}>

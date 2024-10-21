@@ -233,7 +233,9 @@ const profileSlice = createSlice({
       state.optionFormData = {
         ...state.optionFormData,
         ...action.payload,
+        
       };
+      console.log(action.payload)
     },
     setCustomSignature: (state, action) => {
       state.customSignature = action.payload;

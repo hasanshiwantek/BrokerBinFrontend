@@ -11,7 +11,7 @@ const Options = () => {
   const { optionFormData } = useSelector((state) => state.profileStore);
   const dispatch = useDispatch();
   // State to manage the entire form
-console.log(optionFormData);
+  console.log(optionFormData);
 
   // Handler for sorting changes
   const handleSortingChange = (index, field, value) => {
@@ -92,6 +92,23 @@ console.log(optionFormData);
               </ul>
             </div>
             <div className={css.options_form}>
+
+
+              <div className={css.optionsBtnGroup}>
+                <div className={css.optionsBtnGroupSec}>
+                  <div>
+                    <label>BroadCast</label><Link to={"/myprofile/broadcastfilter"}><button style={{ marginLeft: "25px" }}>Options and Filters</button></Link>
+                  </div>
+                  <div>
+
+                    <label>Email Reports</label><Link to={"/reports/email"}><button>Options and Filters</button></Link>
+                  </div>
+
+                </div>
+              </div>
+
+
+
               {/* Section: Receive Match Your Hits */}
               <div className={css.receiveMatchYourHits}>
                 <h1>Receive Match Your Hits</h1>
@@ -541,10 +558,31 @@ console.log(optionFormData);
                   </ul>
                 </div>
               </div>
+
+              <div className={css.btnGroup}>
+                <div className={css.btnGroupSec}>
+                  <button >Reset</button>
+                  <button >Submit Changes</button>
+                </div>
+              </div>
+
+
+
             </div>
           </div>
         </form>
       </div>
+
+
+      
+<footer>
+                <div className={css.footerlinks}>
+                    <li><a href="/">Advertising Programs</a></li>
+                    <li><a href="/">Business Solutions</a></li>
+                    <li><a href="/">About BrokerBin.com</a></li>
+                    <li>©2024 Privacy</li>
+                </div>
+            </footer>
     </>
   );
 };
