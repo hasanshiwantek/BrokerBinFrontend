@@ -128,7 +128,8 @@ const initialState = {
   companiesSelection: [],
   regionSelection: [],
   filters: [],
-  broadCastData:[]
+  broadCastData:[],
+  serviceData:[],
 };
 
 const broadcastSlice = createSlice({
@@ -150,6 +151,16 @@ const broadcastSlice = createSlice({
     setRegionSelection: (state, action) => {
       state.regionSelection = action.payload;
     },
+    setServiceSelection: (state, action) => {
+      const index = state.serviceData.indexOf(action.payload);
+      if (index > -1) {
+          // Service is already selected, remove it
+          state.serviceData.splice(index, 1);
+      } else {
+          // Service is not selected, add it
+          state.serviceData.push(action.payload);
+      }
+  },
   },
     extraReducers: (builder) => {
       builder
@@ -201,6 +212,7 @@ export const {
   setMobileDevicesSelection,
   setCompaniesSelection,
   setRegionSelection,
+  setServiceSelection,
 } = broadcastSlice.actions;
 
 export default broadcastSlice.reducer;
