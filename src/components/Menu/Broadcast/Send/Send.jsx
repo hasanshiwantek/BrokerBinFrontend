@@ -191,6 +191,7 @@ const BroadcastForm = () => {
       <div className={css.broadcastForm}>
         {formTypes.hideFormOne && !formTypes.emailFormat && (
           <>
+
             <div className={css.broadcastFirstForm}>
               <h2>Send a Broadcast</h2>
               <div>
@@ -222,6 +223,7 @@ const BroadcastForm = () => {
               <div>
                 <h3>For the following:</h3>
                 <div className={css.categories}>
+
                   <button
                     className={
                       category === "single part / items" ? css.selected : ""
@@ -232,6 +234,7 @@ const BroadcastForm = () => {
                     <span>attach files or paste text</span>
                     <small>(pdf, csv, xlsx, txt, photos, datasheets)</small>
                   </button>
+                  
                   <button
                     className={category === "service" ? css.selected : ""}
                     onClick={() => setCategory("service")}
@@ -240,6 +243,7 @@ const BroadcastForm = () => {
                     <span>attach files or paste text</span>
                     <small>(pdf, csv, xlsx, txt, photos, datasheets)</small>
                   </button>
+
                   <button
                     className={
                       category === "multiple parts / items" ? css.selected : ""
@@ -250,9 +254,11 @@ const BroadcastForm = () => {
                     <span>attach files or paste text</span>
                     <small>(pdf, csv, xlsx, txt, photos, datasheets)</small>
                   </button>
+
                 </div>
               </div>
             </div>
+
             <div className={css.actions}>
               <button onClick={cancelAllActions}>Cancel</button>
               <button
@@ -264,6 +270,7 @@ const BroadcastForm = () => {
             </div>
           </>
         )}
+
         <form onSubmit={handleSubmit}>
           {formTypes[broadcastType] && !formTypes.emailFormat && (
             <>
@@ -285,7 +292,8 @@ const BroadcastForm = () => {
                 )}
 
                 {/* SERVICES SECTION */}
-
+                
+                {category === "service" && (
                 <div className={css.toggleServices}>
                   <div className={css.headings}>
                     <h3>Services</h3>
@@ -294,12 +302,10 @@ const BroadcastForm = () => {
                   <div>
                     <Services />
                   </div>
-
-
                 </div>
+                 )}
 
-
-
+                 {category !== "service" && (
                 <div className={css.toggleCategories}>
                   <div className={css.headings}>
                     <h3>Categories</h3>
@@ -307,6 +313,8 @@ const BroadcastForm = () => {
                   </div>
                   <ToggleCategories />
                 </div>
+                 )}
+
                 <div className={css.toggleFilters}>
                   <div className={css.headings}>
                     <h3>Filters</h3>
@@ -314,6 +322,7 @@ const BroadcastForm = () => {
                   </div>
                   <ToggleFilters />
                 </div>
+
                 <div className={css.file_upload_container}>
                   <div className={css.headings}>
                     <h3>Attach Files</h3>
@@ -350,6 +359,7 @@ const BroadcastForm = () => {
                     </label>
                   </div>
                 </div>
+
                 <div className={css.mainFields}>
                   <div className={css.mainFields_1}>
                     <div>
@@ -469,6 +479,7 @@ const BroadcastForm = () => {
                     </div>
                   </div>
                 </div>
+                
                 <div className={css.createABroadcast}>
                   <h3>Create a Broadcast</h3>
                   <div>
@@ -495,7 +506,9 @@ const BroadcastForm = () => {
                     ></textarea>
                   </div>
                 </div>
+
               </div>
+
               <div className={css.actions}>
                 <button type="button" onClick={handlePrevious}>
                   Previous
@@ -511,11 +524,13 @@ const BroadcastForm = () => {
               </div>
             </>
           )}
+
           {formTypes.emailFormat && (
             <div className={css.broadcastEmail}>
               {broadcastType === "wtb" && <h3>want to buy (WTB)</h3>}
               {broadcastType === "rfq" && <h3>request for quote (RFQ)</h3>}
               {broadcastType === "wts" && <h3>want to sell (WTS)</h3>}
+
               <div className={css.broadcastEmailFormat}>
                 <div>
                   {[user].map((item) => {
@@ -602,6 +617,7 @@ const BroadcastForm = () => {
                   })}
                 </div>
               </div>
+
               <div className={css.actions}>
                 <button type="button" onClick={handlePreviousForm}>
                   Previous
@@ -613,8 +629,10 @@ const BroadcastForm = () => {
                   <input type="submit" value="SEND" style={{ cursor: "pointer" }} />
                 </span>
               </div>
+
             </div>
           )}
+
         </form>
       </div>
     </div>

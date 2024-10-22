@@ -335,8 +335,7 @@ const Options = () => {
                     className={({ isActive }) => (isActive ? myProfile.active : '')}
                   >
                     <span>Broadcast Filters</span>
-                  </NavLink>
-                </li>
+                  </NavLink>                </li>
               </ul>
             </div>
             <div className={css.broadcastFilters}>
