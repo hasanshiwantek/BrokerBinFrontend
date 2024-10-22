@@ -255,3 +255,41 @@ input {
     }
   }
 }
+
+
+.toggleFieldsLayout p{
+  color: black;
+  border: 1px solid black;
+  /* background-color: var(--primary-color); */
+  padding: 13px 20px;
+  width: 90px;
+  height: 60px;
+  cursor: pointer;
+}
+
+
+
+.servicesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 50px;
+}
+
+.serviceItem {
+  display: flex;
+  align-items: center;
+}
+.serviceItem label{
+  padding: 4px;
+  font-size: 1.8rem;
+}
+ 
+
+
+
+
+.serviceItem input{
+  width: 15px;
+  padding: 15px ;
+  margin-right: 20px;
+} 

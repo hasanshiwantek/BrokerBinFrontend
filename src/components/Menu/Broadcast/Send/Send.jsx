@@ -7,6 +7,9 @@ import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { sendBroadcast } from "../../../../ReduxStore/BroadCast";
 import { MdUploadFile } from "react-icons/md";
+import { servicesList } from "../../../../data/services";
+import CheckboxList from "../../Manage/BroadcastFilter/CheckboxList";
+import Services from "./Field Components/Services";
 
 const BroadcastForm = () => {
   const token = Cookies.get("token");
@@ -280,6 +283,23 @@ const BroadcastForm = () => {
                     Want To Sell ({broadcastType}): {category}
                   </h1>
                 )}
+
+                {/* SERVICES SECTION */}
+
+                <div className={css.toggleServices}>
+                  <div className={css.headings}>
+                    <h3>Services</h3>
+                    <p>(Click to expand further)</p>
+                  </div>
+                  <div>
+                    <Services />
+                  </div>
+
+
+                </div>
+
+
+
                 <div className={css.toggleCategories}>
                   <div className={css.headings}>
                     <h3>Categories</h3>
@@ -339,6 +359,8 @@ const BroadcastForm = () => {
                         name="partModel"
                         value={formData.partModel}
                         onChange={handleInputChange}
+                        placeholder="Enter PartModel"
+                        required
                       />
                     </div>
                     <div>
@@ -348,6 +370,8 @@ const BroadcastForm = () => {
                         name="mfg"
                         value={formData.mfg}
                         onChange={handleInputChange}
+                        placeholder="MFG"
+                        required
                       />
                     </div>
                   </div>
@@ -373,6 +397,9 @@ const BroadcastForm = () => {
                         name="heciClei"
                         value={formData.heciClei}
                         onChange={handleInputChange}
+                        placeholder="HECI / CLEI"
+                        required
+
                       />
                     </div>
                     <div>
@@ -382,6 +409,8 @@ const BroadcastForm = () => {
                         name="price"
                         value={formData.price}
                         onChange={handleInputChange}
+                        placeholder="Price"
+                        required
                       />
                     </div>
                     <div>
@@ -391,6 +420,8 @@ const BroadcastForm = () => {
                         name="quantity"
                         value={formData.quantity}
                         onChange={handleInputChange}
+                        placeholder="Quantity"
+                        required
                       />
                     </div>
                   </div>
@@ -446,18 +477,22 @@ const BroadcastForm = () => {
                       name="description"
                       value={formData.description}
                       onChange={handleInputChange}
-                      cols={10}
-                      rows={4}
+                      placeholder="Description"
+                      required
                     ></textarea>
                   </div>
                   <div>
                     <label htmlFor="additional_comments">Comments</label>
-                    <input
+                    <textarea
                       type="text"
                       name="additional_comments"
                       value={formData.additional_comments}
                       onChange={handleInputChange}
-                    />
+                      placeholder="Message , Comments"
+                      cols={10}
+                      rows={5}
+                      required
+                    ></textarea>
                   </div>
                 </div>
               </div>
@@ -575,7 +610,7 @@ const BroadcastForm = () => {
                   <button type="button" onClick={cancelAllActions}>
                     Cancel
                   </button>
-                  <input type="submit" value="SEND" style={{cursor:"pointer"}} />
+                  <input type="submit" value="SEND" style={{ cursor: "pointer" }} />
                 </span>
               </div>
             </div>
@@ -587,3 +622,27 @@ const BroadcastForm = () => {
 };
 
 export default BroadcastForm;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
