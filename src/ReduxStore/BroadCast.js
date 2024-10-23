@@ -8,6 +8,7 @@ export const sendBroadcast = createAsyncThunk(
       const response = await axios.post(
         "https://brokerbin.shiwantek.com/api/broadcast/store",
         data,
+        console.log(data),
         {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -61,7 +62,6 @@ export const broadCastFilters = createAsyncThunk(
   }
 );
 
-
 export const fetchBroadCastFilters = createAsyncThunk(
   "broadcastStore/fetchBroadCastFilters",
   async ({token }) => {
@@ -87,9 +87,6 @@ export const fetchBroadCastFilters = createAsyncThunk(
     }
   }
 );
-
-
-
 
 export const fetchBroadCastData = createAsyncThunk(
   "broadcastStore/fetchBroadCastData",
@@ -130,6 +127,7 @@ const initialState = {
   filters: [],
   broadCastData:[],
   serviceData:[],
+
 };
 
 const broadcastSlice = createSlice({

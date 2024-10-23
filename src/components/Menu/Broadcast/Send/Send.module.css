@@ -1,6 +1,7 @@
 .outerPadding {
   padding: 10rem;
 }
+
 .formTypeLayout {
   display: flex;
   flex-direction: column;
@@ -38,7 +39,8 @@ h3 {
   flex-direction: column;
   gap: 4rem;
   padding: 2rem 4rem;
-  > div {
+
+  >div {
     display: flex;
     flex-direction: column;
     gap: 2rem;
@@ -49,8 +51,9 @@ h3 {
 .categories {
   display: flex;
   justify-content: space-around;
+
   /* margin-bottom: 20px; */
-  > button {
+  >button {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -65,21 +68,26 @@ h3 {
     cursor: pointer;
     transition: all 0.3s ease;
     color: black;
-    > span:nth-child(1) {
-      color: green;
+
+    >span:nth-child(1) {
+      color: black;
+      font-size: 2.3rem;
     }
-    > span:nth-child(2) {
+
+    >span:nth-child(2) {
       font-size: 1.5rem;
     }
-    > small {
-      font-size: 1rem;
+
+    >small {
+      font-size: 1.3rem;
     }
   }
-  > button:hover {
+
+  >button:hover {
     background-color: #f1f1f1;
   }
 
-  > button.selected {
+  >button.selected {
     border: 1px solid #007bff;
     color: #007bff;
     background-color: #f1f1f1;
@@ -89,10 +97,12 @@ h3 {
 .actions {
   display: flex;
   justify-content: space-between;
+
   span {
     display: flex;
     gap: 1rem;
   }
+
   input {
     background: var(--primary-color);
     color: white !important;
@@ -103,6 +113,7 @@ h3 {
 input {
   padding: 10px 20px;
   font-size: 16px;
+  
 }
 
 .actions button:disabled {
@@ -125,17 +136,19 @@ input {
   align-items: center;
   gap: 1rem;
   margin-bottom: 1rem;
+
   h3 {
     font-size: 2rem;
   }
 }
 
 .file_upload_container {
-  > div:not(:first-of-type) {
+  >div:not(:first-of-type) {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
     label {
       display: flex;
       flex-direction: column;
@@ -145,7 +158,8 @@ input {
       border: 1px solid black;
       width: 50%;
       padding: 1rem;
-      > div {
+
+      >div {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -158,6 +172,7 @@ input {
   &_btn {
     display: flex;
     gap: 1rem;
+
     button {
       color: black;
       border: 1px solid #e8e8e8;
@@ -170,26 +185,31 @@ input {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+
   &_1,
   &_2 {
     display: flex;
     justify-content: space-between;
     gap: 2rem;
+
     div {
       display: flex;
       flex-direction: column;
       flex: 1;
-      > select,
+
+      >select,
       input {
         padding: 0.8rem;
         border: 1px solid #cacaca;
       }
     }
   }
+
   &_3 {
     display: flex;
     justify-content: space-between;
-    > div {
+
+    >div {
       display: flex;
       align-items: center;
       gap: 1rem;
@@ -202,11 +222,13 @@ input {
 .createABroadcast {
   display: flex;
   flex-direction: column;
+
   div {
     display: flex;
     flex-direction: column;
     gap: 1rem;
     margin-bottom: 1rem;
+
     input,
     textarea {
       padding: 0.8rem;
@@ -222,32 +244,40 @@ input {
   border: 1px solid #b5b7b9;
   padding: 1rem;
   margin-top: 2rem;
+
   span {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
 .broadcastEmail {
   padding: 2rem 8rem;
+
   h3 {
     font-size: 4rem;
   }
+
   &Format {
     padding: 1rem 5rem;
     font-size: 2rem;
+
     /* text-transform: capitalize; */
-    > div {
+    >div {
       margin-bottom: 2rem;
       padding-bottom: 2rem;
       border-bottom: 1px solid black;
+
       ul {
         display: flex;
         flex-direction: column;
         gap: 1rem;
+
         li {
           display: flex;
           gap: 1rem;
-          > p:not(:nth-child(1)) {
+
+          >p:not(:nth-child(1)) {
             text-transform: lowercase;
           }
         }
@@ -257,12 +287,13 @@ input {
 }
 
 
-.toggleFieldsLayout p{
+.toggleFieldsLayout p {
   color: black;
   border: 1px solid black;
   /* background-color: var(--primary-color); */
-  padding: 13px 20px;
-  width: 90px;
+  padding: 13px 30px;
+  width: 150px;
+  text-align: center;
   height: 60px;
   cursor: pointer;
 }
@@ -271,7 +302,7 @@ input {
 
 .servicesGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); 
+  grid-template-columns: repeat(3, 1fr);
   gap: 50px;
 }
 
@@ -279,17 +310,43 @@ input {
   display: flex;
   align-items: center;
 }
-.serviceItem label{
+
+.serviceItem label {
   padding: 4px;
   font-size: 1.8rem;
 }
- 
 
 
 
 
-.serviceItem input{
+
+.serviceItem input {
   width: 15px;
-  padding: 15px ;
+  padding: 15px;
   margin-right: 20px;
+}
+
+
+
+.file_upload_container label:hover{
+  background-color: #cacaca;
+  cursor: pointer;
+}
+
+.mainFields input:focus{
+  outline: 2px solid var(--primary-color);
+  /* outline-offset: 1px; */
 } 
+
+.createABroadcast textarea:focus{
+  outline: 2px solid var(--primary-color);
+
+}
+
+
+
+
+.actions button{
+  background-color: var(--primary-color) !important;
+  color: #fff !important;
+}

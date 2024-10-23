@@ -14,6 +14,9 @@ import Services from "./Field Components/Services";
 const BroadcastForm = () => {
   const token = Cookies.get("token");
   const { user } = JSON.parse(localStorage.getItem("user"));
+  const service = useSelector((state) => state.broadcastStore.serviceData)
+  // console.log(service);
+
   // console.log(user);
   const dispatch = useDispatch();
   // Form States
@@ -51,6 +54,7 @@ const BroadcastForm = () => {
     mobileDevicesSelection,
     companiesSelection,
     regionSelection,
+    serviceData
   } = useSelector((state) => state.broadcastStore);
 
   const handleContinue = () => {
@@ -172,9 +176,11 @@ const BroadcastForm = () => {
         selectedMobileDevices: mobileDevicesSelection,
         selectedRegion: regionSelection,
         companiesSelection: companiesSelection,
+        service: serviceData
       };
       dispatch(sendBroadcast({ data, token }));
       // console.log(data);
+
     }
     setEmailFormat((prev) => {
       const updatedFormat = { ...prev };
@@ -200,21 +206,21 @@ const BroadcastForm = () => {
                     className={broadcastType === "wtb" ? css.selected : ""}
                     onClick={() => setBroadcastType("wtb")}
                   >
-                    <span style={{ color: "blue" }}>WTB</span>
+                    <span style={{ color: "blue", fontSize: "2rem", fontWeight: "bold" }}>WTB</span>
                     <span>Want to Buy</span>
                   </button>
                   <button
                     className={broadcastType === "rfq" ? css.selected : ""}
                     onClick={() => setBroadcastType("rfq")}
                   >
-                    <span style={{ color: "red" }}>RFQ</span>
+                    <span style={{ color: "green", fontSize: "2rem", fontWeight: "bold" }}>RFQ</span>
                     <span>Request for Quote</span>
                   </button>
                   <button
                     className={broadcastType === "wts" ? css.selected : ""}
                     onClick={() => setBroadcastType("wts")}
                   >
-                    <span style={{ color: "orange" }}>WTS</span>
+                    <span style={{ color: "red", fontSize: "2rem", fontWeight: "bold" }}>WTS</span>
                     <span>Want to Sell</span>
                   </button>
                 </div>
@@ -285,28 +291,33 @@ const BroadcastForm = () => {
                 )}
 
                 {/* SERVICES SECTION */}
-
-                <div className={css.toggleServices}>
-                  <div className={css.headings}>
-                    <h3>Services</h3>
-                    <p>(Click to expand further)</p>
+                {
+                  category === "service" &&
+                  <div className={css.toggleServices}>
+                    <div className={css.headings}>
+                      <h3>Services</h3>
+                      <p>(Click to expand further)</p>
+                    </div>
+                    <div>
+                      <Services />
+                    </div>
                   </div>
-                  <div>
-                    <Services />
+                }
+
+
+
+                {
+
+                  category != "service" &&
+                  <div className={css.toggleCategories}>
+                    <div className={css.headings}>
+                      <h3>Categories</h3>
+                      <p>(Click to expand further)</p>
+                    </div>
+                    <ToggleCategories />
                   </div>
+                }
 
-
-                </div>
-
-
-
-                <div className={css.toggleCategories}>
-                  <div className={css.headings}>
-                    <h3>Categories</h3>
-                    <p>(Click to expand further)</p>
-                  </div>
-                  <ToggleCategories />
-                </div>
                 <div className={css.toggleFilters}>
                   <div className={css.headings}>
                     <h3>Filters</h3>
@@ -405,7 +416,7 @@ const BroadcastForm = () => {
                     <div>
                       <label htmlFor="price">Price</label>
                       <input
-                        type="text"
+                        type="number"
                         name="price"
                         value={formData.price}
                         onChange={handleInputChange}
@@ -416,7 +427,7 @@ const BroadcastForm = () => {
                     <div>
                       <label htmlFor="quantity">Quantity</label>
                       <input
-                        type="text"
+                        type="number"
                         name="quantity"
                         value={formData.quantity}
                         onChange={handleInputChange}
@@ -581,6 +592,17 @@ const BroadcastForm = () => {
                           <p>description:</p>
                           <p>{item.description}</p>
                         </li>
+                        <li>
+                          <p>Services</p>
+                          {/* <p>{service}</p> */}
+                          {
+                            service.map((val, index) => {
+                              return (
+                                <li>{val}</li>
+                              )
+                            })
+                          }
+                        </li>
                       </ul>
                     );
                   })}
@@ -607,7 +629,7 @@ const BroadcastForm = () => {
                   Previous
                 </button>
                 <span>
-                  <button type="button" onClick={cancelAllActions}>
+                  <button type="button" onClick={cancelAllActions} >
                     Cancel
                   </button>
                   <input type="submit" value="SEND" style={{ cursor: "pointer" }} />
@@ -622,9 +644,6 @@ const BroadcastForm = () => {
 };
 
 export default BroadcastForm;
-
-
-
 
 
 
