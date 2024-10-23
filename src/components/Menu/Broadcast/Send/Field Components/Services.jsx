@@ -3,7 +3,7 @@ import css from "../Send.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { setServiceSelection } from "../../../../../ReduxStore/BroadCast";
 
-const Services = () => {
+const Services = ({handleServiceChange}) => {
     const [isExpanded, setIsExpanded] = useState(false); // State to track visibility
 
     const services = [

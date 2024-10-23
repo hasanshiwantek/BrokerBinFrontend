@@ -39,6 +39,7 @@ const BroadcastForm = () => {
     buy_in: "",
     description: "",
     additional_comments: "",
+    selectedServices: []
   });
   const [emailFormat, setEmailFormat] = useState({
     time: "",

@@ -27,7 +27,6 @@ export const sendBroadcast = createAsyncThunk(
   }
 );
 
-
 export const broadCastFilters = createAsyncThunk(
   "broadcastStore/broadCastFilters",
   async ({ data, token }) => {
@@ -61,7 +60,6 @@ export const broadCastFilters = createAsyncThunk(
   }
 );
 
-
 export const fetchBroadCastFilters = createAsyncThunk(
   "broadcastStore/fetchBroadCastFilters",
   async ({token }) => {
@@ -88,9 +86,6 @@ export const fetchBroadCastFilters = createAsyncThunk(
   }
 );
 
-
-
-
 export const fetchBroadCastData = createAsyncThunk(
   "broadcastStore/fetchBroadCastData",
   async ({token }) => {
@@ -116,10 +111,6 @@ export const fetchBroadCastData = createAsyncThunk(
     }
   }
 );
-
-
-
-
 
 const initialState = {
   computerSelection: [],
@@ -206,6 +197,7 @@ const broadcastSlice = createSlice({
       });
     },
 });
+
 export const {
   setComputerSelection,
   setTelecomSelection,
