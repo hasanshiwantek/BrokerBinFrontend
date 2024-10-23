@@ -57,6 +57,7 @@ export const submitUserOptions = createAsyncThunk(
       const response = await axios.put(
         `https://brokerbin.shiwantek.com/api/user/edit/${id}`,
         JSON.stringify(data),
+        console.log(data),
         {
           headers: {
             Authorization: `Bearer ${token}`,
