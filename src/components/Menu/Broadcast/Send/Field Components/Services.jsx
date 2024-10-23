@@ -78,6 +78,7 @@ const Services = ({handleServiceChange}) => {
 
 
             <div className={css.toggleFieldsLayout}>
+
                 <p onClick={toggleExpandCollapse}>
                     {isExpanded ? "Collapse Services" : "Expand Services"}
                 </p>
