@@ -200,21 +200,21 @@ const BroadcastForm = () => {
                     className={broadcastType === "wtb" ? css.selected : ""}
                     onClick={() => setBroadcastType("wtb")}
                   >
-                    <span style={{ color: "blue" }}>WTB</span>
+                    <span style={{ color: "blue" ,fontSize:"2rem",fontWeight:"bold"}}>WTB</span>
                     <span>Want to Buy</span>
                   </button>
                   <button
                     className={broadcastType === "rfq" ? css.selected : ""}
                     onClick={() => setBroadcastType("rfq")}
                   >
-                    <span style={{ color: "red" }}>RFQ</span>
+                    <span style={{ color: "green" ,fontSize:"2rem",fontWeight:"bold"}}>RFQ</span>
                     <span>Request for Quote</span>
                   </button>
                   <button
                     className={broadcastType === "wts" ? css.selected : ""}
                     onClick={() => setBroadcastType("wts")}
                   >
-                    <span style={{ color: "orange" }}>WTS</span>
+                    <span style={{ color: "red" ,fontSize:"2rem",fontWeight:"bold"}}>WTS</span>
                     <span>Want to Sell</span>
                   </button>
                 </div>
@@ -285,18 +285,21 @@ const BroadcastForm = () => {
                 )}
 
                 {/* SERVICES SECTION */}
+                {
+                  category == "service" &&
+                  <div className={css.toggleServices}>
+                    <div className={css.headings}>
+                      <h3>Services</h3>
+                      <p>(Click to expand further)</p>
+                    </div>
+                    <div>
+                      <Services />
+                    </div>
 
-                <div className={css.toggleServices}>
-                  <div className={css.headings}>
-                    <h3>Services</h3>
-                    <p>(Click to expand further)</p>
+
                   </div>
-                  <div>
-                    <Services />
-                  </div>
+                }
 
-
-                </div>
 
 
 
@@ -607,7 +610,7 @@ const BroadcastForm = () => {
                   Previous
                 </button>
                 <span>
-                  <button type="button" onClick={cancelAllActions}>
+                  <button type="button" onClick={cancelAllActions} >
                     Cancel
                   </button>
                   <input type="submit" value="SEND" style={{ cursor: "pointer" }} />
@@ -622,9 +625,6 @@ const BroadcastForm = () => {
 };
 
 export default BroadcastForm;
-
-
-
 
 
 
