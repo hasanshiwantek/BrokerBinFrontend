@@ -1,0 +1,27 @@
+.footerSec {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    font-size: 13px;
+
+}
+
+.footerSec a {
+    color: rgb(92, 92, 189);
+    text-decoration: none;
+    padding: 8px;
+    font-weight: 400;
+
+}
+
+/* .table th{
+    font-size: 12px;
+  } */
+
+.p {
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    color: rgb(92, 92, 189);
+    padding: 10px;
+}

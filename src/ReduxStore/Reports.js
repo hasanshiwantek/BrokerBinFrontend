@@ -1,12 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { brokerAPI } from "../components/api/BrokerEndpoint";
 
 export const getMatchYourHits = createAsyncThunk(
   "reports/getMatchYourHits",
   async ({ token }) => {
     try {
       const response = await axios.post(
-        "https://brokerbinbackend.shiwantek.com/api/report/match_hits",
+        `${brokerAPI}report/match_hits`,
         {},
         {
           headers: {
@@ -30,7 +31,7 @@ export const getSupplyAndDemand = createAsyncThunk(
     console.log(supplyAndDemandQuery);
     try {
       const response = await axios.post(
-        "https://brokerbinbackend.shiwantek.com/api/report/supply",
+        `${brokerAPI}report/supply`,
         supplyAndDemandQuery,
         {
           headers: {
@@ -54,7 +55,7 @@ export const searchCompany = createAsyncThunk(
     console.log(name, token);
     try {
       const response = await axios.post(
-        "https://brokerbinbackend.shiwantek.com/api/company/search",
+        `${brokerAPI}company/search`,
         { name },
         {
           headers: {
@@ -77,7 +78,7 @@ export const getCompanyInventory = createAsyncThunk(
     console.log(id, page);
     try {
       const response = await axios.get(
-        `https://brokerbinbackend.shiwantek.com/api/inventory/company/${id}?page=${page}`,
+        `${brokerAPI}inventory/company/${id}?page=${page}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -99,7 +100,7 @@ export const getTopSearch = createAsyncThunk(
     console.log(parameter);
     try {
       const response = await axios.post(
-        "https://brokerbinbackend.shiwantek.com/api/report/topsearch",
+        `${brokerAPI}report/topsearch`,
         {},
         {
           headers: {
@@ -123,7 +124,7 @@ export const getTopSearchByManufacturer = createAsyncThunk(
     console.log(token, parameter, mfg);
     try {
       const response = await axios.post(
-        "https://brokerbinbackend.shiwantek.com/api/report/mfg_filter",
+        `${brokerAPI}report/mfg_filter`,
         { mfg },
         {
           headers: {

@@ -1,13 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-
+import { brokerAPI } from "../components/api/BrokerEndpoint";
 export const searchProductQuery = createAsyncThunk(
   "searchProductStore/searchProductQuery",
   async ({ token, page, search }) => {
     console.log(search);
     try {
       const response = await axios.post(
-        `https://brokerbinbackend.shiwantek.com/api/inventory/search`,
+        `${brokerAPI}inventory/search`,
         {
           page, // Send 'page' in the request body
           search, // Send 'search' in the request body
@@ -36,7 +36,7 @@ export const searchByKeyword = createAsyncThunk(
     console.log(partModel);
     try {
       const response = await axios.post(
-        `https://brokerbinbackend.shiwantek.com/api/inventory/partmodel`,
+        `${brokerAPI}inventory/partmodel`,
         {
           page, // Send 'page' in the request body
           partModel, // Send 'partModel' in the request body
@@ -66,7 +66,7 @@ export const searchProductFilter = createAsyncThunk(
     console.log(filters);
     try {
       const response = await axios.post(
-        `https://brokerbinbackend.shiwantek.com/api/inventory/fetch`,
+        `${brokerAPI}inventory/fetch`,
         filters,
         {
           headers: {
@@ -94,7 +94,7 @@ export const searchProductHistory = createAsyncThunk(
   async ({ token }) => {
     try {
       const response = await axios.get(
-        `https://brokerbinbackend.shiwantek.com/api/inventory/search/history`,
+        `${brokerAPI}inventory/search/history`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -120,7 +120,7 @@ export const addToHotList = createAsyncThunk(
     console.log(JSON.stringify({ hotlists }));
     try {
       const response = await axios.post(
-        `https://brokerbinbackend.shiwantek.com/api/hot-lists/store`,
+        `${brokerAPI}hot-lists/store`,
         JSON.stringify({ hotlists }),
         {
           headers: {

@@ -190,6 +190,8 @@ const BroadcastForm = () => {
       updatedFormat.date = new Date().toLocaleDateString("en-US");
       return updatedFormat;
     });
+    console.log(token)
+
   };
 
   return (
@@ -644,24 +646,4 @@ const BroadcastForm = () => {
 };
 
 export default BroadcastForm;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
