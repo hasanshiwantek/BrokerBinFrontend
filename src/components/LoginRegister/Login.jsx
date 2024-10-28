@@ -25,7 +25,13 @@ const Login = () => {
     const data = Object.fromEntries(formData.entries());
     try {
       const response = await fetch(
+<<<<<<< HEAD
         "https://phplaravel-1343027-4927440.cloudwaysapps.com/api/user/login",
+=======
+        // "https://phplaravel-1343027-4927440.cloudwaysapps.com/api/user/",
+         "https://phplaravel-1343027-4927440.cloudwaysapps.com/api/user/login",
+
+>>>>>>> 774b0ac1935fde338a9f458887a76ff5c36f6204
         {
           method: "POST",
           headers: {

@@ -13,6 +13,7 @@ import {
 import ErrorStatus from "../../Error/ErrorStatus";
 import Cookies from "js-cookie";
 import { Link,NavLink } from "react-router-dom";
+import Footer from "../../Footer/Footer";
 
 const MyProfile = () => {
   const token = Cookies.get("token");
@@ -715,14 +716,6 @@ const MyProfile = () => {
         </div>
       )}
 
-<footer>
-                <div className={css.footerlinks}>
-                    <li><a href="/">Advertising Programs</a></li>
-                    <li><a href="/">Business Solutions</a></li>
-                    <li><a href="/">About BrokerBin.com</a></li>
-                    <li>©2024 Privacy</li>
-                </div>
-            </footer>
     </>
   );
 };

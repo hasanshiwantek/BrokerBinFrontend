@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-
+import { brokerAPI } from "../components/api/BrokerEndpoint";
 export const fetchUserData = createAsyncThunk(
   "profileStore/fetchUserData",
   async ({ id, token }) => {
     try {
       const response = await axios.get(
-        `https://brokerbin.shiwantek.com/api/user/fetch/${id}`,
+        `${brokerAPI}user/fetch/${id}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -30,7 +30,7 @@ export const submitUserData = createAsyncThunk(
   async ({ id, token, data }) => {
     try {
       const response = await axios.put(
-        `https://brokerbin.shiwantek.com/api/user/edit/${id}`,
+        `${brokerAPI}user/edit/${id}`,
         JSON.stringify(data),
         {
           headers: {
@@ -55,7 +55,7 @@ export const submitUserOptions = createAsyncThunk(
   async ({ id, token, data }) => {
     try {
       const response = await axios.put(
-        `https://brokerbin.shiwantek.com/api/user/edit/${id}`,
+        `${brokerAPI}user/edit/${id}`,
         JSON.stringify(data),
         console.log(data),
         {
@@ -119,7 +119,7 @@ export const submitUserSearch = createAsyncThunk(
   async ({ data, token }, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        "https://brokerbinbackend.shiwantek.com/api/user/search",
+        `${brokerAPI}user/search`,
         {data},
         {
           headers: {

@@ -194,8 +194,20 @@ const BroadcastForm = () => {
     time: new Date().toLocaleTimeString("en-US", { hour12: true }),
     date: new Date().toLocaleDateString("en-US"),
 }));
-};
 
+    }
+    setEmailFormat((prev) => {
+      const updatedFormat = { ...prev };
+      updatedFormat.time = new Date().toLocaleTimeString("en-US", {
+        hour12: true,
+      });
+      updatedFormat.date = new Date().toLocaleDateString("en-US");
+      return updatedFormat;
+    });
+    console.log(token)
+  
+
+  
 
   return (
     <div className={css.outerPadding}>
@@ -665,57 +677,4 @@ const BroadcastForm = () => {
 };
 
 export default BroadcastForm;
-
-
-{/* <>
-const updateFormTypes = (updates) => {
-  setFormTypes((prev) => ({
-    wtb: false,
-    rfq: false,
-    wts: false,
-    hideFormOne: true,
-    emailFormat: false,
-    ...updates,  // Apply specific updates
-  }));
-};
-
-const handleContinue = () => {
-  if (broadcastType && category) {
-    updateFormTypes({ [broadcastType]: true });  // Show selected broadcastType form
-  } else {
-    alert("Please make both selections before continuing.");
-  }
-};
-
-const handlePrevious = () => {
-  updateFormTypes({ hideFormOne: true, emailFormat: false });
-};
-
-const handlePreviousForm = () => {
-  updateFormTypes({ [broadcastType]: true, hideFormOne: false });
-};
-
-
-const handleContinueForm = () => {
-  updateFormTypes({ broadcastType: false, emailFormat: true });
-};
-
-
-</> */}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

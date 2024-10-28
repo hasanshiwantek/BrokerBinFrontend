@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setOptionFormData, submitUserOptions } from "../../../ReduxStore/ProfleSlice";
 import { Link, NavLink } from "react-router-dom";
 import Cookies from "js-cookie";
+import Footer from "../../Footer/Footer";
 
 const Options = () => {
   const { optionFormData } = useSelector((state) => state.profileStore);
@@ -593,14 +594,6 @@ const Options = () => {
 
 
 
-      <footer>
-        <div className={css.footerlinks}>
-          <li><a href="/">Advertising Programs</a></li>
-          <li><a href="/">Business Solutions</a></li>
-          <li><a href="/">About BrokerBin.com</a></li>
-          <li>©2024 Privacy</li>
-        </div>
-      </footer>
     </>
   );
 };

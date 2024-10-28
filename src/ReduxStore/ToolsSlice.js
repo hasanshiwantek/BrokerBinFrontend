@@ -1,13 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-
+import { brokerAPI } from "../components/api/BrokerEndpoint";
 export const sendEthics = createAsyncThunk(
   "toolsStore/sendEthics",
   async ({ data, token }) => {
     console.log(data);
     try {
       const response = await axios.post(
-        "https://brokerbinbackend.shiwantek.com/api/ethics/store",
+        `${brokerAPI}ethics/store`,
         data,
         {
           headers: {
@@ -29,7 +29,7 @@ export const searchCompanyName = createAsyncThunk(
   async ({ search, token }) => {
     try {
       const response = await axios.post(
-        "https://brokerbinbackend.shiwantek.com/api/vendor/search",
+        `${brokerAPI}vendor/search`,
         { search },
         {
           headers: {
@@ -51,7 +51,7 @@ export const searchMyVendors = createAsyncThunk(
   async ({ search, token }) => {
     try {
       const response = await axios.post(
-        "https://brokerbinbackend.shiwantek.com/api/vendor/search",
+        `${brokerAPI}vendor/search`,
         { search },
         {
           headers: {
@@ -72,7 +72,7 @@ export const getMyVendors = createAsyncThunk(
   async ({ token }) => {
     try {
       const response = await axios.get(
-        "https://brokerbinbackend.shiwantek.com/api/vendor",
+      `${brokerAPI}vendor`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -95,7 +95,7 @@ export const addMyVendors = createAsyncThunk(
 
     try {
       const response = await axios.post(
-        "https://brokerbinbackend.shiwantek.com/api/vendor/is_fav",
+        `${brokerAPI}vendor/is_fav`,
         companyId,
         {
           headers: {
@@ -119,7 +119,7 @@ export const removeMyVendors = createAsyncThunk(
 
     try {
       const response = await axios.post(
-        "https://brokerbinbackend.shiwantek.com/api/vendor/is_fav",
+        `${brokerAPI}vendor/is_fav`,
         companyId,
         {
           headers: {
@@ -143,7 +143,7 @@ export const addHotListItem = createAsyncThunk(
 
     try {
       const response = await axios.post(
-        "https://brokerbinbackend.shiwantek.com/api/hot-lists/store",
+        `${brokerAPI}hot-lists/store`,
         { hotlists },
         {
           headers: {
@@ -166,7 +166,7 @@ export const showHotListItem = createAsyncThunk(
     console.log(token);
     try {
       const response = await axios.get(
-        "https://brokerbinbackend.shiwantek.com/api/hot-lists",
+        `${brokerAPI}hot-lists`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -188,7 +188,7 @@ export const editHotListItem = createAsyncThunk(
     console.log("HotListItem:", hotlists);
     try {
       const response = await axios.post(
-        "https://brokerbinbackend.shiwantek.com/api/hot-lists/update",
+        `${brokerAPI}hot-lists/update`,
         { hotlists },
         {
           headers: {

@@ -161,12 +161,7 @@ const HotListEdit = () => {
         </div>
       </div>
 
-      <footer className={css.footer}>
-        <a href="/">Advertising Programs</a>
-        <a href="/">Business Solutions</a>
-        <a href="/">About BrokerBin.com</a>
-      </footer>
-      <p className={css.p}>© 2024 Privacy</p>
+
     </>
   );
 };

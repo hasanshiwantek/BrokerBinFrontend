@@ -1,14 +1,44 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { brokerAPI } from "../components/api/BrokerEndpoint";
+// export const sendBroadcast = createAsyncThunk(
+//   "broadcastStore/sendBroadcast",
+//   async ({ token, data }) => {
+//     try {
+//       const response = await axios.post(
+//         "https://brokerbin.shiwantek.com/api/broadcast/store",
+//         data,
+//         console.log(data),
+//         {
+//           headers: {
+//             "Content-Type": "multipart/form-data",
+//             Authorization: `Bearer ${token}`,
+//           },
+//         }
+//       );
+
+//       return response.data;
+//     } catch (error) {
+//       console.error(
+//         "Error while fetching user data:",
+//         error.response?.data || error.message
+//       );
+//       throw "Error while sending broadcast:" || error;
+//     }
+//   }
+// );
+
 
 export const sendBroadcast = createAsyncThunk(
   "broadcastStore/sendBroadcast",
   async ({ token, data }) => {
     try {
-      console.log(data);
+      // Log data to check what is being sent
+      console.log("Sending data:", data);
+
       const response = await axios.post(
-        "https://phplaravel-1343027-4927440.cloudwaysapps.com/api/broadcast/store",
-        data,
+        `${brokerAPI}broadcast/store`,
+        data, // Assuming 'data' is correctly formatted for 'multipart/form-data'
         {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -23,32 +53,34 @@ export const sendBroadcast = createAsyncThunk(
         "Error while fetching user data:",
         error.response?.data || error.message
       );
-      throw "Error while sending broadcast:" || error;
+      throw new Error("Error while sending broadcast: " + (error.response?.data || error.message));
     }
   }
 );
 
+
+
 export const broadCastFilters = createAsyncThunk(
   "broadcastStore/broadCastFilters",
   async ({ data, token }) => {
-    console.log({data})
+    console.log({ data })
 
     try {
       const response = await axios.post(
-        "https://brokerbinbackend.shiwantek.com/api/bfilters/store",
+        `${brokerAPI}bfilters/store`,
         data,
-        
-        
+
+
         {
           headers: {
-           "Content-Type": "application/json", 
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         }
       );
 
       console.log(response.data);
-      
+
       return response.data;
 
     } catch (error) {
@@ -63,22 +95,22 @@ export const broadCastFilters = createAsyncThunk(
 
 export const fetchBroadCastFilters = createAsyncThunk(
   "broadcastStore/fetchBroadCastFilters",
-  async ({token }) => {
+  async ({ token }) => {
     console.log(token)
 
     try {
       const response = await axios.get(
-        "https://brokerbinbackend.shiwantek.com/api/bfilters/show",
+        `${brokerAPI}bfilters/show`,
         {
           headers: {
-           "Content-Type": "application/json", 
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         }
       );
 
       console.log(response.data);
-      
+
       return response.data;
 
     } catch (error) {
@@ -89,22 +121,22 @@ export const fetchBroadCastFilters = createAsyncThunk(
 
 export const fetchBroadCastData = createAsyncThunk(
   "broadcastStore/fetchBroadCastData",
-  async ({token }) => {
+  async ({ token }) => {
     console.log(token)
 
     try {
       const response = await axios.get(
-        "https://brokerbinbackend.shiwantek.com/api/broadcast",
+        `${brokerAPI}broadcast`,
         {
           headers: {
-           "Content-Type": "application/json", 
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         }
       );
 
       console.log(response.data);
-      
+
       return response.data;
 
     } catch (error) {
@@ -120,23 +152,11 @@ const initialState = {
   companiesSelection: [],
   regionSelection: [],
   filters: [],
-  broadCastData:[],
-  serviceData:[],
-  formData: {
-    partModel: "",
-    mfg: "",
-    cond: "",
-    heciClei: "",
-    price: "",
-    quantity: "",
-    buy_in: "",
-    description: "",
-    additional_comments: "",
-    selectedServices: [],
-    categories: [],  // Include categories here
-    regions: [],     // Include regions here
-    companies: [],
-  },
+  broadCastData: [],
+  serviceData: [],
+ 
+
+
 
 };
 
@@ -162,23 +182,16 @@ const broadcastSlice = createSlice({
     setServiceSelection: (state, action) => {
       const index = state.serviceData.indexOf(action.payload);
       if (index > -1) {
-          // Service is already selected, remove it
-          state.serviceData.splice(index, 1);
+        // Service is already selected, remove it
+        state.serviceData.splice(index, 1);
       } else {
-          // Service is not selected, add it
-          state.serviceData.push(action.payload);
+        // Service is not selected, add it
+        state.serviceData.push(action.payload);
       }
     },
-    setFormData: (state, action) => {
-      console.log(action.payload);
-    state.formData = {
-      ...state.formData,
-      ...action.payload,
-    };
-    },
   },
-    extraReducers: (builder) => {
-      builder
+  extraReducers: (builder) => {
+    builder
       .addCase(broadCastFilters.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -219,7 +232,7 @@ const broadcastSlice = createSlice({
         state.isLoading = false;
         state.error = action.error.message;
       });
-    },
+  },
 });
 
 export const {

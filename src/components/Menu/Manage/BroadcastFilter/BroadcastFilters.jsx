@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import myProfile from "../../../../styles/Menu/Manage/MyProfile.module.css";
 import css from "../../../../styles/Menu/Manage/BroadcastFilters/BroadcastFilters.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { Link,NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { broadCastFilters, fetchBroadCastFilters } from "../../../../ReduxStore/BroadCast";
 import Cookies from "js-cookie";
 import { servicesList, regionsList, countriesList, groupingsList, telecom, mobileDevice, computers, initialMFGs } from "../../../../data/services";
 import CheckboxList from "./CheckboxList";
 import UniversalSelector from "./UniversalSelector";
 import MFGFilter from "./MFGFilter";
+import Footer from "../../../Footer/Footer";
 
 const Options = () => {
 
@@ -255,7 +256,9 @@ const Options = () => {
 
     dispatch(broadCastFilters({ data: transformedData, token }));
 
-    alert("Form Data Submitted!")
+    if(data.success){
+      alert("Form Data Submitted!")
+    }
   };
   const isBroadcastSelected = broadcastFilterState.selectedBroadcastTypes.length > 0;
 
@@ -295,7 +298,7 @@ const Options = () => {
           </div>
           <div className={myProfile.profileInfo}>
             <div className={myProfile.profileInfo_links}>
-            <ul>
+              <ul>
                 <li>
                   <NavLink
                     to="/myprofile"
@@ -630,15 +633,6 @@ const Options = () => {
 
 
 
-      
-<footer>
-                <div className={css.footerlinks}>
-                    <li><a href="/">Advertising Programs</a></li>
-                    <li><a href="/">Business Solutions</a></li>
-                    <li><a href="/">About BrokerBin.com</a></li>
-                    <li>©2024 Privacy</li>
-                </div>
-            </footer>
     </>
   );
 };

@@ -375,6 +375,7 @@ import Cookies from "js-cookie";
 import { FaUsers } from "react-icons/fa";
 import { CiSquareRemove } from "react-icons/ci";
 import venIcon from "../../../assets/my-vendors.svg";
+import Footer from "../../Footer/Footer";
 const MyVendors = () => {
   const token = Cookies.get("token");
   let [viewAsCompany, setViewAsCompany] = useState(false);
@@ -411,7 +412,6 @@ const MyVendors = () => {
 
   const removeFromMyVendors = (id) => {
     const companyId = { company_id: id };
-    console.log(companyId);
     dispatch(removeMyVendors({ companyId, token }));
   };
 
@@ -705,15 +705,6 @@ const MyVendors = () => {
           </div>
         </div>
       </div>
-
-      <footer>
-        <div className={css.footerlinks}>
-          <li><a href="/">Advertising Programs</a></li>
-          <li><a href="/">Business Solutions</a></li>
-          <li><a href="/">About BrokerBin.com</a></li>
-          <li>©2024 Privacy</li>
-        </div>
-      </footer>
     </>
   );
 };

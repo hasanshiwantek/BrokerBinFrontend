@@ -13,6 +13,7 @@ import LoadingState2 from "./LoadingState2.jsx";
 const Login = lazy(() => import("./components/LoginRegister/Login.jsx"));
 const Register = lazy(() => import("./components/LoginRegister/Register.jsx"));
 const Header = lazy(() => import("./components/Header.jsx"));
+const Footer = lazy(() => import("./components/Footer/Footer.jsx"))
 const Home = lazy(() => import("./components/Home/Home.jsx"));
 const Cart = lazy(() => import("./components/Tools/Cart.jsx"));
 const SearchProduct = lazy(() =>
@@ -81,7 +82,7 @@ const Map = lazy(() => import("./components/Map/Map.jsx"));
 const MyWorldMap = lazy(() => import("./components/Map/MyWorldMap.jsx"));
 const Form = lazy(() => import("./Form.jsx"));
 const TextEditor = lazy(() => import("./components/TextEditor.jsx"));
-const Tools=lazy(()=>import("./components/Menu/Tools/Tools.jsx"))
+const Tools = lazy(() => import("./components/Menu/Tools/Tools.jsx"))
 const MyVendors = lazy(() => import("./components/Menu/Tools/MyVendors.jsx"));
 const MyContact = lazy(() => import("./components/Menu/Tools/MyContact.jsx"));
 const Company = lazy(() => import("./components/Menu/Reports/Company.jsx"));
@@ -164,6 +165,7 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <Home />
+            <Footer />
           </Suspense>
         ),
       },
@@ -181,6 +183,8 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <Cart />
+            <Footer/>
+
           </Suspense>
         ),
       },
@@ -199,6 +203,8 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <MyProfile />
+            <Footer />
+
           </Suspense>
         ),
       },
@@ -208,6 +214,7 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <Options />
+            <Footer />
           </Suspense>
         ),
       },
@@ -217,6 +224,8 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <BroadcastFilters />
+            <Footer />
+
           </Suspense>
         ),
       },
@@ -226,6 +235,8 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <MyBroadcast />
+            <Footer />
+
           </Suspense>
         ),
       },
@@ -234,7 +245,8 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingState />}>
             <Header />
-            <BroadCastHistory/>
+            <BroadCastHistory />
+            <Footer />
           </Suspense>
         ),
       },
@@ -253,6 +265,7 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <MyRFQ />
+            <Footer />
           </Suspense>
         ),
       },
@@ -262,6 +275,8 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <Search />
+            <Footer />
+
           </Suspense>
         ),
       },
@@ -271,6 +286,8 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <SearchCompany />
+            <Footer />
+
           </Suspense>
         ),
       },
@@ -279,7 +296,8 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingState />}>
             <Header />
-            <Person/>
+            <Person />
+            <Footer />
           </Suspense>
         ),
       },
@@ -288,7 +306,9 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingState />}>
             <Header />
-            <SearchResult/>
+            <SearchResult />
+<Footer/>
+
           </Suspense>
         ),
       },
@@ -297,7 +317,9 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingState />}>
             <Header />
-            <Services/>
+            <Services />
+            <Footer />
+
           </Suspense>
         ),
       },
@@ -306,17 +328,17 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingState />}>
             <Header />
-            <FeedBackProfile/>
+            <FeedBackProfile />
           </Suspense>
         ),
       },
-      
+
       {
         path: "/manage",
         element: (
           <Suspense fallback={<LoadingState />}>
             <Header />
-            <Manage/>
+            <Manage />
           </Suspense>
         ),
       },
@@ -326,7 +348,9 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingState />}>
             <Header />
-            <MyServices/>
+            <MyServices />
+            <Footer />
+
           </Suspense>
         ),
       },
@@ -337,6 +361,8 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <Inventory />
+            <Footer />
+
           </Suspense>
         ),
       },
@@ -355,6 +381,8 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <EditDelete />
+            <Footer />
+
           </Suspense>
         ),
       },
@@ -364,6 +392,8 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <Add />
+            <Footer />
+
           </Suspense>
         ),
       },
@@ -449,6 +479,7 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <Send />
+            <Footer/>
           </Suspense>
         ),
       },
@@ -458,6 +489,7 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <Help />
+            <Footer />
           </Suspense>
         ),
       },
@@ -467,6 +499,7 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <Contact />
+            <Footer />
           </Suspense>
         ),
       },
@@ -476,6 +509,7 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <Ethics />
+            <Footer />
           </Suspense>
         ),
       },
@@ -484,7 +518,8 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingState />}>
             <Header />
-            <Badges/>
+            <Badges />
+            <Footer />
           </Suspense>
         ),
       },
@@ -493,7 +528,8 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingState />}>
             <Header />
-            <SiteMap/>
+            <SiteMap />
+            <Footer />
           </Suspense>
         ),
       },
@@ -502,7 +538,8 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingState />}>
             <Header />
-            <Tools/>
+            <Tools />
+            <Footer />
           </Suspense>
         ),
       },
@@ -512,6 +549,7 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <MyVendors />
+            <Footer />
           </Suspense>
         ),
       },
@@ -521,6 +559,7 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <MyContact />
+            <Footer />
           </Suspense>
         ),
       },
@@ -530,6 +569,8 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <Company />
+            <Footer />
+
           </Suspense>
         ),
       },
@@ -539,6 +580,8 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <SiteWide />
+            <Footer />
+
           </Suspense>
         ),
       },
@@ -548,6 +591,8 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <Email />
+            <Footer />
+
           </Suspense>
         ),
       },
@@ -557,6 +602,8 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <ServiceStats />
+            <Footer />
+
           </Suspense>
         ),
       },
@@ -593,6 +640,7 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <CompanyInventory />
+
           </Suspense>
         ),
       },
@@ -611,6 +659,7 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <HotListAdd />
+            <Footer />
           </Suspense>
         ),
       },
@@ -620,6 +669,8 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <HotListView />
+            <Footer />
+
           </Suspense>
         ),
       },
@@ -629,6 +680,8 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <HotListEdit />
+            <Footer />
+
           </Suspense>
         ),
       },
@@ -643,6 +696,7 @@ const router = createBrowserRouter([
     element: (
       <Suspense fallback={<LoadingState />}>
         <NotFound />
+
       </Suspense>
     ),
   },
