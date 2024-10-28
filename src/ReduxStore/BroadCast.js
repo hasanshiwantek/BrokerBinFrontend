@@ -5,10 +5,10 @@ export const sendBroadcast = createAsyncThunk(
   "broadcastStore/sendBroadcast",
   async ({ token, data }) => {
     try {
+      console.log(data);
       const response = await axios.post(
-        "https://brokerbin.shiwantek.com/api/broadcast/store",
+        "https://phplaravel-1343027-4927440.cloudwaysapps.com/api/broadcast/store",
         data,
-        console.log(data),
         {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -122,6 +122,21 @@ const initialState = {
   filters: [],
   broadCastData:[],
   serviceData:[],
+  formData: {
+    partModel: "",
+    mfg: "",
+    cond: "",
+    heciClei: "",
+    price: "",
+    quantity: "",
+    buy_in: "",
+    description: "",
+    additional_comments: "",
+    selectedServices: [],
+    categories: [],  // Include categories here
+    regions: [],     // Include regions here
+    companies: [],
+  },
 
 };
 
@@ -153,7 +168,14 @@ const broadcastSlice = createSlice({
           // Service is not selected, add it
           state.serviceData.push(action.payload);
       }
-  },
+    },
+    setFormData: (state, action) => {
+      console.log(action.payload);
+    state.formData = {
+      ...state.formData,
+      ...action.payload,
+    };
+    },
   },
     extraReducers: (builder) => {
       builder
@@ -207,6 +229,7 @@ export const {
   setCompaniesSelection,
   setRegionSelection,
   setServiceSelection,
+  setFormData,
 } = broadcastSlice.actions;
 
 export default broadcastSlice.reducer;

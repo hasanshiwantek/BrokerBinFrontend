@@ -5,7 +5,7 @@ import ToggleCategories from "./Field Components/ToggleCategories";
 import ToggleFilters from "./Field Components/ToggleFilters";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
-import { sendBroadcast } from "../../../../ReduxStore/BroadCast";
+import { sendBroadcast, setFormData } from "../../../../ReduxStore/BroadCast";
 import { MdUploadFile } from "react-icons/md";
 import { servicesList } from "../../../../data/services";
 import CheckboxList from "../../Manage/BroadcastFilter/CheckboxList";
@@ -15,6 +15,9 @@ const BroadcastForm = () => {
   const token = Cookies.get("token");
   const { user } = JSON.parse(localStorage.getItem("user"));
   const service = useSelector((state) => state.broadcastStore.serviceData)
+  const formData = useSelector((state) => state.broadcastStore.formData);
+  console.log("formData line # 19",formData)
+
   // console.log(service);
 
   // console.log(user);
@@ -32,18 +35,20 @@ const BroadcastForm = () => {
 
   // File and Input Data States
   const [files, setFiles] = useState("");
-  const [formData, setFormData] = useState({
-    partModel: "",
-    mfg: "",
-    cond: "",
-    heciClei: "",
-    price: "",
-    quantity: "",
-    buy_in: "",
-    description: "",
-    additional_comments: "",
-    selectedServices: []
-  });
+  
+  // const [localFormData, setLocalFormData] = useState({
+  //   partModel: "",
+  //   mfg: "",
+  //   cond: "",
+  //   heciClei: "",
+  //   price: "",
+  //   quantity: "",
+  //   buy_in: "",
+  //   description: "",
+  //   additional_comments: "",
+  //   selectedServices: []
+  // });
+
   const [emailFormat, setEmailFormat] = useState({
     time: "",
     date: "",
@@ -57,6 +62,8 @@ const BroadcastForm = () => {
     regionSelection,
     serviceData
   } = useSelector((state) => state.broadcastStore);
+
+  
 
   const handleContinue = () => {
     if (broadcastType && category) {
@@ -113,8 +120,8 @@ const BroadcastForm = () => {
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     // console.log(type, checked, value, name);
-    setFormData((prevData) => ({
-      ...prevData,
+    dispatch(setFormData({
+      ...formData,
       [name]: type === "checkbox" ? checked : value,
     }));
   };
@@ -140,7 +147,7 @@ const BroadcastForm = () => {
       hideFormOne: true,
       emailFormat: false,
     });
-    setFormData({
+    setLocalFormData({
       partModel: "",
       mfg: "",
       cond: "",
@@ -160,38 +167,35 @@ const BroadcastForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Combine form data and other selections
-    if (files) {
-      const data = {
-        uploadFile: files,
-        type: broadcastType,
-      };
-      dispatch(sendBroadcast({ token, data }));
-      // console.log(data);
-    } else {
-      const data = {
+
+    const data = {
         ...formData,
         type: broadcastType,
-        selectedCompanies: computerSelection,
+        selectedComputer: computerSelection,
         selectedTelecom: telecomSelection,
         selectedMobileDevices: mobileDevicesSelection,
         selectedRegion: regionSelection,
         companiesSelection: companiesSelection,
-        service: serviceData
-      };
-      dispatch(sendBroadcast({ data, token }));
-      // console.log(data);
+        service: serviceData,
+    };
 
-    }
-    setEmailFormat((prev) => {
-      const updatedFormat = { ...prev };
-      updatedFormat.time = new Date().toLocaleTimeString("en-US", {
-        hour12: true,
-      });
-      updatedFormat.date = new Date().toLocaleDateString("en-US");
-      return updatedFormat;
-    });
-  };
+    if (formData.uploadFile) {
+      const uploadData = {
+          uploadFile: formData.uploadFile,
+          type: broadcastType,
+      };
+      dispatch(sendBroadcast({ token, data: uploadData }));
+  } else {
+      dispatch(sendBroadcast({ data, token }));
+  }
+
+  setEmailFormat((prev) => ({
+    ...prev,
+    time: new Date().toLocaleTimeString("en-US", { hour12: true }),
+    date: new Date().toLocaleDateString("en-US"),
+}));
+};
+
 
   return (
     <div className={css.outerPadding}>
@@ -237,8 +241,8 @@ const BroadcastForm = () => {
                     }
                     onClick={() => setCategory("single part / items")}
                   >
-                    <span>Single Part / Item</span>
-                    <span>attach files or paste text</span>
+                    <span>Single Part / Item</span> 
+                    <span>attach files or paste text</span> 
                     <small>(pdf, csv, xlsx, txt, photos, datasheets)</small>
                   </button>
                   
@@ -311,7 +315,6 @@ const BroadcastForm = () => {
                     </div>
                   </div>
                 }
-
 
 
                 {
@@ -664,8 +667,41 @@ const BroadcastForm = () => {
 export default BroadcastForm;
 
 
+{/* <>
+const updateFormTypes = (updates) => {
+  setFormTypes((prev) => ({
+    wtb: false,
+    rfq: false,
+    wts: false,
+    hideFormOne: true,
+    emailFormat: false,
+    ...updates,  // Apply specific updates
+  }));
+};
+
+const handleContinue = () => {
+  if (broadcastType && category) {
+    updateFormTypes({ [broadcastType]: true });  // Show selected broadcastType form
+  } else {
+    alert("Please make both selections before continuing.");
+  }
+};
+
+const handlePrevious = () => {
+  updateFormTypes({ hideFormOne: true, emailFormat: false });
+};
+
+const handlePreviousForm = () => {
+  updateFormTypes({ [broadcastType]: true, hideFormOne: false });
+};
 
 
+const handleContinueForm = () => {
+  updateFormTypes({ broadcastType: false, emailFormat: true });
+};
+
+
+</> */}
 
 
 

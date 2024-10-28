@@ -60,7 +60,7 @@ const Register = () => {
 
       try {
         const response = await fetch(
-          "https://brokerbin.shiwantek.com/api/user/register",
+          "https://phplaravel-1343027-4927440.cloudwaysapps.com/api/user/register",
           {
             method: "POST",
             headers: {

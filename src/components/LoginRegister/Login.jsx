@@ -25,7 +25,7 @@ const Login = () => {
     const data = Object.fromEntries(formData.entries());
     try {
       const response = await fetch(
-        "https://brokerbin.shiwantek.com/api/user/login",
+        "https://phplaravel-1343027-4927440.cloudwaysapps.com/api/user/login",
         {
           method: "POST",
           headers: {
