@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import "../../Menu/Main/MenuBar.css"
 import { Link } from 'react-router-dom'
 import styles from "./BroadCast.module.css"
@@ -15,7 +15,8 @@ const BroadCast = () => {
 
 
   const token = Cookies.get("token");
-
+  const [filterType, setFilterType] = useState('all');
+  const [buyInFilters, setBuyInFilters] = useState([]);
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -24,11 +25,41 @@ const BroadCast = () => {
   }, [dispatch, token])
 
   const broadcastItems = useSelector((state) => state.broadcastStore.broadCastData)
-  console.log("Data:", broadcastItems.broadcasts);
+  // console.log("Data:", broadcastItems.broadcasts);
 
 
-  const filtersArray = Array.isArray(broadcastItems.broadcasts) ? broadcastItems.broadcasts : [];
-  console.log(filtersArray);
+  if (broadcastItems && broadcastItems.broadcasts) {
+    const buy_ins = broadcastItems.broadcasts.map(item => item.buy_in)
+    console.log("Buy-in values:", buy_ins);
+  }
+  const filteredBroadcasts = broadcastItems && broadcastItems.broadcasts
+  ? broadcastItems.broadcasts.filter(broadcast =>
+      (filterType === 'all' || broadcast.type === filterType) && // Add this condition
+      (buyInFilters.length === 0 || buyInFilters.includes(broadcast.buy_in))
+    )
+  : [];
+
+  console.log(filteredBroadcasts);
+
+  // Handler for Types like wtb,wts,rfq...
+  const handleFilterChange = (event) => {
+    setFilterType(event.target.value);
+  };
+
+
+  // Handler for BuyIns
+  const handleBuyInChange = (event) => {
+    const { name, checked } = event.target;
+    setBuyInFilters(prevFilters => {
+      if (checked) {
+        // Add the filter
+        return [...prevFilters, name];
+      } else {
+        // Remove the filter
+        return prevFilters.filter(filter => filter !== name);
+      }
+    });
+  };
   return (
     <>
       <main className={styles.mainSec}>
@@ -84,9 +115,13 @@ const BroadCast = () => {
                 </select>
               </div>
 
-              <div className={styles.manufacturerDropdown}>
-                <select>
+              <div className={styles.manufacturerDropdown} >
+                <select onChange={handleFilterChange}>
                   <option value="all">Type</option>
+                  <option value="wts">WTS</option>
+                  <option value="wtb">WTB</option>
+                  <option value="rfq">RFQ</option>
+
 
                 </select>
               </div>
@@ -98,13 +133,20 @@ const BroadCast = () => {
                 </select>
               </div>
               <div>
-                <label htmlFor="" id='checks'>Bulk</label>
-                <input type="checkbox" name="check" id="check" />
+                <label htmlFor="bulk">Bulk</label>
+                <input type="checkbox" name="bulk" id="bulk" onChange={handleBuyInChange} />
               </div>
-
               <div>
-                <label htmlFor="" id='checks'>Whole Unit</label>
-                <input type="checkbox" name="check" id="check" />
+                <label htmlFor="wholeUnit">Whole Unit</label>
+                <input type="checkbox" name="wholeUnit" id="wholeUnit" onChange={handleBuyInChange} />
+              </div>
+              <div>
+                <label htmlFor="container">Container</label>
+                <input type="checkbox" name="container" id="container" onChange={handleBuyInChange} />
+              </div>
+              <div>
+                <label htmlFor="pallet">Pallet</label>
+                <input type="checkbox" name="pallet" id="pallet" onChange={handleBuyInChange} />
               </div>
 
 
@@ -136,7 +178,7 @@ const BroadCast = () => {
             </tr>
           </thead>
           <tbody>
-            {filtersArray.map((item, index) => (
+            {filteredBroadcasts.map((item, index) => (
               <tr key={index}>
                 <td>
                   <input type="checkbox" />
