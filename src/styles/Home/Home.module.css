@@ -454,8 +454,11 @@ justify-content: space-around;
 
 
 
+.gridHome2_Details_Upper_Right_PartSearch textarea:focus{
+  outline: 1px solid var(--primary-color);
+  box-shadow: 1px 1px 0.5px 0.5px;
 
-
+}
 
 
 

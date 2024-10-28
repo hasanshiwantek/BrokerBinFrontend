@@ -24,14 +24,6 @@ const Search = () => {
       </div>
 
 
-<footer>
-<div className={styles.footerlinks} style={{marginTop:"12px"}}>
-        <li><a href="/">Advertising Programs</a></li>
-        <li><a href="/">Business Solutions</a></li>
-        <li><a href="/">About BrokerBin.com</a></li>
-        <li>©2024 Privacy</li>
-    </div>
-</footer>
 
     </>
   )

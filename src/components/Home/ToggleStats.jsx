@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { inventoryData,inventoryDataTotalParts } from "../../data/tableData";
+import { inventoryData, inventoryDataTotalParts } from "../../data/tableData";
 import css from "../../styles/Home/Home.module.css";
+import { Link } from "react-router-dom";
 
 const ToggleStats = () => {
   const [toggleStats, setToggleStats] = useState(true);
@@ -20,7 +21,7 @@ const ToggleStats = () => {
               </div>
             );
           })}
-          <a href="#">more...</a>
+          <Link to={"/reports/sitewide"}>more...</Link>
         </div>
       )}
       {!toggleStats && (
@@ -33,7 +34,7 @@ const ToggleStats = () => {
               </div>
             );
           })}
-          <a href="#">more...</a>
+          <Link to={"/reports/sitewide"}>more...</Link>
         </div>
       )}
     </div>

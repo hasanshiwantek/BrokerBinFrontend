@@ -8,6 +8,7 @@ import { fetchBroadCastData } from '../../../ReduxStore/BroadCast'
 import Cookies from "js-cookie";
 import shieldImage from "../../../assets/shield-img.png"
 import bullImage from "../../../assets/bullhornn.png"
+import Footer from '../../Footer/Footer'
 
 
 const BroadCast = () => {
@@ -160,14 +161,6 @@ const BroadCast = () => {
 
       </main >
 
-      <footer>
-                <div className={styles.footerlinks}>
-                    <li><a href="/">Advertising Programs</a></li>
-                    <li><a href="/">Business Solutions</a></li>
-                    <li><a href="/">About BrokerBin.com</a></li>
-                    <li>©2024 Privacy</li>
-                </div>
-            </footer>
     </>
   )
 }

@@ -12,6 +12,7 @@ import { getMyVendors, removeMyVendors } from "../../../ReduxStore/ToolsSlice";
 import Cookies from "js-cookie";
 import { FaUsers } from "react-icons/fa";
 import { CiSquareRemove } from "react-icons/ci";
+import Footer from "../../Footer/Footer";
 
 const MyContact = () => {
   const token = Cookies.get("token");
@@ -356,15 +357,6 @@ const MyContact = () => {
           </div>
         </div>
       </div>
-
-      <footer>
-                <div className={css.footerlinks}>
-                    <li><a href="/">Advertising Programs</a></li>
-                    <li><a href="/">Business Solutions</a></li>
-                    <li><a href="/">About BrokerBin.com</a></li>
-                    <li>©2024 Privacy</li>
-                </div>
-            </footer>
     </>
   );
 };
