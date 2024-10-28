@@ -5,7 +5,7 @@ import ToggleCategories from "./Field Components/ToggleCategories";
 import ToggleFilters from "./Field Components/ToggleFilters";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
-import { sendBroadcast, setFormData } from "../../../../ReduxStore/BroadCast";
+import { sendBroadcast } from "../../../../ReduxStore/BroadCast";
 import { MdUploadFile } from "react-icons/md";
 import { servicesList } from "../../../../data/services";
 import CheckboxList from "../../Manage/BroadcastFilter/CheckboxList";
@@ -15,9 +15,6 @@ const BroadcastForm = () => {
   const token = Cookies.get("token");
   const { user } = JSON.parse(localStorage.getItem("user"));
   const service = useSelector((state) => state.broadcastStore.serviceData)
-  const formData = useSelector((state) => state.broadcastStore.formData);
-  console.log("formData line # 19",formData)
-
   // console.log(service);
 
   // console.log(user);
@@ -35,20 +32,18 @@ const BroadcastForm = () => {
 
   // File and Input Data States
   const [files, setFiles] = useState("");
+  const [formData, setFormData] = useState({
+    partModel: "",
+    mfg: "",
+    cond: "",
+    heciClei: "",
+    price: "",
+    quantity: "",
+    buy_in: "",
+    description: "",
+    additional_comments: "",
+  });
   
-  // const [localFormData, setLocalFormData] = useState({
-  //   partModel: "",
-  //   mfg: "",
-  //   cond: "",
-  //   heciClei: "",
-  //   price: "",
-  //   quantity: "",
-  //   buy_in: "",
-  //   description: "",
-  //   additional_comments: "",
-  //   selectedServices: []
-  // });
-
   const [emailFormat, setEmailFormat] = useState({
     time: "",
     date: "",
@@ -62,8 +57,6 @@ const BroadcastForm = () => {
     regionSelection,
     serviceData
   } = useSelector((state) => state.broadcastStore);
-
-  
 
   const handleContinue = () => {
     if (broadcastType && category) {
@@ -120,8 +113,8 @@ const BroadcastForm = () => {
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     // console.log(type, checked, value, name);
-    dispatch(setFormData({
-      ...formData,
+    setFormData((prevData) => ({
+      ...prevData,
       [name]: type === "checkbox" ? checked : value,
     }));
   };
@@ -147,7 +140,7 @@ const BroadcastForm = () => {
       hideFormOne: true,
       emailFormat: false,
     });
-    setLocalFormData({
+    setFormData({
       partModel: "",
       mfg: "",
       cond: "",
@@ -167,33 +160,27 @@ const BroadcastForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const data = {
+    // Combine form data and other selections
+    if (files) {
+      const data = {
+        uploadFile: files,
+        type: broadcastType,
+      };
+      dispatch(sendBroadcast({ token, data }));
+      // console.log(data);
+    } else {
+      const data = {
         ...formData,
         type: broadcastType,
-        selectedComputer: computerSelection,
+        selectedCompanies: computerSelection,
         selectedTelecom: telecomSelection,
         selectedMobileDevices: mobileDevicesSelection,
         selectedRegion: regionSelection,
         companiesSelection: companiesSelection,
-        service: serviceData,
-    };
-
-    if (formData.uploadFile) {
-      const uploadData = {
-          uploadFile: formData.uploadFile,
-          type: broadcastType,
+        service: serviceData
       };
-      dispatch(sendBroadcast({ token, data: uploadData }));
-  } else {
       dispatch(sendBroadcast({ data, token }));
-  }
-
-  setEmailFormat((prev) => ({
-    ...prev,
-    time: new Date().toLocaleTimeString("en-US", { hour12: true }),
-    date: new Date().toLocaleDateString("en-US"),
-}));
+      // console.log(data);
 
     }
     setEmailFormat((prev) => {
@@ -205,16 +192,14 @@ const BroadcastForm = () => {
       return updatedFormat;
     });
     console.log(token)
-  
 
-  
+  };
 
   return (
     <div className={css.outerPadding}>
       <div className={css.broadcastForm}>
         {formTypes.hideFormOne && !formTypes.emailFormat && (
           <>
-
             <div className={css.broadcastFirstForm}>
               <h2>Send a Broadcast</h2>
               <div>
@@ -246,18 +231,16 @@ const BroadcastForm = () => {
               <div>
                 <h3>For the following:</h3>
                 <div className={css.categories}>
-
                   <button
                     className={
                       category === "single part / items" ? css.selected : ""
                     }
                     onClick={() => setCategory("single part / items")}
                   >
-                    <span>Single Part / Item</span> 
-                    <span>attach files or paste text</span> 
+                    <span>Single Part / Item</span>
+                    <span>attach files or paste text</span>
                     <small>(pdf, csv, xlsx, txt, photos, datasheets)</small>
                   </button>
-                  
                   <button
                     className={category === "service" ? css.selected : ""}
                     onClick={() => setCategory("service")}
@@ -266,7 +249,6 @@ const BroadcastForm = () => {
                     <span>attach files or paste text</span>
                     <small>(pdf, csv, xlsx, txt, photos, datasheets)</small>
                   </button>
-
                   <button
                     className={
                       category === "multiple parts / items" ? css.selected : ""
@@ -277,11 +259,9 @@ const BroadcastForm = () => {
                     <span>attach files or paste text</span>
                     <small>(pdf, csv, xlsx, txt, photos, datasheets)</small>
                   </button>
-
                 </div>
               </div>
             </div>
-
             <div className={css.actions}>
               <button onClick={cancelAllActions}>Cancel</button>
               <button
@@ -293,7 +273,6 @@ const BroadcastForm = () => {
             </div>
           </>
         )}
-
         <form onSubmit={handleSubmit}>
           {formTypes[broadcastType] && !formTypes.emailFormat && (
             <>
@@ -314,7 +293,6 @@ const BroadcastForm = () => {
                   </h1>
                 )}
 
-                {/* SERVICES SECTION */}
                 {
                   category === "service" &&
                   <div className={css.toggleServices}>
@@ -327,6 +305,7 @@ const BroadcastForm = () => {
                     </div>
                   </div>
                 }
+
 
 
                 {
@@ -348,7 +327,6 @@ const BroadcastForm = () => {
                   </div>
                   <ToggleFilters />
                 </div>
-
                 <div className={css.file_upload_container}>
                   <div className={css.headings}>
                     <h3>Attach Files</h3>
@@ -385,7 +363,6 @@ const BroadcastForm = () => {
                     </label>
                   </div>
                 </div>
-
                 <div className={css.mainFields}>
                   <div className={css.mainFields_1}>
                     <div>
@@ -464,7 +441,6 @@ const BroadcastForm = () => {
                   <div className={css.mainFields_3}>
                     <div>
                       <label htmlFor="buy_in_bulk">Bulk</label>
-                      {/* <input type="radio" name="" id="" /> */}
                       <input
                         type="radio"
                         name="buy_in"
@@ -505,7 +481,6 @@ const BroadcastForm = () => {
                     </div>
                   </div>
                 </div>
-                
                 <div className={css.createABroadcast}>
                   <h3>Create a Broadcast</h3>
                   <div>
@@ -532,9 +507,7 @@ const BroadcastForm = () => {
                     ></textarea>
                   </div>
                 </div>
-
               </div>
-
               <div className={css.actions}>
                 <button type="button" onClick={handlePrevious}>
                   Previous
@@ -550,13 +523,11 @@ const BroadcastForm = () => {
               </div>
             </>
           )}
-
           {formTypes.emailFormat && (
             <div className={css.broadcastEmail}>
               {broadcastType === "wtb" && <h3>want to buy (WTB)</h3>}
               {broadcastType === "rfq" && <h3>request for quote (RFQ)</h3>}
               {broadcastType === "wts" && <h3>want to sell (WTS)</h3>}
-
               <div className={css.broadcastEmailFormat}>
                 <div>
                   {[user].map((item) => {
@@ -624,7 +595,6 @@ const BroadcastForm = () => {
                         </li>
                         <li>
                           <p>Services</p>
-                          {/* <p>{service}</p> */}
                           {
                             service.map((val, index) => {
                               return (
@@ -654,7 +624,6 @@ const BroadcastForm = () => {
                   })}
                 </div>
               </div>
-
               <div className={css.actions}>
                 <button type="button" onClick={handlePreviousForm}>
                   Previous
@@ -666,10 +635,8 @@ const BroadcastForm = () => {
                   <input type="submit" value="SEND" style={{ cursor: "pointer" }} />
                 </span>
               </div>
-
             </div>
           )}
-
         </form>
       </div>
     </div>
@@ -677,4 +644,3 @@ const BroadcastForm = () => {
 };
 
 export default BroadcastForm;
-
