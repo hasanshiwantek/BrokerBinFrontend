@@ -60,7 +60,7 @@ const Add = () => {
 
     try {
       const response = await fetch(
-        "https://brokerbinbackend.advertsedge.com/api/inventory/add",
+        "https://phplaravel-1343027-4927440.cloudwaysapps.com/api/inventory/add",
         {
           method: "POST",
           headers: {

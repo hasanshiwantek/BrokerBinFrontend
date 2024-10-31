@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { brokerAPI } from "../components/api/BrokerEndpoint";
+
+
 export const searchProductQuery = createAsyncThunk(
   "searchProductStore/searchProductQuery",
   async ({ token, page, search }) => {
