@@ -73,7 +73,10 @@
     color: white;
   }
   
-
+  .table th:hover{
+    color: black;
+    cursor: pointer;
+  }
 
   .tableWrapper {
     background-color: white;
@@ -108,4 +111,14 @@ button, select {
 }
 .footerlinks li a{
   font-size: 11px;
+}
+
+.replyBtn{
+  color: white;
+  background-color: var(--primary-color);
+  margin: 5px;
+  padding: 10px 15px;
+}
+.replyBtnSec{
+  background-color: #ddd
 }

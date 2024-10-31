@@ -46,6 +46,7 @@ const Login = () => {
         const { id } = result.data.user;
 
         Cookies.set("token", access_token, { expires: 1, secure: true });
+        
         Cookies.set("user_id", id, { expires: 1, secure: true });
         localStorage.setItem("user", JSON.stringify(user));
 
