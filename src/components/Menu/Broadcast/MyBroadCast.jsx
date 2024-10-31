@@ -16,6 +16,10 @@ const BroadCast = () => {
   const token = Cookies.get("token");
   const [filterType, setFilterType] = useState('all');
   const [buyInFilters, setBuyInFilters] = useState([]);
+  const [inputSearchTerm, setInputSearchTerm] = useState(''); // Temporary state for input field
+  const [searchTerm, setSearchTerm] = useState('');
+
+
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -31,11 +35,13 @@ const BroadCast = () => {
   //   console.log("Buy-in values:", buy_ins);
   // }
   const filteredBroadcasts = broadcastItems && broadcastItems.broadcasts
-  ? broadcastItems.broadcasts.filter(broadcast =>
+    ? broadcastItems.broadcasts.filter(broadcast =>
       (filterType === 'all' || broadcast.type === filterType) && // Add this condition
       (buyInFilters.length === 0 || buyInFilters.includes(broadcast.buy_in))
+      &&
+      (searchTerm === '' || broadcast.partModel.toLowerCase().includes(searchTerm.toLowerCase()))
     )
-  : [];
+    : [];
 
   console.log(filteredBroadcasts);
 
@@ -58,6 +64,17 @@ const BroadCast = () => {
       }
     });
   };
+  // Handle input change for search term
+  const handleInputChange = (event) => {
+    setInputSearchTerm(event.target.value);
+  };
+
+  // Search Button Handler to apply the search term
+  const handleSearchClick = () => {
+    setSearchTerm(inputSearchTerm.trim()); // Update the main search term to trigger filtering
+  };
+
+
   return (
     <>
       <main className={styles.mainSec}>
@@ -147,6 +164,16 @@ const BroadCast = () => {
                 <input type="checkbox" name="pallet" id="pallet" onChange={handleBuyInChange} />
               </div>
 
+              <div className={styles.searchBroadcastSec}>
+                <input
+                  type="text"
+                  placeholder='Search Broadcasts'
+                  value={inputSearchTerm}
+                  onChange={handleInputChange} // Updates input field only
+                />
+                <button onClick={handleSearchClick}>Search</button>
+              </div>
+
 
 
             </div>
@@ -216,9 +243,9 @@ const BroadCast = () => {
           </thead>
         </table>
 
-<div className={styles.replyBtnSec}>
-  <button className={styles.replyBtn}>Reply</button>
-</div>
+        <div className={styles.replyBtnSec}>
+          <button className={styles.replyBtn}>Reply</button>
+        </div>
       </main >
 
     </>

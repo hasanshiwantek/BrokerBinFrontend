@@ -122,3 +122,16 @@ button, select {
 .replyBtnSec{
   background-color: #ddd
 }
+
+.searchBroadcastSec button{
+  color: white;
+  background-color: var(--primary-color);
+  margin: 5px;
+  padding:8px;
+  border-radius: 10px;
+}
+
+.searchBroadcastSec input{
+  padding: 5px;
+  border: 1px solid  black;
+}
