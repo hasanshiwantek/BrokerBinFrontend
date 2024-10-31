@@ -228,7 +228,7 @@ const BroadcastForm = () => {
                   </button>
                 </div>
               </div>
-              <div>
+              <div> 
                 <h3>For the following:</h3>
                 <div className={css.categories}>
                   <button
