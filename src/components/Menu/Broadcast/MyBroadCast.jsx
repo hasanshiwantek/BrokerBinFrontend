@@ -8,12 +8,11 @@ import { fetchBroadCastData } from '../../../ReduxStore/BroadCast'
 import Cookies from "js-cookie";
 import shieldImage from "../../../assets/shield-img.png"
 import bullImage from "../../../assets/bullhornn.png"
-import Footer from '../../Footer/Footer'
 
 
 const BroadCast = () => {
 
-
+  const broadcastItems = useSelector((state) => state.broadcastStore.broadCastData)
   const token = Cookies.get("token");
   const [filterType, setFilterType] = useState('all');
   const [buyInFilters, setBuyInFilters] = useState([]);
@@ -24,14 +23,13 @@ const BroadCast = () => {
 
   }, [dispatch, token])
 
-  const broadcastItems = useSelector((state) => state.broadcastStore.broadCastData)
   // console.log("Data:", broadcastItems.broadcasts);
 
 
-  if (broadcastItems && broadcastItems.broadcasts) {
-    const buy_ins = broadcastItems.broadcasts.map(item => item.buy_in)
-    console.log("Buy-in values:", buy_ins);
-  }
+  // if (broadcastItems && broadcastItems.broadcasts) {
+  //   const buy_ins = broadcastItems.broadcasts.map(item => item.buy_in)
+  //   console.log("Buy-in values:", buy_ins);
+  // }
   const filteredBroadcasts = broadcastItems && broadcastItems.broadcasts
   ? broadcastItems.broadcasts.filter(broadcast =>
       (filterType === 'all' || broadcast.type === filterType) && // Add this condition
@@ -199,8 +197,28 @@ const BroadCast = () => {
               </tr>
             ))}
           </tbody>
+          <thead>
+            <tr>
+              <th>Cart</th>
+              <th>Posted</th>
+              <th><img src={shieldImage} alt="" srcset="" style={{ width: "18px", fontWeight: "bold" }} /> </th>
+              <th>Company</th>
+              <th>City</th>
+              <th>Type</th>
+              <th>View</th>
+              <th>Part / Model</th>
+              <th>Mfg</th>
+              <th>Cond</th>
+              <th>Price</th>
+              <th>Qty </th>
+              <th>Product Description</th>
+            </tr>
+          </thead>
         </table>
 
+<div className={styles.replyBtnSec}>
+  <button className={styles.replyBtn}>Reply</button>
+</div>
       </main >
 
     </>
