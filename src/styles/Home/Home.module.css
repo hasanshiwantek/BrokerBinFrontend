@@ -33,7 +33,7 @@ button:hover{
     justify-content: space-between;
     padding: 1rem;
     align-items: center;
-    border-top: 1px solid var(--primary-color);
+    border-top: 2px solid var(--primary-color);
     svg {
       height: 2rem;
       width: 2rem;
@@ -43,7 +43,7 @@ button:hover{
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    border-top: 1px solid var(--primary-color);
+    border-top: 2px solid var(--primary-color);
     height: 100%;
     height: -webkit-fill-available;
     padding: 1rem 2rem;
@@ -163,7 +163,7 @@ button:hover{
     }
     > div {
       box-shadow: 0 0 1px rgba(51, 51, 51, 0.5);
-      border-top: 1px solid var(--primary-color);
+      border-top: 2px solid var(--primary-color);
       display: flex;
       justify-content: space-between;
       width: 50%;
@@ -181,7 +181,7 @@ button:hover{
   /* display: grid; */
   /* grid-template-columns: 1fr; */
   margin-bottom: 5rem;
-  border-top: 1px solid var(--primary-color);
+  border-top: 2px solid var(--primary-color);
   .gridHome2_Details_Upper_Right {
     padding: 1rem;
     .gridHome2_Details_Upper_Right_PartSearch {

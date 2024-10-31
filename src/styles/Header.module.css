@@ -9,6 +9,7 @@ button {
   outline: none;
   border: none;
 }
+
 .headerFixed {
   top: 0;
   position: sticky;
@@ -16,26 +17,32 @@ button {
   z-index: 5;
   width: 100%;
 }
+
 .header {
   display: flex;
   align-items: center;
   padding: 1rem;
   border-top: 0.5rem solid var(--primary-color);
   min-height: 8rem;
+
   @media only screen and (max-width: 54.375em) {
     justify-content: space-between;
   }
+
   #logo {
-    > img {
+    >img {
       height: 5rem;
       margin-right: 5rem;
     }
   }
+
   .search_container {
     display: flex;
+
     form {
       display: flex;
     }
+
     .search_btn {
       background-color: var(--primary-color);
       text-transform: capitalize;
@@ -45,34 +52,40 @@ button {
       margin-left: 1rem;
       color: var(--font-color);
     }
+
     #search {
       width: 25rem;
       padding: 0.5rem;
       border: 2px solid var(--box-shadow);
       outline: none;
+
       @media only screen and (max-width: 23.4375em) {
         width: 100%;
       }
     }
+
     #search:focus {
       border: 2px solid black;
     }
   }
 }
 
-.tools_toggle path:hover{
+.tools_toggle path:hover {
   color: white !important;
 }
+
 .nav {
   display: flex;
   justify-content: space-between;
   background-color: var(--primary-color);
-  > ul {
+
+  >ul {
     list-style-type: none;
     display: flex;
     align-items: center;
     text-transform: capitalize;
-    > li {
+
+    >li {
       position: relative;
       display: flex;
       align-items: center;
@@ -81,34 +94,38 @@ button {
       color: var(--font-color);
     }
 
-    > li:hover {
+    >li:hover {
       /* height: 100%; */
       background: rgb(202, 99, 202);
     }
   }
+
   .onHoverMenuIconUp {
     display: none;
   }
 }
+
 .navbar_search_options {
   color: black !important;
 }
+
 .nav {
   position: relative;
 }
 
 .nav_tools {
-  > li {
+  >li {
     height: 100%;
-    padding: 0.1rem ;
+    padding: 0.1rem;
 
   }
+
   @media only screen and (max-width: 54.375em) {
     margin-left: auto;
   }
 }
 
-.venIcon{
+.venIcon {
   font-weight: 700;
 }
 
@@ -117,12 +134,14 @@ button {
 
   ul {
     width: max-content;
+
     li {
       padding: 1rem;
     }
   }
 }
-nav > ul > li:hover .dropdownMenu {
+
+nav>ul>li:hover .dropdownMenu {
   display: block;
   position: absolute;
   top: 100%;
@@ -131,6 +150,7 @@ nav > ul > li:hover .dropdownMenu {
   color: black;
   box-shadow: 1px 1px 1rem 1px var(--box-shadow);
   z-index: 1;
+
   ul {
     li:hover {
       color: var(--font-color);
@@ -139,25 +159,29 @@ nav > ul > li:hover .dropdownMenu {
   }
 }
 
-nav > ul > li:hover {
+nav>ul>li:hover {
   .onHoverMenuIconUp {
     display: block;
   }
+
   .onHoverMenuIconDown {
     display: none;
   }
 }
 
 .nav_links {
+
   /* height: 100%; */
   /* position: relative; */
   > :first-child {
     display: none;
   }
+
   @media only screen and (max-width: 54.375em) {
     > :first-child {
       display: flex;
     }
+
     > :not(:first-child) {
       display: none;
     }
@@ -202,23 +226,25 @@ nav > ul > li:hover {
     } */
 
     &_ul {
+
       /* ul > a  {
         padding: 1rem 4rem;
       } */
-      ul > a > li {
+      ul>a>li {
         color: black;
         /* color: var(--primary-color); */
         padding: 1rem 4rem;
       }
-      ul > a > li:hover {
+
+      ul>a>li:hover {
         background: var(--primary-color);
         color: inherit;
         /* background: pink; */
       }
     }
 
-    > li {
-      > div:first-of-type {
+    >li {
+      >div:first-of-type {
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -228,7 +254,8 @@ nav > ul > li:hover {
         cursor: pointer;
       }
     }
-    > li:last-of-type {
+
+    >li:last-of-type {
       display: flex;
       align-items: center;
       /* justify-content: flex-end; */
@@ -247,18 +274,22 @@ nav > ul > li:hover {
   gap: 3rem;
   margin-left: 5rem;
   padding: 0.2rem;
+
   &_details {
     display: flex;
     flex-direction: column;
-    > span {
+
+    >span {
       display: flex;
       gap: 0.5rem;
     }
   }
+
   &_img {
     height: 7rem;
     border: 1px solid rgb(158, 158, 158);
-    > img {
+
+    >img {
       height: 100%;
       aspect-ratio: 1;
       object-fit: contain;
