@@ -28,7 +28,6 @@ import { brokerAPI } from "../components/api/BrokerEndpoint";
 //   }
 // );
 
-
 export const sendBroadcast = createAsyncThunk(
   "broadcastStore/sendBroadcast",
   async ({ token, data }) => {
@@ -145,10 +144,6 @@ export const fetchBroadCastData = createAsyncThunk(
   }
 );
 
-
-
-
-
 const initialState = {
   computerSelection: [],
   telecomSelection: [],
@@ -238,6 +233,7 @@ const broadcastSlice = createSlice({
       });
   },
 });
+
 export const {
   setComputerSelection,
   setTelecomSelection,
@@ -245,6 +241,7 @@ export const {
   setCompaniesSelection,
   setRegionSelection,
   setServiceSelection,
+  setFormData,
 } = broadcastSlice.actions;
 
 export default broadcastSlice.reducer;

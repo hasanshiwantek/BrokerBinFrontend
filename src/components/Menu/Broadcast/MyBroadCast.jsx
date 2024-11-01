@@ -19,6 +19,10 @@ const BroadCast = () => {
   const [buyInFilters, setBuyInFilters] = useState([]);
   const [inputSearchTerm, setInputSearchTerm] = useState(''); // Temporary state for input field
   const [searchTerm, setSearchTerm] = useState('');
+  // const broadcasts = useSelector(state => state.broadcastStore.broadCastData);
+  // const currentUser = useSelector(state => state.auth.currentUser);
+  const currentUserID = Cookies.get("user_id");
+
 
 
   const dispatch = useDispatch()
@@ -42,6 +46,7 @@ const BroadCast = () => {
 
   const uniqueCompanyIds = [...new Set(filteredBroadcasts.map((item) => item.user_id.id))];
   console.log(uniqueCompanyIds.toString());
+
 
 
   // Handler for Types like wtb,wts,rfq...
@@ -180,9 +185,6 @@ const BroadCast = () => {
                 />
                 <button onClick={handleSearchClick}>Search</button>
               </div>
-
-
-
             </div>
           </div>
 
@@ -191,6 +193,7 @@ const BroadCast = () => {
 
 
         </div>
+
         <table className={styles.table}>
           <thead>
             <tr>
@@ -209,12 +212,14 @@ const BroadCast = () => {
               <th>Product Description</th>
             </tr>
           </thead>
+          
+
           <tbody>
 
 
 
             {filteredBroadcasts.map((item, index) => (
-              <tr key={index}>
+              <tr key={index} style={String(item.user_id.id) === currentUserID ? { color: "red" } : null}>
                 <td>
                   <input type="checkbox" />
                 </td>
@@ -243,6 +248,7 @@ const BroadCast = () => {
             ))}
 
           </tbody>
+
           <thead>
             <tr>
               <th>Cart</th>
