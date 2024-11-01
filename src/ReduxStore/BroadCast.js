@@ -28,7 +28,6 @@ import { brokerAPI } from "../components/api/BrokerEndpoint";
 //   }
 // );
 
-
 export const sendBroadcast = createAsyncThunk(
   "broadcastStore/sendBroadcast",
   async ({ token, data }) => {
@@ -135,7 +134,7 @@ export const fetchBroadCastData = createAsyncThunk(
         }
       );
 
-      console.log(response.data);
+      console.log("View Broadcast Data",response.data);
 
       return response.data;
 

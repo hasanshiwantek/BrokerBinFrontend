@@ -87,14 +87,14 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
-    padding: 5px;
+    /* padding: 5px; */
     background-color: lightgray;
     margin-bottom: 5px;
 }
 
 
 button, select {
-    padding: 3px;
+    padding: 10px;
     margin: 3px;
 }
 
@@ -134,4 +134,21 @@ button, select {
 .searchBroadcastSec input{
   padding: 5px;
   border: 1px solid  black;
+}
+
+.type-wtb {
+  color: blue;
+  text-transform:uppercase;
+}
+
+.type-wts {
+  color: red;
+  text-transform:uppercase;
+
+}
+
+.type-rfq {
+  color: green;
+  text-transform:uppercase;
+
 }

@@ -45,6 +45,11 @@
     background-color: white;
     border-radius: 5px;
 }
+ 
+.table th:hover{
+    color: black;
+    cursor: pointer;
+  }
 
 .tableHeader {
     display: flex;
@@ -138,3 +143,36 @@
     align-items: center;
     gap: 5px;
 }
+
+
+
+.searchBroadcastSec button{
+    color: white;
+    background-color: var(--primary-color);
+    margin: 5px;
+    padding:8px;
+    border-radius: 10px;
+  }
+  
+  .searchBroadcastSec input{
+    padding: 5px;
+    border: 1px solid  black;
+  }
+  
+
+  .type-wtb {
+    color: blue;
+    text-transform:uppercase;
+  }
+  
+  .type-wts {
+    color: red;
+    text-transform:uppercase;
+  
+  }
+  
+  .type-rfq {
+    color: green;
+    text-transform:uppercase;
+  
+  }
