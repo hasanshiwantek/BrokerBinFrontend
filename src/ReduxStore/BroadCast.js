@@ -135,7 +135,7 @@ export const fetchBroadCastData = createAsyncThunk(
         }
       );
 
-      console.log(response.data);
+      console.log("View Broadcast Data",response.data);
 
       return response.data;
 

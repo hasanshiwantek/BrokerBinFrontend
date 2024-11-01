@@ -13,6 +13,7 @@ import bullImage from "../../../assets/bullhornn.png"
 const BroadCast = () => {
 
   const broadcastItems = useSelector((state) => state.broadcastStore.broadCastData)
+
   const token = Cookies.get("token");
   const [filterType, setFilterType] = useState('all');
   const [buyInFilters, setBuyInFilters] = useState([]);
@@ -27,13 +28,8 @@ const BroadCast = () => {
 
   }, [dispatch, token])
 
-  // console.log("Data:", broadcastItems.broadcasts);
 
 
-  // if (broadcastItems && broadcastItems.broadcasts) {
-  //   const buy_ins = broadcastItems.broadcasts.map(item => item.buy_in)
-  //   console.log("Buy-in values:", buy_ins);
-  // }
   const filteredBroadcasts = broadcastItems && broadcastItems.broadcasts
     ? broadcastItems.broadcasts.filter(broadcast =>
       (filterType === 'all' || broadcast.type === filterType) && // Add this condition
@@ -43,7 +39,10 @@ const BroadCast = () => {
     )
     : [];
 
-  console.log(filteredBroadcasts);
+
+  const uniqueCompanyIds = [...new Set(filteredBroadcasts.map((item) => item.user_id.id))];
+  console.log(uniqueCompanyIds.toString());
+
 
   // Handler for Types like wtb,wts,rfq...
   const handleFilterChange = (event) => {
@@ -74,6 +73,13 @@ const BroadCast = () => {
     setSearchTerm(inputSearchTerm.trim()); // Update the main search term to trigger filtering
   };
 
+
+  // Trigger search on Enter key press
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      handleSearchClick();
+    }
+  };
 
   return (
     <>
@@ -170,6 +176,7 @@ const BroadCast = () => {
                   placeholder='Search Broadcasts'
                   value={inputSearchTerm}
                   onChange={handleInputChange} // Updates input field only
+                  onKeyDown={handleKeyDown}
                 />
                 <button onClick={handleSearchClick}>Search</button>
               </div>
@@ -213,7 +220,14 @@ const BroadCast = () => {
                 <td></td>
                 <td>{item.user_id.company.name}</td>
                 <td>{item.user_id.company.country}</td>
-                <td style={{ color: "red" }}>{item.type}</td>
+                <td className={
+                  item.type === 'wtb' ? styles['type-wtb'] :
+                    item.type === 'wts' ? styles['type-wts'] :
+                      item.type === 'rfq' ? styles['type-rfq'] :
+                        ''
+                }>
+                  {item.type}
+                </td>
                 <td > <img src={bullImage} alt="" srcset="" style={{ width: "18px", fontWeight: "bold" }} /></td>
                 <td>{item.partModel}</td>
                 <td>{item.mfg}</td>
