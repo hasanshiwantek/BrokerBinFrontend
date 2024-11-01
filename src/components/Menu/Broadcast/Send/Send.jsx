@@ -15,6 +15,7 @@ const BroadcastForm = () => {
   const token = Cookies.get("token");
   const { user } = JSON.parse(localStorage.getItem("user"));
   const service = useSelector((state) => state.broadcastStore.serviceData)
+  
   // console.log(service);
 
   // console.log(user);

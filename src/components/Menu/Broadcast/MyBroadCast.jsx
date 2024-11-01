@@ -18,6 +18,10 @@ const BroadCast = () => {
   const [buyInFilters, setBuyInFilters] = useState([]);
   const [inputSearchTerm, setInputSearchTerm] = useState(''); // Temporary state for input field
   const [searchTerm, setSearchTerm] = useState('');
+  // const broadcasts = useSelector(state => state.broadcastStore.broadCastData);
+  // const currentUser = useSelector(state => state.auth.currentUser);
+  const currentUserID = Cookies.get("user_id");
+
 
 
   const dispatch = useDispatch()
@@ -44,6 +48,7 @@ const BroadCast = () => {
     : [];
 
   console.log(filteredBroadcasts);
+
 
   // Handler for Types like wtb,wts,rfq...
   const handleFilterChange = (event) => {
@@ -72,6 +77,12 @@ const BroadCast = () => {
   // Search Button Handler to apply the search term
   const handleSearchClick = () => {
     setSearchTerm(inputSearchTerm.trim()); // Update the main search term to trigger filtering
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      handleSearchClick();
+    }
   };
 
 
@@ -169,13 +180,11 @@ const BroadCast = () => {
                   type="text"
                   placeholder='Search Broadcasts'
                   value={inputSearchTerm}
-                  onChange={handleInputChange} // Updates input field only
+                  onChange={handleInputChange}
+                  onKeyDown={handleKeyDown} // Updates input field only
                 />
                 <button onClick={handleSearchClick}>Search</button>
               </div>
-
-
-
             </div>
           </div>
 
@@ -184,6 +193,7 @@ const BroadCast = () => {
 
 
         </div>
+
         <table className={styles.table}>
           <thead>
             <tr>
@@ -202,9 +212,11 @@ const BroadCast = () => {
               <th>Product Description</th>
             </tr>
           </thead>
+          
+
           <tbody>
             {filteredBroadcasts.map((item, index) => (
-              <tr key={index}>
+              <tr key={index} style={String(item.user_id.id) === currentUserID ? { color: "red" } : null}>
                 <td>
                   <input type="checkbox" />
                 </td>
@@ -224,6 +236,7 @@ const BroadCast = () => {
               </tr>
             ))}
           </tbody>
+
           <thead>
             <tr>
               <th>Cart</th>
