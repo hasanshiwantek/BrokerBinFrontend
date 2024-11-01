@@ -1,15 +1,70 @@
-import React from 'react'
-import css from "../../../styles/Menu/Manage/BroadcastFilters/BroadCastHistory.module.css"
-import { Link } from 'react-router-dom'
+
+import React, { useEffect, useState } from 'react';
+import css from "../../../styles/Menu/Manage/BroadcastFilters/BroadCastHistory.module.css";
+import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import Cookies from 'js-cookie';
+import { fetchBroadCastData } from '../../../ReduxStore/BroadCast';
+
 const BroadCastHistory = () => {
+  const broadcastItems = useSelector((state) => state.broadcastStore.broadCastData);
+  const loggedInUserId = Cookies.get("user_id");
+  const dispatch = useDispatch();
+
+  const [selectedType, setSelectedType] = useState("all"); // State to track selected broadcast type
+  const [inputSearchTerm, setInputSearchTerm] = useState(''); // Temporary state for input field
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const token = Cookies.get("token");
+
+  useEffect(() => {
+    dispatch(fetchBroadCastData({ token }));
+  }, [dispatch, token]);
+
+  // Filter broadcasts for the logged-in user
+  const userBroadcasts = broadcastItems.broadcasts?.filter(
+    (item) => item.user_id.id.toString() === loggedInUserId.toString()
+  );
+
+  // Further filter by selectedType if it's not "all"
+  const filteredBroadcasts = userBroadcasts
+  ?.filter((item) => selectedType === "all" || item.type === selectedType.toLowerCase())
+  .filter((item) =>
+    searchTerm === '' ||
+    item.partModel?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.mfg?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+
+  const handleTypeChange = (event) => {
+    setSelectedType(event.target.value); // Update selected type based on dropdown selection
+  };
+ // Handle input change for search term
+ const handleInputChange = (event) => {
+  setInputSearchTerm(event.target.value);
+};
+
+
+  // Search Button Handler to apply the search term
+  const handleSearchClick = () => {
+    setSearchTerm(inputSearchTerm.trim()); // Update the main search term to trigger filtering
+  };
+
+
+  // Trigger search on Enter key press
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      handleSearchClick();
+    }
+  };
+
   return (
     <>
-    <div className={css.container}>
+      <div className={css.container}>
         {/* Tabs */}
         <div className={css.tabs}>
           <ul>
-
-        <li>
+            <li>
               <Link to="/sendbroad">Send</Link>
             </li>
             <li>
@@ -21,36 +76,41 @@ const BroadCastHistory = () => {
             <li>
               <Link to="/broadcasthistory" className={css.activeTab}>History</Link>
             </li>
-        
           </ul>
         </div>
 
         {/* Table Section */}
         <div className={css.tableWrapper}>
           <div className={css.tableHeader}>
-            <div >
+            <div>
               <button className={css.tabTitle}>BroadCast</button>
-       
             </div>
 
-
-            {/* Manufacturer Dropdown */}
+            {/* Filter by Type Dropdown */}
             <div className={css.manufacturerDropdown}>
               <span> View:&nbsp;</span>
-              <select>
-                <option value="BroadCasts">BroadCasts</option>
+              <select onChange={handleTypeChange} value={selectedType}>
+                <option value="all">All Broadcasts</option>
                 <option value="WTB">WTB</option>
                 <option value="WTS">WTS</option>
                 <option value="RFQ">RFQ</option>
               </select>
             </div>
 
-
-            <div className={css.partSearchSec}>
-            <span> PartSearch:&nbsp;</span>
-            <input type="text" />
-            <button className={css.broadcastButton}>Search</button>
+            {/* Part Search */}
+            <div className={css.searchBroadcastSec}>
+              <input
+                type="text"
+                placeholder='Search Broadcasts'
+                value={inputSearchTerm}
+                onChange={handleInputChange} // Updates input field only
+                onKeyDown={handleKeyDown}
+              />
+              <button onClick={handleSearchClick}>Search</button>
             </div>
+
+
+
           </div>
 
           {/* Table */}
@@ -68,40 +128,57 @@ const BroadCastHistory = () => {
                 <th>Product Description</th>
               </tr>
             </thead>
-         
-                  <tbody>
-
-                    <tr >
-                    
-
-                      <td>1</td>
-                      <td>4</td>
-                      <td>---</td>
-                      <td>55</td>
-                      <td>tyty</td>
-                      <td>978979</td>
-                      <td>7676</td>
-                      <td>---</td>
-                      <td>---</td>
-                      
-                  
-                    </tr>
-                  </tbody>
-
+            <tbody>
+              {filteredBroadcasts && filteredBroadcasts.length > 0 ? (
+                filteredBroadcasts.map((item, index) => (
+                  <tr key={index}>
+                    <td>{item.created_at}</td>
+                    <td className={
+                  item.type === 'wtb' ? css['type-wtb'] :
+                    item.type === 'wts' ? css['type-wts'] :
+                      item.type === 'rfq' ? css['type-rfq'] :
+                        ''
+                }>
+                  {item.type}
+                </td>
+                    <td>---</td>
+                    <td>{item.partModel}</td>
+                    <td>{item.heciClei}</td>
+                    <td>{item.mfg}</td>
+                    <td style={{color:"blue"}}>{item.price}</td>
+                    <td>{item.quantity}</td>
+                    <td>{item.description}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="9">No broadcasts found for this type.</td>
+                </tr>
+              )}
+            </tbody>
+            <thead>
+              <tr>
+                <th>Last Posted</th>
+                <th>Type</th>
+                <th>View</th>
+                <th>Part / Model</th>
+                <th>HECI / CLEI</th>
+                <th>Mfg</th>
+                <th>Price</th>
+                <th>QTY</th>
+                <th>Product Description</th>
+              </tr>
+            </thead>
           </table>
 
+          {/* Action Buttons */}
           <div className={css.actionButtons}>
-     
-          <button className={css.deleteButton}>Delete</button>
+            <button className={css.deleteButton}>Delete</button>
           </div>
-
-
         </div>
-
       </div>
-
     </>
-  )
-}
+  );
+};
 
-export default BroadCastHistory
+export default BroadCastHistory;
