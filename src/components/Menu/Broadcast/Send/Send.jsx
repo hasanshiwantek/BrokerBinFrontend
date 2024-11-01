@@ -15,6 +15,7 @@ const BroadcastForm = () => {
   const token = Cookies.get("token");
   const { user } = JSON.parse(localStorage.getItem("user"));
   const service = useSelector((state) => state.broadcastStore.serviceData)
+  
   // console.log(service);
 
   // console.log(user);
@@ -43,6 +44,7 @@ const BroadcastForm = () => {
     description: "",
     additional_comments: "",
   });
+  
   const [emailFormat, setEmailFormat] = useState({
     time: "",
     date: "",
@@ -227,7 +229,7 @@ const BroadcastForm = () => {
                   </button>
                 </div>
               </div>
-              <div>
+              <div> 
                 <h3>For the following:</h3>
                 <div className={css.categories}>
                   <button
@@ -292,7 +294,6 @@ const BroadcastForm = () => {
                   </h1>
                 )}
 
-                {/* SERVICES SECTION */}
                 {
                   category === "service" &&
                   <div className={css.toggleServices}>
@@ -441,7 +442,6 @@ const BroadcastForm = () => {
                   <div className={css.mainFields_3}>
                     <div>
                       <label htmlFor="buy_in_bulk">Bulk</label>
-                      {/* <input type="radio" name="" id="" /> */}
                       <input
                         type="radio"
                         name="buy_in"
@@ -596,7 +596,6 @@ const BroadcastForm = () => {
                         </li>
                         <li>
                           <p>Services</p>
-                          {/* <p>{service}</p> */}
                           {
                             service.map((val, index) => {
                               return (
@@ -646,4 +645,3 @@ const BroadcastForm = () => {
 };
 
 export default BroadcastForm;
-
