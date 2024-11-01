@@ -210,6 +210,9 @@ const BroadCast = () => {
             </tr>
           </thead>
           <tbody>
+
+
+
             {filteredBroadcasts.map((item, index) => (
               <tr key={index}>
                 <td>
@@ -236,7 +239,9 @@ const BroadCast = () => {
                 <td>{item.quantity}</td>
                 <td>{item.description}</td>
               </tr>
+
             ))}
+
           </tbody>
           <thead>
             <tr>
