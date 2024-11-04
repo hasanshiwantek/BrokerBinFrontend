@@ -57,6 +57,7 @@
    
   .table tr:hover{
     background-color: #f1f1f1;
+    cursor: pointer;
   }
   
   .table th, .table td {
@@ -129,6 +130,12 @@ button, select {
   margin: 5px;
   padding:8px;
   border-radius: 10px;
+  border: 1px solid var(--primary-color);
+}
+
+.searchBroadcastSec button:hover{
+  background-color: white;
+  color: var(--primary-color);
 }
 
 .searchBroadcastSec input{

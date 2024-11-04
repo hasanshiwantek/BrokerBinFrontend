@@ -51,6 +51,12 @@
     cursor: pointer;
   }
 
+  .table tr:hover{
+    background-color: #f1f1f1;
+    cursor: pointer;
+
+  }
+
 .tableHeader {
     display: flex;
     justify-content: space-between;

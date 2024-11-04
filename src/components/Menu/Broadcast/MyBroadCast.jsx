@@ -8,11 +8,14 @@ import { fetchBroadCastData } from '../../../ReduxStore/BroadCast'
 import Cookies from "js-cookie";
 import shieldImage from "../../../assets/shield-img.png"
 import bullImage from "../../../assets/bullhornn.png"
-
+import { computers, telecom, mobileDevice, servicesList } from '../../../data/services'
 
 const BroadCast = () => {
 
   const broadcastItems = useSelector((state) => state.broadcastStore.broadCastData)
+
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [options, setOptions] = useState([]);
 
   const token = Cookies.get("token");
   const [filterType, setFilterType] = useState('all');
@@ -86,6 +89,31 @@ const BroadCast = () => {
     }
   };
 
+
+  // Update options based on selected category
+  const handleCategoryChange = (event) => {
+    const category = event.target.value;
+    setSelectedCategory(category);
+
+    switch (category) {
+      case "computer":
+        setOptions(computers);
+        break;
+      case "telecom":
+        setOptions(telecom);
+        break;
+      case "mobileDevices":
+        setOptions(mobileDevice);
+        break;
+      case "services":
+        setOptions(servicesList)
+        break;
+      default:
+        setOptions([]);
+        break;
+    }
+  };
+
   return (
     <>
       <main className={styles.mainSec}>
@@ -98,7 +126,7 @@ const BroadCast = () => {
               <Link to={'/sendbroad'}>Send</Link>
             </li>
             <li>
-              <Link to={'/'}>View</Link>
+              <Link to={'/broadcasts"'}>View</Link>
             </li>
             <li>
               <Link to={"/myprofile/broadcastfilter"}>
@@ -107,7 +135,7 @@ const BroadCast = () => {
 
             </li>
             <li>
-              <Link to={'/'}>History</Link>
+              <Link to={'/broadcasthistory'}>History</Link>
             </li>
           </ul>
         </nav>
@@ -123,21 +151,33 @@ const BroadCast = () => {
                 <span> View By:&nbsp;</span>
                 <select>
                   <option value="all">Manufacturer</option>
-
                 </select>
               </div>
 
+              {/* First Dropdown for Category Selection */}
               <div className={styles.manufacturerDropdown}>
-                <select>
+                <select value={selectedCategory} onChange={handleCategoryChange}>
                   <option value="all">All</option>
-
+                  <option value="computer">Computers</option>
+                  <option value="telecom">Telecom</option>
+                  <option value="services">Services</option>
+                  <option value="mobileDevices">Mobile Devices</option>
                 </select>
               </div>
 
-              <div className={styles.manufacturerDropdown}>
+              {/* Second Dropdown for Dynamic Options */}
+              <div>
                 <select>
-                  <option value="all">Sub-categories</option>
-
+                  {selectedCategory === "all" ? (
+                    <option value="">- -Choose one</option>
+                  ) : (
+                    <option value="">Sub Category</option>
+                  )}
+                  {options.map((item) => (
+                    <option key={item.id} value={item.value}>
+                      {item.label}
+                    </option>
+                  ))}
                 </select>
               </div>
 
@@ -205,6 +245,8 @@ const BroadCast = () => {
               <th>Type</th>
               <th>View</th>
               <th>Part / Model</th>
+              <th>HECI/CLEI</th>
+
               <th>Mfg</th>
               <th>Cond</th>
               <th>Price</th>
@@ -212,9 +254,12 @@ const BroadCast = () => {
               <th>Product Description</th>
             </tr>
           </thead>
-          
+
 
           <tbody>
+
+
+
             {filteredBroadcasts.map((item, index) => (
               <tr key={index} style={String(item.user_id.id) === currentUserID ? { color: "red" } : null}>
                 <td>
@@ -234,14 +279,17 @@ const BroadCast = () => {
                   {item.type}
                 </td>
                 <td > <img src={bullImage} alt="" srcset="" style={{ width: "18px", fontWeight: "bold" }} /></td>
-                <td>{item.partModel}</td>
+                <td style={{textTransform:"uppercase"}}>{item.partModel}</td>
+                <td>{item.heciClei}</td>
                 <td>{item.mfg}</td>
                 <td>{item.cond}</td>
                 <td style={{ color: "blue" }}>{item.price}</td>
                 <td>{item.quantity}</td>
                 <td>{item.description}</td>
               </tr>
+
             ))}
+
           </tbody>
 
           <thead>
@@ -254,6 +302,8 @@ const BroadCast = () => {
               <th>Type</th>
               <th>View</th>
               <th>Part / Model</th>
+              <th>HECI/CLEI</th>
+
               <th>Mfg</th>
               <th>Cond</th>
               <th>Price</th>
