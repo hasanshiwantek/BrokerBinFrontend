@@ -58,6 +58,10 @@ const BroadCastHistory = () => {
     }
   };
 
+  const handleDelete = () => {
+
+  }
+
   return (
     <>
       <div className={css.container}>
@@ -117,6 +121,7 @@ const BroadCastHistory = () => {
           <table className={css.table}>
             <thead>
               <tr>
+                <th>cart</th>
                 <th>Last Posted</th>
                 <th>Type</th>
                 <th>View</th>
@@ -132,6 +137,9 @@ const BroadCastHistory = () => {
               {filteredBroadcasts && filteredBroadcasts.length > 0 ? (
                 filteredBroadcasts.map((item, index) => (
                   <tr key={index}>
+                    <td>
+                      <input type="checkbox" />
+                    </td>
                     <td>{item.created_at}</td>
                     <td className={
                   item.type === 'wtb' ? css['type-wtb'] :
@@ -158,6 +166,7 @@ const BroadCastHistory = () => {
             </tbody>
             <thead>
               <tr>
+                <th>cart</th>
                 <th>Last Posted</th>
                 <th>Type</th>
                 <th>View</th>

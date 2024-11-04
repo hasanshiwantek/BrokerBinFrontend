@@ -62,32 +62,6 @@ const Login = () => {
     }
   };
 
-  // useEffect(() => {
-  // const handleClick = (e) => {
-  //   if (popUpRef.current && !popUpRef.current.contains(e.target)) {
-  //     setForgotPassword((prev) => !prev);
-  //   }
-  // };
-  // document.addEventListener("click", handleClick);
-
-  //   return () => {
-  //     document.removeEventListener("click", handleClick);
-  //   };
-  // }, [forgotPassword]);
-
-  // useEffect(() => {
-  //   const token = localStorage.getItem("user");
-  //   if (token) {
-  //     // Optional: Validate the token if needed
-  //     // For simplicity, assume token is valid and redirect
-  //     navigate("/");
-  //   }
-  //   else{
-  //     navigate("/login");
-
-  //   }
-  // }, [navigate]);
-
   return (
     <div className={css.bg}>
       <div className={css.loginContainer}>
