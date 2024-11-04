@@ -9,8 +9,7 @@ import { servicesList, regionsList, countriesList, groupingsList, telecom, mobil
 import CheckboxList from "./CheckboxList";
 import UniversalSelector from "./UniversalSelector";
 import MFGFilter from "./MFGFilter";
-import Footer from "../../../Footer/Footer";
-
+import SearchCompanyInventory from "../../Reports/SearchCompanyInventory";
 const Options = () => {
 
   // Existing states and handlers...
@@ -57,7 +56,7 @@ const Options = () => {
 
 
 
-// Function to handle checkbox individually.
+  // Function to handle checkbox individually.
   const handleCheckboxChange = (name, value) => {
     setBroadcastFilterState((prevState) => {
       let updatedItems;
@@ -98,7 +97,7 @@ const Options = () => {
         return { ...prevState, selectedOutgoingRegions: updatedItems };
       }
 
-      if (name === "type_of_broadcast") {  
+      if (name === "type_of_broadcast") {
         updatedItems = prevState.selectedBroadcastTypes.includes(value)
           ? prevState.selectedBroadcastTypes.filter((item) => item !== value)
           : [...prevState.selectedBroadcastTypes, value];
@@ -256,9 +255,9 @@ const Options = () => {
 
     dispatch(broadCastFilters({ data: transformedData, token }));
 
-    if(data.success){
-      alert("Form Data Submitted!")
-    }
+    // if(transformedData){
+    //   alert("Form Data Submitted!")
+    //   }
   };
   const isBroadcastSelected = broadcastFilterState.selectedBroadcastTypes.length > 0;
 
@@ -583,7 +582,7 @@ const Options = () => {
                   <h1>
                     Company Filters (Max of 25/Overrides My Vendor settings.)
                   </h1>
-                  <ul>
+                  {/* <ul>
                     <li>
                       <span>
                         <label htmlFor="companySearch">Company Search</label>
@@ -596,7 +595,16 @@ const Options = () => {
                         <button type="button">add</button>
                       </span>
                     </li>
-                  </ul>
+                  </ul> */}
+
+
+
+                  {/* View A Company's Inventory */}
+                  <div className={css.section} style={{ margin: "10px" }}>
+                    <div className={css.display}>
+                      <SearchCompanyInventory />
+                    </div>
+                  </div>
                 </div>
               </div>
 
