@@ -9,10 +9,12 @@ import Cookies from "js-cookie";
 import shieldImage from "../../../assets/shield-img.png"
 import bullImage from "../../../assets/bullhornn.png"
 import { computers, telecom, mobileDevice, servicesList } from '../../../data/services'
-
+import BroadcastFileModal from './Send/Field Components/BroadcastFileModal'
 const BroadCast = () => {
 
   const broadcastItems = useSelector((state) => state.broadcastStore.broadCastData)
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedBroadcast, setSelectedBroadcast] = useState(null);
 
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [options, setOptions] = useState([]);
@@ -114,6 +116,15 @@ const BroadCast = () => {
     }
   };
 
+  const openModal = (broadcast) => {
+    setSelectedBroadcast(broadcast);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedBroadcast(null);
+  };
   return (
     <>
       <main className={styles.mainSec}>
@@ -278,8 +289,8 @@ const BroadCast = () => {
                 }>
                   {item.type}
                 </td>
-                <td > <img src={bullImage} alt="" srcset="" style={{ width: "18px", fontWeight: "bold" }} /></td>
-                <td style={{textTransform:"uppercase"}}>{item.partModel}</td>
+                <td > <img src={bullImage} alt="" srcset="" onClick={() => openModal(item)} style={{ width: "18px", fontWeight: "bold" }} /></td>
+                <td style={{ textTransform: "uppercase" }}>{item.partModel}</td>
                 <td>{item.heciClei}</td>
                 <td>{item.mfg}</td>
                 <td>{item.cond}</td>
@@ -316,6 +327,12 @@ const BroadCast = () => {
         <div className={styles.replyBtnSec}>
           <button className={styles.replyBtn}>Reply</button>
         </div>
+
+        <BroadcastFileModal
+          isOpen={isModalOpen}
+          onRequestClose={closeModal}
+          broadcast={selectedBroadcast}
+        />
       </main >
 
     </>
