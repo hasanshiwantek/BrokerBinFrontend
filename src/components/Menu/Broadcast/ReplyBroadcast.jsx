@@ -1,11 +1,10 @@
-import React, {useState} from 'react'
-import styles from "./BroadCast.module.css"
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import myProfile from '../../../styles/Menu/Manage/BroadcastFilters/BroadcastFilters.module.css';
-import css from "../../../styles/Menu/Manage/BroadcastFilters/BroadcastFilters.module.css";
 import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Cookies from "js-cookie";
+import styles from "./BroadCast.module.css"
 
 
 
@@ -15,9 +14,9 @@ const ReplyBroad = () => {
     const location = useLocation();
     const { broadcast } = location.state || {};
 
-     // Create recipientEmail to store the actual email address
-     const recipientEmail = broadcast?.user_id?.email || ''; // Pulls email from selected broadcast
-     // This function is when you have the API key and processing it through asyncthunk. same goes for above recipientEmail because in email format to: we are showing only name their and email will be in api call hidden.
+    // Create recipientEmail to store the actual email address
+    const recipientEmail = broadcast?.user_id?.email || ''; // Pulls email from selected broadcast
+    // This function is when you have the API key and processing it through asyncthunk. same goes for above recipientEmail because in email format to: we are showing only name their and email will be in api call hidden.
 
     //  const handleSubmit = (e) => {
     //     e.preventDefault();
@@ -39,21 +38,22 @@ const ReplyBroad = () => {
     // };
 
     // Fetch logged-in user's details from Redux
-  const currentUserID = Cookies.get("user_id");
-  
-  //const currentUser = useSelector(state => state.auth.currentUser);
+    const currentUserID = Cookies.get("user_id");
+
+    //const currentUser = useSelector(state => state.auth.currentUser);
 
     const [email, setEmail] = useState({
-        to: broadcast ? `${broadcast.user_id.email} `: '',
+        to: broadcast ? `${broadcast.user_id.email} ` : '',
         subject: broadcast ? `Re: ${broadcast.type} : ${broadcast.mfg} : ${broadcast.partModel} : ${broadcast?.additional_comments} : ${broadcast?.description}` : '',
         comments: broadcast ? `${broadcast?.additional_comments}` : '',
     });
 
-    const handleChange = (e) => { 
-        setEmail({...email, [e.target.name]: e.target.value});
+    const handleChange = (e) => {
+        const {value,name} =e.target
+        setEmail({ ...email, [name]: value  });
     };
-    
-    
+
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -62,33 +62,57 @@ const ReplyBroad = () => {
     };
 
 
+    // Function to initialize comments with dynamic data from broadcast
+    const initializeComments = () => {
+        return `--------------------\n${broadcast.user_id.firstName} ${broadcast.user_id.lastName}\n${broadcast.user_id.company.name}\nP: ${broadcast.user_id.phoneNumber}\n${broadcast.user_id.email}\n\n--------------------\nOriginal Broadcast Details
+        MFG: ${broadcast.mfg || ''}
+        Part No: ${broadcast.partModel || ''}
+        Condition: ${broadcast.cond || ''}
+        Quantity: ${broadcast.quantity || ''}
+        Price: ${broadcast.price || ''}
+        Comments: ${broadcast.additional_comments || ''}
+        Description: ${broadcast.description || ''}
+        `;
+    };
+
+    useEffect(() => {
+        // Set initial comments with dynamic data when the component mounts
+        setEmail((prev) => ({
+            ...prev,
+            comments: initializeComments()
+        }));
+    }, [broadcast]); // Re-run if broadcast data changes
+
     return (
         <>
-        {/* <main className={styles.mainSec}> */}
-        <main className={myProfile.profileInfo}>
-            <nav className='menu-bar'>
-                <ul>
-                    <li>
-                    <Link to={'/'}>Reply</Link>
-                    </li>
-                    <li>
-                    <Link to={'/sendbroad'}>Send</Link>
-                    </li>
-                    <li>
-                    <Link to={'/broadcasts'}>View</Link>
-                    </li>
-                    <li>
-                    <Link to={"/myprofile/broadcastfilter"}>
-                        Set Filters
-                    </Link>
-                    </li>
-                    <li>
-                    <Link to={'/broadcasthistory'}>History</Link>
-                    </li>
-                </ul>
-            </nav>
-            <div className={` ${styles.replyform}`}>
-                <h1>Reply To Broadcast</h1>
+            {/* <main className={styles.mainSec}> */}
+            <main className={myProfile.profileInfo}>
+                <nav className='menu-bar'>
+                    <ul>
+                        <li>
+                            <Link to={'/'}>Reply</Link>
+                        </li>
+                        <li>
+                            <Link to={'/sendbroad'}>Send</Link>
+                        </li>
+                        <li>
+                            <Link to={'/broadcasts'}>View</Link>
+                        </li>
+                        <li>
+                            <Link to={"/myprofile/broadcastfilter"}>
+                                Set Filters
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to={'/broadcasthistory'}>History</Link>
+                        </li>
+                    </ul>
+                </nav>
+                <div className={` ${styles.replyform}`}>
+                    <h2>Reply To Broadcast</h2>
+                    <div className={styles.replySec}>
+
+                        {/* <div className={styles.formGroup}>
                 <form 
                 onSubmit={handleSubmit}
                 className="mt-10">
@@ -107,13 +131,73 @@ const ReplyBroad = () => {
                     <button type="submit">Send</button>
                     <button type="button" onClick={() => setEmail({to: '', subject: '', comments: ''})}>Reset</button>
                 </form>
-                <div className={styles.senderdetails}>
-                    <p>{currentUserID?.user_id}</p> //this is not working
-                    {/* Example placeholder data */}
-                    <p>Name: Your Company Name</p>
-                    <p>Email: contact@yourcompany.com</p>
-                    <p>Phone: 123-456-7890</p>
-                </div>
+</div> */}
+
+
+
+
+
+
+                        <div className={styles.formGroup}>
+                            <form onSubmit={handleSubmit} className="mt-10">
+                                <div>
+                                    <label>
+                                        <strong>To:</strong>
+                                        <input
+                                            // style={{ border: "none" }}
+                                            type="text"
+                                            name="to"
+                                            value={email.to}
+                                            onChange={handleChange}
+                                            className={styles.input}
+                                        />
+                                    </label>
+                                </div>
+                                <div>
+                                    <label>
+                                        <strong>Subject:</strong>
+                                        <input
+                                            // style={{ border: "none" }}
+
+                                            type="text"
+                                            name="subject"
+                                            value={email.subject}
+                                            onChange={handleChange}
+                                            className={styles.input}
+                                        />
+                                    </label>
+                                </div>
+                                <div>
+                                    <label>
+                                        <strong>Comments:</strong>
+                                        <textarea
+                                            name="comments"
+                                            value={email.comments}
+                                            onChange={handleChange}
+                                            className={styles.textarea}
+                                        />
+                                    </label>
+                                </div>
+                                <div className={styles.checkboxContainer}>
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            name="sendCopy"
+                                            checked={email.sendCopy}
+                                            onChange={handleChange}
+                                        />
+                                        Send a copy to myself
+                                    </label>
+                                </div>
+
+                            </form>
+                        </div>
+
+
+
+
+                        {/* 
+        
                 <div>
                     <h3>Original Broadcast Details</h3>
                     <p>MFG: {broadcast?.mfg}</p>
@@ -123,14 +207,26 @@ const ReplyBroad = () => {
                     <p>Price: {broadcast?.price}</p>
                     <p>Comments: {broadcast?.additional_comments}</p>
                     <p>Description: {broadcast?.description}</p>
-                    {/* <p>Country: {broadcast?.user_id.company.country}</p> */}
-                    {/* <p>Company: {broadcast?.user_id.company.name}</p> */}
-                    {/* <p>Email: {broadcast?.user_id.company.email}</p> */}
+                  
+                </div> */}
+                    </div>
+
                 </div>
-            </div>
-            <button type="submit" className='bg-black'>Send</button>
-            <button type="button" className='bg-black' onClick={() => setEmail({to: '', subject: '', comments: ''})}>Reset</button>
-        </main>
+                {/* <button type="submit" className='bg-black'>Send</button>
+            <button type="button" className='bg-black' onClick={() => setEmail({to: '', subject: '', comments: ''})}>Reset</button> */}
+
+
+                <div className={styles.buttonContainer}>
+                    <button type="submit" className={styles.sendButton}>Send</button>
+                    <button
+                        type="button"
+                        onClick={() => setEmail({ to: '', subject: '', comments: '', sendCopy: false })}
+                        className={styles.resetButton}
+                    >
+                        Reset
+                    </button>
+                </div>
+            </main>
         </>
 
     );

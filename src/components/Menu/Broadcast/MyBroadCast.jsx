@@ -18,38 +18,26 @@ const BroadCast = () => {
 
   const broadcastItems = useSelector((state) => state.broadcastStore.broadCastData)
   const { togglePopUp, popupCompanyDetail } = useSelector((state) => state.searchProductStore);
-  // const { popupCompanyDetail } = useSelector((store) => store.searchProductStore);
-
-
   const [isCompanyModalOpen, setIsCompanyModalOpen] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [selectedBroadcast, setSelectedBroadcast] = useState(null);
+  const [newselectedBroadcast, newsetSelectedBroadcast] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [options, setOptions] = useState([]);
-
-  
-
   const token = Cookies.get("token");
   const [filterType, setFilterType] = useState('all');
   const [buyInFilters, setBuyInFilters] = useState([]);
   const [inputSearchTerm, setInputSearchTerm] = useState(''); // Temporary state for input field
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBroadcast, setSelectedBroadcast] = useState({});
-
   // const broadcasts = useSelector(state => state.broadcastStore.broadCastData);
   // const currentUser = useSelector(state => state.auth.currentUser);
   const currentUserID = Cookies.get("user_id");
 
-
-
   const dispatch = useDispatch()
-
   useEffect(() => {
     dispatch(fetchBroadCastData({ token }))
 
   }, [dispatch, token])
-
-
 
   const filteredBroadcasts = broadcastItems && broadcastItems.broadcasts
     ? broadcastItems.broadcasts.filter(broadcast =>
@@ -59,18 +47,15 @@ const BroadCast = () => {
       (searchTerm === '' || broadcast.partModel && broadcast.partModel.toLowerCase().includes(searchTerm.toLowerCase()))
     )
     : [];
-
-
+    
+// Get Logged in IDS
   const uniqueCompanyIds = [...new Set(filteredBroadcasts.map((item) => item.user_id.id))];
   console.log(uniqueCompanyIds.toString());
-
-
 
   // Handler for Types like wtb,wts,rfq...
   const handleFilterChange = (event) => {
     setFilterType(event.target.value);
   };
-
 
   // Handler for BuyIns
   const handleBuyInChange = (event) => {
@@ -95,14 +80,12 @@ const BroadCast = () => {
     setSearchTerm(inputSearchTerm.trim()); // Update the main search term to trigger filtering
   };
 
-
   // Trigger search on Enter key press
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
       handleSearchClick();
     }
   };
-
 
   // Update options based on selected category
   const handleCategoryChange = (event) => {
@@ -159,13 +142,13 @@ const handleReplyClick = () => {
 
 
   const openModal = (broadcast) => {
-    setSelectedBroadcast(broadcast);
+    newsetSelectedBroadcast(broadcast);
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setSelectedBroadcast(null);
+    newsetSelectedBroadcast(null);
   };
 
   // Company Modal
@@ -174,7 +157,6 @@ const handleReplyClick = () => {
     setIsCompanyModalOpen(true); // Set modal visibility to true
     console.log("Popup company details:", company, "Toggle State:", isCompanyModalOpen);
   };
-
 
   // Function to close Company modal
   const closeCompanyModal = () => {
@@ -202,7 +184,6 @@ const handleReplyClick = () => {
               <Link to={"/myprofile/broadcastfilter"}>
                 Set Filters
               </Link>
-
             </li>
             <li>
               <Link to={'/broadcasthistory'}>History</Link>
@@ -211,10 +192,6 @@ const handleReplyClick = () => {
         </nav>
 
         <div className={styles.headerSec}>
-
-
-
-
           <div className={styles.tableWrapper}>
             <div className={styles.tableHeader}>
               <div className={styles.manufacturerDropdown}>
@@ -223,7 +200,6 @@ const handleReplyClick = () => {
                   <option value="all">Manufacturer</option>
                 </select>
               </div>
-
               {/* First Dropdown for Category Selection */}
               <div className={styles.manufacturerDropdown}>
                 <select value={selectedCategory} onChange={handleCategoryChange}>
@@ -234,7 +210,6 @@ const handleReplyClick = () => {
                   <option value="mobileDevices">Mobile Devices</option>
                 </select>
               </div>
-
               {/* Second Dropdown for Dynamic Options */}
               <div>
                 <select>
@@ -250,22 +225,17 @@ const handleReplyClick = () => {
                   ))}
                 </select>
               </div>
-
               <div className={styles.manufacturerDropdown} >
                 <select onChange={handleFilterChange}>
                   <option value="all">Type</option>
                   <option value="wts">WTS</option>
                   <option value="wtb">WTB</option>
                   <option value="rfq">RFQ</option>
-
-
                 </select>
               </div>
-
               <div className={styles.manufacturerDropdown}>
                 <select>
                   <option value="all">Region</option>
-
                 </select>
               </div>
               <div>
@@ -284,26 +254,19 @@ const handleReplyClick = () => {
                 <label htmlFor="pallet">Pallet</label>
                 <input type="checkbox" name="pallet" id="pallet" onChange={handleBuyInChange} />
               </div>
-
               <div className={styles.searchBroadcastSec}>
                 <input
                   type="text"
                   placeholder='Search Broadcasts'
                   value={inputSearchTerm}
                   onChange={handleInputChange} // Updates input field only
-                  onKeyDown={handleKeyDown}
-                />
+                  onKeyDown={handleKeyDown} />
                 <button onClick={handleSearchClick}>Search</button>
               </div>
             </div>
           </div>
 
-
-
-
-
         </div>
-
         <table className={styles.table}>
           <thead>
             <tr>
@@ -324,19 +287,15 @@ const handleReplyClick = () => {
             </tr>
           </thead>
 
-
           <tbody>
-
-
-
             {filteredBroadcasts.map((item, index) => (
-              <tr key={index} style={String(item.user_id.id) === currentUserID ? { color: "red" } : null}>
+               item && item.id ? (
+              <tr key={index} style={item.user_id && String(item.user_id.id) === currentUserID ? { color: "red" } : null}>
                 <td>
                   <input type="checkbox"
                   checked={!!selectedBroadcast[item.id]}
                   onChange={() => handleCheckboxChange(item)} />
                 </td>
-
                 <td>{item.created_at}</td>
                 <td></td>
                 <td>
@@ -348,9 +307,7 @@ const handleReplyClick = () => {
                 <td className={
                   item.type === 'wtb' ? styles['type-wtb'] :
                     item.type === 'wts' ? styles['type-wts'] :
-                      item.type === 'rfq' ? styles['type-rfq'] :
-                        ''
-                }>
+                      item.type === 'rfq' ? styles['type-rfq'] : ''}>
                   {item.type}
                 </td>
                 <td > <img src={bullImage} alt="" srcset="" onClick={() => openModal(item)} style={{ width: "18px", fontWeight: "bold" }} /></td>
@@ -361,12 +318,11 @@ const handleReplyClick = () => {
                 <td style={{ color: "blue" }}>{item.price}</td>
                 <td>{item.quantity}</td>
                 <td>{item.description}</td>
-              </tr>
-
+              </tr>)
+              : null
             ))}
 
           </tbody>
-
           <thead>
             <tr>
               <th>Cart</th>
@@ -386,7 +342,6 @@ const handleReplyClick = () => {
             </tr>
           </thead>
         </table>
-
         <div className={styles.replyBtnSec}>
           <button 
           className={styles.replyBtn}
@@ -395,20 +350,17 @@ const handleReplyClick = () => {
           </button>
         </div>
 
-
         {/* Render CompanyDetails Modal Conditionally */}
         {isCompanyModalOpen && popupCompanyDetail.length > 0 && (
           <CompanyDetails closeModal={closeCompanyModal} /> // Pass close function as prop
         )}
 
-
         <BroadcastFileModal
           isOpen={isModalOpen}
           onRequestClose={closeModal}
-          broadcast={selectedBroadcast}
-        />
+          broadcast={newselectedBroadcast}
+        />  
       </main >
-
     </>
   )
 }

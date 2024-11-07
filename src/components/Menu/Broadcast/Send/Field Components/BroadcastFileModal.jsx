@@ -1,10 +1,14 @@
 // BroadcastModal.js
 import React from 'react';
 import styles from './BroadcastModal.module.css';
-
+import { Link , useNavigate} from 'react-router-dom';
 const BroadcastModal = ({ isOpen, onRequestClose, broadcast }) => {
+    const navigate = useNavigate();
     if (!isOpen || !broadcast) return null;
 
+    // const handleReplyClick = () => {
+    //     navigate('/ReplyBroad', { state: { broadcast } });
+    // };
     return (
         <div className={styles.modalOverlay}>
             <div className={styles.modalContent}>
@@ -29,7 +33,12 @@ const BroadcastModal = ({ isOpen, onRequestClose, broadcast }) => {
                 <hr className={styles.hrSec} />
 
                 <button onClick={onRequestClose} className={styles.closeButton}>Close</button>
-                <button onClick={() => alert("Reply functionality here")} className={styles.replyButton}>Reply</button>
+                <Link   >
+                <button className={styles.replyButton} >
+                    Reply
+                    </button>
+                
+                </Link>
             </div>
         </div>
     );
