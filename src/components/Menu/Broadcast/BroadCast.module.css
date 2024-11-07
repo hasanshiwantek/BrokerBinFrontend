@@ -159,3 +159,22 @@ button, select {
   text-transform:uppercase;
 
 }
+
+.replyform form {
+  display: flex;
+  flex-direction: column;
+}
+
+.replyform label {
+  margin-bottom: 10px;
+}
+
+textarea {
+  height: 100px;
+}
+
+.senderdetails, .broadcastdetails {
+  background-color: #f0f0f0;
+  padding: 10px;
+  margin-top: 20px;
+}

@@ -9,6 +9,7 @@ import Cookies from "js-cookie";
 import shieldImage from "../../../assets/shield-img.png"
 import bullImage from "../../../assets/bullhornn.png"
 import { computers, telecom, mobileDevice, servicesList } from '../../../data/services'
+import { useNavigate } from 'react-router-dom'
 import BroadcastFileModal from './Send/Field Components/BroadcastFileModal'
 import CompanyDetails from '../../Popups/CompanyDetails/CompanyDetails'
 import { setPopupCompanyDetail, setTogglePopUp } from '../../../ReduxStore/SearchProductSlice'
@@ -19,14 +20,21 @@ const BroadCast = () => {
   const { togglePopUp, popupCompanyDetail } = useSelector((state) => state.searchProductStore);
   const [isCompanyModalOpen, setIsCompanyModalOpen] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedBroadcast, setSelectedBroadcast] = useState(null);
+  // const [selectedBroadcast, setSelectedBroadcast] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [options, setOptions] = useState([]);
+
+  
+
   const token = Cookies.get("token");
   const [filterType, setFilterType] = useState('all');
   const [buyInFilters, setBuyInFilters] = useState([]);
   const [inputSearchTerm, setInputSearchTerm] = useState(''); // Temporary state for input field
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedBroadcast, setSelectedBroadcast] = useState({});
+
+  // const broadcasts = useSelector(state => state.broadcastStore.broadCastData);
+  // const currentUser = useSelector(state => state.auth.currentUser);
   const currentUserID = Cookies.get("user_id");
 
   const dispatch = useDispatch()
@@ -107,6 +115,36 @@ const BroadCast = () => {
     }
   };
 
+  const handleCheckboxChange = (broadcast) => {
+    setSelectedBroadcast((prevSelected) => ({
+      ...prevSelected,
+      [broadcast.id]: !prevSelected[broadcast.id] // Toggle the checkbox
+    }));
+  };
+  
+
+const navigate = useNavigate();
+const handleReplyClick = () => {
+  const selectedBroadcastIds = Object.keys(selectedBroadcast).filter(id => selectedBroadcast[id]);
+
+  if (selectedBroadcastIds.length === 0) {
+    alert('Please select a broadcast to reply to.');
+    return;
+  }
+
+  if (selectedBroadcastIds.length > 1) {
+    alert('You can only reply to one broadcast at a time.');
+    return;
+  }
+
+  // If only one broadcast is selected, proceed with navigation
+  const selected = filteredBroadcasts.find(item => item.id === parseInt(selectedBroadcastIds[0]));
+  navigate('/ReplyBroad', { state: { broadcast: selected } });
+};
+
+
+
+
   const openModal = (broadcast) => {
     setSelectedBroadcast(broadcast);
     setIsModalOpen(true);
@@ -138,7 +176,7 @@ const BroadCast = () => {
         <nav className='menu-bar'>
           <ul>
             <li>
-              <Link to={'/'}>Reply</Link>
+            <button onClick={handleReplyClick}>Reply</button>
             </li>
             <li>
               <Link to={'/sendbroad'}>Send</Link>
@@ -257,7 +295,9 @@ const BroadCast = () => {
             {filteredBroadcasts.map((item, index) => (
               <tr key={index} style={String(item.user_id.id) === currentUserID ? { color: "red" } : null}>
                 <td>
-                  <input type="checkbox" />
+                  <input type="checkbox"
+                  checked={!!selectedBroadcast[item.id]}
+                  onChange={() => handleCheckboxChange(item)} />
                 </td>
                 <td>{item.created_at}</td>
                 <td></td>
@@ -291,7 +331,7 @@ const BroadCast = () => {
               <th>Posted</th>
               <th><img src={shieldImage} alt="" srcset="" style={{ width: "18px", fontWeight: "bold" }} /> </th>
               <th>Company</th>
-              <th>City</th>
+              <th>Ctry</th>
               <th>Type</th>
               <th>View</th>
               <th>Part / Model</th>
@@ -305,7 +345,11 @@ const BroadCast = () => {
           </thead>
         </table>
         <div className={styles.replyBtnSec}>
-          <button className={styles.replyBtn}>Reply</button>
+          <button 
+          className={styles.replyBtn}
+          onClick={handleReplyClick}>
+            Reply
+          </button>
         </div>
 
         {/* Render CompanyDetails Modal Conditionally */}

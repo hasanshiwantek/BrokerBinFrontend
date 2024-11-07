@@ -58,9 +58,7 @@ const BroadCastHistory = () => {
     }
   };
 
-  const handleDelete = () => {
 
-  }
 
   return (
     <>
@@ -87,7 +85,11 @@ const BroadCastHistory = () => {
         <div className={css.tableWrapper}>
           <div className={css.tableHeader}>
             <div>
-              <button className={css.tabTitle}>BroadCast</button>
+              <Link 
+              className={css.tabTitle}
+              to={'/broadcasts'}>
+                BroadCast
+              </Link>
             </div>
 
             {/* Filter by Type Dropdown */}
