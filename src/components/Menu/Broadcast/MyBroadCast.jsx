@@ -10,22 +10,26 @@ import shieldImage from "../../../assets/shield-img.png"
 import bullImage from "../../../assets/bullhornn.png"
 import { computers, telecom, mobileDevice, servicesList } from '../../../data/services'
 import BroadcastFileModal from './Send/Field Components/BroadcastFileModal'
+import CompanyDetails from '../../Popups/CompanyDetails/CompanyDetails'
+import { setPopupCompanyDetail, setTogglePopUp } from '../../../ReduxStore/SearchProductSlice'
+
 const BroadCast = () => {
 
   const broadcastItems = useSelector((state) => state.broadcastStore.broadCastData)
+  const { togglePopUp, popupCompanyDetail } = useSelector((state) => state.searchProductStore);
+  // const { popupCompanyDetail } = useSelector((store) => store.searchProductStore);
+
+
+  const [isCompanyModalOpen, setIsCompanyModalOpen] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBroadcast, setSelectedBroadcast] = useState(null);
-
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [options, setOptions] = useState([]);
-
   const token = Cookies.get("token");
   const [filterType, setFilterType] = useState('all');
   const [buyInFilters, setBuyInFilters] = useState([]);
   const [inputSearchTerm, setInputSearchTerm] = useState(''); // Temporary state for input field
   const [searchTerm, setSearchTerm] = useState('');
-  // const broadcasts = useSelector(state => state.broadcastStore.broadCastData);
-  // const currentUser = useSelector(state => state.auth.currentUser);
   const currentUserID = Cookies.get("user_id");
 
 
@@ -44,7 +48,7 @@ const BroadCast = () => {
       (filterType === 'all' || broadcast.type === filterType) && // Add this condition
       (buyInFilters.length === 0 || buyInFilters.includes(broadcast.buy_in))
       &&
-      (searchTerm === '' || broadcast.partModel.toLowerCase().includes(searchTerm.toLowerCase()))
+      (searchTerm === '' || broadcast.partModel && broadcast.partModel.toLowerCase().includes(searchTerm.toLowerCase()))
     )
     : [];
 
@@ -125,6 +129,23 @@ const BroadCast = () => {
     setIsModalOpen(false);
     setSelectedBroadcast(null);
   };
+
+  // Company Modal
+  const openCompanyModal = (company) => {
+    dispatch(setPopupCompanyDetail([company]));
+    setIsCompanyModalOpen(true); // Set modal visibility to true
+    console.log("Popup company details:", company, "Toggle State:", isCompanyModalOpen);
+  };
+
+
+  // Function to close Company modal
+  const closeCompanyModal = () => {
+    setIsCompanyModalOpen(false); // Set modal visibility to false
+  };
+
+  useEffect(() => {
+    console.log("togglePopUp in BroadCast:", togglePopUp);
+  }, [togglePopUp]);
   return (
     <>
       <main className={styles.mainSec}>
@@ -257,7 +278,6 @@ const BroadCast = () => {
               <th>View</th>
               <th>Part / Model</th>
               <th>HECI/CLEI</th>
-
               <th>Mfg</th>
               <th>Cond</th>
               <th>Price</th>
@@ -279,7 +299,11 @@ const BroadCast = () => {
 
                 <td>{item.created_at}</td>
                 <td></td>
-                <td>{item.user_id.company.name}</td>
+                <td>
+                  <span onClick={() => openCompanyModal(item.user_id.company)}>
+                    {item.user_id.company.name}
+                  </span>
+                </td>
                 <td>{item.user_id.company.country}</td>
                 <td className={
                   item.type === 'wtb' ? styles['type-wtb'] :
@@ -327,6 +351,13 @@ const BroadCast = () => {
         <div className={styles.replyBtnSec}>
           <button className={styles.replyBtn}>Reply</button>
         </div>
+
+
+        {/* Render CompanyDetails Modal Conditionally */}
+        {isCompanyModalOpen && popupCompanyDetail.length > 0 && (
+          <CompanyDetails closeModal={closeCompanyModal} /> // Pass close function as prop
+        )}
+
 
         <BroadcastFileModal
           isOpen={isModalOpen}

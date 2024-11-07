@@ -179,14 +179,26 @@ const searchProductSlice = createSlice({
     setPopUpRfq: (state, action) => {
       state.popUpRfq = !state.popUpRfq;
     },
+
+    // setTogglePopUp: (state, action) => {
+    //   state.togglePopUp = !state.togglePopUp;
+    //   console.log("Popup",action.payload)
+    //   console.log("Popup state",state)
+
+    // },
+
     setTogglePopUp: (state, action) => {
-      state.togglePopUp = !state.togglePopUp;
+      // If a payload is provided, use it to set the state, otherwise toggle
+      state.togglePopUp = action.payload !== undefined ? action.payload : !state.togglePopUp;
+      console.log("Popup Toggle:", state.togglePopUp);
     },
     setSearchResponse: (state, action) => {
       state.searchResponseMatched = action.payload.data;
     },
     setPopupCompanyDetail: (state, action) => {
       state.popupCompanyDetail = action.payload;
+      console.log("CompanyDetails",action.payload)
+
     },
     setSelectedProducts: (state, action) => {
       state.selectedProducts = action.payload;
