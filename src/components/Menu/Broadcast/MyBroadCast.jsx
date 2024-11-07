@@ -10,11 +10,20 @@ import shieldImage from "../../../assets/shield-img.png"
 import bullImage from "../../../assets/bullhornn.png"
 import { computers, telecom, mobileDevice, servicesList } from '../../../data/services'
 import { useNavigate } from 'react-router-dom'
+import BroadcastFileModal from './Send/Field Components/BroadcastFileModal'
+import CompanyDetails from '../../Popups/CompanyDetails/CompanyDetails'
+import { setPopupCompanyDetail, setTogglePopUp } from '../../../ReduxStore/SearchProductSlice'
 
 const BroadCast = () => {
 
   const broadcastItems = useSelector((state) => state.broadcastStore.broadCastData)
+  const { togglePopUp, popupCompanyDetail } = useSelector((state) => state.searchProductStore);
+  // const { popupCompanyDetail } = useSelector((store) => store.searchProductStore);
 
+
+  const [isCompanyModalOpen, setIsCompanyModalOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [selectedBroadcast, setSelectedBroadcast] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [options, setOptions] = useState([]);
 
@@ -47,7 +56,7 @@ const BroadCast = () => {
       (filterType === 'all' || broadcast.type === filterType) && // Add this condition
       (buyInFilters.length === 0 || buyInFilters.includes(broadcast.buy_in))
       &&
-      (searchTerm === '' || broadcast.partModel.toLowerCase().includes(searchTerm.toLowerCase()))
+      (searchTerm === '' || broadcast.partModel && broadcast.partModel.toLowerCase().includes(searchTerm.toLowerCase()))
     )
     : [];
 
@@ -149,6 +158,32 @@ const handleReplyClick = () => {
 
 
 
+  const openModal = (broadcast) => {
+    setSelectedBroadcast(broadcast);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedBroadcast(null);
+  };
+
+  // Company Modal
+  const openCompanyModal = (company) => {
+    dispatch(setPopupCompanyDetail([company]));
+    setIsCompanyModalOpen(true); // Set modal visibility to true
+    console.log("Popup company details:", company, "Toggle State:", isCompanyModalOpen);
+  };
+
+
+  // Function to close Company modal
+  const closeCompanyModal = () => {
+    setIsCompanyModalOpen(false); // Set modal visibility to false
+  };
+
+  useEffect(() => {
+    console.log("togglePopUp in BroadCast:", togglePopUp);
+  }, [togglePopUp]);
   return (
     <>
       <main className={styles.mainSec}>
@@ -281,7 +316,6 @@ const handleReplyClick = () => {
               <th>View</th>
               <th>Part / Model</th>
               <th>HECI/CLEI</th>
-
               <th>Mfg</th>
               <th>Cond</th>
               <th>Price</th>
@@ -305,7 +339,11 @@ const handleReplyClick = () => {
 
                 <td>{item.created_at}</td>
                 <td></td>
-                <td>{item.user_id.company.name}</td>
+                <td>
+                  <span onClick={() => openCompanyModal(item.user_id.company)}>
+                    {item.user_id.company.name}
+                  </span>
+                </td>
                 <td>{item.user_id.company.country}</td>
                 <td className={
                   item.type === 'wtb' ? styles['type-wtb'] :
@@ -315,8 +353,8 @@ const handleReplyClick = () => {
                 }>
                   {item.type}
                 </td>
-                <td > <img src={bullImage} alt="" srcset="" style={{ width: "18px", fontWeight: "bold" }} /></td>
-                <td style={{textTransform:"uppercase"}}>{item.partModel}</td>
+                <td > <img src={bullImage} alt="" srcset="" onClick={() => openModal(item)} style={{ width: "18px", fontWeight: "bold" }} /></td>
+                <td style={{ textTransform: "uppercase" }}>{item.partModel}</td>
                 <td>{item.heciClei}</td>
                 <td>{item.mfg}</td>
                 <td>{item.cond}</td>
@@ -356,6 +394,19 @@ const handleReplyClick = () => {
             Reply
           </button>
         </div>
+
+
+        {/* Render CompanyDetails Modal Conditionally */}
+        {isCompanyModalOpen && popupCompanyDetail.length > 0 && (
+          <CompanyDetails closeModal={closeCompanyModal} /> // Pass close function as prop
+        )}
+
+
+        <BroadcastFileModal
+          isOpen={isModalOpen}
+          onRequestClose={closeModal}
+          broadcast={selectedBroadcast}
+        />
       </main >
 
     </>

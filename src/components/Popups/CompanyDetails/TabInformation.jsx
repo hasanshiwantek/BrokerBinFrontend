@@ -12,11 +12,13 @@ const TabInformation = () => {
   const { popupCompanyDetail } = useSelector(
     (store) => store.searchProductStore
   );
+  
+
 
   return (
     <>
       <div className={css.Popup_Info_Main_left_companySideInformation}>
-        <ul className={css.Popup_Info_Main_left_companySideInformation_tabs}>
+        <ul className={css.Popup_Info_Main_left_companySideInformation_tabs}> 
           <li
             className={css.Popup_Info_Main_left_companySideInformation_tabs_li}
           >
@@ -28,7 +30,7 @@ const TabInformation = () => {
           <div
             className={toggleTabOne === true ? css.showContent : css.content}
           >
-            {[popupCompanyDetail[0].addedBy.company].map((e, i) => {
+            {[popupCompanyDetail[0]].map((e, i) => {
               return (
                 <ul key={e}>
                   <span>

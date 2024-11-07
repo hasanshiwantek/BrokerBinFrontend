@@ -159,18 +159,72 @@ const BroadcastForm = () => {
     setFiles("");
   };
 
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   // Combine form data and other selections
+  //   if (files) {
+  //     const data = {
+  //       uploadFile: files,
+  //       type: broadcastType,
+  //     };
+  //     dispatch(sendBroadcast({ token, data }));
+  //     // console.log(data);
+  //   } else {
+  //     const data = {
+  //       ...formData,
+  //       type: broadcastType,
+  //       selectedCompanies: computerSelection,
+  //       selectedTelecom: telecomSelection,
+  //       selectedMobileDevices: mobileDevicesSelection,
+  //       selectedRegion: regionSelection,
+  //       companiesSelection: companiesSelection,
+  //       service: serviceData
+  //     };
+  //     dispatch(sendBroadcast({ data, token }));
+  //     // console.log(data);
+
+  //   }
+  //   setEmailFormat((prev) => {
+  //     const updatedFormat = { ...prev };
+  //     updatedFormat.time = new Date().toLocaleTimeString("en-US", {
+  //       hour12: true,
+  //     });
+  //     updatedFormat.date = new Date().toLocaleDateString("en-US");
+  //     return updatedFormat;
+  //   });
+  //   console.log(token)
+  // };
+
+
+
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Combine form data and other selections
+  
+    // If a file is selected, use FormData to include it in the payload
+    let data;
     if (files) {
-      const data = {
-        uploadFile: files,
-        type: broadcastType,
-      };
-      dispatch(sendBroadcast({ token, data }));
-      // console.log(data);
+      data = new FormData();
+      data.append("uploadFile", files); // Add the file with the expected backend key
+  
+      // Append the other data as JSON
+      data.append(
+        "jsonData",
+        JSON.stringify({
+          ...formData,
+          type: broadcastType,
+          selectedCompanies: computerSelection,
+          selectedTelecom: telecomSelection,
+          selectedMobileDevices: mobileDevicesSelection,
+          selectedRegion: regionSelection,
+          companiesSelection: companiesSelection,
+          service: serviceData,
+        })
+      );
     } else {
-      const data = {
+      // If no file, use JSON data as usual
+      data = {
         ...formData,
         type: broadcastType,
         selectedCompanies: computerSelection,
@@ -178,23 +232,36 @@ const BroadcastForm = () => {
         selectedMobileDevices: mobileDevicesSelection,
         selectedRegion: regionSelection,
         companiesSelection: companiesSelection,
-        service: serviceData
+        service: serviceData,
       };
-      dispatch(sendBroadcast({ data, token }));
-      // console.log(data);
-
     }
-    setEmailFormat((prev) => {
-      const updatedFormat = { ...prev };
-      updatedFormat.time = new Date().toLocaleTimeString("en-US", {
-        hour12: true,
+  
+    // Dispatch the data with token
+    dispatch(sendBroadcast({ token, data }))
+      .then(() => {
+        alert("Data has been successfully stored in the backend");
+      })
+      .catch((error) => {
+        console.error("Error storing data:", error);
+        alert("Failed to store data in the backend");
       });
-      updatedFormat.date = new Date().toLocaleDateString("en-US");
-      return updatedFormat;
-    });
-    console.log(token)
-
+  
+    // Set email format
+    setEmailFormat((prev) => ({
+      ...prev,
+      time: new Date().toLocaleTimeString("en-US", { hour12: true }),
+      date: new Date().toLocaleDateString("en-US"),
+    }));
+  
+    console.log("Token:", token);
+    console.log("Data being sent:", data);
+  
+    // Reset form if needed
+    cancelAllActions(); // Assuming this function clears the form and resets states
   };
+  
+
+
 
   return (
     <div className={css.outerPadding}>
@@ -645,3 +712,25 @@ const BroadcastForm = () => {
 };
 
 export default BroadcastForm;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
