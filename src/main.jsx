@@ -24,6 +24,8 @@ const Options = lazy(() => import("./components/Menu/Manage/Options.jsx"));
 const BroadcastFilters = lazy(() => import("./components/Menu/Manage/BroadcastFilter/BroadcastFilters.jsx"));
 const MyBroadcast = lazy(() => import("./components/Menu/Broadcast/MyBroadCast.jsx"));
 const BroadCastHistory = lazy(() => import("./components/Menu/Broadcast/BroadCastHistory.jsx"));
+const ReplyBroadcast = lazy(() => import("./components/Menu/Broadcast/ReplyBroadcast.jsx"));
+
 
 const CompanyDetails = lazy(() =>
   import("./components/Popups/CompanyDetails/CompanyDetails.jsx")
@@ -246,6 +248,16 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <BroadCastHistory />
+            <Footer />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/ReplyBroad",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <ReplyBroadcast/>
             <Footer />
           </Suspense>
         ),
