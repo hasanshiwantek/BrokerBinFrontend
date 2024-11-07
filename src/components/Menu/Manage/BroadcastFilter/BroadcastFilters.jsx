@@ -10,6 +10,7 @@ import CheckboxList from "./CheckboxList";
 import UniversalSelector from "./UniversalSelector";
 import MFGFilter from "./MFGFilter";
 import SearchCompanyInventory from "../../Reports/SearchCompanyInventory";
+import FiltersSearchCompanyInventory from "../../Reports/FiltersSearchCompanyInventory";
 const Options = () => {
 
   // Existing states and handlers...
@@ -602,7 +603,7 @@ const Options = () => {
                   {/* View A Company's Inventory */}
                   <div className={css.section} style={{ margin: "10px" }}>
                     <div className={css.display}>
-                      <SearchCompanyInventory />
+                      <FiltersSearchCompanyInventory />
                     </div>
                   </div>
                 </div>

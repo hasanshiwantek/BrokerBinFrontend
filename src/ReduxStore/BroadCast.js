@@ -154,6 +154,8 @@ const initialState = {
   broadCastData: [],
   serviceData: [],
  
+  togglePopUp: false,
+  popupCompanyDetail: null,
 
 
 
@@ -187,6 +189,13 @@ const broadcastSlice = createSlice({
         // Service is not selected, add it
         state.serviceData.push(action.payload);
       }
+    },
+
+    setTogglePopUp: (state) => {
+      state.togglePopUp = !state.togglePopUp;
+    },
+    setPopupCompanyDetail: (state, action) => {
+      state.popupCompanyDetail = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -242,6 +251,8 @@ export const {
   setRegionSelection,
   setServiceSelection,
   setFormData,
+  setTogglePopUp, 
+  setPopupCompanyDetail
 } = broadcastSlice.actions;
 
 export default broadcastSlice.reducer;

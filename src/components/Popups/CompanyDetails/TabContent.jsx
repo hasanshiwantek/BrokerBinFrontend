@@ -15,8 +15,17 @@ const TabContent = () => {
     (store) => store.searchProductStore
   );
 
-  console.log([popupCompanyDetail[0].addedBy.company.company_images][0]);
-  
+  const company = popupCompanyDetail[0];
+  // const companyImages =
+  // popupCompanyDetail[0] &&
+  // popupCompanyDetail[0].addedBy &&
+  // popupCompanyDetail[0].addedBy.company &&
+  // popupCompanyDetail[0].addedBy.company.company_images
+  //   ? popupCompanyDetail[0].addedBy.company.company_images
+  //   : [];
+  // console.log([popupCompanyDetail[0].addedBy.company.company_images][0]);
+
+
 
   return (
     <>
@@ -365,7 +374,7 @@ const TabContent = () => {
           <div className={css.Popup_Info_Main_right_tabs_photos}>
             <h1>company photos</h1>
             <div className={css.Popup_Info_Main_right_tabs_photos_img}>
-              {[popupCompanyDetail[0].addedBy.company.company_images][0].map(
+              {/* {[popupCompanyDetail[0].addedBy.company.company_images][0].map(
                 (image) => {
                   console.log(image.image);
                   
@@ -375,8 +384,38 @@ const TabContent = () => {
                     </div>
                   );
                 }
+              )} */}
+
+
+              {/* 
+<div className={css.Popup_Info_Main_right_tabs_photos_img}>
+              {companyImages.map((image) => (
+                <div key={image.id}>
+                  <img src={image.image} alt="company photo" />
+                </div>
+              ))}*/}
+
+
+              {company.company_images && company.company_images.length > 0 ? (
+                company.company_images.map((image, index) => (
+                  <div key={index}>
+                    <img src={image.image} alt={`Company photo ${index + 1}`} />
+                  </div>
+                ))
+              ) : (
+                <p>No photos available.</p>
               )}
+
+
+
             </div>
+
+
+
+
+
+
+
           </div>
         </div>
         <div className={toggleTabs === 3 ? css.showContent : css.content}>
