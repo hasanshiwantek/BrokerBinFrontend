@@ -20,19 +20,15 @@ const BroadCast = () => {
   const { togglePopUp, popupCompanyDetail } = useSelector((state) => state.searchProductStore);
   const [isCompanyModalOpen, setIsCompanyModalOpen] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [selectedBroadcast, setSelectedBroadcast] = useState(null);
+  const [newselectedBroadcast, newsetSelectedBroadcast] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [options, setOptions] = useState([]);
-
-  
-
   const token = Cookies.get("token");
   const [filterType, setFilterType] = useState('all');
   const [buyInFilters, setBuyInFilters] = useState([]);
   const [inputSearchTerm, setInputSearchTerm] = useState(''); // Temporary state for input field
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBroadcast, setSelectedBroadcast] = useState({});
-
   // const broadcasts = useSelector(state => state.broadcastStore.broadCastData);
   // const currentUser = useSelector(state => state.auth.currentUser);
   const currentUserID = Cookies.get("user_id");
@@ -146,13 +142,13 @@ const handleReplyClick = () => {
 
 
   const openModal = (broadcast) => {
-    setSelectedBroadcast(broadcast);
+    newsetSelectedBroadcast(broadcast);
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setSelectedBroadcast(null);
+    newsetSelectedBroadcast(null);
   };
 
   // Company Modal
@@ -293,7 +289,8 @@ const handleReplyClick = () => {
 
           <tbody>
             {filteredBroadcasts.map((item, index) => (
-              <tr key={index} style={String(item.user_id.id) === currentUserID ? { color: "red" } : null}>
+               item && item.id ? (
+              <tr key={index} style={item.user_id && String(item.user_id.id) === currentUserID ? { color: "red" } : null}>
                 <td>
                   <input type="checkbox"
                   checked={!!selectedBroadcast[item.id]}
@@ -321,7 +318,8 @@ const handleReplyClick = () => {
                 <td style={{ color: "blue" }}>{item.price}</td>
                 <td>{item.quantity}</td>
                 <td>{item.description}</td>
-              </tr>
+              </tr>)
+              : null
             ))}
 
           </tbody>
@@ -360,8 +358,8 @@ const handleReplyClick = () => {
         <BroadcastFileModal
           isOpen={isModalOpen}
           onRequestClose={closeModal}
-          broadcast={selectedBroadcast}
-        />
+          broadcast={newselectedBroadcast}
+        />  
       </main >
     </>
   )
