@@ -1,14 +1,26 @@
 // BroadcastModal.js
-import React from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import styles from './BroadcastModal.module.css';
-import { Link , useNavigate} from 'react-router-dom';
-const BroadcastModal = ({ isOpen, onRequestClose, broadcast }) => {
+import { Link, useNavigate } from 'react-router-dom';
+
+const BroadcastModal = ({ isOpen, onRequestClose, broadcast}) => {
     const navigate = useNavigate();
     if (!isOpen || !broadcast) return null;
 
-    // const handleReplyClick = () => {
-    //     navigate('/ReplyBroad', { state: { broadcast } });
-    // };
+      const handleReplyClickFromModal = () => {
+        if (!broadcast) {
+            console.error("No broadcast data available.");
+            return;
+        }
+        // Store the broadcast data in localStorage
+        localStorage.setItem("broadcastData", JSON.stringify(broadcast));
+        // Navigate to ReplyBroad without passing state
+        navigate('/ReplyBroad');
+    };
+    
+  
+  
+
     return (
         <div className={styles.modalOverlay}>
             <div className={styles.modalContent}>
@@ -34,10 +46,10 @@ const BroadcastModal = ({ isOpen, onRequestClose, broadcast }) => {
 
                 <button onClick={onRequestClose} className={styles.closeButton}>Close</button>
                 <Link   >
-                <button className={styles.replyButton} >
-                    Reply
+                    <button className={styles.replyButton} onClick={ handleReplyClickFromModal} >
+                        Reply
                     </button>
-                
+
                 </Link>
             </div>
         </div>

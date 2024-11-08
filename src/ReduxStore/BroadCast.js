@@ -153,7 +153,6 @@ const initialState = {
   filters: [],
   broadCastData: [],
   serviceData: [],
- 
   togglePopUp: false,
   popupCompanyDetail: null,
 

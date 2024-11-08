@@ -5,15 +5,16 @@ import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Cookies from "js-cookie";
 import styles from "./BroadCast.module.css"
-
+import { useNavigate } from 'react-router-dom';
 
 
 
 const ReplyBroad = () => {
 
     const location = useLocation();
-    const { broadcast } = location.state || {};
-
+    const navigate= useNavigate();
+    // const { broadcast } = location.state || {};
+    const [broadcast, setBroadcast] = useState(location.state?.broadcast || JSON.parse(localStorage.getItem("broadcastData")));
     // Create recipientEmail to store the actual email address
     const recipientEmail = broadcast?.user_id?.email || ''; // Pulls email from selected broadcast
     // This function is when you have the API key and processing it through asyncthunk. same goes for above recipientEmail because in email format to: we are showing only name their and email will be in api call hidden.
@@ -55,6 +56,7 @@ const ReplyBroad = () => {
 
 
 
+
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Email Data:", email);
@@ -63,26 +65,94 @@ const ReplyBroad = () => {
 
 
     // Function to initialize comments with dynamic data from broadcast
+    // const initializeComments = () => {
+    //     return `--------------------\n${broadcast.user_id?.firstName} ${broadcast.user_id?.lastName}\n${broadcast.user_id.company?.name}\nP: ${broadcast.user_id?.phoneNumber}\n${broadcast.user_id?.email}\n\n--------------------\nOriginal Broadcast Details
+    //     MFG: ${broadcast?.mfg || ''}
+    //     Part No: ${broadcast?.partModel || ''}
+    //     Condition: ${broadcast?.cond || ''}
+    //     Quantity: ${broadcast?.quantity || ''}
+    //     Price: ${broadcast?.price || ''}
+    //     Comments: ${broadcast?.additional_comments || ''}
+    //     Description: ${broadcast?.description || ''}
+    //     `;
+    // };
+
+
+
+
     const initializeComments = () => {
-        return `--------------------\n${broadcast.user_id.firstName} ${broadcast.user_id.lastName}\n${broadcast.user_id.company.name}\nP: ${broadcast.user_id.phoneNumber}\n${broadcast.user_id.email}\n\n--------------------\nOriginal Broadcast Details
-        MFG: ${broadcast.mfg || ''}
-        Part No: ${broadcast.partModel || ''}
-        Condition: ${broadcast.cond || ''}
-        Quantity: ${broadcast.quantity || ''}
-        Price: ${broadcast.price || ''}
-        Comments: ${broadcast.additional_comments || ''}
-        Description: ${broadcast.description || ''}
+        // Check if broadcast exists, if not, return an empty string or default message
+        if (!broadcast) return "Broadcast data is not available.";
+    
+        return `--------------------
+        ${broadcast?.user_id?.firstName || ''} ${broadcast?.user_id?.lastName || ''}
+        ${broadcast?.user_id?.company?.name || ''}
+        P: ${broadcast?.user_id?.phoneNumber || ''}
+        ${broadcast?.user_id?.email || ''}
+        
+        --------------------
+        Original Broadcast Details
+        MFG: ${broadcast?.mfg || ''}
+        Part No: ${broadcast?.partModel || ''}
+        Condition: ${broadcast?.cond || ''}
+        Quantity: ${broadcast?.quantity || ''}
+        Price: ${broadcast?.price || ''}
+        Comments: ${broadcast?.additional_comments || ''}
+        Description: ${broadcast?.description || ''}
         `;
     };
 
-    useEffect(() => {
-        // Set initial comments with dynamic data when the component mounts
-        setEmail((prev) => ({
-            ...prev,
-            comments: initializeComments()
-        }));
-    }, [broadcast]); // Re-run if broadcast data changes
+    // useEffect(() => {
+    //     if (!broadcast) {
+    //         console.error("Broadcast data is missing.");
+    //         navigate('/ReplyBroad'); // Redirect to a different page if broadcast is undefined
+    //     }
+    // }, [broadcast, navigate]);
 
+    useEffect(() => {
+        console.log("Broadcast data in ReplyBroad:", broadcast);
+        if (!broadcast) {
+          console.error("Broadcast data is missing.");
+        //   navigate('/'); // Redirect to home or fallback if data is missing
+        }
+      }, [broadcast, navigate]);
+
+    // useEffect(() => {
+    //     // Set initial comments with dynamic data when the component mounts
+    //     setEmail((prev) => ({
+    //         ...prev,
+    //         comments: initializeComments()
+    //     }));
+    // }, [broadcast]); // Re-run if broadcast data changes
+
+    useEffect(() => {
+        console.log("Broadcast data in ReplyBroad:", broadcast);
+        if (broadcast) {
+            setEmail((prev) => ({
+                ...prev,
+                comments: initializeComments()
+            }));
+        }
+    }, [broadcast]);
+    
+
+    useEffect(() => {
+        console.log("Location state in ReplyBroad:", location.state);
+        const { broadcast } = location.state || {};
+        if (!broadcast) {
+            console.error("Broadcast data is missing.");
+        }
+    }, [location.state]);
+
+
+        // Clear the broadcast data from localStorage when the component unmounts
+        useEffect(() => {
+            return () => {
+                localStorage.removeItem("broadcastData"); // Clear data on unmount
+            };
+        }, []);
+    
+    
     return (
         <>
             {/* <main className={styles.mainSec}> */}
@@ -220,7 +290,7 @@ const ReplyBroad = () => {
                     <button type="submit" className={styles.sendButton}>Send</button>
                     <button
                         type="button"
-                        onClick={() => setEmail({ to: '', subject: '', comments: '', sendCopy: false })}
+                        onClick={() => setEmail({  comments: '', sendCopy: false })}
                         className={styles.resetButton}
                     >
                         Reset
