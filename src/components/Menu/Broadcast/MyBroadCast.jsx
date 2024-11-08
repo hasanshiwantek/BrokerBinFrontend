@@ -155,9 +155,6 @@ const handleReplyClick = () => {
   navigate('/ReplyBroad', { state: { broadcast: selected } });
 };
 
-
-
-
   const openModal = (broadcast) => {
     setSelectedBroadcast(broadcast);
     setIsModalOpen(true);
@@ -165,7 +162,7 @@ const handleReplyClick = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setSelectedBroadcast(null);
+    setSelectedBroadcast(null); 
   };
 
   // Company Modal
@@ -379,14 +376,14 @@ const handleReplyClick = () => {
               <th>Part / Model</th>
               <th>HECI/CLEI</th>
               <th>Mfg</th>
-              <th>Cond</th>
+              <th>Cond</th> 
               <th>Price</th>
               <th>Qty </th>
               <th>Product Description</th>
             </tr>
           </thead>
-        </table>
-
+        </table> 
+        
         <div className={styles.replyBtnSec}>
           <button 
           className={styles.replyBtn}
@@ -395,12 +392,10 @@ const handleReplyClick = () => {
           </button>
         </div>
 
-
         {/* Render CompanyDetails Modal Conditionally */}
         {isCompanyModalOpen && popupCompanyDetail.length > 0 && (
           <CompanyDetails closeModal={closeCompanyModal} /> // Pass close function as prop
         )}
-
 
         <BroadcastFileModal
           isOpen={isModalOpen}
