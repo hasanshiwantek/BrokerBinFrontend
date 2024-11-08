@@ -356,6 +356,7 @@ const handleReplyClick = () => {
           isOpen={isModalOpen}
           onRequestClose={closeModal}
           broadcast={newselectedBroadcast}
+          handleReply={handleReplyClick}
         />  
       </main >
     </>
