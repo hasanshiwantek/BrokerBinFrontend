@@ -112,7 +112,7 @@ const ReplyBroad = () => {
                     <h2>Reply To Broadcast</h2>
                     <div className={styles.replySec}>
 
-                        {/* <div className={styles.formGroup}>
+                {/* <div className={styles.formGroup}>
                 <form 
                 onSubmit={handleSubmit}
                 className="mt-10">
@@ -131,13 +131,7 @@ const ReplyBroad = () => {
                     <button type="submit">Send</button>
                     <button type="button" onClick={() => setEmail({to: '', subject: '', comments: ''})}>Reset</button>
                 </form>
-</div> */}
-
-
-
-
-
-
+                </div> */}
                         <div className={styles.formGroup}>
                             <form onSubmit={handleSubmit} className="mt-10">
                                 <div>
@@ -193,11 +187,8 @@ const ReplyBroad = () => {
                             </form>
                         </div>
 
-
-
-
                         {/* 
-        
+
                 <div>
                     <h3>Original Broadcast Details</h3>
                     <p>MFG: {broadcast?.mfg}</p>
@@ -215,7 +206,6 @@ const ReplyBroad = () => {
                 {/* <button type="submit" className='bg-black'>Send</button>
             <button type="button" className='bg-black' onClick={() => setEmail({to: '', subject: '', comments: ''})}>Reset</button> */}
 
-
                 <div className={styles.buttonContainer}>
                     <button type="submit" className={styles.sendButton}>Send</button>
                     <button
@@ -226,7 +216,8 @@ const ReplyBroad = () => {
                         Reset
                     </button>
                 </div>
-            </main>
+            </main> 
+          
         </>
 
     );
