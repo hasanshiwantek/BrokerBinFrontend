@@ -336,11 +336,16 @@ Description: ${description}<br />`;
 
     };
 
-    useEffect(() => {
-        return () => {
-            localStorage.removeItem("broadcastData");
-        };
-    }, []);
+    useEffect(()=>{
+
+        console.log(broadcast)
+    },[])
+
+    // useEffect(() => {
+    //     return () => {
+    //         localStorage.removeItem("broadcastData");
+    //     };
+    // }, []);
 
     return (
         <>

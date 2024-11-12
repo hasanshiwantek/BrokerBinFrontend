@@ -28,7 +28,12 @@ const BroadcastModal = ({ isOpen, onRequestClose, broadcast}) => {
                 <hr className={styles.hrSec} />
                 <p><strong>From:</strong> {broadcast.user_id.company.name} [{broadcast.user_id.email}]</p>
                 <p><strong>Sent:</strong> {new Date(broadcast.created_at).toLocaleString()}</p>
-                <p><strong>Subject:</strong> BrokerBin Multiple-Part Broadcast {broadcast.type.toUpperCase()}: {broadcast.mfg}</p>
+                {
+                    broadcast.type && (
+                        <p><strong>Subject:</strong> BrokerBin Multiple-Part Broadcast {broadcast.type.toUpperCase() }: {broadcast.mfg}</p>
+                    )
+                }
+            
                 <p><strong>Mfg:</strong> {broadcast.mfg}</p>
                 {/* <p><strong>Part / Model:</strong> {broadcast.partModel}</p> */}
                 {/* <p><strong>Condition:</strong> {broadcast.cond}</p> */}
