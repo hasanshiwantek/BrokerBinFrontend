@@ -26,7 +26,7 @@ const Login = () => {
     try {
       const response = await fetch(
         // "https://phplaravel-1343027-4927440.cloudwaysapps.com/api/user/",
-         "https://phplaravel-1343027-4927440.cloudwaysapps.com/api/user/login",
+        "https://phplaravel-1343027-4927440.cloudwaysapps.com/api/user/login",
 
         {
           method: "POST",
@@ -46,7 +46,7 @@ const Login = () => {
         const { id } = result.data.user;
 
         Cookies.set("token", access_token, { expires: 1, secure: true });
-        
+
         Cookies.set("user_id", id, { expires: 1, secure: true });
         localStorage.setItem("user", JSON.stringify(user));
 
