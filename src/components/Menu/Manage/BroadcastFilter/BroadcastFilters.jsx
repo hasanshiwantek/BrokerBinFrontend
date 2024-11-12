@@ -451,7 +451,7 @@ const Options = () => {
                     </div>
                   )}
                   {onlyReceiveMatch.mobileDevice && (
-                    <div>
+                    <div >
                       <ul className={css.checkbox}>
                         <CheckboxList
                           items={mobileDevice}

@@ -1,7 +1,8 @@
 
 import React, { useEffect, useState } from 'react';
 import css from "../../../styles/Menu/Manage/BroadcastFilters/BroadCastHistory.module.css";
-import { Link } from 'react-router-dom';
+import { Link,NavLink } from 'react-router-dom';
+import myProfile from "../../../styles/Menu/Manage/MyProfile.module.css";
 import { useSelector, useDispatch } from 'react-redux';
 import Cookies from 'js-cookie';
 import { fetchBroadCastData } from '../../../ReduxStore/BroadCast';
@@ -64,22 +65,43 @@ const BroadCastHistory = () => {
     <>
       <div className={css.container}>
         {/* Tabs */}
-        <div className={css.tabs}>
-          <ul>
-            <li>
-              <Link to="/sendbroad">Send</Link>
-            </li>
-            <li>
-              <Link to="/broadcasts">View</Link>
-            </li>
-            <li>
-              <Link to="/myprofile/broadcastfilter">Set Filters</Link>
-            </li>
-            <li>
-              <Link to="/broadcasthistory" className={css.activeTab}>History</Link>
-            </li>
-          </ul>
-        </div>
+        <div className={myProfile.profileInfo_links}>
+              <ul>
+                <li>
+                  <NavLink
+                    to="/sendbroad"
+                    end  // This ensures the exact match for /myprofile
+                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                  >
+                    <span>Send</span>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/broadcasts"
+                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                  >
+                    <span>View</span>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/myprofile/broadcastfilter"
+                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                  >
+                    <span>Set Filters</span>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/broadcasthistory"
+                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                  >
+                    <span>History</span>
+                  </NavLink>
+                </li>
+              </ul>
+            </div>
 
         {/* Table Section */}
         <div className={css.tableWrapper}>
