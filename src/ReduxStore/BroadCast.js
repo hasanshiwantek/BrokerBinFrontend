@@ -144,6 +144,34 @@ export const fetchBroadCastData = createAsyncThunk(
   }
 );
 
+export const deleteBroadCastData = createAsyncThunk(
+  "broadcastStore/deleteBroadCastData",
+  async ({ token, ids }) => {
+    console.log(token);
+
+    try {
+      const response = await axios.delete(
+        `${brokerAPI}broadcast/delete`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          data: { ids },
+        }
+      );
+
+      console.log("Deleted Broadcast Data", response.data);
+
+      return response.data;
+
+    } catch (error) {
+      throw new Error("Error deleting Broadcast");
+    }
+  }
+);
+
+
 const initialState = {
   computerSelection: [],
   telecomSelection: [],
@@ -238,7 +266,91 @@ const broadcastSlice = createSlice({
       .addCase(fetchBroadCastData.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message;
-      });
+      })
+      .addCase(deleteBroadCastData.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      // .addCase(deleteBroadCastData.fulfilled, (state, action) => {
+      //   state.isLoading = false;
+      //   //Update state with the result
+      //   state.broadCastData = action.payload;
+      // })
+      // .addCase(deleteBroadCastData.fulfilled, (state, action) => {
+      //   state.isLoading = false;
+      
+      //   const deletedIds = action.meta.arg.ids; // Get the IDs that were sent for deletion
+      
+      //   // Filter out the deleted broadcasts without replacing broadCastData with action.payload
+      //   if (Array.isArray(state.broadCastData)) {
+      //     state.broadCastData = state.broadCastData.filter(
+      //       (item) => !deletedIds.includes(item.id)
+      //     );
+      //   } else {
+      //     console.error("Expected broadCastData to be an array, got:", state.broadCastData);
+      //   }
+      // })
+
+      // .addCase(deleteBroadCastData.fulfilled, (state, action) => {
+      //   state.isLoading = false;
+      
+      //   // Confirm that deletedIds is coming from meta or payload as a fallback
+      //   const deletedIds = action.meta.arg?.ids || action.payload?.deletedIds;
+        
+      //   // Logging for troubleshooting
+      //   console.log("Deleted IDs:", deletedIds);
+      //   console.log("Current broadcast data:", state.broadCastData);
+      
+      //   // Ensure both deletedIds and broadCastData are arrays before proceeding
+      //   if (Array.isArray(state.broadCastData) && Array.isArray(deletedIds)) {
+      //     // Create a shallow copy and filter it
+      //     const updatedBroadcasts = state.broadCastData.slice().filter(
+      //       (item) => !deletedIds.includes(item.id)
+      //     );
+      
+      //     // Assign the filtered copy back to state.broadCastData
+      //     state.broadCastData = updatedBroadcasts;
+      //   } else {
+      //     console.error("Expected broadCastData to be an array, got:", state.broadCastData);
+      //     console.error("Expected deletedIds to be an array, got:", deletedIds);
+      //   }
+      // })
+      
+      .addCase(deleteBroadCastData.fulfilled, (state, action) => {
+        state.isLoading = false;
+      
+        // Extract deleted IDs safely from either meta or payload
+        const deletedIds = action.meta.arg?.ids || action.payload?.deletedIds;
+      
+        // Logging for clarity
+        console.log("Deleted IDs:", deletedIds);
+        console.log("Current broadcast data:", state.broadCastData);
+      
+        // Force broadCastData to be an array if it's not
+        if (!Array.isArray(state.broadCastData)) {
+          state.broadCastData = [];
+        }
+      
+        // Proceed only if both are arrays
+        if (Array.isArray(deletedIds)) {
+          // Create a filtered array without mutating state directly
+          const updatedBroadcasts = (state.broadCastData || []).filter(
+            (item) => !deletedIds.includes(item.id)
+          );
+      
+          // Update broadCastData immutably
+          state.broadCastData = updatedBroadcasts;
+        } else {
+          console.error("Expected deletedIds to be an array, got:", deletedIds);
+        }
+      })
+      
+      
+      .addCase(deleteBroadCastData.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message;
+      })
+   
   },
 });
 

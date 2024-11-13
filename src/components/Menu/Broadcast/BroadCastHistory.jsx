@@ -5,7 +5,7 @@ import { Link,NavLink } from 'react-router-dom';
 import myProfile from "../../../styles/Menu/Manage/MyProfile.module.css";
 import { useSelector, useDispatch } from 'react-redux';
 import Cookies from 'js-cookie';
-import { fetchBroadCastData } from '../../../ReduxStore/BroadCast';
+import { fetchBroadCastData, deleteBroadCastData } from '../../../ReduxStore/BroadCast';
 
 const BroadCastHistory = () => {
   const broadcastItems = useSelector((state) => state.broadcastStore.broadCastData);
@@ -15,6 +15,7 @@ const BroadCastHistory = () => {
   const [selectedType, setSelectedType] = useState("all"); // State to track selected broadcast type
   const [inputSearchTerm, setInputSearchTerm] = useState(''); // Temporary state for input field
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedBroadcastIds, setSelectedBroadcastIds] = useState([]);
 
   const token = Cookies.get("token");
 
@@ -58,6 +59,19 @@ const BroadCastHistory = () => {
       handleSearchClick();
     }
   };
+
+  const handleCheckboxChange = (id) => {
+    setSelectedBroadcastIds((prevSelected) =>
+      prevSelected.includes(id)
+        ? prevSelected.filter((selectedId) => selectedId !== id)
+        : [...prevSelected, id]
+    );
+  };
+
+  const handleDeleteClick = () => {
+  dispatch(deleteBroadCastData({ token, ids: selectedBroadcastIds }));
+  setSelectedBroadcastIds([]); // Clear selection after deletion
+};
 
 
 
@@ -162,7 +176,9 @@ const BroadCastHistory = () => {
                 filteredBroadcasts.map((item, index) => (
                   <tr key={index}>
                     <td>
-                      <input type="checkbox" />
+                      <input type="checkbox"
+                      onChange={() => handleCheckboxChange(item.id)}
+                      checked={selectedBroadcastIds.includes(item.id)} />
                     </td>
                     <td>{item.created_at}</td>
                     <td className={
@@ -206,7 +222,8 @@ const BroadCastHistory = () => {
 
           {/* Action Buttons */}
           <div className={css.actionButtons}>
-            <button className={css.deleteButton}>Delete</button>
+            <button className={css.deleteButton}
+            onClick={handleDeleteClick}>Delete</button>
           </div>
         </div>
       </div>
