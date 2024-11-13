@@ -3,11 +3,11 @@ import React, { createContext, useContext, useState } from 'react';
 import styles from './BroadcastModal.module.css';
 import { Link, useNavigate } from 'react-router-dom';
 
-const BroadcastModal = ({ isOpen, onRequestClose, broadcast}) => {
+const BroadcastModal = ({ isOpen, onRequestClose, broadcast }) => {
     const navigate = useNavigate();
     if (!isOpen || !broadcast) return null;
 
-      const handleReplyClickFromModal = () => {
+    const handleReplyClickFromModal = () => {
         if (!broadcast) {
             console.error("No broadcast data available.");
             return;
@@ -17,9 +17,9 @@ const BroadcastModal = ({ isOpen, onRequestClose, broadcast}) => {
         // Navigate to ReplyBroad without passing state
         navigate('/ReplyBroad');
     };
-    
-  
-  
+
+
+
 
     return (
         <div className={styles.modalOverlay}>
@@ -30,10 +30,10 @@ const BroadcastModal = ({ isOpen, onRequestClose, broadcast}) => {
                 <p><strong>Sent:</strong> {new Date(broadcast.created_at).toLocaleString()}</p>
                 {
                     broadcast.type && (
-                        <p><strong>Subject:</strong> BrokerBin Multiple-Part Broadcast {broadcast.type.toUpperCase() }: {broadcast.mfg}</p>
+                        <p><strong>Subject:</strong> BrokerBin Multiple-Part Broadcast {broadcast.type.toUpperCase()}: {broadcast.mfg}</p>
                     )
                 }
-            
+
                 <p><strong>Mfg:</strong> {broadcast.mfg}</p>
                 {/* <p><strong>Part / Model:</strong> {broadcast.partModel}</p> */}
                 {/* <p><strong>Condition:</strong> {broadcast.cond}</p> */}
@@ -51,7 +51,7 @@ const BroadcastModal = ({ isOpen, onRequestClose, broadcast}) => {
 
                 <button onClick={onRequestClose} className={styles.closeButton}>Close</button>
                 <Link   >
-                    <button className={styles.replyButton} onClick={ handleReplyClickFromModal} >
+                    <button className={styles.replyButton} onClick={handleReplyClickFromModal} >
                         Reply
                     </button>
 
