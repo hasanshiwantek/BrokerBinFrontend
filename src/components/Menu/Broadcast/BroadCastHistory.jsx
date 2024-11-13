@@ -5,7 +5,8 @@ import { Link,NavLink } from 'react-router-dom';
 import myProfile from "../../../styles/Menu/Manage/MyProfile.module.css";
 import { useSelector, useDispatch } from 'react-redux';
 import Cookies from 'js-cookie';
-import { fetchBroadCastData, deleteBroadCastData } from '../../../ReduxStore/BroadCast';
+import { fetchBroadCastData } from '../../../ReduxStore/BroadCast';
+import { deleteBroadCastData } from '../../../ReduxStore/BroadCast';
 
 const BroadCastHistory = () => {
   const broadcastItems = useSelector((state) => state.broadcastStore.broadCastData);
@@ -15,8 +16,7 @@ const BroadCastHistory = () => {
   const [selectedType, setSelectedType] = useState("all"); // State to track selected broadcast type
   const [inputSearchTerm, setInputSearchTerm] = useState(''); // Temporary state for input field
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedBroadcastIds, setSelectedBroadcastIds] = useState([]);
-
+  const [selectedBroadcasts, setSelectedBroadcasts] = useState([]);
   const token = Cookies.get("token");
 
   useEffect(() => {
@@ -60,20 +60,49 @@ const BroadCastHistory = () => {
     }
   };
 
+
+  // Checkbox Handler
   const handleCheckboxChange = (id) => {
-    setSelectedBroadcastIds((prevSelected) =>
-      prevSelected.includes(id)
-        ? prevSelected.filter((selectedId) => selectedId !== id)
-        : [...prevSelected, id]
+    setSelectedBroadcasts(prev => 
+      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
     );
   };
 
+
+  // Delete Handler
+  // const handleDeleteClick = () => {
+  //   selectedBroadcasts.forEach(id => {
+  //     dispatch(deleteBroadCastData({ token, id }));
+  //   });
+  //   setSelectedBroadcasts([]); // Clear selections
+  // };
+  
+
+
+  // const handleDeleteClick = () => {
+  //   if (selectedBroadcasts.length > 0) {
+  //     dispatch(deleteBroadCastData({ token, ids: selectedBroadcasts }));
+  //     setSelectedBroadcasts([]); // Clear selections after dispatch
+  //     alert("Broadcast Deleted")
+  //   } else {
+  //     console.log("No broadcasts selected for deletion.");
+  //   }
+  // };
+  
+
+
   const handleDeleteClick = () => {
-  dispatch(deleteBroadCastData({ token, ids: selectedBroadcastIds }));
-  setSelectedBroadcastIds([]); // Clear selection after deletion
-};
-
-
+    if (selectedBroadcasts.length > 0) {
+      dispatch(deleteBroadCastData({ token, ids: selectedBroadcasts })).then(() => {
+        dispatch(fetchBroadCastData({ token }));
+      });
+      setSelectedBroadcasts([]); // Clear selections after dispatch
+      alert("Broadcast Deleted");
+    } else {
+      console.log("No broadcasts selected for deletion.");
+    }
+  };
+  
 
   return (
     <>
@@ -177,8 +206,9 @@ const BroadCastHistory = () => {
                   <tr key={index}>
                     <td>
                       <input type="checkbox"
-                      onChange={() => handleCheckboxChange(item.id)}
-                      checked={selectedBroadcastIds.includes(item.id)} />
+                       checked={selectedBroadcasts.includes(item.id)}
+                       onChange={() => handleCheckboxChange(item.id)}
+                       />
                     </td>
                     <td>{item.created_at}</td>
                     <td className={
@@ -200,7 +230,7 @@ const BroadCastHistory = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="9">No broadcasts found for this type.</td>
+                  <td colSpan="9">Loading...</td>
                 </tr>
               )}
             </tbody>
@@ -222,8 +252,7 @@ const BroadCastHistory = () => {
 
           {/* Action Buttons */}
           <div className={css.actionButtons}>
-            <button className={css.deleteButton}
-            onClick={handleDeleteClick}>Delete</button>
+            <button className={css.deleteButton} onClick={handleDeleteClick} >Delete</button>
           </div>
         </div>
       </div>
