@@ -144,6 +144,68 @@ export const fetchBroadCastData = createAsyncThunk(
   }
 );
 
+
+
+
+// export const deleteBroadCastData = createAsyncThunk(
+//   "broadcastStore/deleteBroadCastData",
+//   async ({ token,ids }) => {
+//     console.log(token)
+
+//     try {
+//       const response = await axios.delete(
+//         `${brokerAPI}broadcast/delete${ids}`,
+//         {
+//           headers: {
+//             "Content-Type": "application/json",
+//             Authorization: `Bearer ${token}`,
+//           },
+//         }
+//       );
+
+//       console.log("Broadcast Deleted",response.data);
+
+//       return id;
+
+//     } catch (error) {
+//       throw new Error("Error deleting Broadcast Data");
+//     }
+//   }
+// );
+
+
+
+
+export const deleteBroadCastData = createAsyncThunk(
+  "broadcastStore/deleteBroadCastData",
+  async ({ token, ids }) => {
+    console.log(token, "Attempting to delete broadcasts with IDs:", ids);
+
+    try {
+      const response = await axios.delete(
+        `${brokerAPI}broadcast/delete`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          data: { ids } // Pass 'ids' as part of the request body
+        }
+      );
+
+      console.log("Broadcast Deleted", response.data);
+
+      return ids; // Return the deleted IDs to update the state
+
+    } catch (error) {
+      console.error("Error deleting Broadcast Data", error.response?.data || error.message);
+      throw new Error("Error deleting Broadcast Data: " + (error.response?.data || error.message));
+    }
+  }
+);
+
+
+
 const initialState = {
   computerSelection: [],
   telecomSelection: [],
@@ -237,6 +299,34 @@ const broadcastSlice = createSlice({
       })
       .addCase(fetchBroadCastData.rejected, (state, action) => {
         state.isLoading = false;
+        state.error = action.error.message;
+      })
+      .addCase(deleteBroadCastData.pending, (state) => {
+        state.isLoading = true;
+        console.log("Pending... ")
+        state.error = null;
+      })
+      // .addCase(deleteBroadCastData.fulfilled, (state, action) => {
+      //   state.isLoading = false;
+      //   const filteredData = state.broadCastData.filter(broadcast => !action.payload.includes(broadcast.id));
+      //   console.log('Filtered Data:', filteredData);
+      //   state.broadCastData = filteredData;
+      // })
+      .addCase(deleteBroadCastData.fulfilled, (state, action) => {
+        state.isLoading = false;
+        if (Array.isArray(state.broadCastData)) {
+          // Filter out deleted items based on the payload of deleted IDs
+          const filteredData = state.broadCastData.filter(broadcast => !action.payload.includes(broadcast.id));
+          state.broadCastData = filteredData;
+        } else {
+          console.error("broadCastData is not an array:", state.broadCastData);
+          state.broadCastData = []; // Reset it to an empty array to avoid further issues
+        }
+    })
+    
+      .addCase(deleteBroadCastData.rejected, (state, action) => {
+        state.isLoading = false;
+        console.log("REJECTED!!!... ")
         state.error = action.error.message;
       });
   },
