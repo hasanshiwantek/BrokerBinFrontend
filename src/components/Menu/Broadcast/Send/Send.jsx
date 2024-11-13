@@ -15,7 +15,7 @@ const BroadcastForm = () => {
   const token = Cookies.get("token");
   const { user } = JSON.parse(localStorage.getItem("user"));
   const service = useSelector((state) => state.broadcastStore.serviceData)
-  
+
   // console.log(service);
 
   // console.log(user);
@@ -44,7 +44,7 @@ const BroadcastForm = () => {
     description: "",
     additional_comments: "",
   });
-  
+
   const [emailFormat, setEmailFormat] = useState({
     time: "",
     date: "",
@@ -201,14 +201,14 @@ const BroadcastForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+
     // If a file is selected, use FormData to include it in the payload
     let data;
     if (files) {
       data = new FormData();
       data.append("uploadFile", files); // Add the file with the expected backend key
-  
-      // Append the other data as JSON
+
+      // Append the other data as JSON 
       data.append(
         "jsonData",
         JSON.stringify({
@@ -235,7 +235,7 @@ const BroadcastForm = () => {
         service: serviceData,
       };
     }
-  
+
     // Dispatch the data with token
     dispatch(sendBroadcast({ token, data }))
       .then(() => {
@@ -245,21 +245,21 @@ const BroadcastForm = () => {
         console.error("Error storing data:", error);
         alert("Failed to store data in the backend");
       });
-  
+
     // Set email format
     setEmailFormat((prev) => ({
       ...prev,
       time: new Date().toLocaleTimeString("en-US", { hour12: true }),
       date: new Date().toLocaleDateString("en-US"),
     }));
-  
+
     console.log("Token:", token);
     console.log("Data being sent:", data);
-  
+
     // Reset form if needed
     cancelAllActions(); // Assuming this function clears the form and resets states
   };
-  
+
 
 
 
@@ -296,7 +296,7 @@ const BroadcastForm = () => {
                   </button>
                 </div>
               </div>
-              <div> 
+              <div>
                 <h3>For the following:</h3>
                 <div className={css.categories}>
                   <button
@@ -700,7 +700,13 @@ const BroadcastForm = () => {
                   <button type="button" onClick={cancelAllActions} >
                     Cancel
                   </button>
-                  <input type="submit" value="SEND" style={{ cursor: "pointer" }} />
+                  {/* <input type="submit" value="SEND" style={{ cursor: "pointer" }} /> */}
+                  <input
+                    type="button"
+                    value="SEND"
+                    style={{ cursor: "pointer" }}
+                    onClick={handleSubmit} // Directly call handleSubmit here
+                  />
                 </span>
               </div>
             </div>
