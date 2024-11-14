@@ -182,3 +182,8 @@
     text-transform:uppercase;
   
   }
+
+  .container button:active{
+    transform: scale(0.95); /* Slight shrink effect when clicked */
+  }
+  
