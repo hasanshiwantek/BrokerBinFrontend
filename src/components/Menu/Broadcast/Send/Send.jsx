@@ -201,29 +201,28 @@ const BroadcastForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // If a file is selected, use FormData to include it in the payload
+  
+    // If a file is selected, use FormData to include both file and JSON data
     let data;
     if (files) {
       data = new FormData();
-      data.append("uploadFile", files); // Add the file with the expected backend key
-
-      // Append the other data as JSON 
-      data.append(
-        "jsonData",
-        JSON.stringify({
-          ...formData,
-          type: broadcastType,
-          selectedCompanies: computerSelection,
-          selectedTelecom: telecomSelection,
-          selectedMobileDevices: mobileDevicesSelection,
-          selectedRegion: regionSelection,
-          companiesSelection: companiesSelection,
-          service: serviceData,
-        })
-      );
+      data.append("uploadFile", files); // Key for file, expected by the backend
+  
+      // Append each key-value pair to FormData instead of using JSON.stringify
+      data.append("type", broadcastType);
+      data.append("selectedCompanies", JSON.stringify(computerSelection));
+      data.append("selectedTelecom", JSON.stringify(telecomSelection));
+      data.append("selectedMobileDevices", JSON.stringify(mobileDevicesSelection));
+      data.append("selectedRegion", JSON.stringify(regionSelection));
+      data.append("companiesSelection", JSON.stringify(companiesSelection));
+      data.append("service", JSON.stringify(serviceData));
+  
+      // Append any additional form fields if needed
+      for (const [key, value] of Object.entries(formData)) {
+        data.append(key, value);
+      }
     } else {
-      // If no file, use JSON data as usual
+      // If no file, just send a JSON object with key-value pairs
       data = {
         ...formData,
         type: broadcastType,
@@ -235,7 +234,7 @@ const BroadcastForm = () => {
         service: serviceData,
       };
     }
-
+  
     // Dispatch the data with token
     dispatch(sendBroadcast({ token, data }))
       .then(() => {
@@ -245,21 +244,20 @@ const BroadcastForm = () => {
         console.error("Error storing data:", error);
         alert("Failed to store data in the backend");
       });
-
+  
     // Set email format
     setEmailFormat((prev) => ({
       ...prev,
       time: new Date().toLocaleTimeString("en-US", { hour12: true }),
       date: new Date().toLocaleDateString("en-US"),
     }));
-
+  
     console.log("Token:", token);
     console.log("Data being sent:", data);
-
+  
     // Reset form if needed
     cancelAllActions(); // Assuming this function clears the form and resets states
   };
-
 
 
 
@@ -429,7 +427,7 @@ const BroadcastForm = () => {
                         </small>
                       </div>
                     </label>
-                  </div>
+                  </div>  
                 </div>
                 <div className={css.mainFields}>
                   <div className={css.mainFields_1}>
@@ -718,9 +716,6 @@ const BroadcastForm = () => {
 };
 
 export default BroadcastForm;
-
-
-
 
 
 
