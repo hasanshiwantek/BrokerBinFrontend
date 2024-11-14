@@ -206,26 +206,18 @@ const BroadcastForm = () => {
     let data;
     if (files) {
       data = new FormData();
-      data.append("uploadFile", files);
-    
-      data.append("type", broadcastType);
       data.append("selectedCompanies", JSON.stringify(computerSelection));
       data.append("selectedTelecom", JSON.stringify(telecomSelection));
       data.append("selectedMobileDevices", JSON.stringify(mobileDevicesSelection));
-      data.append("selectedRegion", JSON.stringify(regionSelection));
       data.append("companiesSelection", JSON.stringify(companiesSelection));
       data.append("service", JSON.stringify(serviceData));
-    
+  
+      // Append any additional form fields if needed
       for (const [key, value] of Object.entries(formData)) {
         data.append(key, value);
       }
-    
-      // Log FormData contents
-      console.log("FormData contents:");
-      data.forEach((value, key) => {
-        console.log(key, value);
-      });
     } else {
+      // If no file, just send a JSON object with key-value pairs
       data = {
         ...formData,
         type: broadcastType,
@@ -263,7 +255,6 @@ const BroadcastForm = () => {
     cancelAllActions(); // Assuming this function clears the form and resets states
   };
   
-
 
 
 
@@ -433,7 +424,7 @@ const BroadcastForm = () => {
                         </small>
                       </div>
                     </label>
-                  </div>
+                  </div>  
                 </div>
                 <div className={css.mainFields}>
                   <div className={css.mainFields_1}>
@@ -722,9 +713,6 @@ const BroadcastForm = () => {
 };
 
 export default BroadcastForm;
-
-
-
 
 
 

@@ -30,15 +30,17 @@ const BroadCast = () => {
   const [inputSearchTerm, setInputSearchTerm] = useState(''); // Temporary state for input field
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBroadcast, setSelectedBroadcast] = useState({});
-  // const broadcasts = useSelector(state => state.broadcastStore.broadCastData);
-  // const currentUser = useSelector(state => state.auth.currentUser);
+  const [loading, setLoading] = useState(true); // Loading state
+
   const currentUserID = Cookies.get("user_id");
 
   const dispatch = useDispatch()
   useEffect(() => {
+    setLoading(true);
     dispatch(fetchBroadCastData({ token }))
-
-  }, [dispatch, token])
+      .then(() => setLoading(false))
+      .catch(() => setLoading(false));
+  }, [dispatch, token]);
 
   const filteredBroadcasts = broadcastItems && broadcastItems.broadcasts
     ? broadcastItems.broadcasts.filter(broadcast =>
@@ -327,43 +329,60 @@ const BroadCast = () => {
               <th>Product Description</th>
             </tr>
           </thead>
-
           <tbody>
-            {filteredBroadcasts.map((item, index) => (
-              item && item.id ? (
-                <tr key={index} style={item.user_id && String(item.user_id.id) === currentUserID ? { color: "red" } : null}>
-                  <td>
-                    <input type="checkbox"
-                      checked={!!selectedBroadcast[item.id]}
-                      onChange={() => handleCheckboxChange(item)} />
-                  </td>
-                  <td>{item.created_at}</td>
-                  <td></td>
-                  <td>
-                    <span onClick={() => openCompanyModal(item.user_id.company)}>
-                      {item.user_id.company.name}
-                    </span>
-                  </td>
-                  <td>{item.user_id.company.country}</td>
-                  <td className={
-                    item.type === 'wtb' ? styles['type-wtb'] :
-                      item.type === 'wts' ? styles['type-wts'] :
-                        item.type === 'rfq' ? styles['type-rfq'] : ''}>
-                    {item.type}
-                  </td>
-                  <td > <img src={bullImage} alt="" srcset="" onClick={() => openModal(item)} style={{ width: "18px", fontWeight: "bold" }} /></td>
-                  <td style={{ textTransform: "uppercase" }}>{item.partModel}</td>
-                  <td>{item.heciClei}</td>
-                  <td>{item.mfg}</td>
-                  <td>{item.cond}</td>
-                  <td style={{ color: "blue" }}>{item.price}</td>
-                  <td>{item.quantity}</td>
-                  <td>{item.description}</td>
-                </tr>)
-                : null
-            ))}
-
+            {loading ? (
+              <tr>
+                <td colSpan="14" style={{ textAlign: "center" }}>Loading broadcasts...</td>
+              </tr>
+            ) : filteredBroadcasts.length > 0 ? (
+              filteredBroadcasts.map((item, index) => (
+                item && item.id ? (
+                  <tr key={index} style={item.user_id && String(item.user_id.id) === currentUserID ? { color: "red" } : null}>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={!!selectedBroadcast[item.id]}
+                        onChange={() => handleCheckboxChange(item)}
+                      />
+                    </td>
+                    <td>{item.created_at}</td>
+                    <td></td>
+                    <td>
+                      <span onClick={() => openCompanyModal(item.user_id.company)}>
+                        {item.user_id.company.name}
+                      </span>
+                    </td>
+                    <td>{item.user_id.company.country}</td>
+                    <td className={
+                      item.type === 'wtb' ? styles['type-wtb'] :
+                        item.type === 'wts' ? styles['type-wts'] :
+                          item.type === 'rfq' ? styles['type-rfq'] : ''
+                    }>
+                      {item.type}
+                    </td>
+                    <td>
+                      <img src={bullImage} alt="" onClick={() => openModal(item)} style={{ width: "18px", fontWeight: "bold" }} />
+                    </td>
+                    <td style={{ textTransform: "uppercase" }}>{item.partModel}</td>
+                    <td>{item.heciClei}</td>
+                    <td>{item.mfg}</td>
+                    <td>{item.cond}</td>
+                    <td style={{ color: "blue" }}>{item.price}</td>
+                    <td>{item.quantity}</td>
+                    <td>{item.description}</td>
+                  </tr>
+                ) : null
+              ))
+            ) : (
+              <tr>
+                <td colSpan="14" style={{ textAlign: "center" }}>
+                  No broadcasts found for the selected type.
+                </td>
+              </tr>
+            )}
           </tbody>
+
+
           <thead>
             <tr>
               <th>Cart</th>
