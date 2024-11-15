@@ -452,46 +452,44 @@ console.log("Current Page State:", currentPage); // Debugging
       </div> */}
 
 
-
-
-
-
-
-
-
-
-
 <div className={styles.pagination}>
-    <button
-        onClick={() => handlePageChange(currentPage - 1)}
-        disabled={currentPage === 1 || loading}
-    >
-        Previous
-    </button>
+  <button
+    onClick={() => handlePageChange(currentPage - 1)}
+    disabled={currentPage === 1 || loading}
+  >
+    Previous
+  </button>
 
-    {/* Calculate the start and end of the displayed page range */}
-    {[...Array(pagination.last_page || 1).keys()].slice(
-        Math.max(0, currentPage - 1), // Start at currentPage - 1 or 0
-        Math.min(currentPage + 2, pagination.last_page) // Show next two pages
-    ).map((page) => (
-        <button
-            key={page + 1}
-            onClick={() => handlePageChange(page + 1)}
-            className={`${styles.pageButton} ${currentPage === page + 1 ? styles.active : ''}`}
-            disabled={loading}
-        >
-            {page + 1}
-        </button>
+  {[...Array(pagination.last_page || 1).keys()]
+    .map(page => page + 1)
+    .filter(page => {
+      // Display logic for pagination
+      if (currentPage === 1) {
+        return page <= 3; // Show pages 1, 2, 3 when on the first page
+      } else if (currentPage === pagination.last_page) {
+        return page >= pagination.last_page - 2; // Show the last three pages
+      } else {
+        return page >= currentPage - 1 && page <= currentPage + 1; // Show the previous, current, and next page
+      }
+    })
+    .map(page => (
+      <button
+        key={page}
+        onClick={() => handlePageChange(page)}
+        className={`${styles.pageButton} ${currentPage === page ? styles.active : ''}`}
+        disabled={loading}
+      >
+        {page}
+      </button>
     ))}
 
-    <button
-        onClick={() => handlePageChange(currentPage + 1)}
-        disabled={currentPage === pagination.last_page || loading}
-    >
-        Next
-    </button>
+  <button
+    onClick={() => handlePageChange(currentPage + 1)}
+    disabled={currentPage === pagination.last_page || loading}
+  >
+    Next
+  </button>
 </div>
-
 
 
 
