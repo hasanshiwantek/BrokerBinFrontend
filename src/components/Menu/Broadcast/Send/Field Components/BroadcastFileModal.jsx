@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import styles from './BroadcastModal.module.css';
 import { Link, useNavigate } from 'react-router-dom';
+import { FaFileAlt } from "react-icons/fa";
 
 const BroadcastModal = ({ isOpen, onRequestClose, broadcast }) => {
     const navigate = useNavigate();
@@ -18,9 +19,20 @@ const BroadcastModal = ({ isOpen, onRequestClose, broadcast }) => {
         navigate('/ReplyBroad');
     };
 
-
-
-
+    // Function to handle direct file download
+    const handleFileDownload = (event, file) => {
+        event.preventDefault(); // Prevent the default link behavior
+        if (!file) {
+            alert('No file available for download.');
+            return;
+        }
+        const anchor = document.createElement('a');
+        anchor.href = file;
+        anchor.download = file.split('/').pop(); // Extract filename and suggest it for download
+        document.body.appendChild(anchor);
+        anchor.click();
+        document.body.removeChild(anchor);
+    };
     return (
         <div className={styles.modalOverlay}>
             <div className={styles.modalContent}>
@@ -33,12 +45,20 @@ const BroadcastModal = ({ isOpen, onRequestClose, broadcast }) => {
                         <p><strong>Subject:</strong> BrokerBin Multiple-Part Broadcast {broadcast.type.toUpperCase()}: {broadcast.mfg}</p>
                     )
                 }
-
+                {broadcast.file && (
+                    <p><strong>Attachment:</strong>
+                        <a href="#" onClick={(e) => handleFileDownload(e, broadcast.file)}
+                            className={styles.downloadLink}>
+                            <FaFileAlt className={styles.iconMargin} />
+                            {broadcast.file}
+                        </a>
+                    </p>
+                )}
                 <p><strong>Mfg:</strong> {broadcast.mfg}</p>
-                {/* <p><strong>Part / Model:</strong> {broadcast.partModel}</p> */}
-                {/* <p><strong>Condition:</strong> {broadcast.cond}</p> */}
-                {/* <p><strong>Price:</strong> {broadcast.price}</p> */}
-                {/* <p><strong>Quantity:</strong> {broadcast.quantity}</p> */}
+                <p><strong>Part / Model:</strong> {broadcast.partModel}</p>
+                <p><strong>Condition:</strong> {broadcast.cond}</p>
+                <p><strong>Quantity:</strong> {broadcast.quantity}</p>
+                <p><strong>Price:</strong> {broadcast.price}</p>
                 {/* <p><strong>Description:</strong> {broadcast.description}</p> */}
                 {broadcast.additional_comments && (
                     <p><strong>Additional Comments:</strong> {broadcast.additional_comments}</p>
