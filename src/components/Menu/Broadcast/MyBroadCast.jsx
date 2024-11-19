@@ -464,9 +464,6 @@ const BroadCast = () => {
             Next
           </button>
         </div>
-
-
-
         <div className={styles.replyBtnSec}>
           <button
             className={styles.replyBtn}
@@ -474,6 +471,7 @@ const BroadCast = () => {
             Reply
           </button>
         </div>
+
 
         {/* Render CompanyDetails Modal Conditionally */}
         {isCompanyModalOpen && popupCompanyDetail.length > 0 && (
