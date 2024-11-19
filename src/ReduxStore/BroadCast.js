@@ -118,7 +118,6 @@ export const fetchBroadCastFilters = createAsyncThunk(
   }
 );
 
-<<<<<<< HEAD
 export const fetchBroadCastData = createAsyncThunk(
   "broadcastStore/fetchBroadCastData",
   async ({ token }) => {
@@ -145,28 +144,17 @@ export const fetchBroadCastData = createAsyncThunk(
   }
 );
 
-<<<<<<< HEAD
-export const deleteBroadCastData = createAsyncThunk(
-  "broadcastStore/deleteBroadCastData",
-  async ({ token, ids }) => {
-    console.log(token);
-=======
 
 
 
 // export const deleteBroadCastData = createAsyncThunk(
 //   "broadcastStore/deleteBroadCastData",
 //   async ({ token,ids }) => {
-=======
-// export const fetchBroadCastData = createAsyncThunk(
-//   "broadcastStore/fetchBroadCastData",
-//   async ({ token }) => {
->>>>>>> 2b8e31171bd6c0168b68fe7ac59a8f021f51ec68
 //     console.log(token)
 
 //     try {
-//       const response = await axios.get(
-//         `${brokerAPI}broadcast`,
+//       const response = await axios.delete(
+//         `${brokerAPI}broadcast/delete${ids}`,
 //         {
 //           headers: {
 //             "Content-Type": "application/json",
@@ -175,46 +163,23 @@ export const deleteBroadCastData = createAsyncThunk(
 //         }
 //       );
 
-//       console.log("View Broadcast Data",response.data);
+//       console.log("Broadcast Deleted",response.data);
 
-//       return response.data;
+//       return id;
 
 //     } catch (error) {
-//       throw new Error("Error searching User");
+//       throw new Error("Error deleting Broadcast Data");
 //     }
 //   }
 // );
 
 
-export const fetchBroadCastData = createAsyncThunk(
-  "broadcastStore/fetchBroadCastData",
-  async ({ token, pageNumber = 1 }) => {
-    console.log("API Request Page Number:", pageNumber); // Debugging
-    try {
-      const response = await axios.get(
-        `${brokerAPI}broadcast?pageNumber=${pageNumber}`, // Ensure pageNumber is used here
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log("API Response:", response.data); // Debugging
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching broadcasts:", error); // Debugging
-      throw new Error("Error fetching broadcasts");
-    }
-  }
-);
 
 
 export const deleteBroadCastData = createAsyncThunk(
   "broadcastStore/deleteBroadCastData",
   async ({ token, ids }) => {
     console.log(token, "Attempting to delete broadcasts with IDs:", ids);
->>>>>>> 94752b03858014e259dc5dad430eed4254aeef07
 
     try {
       const response = await axios.delete(
@@ -224,18 +189,6 @@ export const deleteBroadCastData = createAsyncThunk(
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-<<<<<<< HEAD
-          data: { ids },
-        }
-      );
-
-      console.log("Deleted Broadcast Data", response.data);
-
-      return response.data;
-
-    } catch (error) {
-      throw new Error("Error deleting Broadcast");
-=======
           data: { ids } // Pass 'ids' as part of the request body
         }
       );
@@ -247,49 +200,14 @@ export const deleteBroadCastData = createAsyncThunk(
     } catch (error) {
       console.error("Error deleting Broadcast Data", error.response?.data || error.message);
       throw new Error("Error deleting Broadcast Data: " + (error.response?.data || error.message));
->>>>>>> 94752b03858014e259dc5dad430eed4254aeef07
     }
   }
 );
 
 
-<<<<<<< HEAD
-=======
-
-<<<<<<< HEAD
->>>>>>> 94752b03858014e259dc5dad430eed4254aeef07
-=======
-
-export const sendBroadcastReply = createAsyncThunk(
-  "broadcastStore/sendBroadcastReply",
-  async ({ token, data }) => {
-    try {
-      // Log data to check what is being sent
-      console.log("Sending data:", data);
-
-      const response = await axios.post(
-        `${brokerAPI}broadcast/email-reply`,
-        data, // Assuming 'data' is correctly formatted for 'multipart/form-data'
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log("API Response:", response.data); // Debugging
-      return response.data;
-    } catch (error) {
-      console.error(
-        "Error while fetching user data:",
-        error.response?.data || error.message
-      );
-      throw new Error("Error while sending broadcast Reply: " + (error.response?.data || error.message));
-    }
-  }
-);
 
 
+>>>>>>> 2b8e31171bd6c0168b68fe7ac59a8f021f51ec68
 
 
 >>>>>>> 2b8e31171bd6c0168b68fe7ac59a8f021f51ec68
@@ -390,101 +308,15 @@ const broadcastSlice = createSlice({
       })
       .addCase(deleteBroadCastData.pending, (state) => {
         state.isLoading = true;
-<<<<<<< HEAD
-=======
         console.log("Pending... ")
->>>>>>> 94752b03858014e259dc5dad430eed4254aeef07
         state.error = null;
       })
-<<<<<<< HEAD
       // .addCase(deleteBroadCastData.fulfilled, (state, action) => {
       //   state.isLoading = false;
-<<<<<<< HEAD
-      //   //Update state with the result
-      //   state.broadCastData = action.payload;
-      // })
-      // .addCase(deleteBroadCastData.fulfilled, (state, action) => {
-      //   state.isLoading = false;
-      
-      //   const deletedIds = action.meta.arg.ids; // Get the IDs that were sent for deletion
-      
-      //   // Filter out the deleted broadcasts without replacing broadCastData with action.payload
-      //   if (Array.isArray(state.broadCastData)) {
-      //     state.broadCastData = state.broadCastData.filter(
-      //       (item) => !deletedIds.includes(item.id)
-      //     );
-      //   } else {
-      //     console.error("Expected broadCastData to be an array, got:", state.broadCastData);
-      //   }
-      // })
-
-      // .addCase(deleteBroadCastData.fulfilled, (state, action) => {
-      //   state.isLoading = false;
-      
-      //   // Confirm that deletedIds is coming from meta or payload as a fallback
-      //   const deletedIds = action.meta.arg?.ids || action.payload?.deletedIds;
-        
-      //   // Logging for troubleshooting
-      //   console.log("Deleted IDs:", deletedIds);
-      //   console.log("Current broadcast data:", state.broadCastData);
-      
-      //   // Ensure both deletedIds and broadCastData are arrays before proceeding
-      //   if (Array.isArray(state.broadCastData) && Array.isArray(deletedIds)) {
-      //     // Create a shallow copy and filter it
-      //     const updatedBroadcasts = state.broadCastData.slice().filter(
-      //       (item) => !deletedIds.includes(item.id)
-      //     );
-      
-      //     // Assign the filtered copy back to state.broadCastData
-      //     state.broadCastData = updatedBroadcasts;
-      //   } else {
-      //     console.error("Expected broadCastData to be an array, got:", state.broadCastData);
-      //     console.error("Expected deletedIds to be an array, got:", deletedIds);
-      //   }
-      // })
-      
-      .addCase(deleteBroadCastData.fulfilled, (state, action) => {
-        state.isLoading = false;
-      
-        // Extract deleted IDs safely from either meta or payload
-        const deletedIds = action.meta.arg?.ids || action.payload?.deletedIds;
-      
-        // Logging for clarity
-        console.log("Deleted IDs:", deletedIds);
-        console.log("Current broadcast data:", state.broadCastData);
-      
-        // Force broadCastData to be an array if it's not
-        if (!Array.isArray(state.broadCastData)) {
-          state.broadCastData = [];
-        }
-      
-        // Proceed only if both are arrays
-        if (Array.isArray(deletedIds)) {
-          // Create a filtered array without mutating state directly
-          const updatedBroadcasts = (state.broadCastData || []).filter(
-            (item) => !deletedIds.includes(item.id)
-          );
-      
-          // Update broadCastData immutably
-          state.broadCastData = updatedBroadcasts;
-        } else {
-          console.error("Expected deletedIds to be an array, got:", deletedIds);
-        }
-      })
-      
-      
-      .addCase(deleteBroadCastData.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.error.message;
-      })
-   
-=======
       //   const filteredData = state.broadCastData.filter(broadcast => !action.payload.includes(broadcast.id));
       //   console.log('Filtered Data:', filteredData);
       //   state.broadCastData = filteredData;
       // })
-=======
->>>>>>> 2b8e31171bd6c0168b68fe7ac59a8f021f51ec68
       .addCase(deleteBroadCastData.fulfilled, (state, action) => {
         state.isLoading = false;
         if (Array.isArray(state.broadCastData)) {
@@ -495,30 +327,13 @@ const broadcastSlice = createSlice({
           console.error("broadCastData is not an array:", state.broadCastData);
           state.broadCastData = []; // Reset it to an empty array to avoid further issues
         }
-      })
-
+    })
+    
       .addCase(deleteBroadCastData.rejected, (state, action) => {
         state.isLoading = false;
         console.log("REJECTED!!!... ")
         state.error = action.error.message;
-
-      }).addCase(sendBroadcastReply.pending, (state) => {
-        state.isLoading = true;
-        console.log("Pending... ")
-        state.error = null;
-      })
-      .addCase(sendBroadcastReply.fulfilled, (state, action) => {
-        state.isLoading = false;
-        console.log("REPLY FULLFILLED")
-
-      })
-
-      .addCase(sendBroadcastReply.rejected, (state, action) => {
-        state.isLoading = false;
-        console.log("REJECTED!!!... ")
-        state.error = action.error.message;
       });
->>>>>>> 94752b03858014e259dc5dad430eed4254aeef07
   },
 });
 
@@ -530,7 +345,7 @@ export const {
   setRegionSelection,
   setServiceSelection,
   setFormData,
-  setTogglePopUp,
+  setTogglePopUp, 
   setPopupCompanyDetail
 } = broadcastSlice.actions;
 
