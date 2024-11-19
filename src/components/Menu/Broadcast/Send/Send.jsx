@@ -1,14 +1,10 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import css from "./Send.module.css";
 import ToggleCategories from "./Field Components/ToggleCategories";
 import ToggleFilters from "./Field Components/ToggleFilters";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { sendBroadcast } from "../../../../ReduxStore/BroadCast";
-import { MdUploadFile } from "react-icons/md";
-import { servicesList } from "../../../../data/services";
-import CheckboxList from "../../Manage/BroadcastFilter/CheckboxList";
 import Services from "./Field Components/Services";
 
 const BroadcastForm = () => {
