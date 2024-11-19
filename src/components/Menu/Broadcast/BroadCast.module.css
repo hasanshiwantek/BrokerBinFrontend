@@ -293,3 +293,56 @@ textarea {
   color: #428bca;
   font-weight: bold;
 }   
+
+.fileIcon{
+  transition: all 0.2s ease-in-out;
+}
+
+.fileIcon:hover{
+  transform: scale(1.2);
+
+}
+
+.pagination button{
+  color: white;
+  background-color: var(--primary-color);
+  margin: 5px;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid var(--primary-color);
+}
+
+.paginationSec{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Custom style for Quill editor container */
+.quill .ql-editor {
+  white-space: pre-wrap; /* Preserves formatting, line breaks, and spaces */
+}
+
+
+
+
+.pageButton {
+  /* Add default styling for all page buttons here */
+  padding: 8px 12px;
+  margin: 0 4px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
+
+/* .pageButton:hover {
+  background-color: #e0e0e0;
+} */
+
+.pageButton.active {
+  /* Style for the active button */
+  background-color: #428bca;
+  color: white;
+  font-weight: bold;
+  border-color: #428bca;
+}
