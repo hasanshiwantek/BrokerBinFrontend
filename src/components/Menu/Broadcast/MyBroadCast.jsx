@@ -16,28 +16,27 @@ import BroadcastFileModal from './Send/Field Components/BroadcastFileModal'
 import CompanyDetails from '../../Popups/CompanyDetails/CompanyDetails'
 import { setPopupCompanyDetail, setTogglePopUp } from '../../../ReduxStore/SearchProductSlice'
 import { FaFileAlt } from "react-icons/fa";
-
 const BroadCast = () => {
   const broadcastItems = useSelector((state) => state.broadcastStore.broadCastData)
-  const { pagination = {} } = broadcastItems || {}; // Default to empty object if undefined
-
   const { togglePopUp, popupCompanyDetail } = useSelector((state) => state.searchProductStore);
+  const { pagination = {} } = broadcastItems || {}; // Default to empty object if undefined
+  const token = Cookies.get("token");
+  const currentUserID = Cookies.get("user_id");
+  const dispatch = useDispatch()
+
   const [isCompanyModalOpen, setIsCompanyModalOpen] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newselectedBroadcast, newsetSelectedBroadcast] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [options, setOptions] = useState([]);
-  const token = Cookies.get("token");
   const [filterType, setFilterType] = useState('all');
   const [buyInFilters, setBuyInFilters] = useState([]);
   const [inputSearchTerm, setInputSearchTerm] = useState(''); // Temporary state for input field
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBroadcast, setSelectedBroadcast] = useState({});
   const [loading, setLoading] = useState(true); // Loading state
-  const currentUserID = Cookies.get("user_id");
   const [currentPage, setCurrentPage] = useState(1);
 
-  const dispatch = useDispatch()
 
   // Fetch data when currentPage changes
   useEffect(() => {
@@ -47,17 +46,17 @@ const BroadCast = () => {
       .then(() => setLoading(false))
       .catch(() => setLoading(false));
   }, [dispatch, token, currentPage]); // Make sure `currentPage` is in the dependency array
-  
-  
-// Pagination Handlers
-const handlePageChange = (page) => {
-  if (page !== currentPage && page >= 1 && page <= (pagination.last_page || 1)) {
-    console.log("Changing to page:", page); // Debugging
-    setCurrentPage(page);
-  }
-};
 
-console.log("Current Page State:", currentPage); // Debugging
+
+  // Pagination Handlers
+  const handlePageChange = (page) => {
+    if (page !== currentPage && page >= 1 && page <= (pagination.last_page || 1)) {
+      console.log("Changing to page:", page); // Debugging
+      setCurrentPage(page);
+    }
+  };
+
+  console.log("Current Page State:", currentPage); // Debugging
   const filteredBroadcasts = broadcastItems && broadcastItems.broadcasts
     ? broadcastItems.broadcasts.filter(broadcast =>
       (filterType === 'all' || broadcast.type === filterType) && // Add this condition
@@ -66,7 +65,7 @@ console.log("Current Page State:", currentPage); // Debugging
       (searchTerm === '' || broadcast.partModel && broadcast.partModel.toLowerCase().includes(searchTerm.toLowerCase()))
     )
     : [];
-    console.log("Filtered Broadcasts:", filteredBroadcasts);
+  console.log("Filtered Broadcasts:", filteredBroadcasts);
 
   // const filterFiles = filteredBroadcasts.map((item) => {
   //   return item.file
@@ -377,15 +376,16 @@ console.log("Current Page State:", currentPage); // Debugging
                     <td className='flex'>
                       <img src={bullImage} alt="" onClick={() => openModal(item)} style={{ width: "18px", fontWeight: "bold" }} />
                       {
-                        item.file ? (
-                          <>
+                        item.file && (
+                          <div className={styles.tooltipWrapper}>
                             <FaFileAlt
                               onClick={() => handleFileDownload(item.file)}
                               style={{ cursor: "pointer", marginLeft: "8px" }}
                               className={styles.fileIcon}
                             />
-                          </>
-                        ) : null
+                            <span className={styles.tooltip}>Download File</span>
+                          </div>
+                        )
                       }
                     </td>
                     <td style={{ textTransform: "uppercase" }}>{item.partModel}</td>
@@ -425,71 +425,45 @@ console.log("Current Page State:", currentPage); // Debugging
             </tr>
           </thead>
         </table>
-  {/* Pagination */}
-  {/* <div className={styles.pagination}>
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1 || loading}
-        >
-          Previous
-        </button>
-        {[...Array(pagination.last_page || 1).keys()].map((page) => (
+
+        <div className={styles.pagination}>
           <button
-            key={page + 1}
-            onClick={() => handlePageChange(page + 1)}
-            className={currentPage === page + 1 ? 'active' : ''}
-            disabled={loading}
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1 || loading}
           >
-            {page + 1}
+            Previous
           </button>
-        ))}
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === pagination.last_page || loading}
-        >
-          Next
-        </button>
-      </div> */}
 
+          {[...Array(pagination.last_page || 1).keys()]
+            .map(page => page + 1)
+            .filter(page => {
+              // Display logic for pagination
+              if (currentPage === 1) {
+                return page <= 3; // Show pages 1, 2, 3 when on the first page
+              } else if (currentPage === pagination.last_page) {
+                return page >= pagination.last_page - 2; // Show the last three pages
+              } else {
+                return page >= currentPage - 1 && page <= currentPage + 1; // Show the previous, current, and next page
+              }
+            })
+            .map(page => (
+              <button
+                key={page}
+                onClick={() => handlePageChange(page)}
+                className={`${styles.pageButton} ${currentPage === page ? styles.active : ''}`}
+                disabled={loading}
+              >
+                {page}
+              </button>
+            ))}
 
-<div className={styles.pagination}>
-  <button
-    onClick={() => handlePageChange(currentPage - 1)}
-    disabled={currentPage === 1 || loading}
-  >
-    Previous
-  </button>
-
-  {[...Array(pagination.last_page || 1).keys()]
-    .map(page => page + 1)
-    .filter(page => {
-      // Display logic for pagination
-      if (currentPage === 1) {
-        return page <= 3; // Show pages 1, 2, 3 when on the first page
-      } else if (currentPage === pagination.last_page) {
-        return page >= pagination.last_page - 2; // Show the last three pages
-      } else {
-        return page >= currentPage - 1 && page <= currentPage + 1; // Show the previous, current, and next page
-      }
-    })
-    .map(page => (
-      <button
-        key={page}
-        onClick={() => handlePageChange(page)}
-        className={`${styles.pageButton} ${currentPage === page ? styles.active : ''}`}
-        disabled={loading}
-      >
-        {page}
-      </button>
-    ))}
-
-  <button
-    onClick={() => handlePageChange(currentPage + 1)}
-    disabled={currentPage === pagination.last_page || loading}
-  >
-    Next
-  </button>
-</div>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === pagination.last_page || loading}
+          >
+            Next
+          </button>
+        </div>
 
 
 
