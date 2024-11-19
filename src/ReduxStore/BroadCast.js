@@ -204,14 +204,7 @@ export const deleteBroadCastData = createAsyncThunk(
   }
 );
 
-
-
-
->>>>>>> 2b8e31171bd6c0168b68fe7ac59a8f021f51ec68
-
-
->>>>>>> 2b8e31171bd6c0168b68fe7ac59a8f021f51ec68
-const initialState = {
+  const initialState = {
   computerSelection: [],
   telecomSelection: [],
   mobileDevicesSelection: [],
