@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react'
 import "../../Menu/Main/MenuBar.css"
 import { Link, NavLink } from 'react-router-dom'
@@ -14,13 +15,12 @@ import { useNavigate } from 'react-router-dom'
 import BroadcastFileModal from './Send/Field Components/BroadcastFileModal'
 import CompanyDetails from '../../Popups/CompanyDetails/CompanyDetails'
 import { setPopupCompanyDetail, setTogglePopUp } from '../../../ReduxStore/SearchProductSlice'
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFileDownload } from "@fortawesome/free-solid-svg-icons";
-
+import { FaFileAlt } from "react-icons/fa";
 
 const BroadCast = () => {
-
   const broadcastItems = useSelector((state) => state.broadcastStore.broadCastData)
+  const { pagination = {} } = broadcastItems || {}; // Default to empty object if undefined
+
   const { togglePopUp, popupCompanyDetail } = useSelector((state) => state.searchProductStore);
   const [isCompanyModalOpen, setIsCompanyModalOpen] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -34,17 +34,30 @@ const BroadCast = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBroadcast, setSelectedBroadcast] = useState({});
   const [loading, setLoading] = useState(true); // Loading state
-
   const currentUserID = Cookies.get("user_id");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const dispatch = useDispatch()
+
+  // Fetch data when currentPage changes
   useEffect(() => {
+    console.log("Fetching data for pageNumber:", currentPage);
     setLoading(true);
-    dispatch(fetchBroadCastData({ token }))
+    dispatch(fetchBroadCastData({ token, pageNumber: currentPage }))
       .then(() => setLoading(false))
       .catch(() => setLoading(false));
-  }, [dispatch, token]);
+  }, [dispatch, token, currentPage]); // Make sure `currentPage` is in the dependency array
+  
+  
+// Pagination Handlers
+const handlePageChange = (page) => {
+  if (page !== currentPage && page >= 1 && page <= (pagination.last_page || 1)) {
+    console.log("Changing to page:", page); // Debugging
+    setCurrentPage(page);
+  }
+};
 
+console.log("Current Page State:", currentPage); // Debugging
   const filteredBroadcasts = broadcastItems && broadcastItems.broadcasts
     ? broadcastItems.broadcasts.filter(broadcast =>
       (filterType === 'all' || broadcast.type === filterType) && // Add this condition
@@ -53,7 +66,13 @@ const BroadCast = () => {
       (searchTerm === '' || broadcast.partModel && broadcast.partModel.toLowerCase().includes(searchTerm.toLowerCase()))
     )
     : [];
+    console.log("Filtered Broadcasts:", filteredBroadcasts);
 
+  // const filterFiles = filteredBroadcasts.map((item) => {
+  //   return item.file
+
+  // })
+  // console.log("Files...", filterFiles)
   // Get Logged in IDS
   const uniqueCompanyIds = [...new Set(filteredBroadcasts.map((item) => item.user_id.id))];
   console.log(uniqueCompanyIds.toString());
@@ -124,7 +143,6 @@ const BroadCast = () => {
     }));
   };
 
-
   const navigate = useNavigate();
   const handleReplyClick = () => {
     const selectedBroadcastIds = Object.keys(selectedBroadcast).filter(id => selectedBroadcast[id]);
@@ -143,9 +161,6 @@ const BroadCast = () => {
     const selected = filteredBroadcasts.find(item => item.id === parseInt(selectedBroadcastIds[0]));
     navigate('/ReplyBroad', { state: { broadcast: selected } });
   };
-
-
-
 
   const openModal = (broadcast) => {
     newsetSelectedBroadcast(broadcast);
@@ -169,6 +184,21 @@ const BroadCast = () => {
     setIsCompanyModalOpen(false); // Set modal visibility to false
   };
 
+  const handleFileDownload = (file) => {
+    if (!file) {
+      alert('No file available for download.');
+      return;
+    }
+
+    // Create a new anchor element dynamically
+    const anchor = document.createElement('a');
+    anchor.href = file;  // Set href to the file URL
+    anchor.download = file.split('/').pop();  // Suggests a filename to save as, extracting from URL
+    document.body.appendChild(anchor);  // Append to body
+    anchor.click();  // Programmatically click the anchor to trigger download
+    document.body.removeChild(anchor);  // Clean up and remove the anchor
+  };
+
   useEffect(() => {
     console.log("togglePopUp in BroadCast:", togglePopUp);
   }, [togglePopUp]);
@@ -176,28 +206,6 @@ const BroadCast = () => {
     <>
       <main className={styles.mainSec}>
         <nav className='menu-bar'>
-          {/* <ul>
-            <li>
-              <button onClick={handleReplyClick}>Reply</button>
-            </li>
-            <li>
-              <Link to={'/sendbroad'}>Send</Link>
-            </li>
-            <li>
-              <Link to={'/broadcasts'}>View</Link>
-            </li>
-            <li>
-              <Link to={"/myprofile/broadcastfilter"}>
-                Set Filters
-              </Link>
-            </li>
-            <li>
-              <Link to={'/broadcasthistory'}>History</Link>
-            </li>
-          </ul> */}
-
-
-
           <div className={myProfile.profileInfo_links}>
             <ul>
               <li>
@@ -366,16 +374,19 @@ const BroadCast = () => {
                     }>
                       {item.type}
                     </td>
-                    <td className=''>
+                    <td className='flex'>
                       <img src={bullImage} alt="" onClick={() => openModal(item)} style={{ width: "18px", fontWeight: "bold" }} />
-                      {item.file && ( 
-                      <FontAwesomeIcon 
-                        icon={faFileDownload} 
-                        onClick={() => window.open(item.file, "_blank")} // Opens the file or triggers a download
-                        style={{ fontSize: "18px", cursor: "pointer" }}
-                        
-                        />
-                      )}
+                      {
+                        item.file ? (
+                          <>
+                            <FaFileAlt
+                              onClick={() => handleFileDownload(item.file)}
+                              style={{ cursor: "pointer", marginLeft: "8px" }}
+                              className={styles.fileIcon}
+                            />
+                          </>
+                        ) : null
+                      }
                     </td>
                     <td style={{ textTransform: "uppercase" }}>{item.partModel}</td>
                     <td>{item.heciClei}</td>
@@ -395,8 +406,6 @@ const BroadCast = () => {
               </tr>
             )}
           </tbody>
-
-
           <thead>
             <tr>
               <th>Cart</th>
@@ -416,6 +425,74 @@ const BroadCast = () => {
             </tr>
           </thead>
         </table>
+  {/* Pagination */}
+  {/* <div className={styles.pagination}>
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1 || loading}
+        >
+          Previous
+        </button>
+        {[...Array(pagination.last_page || 1).keys()].map((page) => (
+          <button
+            key={page + 1}
+            onClick={() => handlePageChange(page + 1)}
+            className={currentPage === page + 1 ? 'active' : ''}
+            disabled={loading}
+          >
+            {page + 1}
+          </button>
+        ))}
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === pagination.last_page || loading}
+        >
+          Next
+        </button>
+      </div> */}
+
+
+<div className={styles.pagination}>
+  <button
+    onClick={() => handlePageChange(currentPage - 1)}
+    disabled={currentPage === 1 || loading}
+  >
+    Previous
+  </button>
+
+  {[...Array(pagination.last_page || 1).keys()]
+    .map(page => page + 1)
+    .filter(page => {
+      // Display logic for pagination
+      if (currentPage === 1) {
+        return page <= 3; // Show pages 1, 2, 3 when on the first page
+      } else if (currentPage === pagination.last_page) {
+        return page >= pagination.last_page - 2; // Show the last three pages
+      } else {
+        return page >= currentPage - 1 && page <= currentPage + 1; // Show the previous, current, and next page
+      }
+    })
+    .map(page => (
+      <button
+        key={page}
+        onClick={() => handlePageChange(page)}
+        className={`${styles.pageButton} ${currentPage === page ? styles.active : ''}`}
+        disabled={loading}
+      >
+        {page}
+      </button>
+    ))}
+
+  <button
+    onClick={() => handlePageChange(currentPage + 1)}
+    disabled={currentPage === pagination.last_page || loading}
+  >
+    Next
+  </button>
+</div>
+
+
+
         <div className={styles.replyBtnSec}>
           <button
             className={styles.replyBtn}

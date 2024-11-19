@@ -253,8 +253,7 @@ const BroadcastForm = () => {
     }));
   
     console.log("Token:", token);
-    console.log("Data being sent:", data);
-  
+
     // Reset form if needed
     cancelAllActions(); // Assuming this function clears the form and resets states
   };

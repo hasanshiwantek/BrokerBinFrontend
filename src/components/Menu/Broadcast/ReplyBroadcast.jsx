@@ -7,18 +7,21 @@ import styles from "./BroadCast.module.css";
 import { useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-
+import { useDispatch } from 'react-redux';
+import { sendBroadcastReply } from '../../../ReduxStore/BroadCast';
 const ReplyBroad = () => {
+    const dispatch=useDispatch()
     const location = useLocation();
     const navigate = useNavigate();
     const [broadcast, setBroadcast] = useState(location.state?.broadcast || JSON.parse(localStorage.getItem("broadcastData")));
     const recipientEmail = broadcast?.user_id?.email || '';
     const currentUserID = Cookies.get("user_id");
+    const token=Cookies.get("token")
 
     // Function to format comments data with <br> tags
     const formatComments = () => {
         if (!broadcast) return "Broadcast data is not available.";
-
+    
         const firstName = broadcast.user_id?.firstName || '';
         const lastName = broadcast.user_id?.lastName || '';
         const companyName = broadcast.user_id?.company?.name || '';
@@ -31,24 +34,24 @@ const ReplyBroad = () => {
         const price = broadcast.price || '';
         const additionalComments = broadcast.additional_comments || '';
         const description = broadcast.description || '';
-
+    
         return `- ------------------ -<br />
-${firstName} ${lastName}<br />
-${companyName}<br />
-P: ${phoneNumber}<br />
-${email}<br />
-<br />
-- ------------------ -<br />
-Original Broadcast Details<br />
-MFG: ${mfg}<br />
-Part No: ${partModel}<br />
-Condition: ${condition}<br />
-Quantity: ${quantity}<br />
-Price: ${price}<br />
-Comments: ${additionalComments}<br />
-Description: ${description}<br />`;
+    ${firstName} ${lastName}<br />
+    ${companyName}<br />
+    P: ${phoneNumber}<br />
+    ${email}<br />
+    <br />
+    - ------------------ -<br />
+    Original Broadcast Details<br />
+    MFG: ${mfg}<br />
+    Part No: ${partModel}<br />
+    Condition: ${condition}<br />
+    Quantity: ${quantity}<br />
+    Price: ${price}<br />
+    Comments: ${additionalComments}<br />
+    Description: ${description}<br />`;
     };
-
+    
 
     const [email, setEmail] = useState({
         to: broadcast ? `${broadcast.user_id.email} ` : '',
@@ -61,12 +64,12 @@ Description: ${description}<br />`;
     // Strip HTML tags and preserve line breaks
     const stripHtmlTagsWithLineBreaks = (html) => {
         return html
-            .replace(/<p>/g, '\n')            // Replace opening <p> with a newline
-            .replace(/<\/p>/g, '')             // Remove closing </p>
+            .replace(/<\/p>/g, '\n')           // Replace closing </p> with a newline
+            .replace(/<p>/g, '')               // Remove opening <p>
             .replace(/<br\s*\/?>/gi, '\n')     // Replace <br> with a newline
-            .replace(/^\s+|\s+$/g, '');        // Trim leading/trailing whitespace
+            .replace(/<\/?[^>]+(>|$)/g, "");   // Remove any remaining HTML tags
     };
-
+     
     useEffect(() => {
         if (broadcast) {
             setEmail((prev) => ({
@@ -86,36 +89,40 @@ Description: ${description}<br />`;
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
+    
         // Convert HTML comments to plain text with line breaks
         const plainTextComments = stripHtmlTagsWithLineBreaks(email.comments);
-
+    
         // Prepare data for backend submission
         const emailData = {
-            to: email.to,
-            subject: email.subject,
-            comments: plainTextComments,
-            sendCopy: email.sendCopy
+            emailData: {  // Wrap in an 'emailData' object
+                to: email.to,
+                subject: email.subject,
+                comments: plainTextComments,  // Now it has `\n` line breaks for backend
+                sendCopy: email.sendCopy
+            }
         };
-
-        // Log the emailData object with formatted comments
-        console.log("Email Data:", JSON.stringify(emailData, null, 2).replace(/\\n/g, '\n'));
-
-
-        // Dispatch the sendEmail action with emailData
-        //   dispatch(sendEmail(emailData));
+    
+        // Log the emailData with line breaks visible in console
+        console.log("Email Data:", emailData);
+    
+        dispatch(sendBroadcastReply({ token, data: emailData }));
     };
+    
 
-    useEffect(()=>{
+    useEffect(() => {
 
         console.log(broadcast)
-    },[])
+    }, [])
 
     // useEffect(() => {
     //     return () => {
     //         localStorage.removeItem("broadcastData");
     //     };
     // }, []);
+
+
+
 
     return (
         <>
