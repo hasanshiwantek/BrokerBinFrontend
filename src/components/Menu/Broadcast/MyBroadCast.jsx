@@ -14,6 +14,9 @@ import { useNavigate } from 'react-router-dom'
 import BroadcastFileModal from './Send/Field Components/BroadcastFileModal'
 import CompanyDetails from '../../Popups/CompanyDetails/CompanyDetails'
 import { setPopupCompanyDetail, setTogglePopUp } from '../../../ReduxStore/SearchProductSlice'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFileDownload } from "@fortawesome/free-solid-svg-icons";
+
 
 const BroadCast = () => {
 
@@ -363,8 +366,16 @@ const BroadCast = () => {
                     }>
                       {item.type}
                     </td>
-                    <td>
+                    <td className=''>
                       <img src={bullImage} alt="" onClick={() => openModal(item)} style={{ width: "18px", fontWeight: "bold" }} />
+                      {item.file && ( 
+                      <FontAwesomeIcon 
+                        icon={faFileDownload} 
+                        onClick={() => window.open(item.file, "_blank")} // Opens the file or triggers a download
+                        style={{ fontSize: "18px", cursor: "pointer" }}
+                        
+                        />
+                      )}
                     </td>
                     <td style={{ textTransform: "uppercase" }}>{item.partModel}</td>
                     <td>{item.heciClei}</td>
