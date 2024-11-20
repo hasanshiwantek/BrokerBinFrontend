@@ -50,7 +50,7 @@ const Contact = () => {
     };
 
     const response = await fetch(
-      "https://brokerbin.shiwantek.com/api/contact/store",
+      "https://phplaravel-1343027-4927440.cloudwaysapps.com/api/contact/store",
       {
         method: "POST",
         headers: {

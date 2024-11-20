@@ -105,8 +105,22 @@ const ReplyBroad = () => {
     
         // Log the emailData with line breaks visible in console
         console.log("Email Data:", emailData);
-    
-        dispatch(sendBroadcastReply({ token, data: emailData }));
+        dispatch(sendBroadcastReply({ token, data: emailData }))
+        .then(response => {
+            // Display an alert message after successful sending
+            alert("Email sent successfully!");
+
+            // Navigate to the view page
+            navigate('/broadcasts');  // Adjust the path as necessary
+        })
+        .catch(error => {
+            // Handle any errors
+            console.error("Failed to send email:", error);
+            alert("Failed to send email.");
+        });
+
+
+
     };
     
 
@@ -204,7 +218,8 @@ const ReplyBroad = () => {
                         Reset
                     </button>
                 </div>
-            </main>
+            </main> 
+          
         </>
     );
 };

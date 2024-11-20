@@ -1,32 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { brokerAPI } from "../components/api/BrokerEndpoint";
-// export const sendBroadcast = createAsyncThunk(
-//   "broadcastStore/sendBroadcast",
-//   async ({ token, data }) => {
-//     try {
-//       const response = await axios.post(
-//         "https://brokerbin.shiwantek.com/api/broadcast/store",
-//         data,
-//         console.log(data),
-//         {
-//           headers: {
-//             "Content-Type": "multipart/form-data",
-//             Authorization: `Bearer ${token}`,
-//           },
-//         }
-//       );
-
-//       return response.data;
-//     } catch (error) {
-//       console.error(
-//         "Error while fetching user data:",
-//         error.response?.data || error.message
-//       );
-//       throw "Error while sending broadcast:" || error;
-//     }
-//   }
-// );
 
 export const sendBroadcast = createAsyncThunk(
   "broadcastStore/sendBroadcast",
@@ -117,33 +91,6 @@ export const fetchBroadCastFilters = createAsyncThunk(
     }
   }
 );
-
-// export const fetchBroadCastData = createAsyncThunk(
-//   "broadcastStore/fetchBroadCastData",
-//   async ({ token }) => {
-//     console.log(token)
-
-//     try {
-//       const response = await axios.get(
-//         `${brokerAPI}broadcast`,
-//         {
-//           headers: {
-//             "Content-Type": "application/json",
-//             Authorization: `Bearer ${token}`,
-//           },
-//         }
-//       );
-
-//       console.log("View Broadcast Data",response.data);
-
-//       return response.data;
-
-//     } catch (error) {
-//       throw new Error("Error searching User");
-//     }
-//   }
-// );
-
 
 export const fetchBroadCastData = createAsyncThunk(
   "broadcastStore/fetchBroadCastData",
