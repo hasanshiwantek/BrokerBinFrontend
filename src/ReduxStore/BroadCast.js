@@ -1,32 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { brokerAPI } from "../components/api/BrokerEndpoint";
-// export const sendBroadcast = createAsyncThunk(
-//   "broadcastStore/sendBroadcast",
-//   async ({ token, data }) => {
-//     try {
-//       const response = await axios.post(
-//         "https://brokerbin.shiwantek.com/api/broadcast/store",
-//         data,
-//         console.log(data),
-//         {
-//           headers: {
-//             "Content-Type": "multipart/form-data",
-//             Authorization: `Bearer ${token}`,
-//           },
-//         }
-//       );
-
-//       return response.data;
-//     } catch (error) {
-//       console.error(
-//         "Error while fetching user data:",
-//         error.response?.data || error.message
-//       );
-//       throw "Error while sending broadcast:" || error;
-//     }
-//   }
-// );
 
 export const sendBroadcast = createAsyncThunk(
   "broadcastStore/sendBroadcast",
@@ -120,12 +94,11 @@ export const fetchBroadCastFilters = createAsyncThunk(
 
 export const fetchBroadCastData = createAsyncThunk(
   "broadcastStore/fetchBroadCastData",
-  async ({ token }) => {
-    console.log(token)
-
+  async ({ token, pageNumber = 1 }) => {
+    console.log("API Request Page Number:", pageNumber); // Debugging
     try {
       const response = await axios.get(
-        `${brokerAPI}broadcast`,
+        `${brokerAPI}broadcast?pageNumber=${pageNumber}`, // Ensure pageNumber is used here
         {
           headers: {
             "Content-Type": "application/json",
@@ -133,47 +106,14 @@ export const fetchBroadCastData = createAsyncThunk(
           },
         }
       );
-
-      console.log("View Broadcast Data",response.data);
-
+      console.log("API Response:", response.data); // Debugging
       return response.data;
-
     } catch (error) {
-      throw new Error("Error searching User");
+      console.error("Error fetching broadcasts:", error); // Debugging
+      throw new Error("Error fetching broadcasts");
     }
   }
 );
-
-
-
-
-// export const deleteBroadCastData = createAsyncThunk(
-//   "broadcastStore/deleteBroadCastData",
-//   async ({ token,ids }) => {
-//     console.log(token)
-
-//     try {
-//       const response = await axios.delete(
-//         `${brokerAPI}broadcast/delete${ids}`,
-//         {
-//           headers: {
-//             "Content-Type": "application/json",
-//             Authorization: `Bearer ${token}`,
-//           },
-//         }
-//       );
-
-//       console.log("Broadcast Deleted",response.data);
-
-//       return id;
-
-//     } catch (error) {
-//       throw new Error("Error deleting Broadcast Data");
-//     }
-//   }
-// );
-
-
 
 
 export const deleteBroadCastData = createAsyncThunk(
@@ -204,7 +144,42 @@ export const deleteBroadCastData = createAsyncThunk(
   }
 );
 
-  const initialState = {
+
+
+
+export const sendBroadcastReply = createAsyncThunk(
+  "broadcastStore/sendBroadcastReply",
+  async ({ token, data }) => {
+    try {
+      // Log data to check what is being sent
+      console.log("Sending data:", data);
+
+      const response = await axios.post(
+        `${brokerAPI}broadcast/email-reply`,
+        data, // Assuming 'data' is correctly formatted for 'multipart/form-data'
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("API Response:", response.data); // Debugging
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error while fetching user data:",
+        error.response?.data || error.message
+      );
+      throw new Error("Error while sending broadcast Reply: " + (error.response?.data || error.message));
+    }
+  }
+);
+
+
+
+
+const initialState = {
   computerSelection: [],
   telecomSelection: [],
   mobileDevicesSelection: [],
@@ -304,12 +279,6 @@ const broadcastSlice = createSlice({
         console.log("Pending... ")
         state.error = null;
       })
-      // .addCase(deleteBroadCastData.fulfilled, (state, action) => {
-      //   state.isLoading = false;
-      //   const filteredData = state.broadCastData.filter(broadcast => !action.payload.includes(broadcast.id));
-      //   console.log('Filtered Data:', filteredData);
-      //   state.broadCastData = filteredData;
-      // })
       .addCase(deleteBroadCastData.fulfilled, (state, action) => {
         state.isLoading = false;
         if (Array.isArray(state.broadCastData)) {
@@ -320,9 +289,25 @@ const broadcastSlice = createSlice({
           console.error("broadCastData is not an array:", state.broadCastData);
           state.broadCastData = []; // Reset it to an empty array to avoid further issues
         }
-    })
-    
+      })
+
       .addCase(deleteBroadCastData.rejected, (state, action) => {
+        state.isLoading = false;
+        console.log("REJECTED!!!... ")
+        state.error = action.error.message;
+
+      }).addCase(sendBroadcastReply.pending, (state) => {
+        state.isLoading = true;
+        console.log("Pending... ")
+        state.error = null;
+      })
+      .addCase(sendBroadcastReply.fulfilled, (state, action) => {
+        state.isLoading = false;
+        console.log("REPLY FULLFILLED")
+
+      })
+
+      .addCase(sendBroadcastReply.rejected, (state, action) => {
         state.isLoading = false;
         console.log("REJECTED!!!... ")
         state.error = action.error.message;
@@ -338,7 +323,7 @@ export const {
   setRegionSelection,
   setServiceSelection,
   setFormData,
-  setTogglePopUp, 
+  setTogglePopUp,
   setPopupCompanyDetail
 } = broadcastSlice.actions;
 
