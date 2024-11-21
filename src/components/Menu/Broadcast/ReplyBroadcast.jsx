@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import myProfile from '../../../styles/Menu/Manage/BroadcastFilters/BroadcastFilters.module.css';
@@ -219,7 +218,8 @@ const ReplyBroad = () => {
                         Reset
                     </button>
                 </div>
-            </main>
+            </main> 
+          
         </>
     );
 };

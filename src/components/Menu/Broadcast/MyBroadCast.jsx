@@ -418,7 +418,7 @@ const BroadCast = () => {
               <th>Part / Model</th>
               <th>HECI/CLEI</th>
               <th>Mfg</th>
-              <th>Cond</th>
+              <th>Cond</th> 
               <th>Price</th>
               <th>Qty </th>
               <th>Product Description</th>

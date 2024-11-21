@@ -1,14 +1,10 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import css from "./Send.module.css";
 import ToggleCategories from "./Field Components/ToggleCategories";
 import ToggleFilters from "./Field Components/ToggleFilters";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { sendBroadcast } from "../../../../ReduxStore/BroadCast";
-import { MdUploadFile } from "react-icons/md";
-import { servicesList } from "../../../../data/services";
-import CheckboxList from "../../Manage/BroadcastFilter/CheckboxList";
 import Services from "./Field Components/Services";
 
 const BroadcastForm = () => {
@@ -206,14 +202,9 @@ const BroadcastForm = () => {
     let data;
     if (files) {
       data = new FormData();
-      data.append("uploadFile", files); // Key for file, expected by the backend
-  
-      // Append each key-value pair to FormData instead of using JSON.stringify
-      data.append("type", broadcastType);
       data.append("selectedCompanies", JSON.stringify(computerSelection));
       data.append("selectedTelecom", JSON.stringify(telecomSelection));
       data.append("selectedMobileDevices", JSON.stringify(mobileDevicesSelection));
-      data.append("selectedRegion", JSON.stringify(regionSelection));
       data.append("companiesSelection", JSON.stringify(companiesSelection));
       data.append("service", JSON.stringify(serviceData));
   
@@ -233,6 +224,7 @@ const BroadcastForm = () => {
         companiesSelection: companiesSelection,
         service: serviceData,
       };
+      console.log("Data being sent:", data);
     }
   
     // Dispatch the data with token
@@ -257,6 +249,7 @@ const BroadcastForm = () => {
     // Reset form if needed
     cancelAllActions(); // Assuming this function clears the form and resets states
   };
+  
 
 
 
@@ -715,22 +708,3 @@ const BroadcastForm = () => {
 };
 
 export default BroadcastForm;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
