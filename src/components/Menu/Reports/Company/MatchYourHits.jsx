@@ -31,7 +31,6 @@ const MatchYourHits = () => {
     }
   ];
   console.log(data)
-
   useEffect(() => {
     dispatch(getMatchYourHits({ token }));
   }, []);
