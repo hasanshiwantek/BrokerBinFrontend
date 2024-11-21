@@ -16,9 +16,7 @@ const Header = lazy(() => import("./components/Header.jsx"));
 const Footer = lazy(() => import("./components/Footer/Footer.jsx"))
 const Home = lazy(() => import("./components/Home/Home.jsx"));
 const Cart = lazy(() => import("./components/Tools/Cart.jsx"));
-const SearchProduct = lazy(() =>
-  import("./components/Menu/Manage/SearchProduct.jsx")
-);
+const SearchProduct = lazy(() =>import("./components/Menu/Manage/SearchProduct.jsx"));
 const MyProfile = lazy(() => import("./components/Menu/Manage/MyProfile.jsx"));
 const Options = lazy(() => import("./components/Menu/Manage/Options.jsx"));
 const BroadcastFilters = lazy(() => import("./components/Menu/Manage/BroadcastFilter/BroadcastFilters.jsx"));
