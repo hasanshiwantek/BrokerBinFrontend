@@ -66,3 +66,11 @@
 .dataTable td {
   white-space: nowrap;
 }
+
+
+.searchSec{
+  display: flex;
+  justify-content: space-between;
+  align-self: center;
+  padding: 15px 15px;
+}

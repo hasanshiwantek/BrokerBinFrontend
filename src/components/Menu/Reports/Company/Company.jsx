@@ -1,16 +1,16 @@
 import React from "react";
-import css from "../../../styles/Menu/Reports/Company.module.css";
+import css from "../../../../styles/Menu/Reports/Company.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
   searchProductHistory,
   setSelectedProducts,
-} from "../../../ReduxStore/SearchProductSlice";
+} from "../../../../ReduxStore/SearchProductSlice";
 import Cookies from "js-cookie";
 import {
   getMatchYourHits,
   getSupplyAndDemand,
-} from "../../../ReduxStore/Reports";
+} from "../../../../ReduxStore/Reports";
 const Company = () => {
   const token = Cookies.get("token");
   const dispatch = useDispatch();
