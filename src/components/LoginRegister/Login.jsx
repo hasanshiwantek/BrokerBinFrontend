@@ -66,7 +66,7 @@ const Login = () => {
     <div className={css.bg}>
       <div className={css.loginContainer}>
         <span className={css.loginContainer_head}>
-          <h1>Welcome to Brokerbin</h1>
+          <h1>Welcome to Brokercell</h1>
           <p>Please sign in to your account and start B2B</p>
         </span>
         <form className={css.loginContainer_form} onSubmit={handleSubmit}>

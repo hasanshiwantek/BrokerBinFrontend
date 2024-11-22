@@ -10,27 +10,51 @@ const AddAnotherFile = () => {
   );
   const dispatch = useDispatch();
 
+  // const handleFileChange = (e, index) => {
+  //   const file = e.target.files[0];
+  //   const fileSupported = ["xlsx", "csv", "xls"];
+  //   if (file) {
+  //     if (fileSupported.includes(file.name.split(".").pop().toLowerCase())) {
+  //       const reader = new FileReader();
+  //       reader.onload = (e) => {
+  //         const base64String = e.target.result
+  //           .replace("data:", "")
+  //           .replace(/^.+,/, "");
+  //         const updatedFiles = addAnotherFiles.map((item, i) => {
+  //           if (index === i) {
+  //             return { ...item, file: base64String };
+  //           }
+  //           return item;
+  //         });
+  //         dispatch(setAddAnotherFiles(updatedFiles));
+  //       };
+  //       reader.readAsDataURL(file);
+  //     } else {
+  //       e.target.value = "";
+  //       alert("Format should be only .xlsx or .csv");
+  //       return;
+  //     }
+  //   }
+  // };
+
   const handleFileChange = (e, index) => {
     const file = e.target.files[0];
-
     const fileSupported = ["xlsx", "csv", "xls"];
-
+  
     if (file) {
       if (fileSupported.includes(file.name.split(".").pop().toLowerCase())) {
         const reader = new FileReader();
         reader.onload = (e) => {
-          const base64String = e.target.result
-            .replace("data:", "")
-            .replace(/^.+,/, "");
+          const binaryData = e.target.result; // Binary data as ArrayBuffer
           const updatedFiles = addAnotherFiles.map((item, i) => {
             if (index === i) {
-              return { ...item, file: base64String };
+              return { ...item, file: binaryData };
             }
             return item;
           });
           dispatch(setAddAnotherFiles(updatedFiles));
         };
-        reader.readAsDataURL(file);
+        reader.readAsArrayBuffer(file); // Read as binary data
       } else {
         e.target.value = "";
         alert("Format should be only .xlsx or .csv");
@@ -38,6 +62,7 @@ const AddAnotherFile = () => {
       }
     }
   };
+  
 
   const handleStatusChange = (e, index) => {
     const updatedFiles = addAnotherFiles.map((item, i) => {
