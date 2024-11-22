@@ -89,7 +89,9 @@ const Company = lazy(() => import("./components/Menu/Reports/Company/Company.jsx
 const SiteWide = lazy(() => import("./components/Menu/Reports/SiteWide.jsx"));
 const Email = lazy(() => import("./components/Menu/Reports/Email.jsx"));
 const ServiceStats = lazy(() => import("./components/Menu/Reports/ServiceStats.jsx"));
-
+const Detailed = lazy(() =>
+  import("./components/Menu/Reports/Company/Detailed.jsx")
+);
 const MatchYourHits = lazy(() =>
   import("./components/Menu/Reports/Company/MatchYourHits.jsx")
 );
@@ -632,6 +634,15 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <SupplyAndDemand />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/reports/Detailed",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <Detailed />
           </Suspense>
         ),
       },
