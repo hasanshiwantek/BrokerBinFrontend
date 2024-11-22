@@ -17,22 +17,51 @@ const Inventory = () => {
   // const { token } = useSelector((state) => state.profileStore);
   const dispatch = useDispatch();
 
+  // const submitInventoryBtn = (e) => {
+  //   e.preventDefault();
+  //   const formData = new FormData(e.target);
+  //   const formDataObject = Object.fromEntries(formData.entries());
+  //   const filteredInventoryFile = addAnotherFiles.filter(
+  //     (e, i) => e.file !== null
+  //   );
+  //   formDataObject.uploadFile = filteredInventoryFile;
+  //   if (formDataObject.uploadFile.length > 0) {
+  //     console.log(formDataObject);
+  //     dispatch(sendInventoryFile({ token, formDataObject }));
+  //   } else {
+  //     alert("Please fill all required fields");
+  //     return; // stop the function execution and return early if the form is not valid.
+  //   }
+  // };
+
   const submitInventoryBtn = (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const formDataObject = Object.fromEntries(formData.entries());
-    const filteredInventoryFile = addAnotherFiles.filter(
-      (e, i) => e.file !== null
-    );
-    formDataObject.uploadFile = filteredInventoryFile;
-    if (formDataObject.uploadFile.length > 0) {
-      console.log(formDataObject);
-      dispatch(sendInventoryFile({ token, formDataObject }));
+    const formData = new FormData();
+  
+    // Append other form data fields
+    const formDataObject = Object.fromEntries(new FormData(e.target).entries());
+    for (const [key, value] of Object.entries(formDataObject)) {
+      formData.append(key, value);
+    }
+  
+    // Filter valid files and append them as an array
+    const filteredInventoryFile = addAnotherFiles.filter((e) => e.file !== null);
+    if (filteredInventoryFile.length > 0) {
+      filteredInventoryFile.forEach((item, index) => {
+        if (item.file) {
+          formData.append(`uploadFile[]`, new Blob([item.file]), `file${index}.csv`);
+        }
+      });
+  
+      // Dispatch API call
+      dispatch(sendInventoryFile({ token, formData }));
     } else {
       alert("Please fill all required fields");
-      return; // stop the function execution and return early if the form is not valid.
+      return; // Stop the function if validation fails
     }
   };
+  
+  
 
   if (error) {
     return <ErrorStatus error={error} />;
