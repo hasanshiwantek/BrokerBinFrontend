@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import css from "../../../styles/Menu/Reports/SiteWide.module.css";
 import style from "../../../styles/Menu/Reports/Company.module.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate ,NavLink} from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
   getSupplyAndDemand,
@@ -10,6 +10,7 @@ import {
 } from "../../../ReduxStore/Reports";
 import Cookies from "js-cookie";
 import SearchCompanyInventory from "./SearchCompanyInventory";
+import myProfile from "../../../styles/Menu/Manage/MyProfile.module.css";
 
 const SiteWide = () => {
 
@@ -68,22 +69,42 @@ const SiteWide = () => {
 
     <div className={style.container}>
       {/* Navigation Tabs */}
-      <div className={style.navTabs}>
-        <ul>
-          <li>
-            <Link to={"/reports/Company"}>Company</Link>
-          </li>
-          <li>
-            <Link to={"/reports/sitewide"}>Site Wide</Link>
-          </li>
-          <li>
-            <Link to={"/reports/email"}>Email</Link>
-          </li>
-          <li>
-            <Link to={"/reports/serviceStats"}>Stats</Link>
-          </li>
-        </ul>
-      </div>
+      <div className={myProfile.profileInfo_links}>
+            <ul>
+              <li>
+                <NavLink
+                  to="/reports/Company"
+                  className={({ isActive }) => (isActive ? myProfile.active : '')}
+                >
+                  <span>Company</span>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/reports/sitewide"
+                  className={({ isActive }) => (isActive ? myProfile.active : '')}
+                >
+                  <span>Site Wide</span>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/reports/email"
+                  className={({ isActive }) => (isActive ? myProfile.active : '')}
+                >
+                  <span>Email</span>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/reports/serviceStats"
+                  className={({ isActive }) => (isActive ? myProfile.active : '')}
+                >
+                  <span>Stats</span>
+                </NavLink>
+              </li>
+            </ul>
+          </div>
 
       <div className={style.mainBody}>
         {/* Top 200 Searched Parts For */}
