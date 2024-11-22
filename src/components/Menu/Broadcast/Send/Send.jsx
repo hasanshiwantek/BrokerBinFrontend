@@ -202,9 +202,14 @@ const BroadcastForm = () => {
     let data;
     if (files) {
       data = new FormData();
+      data.append("uploadFile", files); // Key for file, expected by the backend
+  
+      // Append each key-value pair to FormData instead of using JSON.stringify
+      data.append("type", broadcastType);
       data.append("selectedCompanies", JSON.stringify(computerSelection));
       data.append("selectedTelecom", JSON.stringify(telecomSelection));
       data.append("selectedMobileDevices", JSON.stringify(mobileDevicesSelection));
+      data.append("selectedRegion", JSON.stringify(regionSelection));
       data.append("companiesSelection", JSON.stringify(companiesSelection));
       data.append("service", JSON.stringify(serviceData));
   
@@ -224,18 +229,17 @@ const BroadcastForm = () => {
         companiesSelection: companiesSelection,
         service: serviceData,
       };
-      console.log("Data being sent:", data);
     }
   
     // Dispatch the data with token
     dispatch(sendBroadcast({ token, data }))
-      .then(() => {
-        alert("Data has been successfully stored in the backend");
-      })
-      .catch((error) => {
-        console.error("Error storing data:", error);
-        alert("Failed to store data in the backend");
-      });
+    .then(() => {
+      alert("Data has been successfully stored in the backend");
+    })
+    .catch((error) => {
+      console.error("Error storing data:", error);
+      alert("Failed to store data in the backend");
+    });
   
     // Set email format
     setEmailFormat((prev) => ({
