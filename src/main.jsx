@@ -16,9 +16,7 @@ const Header = lazy(() => import("./components/Header.jsx"));
 const Footer = lazy(() => import("./components/Footer/Footer.jsx"))
 const Home = lazy(() => import("./components/Home/Home.jsx"));
 const Cart = lazy(() => import("./components/Tools/Cart.jsx"));
-const SearchProduct = lazy(() =>
-  import("./components/Menu/Manage/SearchProduct.jsx")
-);
+const SearchProduct = lazy(() =>import("./components/Menu/Manage/SearchProduct.jsx"));
 const MyProfile = lazy(() => import("./components/Menu/Manage/MyProfile.jsx"));
 const Options = lazy(() => import("./components/Menu/Manage/Options.jsx"));
 const BroadcastFilters = lazy(() => import("./components/Menu/Manage/BroadcastFilter/BroadcastFilters.jsx"));
@@ -91,7 +89,6 @@ const Company = lazy(() => import("./components/Menu/Reports/Company/Company.jsx
 const SiteWide = lazy(() => import("./components/Menu/Reports/SiteWide.jsx"));
 const Email = lazy(() => import("./components/Menu/Reports/Email.jsx"));
 const ServiceStats = lazy(() => import("./components/Menu/Reports/ServiceStats.jsx"));
-
 const MatchYourHits = lazy(() =>
   import("./components/Menu/Reports/Company/MatchYourHits.jsx")
 );
@@ -646,6 +643,15 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <SupplyAndDemand />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/reports/Detailed",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <Detailed />
           </Suspense>
         ),
       },

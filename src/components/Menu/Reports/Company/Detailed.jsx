@@ -27,7 +27,7 @@ const Detailed = () => {
     return (
         <>
          <div className={css.container}>
-      {/* Navigation Tabs */}
+      {/* {/ Navigation Tabs /} */}
       <div className={css.navTabs}>
         <ul>
           <li>
