@@ -3,9 +3,12 @@ import css from "../../../../styles/Menu/Manage/Inventory/Inventory.module.css";
 import TableAdd from "../../../Tables/TableAdd";
 import InventoryButtons from "./InventoryButtons";
 import { useDispatch, useSelector } from "react-redux";
+import Cookies from "js-cookie";
 
 const Add = () => {
-  const { inventoryAddData, token } = useSelector(
+  const token = Cookies.get("token");
+
+  const { inventoryAddData } = useSelector(
     (state) => state.inventoryStore
   );
   const handleSubmit = async (event) => {
