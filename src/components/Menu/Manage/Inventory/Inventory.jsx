@@ -6,12 +6,15 @@ import InventoryButtons from "./InventoryButtons";
 import { useDispatch, useSelector } from "react-redux";
 import { sendInventoryFile } from "../../../../ReduxStore/InventorySlice";
 import ErrorStatus from "../../../Error/ErrorStatus";
+import Cookies from "js-cookie";
+
 
 const Inventory = () => {
+  const token = Cookies.get("token");
   const { addAnotherFiles, error } = useSelector(
     (state) => state.inventoryStore
   );
-  const { token } = useSelector((state) => state.profileStore);
+  // const { token } = useSelector((state) => state.profileStore);
   const dispatch = useDispatch();
 
   const submitInventoryBtn = (e) => {
@@ -69,9 +72,10 @@ const Inventory = () => {
               </a>
             </div>
           </div>
-          <input
+          <button
             type="submit"
             value="send file"
+            oncClick={submitInventoryBtn}
             className={css.inventory_main_submitBtn}
           />
           <h1 className={css.inventory_main_AutoUploadh1}>Auto Uploads</h1>
