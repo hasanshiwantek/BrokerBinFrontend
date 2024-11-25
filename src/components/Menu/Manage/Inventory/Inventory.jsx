@@ -34,32 +34,271 @@ const Inventory = () => {
   //   }
   // };
 
+  // const submitInventoryBtn = (e) => {
+  //   e.preventDefault();
+  //   const formData = new FormData();
+  
+  //   // Append other form data fields
+  //   const formDataObject = Object.fromEntries(new FormData(e.target).entries());
+  //   for (const [key, value] of Object.entries(formDataObject)) {
+  //     formData.append(key, value);
+  //   }
+  
+  //   // Filter valid files and append them as an array
+  //   const filteredInventoryFile = addAnotherFiles.filter((e) => e.file !== null);
+  //   if (filteredInventoryFile.length > 0) {
+  //     filteredInventoryFile.forEach((item, index) => {
+  //       if (item.file) {
+  //         formData.append(`uploadFile[]`, new Blob([item.file]), `file${index}.csv`);
+  //       }
+  //     });
+  
+  //     // Dispatch API call
+  //     dispatch(sendInventoryFile({ token, formData }));
+  //   } else {
+  //     alert("Please fill all required fields");
+  //     return; // Stop the function if validation fails
+  //   }
+  // };
+  
+  // const submitInventoryBtn = (e) => {
+  //   e.preventDefault();
+  //   const formData = new FormData();
+  
+  //   // Append other form fields
+  //   const formDataObject = Object.fromEntries(new FormData(e.target).entries());
+  //   for (const [key, value] of Object.entries(formDataObject)) {
+  //     formData.append(key, value);
+  //   }
+  
+  //   // Filter valid files and append them to the FormData
+  //   const filteredInventoryFile = addAnotherFiles.filter((fileObj) => fileObj.file !== null);
+  //   if (filteredInventoryFile.length > 0) {
+  //     filteredInventoryFile.forEach((fileObj, index) => {
+  //       if (fileObj.file) {
+  //         formData.append(
+  //           "uploadFile[]", // Adjust key based on backend expectation
+  //           new Blob([fileObj.file], { type: "application/octet-stream" }),
+  //           `file${index}.csv`
+  //         );
+  //       }
+  //     });
+  
+  //     // Debugging FormData
+  //     for (let pair of formData.entries()) {
+  //       console.log(pair[0], pair[1]);
+  //     }
+  
+  //     // Dispatch API call
+  //     dispatch(sendInventoryFile({ token, formData }));
+  //   } else {
+  //     alert("Please fill all required fields");
+  //     return;
+  //   }
+  // };
+  
+  // const submitInventoryBtn = (e) => {
+  //   e.preventDefault();
+  //   const formData = new FormData();
+  
+  //   // Add form fields
+  //   const formDataObject = Object.fromEntries(new FormData(e.target).entries());
+  //   for (const [key, value] of Object.entries(formDataObject)) {
+  //     formData.append(key, value);
+  //   }
+  
+  //   // Add files as binary
+  //   const filteredInventoryFile = addAnotherFiles.filter((fileObj) => fileObj.file !== null);
+  //   if (filteredInventoryFile.length > 0) {
+  //     filteredInventoryFile.forEach((fileObj, index) => {
+  //       if (fileObj.file) {
+  //         formData.append("uploadFile[]", new Blob([fileObj.file], { type: "application/octet-stream" }), `file${index}.csv`);
+  //       }
+  //     });
+  
+  //     // Debug FormData
+  //     for (let pair of formData.entries()) {
+  //       console.log(`${pair[0]}:`, pair[1]);
+  //     }
+  
+  //     // Dispatch API call
+  //     dispatch(sendInventoryFile({ token, formData }));
+  //   } else {
+  //     alert("Please fill all required fields");
+  //   }
+  // };
+  
+  // const submitInventoryBtn = (e) => {
+  //   e.preventDefault();
+  //   const formData = new FormData();
+  
+  //   // Add other form data fields
+  //   const formDataObject = Object.fromEntries(new FormData(e.target).entries());
+  //   for (const [key, value] of Object.entries(formDataObject)) {
+  //     formData.append(key, value);
+  //   }
+  
+  //   // Add binary files from local reference
+  //   const filteredInventoryFile = addAnotherFiles.filter((fileObj) => fileObj.file && fileObj.binaryData);
+  //   if (filteredInventoryFile.length > 0) {
+  //     filteredInventoryFile.forEach((fileObj, index) => {
+  //       formData.append(
+  //         "uploadFile[]", // Check with backend if brackets [] are required
+  //         new Blob([fileObj.binaryData], { type: fileObj.file.type }),
+  //         fileObj.file.name
+  //       );
+  //     });
+  
+  //     // Debugging FormData
+  //     for (let pair of formData.entries()) {
+  //       console.log(pair[0], pair[1]);
+  //     }
+  
+  //     // Dispatch API call
+  //     dispatch(sendInventoryFile({ token, formData }));
+  //   } else {
+  //     alert("Please fill all required fields");
+  //     return;
+  //   }
+  // };
+  
+  // const submitInventoryBtn = (e) => {
+  //   e.preventDefault();
+  //   const formData = new FormData();
+  
+  //   // Add other form data fields
+  //   const formDataObject = Object.fromEntries(new FormData(e.target).entries());
+  //   for (const [key, value] of Object.entries(formDataObject)) {
+  //     formData.append(key, value);
+  //   }
+  
+  //   // Add binary files
+  //   const filteredInventoryFile = addAnotherFiles.filter(
+  //     (fileObj) => fileObj.file && fileObj.binaryData
+  //   );
+  
+  //   if (filteredInventoryFile.length > 0) {
+  //     filteredInventoryFile.forEach((fileObj, index) => {
+  //       formData.append(
+  //         "uploadFile[]", // Confirm key name with backend
+  //         new Blob([fileObj.binaryData], { type: fileObj.file.type }),
+  //         fileObj.file.name
+  //       );
+  //     });
+  
+  //     // Debugging FormData
+  //     for (let pair of formData.entries()) {
+  //       console.log(pair[0], pair[1]);
+  //     }
+  
+  //     // Dispatch API call
+  //     dispatch(sendInventoryFile({ token, formData }));
+  //   } else {
+  //     alert("Please select at least one file.");
+  //   }
+  // };
+  
+  // const submitInventoryBtn = (e) => {
+  //   e.preventDefault();
+  //   const formData = new FormData();
+  
+  //   // Add other form data fields
+  //   const formDataObject = Object.fromEntries(new FormData(e.target).entries());
+  //   for (const [key, value] of Object.entries(formDataObject)) {
+  //     formData.append(key, value);
+  //   }
+  
+  //   // Add binary files from local references
+  //   const filteredInventoryFile = addAnotherFiles.filter((fileObj) => fileObj.file);
+  //   if (filteredInventoryFile.length > 0) {
+  //     filteredInventoryFile.forEach((fileObj, index) => {
+  //       formData.append(
+  //         "uploadFile[]", // Confirm key name with backend
+  //         new Blob([fileObj.binaryData], { type: fileObj.file.type }),
+  //         fileObj.file.name
+  //       );
+  //     });
+  
+  //     // Debugging FormData
+  //     for (let pair of formData.entries()) {
+  //       console.log(pair[0], pair[1]);
+  //     }
+  
+  //     // Dispatch API call
+  //     dispatch(sendInventoryFile({ token, formData }));
+  //   } else {
+  //     alert("Please select at least one file.");
+  //   }
+  // };
+  
+  // const submitInventoryBtn = (e) => {
+  //   e.preventDefault();
+  //   const formData = new FormData();
+  
+  //   // Add other form fields
+  //   const formDataObject = Object.fromEntries(new FormData(e.target).entries());
+  //   for (const [key, value] of Object.entries(formDataObject)) {
+  //     formData.append(key, value);
+  //   }
+  
+  //   // Add files to FormData
+  //   const filteredInventoryFile = addAnotherFiles.filter((fileObj) => fileObj.file); // Ensure valid files
+  //   if (filteredInventoryFile.length > 0) {
+  //     filteredInventoryFile.forEach((fileObj) => {
+  //       formData.append(
+  //         "uploadFile", // Exact field name as required by the backend
+  //         new Blob([fileObj.binaryData], { type: fileObj.file.type }),
+  //         fileObj.file.name
+  //       );
+  //     });
+  
+  //     // Debugging: Log FormData to ensure correctness
+  //     for (let pair of formData.entries()) {
+  //       console.log(pair[0], pair[1]);
+  //     }
+  
+  //     // Dispatch API call
+  //     dispatch(sendInventoryFile({ token, formData }));
+  //   } else {
+  //     alert("Please select at least one file.");
+  //     return;
+  //   }
+  // };
+  
   const submitInventoryBtn = (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-  
-    // Append other form data fields
-    const formDataObject = Object.fromEntries(new FormData(e.target).entries());
-    for (const [key, value] of Object.entries(formDataObject)) {
-      formData.append(key, value);
+  e.preventDefault();
+  const formData = new FormData();
+
+  // Add other form fields
+  const formDataObject = Object.fromEntries(new FormData(e.target).entries());
+  for (const [key, value] of Object.entries(formDataObject)) {
+    formData.append(key, value);
+  }
+
+  // Add files to FormData as an array
+  const filteredInventoryFile = addAnotherFiles.filter((fileObj) => fileObj.file); // Ensure valid files
+  if (filteredInventoryFile.length > 0) {
+    filteredInventoryFile.forEach((fileObj) => {
+      formData.append(
+        "uploadFile[]", // Use brackets to send as an array
+        new Blob([fileObj.binaryData], { type: fileObj.file.type }),
+        fileObj.file.name
+      );
+    });
+
+    // Debugging: Log FormData content
+    for (let pair of formData.entries()) {
+      console.log(pair[0], pair[1]);
     }
-  
-    // Filter valid files and append them as an array
-    const filteredInventoryFile = addAnotherFiles.filter((e) => e.file !== null);
-    if (filteredInventoryFile.length > 0) {
-      filteredInventoryFile.forEach((item, index) => {
-        if (item.file) {
-          formData.append(`uploadFile[]`, new Blob([item.file]), `file${index}.csv`);
-        }
-      });
-  
-      // Dispatch API call
-      dispatch(sendInventoryFile({ token, formData }));
-    } else {
-      alert("Please fill all required fields");
-      return; // Stop the function if validation fails
-    }
-  };
+
+    // Dispatch API call
+    dispatch(sendInventoryFile({ token, formData }));
+  } else {
+    alert("Please select at least one file.");
+    return;
+  }
+};
+
   
   
 
