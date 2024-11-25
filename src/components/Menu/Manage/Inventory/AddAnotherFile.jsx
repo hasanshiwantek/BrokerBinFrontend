@@ -145,6 +145,48 @@ const AddAnotherFile = () => {
   // };
   
   
+  // const handleFileChange = (e, index) => {
+  //   const file = e.target.files[0];
+  //   const fileSupported = ["xlsx", "csv", "xls"];
+  
+  //   if (file) {
+  //     if (fileSupported.includes(file.name.split(".").pop().toLowerCase())) {
+  //       const reader = new FileReader();
+  //       reader.onload = (event) => {
+  //         const binaryData = event.target.result; // ArrayBuffer
+  
+  //         // Update only metadata in Redux
+  //         const updatedFiles = addAnotherFiles.map((item, i) => {
+  //           if (index === i) {
+  //             return {
+  //               ...item,
+  //               file: {
+  //                 name: file.name,
+  //                 size: file.size,
+  //                 type: file.type,
+  //               }, // Only metadata stored in Redux
+  //             };
+  //           }
+  //           return item;
+  //         });
+  
+  //         // Store binaryData locally (e.g., in a separate variable or map)
+  //         // Ensure binary data is not part of the Redux state or payload
+  //         file.binaryData = binaryData; // Associate binary data locally
+  
+  //         // Dispatch only metadata to Redux
+  //         dispatch(setAddAnotherFiles(updatedFiles));
+  //       };
+  //       reader.readAsArrayBuffer(file);
+  //     } else {
+  //       e.target.value = "";
+  //       alert("Format should be only .xlsx or .csv");
+  //     }
+  //   } else {
+  //     alert("No file selected.");
+  //   }
+  // };
+  
   const handleFileChange = (e, index) => {
     const file = e.target.files[0];
     const fileSupported = ["xlsx", "csv", "xls"];
@@ -152,32 +194,26 @@ const AddAnotherFile = () => {
     if (file) {
       if (fileSupported.includes(file.name.split(".").pop().toLowerCase())) {
         const reader = new FileReader();
-        reader.onload = (event) => {
-          const binaryData = event.target.result; // ArrayBuffer
-  
-          // Update only metadata in Redux
+        reader.onload = (e) => {
+          const base64String = e.target.result.replace("data:", "").replace(/^.+,/, "");
           const updatedFiles = addAnotherFiles.map((item, i) => {
             if (index === i) {
               return {
                 ...item,
                 file: {
+                  base64: base64String, // Store base64 for preview/debugging
                   name: file.name,
                   size: file.size,
                   type: file.type,
-                }, // Only metadata stored in Redux
+                },
+                stockOption: item.stockOption || "", // Retain or initialize stock option
               };
             }
             return item;
           });
-  
-          // Store binaryData locally (e.g., in a separate variable or map)
-          // Ensure binary data is not part of the Redux state or payload
-          file.binaryData = binaryData; // Associate binary data locally
-  
-          // Dispatch only metadata to Redux
           dispatch(setAddAnotherFiles(updatedFiles));
         };
-        reader.readAsArrayBuffer(file);
+        reader.readAsDataURL(file);
       } else {
         e.target.value = "";
         alert("Format should be only .xlsx or .csv");
@@ -220,7 +256,9 @@ const AddAnotherFile = () => {
         {addAnotherFiles.map((file, i) => (
           <div className={css.AddAnotherFile_uploads_div} key={i}>
             <label>Excel or CSV*</label>
+            
             <input type="file" onChange={(e) => handleFileChange(e, i)} />
+            
             <select
               value={file.status}
               onChange={(e) => handleStatusChange(e, i)}
@@ -230,6 +268,7 @@ const AddAnotherFile = () => {
               <option value="Stock">Stock</option>
               <option value="Avail">Distribution</option>
             </select>
+
             {i !== 0 && (
               <button type="button" onClick={() => removeFileField(i)}>
                 <BiMinus />
