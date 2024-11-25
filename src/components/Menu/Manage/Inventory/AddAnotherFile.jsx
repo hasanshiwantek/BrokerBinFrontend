@@ -37,6 +37,114 @@ const AddAnotherFile = () => {
   //   }
   // };
 
+  // const handleFileChange = (e, index) => {
+  //   const file = e.target.files[0];
+  //   const fileSupported = ["xlsx", "csv", "xls"];
+  
+  //   if (file) {
+  //     if (fileSupported.includes(file.name.split(".").pop().toLowerCase())) {
+  //       const reader = new FileReader();
+  //       reader.onload = (e) => {
+  //         const binaryData = e.target.result; // Binary data as ArrayBuffer
+  //         const updatedFiles = addAnotherFiles.map((item, i) => {
+  //           if (index === i) {
+  //             return { ...item, file: binaryData };
+  //           }
+  //           return item;
+  //         });
+  //         dispatch(setAddAnotherFiles(updatedFiles));
+  //       };
+  //       reader.readAsArrayBuffer(file); // Read as binary data
+  //     } else {
+  //       e.target.value = "";
+  //       alert("Format should be only .xlsx or .csv");
+  //       return;
+  //     }
+  //   }
+  // };
+  
+  // const handleFileChange = (e, index) => {
+  //   const file = e.target.files[0];
+  //   const fileSupported = ["xlsx", "csv", "xls"];
+  
+  //   if (file) {
+  //     if (fileSupported.includes(file.name.split(".").pop().toLowerCase())) {
+  //       const reader = new FileReader();
+  //       reader.onload = (event) => {
+  //         const binaryData = event.target.result; // ArrayBuffer
+  
+  //         // Store only metadata in Redux
+  //         const updatedFiles = addAnotherFiles.map((item, i) => {
+  //           if (index === i) {
+  //             return {
+  //               ...item,
+  //               file: {
+  //                 name: file.name,
+  //                 size: file.size,
+  //                 type: file.type,
+  //               },
+  //               // Do not store binaryData in Redux
+  //             };
+  //           }
+  //           return item;
+  //         });
+  //         dispatch(setAddAnotherFiles(updatedFiles)); // Dispatch only serializable data
+  
+  //         // Store binaryData temporarily for submission (local reference)
+  //         item.binaryData = binaryData; // Store locally, not in Redux
+  //       };
+  //       reader.readAsArrayBuffer(file);
+  //     } else {
+  //       e.target.value = "";
+  //       alert("Format should be only .xlsx or .csv");
+  //       return;
+  //     }
+  //   }
+  // };
+  
+  // const handleFileChange = (e, index) => {
+  //   const file = e.target.files[0];
+  //   const fileSupported = ["xlsx", "csv", "xls"];
+  
+  //   if (file) {
+  //     if (fileSupported.includes(file.name.split(".").pop().toLowerCase())) {
+  //       const reader = new FileReader();
+  //       reader.onload = (event) => {
+  //         const binaryData = event.target.result; // Binary data as ArrayBuffer
+  
+  //         // Ensure the binary data is stored locally and metadata in Redux
+  //         const updatedFiles = addAnotherFiles.map((item, i) => {
+  //           if (index === i) {
+  //             return {
+  //               ...item,
+  //               file: {
+  //                 name: file.name,
+  //                 size: file.size,
+  //                 type: file.type,
+  //               }, // Metadata in Redux
+  //               binaryData, // Store locally, not in Redux
+  //             };
+  //           }
+  //           return item;
+  //         });
+  
+  //         // Log for debugging
+  //         console.log("Updated Files:", updatedFiles);
+  
+  //         // Dispatch only metadata
+  //         dispatch(setAddAnotherFiles(updatedFiles));
+  //       };
+  //       reader.readAsArrayBuffer(file);
+  //     } else {
+  //       e.target.value = "";
+  //       alert("Format should be only .xlsx or .csv");
+  //     }
+  //   } else {
+  //     alert("No file selected.");
+  //   }
+  // };
+  
+  
   const handleFileChange = (e, index) => {
     const file = e.target.files[0];
     const fileSupported = ["xlsx", "csv", "xls"];
@@ -44,22 +152,38 @@ const AddAnotherFile = () => {
     if (file) {
       if (fileSupported.includes(file.name.split(".").pop().toLowerCase())) {
         const reader = new FileReader();
-        reader.onload = (e) => {
-          const binaryData = e.target.result; // Binary data as ArrayBuffer
+        reader.onload = (event) => {
+          const binaryData = event.target.result; // ArrayBuffer
+  
+          // Update only metadata in Redux
           const updatedFiles = addAnotherFiles.map((item, i) => {
             if (index === i) {
-              return { ...item, file: binaryData };
+              return {
+                ...item,
+                file: {
+                  name: file.name,
+                  size: file.size,
+                  type: file.type,
+                }, // Only metadata stored in Redux
+              };
             }
             return item;
           });
+  
+          // Store binaryData locally (e.g., in a separate variable or map)
+          // Ensure binary data is not part of the Redux state or payload
+          file.binaryData = binaryData; // Associate binary data locally
+  
+          // Dispatch only metadata to Redux
           dispatch(setAddAnotherFiles(updatedFiles));
         };
-        reader.readAsArrayBuffer(file); // Read as binary data
+        reader.readAsArrayBuffer(file);
       } else {
         e.target.value = "";
         alert("Format should be only .xlsx or .csv");
-        return;
       }
+    } else {
+      alert("No file selected.");
     }
   };
   

@@ -2,17 +2,43 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { brokerAPI } from "../components/api/BrokerEndpoint";
 
+// export const sendInventoryFile = createAsyncThunk(
+//   "inventoryStore/sendInventoryFile",
+//   async ({ token, formData }) => {
+//     try {
+//       const response = await axios.post(
+//         `${brokerAPI}inventory/upload`,
+//         formData,
+//         {
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//             // "Content-Type": "application/json", // Remove this line
+//             // Let the browser set "multipart/form-data" automatically
+//           },
+//         }
+//       );
+//       return response.data;
+//     } catch (error) {
+//       console.error(
+//         "Error uploading inventory file:",
+//         error.response?.data || error.message
+//       );
+//       throw error.response?.data || error;
+//     }
+//   }
+// );
+
 export const sendInventoryFile = createAsyncThunk(
   "inventoryStore/sendInventoryFile",
-  async ({ token, formDataObject }) => {
+  async ({ token, formData }) => {
     try {
       const response = await axios.post(
         `${brokerAPI}inventory/upload`,
-        formDataObject,
+        formData,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Include token
+            // Do not set Content-Type manually
           },
         }
       );
@@ -22,10 +48,11 @@ export const sendInventoryFile = createAsyncThunk(
         "Error uploading inventory file:",
         error.response?.data || error.message
       );
-      throw "Error uploading inventory file:" || error;
+      throw error.response?.data || error;
     }
   }
 );
+
 
 const initialState = {
   // Add inventory data
