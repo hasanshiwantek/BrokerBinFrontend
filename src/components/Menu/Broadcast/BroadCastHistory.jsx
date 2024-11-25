@@ -34,7 +34,7 @@ const BroadCastHistory = () => {
     ?.filter((item) => selectedType === "all" || item.type === selectedType.toLowerCase())
     .filter((item) =>
       searchTerm === '' ||
-      item.partModel?.toLowerCase().includes(searchTerm.toLowerCase()) 
+      item.partModel?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
   const handleTypeChange = (event) => {
@@ -169,9 +169,9 @@ const BroadCastHistory = () => {
                     <td>{item.created_at}</td>
                     <td className={
                       item.type === 'wtb' ? css['type-wtb'] :
-                      item.type === 'wts' ? css['type-wts'] :
-                      item.type === 'rfq' ? css['type-rfq'] :
-                      ''
+                        item.type === 'wts' ? css['type-wts'] :
+                          item.type === 'rfq' ? css['type-rfq'] :
+                            ''
                     }>
                       {item.type}
                     </td>

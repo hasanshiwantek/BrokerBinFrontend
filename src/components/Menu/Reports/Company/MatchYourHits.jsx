@@ -42,6 +42,8 @@ const MatchYourHits = () => {
   return (
     <div className={css.container}>
       {/* Navigation Tabs */}
+
+      
       <div className={css.navTabs}>
         <ul>
           <li>
@@ -58,6 +60,8 @@ const MatchYourHits = () => {
           </li>
         </ul>
       </div>
+
+
       <div className={css.searchBar}  >
         <div className={css.searchSec}>
         <h2>Match Your Hits Basic</h2>
