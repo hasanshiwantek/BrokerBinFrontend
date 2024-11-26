@@ -1,0 +1,1 @@
+import{j as s,a7 as a}from"./index-SDeZWYlL.js";const e=({error:n})=>s.jsxs("div",{className:a.notFound,children:[s.jsxs("div",{className:a.face,children:[s.jsx("span",{}),s.jsx("span",{}),s.jsx("span",{}),s.jsx("div",{children:s.jsx("span",{})})]}),s.jsx("div",{className:a.text,children:s.jsx("h1",{children:n})})]});export{e as E};

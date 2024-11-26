@@ -7,6 +7,9 @@ import CompanyDetails from "../../Popups/CompanyDetails/CompanyDetails";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { useLocation, useNavigate } from "react-router-dom";
+import shieldImage from "../../../assets/shield-img.png"
+import { countriesList } from "../../../data/services"
+
 
 import {
   searchProductQuery,
@@ -262,12 +265,8 @@ const ProductTableDetail = React.memo(() => {
         <thead>
           <tr>
             <th>Cart</th>
-            <th>
-              <span>
-                <FaShieldAlt />
-                Company
-              </span>
-            </th>
+            <th><img src={shieldImage} alt="" srcset="" style={{ width: "18px", fontWeight: "bold" }} /> </th>
+            <th>Company</th>
             <th>PVR</th>
             <th>Ctry</th>
             <th>Part / Model</th>
@@ -294,6 +293,7 @@ const ProductTableDetail = React.memo(() => {
                   onChange={() => selectProduct(e.id)}
                 />
               </td>
+              <td></td>
               <td>
                 <a
                   onClick={(event) =>
@@ -303,13 +303,15 @@ const ProductTableDetail = React.memo(() => {
                     handleHoverCompanyDetail(event, e.id)
                   }
                 >
-                  {e.mfg}
+                  {e.addedBy.company.name}
                 </a>
               </td>
               <td>
                 <FaEye />
               </td>
-              <td>{e.country}</td>
+              {countriesList.find((country) =>
+                    country.label.toLowerCase().trim() === e.addedBy.company.country.toLowerCase().trim()
+                )?.value || e.addedBy.company.country}
               <td>{e.partModel}</td>
               <td>
                 <MdShowChart />
@@ -336,12 +338,8 @@ const ProductTableDetail = React.memo(() => {
         <tfoot>
           <tr>
             <th>Cart</th>
-            <th>
-              <span>
-                <FaShieldAlt />
-                Company
-              </span>
-            </th>
+            <th><img src={shieldImage} alt="" srcset="" style={{ width: "18px", fontWeight: "bold" }} /> </th>
+            <th>Company</th>
             <th>PVR</th>
             <th>Ctry</th>
             <th>Part / Model</th>
