@@ -160,28 +160,54 @@ const MyRFQNew = () => {
     };
   }, [setPopUpRfq]);
 
-  const submitHandle = (event) => {
-    event.preventDefault();
-    const form = new FormData(event.target);
+  // const submitHandle = (event) => {
+  //   event.preventDefault();
+  //   const form = new FormData(event.target);
+  //   const data = Object.fromEntries(form.entries());
+  //   data.parts = parts;
+  //   data.comment = comment;
+  //   data.poInHand == "on" ? (data.poInHand = 1) : (data.poInHand = 0);
+  //   data.sendCopyToMyself == "on"
+  //     ? (data.sendCopyToMyself = 1)
+  //     : (data.sendCopyToMyself = 0);
+  //   data.sendToMyVendorsList == "on"
+  //     ? (data.sendToMyVendorsList = 1)
+  //     : (data.sendToMyVendorsList = 0);
+  //   data.sendToStockingVendorsIn == "on"
+  //     ? (data.sendToStockingVendorsIn = 1)
+  //     : (data.sendToStockingVendorsIn = 0);
+  //   data.partialOrderQuotesAccepted == "on"
+  //     ? (data.partialOrderQuotesAccepted = 1)
+  //     : (data.partialOrderQuotesAccepted = 0);
+  //   data.bcc = selectedProductsBCC.map((item) => item.mfg);
+  //   console.log(data);
+  // };
+
+
+  const submitHandle = () => {
+    const form = new FormData(document.querySelector("form")); // Assuming this is wrapped in a form
     const data = Object.fromEntries(form.entries());
+  
     data.parts = parts;
     data.comment = comment;
-    data.poInHand == "on" ? (data.poInHand = 1) : (data.poInHand = 0);
-    data.sendCopyToMyself == "on"
-      ? (data.sendCopyToMyself = 1)
-      : (data.sendCopyToMyself = 0);
-    data.sendToMyVendorsList == "on"
-      ? (data.sendToMyVendorsList = 1)
-      : (data.sendToMyVendorsList = 0);
-    data.sendToStockingVendorsIn == "on"
-      ? (data.sendToStockingVendorsIn = 1)
-      : (data.sendToStockingVendorsIn = 0);
-    data.partialOrderQuotesAccepted == "on"
-      ? (data.partialOrderQuotesAccepted = 1)
-      : (data.partialOrderQuotesAccepted = 0);
+  
+    const booleanFields = [
+      "poInHand",
+      "sendCopyToMyself",
+      "sendToMyVendorsList",
+      "sendToStockingVendorsIn",
+      "partialOrderQuotesAccepted",
+    ];
+  
+    booleanFields.forEach((field) => {
+      data[field] = data[field] === "on" ? 1 : 0;
+    });
+  
     data.bcc = selectedProductsBCC.map((item) => item.mfg);
-    console.log(data);
+  
+    console.log("Payload:", data); // Log the payload
   };
+  
 
   return (
     <>
@@ -224,12 +250,14 @@ const MyRFQNew = () => {
                       <span className={css.rfqBody_Main_left_receptions_bcc}>
                         {selectedProductsBCC.map((item) => {
                           return (
-                            <span
-                              key={item.id}
+                            <span key={item.id}>
+
+                              <MdRemoveCircle 
                               onClick={(e) => removeBCC(e, item.id)}
-                            >
-                              <MdRemoveCircle />
-                              <strong>{item.mfg}</strong>
+                              style={{ cursor: "pointer"}}
+                              />
+
+                              <strong>{item.addedBy.firstName}</strong>
                             </span>
                           );
                         })}
@@ -386,19 +414,20 @@ const MyRFQNew = () => {
               </div>
             </div>
             <div className={css.rfqBody_sendBtn}>
-              <input type="submit" value="send" />
-              {/* <button
-              type="button"
-              onClick={() => {
-                alert("Your RFQ has been sent");
-                setTimeout(() => {
-                  setPopUpRfq((prev) => !prev);
-                }, 100);
-              }}
-            >
-              send
-            </button> */}
+              <button
+                type="button"
+                onClick={() => {
+                  submitHandle(); // Call the submit handler
+                  alert("Your RFQ has been sent");
+                  setTimeout(() => {
+                    setPopUpRfq((prev) => !prev);
+                  }, 100);
+                }}
+              >
+                send
+              </button>
             </div>
+
           </div>
         </form>
       </div>
