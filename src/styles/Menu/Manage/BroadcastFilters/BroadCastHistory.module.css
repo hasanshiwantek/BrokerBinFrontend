@@ -76,6 +76,9 @@
     border: 1px solid gray;
     padding: 3px;
     text-align: left;
+    font-size: 8pt;
+    font-weight: 600;
+    color: #444;
 }
 .table th {
     background-color: #4a575a;

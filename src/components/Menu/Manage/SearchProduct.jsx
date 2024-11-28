@@ -110,6 +110,8 @@ const SearchProduct = () => {
     return <ErrorStatus error={error} />;
   }
 
+  
+
   return (
     <div className={css.layout}>
       {filterToggle && <Filter />}
@@ -161,12 +163,12 @@ const ProductTableBtn = React.memo(() => {
       </button>
       {popUpRfq && <MyRFQNew />}
       <button type="button">Add</button>
-      <a href="/cartpart">Cart</a>
+      <a href="/cartpart" style={{fontSize:"1.2rem"}}>Cart</a>
       <button type="button" onClick={() => dispatch(setFilterToggle())}>
         Filters
       </button>
       <button type="button" onClick={() => dispatch(setGraphToggle())}>
-        Graph View
+        GraphView
       </button>
     </div>
   );
@@ -283,7 +285,8 @@ const ProductTableDetail = React.memo(() => {
         </thead>
         <tbody>
           {searchResponseMatched?.map((e, i) => (
-            <tr className={css.tableData} key={i}>
+            <tr className={css.tableData} key={i}
+             > 
               <td>
                 <input
                   type="checkbox"
@@ -294,8 +297,8 @@ const ProductTableDetail = React.memo(() => {
                 />
               </td>
               <td></td>
-              <td>
-                <a
+              <td >
+                <a style={{ color: "#428bca" ,fontWeight:"500"} }
                   onClick={(event) =>
                     handleShowPopupCompanyDetails(event, e.id)
                   }
@@ -309,9 +312,13 @@ const ProductTableDetail = React.memo(() => {
               <td>
                 <FaEye />
               </td>
-              {countriesList.find((country) =>
-                    country.label.toLowerCase().trim() === e.addedBy.company.country.toLowerCase().trim()
+              <td>
+
+                {countriesList.find((country) =>
+                  country.label.toLowerCase().trim() === e.addedBy.company.country.toLowerCase().trim()
                 )?.value || e.addedBy.company.country}
+              </td>
+
               <td>{e.partModel}</td>
               <td>
                 <MdShowChart />
@@ -319,10 +326,10 @@ const ProductTableDetail = React.memo(() => {
               <td>
                 {e.ts ? (
                   <IoCheckmarkCircle
-                    style={{ color: "var(--primary-color)" }}
+                    style={{ color: "red" }}
                   />
                 ) : (
-                  <BiBlock />
+                  <BiBlock style={{ color: "red" }} />
                 )}
               </td>
               <td>{e.heciClei}</td>
@@ -331,7 +338,7 @@ const ProductTableDetail = React.memo(() => {
               <td>{e.price}</td>
               <td>{e.quantity}</td>
               <td>{e.age}</td>
-              <td>{e.productDescription}</td>
+              <td>{e.productDescription.slice(0, 80)}...</td>
             </tr>
           ))}
         </tbody>

@@ -75,7 +75,7 @@ const Filter = () => {
     <div className={css.filterSection}>
       <div id={css.advancedFilters}>
         <div>
-          <button type="button" onClick={() => dispatch(setFilterToggle())}>
+          <button type="button" style={{color:"#428bca"}} onClick={() => dispatch(setFilterToggle())}>
             advanced filters
             <FaWindowClose />
           </button>

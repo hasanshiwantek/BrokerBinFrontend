@@ -350,7 +350,7 @@ const BroadCast = () => {
             ) : filteredBroadcasts.length > 0 ? (
               filteredBroadcasts.map((item, index) => (
                 item && item.id ? (
-                  <tr key={index} style={item.user_id && String(item.user_id.id) === currentUserID ? { color: "red" } : null}>
+                  <tr key={index} style={item.user_id && String(item.user_id.id) === currentUserID ? { backgroundColor: "#FFF8DC" } : null}>
                     <td>
                       <input
                         type="checkbox"
@@ -418,7 +418,7 @@ const BroadCast = () => {
               <th>Part / Model</th>
               <th>HECI/CLEI</th>
               <th>Mfg</th>
-              <th>Cond</th> 
+              <th>Cond</th>
               <th>Price</th>
               <th>Qty </th>
               <th>Product Description</th>
