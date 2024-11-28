@@ -6,6 +6,9 @@ import { MdRemoveCircle } from "react-icons/md";
 import TextEditor from "../TextEditor";
 import { setPopUpRfq } from "../../ReduxStore/SearchProductSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { addRecipients } from "../../ReduxStore/RfqSlice";
+import Cookies from "js-cookie";
+
 
 const AddParts = ({ part, onUpdate, onRemove }) => {
   const handleRemove = (event) => {
@@ -19,7 +22,7 @@ const AddParts = ({ part, onUpdate, onRemove }) => {
   return (
     <div className={css.rfqBody_Main_left_addParts_Addfields}>
       <button type="button" onClick={handleRemove}>
-        <MdRemoveCircle />
+        <MdRemoveCircle /> 
       </button>
       <div>
         <input
@@ -70,6 +73,13 @@ const MyRFQNew = () => {
   const dispatch = useDispatch();
   const [total, received, sent] = [110, 90, 0];
   const [comment, setComment] = useState(""); // State to hold the value of the text editor
+  const searchResults = useSelector((state) => state.rfqStore.searchResults);
+  const {searchResponseMatched} = useSelector((store) => store.searchProductStore);
+
+  console.log("Search Results in Component:", searchResults);
+
+
+  const token = Cookies.get("token");
 
   const handleCommentChange = (content, delta, source, editor) => {
     const text = editor.getHTML();
@@ -160,28 +170,67 @@ const MyRFQNew = () => {
     };
   }, [setPopUpRfq]);
 
-  const submitHandle = (event) => {
-    event.preventDefault();
-    const form = new FormData(event.target);
+  // const submitHandle = (event) => {
+  //   event.preventDefault();
+  //   const form = new FormData(event.target);
+  //   const data = Object.fromEntries(form.entries());
+  //   data.parts = parts;
+  //   data.comment = comment;
+  //   data.poInHand == "on" ? (data.poInHand = 1) : (data.poInHand = 0);
+  //   data.sendCopyToMyself == "on"
+  //     ? (data.sendCopyToMyself = 1)
+  //     : (data.sendCopyToMyself = 0);
+  //   data.sendToMyVendorsList == "on"
+  //     ? (data.sendToMyVendorsList = 1)
+  //     : (data.sendToMyVendorsList = 0);
+  //   data.sendToStockingVendorsIn == "on"
+  //     ? (data.sendToStockingVendorsIn = 1)
+  //     : (data.sendToStockingVendorsIn = 0);
+  //   data.partialOrderQuotesAccepted == "on"
+  //     ? (data.partialOrderQuotesAccepted = 1)
+  //     : (data.partialOrderQuotesAccepted = 0);
+  //   data.bcc = selectedProductsBCC.map((item) => item.mfg);
+  //   console.log(data);
+  // };
+
+
+  const submitHandle = () => {
+    const form = new FormData(document.querySelector("form")); // Assuming this is wrapped in a form
     const data = Object.fromEntries(form.entries());
+  
     data.parts = parts;
     data.comment = comment;
-    data.poInHand == "on" ? (data.poInHand = 1) : (data.poInHand = 0);
-    data.sendCopyToMyself == "on"
-      ? (data.sendCopyToMyself = 1)
-      : (data.sendCopyToMyself = 0);
-    data.sendToMyVendorsList == "on"
-      ? (data.sendToMyVendorsList = 1)
-      : (data.sendToMyVendorsList = 0);
-    data.sendToStockingVendorsIn == "on"
-      ? (data.sendToStockingVendorsIn = 1)
-      : (data.sendToStockingVendorsIn = 0);
-    data.partialOrderQuotesAccepted == "on"
-      ? (data.partialOrderQuotesAccepted = 1)
-      : (data.partialOrderQuotesAccepted = 0);
+  
+    const booleanFields = [
+      "poInHand",
+      "sendCopyToMyself",
+      "sendToMyVendorsList",
+      "sendToStockingVendorsIn",
+      "partialOrderQuotesAccepted",
+    ];
+  
+    booleanFields.forEach((field) => {
+      data[field] = data[field] === "on" ? 1 : 0;
+    });
+  
     data.bcc = selectedProductsBCC.map((item) => item.mfg);
-    console.log(data);
+  
+    console.log("Payload:", data); // Log the payload
   };
+
+  
+  const handleRecipientSearch = async (e) => {
+    const query = e.target.value;
+    if (query.trim() === "") return;
+  
+    try {
+      console.log("Dispatching addRecipients with query:", query);
+      await dispatch(addRecipients({ token, search: query })).unwrap();
+    } catch (error) {
+      console.error("Error fetching recipients:", error);
+    }
+  };
+  
 
   return (
     <>
@@ -215,21 +264,39 @@ const MyRFQNew = () => {
               <div className={css.rfqBody_Main}>
                 <div className={css.rfqBody_Main_left}>
                   <div className={css.rfqBody_Main_left_receptions}>
+                    
                     <span>
                       <label htmlFor="">Add Recipient:</label>
-                      <input name="recipient" type="text" />
+                      <input 
+                        name="recipient" 
+                        type="text" 
+                        onChange={handleRecipientSearch}
+                      />
+                      {searchResults.length > 0 && (
+                        <ul style={{ position: "absolute", zIndex: 1000, background: "#fff", border: "1px solid #ccc" }}>
+                          {searchResults.map((user) => (
+                            <li key={user.id} onClick={() => console.log(user.email.replace("mailto:", ""))}>
+                              {user.firstName} {user.lastName} - {user.email.replace("mailto:", "")}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
                     </span>
+
                     <span>
+
                       <label htmlFor="">BCC:</label>
                       <span className={css.rfqBody_Main_left_receptions_bcc}>
                         {selectedProductsBCC.map((item) => {
                           return (
-                            <span
-                              key={item.id}
+                            <span key={item.id}>
+
+                              <MdRemoveCircle 
                               onClick={(e) => removeBCC(e, item.id)}
-                            >
-                              <MdRemoveCircle />
-                              <strong>{item.mfg}</strong>
+                              style={{ cursor: "pointer"}}
+                              />
+
+                              <strong>{item.addedBy.firstName}</strong>
                             </span>
                           );
                         })}
@@ -386,19 +453,20 @@ const MyRFQNew = () => {
               </div>
             </div>
             <div className={css.rfqBody_sendBtn}>
-              <input type="submit" value="send" />
-              {/* <button
-              type="button"
-              onClick={() => {
-                alert("Your RFQ has been sent");
-                setTimeout(() => {
-                  setPopUpRfq((prev) => !prev);
-                }, 100);
-              }}
-            >
-              send
-            </button> */}
+              <button
+                type="button"
+                onClick={() => {
+                  submitHandle(); // Call the submit handler
+                  alert("Your RFQ has been sent");
+                  setTimeout(() => {
+                    setPopUpRfq((prev) => !prev);
+                  }, 100);
+                }}
+              >
+                send
+              </button>
             </div>
+
           </div>
         </form>
       </div>

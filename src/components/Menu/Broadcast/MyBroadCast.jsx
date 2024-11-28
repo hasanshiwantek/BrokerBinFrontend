@@ -16,6 +16,8 @@ import BroadcastFileModal from './Send/Field Components/BroadcastFileModal'
 import CompanyDetails from '../../Popups/CompanyDetails/CompanyDetails'
 import { setPopupCompanyDetail, setTogglePopUp } from '../../../ReduxStore/SearchProductSlice'
 import { FaFileAlt } from "react-icons/fa";
+
+
 const BroadCast = () => {
   const broadcastItems = useSelector((state) => state.broadcastStore.broadCastData)
   const { togglePopUp, popupCompanyDetail } = useSelector((state) => state.searchProductStore);
