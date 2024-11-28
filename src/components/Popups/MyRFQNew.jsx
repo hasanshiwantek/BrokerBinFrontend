@@ -6,6 +6,9 @@ import { MdRemoveCircle } from "react-icons/md";
 import TextEditor from "../TextEditor";
 import { setPopUpRfq } from "../../ReduxStore/SearchProductSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { addRecipients } from "../../ReduxStore/RfqSlice";
+import Cookies from "js-cookie";
+
 
 const AddParts = ({ part, onUpdate, onRemove }) => {
   const handleRemove = (event) => {
@@ -19,7 +22,7 @@ const AddParts = ({ part, onUpdate, onRemove }) => {
   return (
     <div className={css.rfqBody_Main_left_addParts_Addfields}>
       <button type="button" onClick={handleRemove}>
-        <MdRemoveCircle />
+        <MdRemoveCircle /> 
       </button>
       <div>
         <input
@@ -70,6 +73,13 @@ const MyRFQNew = () => {
   const dispatch = useDispatch();
   const [total, received, sent] = [110, 90, 0];
   const [comment, setComment] = useState(""); // State to hold the value of the text editor
+  const searchResults = useSelector((state) => state.rfqStore.searchResults);
+  const {searchResponseMatched} = useSelector((store) => store.searchProductStore);
+
+  console.log("Search Results in Component:", searchResults);
+
+
+  const token = Cookies.get("token");
 
   const handleCommentChange = (content, delta, source, editor) => {
     const text = editor.getHTML();
@@ -207,6 +217,19 @@ const MyRFQNew = () => {
   
     console.log("Payload:", data); // Log the payload
   };
+
+  
+  const handleRecipientSearch = async (e) => {
+    const query = e.target.value;
+    if (query.trim() === "") return;
+  
+    try {
+      console.log("Dispatching addRecipients with query:", query);
+      await dispatch(addRecipients({ token, search: query })).unwrap();
+    } catch (error) {
+      console.error("Error fetching recipients:", error);
+    }
+  };
   
 
   return (
@@ -241,11 +264,27 @@ const MyRFQNew = () => {
               <div className={css.rfqBody_Main}>
                 <div className={css.rfqBody_Main_left}>
                   <div className={css.rfqBody_Main_left_receptions}>
+                    
                     <span>
                       <label htmlFor="">Add Recipient:</label>
-                      <input name="recipient" type="text" />
+                      <input 
+                        name="recipient" 
+                        type="text" 
+                        onChange={handleRecipientSearch}
+                      />
+                      {searchResults.length > 0 && (
+                        <ul style={{ position: "absolute", zIndex: 1000, background: "#fff", border: "1px solid #ccc" }}>
+                          {searchResults.map((user) => (
+                            <li key={user.id} onClick={() => console.log(user.email.replace("mailto:", ""))}>
+                              {user.firstName} {user.lastName} - {user.email.replace("mailto:", "")}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
                     </span>
+
                     <span>
+
                       <label htmlFor="">BCC:</label>
                       <span className={css.rfqBody_Main_left_receptions_bcc}>
                         {selectedProductsBCC.map((item) => {
