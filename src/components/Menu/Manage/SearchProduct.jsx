@@ -59,6 +59,8 @@ const SearchProduct = () => {
     togglePopUp,
   } = useSelector((store) => store.searchProductStore);
 
+
+  searchResponseMatched.map((item)=>{console.log("Part Model " +item.partModel)})
   // Fetch data whenever 'page' or 'searchString' changes
   useEffect(() => {
     if (!searchString && !partModel) {

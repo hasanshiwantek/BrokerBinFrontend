@@ -240,6 +240,7 @@ const MyRFQNew = () => {
                       <input name="subject" type="text" />
                     </span>
                   </div>
+                  
                   <div className={css.rfqBody_Main_left_addParts}>
                     <div></div>
                     <div>
@@ -264,6 +265,7 @@ const MyRFQNew = () => {
                           />
                         ))}
                       </span>
+                      
                       <div className={css.rfqBody_Main_left_addParts_AddBtn}>
                         <button type="button" onClick={addPart}>
                           <AddCircle /> add part
@@ -275,6 +277,7 @@ const MyRFQNew = () => {
                       </div>
                     </div>
                   </div>
+                  
                   <div className={css.rfqBody_Main_left_comments}>
                     <label htmlFor="">comments</label>
                     {/* <textarea name="comments"> */}
@@ -407,3 +410,34 @@ const MyRFQNew = () => {
 };
 
 export default MyRFQNew;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
