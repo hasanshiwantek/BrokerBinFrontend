@@ -4,6 +4,7 @@ import { BiMinus, BiPlus } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { setAddAnotherFiles } from "../../../../ReduxStore/InventorySlice";
 
+
 const AddAnotherFile = () => {
   const addAnotherFiles = useSelector(
     (state) => state.inventoryStore.addAnotherFiles

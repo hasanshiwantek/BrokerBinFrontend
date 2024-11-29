@@ -32,6 +32,7 @@ export const searchProductQuery = createAsyncThunk(
     }
   }
 );
+
 export const searchByKeyword = createAsyncThunk(
   "searchProductStore/searchByKeyword",
   async ({ token, page, partModel }) => {
