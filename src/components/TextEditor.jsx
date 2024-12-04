@@ -5,17 +5,8 @@ import "react-quill/dist/quill.snow.css"; // ES6
 const TextEditor = ({ comment, handleCommentChange }) => {
   const modules = {
     toolbar: [
-      [{ header: "1" }, { header: "2" }, { font: [] }],
-      [{ size: [] }],
-      ["bold", "italic", "underline", "strike", "blockquote"],
-      [
-        { list: "ordered" },
-        { list: "bullet" },
-        { indent: "-1" },
-        { indent: "+1" },
-      ],
-      ["link", "image", "video"],
-      ["clean"],
+      ["bold", "italic",],
+      ["link"],
     ],
   };
 
@@ -44,6 +35,7 @@ const TextEditor = ({ comment, handleCommentChange }) => {
         onChange={handleCommentChange}
         modules={modules}
         formats={formats}
+        style={{ height: "22vh",marginBottom:"40px",width:"40vw" }} 
       />
     </div>
   );
