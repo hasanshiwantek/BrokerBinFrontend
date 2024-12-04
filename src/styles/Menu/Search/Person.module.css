@@ -1,5 +1,5 @@
 .main {
-    width: 200px;
+    width: 500px;
 
 }
 
@@ -13,10 +13,10 @@
 }
 
 h2 {
-    font-size: 18px;
-    text-align: left;
+    color: #444;
+    font-size: 1.5em;
+    font-weight: 700;
 }
-
 .personForm {
     display: flex;
     flex-direction: column;
@@ -31,7 +31,9 @@ h2 {
 
 .formRow label {
     width: 30%; /* Adjust width of the label */
-    font-size: 12px;
+    font-weight: bold;
+    font-size: 1em;
+    color: #444;
 }
 
 .formRow input, .formRow select {
@@ -39,9 +41,23 @@ h2 {
     padding: 6px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    font-size: 12px;
+    font-size: 9pt;
+    font-weight: 500;
+    color: #444;        
     margin-right: 35%;
+    transition: all 0.4s ease-out;
 }
+
+.formRow input:focus{
+    outline: none;
+    border: 1px solid var(--primary-color);
+}
+
+.formRow select:focus{
+    outline: none;
+    border: 1px solid var(--primary-color);
+}
+
 
 .buttonContainer {
     text-align: right;
@@ -60,6 +76,9 @@ h2 {
     background-color: #d45500;
 }
 
+.submitButton:active{
+    transform: scale(0.95);
+}
 
 .footerlinks{
     display: flex;
@@ -74,4 +93,10 @@ h2 {
   }
   .footerlinks li a{
     font-size: 11px;
+  }
+
+  .main nav ul li a{
+    font-size: 14px;
+    font-weight: 400;
+    color: #444;
   }

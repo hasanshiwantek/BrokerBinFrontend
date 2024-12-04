@@ -15,7 +15,7 @@ const SearchResults = () => {
     const { searchResults } = location.state; 
 
     return (
-        <main>
+        <main className='mainSec'>
             <nav className='menu-bar'>
                 <ul>
                     <li><Link to={'/inventory'}>Inventory</Link></li>
@@ -37,10 +37,11 @@ const SearchResults = () => {
                         </div>
                         <div className="profile-details">
                             <p><strong>Company:</strong> {val.company.name}</p>
-                            <p><strong>Title:</strong> {val.position}</p>
+                            <p><strong>Title:</strong> {val.specialty}</p>
                             <p><strong>Phone:</strong> {val.phoneNumber}</p>
                             <p><strong>Email:</strong> {val.email}</p>
                             <p><strong>City:</strong> {val.company.region}</p>
+                            <p><strong>State:</strong> {val.state}</p>
                             <p><strong>Country:</strong> {val.company.country}</p>
                         </div>
 

@@ -145,35 +145,6 @@ export const addToHotList = createAsyncThunk(
 );
 
 
-export const submitRfq = createAsyncThunk(
-  "searchProductStore/submitRfq ",
-  async ({ token, data }) => {
-    try {
-      // Log data to check what is being sent
-      console.log("Sending RFQ data:", data);
-
-      const response = await axios.post(
-        `${brokerAPI}inventory/rfq`,
-        data, // Assuming 'data' is correctly formatted for 'multipart/form-data'
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      return response.data;
-    } catch (error) {
-      console.error(
-        "Error submitting RFQ data:",
-        error.response?.data || error.message
-      );
-      throw new Error("Error while sending broadcast: " + (error.response?.data || error.message));
-    }
-  }
-);
-
 
 
 

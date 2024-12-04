@@ -165,7 +165,7 @@ const ProductTableBtn = React.memo(() => {
       </button>
       {popUpRfq && <MyRFQNew />}
       <button type="button">Add</button>
-      <a href="/cartpart" style={{fontSize:"1.2rem"}}>Cart</a>
+      <a href="/cartpart" style={{fontSize:"1em",color:"#444"}}>Cart</a>
       <button type="button" onClick={() => dispatch(setFilterToggle())}>
         Filters
       </button>
@@ -296,6 +296,7 @@ const ProductTableDetail = React.memo(() => {
                   id={e.id}
                   checked={isSelected(e.id)}
                   onChange={() => selectProduct(e.id)}
+                  style={{cursor:"pointer"}}
                 />
               </td>
               <td></td>

@@ -26,7 +26,9 @@
 .profile-details {
     flex: 1; 
 }
-
+.profile-details p{
+    margin-top: 2px;
+}
 .notes-rating {
     display: flex;
     flex-direction: column;
@@ -41,3 +43,10 @@
 .rating select {
     width: 100px; 
 }
+
+
+.mainSec nav ul li a{
+    font-size: 14px;
+    font-weight: 400;
+    color: #444;
+  }
