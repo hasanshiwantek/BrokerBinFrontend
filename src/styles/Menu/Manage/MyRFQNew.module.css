@@ -306,8 +306,20 @@
 }
 .receipentSec ul li:hover {
   cursor: pointer;
-  background-color: rgb(102, 142, 252);
+  /* background-color: rgb(102, 142, 252); */
+  background-color: rgb(24, 52, 131);
+
   color: white;
+}
+.searchResponseMatchSec li{
+  font-size: 1em;
+  color: #444;
+}
+
+.searchResponseMatchSec li:hover{
+   cursor: pointer;
+   background-color: rgb(24, 52, 131);
+   color: white ;
 }
 
 .receipentSec ul{
@@ -339,4 +351,10 @@
   background-color: #7E7D8E;
   color: white;
   padding: 3px;
+}
+
+.searchResponseSec li:hover{
+  cursor: pointer;
+  background-color: rgb(24, 52, 131);
+  color: white ;
 }
