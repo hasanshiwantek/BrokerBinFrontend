@@ -885,18 +885,42 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
     event.stopPropagation(); // This stops the click event from bubbling up to parent elements.
     onRemove(part.id);
   };
-  const handleInputChange = (field, value) => {
-    if (field === "partModel" && part.isNew) {
-      onSearch(value); // Call API search function
-    }
-    onUpdate(part.id, field, value); // Update local state
+  // const handleInputChange = (field, value) => {
+  //   if (field === "partModel" && part.isNew) {
+  //     onSearch(value); // Call API search function
+  //   }
+  //   onUpdate(part.id, field, value); // Update local state
 
-    console.log("Show dropdown triggered"); // Debug log
-    setShowDropdown(true); // Trigger dropdown visibility
+  //   console.log("Show dropdown triggered"); // Debug log
+  //   setShowDropdown(true); // Trigger dropdown visibility
+  // };
+
+  const handleInputChange = (field, value) => {
+    onUpdate(part.id, field, value); // Update part value in state
+  
+    // Show dropdown only if the field is partModel and value is not empty
+    if (field === "partModel" && value.trim() !== "") {
+      onSearch(value); // Trigger search
+      setShowDropdown(true);
+    } else {
+      setShowDropdown(false);
+    }
   };
+
+  // Update onBlur handler to only hide the dropdown if the partModel input is not focused or if it's empty
+const handleInputBlur = () => {
+  setTimeout(() => {
+    if (!part.partModel || part.partModel.trim() === "") {
+      setShowDropdown(false);
+    }
+  }, 200); // Timeout to catch clicks on dropdown items
+};
+
+
 
   const handleSuggestionSelect = (value) => {
     onUpdate(part.id, "partModel", value); // Update partModel when a suggestion is selected
+    setShowDropdown(false)
   };
 
 
@@ -907,7 +931,11 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
         <MdRemoveCircle />
       </button>
       <div>
+
+        <div  style={{position:"relative"}}>
+
       <input
+     
         type="text"
         value={part.partModel || ""}
         onChange={(e) => {
@@ -917,22 +945,31 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
         onKeyDown={(e) => {
           if (e.key === "Enter") e.preventDefault();
         }}
-        onBlur={() => setTimeout(() => setShowDropdown(false), 200)} // Close dropdown after blur
+        onFocus={() => {
+          if (part.partModel.trim() !== "") {
+            setShowDropdown(true); // Show dropdown if there's a non-empty value
+          }
+        }}
+        onBlur={handleInputBlur} // Updated blur handler
       />
       {console.log("Dropdown visibility:", showDropdown)}
-      {console.log("Search Results in AddParts:", searchResponseMatched)} 
+      {console.log("Search Results in AddParts:", searchResponseMatched)}
+
       {showDropdown && searchResponseMatched?.length > 0 && (
         <ul
+        className={css.searchResponseSec}
           style={{
             position: "absolute",
-            top: "45%",
+            top: "100%",
             // left: 0,
             zIndex: 1000,
             background: "#fff",
             border: "1px solid #ccc",
             listStyle: "none",
-            padding: "5px",
-            width: "200px",
+            padding: "3px",
+            width: "120px",
+            overflowY:"scroll",
+            maxHeight:"20vh"
           }}
         >
           {searchResponseMatched.map((item) => (
@@ -940,22 +977,25 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
               key={item.id}
               onClick={() => handleSuggestionSelect(item.partModel)}
               style={{
-                padding: "5px",
+                padding: "4px",
                 cursor: "pointer",
-                backgroundColor: "#f9f9f9",
+         
                 borderBottom: "1px solid #eee",
               }}
-              onMouseOver={(e) => (e.target.style.backgroundColor = "#e6f7ff")}
-              onMouseOut={(e) => (e.target.style.backgroundColor = "#fff")}
+              // onMouseOver={(e) => (e.target.style.backgroundColor = "#e6f7ff")}
+              // onMouseOut={(e) => (e.target.style.backgroundColor = "#fff")}
             >
               {item.partModel}
             </li>
           ))}
         </ul>
       )}
+
+</div>
+
         <input
           type="text"
-          value={part.heci}
+          value={part.heciClei}
           onChange={(e) => handleInputChange("heciClei", e.target.value)}
         />
         <select
@@ -977,7 +1017,7 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
           onChange={(e) => handleInputChange("quantity", e.target.value)}
         />
         <input
-          type="text"
+          type="text" 
           value={part.targetPrice}
           onChange={(e) => handleInputChange("targetPrice", e.target.value)}
         />
@@ -1057,7 +1097,7 @@ const MyRFQNew = () => {
   // };
 
   const addPart = () => {
-    setParts([...parts, { id: Date.now(), partModel: "", heciClei: "", mfg: "", condition: "",   quantity: "",isNew: true,targetPrice: "",terms: "", }]);
+    setParts([...parts, { id: Date.now(), partModel: " ", heciClei: " ", mfg: "", condition: "",   quantity: "",isNew: true,targetPrice: "",terms: "", }]);
   };
 
   // Function to handle removing a part by id
@@ -1509,8 +1549,6 @@ const MyRFQNew = () => {
                                   style={{
                                     borderBottom: "1px solid #ccc",
                                     padding: "6px",
-                                    fontSize: "10.1pt",
-                                    fontWeight: "500",
                                     cursor: "pointer",
                                   }}
                                 >
