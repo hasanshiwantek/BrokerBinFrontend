@@ -1650,6 +1650,7 @@ const MyRFQNew = () => {
                     <TextEditor
                       handleCommentChange={handleCommentChange}
                       comment={comment}
+                      className={css.ql_editor}
 
                     />
                     {/* </textarea> */}

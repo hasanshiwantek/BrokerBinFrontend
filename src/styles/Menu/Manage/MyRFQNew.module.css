@@ -332,14 +332,10 @@
 
 
 
-
-
-.rfqBody_Main_left_comments .ql-editor {
-  height: 18vh !important; /* Force the height */
-  margin: 0;
-  padding: 0;
+.ql_editor {
+  height: 50vh !important; /* Fixed height */
+  /* or */
 }
-
 .removeBtn {
   color: black ;
 
@@ -358,3 +354,4 @@
   background-color: rgb(24, 52, 131);
   color: white ;
 }
+
