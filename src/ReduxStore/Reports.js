@@ -55,8 +55,7 @@ export const searchCompany = createAsyncThunk(
     console.log(name, token);
     try {
       const response = await axios.post(
-        `${brokerAPI}company/search`,
-        { name },
+        `${brokerAPI}company/search`,{ name },
         {
           headers: {
             "Content-Type": "application/json",

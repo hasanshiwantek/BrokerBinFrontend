@@ -144,6 +144,15 @@ export const addToHotList = createAsyncThunk(
   }
 );
 
+
+
+
+
+
+
+
+
+
 const initialState = {
   companiesListingParts: true,
   graphToggle: false,

@@ -129,7 +129,6 @@ export const submitUserSearch = createAsyncThunk(
         }
       );
       console.log("Search response data from front-end:", response.data);
-      console.log(response.data.data);
       
       return response.data.data;
     } catch (error) {

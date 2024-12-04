@@ -13,7 +13,7 @@ const Person = () => {
         firstName: '',
         lastName: '',
         company_name: '',
-        position: '',
+        title: '',
         // specialty: '',
         state: '',
         region: '',
@@ -47,11 +47,24 @@ const Person = () => {
         try {
             const result = await dispatch(submitUserSearch({ data: formData, token })).unwrap();
             
-            // Check what is returned from the API call
             console.log("API Result:", result);
-            navigate('/search-result', { state: { searchResults: result } });
+            if (result.length === 0) {
+                alert('No matching records found.');
+                setFormData({
+                    firstName: '',
+                    lastName: '',
+                    company_name: '',
+                    title: '',
+                    state: '',
+                    region: '',
+                    email: ''
+                })
+            } else {
+                navigate('/search-result', { state: { searchResults: result } });
+            }
         } catch (error) {
             console.error('Error fetching user search data:', error);
+            alert('An error occurred while fetching data.');
         }
     };
     
@@ -60,7 +73,7 @@ const Person = () => {
     
     return (
         <>
-            <main>
+            <main className={styles.main}>
                 <nav className='menu-bar'>
                     <ul>
                         <li><Link to={'/inventory'}>Inventory</Link></li>
@@ -110,12 +123,12 @@ const Person = () => {
                         </div>
 
                         <div className={styles.formRow}>
-                            <label htmlFor="position">Title</label>
+                            <label htmlFor="title">Title</label>
                             <input
                                 type="text"
-                                id="position"
-                                name="position"
-                                value={formData.position}
+                                id="title"
+                                name="title"
+                                value={formData.title}
                                 onChange={handleInputChange}
                             />
                         </div>

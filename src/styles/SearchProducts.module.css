@@ -15,8 +15,8 @@
   gap: 2rem;
   padding: 0.6rem 0;
   > button {
-    color: black;
-    font-size: 1.2rem;
+    font-size: 1em;
+    color: #444;
   }
 }
 
@@ -162,7 +162,7 @@
 }
 
 .productTableBtn a:hover{
-  color: #428bca;
+  color: #428bca !important ;
 }
 
 
