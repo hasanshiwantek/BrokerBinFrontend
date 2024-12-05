@@ -78,38 +78,6 @@ export const submitUserOptions = createAsyncThunk(
 
 
 
-// export const submitUserSearch = createAsyncThunk(
-//   "profileStore/submitUserSearch ",
-//   async ({data, token }) => {
-//     console.log({data});
-//     try {
-//       const response = await axios.post(
-//         "https://brokerbinbackend.shiwantek.com/api/user/search",
-//          data,
-        
-//         {
-//           headers: {
-//             Authorization: `Bearer ${token}`,
-//             "Content-Type": "application/json",
-//           },
-//         }
-//       );
-//       console.log("Search data from redux:",response.data);
-      
-//       return response.data.data;
-//     } catch (error) {
-//       console.error(
-
-//         "Request failed with error from front-end:", error,
-//         error.response?.data || error.message
-
-//       );
-//       throw "Error while submitting user data:" || error;
-//     }
-//   }
-
-// );
-
 
 
 

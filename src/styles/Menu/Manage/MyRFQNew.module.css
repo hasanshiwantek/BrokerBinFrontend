@@ -301,7 +301,7 @@
 
 
 .receipentSec ul li{
-  font-size: 1em;
+  font-size: 0.9em;
   color: #444;
 }
 .receipentSec ul li:hover {
@@ -312,7 +312,7 @@
   color: white;
 }
 .searchResponseMatchSec li{
-  font-size: 1em;
+  font-size: 0.5em;
   color: #444;
 }
 
