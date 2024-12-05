@@ -96,7 +96,8 @@ button {
 
     >li:hover {
       /* height: 100%; */
-      background: rgb(202, 99, 202);
+      background:#68c;;
+
     }
   }
 
@@ -107,6 +108,7 @@ button {
 
 .navbar_search_options {
   color: black !important;
+
 }
 
 .nav {
@@ -132,8 +134,11 @@ button {
 .dropdownMenu {
   display: none;
 
+
   ul {
     width: max-content;
+  background: #e8e8e8;
+
 
     li {
       padding: 1rem;
