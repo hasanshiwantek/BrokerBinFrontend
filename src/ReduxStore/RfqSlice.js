@@ -2,9 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { brokerAPI } from "../components/api/BrokerEndpoint";
 import axios from "axios";
 
-
-
-
 export const addRecipients = createAsyncThunk(
   "rfqStore/addRecipients",
   async ({ token, search }) => {
@@ -39,7 +36,7 @@ export const searchProductQuery = createAsyncThunk(
     console.log("Part Search" + search);
     try {
       const response = await axios.post(
-        `${brokerAPI}inventory/search`,
+        `${brokerAPI}inventory/search/rfq`,
         {
           page, // Send 'page' in the request body
           search, // Send 'search' in the request body

@@ -365,19 +365,20 @@ const ProductTableDetail = React.memo(() => {
           </tr>
         </tfoot>
       </table>
-      <div className={css.tablePagination}>
-        <button type="button" onClick={handlePrevPage} disabled={page === 1}>
-          ⬅️
+      <div className={`${css.tablePagination} `}>
+        <button type="button" onClick={handlePrevPage} disabled={page === 1} className="text-white text-sm font-bold"> 
+          Prev
         </button>
-        <span>
+        <span className="text-white text-sm font-bold">
           {page}/{totalPages}
         </span>
         <button
+     className="text-white text-sm font-bold"
           type="button"
           onClick={handleNextPage}
           disabled={page === totalPages}
         >
-          ➡️
+        Next
         </button>
       </div>
     </div>
