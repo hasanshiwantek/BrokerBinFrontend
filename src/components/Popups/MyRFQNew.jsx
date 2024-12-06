@@ -596,8 +596,6 @@ const MyRFQNew = () => {
                           );
                         })
                       }
-
-
                     </tfoot>
                   </table>
                 </div>

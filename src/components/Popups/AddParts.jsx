@@ -6,47 +6,25 @@ import { MdRemoveCircle } from "react-icons/md";
 
 const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePartModelSearch, isNew, searchResponseMatched }) => {
     const [showDropdown, setShowDropdown] = useState(false)
-    const dropdownRef = useRef(null); // Reference to the dropdown
+    const dropdownRef = useRef(null);
   
-    // This effect sets up a click listener for clicks outside of the dropdown
     useEffect(() => {
       const handleClickOutside = (event) => {
         if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-          setShowDropdown(false); // Close the dropdown if the click is outside
+          setShowDropdown(false); // 
         }
       };
-  
-      // Attach the event listener to the document
       document.addEventListener('mousedown', handleClickOutside);
   
       return () => {
-        // Clean up the event listener when the component unmounts
         document.removeEventListener('mousedown', handleClickOutside);
       };
     }, []);
   
     const handleRemove = (event) => {
-      event.stopPropagation(); // This stops the click event from bubbling up to parent elements.
+      event.stopPropagation(); 
       onRemove(part.id);
     };
-
-    // const handleInputChange = (field, value) => {
-    //   // Update the part field in state
-    //   onUpdate(part.id, field, value);
-    
-    //   if (field === "partModel" && value.trim() !== "") {
-    //     onSearch(value); // Trigger search for partModel
-    //     setShowDropdown(true);
-    //   } else {
-    //     setShowDropdown(false);
-    //   }
-    
-    //   // Clear options only for new lines
-    //   if (field === "partModel" && value.trim() === "" && isNew) {
-    //     onUpdate(part.id, "mfgOptions", []); // Clear MFG options
-    //     onUpdate(part.id, "conditionOptions", []); // Clear Condition options
-    //   }
-    // };
 
     const handleInputChange = (field, value) => {
       onUpdate(part.id, field, value); // Update the selected value in state
@@ -60,65 +38,21 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
       }
     };
     
-    // Update onBlur handler to only hide the dropdown if the partModel input is not focused or if it's empty
     const handleInputBlur = () => {
       setTimeout(() => {
         if (!part.partModel || part.partModel.trim() === "") {
           setShowDropdown(false);
         }
-      }, 200); // Timeout to catch clicks on dropdown items
+      }, 200);
     };
   
-    // const handleSuggestionSelect = (selectedItem) => {
-    //   console.log("Selected Item:", selectedItem);
-    //   onUpdate(part.id, "partModel", selectedItem.partModel); // Update partModel
-    //   if (isNew) {
-    //     onUpdate(part.id, "mfgOptions", selectedItem.mfg || []); // Populate MFG options
-    //     onUpdate(part.id, "conditionOptions", selectedItem.cond || []); // Populate Condition options
-    //   }
-    //   setShowDropdown(false);
-    // };
-    
-    // const handleSuggestionSelect = (selectedItem) => {
-    //   console.log("Selected Item:", selectedItem);
-    //   onUpdate(part.id, "partModel", selectedItem.partModel); // Update partModel
-    
-    //   // Populate MFG and Condition options for all lines
-    //   onUpdate(part.id, "mfgOptions", selectedItem.mfg || []);
-    //   onUpdate(part.id, "conditionOptions", selectedItem.cond || []);
-    //   setShowDropdown(false);
-    // };
-
-    // const handleSuggestionSelect = (selectedItem) => {
-    //   console.log("Selected Item:", selectedItem);
-    //   onUpdate(part.id, "partModel", selectedItem.partModel); // Update partModel
-    
-    //   // Always populate options for Mfg and Condition
-    //   onUpdate(part.id, "mfgOptions", selectedItem.mfg || []); // Populate MFG options
-    //   onUpdate(part.id, "conditionOptions", selectedItem.cond || []); // Populate Condition options
-    
-    //   // Set initial values for Mfg and Cond if not already set
-    //   if (!part.mfg) {
-    //     onUpdate(part.id, "mfg", selectedItem.mfg?.[0] || ""); // Default to the first Mfg
-    //   }
-    //   if (!part.cond) {
-    //     onUpdate(part.id, "cond", selectedItem.cond?.[0] || ""); // Default to the first Cond
-    //   }
-    
-    //   setShowDropdown(false); // Close dropdown
-    // };
-
     const handleSuggestionSelect = (selectedItem) => {
       console.log("Selected Item:", selectedItem);
     
       // Update partModel
-      onUpdate(part.id, "partModel", selectedItem.partModel);
-    
-      // Always populate MFG and Condition options
+      onUpdate(part.id, "partModel", selectedItem.partModel);    
       onUpdate(part.id, "mfgOptions", selectedItem.mfg || []);
       onUpdate(part.id, "conditionOptions", selectedItem.cond || []);
-    
-      // Update MFG and Cond only if user has selected a new partModel
       if (selectedItem.mfg?.length) {
         onUpdate(part.id, "mfg", selectedItem.mfg[0]); // Default to the first MFG option
       }
@@ -126,7 +60,7 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
         onUpdate(part.id, "cond", selectedItem.cond[0]); // Default to the first Condition option
       }
     
-      setShowDropdown(false); // Close dropdown
+      setShowDropdown(false);
     };
     
     useEffect(() => {
@@ -134,7 +68,7 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
         onUpdate(part.id, "mfgOptions", [part.mfg]); // Initialize MFG options with the RFQ data
       }
       if (!part.conditionOptions?.length) {
-        onUpdate(part.id, "conditionOptions", [part.cond]); // Initialize Condition options with the RFQ data
+        onUpdate(part.id, "conditionOptions", [part.cond]);
       }
     }, [part.mfg, part.cond, part.mfgOptions, part.conditionOptions, onUpdate]);
     
@@ -210,64 +144,29 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
             onChange={(e) => handleInputChange("heciClei", e.target.value)}
           />
 
-          {/* <select
-            value={isNew ? part.Mfg || "" : part.Mfg || ""} // Use pre-loaded data for the first line
-            onChange={(e) => {
-              if (isNew) handleInputChange("mfg", e.target.value); // Allow changes only for new lines
-            }}
-            // disabled={!isNew} // Disable for the first line
+          <select
+            value={part.mfg || ""}
+            onChange={(e) => handleInputChange("mfg", e.target.value)}
           >
-            <option value="">{isNew ? "Select Mfg" : part.mfg || "Mfg Not Set"}</option>
-            {isNew &&
-              part.mfgOptions?.map((Mfg) => (
-                <option key={Mfg} value={Mfg}>
-                  {Mfg}
-                </option>
-              ))}
+            <option value="">Select Mfg</option>
+            {part.mfgOptions?.map((Mfg) => (
+              <option key={Mfg} value={Mfg}>
+                {Mfg}
+              </option>
+            ))}
           </select>
 
           <select
-            value={isNew ? part.cond || "" : part.cond || ""} // Use pre-loaded data for the first line
-            onChange={(e) => {
-              if (isNew) handleInputChange("Cond", e.target.value); // Allow changes only for new lines
-            }}
-            // disabled={!isNew} // Disable for the first line
+            value={part.cond || ""}
+            onChange={(e) => handleInputChange("cond", e.target.value)}
           >
-            <option value="">{isNew ? "Select Cond" : part.cond || "Cond Not Set"}</option>
-            {isNew &&
-              part.conditionOptions?.map((Cond) => (
-                <option key={Cond} value={Cond}>
-                  {Cond}
-                </option>
-              ))}
-          </select> */}
-
-<select
-  value={part.mfg || ""}
-  onChange={(e) => handleInputChange("mfg", e.target.value)}
->
-  <option value="">Select Mfg</option>
-  {part.mfgOptions?.map((Mfg) => (
-    <option key={Mfg} value={Mfg}>
-      {Mfg}
-    </option>
-  ))}
-</select>
-
-<select
-  value={part.cond || ""}
-  onChange={(e) => handleInputChange("cond", e.target.value)}
->
-  <option value="">Select Cond</option>
-  {part.conditionOptions?.map((Cond) => (
-    <option key={Cond} value={Cond}>
-      {Cond}
-    </option>
-  ))}
-</select>
-
-
-
+            <option value="">Select Cond</option>
+            {part.conditionOptions?.map((Cond) => (
+              <option key={Cond} value={Cond}>
+                {Cond}
+              </option>
+            ))}
+          </select>
 
           <input
             type="text"
