@@ -39,7 +39,7 @@ export const searchProductQuery = createAsyncThunk(
     console.log("Part Search" + search);
     try {
       const response = await axios.post(
-        `${brokerAPI}inventory/search`,
+        `${brokerAPI}inventory/search/rfq`,
         {
           page, // Send 'page' in the request body
           search, // Send 'search' in the request body

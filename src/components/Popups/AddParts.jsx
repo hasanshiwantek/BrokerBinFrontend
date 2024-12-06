@@ -4,7 +4,7 @@ import { MdRemoveCircle } from "react-icons/md";
 
 
 
-const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePartModelSearch, searchResponseMatched }) => {
+const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePartModelSearch, isNew, searchResponseMatched }) => {
     const [showDropdown, setShowDropdown] = useState(false)
     const dropdownRef = useRef(null); // Reference to the dropdown
   
@@ -29,19 +29,37 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
       event.stopPropagation(); // This stops the click event from bubbling up to parent elements.
       onRemove(part.id);
     };
-  
+
+    // const handleInputChange = (field, value) => {
+    //   // Update the part field in state
+    //   onUpdate(part.id, field, value);
+    
+    //   if (field === "partModel" && value.trim() !== "") {
+    //     onSearch(value); // Trigger search for partModel
+    //     setShowDropdown(true);
+    //   } else {
+    //     setShowDropdown(false);
+    //   }
+    
+    //   // Clear options only for new lines
+    //   if (field === "partModel" && value.trim() === "" && isNew) {
+    //     onUpdate(part.id, "mfgOptions", []); // Clear MFG options
+    //     onUpdate(part.id, "conditionOptions", []); // Clear Condition options
+    //   }
+    // };
+
     const handleInputChange = (field, value) => {
-      onUpdate(part.id, field, value); // Update part value in state
-  
-      // Show dropdown only if the field is partModel and value is not empty
+      onUpdate(part.id, field, value); // Update the selected value in state
+    
       if (field === "partModel" && value.trim() !== "") {
-        onSearch(value); // Trigger search
+        onSearch(value); // Trigger search for partModel
         setShowDropdown(true);
-      } else {
-        setShowDropdown(false);
+      } else if (field === "partModel" && value.trim() === "") {
+        onUpdate(part.id, "mfgOptions", []); // Clear MFG options
+        onUpdate(part.id, "conditionOptions", []); // Clear Condition options
       }
     };
-  
+    
     // Update onBlur handler to only hide the dropdown if the partModel input is not focused or if it's empty
     const handleInputBlur = () => {
       setTimeout(() => {
@@ -51,11 +69,76 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
       }, 200); // Timeout to catch clicks on dropdown items
     };
   
-    const handleSuggestionSelect = (value) => {
-      onUpdate(part.id, "partModel", value); // Update partModel when a suggestion is selected
-      setShowDropdown(false)
+    // const handleSuggestionSelect = (selectedItem) => {
+    //   console.log("Selected Item:", selectedItem);
+    //   onUpdate(part.id, "partModel", selectedItem.partModel); // Update partModel
+    //   if (isNew) {
+    //     onUpdate(part.id, "mfgOptions", selectedItem.mfg || []); // Populate MFG options
+    //     onUpdate(part.id, "conditionOptions", selectedItem.cond || []); // Populate Condition options
+    //   }
+    //   setShowDropdown(false);
+    // };
+    
+    // const handleSuggestionSelect = (selectedItem) => {
+    //   console.log("Selected Item:", selectedItem);
+    //   onUpdate(part.id, "partModel", selectedItem.partModel); // Update partModel
+    
+    //   // Populate MFG and Condition options for all lines
+    //   onUpdate(part.id, "mfgOptions", selectedItem.mfg || []);
+    //   onUpdate(part.id, "conditionOptions", selectedItem.cond || []);
+    //   setShowDropdown(false);
+    // };
+
+    // const handleSuggestionSelect = (selectedItem) => {
+    //   console.log("Selected Item:", selectedItem);
+    //   onUpdate(part.id, "partModel", selectedItem.partModel); // Update partModel
+    
+    //   // Always populate options for Mfg and Condition
+    //   onUpdate(part.id, "mfgOptions", selectedItem.mfg || []); // Populate MFG options
+    //   onUpdate(part.id, "conditionOptions", selectedItem.cond || []); // Populate Condition options
+    
+    //   // Set initial values for Mfg and Cond if not already set
+    //   if (!part.mfg) {
+    //     onUpdate(part.id, "mfg", selectedItem.mfg?.[0] || ""); // Default to the first Mfg
+    //   }
+    //   if (!part.cond) {
+    //     onUpdate(part.id, "cond", selectedItem.cond?.[0] || ""); // Default to the first Cond
+    //   }
+    
+    //   setShowDropdown(false); // Close dropdown
+    // };
+
+    const handleSuggestionSelect = (selectedItem) => {
+      console.log("Selected Item:", selectedItem);
+    
+      // Update partModel
+      onUpdate(part.id, "partModel", selectedItem.partModel);
+    
+      // Always populate MFG and Condition options
+      onUpdate(part.id, "mfgOptions", selectedItem.mfg || []);
+      onUpdate(part.id, "conditionOptions", selectedItem.cond || []);
+    
+      // Update MFG and Cond only if user has selected a new partModel
+      if (selectedItem.mfg?.length) {
+        onUpdate(part.id, "mfg", selectedItem.mfg[0]); // Default to the first MFG option
+      }
+      if (selectedItem.cond?.length) {
+        onUpdate(part.id, "cond", selectedItem.cond[0]); // Default to the first Condition option
+      }
+    
+      setShowDropdown(false); // Close dropdown
     };
-  
+    
+    useEffect(() => {
+      if (!part.mfgOptions?.length) {
+        onUpdate(part.id, "mfgOptions", [part.mfg]); // Initialize MFG options with the RFQ data
+      }
+      if (!part.conditionOptions?.length) {
+        onUpdate(part.id, "conditionOptions", [part.cond]); // Initialize Condition options with the RFQ data
+      }
+    }, [part.mfg, part.cond, part.mfgOptions, part.conditionOptions, onUpdate]);
+    
+    
     return (
       <div className={css.rfqBody_Main_left_addParts_Addfields}>
         <button type="button" onClick={handleRemove} className={css.removeBtn}  >
@@ -106,15 +189,12 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
                 {searchResponseMatched.map((item) => (
                   <li
                     key={item.id}
-                    onClick={() => handleSuggestionSelect(item.partModel)}
+                    onClick={() => handleSuggestionSelect(item)} // Pass full item
                     style={{
                       padding: "4px",
                       cursor: "pointer",
-  
                       borderBottom: "1px solid #eee",
                     }}
-                  // onMouseOver={(e) => (e.target.style.backgroundColor = "#e6f7ff")}
-                  // onMouseOut={(e) => (e.target.style.backgroundColor = "#fff")}
                   >
                     {item.partModel}
                   </li>
@@ -123,25 +203,72 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
             )}
   
           </div>
-  
+          
           <input
             type="text"
             value={part.heciClei}
             onChange={(e) => handleInputChange("heciClei", e.target.value)}
           />
-          <select
-            value={part.mfg}
-            onChange={(e) => handleInputChange("mfg", e.target.value)}
+
+          {/* <select
+            value={isNew ? part.Mfg || "" : part.Mfg || ""} // Use pre-loaded data for the first line
+            onChange={(e) => {
+              if (isNew) handleInputChange("mfg", e.target.value); // Allow changes only for new lines
+            }}
+            // disabled={!isNew} // Disable for the first line
           >
-            <option value={part.mfg}>{part.mfg}</option>
+            <option value="">{isNew ? "Select Mfg" : part.mfg || "Mfg Not Set"}</option>
+            {isNew &&
+              part.mfgOptions?.map((Mfg) => (
+                <option key={Mfg} value={Mfg}>
+                  {Mfg}
+                </option>
+              ))}
           </select>
+
           <select
-            value={part.cond}
-            onChange={(e) => handleInputChange("condition", e.target.value)}
+            value={isNew ? part.cond || "" : part.cond || ""} // Use pre-loaded data for the first line
+            onChange={(e) => {
+              if (isNew) handleInputChange("Cond", e.target.value); // Allow changes only for new lines
+            }}
+            // disabled={!isNew} // Disable for the first line
           >
-            <option value={part.cond}>{part.cond}</option>
-            {/* Additional options */}
-          </select>
+            <option value="">{isNew ? "Select Cond" : part.cond || "Cond Not Set"}</option>
+            {isNew &&
+              part.conditionOptions?.map((Cond) => (
+                <option key={Cond} value={Cond}>
+                  {Cond}
+                </option>
+              ))}
+          </select> */}
+
+<select
+  value={part.mfg || ""}
+  onChange={(e) => handleInputChange("mfg", e.target.value)}
+>
+  <option value="">Select Mfg</option>
+  {part.mfgOptions?.map((Mfg) => (
+    <option key={Mfg} value={Mfg}>
+      {Mfg}
+    </option>
+  ))}
+</select>
+
+<select
+  value={part.cond || ""}
+  onChange={(e) => handleInputChange("cond", e.target.value)}
+>
+  <option value="">Select Cond</option>
+  {part.conditionOptions?.map((Cond) => (
+    <option key={Cond} value={Cond}>
+      {Cond}
+    </option>
+  ))}
+</select>
+
+
+
+
           <input
             type="text"
             value={part.quantity}
