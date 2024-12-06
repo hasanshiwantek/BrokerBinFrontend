@@ -26,8 +26,22 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
       onRemove(part.id);
     };
 
+    const handleInputBlur = () => {
+      setTimeout(() => {
+        if (!part.partModel || part.partModel.trim() === "") {
+          setShowDropdown(false);
+        }
+      }, 200);
+    };
+
     const handleInputChange = (field, value) => {
       onUpdate(part.id, field, value); // Update the selected value in state
+    
+      if (field === "mfg") {
+        // Find conditions for the selected MFG
+        const selectedMfg = part.mfgCondQuantities?.find((item) => item.mfg === value.split(" (")[0]); // Match MFG name without count
+        onUpdate(part.id, "conditionOptions", selectedMfg?.cond || []); // Update Cond options
+      }
     
       if (field === "partModel" && value.trim() !== "") {
         onSearch(value); // Trigger search for partModel
@@ -38,29 +52,26 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
       }
     };
     
-    const handleInputBlur = () => {
-      setTimeout(() => {
-        if (!part.partModel || part.partModel.trim() === "") {
-          setShowDropdown(false);
-        }
-      }, 200);
-    };
-  
     const handleSuggestionSelect = (selectedItem) => {
       console.log("Selected Item:", selectedItem);
     
       // Update partModel
-      onUpdate(part.id, "partModel", selectedItem.partModel);    
-      onUpdate(part.id, "mfgOptions", selectedItem.mfg || []);
-      onUpdate(part.id, "conditionOptions", selectedItem.cond || []);
-      if (selectedItem.mfg?.length) {
-        onUpdate(part.id, "mfg", selectedItem.mfg[0]); // Default to the first MFG option
-      }
-      if (selectedItem.cond?.length) {
-        onUpdate(part.id, "cond", selectedItem.cond[0]); // Default to the first Condition option
+      onUpdate(part.id, "partModel", selectedItem.partModel);
+    
+      // Use backend response for MFG with counts
+      onUpdate(part.id, "mfgOptions", selectedItem.mfg || []); 
+    
+      // Save the full mapping for MFG and Condition
+      onUpdate(part.id, "mfgCondQuantities", selectedItem.mfg_cond_quantities);
+    
+      // Default MFG and Conditions
+      if (selectedItem.mfg_cond_quantities?.length) {
+        const defaultMfg = selectedItem.mfg_cond_quantities[0];
+        onUpdate(part.id, "mfg", `${defaultMfg.mfg} (${defaultMfg.total_quantity})`); // Default MFG with count
+        onUpdate(part.id, "conditionOptions", defaultMfg.cond || []); // Default Cond options
       }
     
-      setShowDropdown(false);
+      setShowDropdown(false); // Close dropdown
     };
     
     useEffect(() => {
@@ -71,7 +82,6 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
         onUpdate(part.id, "conditionOptions", [part.cond]);
       }
     }, [part.mfg, part.cond, part.mfgOptions, part.conditionOptions, onUpdate]);
-    
     
     return (
       <div className={css.rfqBody_Main_left_addParts_Addfields}>
@@ -135,7 +145,6 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
                 ))}
               </ul>
             )}
-  
           </div>
           
           <input
