@@ -4,58 +4,85 @@ import { MdRemoveCircle } from "react-icons/md";
 
 
 
-const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePartModelSearch, searchResponseMatched }) => {
+const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePartModelSearch, isNew, searchResponseMatched }) => {
     const [showDropdown, setShowDropdown] = useState(false)
-    const dropdownRef = useRef(null); // Reference to the dropdown
+    const dropdownRef = useRef(null);
   
-    // This effect sets up a click listener for clicks outside of the dropdown
     useEffect(() => {
       const handleClickOutside = (event) => {
         if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-          setShowDropdown(false); // Close the dropdown if the click is outside
+          setShowDropdown(false); // 
         }
       };
-  
-      // Attach the event listener to the document
       document.addEventListener('mousedown', handleClickOutside);
   
       return () => {
-        // Clean up the event listener when the component unmounts
         document.removeEventListener('mousedown', handleClickOutside);
       };
     }, []);
   
     const handleRemove = (event) => {
-      event.stopPropagation(); // This stops the click event from bubbling up to parent elements.
+      event.stopPropagation(); 
       onRemove(part.id);
     };
-  
-    const handleInputChange = (field, value) => {
-      onUpdate(part.id, field, value); // Update part value in state
-  
-      // Show dropdown only if the field is partModel and value is not empty
-      if (field === "partModel" && value.trim() !== "") {
-        onSearch(value); // Trigger search
-        setShowDropdown(true);
-      } else {
-        setShowDropdown(false);
-      }
-    };
-  
-    // Update onBlur handler to only hide the dropdown if the partModel input is not focused or if it's empty
+
     const handleInputBlur = () => {
       setTimeout(() => {
         if (!part.partModel || part.partModel.trim() === "") {
           setShowDropdown(false);
         }
-      }, 200); // Timeout to catch clicks on dropdown items
+      }, 200);
     };
-  
-    const handleSuggestionSelect = (value) => {
-      onUpdate(part.id, "partModel", value); // Update partModel when a suggestion is selected
-      setShowDropdown(false)
+
+    const handleInputChange = (field, value) => {
+      onUpdate(part.id, field, value); // Update the selected value in state
+    
+      if (field === "mfg") {
+        // Find conditions for the selected MFG
+        const selectedMfg = part.mfgCondQuantities?.find((item) => item.mfg === value.split(" (")[0]); // Match MFG name without count
+        onUpdate(part.id, "conditionOptions", selectedMfg?.cond || []); // Update Cond options
+      }
+    
+      if (field === "partModel" && value.trim() !== "") {
+        onSearch(value); // Trigger search for partModel
+        setShowDropdown(true);
+      } else if (field === "partModel" && value.trim() === "") {
+        onUpdate(part.id, "mfgOptions", []); // Clear MFG options
+        onUpdate(part.id, "conditionOptions", []); // Clear Condition options
+      }
     };
-  
+    
+    const handleSuggestionSelect = (selectedItem) => {
+      console.log("Selected Item:", selectedItem);
+    
+      // Update partModel
+      onUpdate(part.id, "partModel", selectedItem.partModel);
+    
+      // Use backend response for MFG with counts
+      onUpdate(part.id, "mfgOptions", selectedItem.mfg || []); 
+    
+      // Save the full mapping for MFG and Condition
+      onUpdate(part.id, "mfgCondQuantities", selectedItem.mfg_cond_quantities);
+    
+      // Default MFG and Conditions
+      if (selectedItem.mfg_cond_quantities?.length) {
+        const defaultMfg = selectedItem.mfg_cond_quantities[0];
+        onUpdate(part.id, "mfg", `${defaultMfg.mfg} (${defaultMfg.total_quantity})`); // Default MFG with count
+        onUpdate(part.id, "conditionOptions", defaultMfg.cond || []); // Default Cond options
+      }
+    
+      setShowDropdown(false); // Close dropdown
+    };
+    
+    useEffect(() => {
+      if (!part.mfgOptions?.length) {
+        onUpdate(part.id, "mfgOptions", [part.mfg]); // Initialize MFG options with the RFQ data
+      }
+      if (!part.conditionOptions?.length) {
+        onUpdate(part.id, "conditionOptions", [part.cond]);
+      }
+    }, [part.mfg, part.cond, part.mfgOptions, part.conditionOptions, onUpdate]);
+    
     return (
       <div className={css.rfqBody_Main_left_addParts_Addfields}>
         <button type="button" onClick={handleRemove} className={css.removeBtn}  >
@@ -106,42 +133,50 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
                 {searchResponseMatched.map((item) => (
                   <li
                     key={item.id}
-                    onClick={() => handleSuggestionSelect(item.partModel)}
+                    onClick={() => handleSuggestionSelect(item)} // Pass full item
                     style={{
                       padding: "4px",
                       cursor: "pointer",
-  
                       borderBottom: "1px solid #eee",
                     }}
-                  // onMouseOver={(e) => (e.target.style.backgroundColor = "#e6f7ff")}
-                  // onMouseOut={(e) => (e.target.style.backgroundColor = "#fff")}
                   >
                     {item.partModel}
                   </li>
                 ))}
               </ul>
             )}
-  
           </div>
-  
+          
           <input
             type="text"
             value={part.heciClei}
             onChange={(e) => handleInputChange("heciClei", e.target.value)}
           />
+
           <select
-            value={part.mfg}
+            value={part.mfg || ""}
             onChange={(e) => handleInputChange("mfg", e.target.value)}
           >
-            <option value={part.mfg}>{part.mfg}</option>
+            <option value="">Select Mfg</option>
+            {part.mfgOptions?.map((Mfg) => (
+              <option key={Mfg} value={Mfg}>
+                {Mfg}
+              </option>
+            ))}
           </select>
+
           <select
-            value={part.cond}
-            onChange={(e) => handleInputChange("condition", e.target.value)}
+            value={part.cond || ""}
+            onChange={(e) => handleInputChange("cond", e.target.value)}
           >
-            <option value={part.cond}>{part.cond}</option>
-            {/* Additional options */}
+            <option value="">Select Cond</option>
+            {part.conditionOptions?.map((Cond) => (
+              <option key={Cond} value={Cond}>
+                {Cond}
+              </option>
+            ))}
           </select>
+
           <input
             type="text"
             value={part.quantity}
