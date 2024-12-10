@@ -63,7 +63,7 @@ const Add = () => {
 
     try {
       const response = await fetch(
-        "https://phplaravel-1343027-4927440.cloudwaysapps.com/api/inventory/add",
+        "https://brokerbinbackend.shiwantek.com/api/inventory/add",
         {
           method: "POST",
           headers: {
