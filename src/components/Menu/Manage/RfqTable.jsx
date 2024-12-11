@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import css from "../../../styles/Menu/Manage/RfqTable.module.css";
 import { tableData } from "../../../data/tableData";
 import SearchComponent from "../../SearchComponent.jsx";
@@ -14,12 +14,44 @@ import {
   setCurrentPagePrev,
 } from "../../../ReduxStore/RfqSlice.js";
 import { IoMail, IoMailOpen } from "react-icons/io5";
+import { receivedRfq } from "../../../ReduxStore/RfqSlice.js";
+import Cookies from "js-cookie";
+
+
 
 const RfqTable = () => {
+
+ 
+
+
   const { togglePopUp, rfqMail, rfqMailCheckAll, currentPage } = useSelector(
     (state) => state.rfqStore
   );
+
+
+
+
   const dispatch = useDispatch();
+
+  const token = Cookies.get("token");
+
+  const {receiveRfqData}=useSelector((state)=>state.rfqStore)
+  console.log("Data From Page",receiveRfqData)
+  
+
+  const receivedData=receiveRfqData.data
+
+
+  console.log("Data Received",receivedData)
+ 
+  useEffect(()=>{
+    dispatch(receivedRfq({token}))
+  },[])
+
+
+
+
+
 
   const itemsPerPage = 20;
   const sliceTo = currentPage * itemsPerPage;
@@ -80,16 +112,21 @@ const RfqTable = () => {
     }
   };
 
+
   return (
     <>
       <div className={css.layout}>
         <div className={css.tableArea}>
           <div className={css.rfqTable}>
             <div className={css.rfqTableBtn_top}>
-              <button type="button">received({tableData.length})</button>
-              <a href="/cartpart">sent(0)</a>
-              <button type="button">new</button>
-              <button type="button">archive</button>
+
+
+              <a href="/rfq" >received({tableData.length})</a>
+              <a href="/rfqSent">sent(0)</a>
+              <a >new</a>
+              <a >archive</a>
+
+
             </div>
             <div className={css.rfqTableDetail}>
               <SearchComponent />
@@ -117,7 +154,7 @@ const RfqTable = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {currentItems.map((e) => (
+                  {receivedData?.map((e) => (
                     <tr
                       className={css.tableData}
                       key={e.id}
@@ -138,18 +175,24 @@ const RfqTable = () => {
                           }
                         />
                         <p>(0|1)</p>
-                        {!e.read ? <IoMail /> : <IoMailOpen />}
+                        {/* {!e.read ? <IoMail /> : <IoMailOpen />} */}
+                        <img src="https://static.brokerbin.com/version/v8.2.9/images/New.png" alt="" srcset="" />
+                        {/* Open Img: https://static.brokerbin.com/version/v8.2.9/images/Open.png */}
                       </td>
-                      <td>{e.quantity}</td>
-                      <td>{e.model}</td>
+                      <td> {e.quantities.map((item, index) => (
+                                                <td className="mr-2" key={index}>{item}</td>
+                                            ))}</td>
+                      <td> {e.partNumbers.map((item, index) => (
+                                                <td className="mr-2" key={index}>{item}</td>
+                                            ))}</td>
                       <td>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        {e.subject}
                       </td>
-                      <td>{e.from}</td>
+                      <td>{e.from.firstName}  {e.from.lastName}</td>
                       <td>
-                        <a>{e.company}</a>
+                        <a>{e.from.company}</a>
                       </td>
-                      <td>{date}</td>
+                      <td>{e.updated_at}</td>
                     </tr>
                   ))}
                 </tbody>

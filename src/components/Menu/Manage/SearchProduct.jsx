@@ -60,7 +60,7 @@ const SearchProduct = () => {
   } = useSelector((store) => store.searchProductStore);
 
 
-  searchResponseMatched.map((item)=>{console.log("Part Model " +item.partModel)})
+  searchResponseMatched.map((item) => { console.log("Part Model " + item.partModel) })
   // Fetch data whenever 'page' or 'searchString' changes
   useEffect(() => {
     if (!searchString && !partModel) {
@@ -112,7 +112,7 @@ const SearchProduct = () => {
     return <ErrorStatus error={error} />;
   }
 
-  
+
 
   return (
     <div className={css.layout}>
@@ -165,7 +165,7 @@ const ProductTableBtn = React.memo(() => {
       </button>
       {popUpRfq && <MyRFQNew />}
       <button type="button">Add</button>
-      <a href="/cartpart" style={{fontSize:"1em",color:"#444"}}>Cart</a>
+      <a href="/cartpart" style={{ fontSize: "1em", color: "#444" }}>Cart</a>
       <button type="button" onClick={() => dispatch(setFilterToggle())}>
         Filters
       </button>
@@ -288,7 +288,7 @@ const ProductTableDetail = React.memo(() => {
         <tbody>
           {searchResponseMatched?.map((e, i) => (
             <tr className={css.tableData} key={i}
-             > 
+            >
               <td>
                 <input
                   type="checkbox"
@@ -296,12 +296,12 @@ const ProductTableDetail = React.memo(() => {
                   id={e.id}
                   checked={isSelected(e.id)}
                   onChange={() => selectProduct(e.id)}
-                  style={{cursor:"pointer"}}
+                  style={{ cursor: "pointer" }}
                 />
               </td>
               <td></td>
               <td >
-                <a style={{ color: "#428bca" ,fontWeight:"500"} }
+                <a style={{ color: "#428bca", fontWeight: "500" }}
                   onClick={(event) =>
                     handleShowPopupCompanyDetails(event, e.id)
                   }
@@ -365,19 +365,20 @@ const ProductTableDetail = React.memo(() => {
           </tr>
         </tfoot>
       </table>
-      <div className={css.tablePagination}>
-        <button type="button" onClick={handlePrevPage} disabled={page === 1}>
-          ⬅️
+      <div className={`${css.tablePagination} `}>
+        <button type="button" onClick={handlePrevPage} disabled={page === 1} className="text-white text-sm font-bold">
+          Prev
         </button>
-        <span>
+        <span className="text-white text-sm font-bold">
           {page}/{totalPages}
         </span>
         <button
+          className="text-white text-sm font-bold"
           type="button"
           onClick={handleNextPage}
           disabled={page === totalPages}
         >
-          ➡️
+          Next
         </button>
       </div>
     </div>

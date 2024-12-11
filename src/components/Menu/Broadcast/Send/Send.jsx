@@ -271,21 +271,21 @@ const BroadcastForm = () => {
                     className={broadcastType === "wtb" ? css.selected : ""}
                     onClick={() => setBroadcastType("wtb")}
                   >
-                    <span style={{ color: "blue", fontSize: "2rem", fontWeight: "bold" }}>WTB</span>
+                    <span style={{ color: "blue", fontSize: "2rem", fontWeight: "600" }}>WTB</span>
                     <span>Want to Buy</span>
                   </button>
                   <button
                     className={broadcastType === "rfq" ? css.selected : ""}
                     onClick={() => setBroadcastType("rfq")}
                   >
-                    <span style={{ color: "green", fontSize: "2rem", fontWeight: "bold" }}>RFQ</span>
+                    <span style={{ color: "green", fontSize: "2rem", fontWeight: "600" }}>RFQ</span>
                     <span>Request for Quote</span>
                   </button>
                   <button
                     className={broadcastType === "wts" ? css.selected : ""}
                     onClick={() => setBroadcastType("wts")}
                   >
-                    <span style={{ color: "red", fontSize: "2rem", fontWeight: "bold" }}>WTS</span>
+                    <span style={{ color: "red", fontSize: "2rem", fontWeight: "600" }}>WTS</span>
                     <span>Want to Sell</span>
                   </button>
                 </div>
@@ -299,7 +299,7 @@ const BroadcastForm = () => {
                     }
                     onClick={() => setCategory("single part / items")}
                   >
-                    <span>Single Part / Item</span>
+                    <span className={css.sendTitle}>Single Part / Item</span>
                     <span>attach files or paste text</span>
                     <small>(pdf, csv, xlsx, txt, photos, datasheets)</small>
                   </button>
@@ -307,7 +307,7 @@ const BroadcastForm = () => {
                     className={category === "service" ? css.selected : ""}
                     onClick={() => setCategory("service")}
                   >
-                    <span>Service</span>
+                    <span className={css.sendTitle}>Service</span>
                     <span>attach files or paste text</span>
                     <small>(pdf, csv, xlsx, txt, photos, datasheets)</small>
                   </button>
@@ -317,7 +317,7 @@ const BroadcastForm = () => {
                     }
                     onClick={() => setCategory("multiple parts / items")}
                   >
-                    <span>Multiple Parts / Items</span>
+                    <span className={css.sendTitle}>Multiple Parts / Items</span>
                     <span>attach files or paste text</span>
                     <small>(pdf, csv, xlsx, txt, photos, datasheets)</small>
                   </button>
@@ -325,7 +325,7 @@ const BroadcastForm = () => {
               </div>
             </div>
             <div className={css.actions}>
-              <button onClick={cancelAllActions}>Cancel</button>
+              <button onClick={cancelAllActions} className={css.cancelBtn}>Cancel</button>
               <button
                 onClick={handleContinue}
                 disabled={!broadcastType || !category}
