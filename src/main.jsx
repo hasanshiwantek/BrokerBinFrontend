@@ -29,6 +29,9 @@ const CompanyDetails = lazy(() =>
   import("./components/Popups/CompanyDetails/CompanyDetails.jsx")
 );
 const MyRFQ = lazy(() => import("./components/Menu/Manage/MyRFQ.jsx"));
+
+const RfqSent= lazy(() => import("./components/Menu/Manage/RfqSent.jsx"));
+
 const Inventory = lazy(() =>
   import("./components/Menu/Manage/Inventory/Inventory.jsx")
 );
@@ -277,6 +280,16 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <MyRFQ />
+            <Footer />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/rfqSent",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <RfqSent />
             <Footer />
           </Suspense>
         ),

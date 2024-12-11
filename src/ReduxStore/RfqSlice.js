@@ -2,9 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { brokerAPI } from "../components/api/BrokerEndpoint";
 import axios from "axios";
 
-
-
-
 export const addRecipients = createAsyncThunk(
   "rfqStore/addRecipients",
   async ({ token, search }) => {
@@ -98,6 +95,59 @@ export const submitRfq = createAsyncThunk(
 
 
 
+export const receivedRfq = createAsyncThunk(
+  "searchProductStore/receivedRfq",
+  async ({ token }) => {
+    console.log("Token:", token);
+
+    try {
+      const response = await axios.get(
+        `${brokerAPI}rfq/received`, 
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,  // Token passed correctly in headers
+          },
+        }
+      );
+
+      console.log("RFQ from backend", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error Fetching RFQ received data:", error.response?.data || error.message);
+      throw new Error("Error while sending broadcast: " + (error.response?.data || error.message));
+    }
+  }
+);
+
+
+export const sentRfq = createAsyncThunk(
+  "searchProductStore/sentRfq",
+  async ({ token }) => {
+    console.log("Token:", token);
+
+    try {
+      const response = await axios.get(
+        `${brokerAPI}rfq/sent`, 
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,  // Token passed correctly in headers
+          },
+        }
+      );
+
+      console.log("Sent RFQ from backend", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error Fetching RFQ Sent data:", error.response?.data || error.message);
+    }
+  }
+);
+
+
+
+
 const initialState = {
   togglePopUp: false,
   rfqMailCheckAll: false,
@@ -106,6 +156,8 @@ const initialState = {
   rfqMail: [],
   searchResults: [],
   searchResponseMatched: [],
+  receiveRfqData:[],
+  sentRfqData:[]
 };
 
 const RfqSlice = createSlice({
@@ -174,6 +226,28 @@ const RfqSlice = createSlice({
         state.error = action.error.message;
         console.error("Error while searching:", action.error.message);
         state.gettingProducts = false; // Set to false if the fetch fails
+      })
+      .addCase(receivedRfq.pending, (state) => {
+        console.log("Pending....")
+      })
+      .addCase(receivedRfq.fulfilled, (state, action) => {
+        state.receiveRfqData=action.payload
+        console.log("PAYLOAD "+ action.payload)
+
+      })
+      .addCase(receivedRfq.rejected, (state, action) => {
+        console.error("Error while Fetching Received Data");
+      })
+      .addCase(sentRfq.pending, (state) => {
+        console.log("Pending....")
+      })
+      .addCase(sentRfq.fulfilled, (state, action) => {
+        state.sentRfqData =action.payload
+        console.log("PAYLOAD "+ action.payload)
+
+      })
+      .addCase(sentRfq.rejected, (state, action) => {
+        console.error("Error while Fetching Sent Data");
       })
 
   },

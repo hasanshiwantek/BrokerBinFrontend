@@ -25,7 +25,10 @@ const Login = () => {
     const data = Object.fromEntries(formData.entries());
     try {
       const response = await fetch(
+<<<<<<< HEAD
+=======
         // "https://brokerbinbackend.shiwantek.com/api/user/",
+>>>>>>> f84b24171e628463c8568e4a666e75c6de20a4dd
         "https://brokerbinbackend.shiwantek.com/api/user/login",
 
         {
