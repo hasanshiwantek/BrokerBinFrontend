@@ -172,12 +172,12 @@ const RfqTable = () => {
                                                         rfqMailCheckAll
                                                     }
                                                 />
-                                                <p>(0|1)</p>
+                                                <td>(0|1)</td>
                                                 {/* {!e.read ? <IoMail /> : <IoMailOpen />} */}
                                                 <img src="https://static.brokerbin.com/version/v8.2.9/images/New.png" alt="" srcset="" />
                                             </td>
                                             <td>{e.quantities}</td>
-                                            <td>{e.partNumbers}</td>
+                                            <td>{e.partNumbers[0]}</td>
                                             <td>
                                                 {e.subject}
                                             </td>

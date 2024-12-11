@@ -94,7 +94,7 @@
     tbody {
       > tr {
         td {
-          padding: 0.5rem;
+          padding: 0.8px 5px;
           svg {
             height: 1.5rem;
             width: 1.5rem;
@@ -175,11 +175,13 @@
 .rfqTableDetail table tbody td{
   font-size: 8pt !important;
   color: #444 !important;
-  font-weight: 550 !important;
+  font-weight: 700 !important;
 }
 
 .rfqTableDetail table thead th{
   font-size: 8pt !important;
+  font-weight: 700 !important;
+
 }
 
 .rfqTableDetail table tbody td a{

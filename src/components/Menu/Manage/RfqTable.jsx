@@ -174,7 +174,8 @@ const RfqTable = () => {
                             rfqMailCheckAll
                           }
                         />
-                        <p>(0|1)</p>
+                        <td>(0|1)</td>
+                        
                         {/* {!e.read ? <IoMail /> : <IoMailOpen />} */}
                         <img src="https://static.brokerbin.com/version/v8.2.9/images/New.png" alt="" srcset="" />
                         {/* Open Img: https://static.brokerbin.com/version/v8.2.9/images/Open.png */}
@@ -182,9 +183,10 @@ const RfqTable = () => {
                       <td> {e.quantities.map((item, index) => (
                                                 <td className="mr-2" key={index}>{item}</td>
                                             ))}</td>
-                      <td> {e.partNumbers.map((item, index) => (
-                                                <td className="mr-2" key={index}>{item}</td>
-                                            ))}</td>
+                 {/* <td>{e.partNumbers[0]}</td> */}
+                 <td>{
+                  e.partNumbers.length > 1 ? (`${e.partNumbers.length} part`): (e.partNumbers[0])
+                  }</td>
                       <td>
                         {e.subject}
                       </td>
