@@ -6,8 +6,6 @@ import { MdRemoveCircle } from "react-icons/md";
 
 const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePartModelSearch, isNew, searchResponseMatched }) => {
     const [showDropdown, setShowDropdown] = useState(false)
-    // const [loading,setLoading]=useState(false)
-
     const dropdownRef = useRef(null);
   
     useEffect(() => {
@@ -36,38 +34,23 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
       }, 200);
     };
 
-    // const handleInputChange = (field, value) => {
-    //   onUpdate(part.id, field, value); // Update the selected value in state
+    const handleInputChange = (field, value) => {
+      onUpdate(part.id, field, value); // Update the selected value in state
     
-    //   if (field === "mfg") {
-    //     // Find conditions for the selected MFG
-    //     const selectedMfg = part.mfgCondQuantities?.find((item) => item.mfg === value.split(" (")[0]); // Match MFG name without count
-    //     onUpdate(part.id, "conditionOptions", selectedMfg?.cond || []); // Update Cond options
-    //   }
+      if (field === "mfg") {
+        // Find conditions for the selected MFG
+        const selectedMfg = part.mfgCondQuantities?.find((item) => item.mfg === value.split(" (")[0]); // Match MFG name without count
+        onUpdate(part.id, "conditionOptions", selectedMfg?.cond || []); // Update Cond options
+      }
     
-    //   if (field === "partModel" && value.trim() !== "") {
-    //     onSearch(value); // Trigger search for partModel
-    //     setShowDropdown(true);
-    //   } else if (field === "partModel" && value.trim() === "") {
-    //     onUpdate(part.id, "mfgOptions", []); // Clear MFG options
-    //     onUpdate(part.id, "conditionOptions", []); // Clear Condition options
-    //   }
-    // };
-    
-
-    const handleInputChange = async (field, value) => {
-      onUpdate(part.id, field, value);
-      if (field === "partModel") {
-        if (value.trim() !== "") {
-          setShowDropdown(true);
-          await onSearch(value);
-        } else {
-          setShowDropdown(false);
-        }
+      if (field === "partModel" && value.trim() !== "") {
+        onSearch(value); // Trigger search for partModel
+        setShowDropdown(true);
+      } else if (field === "partModel" && value.trim() === "") {
+        onUpdate(part.id, "mfgOptions", []); // Clear MFG options
+        onUpdate(part.id, "conditionOptions", []); // Clear Condition options
       }
     };
-  
-
     
     const handleSuggestionSelect = (selectedItem) => {
       console.log("Selected Item:", selectedItem);
@@ -161,9 +144,7 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
                   </li>
                 ))}
               </ul>
-           )} 
-
-
+            )}
           </div>
           
           <input
