@@ -296,12 +296,12 @@ const MyRFQNew = () => {
                 <div className={css.rfqBody_Header}>
                   <ul>
                     <li>
-                      <a href="/rfq">
+                      <a href="/">
                         received({total}|{received})
                       </a>
                     </li>
                     <li>
-                      <a href="/rfqSent">sent({sent})</a>
+                      <a href="/">sent({sent})</a>
                     </li>
                     <li>
                       <a href="/" style={{ color: " rgb(102, 142, 252)" }}>new</a>
