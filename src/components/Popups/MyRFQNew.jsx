@@ -623,25 +623,3 @@ const MyRFQNew = () => {
 };
 
 export default MyRFQNew;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

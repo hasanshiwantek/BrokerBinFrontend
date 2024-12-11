@@ -64,8 +64,6 @@ export const searchProductQuery = createAsyncThunk(
 );
 
 
-
-
 export const submitRfq = createAsyncThunk(
   "searchProductStore/submitRfq ",
   async ({ token, data }) => {
