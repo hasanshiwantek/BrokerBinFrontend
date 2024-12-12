@@ -96,6 +96,7 @@ const RfqTablePopUp = ({ type }) => {
                       "N/A"
                     );
                   })()}
+
               </p>
             </div>
           );
