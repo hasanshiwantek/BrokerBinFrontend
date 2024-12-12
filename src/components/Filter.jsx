@@ -241,7 +241,7 @@ import {
   searchProductFilter,
   setFilterToggle,
 } from "../ReduxStore/SearchProductSlice";
-import { useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 const Filter = () => {
   const [collapsedSections, setCollapsedSections] = useState({
@@ -324,7 +324,7 @@ const Filter = () => {
         <div>
           <button
             type="button"
-            style={{ color: "#428bca", fontWeight: "600" }}
+            style={{ color: "#428bca", fontWeight: "600" ,fontSize:"14px" }}
             onClick={() => dispatch(setFilterToggle())}
           >
             Advanced Filters
@@ -441,7 +441,7 @@ const Filter = () => {
         </div>
 
         {/* Submit Button */}
-        <input type="submit" id={css.applyFilter} value="Apply Filters" />
+        <input type="submit" id={css.applyFilter} value="Apply Filters" className={css.applyFilterBtn} />
       </form>
 
       {/* Search History Section */}
@@ -495,7 +495,11 @@ const Filter = () => {
           </div>
         )}
         <span id={css.customizeDisplayBtn}>
-          <button type="button">Customize Display</button>
+          <button type="button">
+            <NavLink to={"/myprofile/Options"}>
+            Customize Display
+            </NavLink>
+            </button>
         </span>
       </div>
     </div>

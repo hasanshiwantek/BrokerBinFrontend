@@ -329,7 +329,7 @@ const Header = () => {
               <BiSolidUpArrow className={css.onHoverMenuIconUp} />
 
               <div className={css.dropdownMenu} style={{marginLeft:"10px"}}>
-                <ul>
+                <ul style={{minWidth:"30px"}}>
                   <Link to={"/myprofile/MyVendors"}>
                     <li>
                       <img src={dp1} alt="" srcset="" />........

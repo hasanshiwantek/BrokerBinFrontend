@@ -197,6 +197,11 @@ input{
   font-weight: bold;
 }   
 
+.profileInfo_links a:hover{
+  color: #428bca;
+
+}
+
 
 .footerlinks{
   display: flex;

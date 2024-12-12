@@ -23,6 +23,8 @@
 .productTableDetail {
   padding: 1rem;
   background: var(--table-bg-color);
+
+  /* width: 115%; */
   > :first-child {
     font-size: 1.5rem;
     color: white;
@@ -74,13 +76,13 @@
 }
 
 .tableArea {
-  margin: 5rem 2rem;
-  /* width: 70%; */
+  margin: 2rem 2rem;
+  width: 105%;
 }
 .productTable {
   background-color: var(--table-outer-color);
   padding: 0 1rem;
-  margin-bottom: 20rem;
+  margin-bottom: 10rem;
 }
 
 .tablePagination {
@@ -103,6 +105,7 @@
     background: #e8e8e8;
     padding: 2rem;
     width: fit-content;
+    margin: 10px;
     &_bg {
       background: #bfbfbf;
       color: white;
@@ -173,4 +176,14 @@
 
 .productTableDetail table tr:nth-child(even) td {
   background-color: #ffffff; /* White for even rows */
+}
+
+.searchProductAddToHotList_main_bg {
+  padding: 5px;
+  border-radius: 10px;
+}
+.searchProductAddToHotList_main_bg span , label{
+  font-size: 9pt;
+  font-weight: 500;
+  padding: 3px;
 }

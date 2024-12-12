@@ -420,7 +420,9 @@ const submitInventoryBtn = (e) => {
             value="send file"
             oncClick={submitInventoryBtn}
             className={css.inventory_main_submitBtn}
-          />
+          >
+            Send File
+          </button>
           <h1 className={css.inventory_main_AutoUploadh1}>Auto Uploads</h1>
         </form>
         <ScheduleNewUpload />

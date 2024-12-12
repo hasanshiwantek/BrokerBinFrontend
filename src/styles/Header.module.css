@@ -89,8 +89,9 @@ button {
       position: relative;
       display: flex;
       align-items: center;
-      font-size: 1.5rem;
-      padding: 0.3rem 1.5rem;
+      font-size: 14px;
+      font-weight: 400;
+      padding: 5px 16px;
       color: var(--font-color);
     }
 
@@ -106,13 +107,15 @@ button {
   }
 }
 
-.navbar_search_options {
+.navbar_search_options  {
   color: black !important;
+  background-color: var(--primary-color) ;
 
 }
 
 .nav {
   position: relative;
+  height: 31px !important;
 }
 
 .nav_tools {
@@ -138,20 +141,23 @@ button {
   ul {
     width: max-content;
   background: #e8e8e8;
-
+  /* padding: 2px 10px; */
+  min-width: 150px;
 
     li {
       padding: 1rem;
+      text-align: left;
     }
   }
 }
+
 
 nav>ul>li:hover .dropdownMenu {
   display: block;
   position: absolute;
   top: 100%;
   left: 0;
-  background-color: var(--dropdown-bg-color);
+  background-color:  #bf501a;
   color: black;
   box-shadow: 1px 1px 1rem 1px var(--box-shadow);
   z-index: 1;
@@ -159,7 +165,7 @@ nav>ul>li:hover .dropdownMenu {
   ul {
     li:hover {
       color: var(--font-color);
-      background: var(--primary-color);
+      background-color:  #bf501a;
     }
   }
 }
