@@ -2,8 +2,11 @@ import React, { useEffect } from "react";
 import css from "../../styles/Popup/RfqTablePopUp.module.css";
 import { setTogglePopUp } from "../../ReduxStore/RfqSlice";
 import { useDispatch, useSelector } from "react-redux";
+import Cookies from "js-cookie";
+import { fetchUserData } from "../../ReduxStore/ProfleSlice";
 
-const RfqTablePopUp = () => {
+
+const RfqTablePopUp = ({ type }) => {
   const { rfqPopBoxInfo } = useSelector((state) => state.rfqStore);
   const dispatch = useDispatch();
 
@@ -28,32 +31,84 @@ const RfqTablePopUp = () => {
       document.removeEventListener("click", handleClickOutside);
       document.removeEventListener("keydown", escKeyToggle);
     };
-  }, [setTogglePopUp]);
+  }, [dispatch]);
 
   const printRfq = () => {
     window.print();
   };
 
+  const { blurWhileLoading, initialData, user, error} = useSelector(
+      (state) => state.profileStore
+    );
+    console.log("User Data",initialData)
+    const user_id = Cookies.get("user_id");
+
+    const id = user?.user?.id || user_id;
+    useEffect(() => {
+      console.log("Logged in userid",id);
+      dispatch(fetchUserData({ id, token }));
+    }, []);
+
+    const token = Cookies.get("token")
+
+
+  const loggedInEmail = Cookies.get("email");
+  console.log("Logged-in User's Email:", loggedInEmail);
+
   return (
     <div className={css.RfqTablePopUp}>
       <div className={css.RfqTablePopUp_body}>
         <div className={css.RfqTablePopUp_body_closeBtn}>
-          <button type="button" onClick={() => setTogglePopUp((prev) => !prev)}>
+          <button type="button" onClick={() => dispatch(setTogglePopUp())}>
             close
           </button>
         </div>
-        {rfqPopBoxInfo.map((item) => {
+        {rfqPopBoxInfo.map((item, index) => {
           return (
             <div key={item.id} className={css.RfqTablePopUp_body_mail}>
-              <label>to:</label>
-              <p>{item.to}</p>
-              <label>from:</label>
-              <p>{item.from}</p>
+              <label>{type === "sent" ? "to:" : "from:"}</label>
+              <p>
+                {type === "sent" && Array.isArray(item.to)
+                  ? item.to.map((user, idx) => (
+                      <span key={idx}>
+                        {user.firstName} - {user.company}
+                        {idx < item.to.length - 1 && ", "}
+                      </span>
+                    ))
+                  : item.from
+                  ? `${item.from.firstName} - ${item.from.company}`
+                  : "N/A"}
+              </p>
+              <label>{type === "sent" ? "from:" : "to:"}</label>
+              <p>
+              {type === "sent"
+                ? "Me"
+                : (() => {
+                    const loggedInEmail = Cookies.get("email"); // Fetch logged-in user's email
+                    const userSpecificBcc = Array.isArray(item.bcc)
+                      ? item.bcc.filter((email) => email === loggedInEmail)
+                      : [];
+                    return userSpecificBcc.length > 0 ? (
+                      userSpecificBcc.map((email, idx) => (
+                        <span key={idx}>{email}</span>
+                      ))
+                    ) : (
+                      "N/A"
+                    );
+                  })()}
+
+              </p>
             </div>
           );
         })}
+
+
         <div className={css.RfqTablePopUp_body_content}>
-          <strong>their_request - Still looking for these parts? (New)</strong>
+          <strong>
+            {type === "sent"
+              ? "their_request - Still looking for these parts? (Sent)"
+              : "their_request - Received these parts? (Received)"}
+          </strong>
           <table>
             <thead>
               <tr>
@@ -69,34 +124,55 @@ const RfqTablePopUp = () => {
             <tbody>
               {rfqPopBoxInfo.map((item) => {
                 return (
-                  <tr key={item.id}>
-                    <td>
-                      <u>{item.model}</u>
-                    </td>
-                    <td>no</td>
-                    <td>{item.mfg}</td>
-                    <td>{item.cond}</td>
-                    <td>{item.quantity}</td>
-                    <td>{item.price}</td>
-                    <td>yes</td>
-                  </tr>
+                  <React.Fragment key={item.id}>
+                    {item.partNumbers.map((partNumber, index) => (
+                      <tr key={`${item.id}-${index}`}>
+                        <td>
+                          <u>{partNumber}</u>
+                        </td>
+                        <td></td>
+                        <td>{item.mfgs[index] || "N/A"}</td>
+                        <td>{item.conditions[index] || "N/A"}</td>
+                        <td>{item.quantities[index] || "N/A"}</td>
+                        <td>{item.targetPrices[index] || "N/A"}</td>
+                        <td>{item.terms[index] || "N/A"}</td>
+                      </tr>
+                    ))}
+                  </React.Fragment>
                 );
               })}
             </tbody>
             <tfoot>
               <tr>
-                <td>notes</td>
+                <td className="pt-2">notes</td>
                 <td>
-                  <span>
-                    I see you are looking for the following parts. Ready in
-                    stock and taking no regret offers. Brand new in box and
-                    clean serial numbers.
-                  </span>
+                <span>
+                {rfqPopBoxInfo.map((item) => (
+                  <React.Fragment key={item.id}>
+                    {item.comment && (
+                      <div dangerouslySetInnerHTML={{ __html: item.comment }}></div>
+                    )}
+                  </React.Fragment>
+                ))}
+                </span>
                   <span> --------------- </span>
-                  <span>Reclaim UK</span>
-                  <span>Reclaim Services </span>
-                  <span> P: 44 (0)162-2236205 </span>
-                  <span>reclaim.brokerbin@gmail.com</span>
+                  {type === "sent" ? (
+                  <>
+                    <span>{initialData.firstName || "NA"}</span>
+                    <span>{initialData.company || "NA"}</span>
+                    <span>{initialData.email || "NA"}</span>
+                    <span>{initialData.user_id || "NA"}</span>
+                  </>
+                ) : (
+                  rfqPopBoxInfo.map((item, index) => (
+                    <div key={index}>
+                      <span>{item.from?.firstName || "NA"}</span> {/* Sender's Name */}
+                      <span>{item.from?.company || "NA"}</span> {/* Sender's Company */}
+                      <span>{item.from?.email || "NA"}</span> {/* Sender's Email */}
+                    </div>
+                  ))
+                )}
+
                 </td>
               </tr>
             </tfoot>
@@ -114,5 +190,8 @@ const RfqTablePopUp = () => {
     </div>
   );
 };
+
+// export default RfqTablePopUp;
+
 
 export default RfqTablePopUp;

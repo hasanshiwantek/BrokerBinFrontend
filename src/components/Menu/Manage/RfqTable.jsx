@@ -40,7 +40,8 @@ const RfqTable = () => {
   console.log("Data From Page",receiveRfqData)
   
 
-  const receivedData=receiveRfqData.data
+  const receivedData=receiveRfqData.data || [];
+  console.log("RECEIVEDDATA", receivedData)
 
 
   console.log("Data Received",receivedData)
@@ -57,7 +58,9 @@ const RfqTable = () => {
   const itemsPerPage = 20;
   const sliceTo = currentPage * itemsPerPage;
   const sliceFrom = sliceTo - itemsPerPage;
-  const currentItems = tableData.slice(sliceFrom, sliceTo);
+
+  const currentItems = receivedData.slice(sliceFrom, sliceTo);
+    console.log("CURRENT ITEMS", currentItems)
 
   const prevPage = () => {
     if (currentPage === 1) {
@@ -286,7 +289,7 @@ const RfqTable = () => {
           </div>
         </div>
       </div>
-      {togglePopUp && <RfqTablePopUp />}
+      {togglePopUp && <RfqTablePopUp type="received" />}
     </>
   );
 };

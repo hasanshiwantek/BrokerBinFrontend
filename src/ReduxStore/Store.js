@@ -7,6 +7,7 @@ import searchProductReducer from "./SearchProductSlice";
 import broadcastReducer from "./BroadCast";
 import ToolsReducer from "./ToolsSlice";
 import ReportsReducer from "./Reports";
+import userReducer from "./UserSlice";
 
 const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ const store = configureStore({
     broadcastStore: broadcastReducer,
     toolsStore: ToolsReducer,
     reports: ReportsReducer,
+    userStore: userReducer,
   },
 });
 

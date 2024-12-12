@@ -40,7 +40,10 @@ const RfqTable = () => {
     console.log("Data From Page", sentRfqData)
 
 
-    const sentData = sentRfqData.data
+    const sentData = sentRfqData.data || [];
+    console.log("SENDATA", sentData)
+
+    
 
 
     const companyData = sentData?.to?.map((item) => item)
@@ -60,7 +63,8 @@ const RfqTable = () => {
     const itemsPerPage = 20;
     const sliceTo = currentPage * itemsPerPage;
     const sliceFrom = sliceTo - itemsPerPage;
-    const currentItems = tableData.slice(sliceFrom, sliceTo);
+    const currentItems = sentData.slice(sliceFrom, sliceTo);
+    console.log("CURRENT ITEMS", currentItems)
 
     const prevPage = () => {
         if (currentPage === 1) {
@@ -89,12 +93,30 @@ const RfqTable = () => {
         `AM`
         } ${now.getDate()}/${now.getMonth()}/${now.getFullYear()}`;
 
-    const handleShowPopupRfq = (event, { id }) => {
-        event.stopPropagation(); // Prevent the event from propagating to the row click event
-        dispatch(setTogglePopUp());
-        dispatch(setRfqPopBoxInfo(currentItems.filter((item) => item.id === id)));
-    };
+    // const handleShowPopupRfq = (event, { id }) => {
+    //     event.stopPropagation(); // Prevent the event from propagating to the row click event
+    //     dispatch(setTogglePopUp());
+    //     dispatch(setRfqPopBoxInfo(currentItems.filter((item) => item.id === id)));
+    // };
 
+    const handleShowPopupRfq = (event, { id }) => {
+        event.stopPropagation();
+    
+        console.log("ID Passed:", id);
+        console.log("Current ITEMS Available:", currentItems);
+    
+        const filteredData = currentItems.filter((item) => item.id == id); // Use == for loose comparison
+        console.log("Filtered Data:", filteredData); // Should now show the filtered result
+    
+        dispatch(setTogglePopUp());
+        dispatch(setRfqPopBoxInfo(filteredData));
+    };
+    
+    
+    
+    
+
+    
     const handleCheckboxClick = (event, id) => {
         event.stopPropagation(); // Prevent the event from propagating to the row click event
         if (event.target.checked) {
@@ -189,6 +211,7 @@ const RfqTable = () => {
                                             className={css.tableData}
                                             key={e.id}
                                             onClick={(event) => {
+                                                console.log("Row Clicked")
                                                 handleShowPopupRfq(event, e);
                                             }}
                                         >
@@ -264,7 +287,7 @@ const RfqTable = () => {
                     </div>
                 </div>
             </div>
-            {togglePopUp && <RfqTablePopUp />}
+            {togglePopUp && <RfqTablePopUp type="sent" />}
         </>
     );
 };
