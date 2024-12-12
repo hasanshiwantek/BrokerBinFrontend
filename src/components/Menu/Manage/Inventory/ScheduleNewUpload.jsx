@@ -41,7 +41,7 @@ const ScheduleNewUpload = () => {
               </span>
               <span>
                 <label>uploader</label>
-                <input type="text" name="uploader" />
+                <input type="text" name="uploader"  style={{padding:"3px"}}/>
               </span>
             </div>
             <div className={css.inventory_main_scheduleUpload_addFile}>

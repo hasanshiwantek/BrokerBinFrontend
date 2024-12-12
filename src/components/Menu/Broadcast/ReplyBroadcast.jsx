@@ -143,7 +143,7 @@ const ReplyBroad = () => {
             <main className={myProfile.profileInfo}>
                 <nav className='menu-bar'>
                     <ul>
-                        <li><Link to={'/'}>Reply</Link></li>
+                        <li style={{color:"#428bca"}}><Link to={'/'}>Reply</Link></li>
                         <li><Link to={'/sendbroad'}>Send</Link></li>
                         <li><Link to={'/broadcasts'}>View</Link></li>
                         <li><Link to={"/myprofile/broadcastfilter"}>Set Filters</Link></li>

@@ -75,6 +75,7 @@
     }
   }
 
+
   table {
     width: 100%;
     th {
@@ -89,12 +90,13 @@
     }
     th,
     td {
-      padding: 0 0.8rem;
+      padding: 0.3 0.8rem;
+      cursor: pointer;
     }
     tbody {
       > tr {
         td {
-          padding: 0.8px 5px;
+          padding: 1.2px 5px;
           svg {
             height: 1.5rem;
             width: 1.5rem;
@@ -109,6 +111,15 @@
       }
     }
   }
+}
+
+
+.rfqTableDetail table th:hover{
+  color: black;
+}
+
+.rfqTableDetailBottom  tr th{
+  font-size: 8pt;
 }
 
 .tableArea {

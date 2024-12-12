@@ -112,7 +112,15 @@ const SearchProduct = () => {
     return <ErrorStatus error={error} />;
   }
 
-
+// if (!partModel) {
+//   return (
+//     <h2>
+//       No results found for Selected part model{" "}
+//       {partModel ? partModel : "N/A"}.
+//       <AddToHotList item={searchString} key={searchString} />
+//     </h2>
+//   );
+// }
 
   return (
     <div className={css.layout}>
@@ -137,7 +145,7 @@ const SearchProduct = () => {
               <ProductTableBtn />
               <ProductTableDetail />
             </div>
-            {companiesListingParts && <CompaniesListingParts />}
+            {/* {companiesListingParts && <CompaniesListingParts />} */}
           </div>
         )}
       </div>
@@ -341,7 +349,7 @@ const ProductTableDetail = React.memo(() => {
               <td>{e.price}</td>
               <td>{e.quantity}</td>
               <td>{e.age}</td>
-              <td>{e.productDescription.slice(0, 80)}...</td>
+              <td>{e.productDescription}</td>
             </tr>
           ))}
         </tbody>
@@ -366,14 +374,14 @@ const ProductTableDetail = React.memo(() => {
         </tfoot>
       </table>
       <div className={`${css.tablePagination} `}>
-        <button type="button" onClick={handlePrevPage} disabled={page === 1} className="text-white text-sm font-bold">
+        <button type="button" onClick={handlePrevPage} disabled={page === 1} className="text-white text-lg font-bold">
           Prev
         </button>
-        <span className="text-white text-sm font-bold">
+        <span className="text-white text-lg font-bold ">
           {page}/{totalPages}
         </span>
         <button
-          className="text-white text-sm font-bold"
+          className="text-white text-lg font-bold"
           type="button"
           onClick={handleNextPage}
           disabled={page === totalPages}
@@ -386,3 +394,43 @@ const ProductTableDetail = React.memo(() => {
 });
 
 export default SearchProduct;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

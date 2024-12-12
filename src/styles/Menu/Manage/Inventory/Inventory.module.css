@@ -202,7 +202,9 @@
     }
     tbody {
       background: white;
+      padding: 4px 7px;
     }
+
   }
   &_top {
     display: flex;
@@ -223,6 +225,13 @@
   }
 }
 
+.editDeleteTable table tbody td{
+  padding: 2px;
+  font-size: 8pt;
+  font-weight: 400;
+}
+
+
 .inventory_add {
   &_main {
     table {
@@ -237,10 +246,13 @@
         select {
           height: 3rem;
           /* padding: 1rem; */
-          font-size: 1.2rem;
+          font-size: 9pt;
+          font-weight: 500;
         }
       }
     }
+
+
     &_top {
       display: flex;
       justify-content: space-between;
@@ -398,7 +410,8 @@
   padding-bottom: 5rem;
   p {
     margin-top: 1rem;
-    font-size: 1.5rem;
+    font-size: 8pt;
+    font-weight: 400;
   }
   span {
     display: grid;
@@ -406,7 +419,8 @@
     /* gap: 2rem; */
     align-items: center;
     label {
-      font-size: 1.5rem;
+      font-size: 8pt;
+      font-weight: 400;
     }
   }
   &_step1 {
@@ -427,7 +441,8 @@
   }
   &_step3 {
     select {
-      font-size: 1.5rem;
+      font-size: 8pt;
+      font-weight: 400;
       text-transform: capitalize;
     }
   }
@@ -462,4 +477,20 @@ gap:80px;
 .vendorContent h2{
   font-weight: bold;
   font-size: 1.8rem;
+}
+
+
+.inventory_main_scheduleUpload_toggle{
+  box-shadow: 0 .125em .25em hsla(0, 0%, 4) 
+}
+
+.editDeleteTable_top{
+  padding: 4px 8px;
+  gap: 8px;
+
+
+}
+
+.inventory button{
+  padding: 3px 6px;
 }

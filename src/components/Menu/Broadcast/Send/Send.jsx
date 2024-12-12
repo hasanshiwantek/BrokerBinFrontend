@@ -699,7 +699,7 @@ const BroadcastForm = () => {
                     type="button"
                     value="SEND"
                     style={{ cursor: "pointer" }}
-                    onClick={handleSubmit} // Directly call handleSubmit here
+                    onClick={handleSubmit} 
                   />
                 </span>
               </div>

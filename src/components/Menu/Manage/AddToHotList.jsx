@@ -18,7 +18,7 @@ const AddToHotList = ({ item }) => {
 
   return (
     <div className={css.searchProductAddToHotList}>
-      <p>No Match Found</p>
+      <p style={{fontSize:"9pt",fontWeight:"600"}}>No Match Found</p>
       <div className={css.searchProductAddToHotList_main}>
         <form onSubmit={itemAddToHotList}>
           <div className={css.searchProductAddToHotList_main_bg}>

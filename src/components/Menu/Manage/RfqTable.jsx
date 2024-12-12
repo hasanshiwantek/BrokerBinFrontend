@@ -16,7 +16,8 @@ import {
 import { IoMail, IoMailOpen } from "react-icons/io5";
 import { receivedRfq } from "../../../ReduxStore/RfqSlice.js";
 import Cookies from "js-cookie";
-
+import myProfile from "../../../styles/Menu/Manage/MyProfile.module.css";
+import { NavLink } from "react-router-dom";
 
 
 const RfqTable = () => {
@@ -118,6 +119,7 @@ const RfqTable = () => {
       <div className={css.layout}>
         <div className={css.tableArea}>
           <div className={css.rfqTable}>
+{/* 
             <div className={css.rfqTableBtn_top}>
 
 
@@ -127,7 +129,50 @@ const RfqTable = () => {
               <a >archive</a>
 
 
-            </div>
+            </div> */}
+
+
+
+
+
+
+                   <div className={myProfile.profileInfo_links}>
+                        <ul>
+                          <li>
+                            <NavLink
+                              to="/rfq"
+                              className={({ isActive }) => (isActive ? myProfile.active : '')}
+                            >
+                              <span>Received({tableData.length})</span>
+                            </NavLink>
+                          </li>
+                          <li>
+                            <NavLink
+                              to="/rfqSent"
+                              className={({ isActive }) => (isActive ? myProfile.active : '')}
+                            >
+                              <span>Sent</span>
+                            </NavLink>
+                          </li>
+                          <li>
+                            <NavLink
+                              to="/"
+                              className={({ isActive }) => (isActive ? myProfile.active : '')}
+                            >
+                              <span>New</span>
+                            </NavLink>
+                          </li>
+                          <li>
+                            <NavLink
+                              to="/"
+                              className={({ isActive }) => (isActive ? myProfile.active : '')}
+                            >
+                              <span>Archeive</span>
+                            </NavLink>
+                          </li>
+                        </ul>
+                      </div>
+
             <div className={css.rfqTableDetail}>
               <SearchComponent />
               <table>
@@ -198,7 +243,7 @@ const RfqTable = () => {
                     </tr>
                   ))}
                 </tbody>
-                <tfoot>
+                <tfoot  className={css.rfqTableDetailBottom} >
                   <tr>
                     <th>
                       <span>

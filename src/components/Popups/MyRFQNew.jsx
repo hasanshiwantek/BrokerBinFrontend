@@ -11,8 +11,25 @@ import { addRecipients, searchProductQuery } from "../../ReduxStore/RfqSlice";
 import Cookies from "js-cookie";
 import { submitRfq, clearSearchResults } from "../../ReduxStore/RfqSlice";
 import AddParts from "./AddParts";
+import { fetchUserData } from "../../ReduxStore/ProfleSlice";
+
 
 const MyRFQNew = () => {
+
+  // LOGGED IN USERID DATA
+    // const { blurWhileLoading, initialData, user, error} = useSelector(
+    //   (state) => state.profileStore
+    // );
+    // console.log("User Data",initialData)
+    // const user_id = Cookies.get("user_id");
+
+    // const id = user?.user?.id || user_id;
+    // useEffect(() => {
+    //   console.log("Logged in userid",id);
+    //   dispatch(fetchUserData({ id, token }));
+    // }, []);
+  
+// <------>
   const { selectedProducts } = useSelector((store) => store.searchProductStore);
   console.log("SelectedProducts", selectedProducts);
   const dispatch = useDispatch();
@@ -24,7 +41,28 @@ const MyRFQNew = () => {
   const [showRecipientDropdown, setShowRecipientDropdown] = useState(false);
   console.log("Search Results in Component:", searchResults);
   const token = Cookies.get("token");
+  const modalRef = useRef(null); // Create a reference to the modal
 
+
+
+
+  // Add event listener to detect click outside modal
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        // Close modal if click is outside
+        dispatch(setPopUpRfq(false));
+      }
+    };
+
+    // Attach event listener to the document
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Clean up the event listener on unmount
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dispatch]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -288,7 +326,7 @@ const MyRFQNew = () => {
     <>
       <div className={css.rfqPopUp}>
         <form >
-          <div className={`${css.rfqNew}  sm:h-[58vh] lg:h-[68vh]`}>
+          <div className={`${css.rfqNew}  sm:h-[58vh] lg:h-[68vh]`} ref={modalRef}>
 
             <div className={css.rfqBody}>
               <div className={css.rfqHeaderSec}>
@@ -606,9 +644,7 @@ const MyRFQNew = () => {
                   onClick={(e) => {
                     e.preventDefault()
                     submitHandle(); // Call the submit handler
-                    setTimeout(() => {
-                      setPopUpRfq((prev) => !prev);
-                    }, 100);
+                    dispatch(setPopUpRfq(false))
                   }}
                 >
                   send

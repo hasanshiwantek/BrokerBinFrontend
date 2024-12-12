@@ -11,7 +11,7 @@
   background: #f4f4f4;
   display: flex;
   justify-content: start;
-  gap: 10px;
+  gap: 10px; 
 }
 
 .dropdown {
@@ -66,12 +66,12 @@
 
 .table th,
 .table td {
-  border: 1px solid #ddd;
+  border: 1px solid #bfbfbf;
   padding: 0px 2px;
   text-align: left;
-  font-size: 8pt;
-  font-weight: 500;
-  /* color: #444; */
+  font-size: 9pt;
+  font-weight: 700;
+  color: #444;
 }
 
 .table th {
@@ -159,18 +159,18 @@ select {
 }
 
 .type-wtb {
-  color: blue;
+  color: blue  !important;
   text-transform: uppercase;
 }
 
 .type-wts {
-  color: red;
+  color: red !important;
   text-transform: uppercase;
 
 }
 
 .type-rfq {
-  color: green;
+  color: green !important;
   text-transform: uppercase;
 
 }

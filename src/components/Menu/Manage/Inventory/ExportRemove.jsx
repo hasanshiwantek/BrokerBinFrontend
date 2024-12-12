@@ -78,7 +78,7 @@ const ExportRemove = () => {
               <label htmlFor="">step 3:</label>
               <span>
                 <label>export/remove</label>
-                <select name="exportRemove" onChange={handleChange}>
+                <select name="exportRemove" onChange={handleChange} className="p-2">
                   <option value="inventory only">inventory only</option>
                   <option value="all items">all items</option>
                   <option value="broadcasts only">broadcasts only</option>

@@ -52,31 +52,38 @@ const Home = () => {
 
   const searchProduct = (event) => {
     event.preventDefault();
-
+  
     const form = new FormData(event.target);
     const formData = Object.fromEntries(form.entries());
-
-    // split by " " and turn into array of string.
-
-    if (formData.searchStrings.trim() === "") {
+  
+    const searchString = formData.searchStrings.trim();
+    const searchBy = formData.searchBy; // Get selected radio button value (part, heciClei, keyword)
+  
+    if (searchString === "") {
       alert("Blank search is not allowed");
       return;
     }
-
-    const searchString = formData.searchStrings.split("\n").join(",");
-
+    let url = '';
+    if (searchBy === "part") {
+      // If 'Part#' is selected
+      url = `/inventory/search?page=1&query=${encodeURIComponent(searchString)}`;
+    } else if (searchBy === "heciClei") {
+      // If 'HECI / CLEI' is selected
+      url = `/inventory/search?page=1&query=${encodeURIComponent(searchString)}`;
+    } else if (searchBy === "keyword") {
+      // If 'Keyword' is selected
+      url = `/inventory/search?page=1&partModel=${encodeURIComponent(searchString)}`;
+    }
+  
     // Clear selected products
     dispatch(setSelectedProducts([]));
-
-    // Search products history.
-    dispatch(searchProductHistory({ token }));
-
-    // Navigate to the search results page with 'page' and 'search' parameters
-    const url = `/inventory/search?page=1&search=${encodeURIComponent(
-      searchString
-    )}`;
+  
+    // Navigate to the URL with appropriate parameters
     navigate(url, { replace: true });
   };
+  
+
+
 
   return (
     <>
@@ -359,38 +366,25 @@ const Home = () => {
                           placeholder="(List multiple search strings separated by returns for the same search category)"
                           style={{ height: "10rem" }}
                         ></textarea>
+
                         <div>
                           <input
-                            id={
-                              css.gridHome2_Details_Upper_Right_PartSearch_btn
-                            }
+                            id={css.gridHome2_Details_Upper_Right_PartSearch_btn}
                             type="submit"
-                            value="submit"
+                            value="SUBMIT"
                           />
                           <div>
                             <label>
-                              part#
-                              <input
-                                type="radio"
-                                name="searchBy"
-                                value="part"
-                              />
+                              Part#
+                              <input type="radio" name="searchBy" value="part" />
                             </label>
                             <label>
                               HECI / CLEI
-                              <input
-                                type="radio"
-                                name="searchBy"
-                                value="heciClei"
-                              />
+                              <input type="radio" name="searchBy" value="heciClei" />
                             </label>
                             <label>
-                              keyword
-                              <input
-                                type="radio"
-                                name="searchBy"
-                                value="keyword"
-                              />
+                              Keyword
+                              <input type="radio" name="searchBy" value="keyword" />
                             </label>
                           </div>
                         </div>

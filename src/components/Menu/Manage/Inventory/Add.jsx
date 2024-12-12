@@ -91,15 +91,15 @@ const Add = () => {
         <div className={css.inventory_add_main}>
           <form onSubmit={handleSubmit}>
             <div className={css.inventory_add_main_top}>
-              <button type="button">
-                <input type="submit" value="save" />
+              <button type="button" className="transform active:scale-90 transition-all duration-100 ">
+                <input type="submit" value="save"  className="cursor-pointer  p-1 "   />
               </button>
               <button type="button">telecom</button>
             </div>
             <TableAdd />
             <div className={css.inventory_add_main_bottom}>
-              <button type="button">
-                <input type="submit" value="save" />
+              <button type="button" className="transform active:scale-90 transition-all duration-100 ">
+                <input type="submit" value="save"  className="cursor-pointer p-1 "/>
               </button>
             </div>
           </form>
