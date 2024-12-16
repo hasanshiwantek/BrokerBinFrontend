@@ -63,6 +63,7 @@ const RfqTablePopUp = ({ type }) => {
             close
           </button>
         </div>
+
         {rfqPopBoxInfo.map((item, index) => {
           return (
             <div key={item.id} className={css.RfqTablePopUp_body_mail}>
@@ -122,6 +123,7 @@ const RfqTablePopUp = ({ type }) => {
               </tr>
             </thead>
             <tbody>
+
               {rfqPopBoxInfo.map((item) => {
                 return (
                   <React.Fragment key={item.id}>
@@ -141,12 +143,14 @@ const RfqTablePopUp = ({ type }) => {
                   </React.Fragment>
                 );
               })}
+
             </tbody>
             <tfoot>
               <tr>
                 <td className="pt-2">notes</td>
                 <td className={css.emailSec}>
                 <span>
+
                 {rfqPopBoxInfo.map((item) => (
                   <React.Fragment key={item.id}>
                     {item.comment && (
@@ -154,6 +158,7 @@ const RfqTablePopUp = ({ type }) => {
                     )}
                   </React.Fragment>
                 ))}
+
                 </span>
                   <span> --------------- </span>
                   {type === "sent" ? (

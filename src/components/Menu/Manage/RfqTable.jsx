@@ -91,12 +91,42 @@ const RfqTable = () => {
     `AM`
     } ${now.getDate()}/${now.getMonth()}/${now.getFullYear()}`;
 
-  const handleShowPopupRfq = (event, { id }) => {
-    event.stopPropagation(); // Prevent the event from propagating to the row click event
-    dispatch(setTogglePopUpRfq());
+  
 
-    dispatch(setRfqPopBoxInfo(currentItems.filter((item) => item.id === id)));
+  const handleShowPopupRfq = (event, rfq) => {
+    event.stopPropagation();
+  
+    // Use added_by_id and partId to uniquely identify the RFQ
+    const id = rfq?.added_by_id;
+    const partNumbers = rfq?.partNumbers; // Or any other unique field
+  
+    console.log("Clicked RFQ ID:", id);
+    console.log("Clicked RFQ Part Numbers:", partNumbers);
+    console.log("Current Items:", currentItems);
+  
+    if (!id) {
+      console.error("RFQ ID is undefined or invalid.");
+      return;
+    }
+  
+    // Match the RFQ using added_by_id and partNumbers
+    const selectedRfq = currentItems.find(
+      (item) => item.added_by_id === id && JSON.stringify(item.partNumbers) === JSON.stringify(partNumbers)
+    );
+  
+    console.log("Selected RFQ:", selectedRfq);
+  
+    if (selectedRfq) {
+      dispatch(setTogglePopUpRfq());
+      dispatch(setRfqPopBoxInfo([selectedRfq])); // Pass the selected RFQ as an array
+    } else {
+      console.error("Selected RFQ not found in current items.");
+    }
   };
+  
+  
+  
+
 
   const handleCheckboxClick = (event, id) => {
     event.stopPropagation(); // Prevent the event from propagating to the row click event
@@ -216,7 +246,7 @@ const RfqTable = () => {
                       className={css.tableData}
                       key={e.id}
                       onClick={(event) => {
-                        console.log("Modal Opened")
+                        console.log("Passed RFQ Object:", e);
                         handleShowPopupRfq(event, e);
                       }}
                     >

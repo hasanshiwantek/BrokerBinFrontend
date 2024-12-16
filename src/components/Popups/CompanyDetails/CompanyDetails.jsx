@@ -248,10 +248,12 @@ const CompanyDetails = ({closeModal}) => {
                   </span>
                 </div>
               </div>
+
               <div className={css.Popup_Info_Main_right_tabs_layout}>
                 <TabContent companyId={companyId} />
 
               </div>
+
             </div>
           </div>
           <div className={css.Popup_Info_Main_bottom}>
