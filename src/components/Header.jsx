@@ -467,10 +467,10 @@ const Header = () => {
                   {/* <Link>
                     <li>My BOM</li>
                   </Link> */}
-                  {/* <Link to={"/myprofile"}>
+                  <Link to={"/myprofile"}>
                     <li>My Profile</li>
-                  </Link> */}
-                  <Link>
+                  </Link>
+                  <Link to={"/mycompany"}>
                     <li>My Company</li>
                   </Link>
                   <Link to={"/manage/my-services"}>
