@@ -126,7 +126,7 @@ const Login = () => {
             <p>New on our platform?</p>
             <a href="/register">Create an account</a>
           </span>
-          <div className={css.loginContainer_bottom_divider}>
+          {/* <div className={css.loginContainer_bottom_divider}>
             <div className={css.loginContainer_bottom_divider_text}>or</div>
           </div>
           <div className={css.loginContainer_bottom_socials}>
@@ -139,7 +139,7 @@ const Login = () => {
             <a href="#">
               <FaXTwitter />
             </a>
-          </div>
+          </div> */}
         </div>
       </div>
       {forgotPassword && (
