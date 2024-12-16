@@ -372,6 +372,7 @@ const Home = () => {
                             id={css.gridHome2_Details_Upper_Right_PartSearch_btn}
                             type="submit"
                             value="SUBMIT"
+                            className="cursor-pointer"
                           />
                           <div>
                             <label>
