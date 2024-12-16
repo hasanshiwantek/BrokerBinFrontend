@@ -399,26 +399,26 @@ const Header = () => {
                   My Vendors
                   </li>
                   </Link>
-                  <Link to={"/myprofile/MyContact"}>
+                  {/* <Link to={"/myprofile/MyContact"}>
                   <li>
                    My Contacts
                   </li>
-                  </Link>
+                  </Link> */}
                   <Link to={"/hotList/view"}>
                   <li>
                    Hot List
                   </li>
                   </Link>
-                  <Link to={"https://brokerbin.com/partners"}  target="blank">
+                  {/* <Link to={"https://brokerbin.com/partners"}  target="blank">
                   <li>
                    Partners
                   </li>
-                  </Link>
-                  <Link to={"https://www.brokerbinroadshow.com/"} target="blank">
+                  </Link> */}
+                  {/* <Link to={"https://www.brokerbinroadshow.com/"} target="blank">
                   <li>
                     Events
                   </li>
-                  </Link>
+                  </Link> */}
                 </ul>
               </div>
             </li>
@@ -431,16 +431,16 @@ const Header = () => {
                   <Link to="/inventory">
                     <li>inventory</li>
                   </Link>
-                  <Link to={"/services"}>
+                  {/* <Link to={"/services"}>
                     <li>services</li>
-                  </Link>
+                  </Link> */}
                   <Link to={"/searchcompany"}>
                     <li>company</li>
                   </Link>
                   <Link to={"/person"}>
                     <li>person</li>
                   </Link>
-                  <Link>
+                  {/* <Link>
                     <li>techSpecs</li>
                   </Link>
                   <Link>
@@ -448,7 +448,7 @@ const Header = () => {
                   </Link>
                   <Link>
                     <li>alt#</li>
-                  </Link>
+                  </Link> */}
                 </ul>
               </div>
             </li>
@@ -464,12 +464,12 @@ const Header = () => {
                   <Link to={"/rfq"}>
                     <li>My RFQs</li>
                   </Link >
-                  <Link>
+                  {/* <Link>
                     <li>My BOM</li>
-                  </Link>
-                  <Link to={"/myprofile"}>
+                  </Link> */}
+                  {/* <Link to={"/myprofile"}>
                     <li>My Profile</li>
-                  </Link>
+                  </Link> */}
                   <Link>
                     <li>My Company</li>
                   </Link>
@@ -612,7 +612,7 @@ const Header = () => {
                   </Link>
                 </li>
                 <li className={css.navbar_search_options}>
-                  <select name="navbarSearchOptions">
+                  <select name="navbarSearchOptions"  >
                     <option value="">MFG Filter</option>
                     <option value="3COM">3COM</option>
                     <option value="APPLE">APPLE</option>

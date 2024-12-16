@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef,useState } from "react";
 import css from "../../../styles/SearchProducts.module.css";
 import Filter from "../../Filter";
 import CompaniesListingParts from "../../CompaniesListingParts";
@@ -36,6 +36,7 @@ import ErrorStatus from "../../Error/ErrorStatus";
 import AddToHotList from "./AddToHotList";
 
 const SearchProduct = () => {
+
   const token = Cookies.get("token");
   const location = useLocation();
   const dispatch = useDispatch();
@@ -122,6 +123,7 @@ const SearchProduct = () => {
 //   );
 // }
 
+
   return (
     <div className={css.layout}>
       {filterToggle && <Filter />}
@@ -149,12 +151,14 @@ const SearchProduct = () => {
           </div>
         )}
       </div>
-      {togglePopUp && <CompanyDetails />}
+      {togglePopUp &&  <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
     </div>
   );
 };
 
 const ProductTableBtn = React.memo(() => {
+
+
   const { popUpRfq } = useSelector((store) => store.searchProductStore);
   const dispatch = useDispatch();
 
@@ -173,7 +177,9 @@ const ProductTableBtn = React.memo(() => {
       </button>
       {popUpRfq && <MyRFQNew />}
       <button type="button">Add</button>
+      <button>
       <a href="/cartpart" style={{ fontSize: "1em", color: "#444" }}>Cart</a>
+      </button>
       <button type="button" onClick={() => dispatch(setFilterToggle())}>
         Filters
       </button>
@@ -185,6 +191,7 @@ const ProductTableBtn = React.memo(() => {
 });
 
 const ProductTableDetail = React.memo(() => {
+
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -206,13 +213,54 @@ const ProductTableDetail = React.memo(() => {
   console.log(hoverCompanyDetail);
   const totalPages = Math.ceil(totalCount / pageSize);
 
-  const handleShowPopupCompanyDetails = (event, id) => {
+  // const handleShowPopupCompanyDetails = (event, id) => {
+  //   event.stopPropagation();
+  //   const companyDetail = searchResponseMatched?.filter((e) => e.id === id);
+  //   console.log("Companydetail.....",companyDetail);
+  //   dispatch(setPopupCompanyDetail(companyDetail));
+  //   dispatch(setTogglePopUp());
+  //   console.log("Popup company details:", company, "Toggle State:", isCompanyModalOpen);
+  // };
+
+
+
+  const handleShowPopupCompanyDetails = (event, companyId) => {
     event.stopPropagation();
-    const companyDetail = searchResponseMatched?.filter((e) => e.id === id);
-    console.log(companyDetail);
-    dispatch(setPopupCompanyDetail(companyDetail));
+  
+    // Debugging: Log the companyId passed to the function
+    console.log("Opening modal for companyId:", companyId);
+  
+    // Debugging: Log the entire searchResponseMatched data to verify it has the expected structure
+    console.log("searchResponseMatched:", searchResponseMatched);
+  
+    // Find the company object by its companyId and addedBy.company.id
+    const companyDetail = searchResponseMatched?.find((e) => {
+      console.log("Checking company:", e.addedBy?.company?.id); // Log the company ids for comparison
+      return e.addedBy?.company?.id === companyId;
+    });
+  
+    // Debugging: Log the companyDetail found (if any)
+    console.log("Found companyDetail:", companyDetail);
+  
+    // Check if companyDetail exists
+    if (companyDetail?.addedBy?.company) {
+      // Debugging: Log the company object before dispatching it
+      console.log("Dispatching company object to modal:", companyDetail.addedBy.company);
+      dispatch(setPopupCompanyDetail([companyDetail.addedBy.company])); // Pass the full company object here
+    } else {
+      console.error("Company not found!");
+    }
+  
+    // Toggle the modal visibility
     dispatch(setTogglePopUp());
   };
+  
+
+
+  
+
+
+
 
   const selectProduct = (id) => {
     const filteredProducts = () => {
@@ -311,7 +359,7 @@ const ProductTableDetail = React.memo(() => {
               <td >
                 <a style={{ color: "#428bca", fontWeight: "500" }}
                   onClick={(event) =>
-                    handleShowPopupCompanyDetails(event, e.id)
+                    handleShowPopupCompanyDetails(event, e.addedBy.company.id)
                   }
                   onMouseEnter={(event) =>
                     handleHoverCompanyDetail(event, e.id)
@@ -383,7 +431,7 @@ const ProductTableDetail = React.memo(() => {
         <button
           className="text-white text-lg font-bold"
           type="button"
-          onClick={handleNextPage}
+          onClick={handleNextPage}     
           disabled={page === totalPages}
         >
           Next

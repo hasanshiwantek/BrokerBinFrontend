@@ -71,12 +71,12 @@ const RfqTablePopUp = ({ type }) => {
                 {type === "sent" && Array.isArray(item.to)
                   ? item.to.map((user, idx) => (
                       <span key={idx}>
-                        {user.firstName} - {user.company}
+                        {user.firstName} - {user.company.name}
                         {idx < item.to.length - 1 && ", "}
                       </span>
                     ))
                   : item.from
-                  ? `${item.from.firstName} - ${item.from.company}`
+                  ? `${item.from.firstName} - ${item.from.company.name}`
                   : "N/A"}
               </p>
               <label>{type === "sent" ? "from:" : "to:"}</label>
@@ -145,7 +145,7 @@ const RfqTablePopUp = ({ type }) => {
             <tfoot>
               <tr>
                 <td className="pt-2">notes</td>
-                <td>
+                <td className={css.emailSec}>
                 <span>
                 {rfqPopBoxInfo.map((item) => (
                   <React.Fragment key={item.id}>
@@ -159,7 +159,7 @@ const RfqTablePopUp = ({ type }) => {
                   {type === "sent" ? (
                   <>
                     <span>{initialData.firstName || "NA"}</span>
-                    <span>{initialData.company || "NA"}</span>
+                    {/* <span>{initialData.to.company || "NA"}</span> */}
                     <span>{initialData.email || "NA"}</span>
                     <span>{initialData.user_id || "NA"}</span>
                   </>
@@ -167,7 +167,7 @@ const RfqTablePopUp = ({ type }) => {
                   rfqPopBoxInfo.map((item, index) => (
                     <div key={index}>
                       <span>{item.from?.firstName || "NA"}</span> {/* Sender's Name */}
-                      <span>{item.from?.company || "NA"}</span> {/* Sender's Company */}
+                      <span>{item.from?.company.name || "NA"}</span> {/* Sender's Company */}
                       <span>{item.from?.email || "NA"}</span> {/* Sender's Email */}
                     </div>
                   ))
@@ -195,3 +195,14 @@ const RfqTablePopUp = ({ type }) => {
 
 
 export default RfqTablePopUp;
+
+
+
+
+
+
+
+
+
+
+

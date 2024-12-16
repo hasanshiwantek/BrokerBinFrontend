@@ -146,6 +146,37 @@ export const sentRfq = createAsyncThunk(
 
 
 
+export const deleteCompanyUser = createAsyncThunk(
+  "deleteCompanyUser/submitRfq",
+  async ({ token, id }) => {
+    try {
+      const response = await axios.put(
+        `${brokerAPI}user/remove-user/${id}`, // Correct URL
+        { id }, // Pass the ID in the body of the request, not just as a URL parameter
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("User deleted From Backend", response.data);
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error Deleting Company User:",
+        error.response?.data || error.message
+      );
+      throw new Error("Error Deleting Company User: " + (error.response?.data || error.message));
+    }
+  }
+);
+
+
+
+
+
 const initialState = {
   togglePopUp: false,
   rfqMailCheckAll: false,

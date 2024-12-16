@@ -6,7 +6,7 @@ import { AiFillMail, AiOutlineMail } from "react-icons/ai";
 import RfqTablePopUp from "../../Popups/RfqTablePopUp.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  setTogglePopUp,
+  setTogglePopUp as setTogglePopUpRfq,
   setRfqPopBoxInfo,
   setRfqMail,
   setRfqMailCheckAll,
@@ -18,37 +18,39 @@ import { receivedRfq } from "../../../ReduxStore/RfqSlice.js";
 import Cookies from "js-cookie";
 import myProfile from "../../../styles/Menu/Manage/MyProfile.module.css";
 import { NavLink } from "react-router-dom";
+import { setPopupCompanyDetail } from "../../../ReduxStore/SearchProductSlice.js";
+import CompanyDetails from "../../Popups/CompanyDetails/CompanyDetails.jsx";
 
+import {
+  setTogglePopUp as setTogglePopUpCompany
+} from "../../../ReduxStore/SearchProductSlice";
 
 const RfqTable = () => {
 
- 
 
-
-  const { togglePopUp, rfqMail, rfqMailCheckAll, currentPage } = useSelector(
+  const { togglePopUp: togglePopUpRfq, rfqMail, rfqMailCheckAll, currentPage } = useSelector(
     (state) => state.rfqStore
   );
 
 
+  const { togglePopUp: togglePopUpCompany } = useSelector((state) => state.searchProductStore)
 
-
+  const { popupCompanyDetail } = useSelector((state) => state.searchProductStore)
   const dispatch = useDispatch();
 
   const token = Cookies.get("token");
 
-  const {receiveRfqData}=useSelector((state)=>state.rfqStore)
-  console.log("Data From Page",receiveRfqData)
-  
-
-  const receivedData=receiveRfqData.data || [];
-  console.log("RECEIVEDDATA", receivedData)
+  const { receiveRfqData } = useSelector((state) => state.rfqStore)
+  console.log("Data From Page", receiveRfqData)
 
 
-  console.log("Data Received",receivedData)
- 
-  useEffect(()=>{
-    dispatch(receivedRfq({token}))
-  },[])
+  const receivedData = receiveRfqData.data || [];
+  console.log("ReceivedData from Frontend", receivedData)
+
+
+  useEffect(() => {
+    dispatch(receivedRfq({ token }));
+  }, [dispatch, token]); // Adding token and dispatch as dependencies
 
 
 
@@ -60,7 +62,7 @@ const RfqTable = () => {
   const sliceFrom = sliceTo - itemsPerPage;
 
   const currentItems = receivedData.slice(sliceFrom, sliceTo);
-    console.log("CURRENT ITEMS", currentItems)
+  console.log("CURRENT ITEMS", currentItems)
 
   const prevPage = () => {
     if (currentPage === 1) {
@@ -77,22 +79,22 @@ const RfqTable = () => {
   };
 
   const now = new Date();
-  const date = `${
-    now.getHours() > 12
-      ? (now.getHours() % 12) +
-        `:` +
-        (now.getMinutes() < 9 ? `0` + now.getMinutes() : now.getMinutes()) +
-        `PM`
-      : `0` +
-        now.getHours() +
-        `:` +
-        (now.getMinutes() < 9 ? `0` + now.getMinutes() : now.getMinutes()) +
-        `AM`
-  } ${now.getDate()}/${now.getMonth()}/${now.getFullYear()}`;
+  const date = `${now.getHours() > 12
+    ? (now.getHours() % 12) +
+    `:` +
+    (now.getMinutes() < 9 ? `0` + now.getMinutes() : now.getMinutes()) +
+    `PM`
+    : `0` +
+    now.getHours() +
+    `:` +
+    (now.getMinutes() < 9 ? `0` + now.getMinutes() : now.getMinutes()) +
+    `AM`
+    } ${now.getDate()}/${now.getMonth()}/${now.getFullYear()}`;
 
   const handleShowPopupRfq = (event, { id }) => {
     event.stopPropagation(); // Prevent the event from propagating to the row click event
-    dispatch(setTogglePopUp());
+    dispatch(setTogglePopUpRfq());
+
     dispatch(setRfqPopBoxInfo(currentItems.filter((item) => item.id === id)));
   };
 
@@ -115,14 +117,21 @@ const RfqTable = () => {
       dispatch(setRfqMail([]));
     }
   };
-
+  // Company Modal Logic
+  const openCompanyModal = (company) => {
+    console.log("Opening Company Modal with Company:", company);
+    dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
+    dispatch(setTogglePopUpCompany()); // Show company modal
+  };
+  console.log("popupCompanyDetail", popupCompanyDetail);
+  console.log("togglePopUp", togglePopUpCompany);
 
   return (
     <>
       <div className={css.layout}>
         <div className={css.tableArea}>
           <div className={css.rfqTable}>
-{/* 
+            {/* 
             <div className={css.rfqTableBtn_top}>
 
 
@@ -139,42 +148,42 @@ const RfqTable = () => {
 
 
 
-                   <div className={myProfile.profileInfo_links}>
-                        <ul>
-                          <li>
-                            <NavLink
-                              to="/rfq"
-                              className={({ isActive }) => (isActive ? myProfile.active : '')}
-                            >
-                              <span>Received({tableData.length})</span>
-                            </NavLink>
-                          </li>
-                          <li>
-                            <NavLink
-                              to="/rfqSent"
-                              className={({ isActive }) => (isActive ? myProfile.active : '')}
-                            >
-                              <span>Sent</span>
-                            </NavLink>
-                          </li>
-                          <li>
-                            <NavLink
-                              to="/"
-                              className={({ isActive }) => (isActive ? myProfile.active : '')}
-                            >
-                              <span>New</span>
-                            </NavLink>
-                          </li>
-                          <li>
-                            <NavLink
-                              to="/"
-                              className={({ isActive }) => (isActive ? myProfile.active : '')}
-                            >
-                              <span>Archeive</span>
-                            </NavLink>
-                          </li>
-                        </ul>
-                      </div>
+            <div className={myProfile.profileInfo_links}>
+              <ul>
+                <li>
+                  <NavLink
+                    to="/rfq"
+                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                  >
+                    <span>Received({receiveRfqData.totalCount})</span>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/rfqSent"
+                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                  >
+                    <span>Sent</span>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/"
+                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                  >
+                    <span>New</span>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/"
+                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                  >
+                    <span>Archeive</span>
+                  </NavLink>
+                </li>
+              </ul>
+            </div>
 
             <div className={css.rfqTableDetail}>
               <SearchComponent />
@@ -207,6 +216,7 @@ const RfqTable = () => {
                       className={css.tableData}
                       key={e.id}
                       onClick={(event) => {
+                        console.log("Modal Opened")
                         handleShowPopupRfq(event, e);
                       }}
                     >
@@ -223,30 +233,44 @@ const RfqTable = () => {
                           }
                         />
                         <td>(0|1)</td>
-                        
+
                         {/* {!e.read ? <IoMail /> : <IoMailOpen />} */}
                         <img src="https://static.brokerbin.com/version/v8.2.9/images/New.png" alt="" srcset="" />
                         {/* Open Img: https://static.brokerbin.com/version/v8.2.9/images/Open.png */}
                       </td>
-                      <td> {e.quantities.map((item, index) => (
-                                                <td className="mr-2" key={index}>{item}</td>
-                                            ))}</td>
-                 {/* <td>{e.partNumbers[0]}</td> */}
-                 <td>{
-                  e.partNumbers.length > 1 ? (`${e.partNumbers.length} part`): (e.partNumbers[0])
-                  }</td>
+                      <td>
+                        {e.quantities?.reduce((total, quantity) => total + Number(quantity), 0)}
+                      </td>
+
+
+                      <td>
+                        {e.partNumbers?.length > 1 ? (
+                          <>
+                            <td>{e.partNumbers.length} Parts</td>
+                            <div className={css.companyDropdown}>
+                              {e.partNumbers.map((part, index) => (
+                                <div key={index} className={css.companyItem}>
+                                  {part}
+                                </div>
+                              ))}
+                            </div>
+                          </>
+                        ) : (
+                          <span>{e.partNumbers[0]}</span>
+                        )}
+                      </td>
                       <td>
                         {e.subject}
                       </td>
                       <td>{e.from.firstName}  {e.from.lastName}</td>
                       <td>
-                        <a>{e.from.company}</a>
+                        <a onClick={() => openCompanyModal(e.from.company)}>{e.from.company.name}</a>
                       </td>
                       <td>{e.updated_at}</td>
                     </tr>
                   ))}
                 </tbody>
-                <tfoot  className={css.rfqTableDetailBottom} >
+                <tfoot className={css.rfqTableDetailBottom} >
                   <tr>
                     <th>
                       <span>
@@ -289,9 +313,53 @@ const RfqTable = () => {
           </div>
         </div>
       </div>
-      {togglePopUp && <RfqTablePopUp type="received" />}
+      {togglePopUpRfq && <RfqTablePopUp type="received" />}
+
+
+      {togglePopUpCompany && <CompanyDetails closeModal={() => dispatch(setTogglePopUpCompany())} />}
     </>
   );
 };
 
 export default memo(RfqTable);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

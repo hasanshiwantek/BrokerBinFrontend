@@ -27,7 +27,7 @@
       left: 0;
       width: 100%;
       display: flex;
-      align-items: center;
+      /* align-items: center; */
       justify-content: space-between;
       background: var(--primary-color);
       padding: 1rem;
@@ -104,7 +104,8 @@
               background: var(--box-shadow);
               padding: 1rem;
               h3 {
-                font-size: 1.5rem;
+                font-size: 9pt;
+                font-weight: 700;
               }
             }
             > div {
@@ -159,7 +160,7 @@
         > :nth-child(1),
         > :nth-child(2),
         > :nth-child(3) {
-          margin-bottom: 5rem;
+          margin-bottom: 3rem;
         }
         &_tabs {
           /* &_layout {
@@ -171,7 +172,8 @@
             margin-bottom: 1rem;
             li {
               color: white;
-              font-size: 1.5rem;
+              font-size: 8pt;
+              font-weight: 400;
               background: var(--box-shadow);
               padding: 1rem;
               cursor: pointer;
@@ -202,11 +204,13 @@
                 align-items: center;
                 padding: 5rem 0;
                 gap: 1rem;
-                font-size: 1.2rem;
+                font-size: 8pt;
+                font-weight: 400;
                 input {
                   width: 30%;
                   padding: 1rem 2rem;
-                  font-size: 2rem;
+                  font-size: 8pt;
+                  font-weight: 400;
                 }
               }
               &_companies {
@@ -231,6 +235,7 @@
                       margin-bottom: 1rem;
                       font-weight: 600;
                       font-size: 1.5rem;
+                      font-weight: 600;
                     }
                     > div {
                       span {
@@ -250,7 +255,8 @@
                     justify-content: space-between;
                     border: 1px solid var(--box-shadow);
                     padding: 1rem;
-                    font-size: 1.2rem;
+                    font-size: 8pt;
+                    font-weight: 400;
                     span{
                       display: flex;
                       align-items: center;
@@ -266,10 +272,11 @@
                   > :nth-child(2) {
                     /* background: pink; */
                     textarea {
-                      height: 15rem;
+                      height: 11rem;
                       width: 100%;
                       resize: none;
-                      font-size: 1.5rem;
+                      font-size: 8pt;
+                      font-weight: 400;
                       padding: 1rem;
                     }
                   }
@@ -308,8 +315,8 @@
         &_productInfo {
           > div {
             display: grid;
-            grid-template-columns: 20% 80%;
-            margin-bottom: 2rem;
+            grid-template-columns: 15% 80%;
+            margin-bottom: 0.5rem;
           }
         }
         &_contact {
@@ -374,4 +381,72 @@
 .activeTab {
   background: var(--primary-color) !important;
   font-size: 5rem;
+  font-weight: 400 ;
+}
+
+
+.Popup_Info_Main_left_companySideInformation_tabs ul li{
+  
+    font-size: 8pt;
+    font-weight: 500;
+
+}
+
+
+.Popup_Info_Main_left_companySideInformation .Popup_Info_Main_right_tabs_contact_right_companies_list_details h2,strong,p{
+  font-size: 8pt;
+  font-weight:  500;  
+  color: #444;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+/* HTML: <div class="loader"></div> */
+.loader {
+  width: 50px;
+  aspect-ratio: 1;
+  display: grid;
+  border-radius: 50%;
+  background:
+    linear-gradient(0deg ,rgb(0 0 0/50%) 30%,#0000 0 70%,rgb(0 0 0/100%) 0) 50%/8% 100%,
+    linear-gradient(90deg,rgb(0 0 0/25%) 30%,#0000 0 70%,rgb(0 0 0/75% ) 0) 50%/100% 8%;
+  background-repeat: no-repeat;
+  animation: l23 1s infinite steps(12);
+  /* margin-left: 600px; */
+}
+.loader::before,
+.loader::after {
+   content: "";
+   grid-area: 1/1;
+   border-radius: 50%;
+   background: inherit;
+   opacity: 0.915;
+   transform: rotate(30deg);
+}
+.loader::after {
+   opacity: 0.83;
+   transform: rotate(60deg);
+}
+@keyframes l23 {
+  100% {transform: rotate(1turn)}
+}
+
+
+.Popup_Info_Main_left_companySideInformation_tabs_li svg{
+  height: 1.8rem !important;
+}
+
+.Popup_Info_Main_right_tabs_contact_right_companies_list img{
+  width: 10%;
+  height:10%;
+
 }
