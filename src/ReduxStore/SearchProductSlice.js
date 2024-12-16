@@ -147,6 +147,35 @@ export const addToHotList = createAsyncThunk(
 
 
 
+// COMPANY CONTACT THUNK
+
+export const getCompanyContact = createAsyncThunk(
+  "searchProductStore/getCompanyContact ",
+  async ({id,token}) => {
+    try {
+      const response = await axios.get(
+        `${brokerAPI}company/show/${id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("Company Contact FROM bACKEND",response.data)
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Company Data Not Available:",
+        error.response?.data || error.message
+      );
+      throw new Error("Company Data Not Available ");
+    }
+  }
+);
+
+
 
 
 
@@ -165,6 +194,7 @@ const initialState = {
   hoverCompanyDetail: [],
   selectedProducts: [],
   searchHistory: [],
+  companyContactData:[],
   error: null,
   page: 1,
   pageSize: 20,
@@ -304,6 +334,19 @@ const searchProductSlice = createSlice({
         state.error = action.error.message;
         console.error("Error while adding to hotlist:", action.error.message);
         state.gettingHistory = false; // Set to false if the fetch fails
+      })
+      .addCase(getCompanyContact.pending, (state) => {
+        // state.gettingHistory = true; // Set to true when starting the fetch
+        // state.error = null;
+        console.log("PENDING....")
+      })
+      .addCase(getCompanyContact.fulfilled, (state, action) => {
+        state.companyContactData = action.payload;
+        console.log(action.payload);
+      })
+      .addCase(getCompanyContact.rejected, (state, action) => {
+        state.error = action.error.message;
+        console.error(" Data Not Available:");
       });
   },
 });

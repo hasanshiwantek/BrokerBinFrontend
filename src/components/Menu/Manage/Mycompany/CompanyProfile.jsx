@@ -475,7 +475,7 @@ const MyProfile = () => {
                 </div>
               </div>
               <div className="pt-2">
-                <button className="bg-[#ef6421] h-[1.5vw] rounded-[.2vw] px-2">Submit Changes</button>
+                <button className="!bg-[#ef6421] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-2">Submit Changes</button>
               </div>
             </div>
           </form>

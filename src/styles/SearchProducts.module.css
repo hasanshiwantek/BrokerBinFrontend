@@ -12,6 +12,7 @@
 .productTableBtn {
   font-size: 1.5rem;
   display: flex;
+  justify-content: flex-start;
   gap: 2rem;
   padding: 0.6rem 0;
   > button {

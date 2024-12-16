@@ -148,7 +148,7 @@ const RfqTablePopUp = ({ type }) => {
             <tfoot>
               <tr>
                 <td className="pt-2">notes</td>
-                <td>
+                <td className={css.emailSec}>
                 <span>
 
                 {rfqPopBoxInfo.map((item) => (
@@ -164,7 +164,7 @@ const RfqTablePopUp = ({ type }) => {
                   {type === "sent" ? (
                   <>
                     <span>{initialData.firstName || "NA"}</span>
-                    <span>{initialData.company || "NA"}</span>
+                    {/* <span>{initialData.to.company || "NA"}</span> */}
                     <span>{initialData.email || "NA"}</span>
                     <span>{initialData.user_id || "NA"}</span>
                   </>
@@ -200,3 +200,14 @@ const RfqTablePopUp = ({ type }) => {
 
 
 export default RfqTablePopUp;
+
+
+
+
+
+
+
+
+
+
+

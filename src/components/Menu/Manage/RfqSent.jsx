@@ -6,7 +6,7 @@ import { AiFillMail, AiOutlineMail } from "react-icons/ai";
 import RfqTablePopUp from "../../Popups/RfqTablePopUp.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import {
-    setTogglePopUp,
+    setTogglePopUp as setTogglePopUpRfq,
     setRfqPopBoxInfo,
     setRfqMail,
     setRfqMailCheckAll,
@@ -18,19 +18,27 @@ import { sentRfq } from "../../../ReduxStore/RfqSlice.js";
 import Cookies from "js-cookie";
 import myProfile from "../../../styles/Menu/Manage/MyProfile.module.css";
 import { NavLink } from "react-router-dom";
+import { setPopupCompanyDetail } from "../../../ReduxStore/SearchProductSlice.js";
+import CompanyDetails from "../../Popups/CompanyDetails/CompanyDetails.jsx";
+
+import {
+    setTogglePopUp as setTogglePopUpCompany
+} from "../../../ReduxStore/SearchProductSlice";
+
+
 
 
 const RfqTable = () => {
 
 
-
-
-    const { togglePopUp, rfqMail, rfqMailCheckAll, currentPage } = useSelector(
+    const { togglePopUp: togglePopUpRfq, rfqMail, rfqMailCheckAll, currentPage } = useSelector(
         (state) => state.rfqStore
     );
 
 
+    const { togglePopUp: togglePopUpCompany } = useSelector((state) => state.searchProductStore)
 
+    const { popupCompanyDetail } = useSelector((state) => state.searchProductStore)
 
     const dispatch = useDispatch();
 
@@ -43,11 +51,14 @@ const RfqTable = () => {
     const sentData = sentRfqData.data || [];
     console.log("SENDATA", sentData)
 
-    
 
 
-    const companyData = sentData?.to?.map((item) => item)
-    console.log("Company" + companyData)
+    const companyData = sentData?.map((item) => {
+        return item.to?.map((recipient) => recipient.company?.name);
+    });
+
+    console.log("Company Names: ", companyData);
+
 
     console.log("Sent Data Received", sentData)
 
@@ -101,22 +112,21 @@ const RfqTable = () => {
 
     const handleShowPopupRfq = (event, { id }) => {
         event.stopPropagation();
-    
+
         console.log("ID Passed:", id);
         console.log("Current ITEMS Available:", currentItems);
-    
+
         const filteredData = currentItems.filter((item) => item.id == id); // Use == for loose comparison
         console.log("Filtered Data:", filteredData); // Should now show the filtered result
-    
-        dispatch(setTogglePopUp());
+        dispatch(setTogglePopUpRfq());
         dispatch(setRfqPopBoxInfo(filteredData));
     };
-    
-    
-    
-    
 
-    
+
+
+
+
+
     const handleCheckboxClick = (event, id) => {
         event.stopPropagation(); // Prevent the event from propagating to the row click event
         if (event.target.checked) {
@@ -138,48 +148,58 @@ const RfqTable = () => {
     };
 
 
+    // Company Modal Logic
+    const openCompanyModal = (company) => {
+        console.log("Opening Company Modal with Company:", company);
+        dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
+        dispatch(setTogglePopUpCompany()); // Show company modal
+    };
+    console.log("popupCompanyDetail", popupCompanyDetail);
+    console.log("togglePopUp", togglePopUpCompany);
+
+
     return (
         <>
             <div className={css.layout}>
                 <div className={css.tableArea}>
                     <div className={css.rfqTable}>
-                      
-                                         <div className={myProfile.profileInfo_links}>
-                                              <ul>
-                                                <li>
-                                                  <NavLink
-                                                    to="/rfq"
-                                                    className={({ isActive }) => (isActive ? myProfile.active : '')}
-                                                  >
-                                                    <span>Received({tableData.length})</span>
-                                                  </NavLink>
-                                                </li>
-                                                <li>
-                                                  <NavLink
-                                                    to="/rfqSent"
-                                                    className={({ isActive }) => (isActive ? myProfile.active : '')}
-                                                  >
-                                                    <span>Sent</span>
-                                                  </NavLink>
-                                                </li>
-                                                <li>
-                                                  <NavLink
-                                                    to="/"
-                                                    className={({ isActive }) => (isActive ? myProfile.active : '')}
-                                                  >
-                                                    <span>New</span>
-                                                  </NavLink>
-                                                </li>
-                                                <li>
-                                                  <NavLink
-                                                    to="/"
-                                                    className={({ isActive }) => (isActive ? myProfile.active : '')}
-                                                  >
-                                                    <span>Archeive</span>
-                                                  </NavLink>
-                                                </li>
-                                              </ul>
-                                            </div>
+
+                        <div className={myProfile.profileInfo_links}>
+                            <ul>
+                                <li>
+                                    <NavLink
+                                        to="/rfq"
+                                        className={({ isActive }) => (isActive ? myProfile.active : '')}
+                                    >
+                                        <span>Received</span>
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink
+                                        to="/rfqSent"
+                                        className={({ isActive }) => (isActive ? myProfile.active : '')}
+                                    >
+                                        <span>Sent({sentRfqData.totalCount})</span>
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink
+                                        to="/"
+                                        className={({ isActive }) => (isActive ? myProfile.active : '')}
+                                    >
+                                        <span>New</span>
+                                    </NavLink>
+                                </li>
+                                <li>
+                                    <NavLink
+                                        to="/"
+                                        className={({ isActive }) => (isActive ? myProfile.active : '')}
+                                    >
+                                        <span>Archeive</span>
+                                    </NavLink>
+                                </li>
+                            </ul>
+                        </div>
                         <div className={css.rfqTableDetail}>
                             <SearchComponent />
                             <table>
@@ -231,15 +251,70 @@ const RfqTable = () => {
                                                 {/* {!e.read ? <IoMail /> : <IoMailOpen />} */}
                                                 <img src="https://static.brokerbin.com/version/v8.2.9/images/New.png" alt="" srcset="" />
                                             </td>
-                                            <td>{e.quantities}</td>
-                                            <td>{e.partNumbers[0]}</td>
+                                            <td>
+                                                {e.quantities?.reduce((total, quantity) => total + Number(quantity), 0)}
+                                            </td>
+
+                                            <td>
+                                                {e.partNumbers?.length > 1 ? (
+                                                    <>
+                                                        <td>{e.partNumbers.length} Parts</td>
+                                                        <div className={css.companyDropdown}>
+                                                            {e.partNumbers.map((part, index) => (
+                                                                <div key={index} className={css.companyItem}>
+                                                                    {part}
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </>
+                                                ) : (
+                                                    <td>{e.partNumbers[0]}</td>
+                                                )}
+                                            </td>
                                             <td>
                                                 {e.subject}
                                             </td>
-                                            <td>{e.to[0]?.firstName} {e.to[0]?.lastName}</td>
                                             <td>
-                                                {e.to[0]?.company.name}
+                                                {e.to?.length > 1 ? (
+                                                    <>
+                                                        <span>{e.to.length} Recipients</span>
+                                                        <div className={css.companyDropdown}>
+                                                            {e.to.map((recipient, index) => (
+                                                                <div key={index} className={css.companyItem}>
+                                                                    {recipient.firstName} {recipient.lastName}
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </>
+                                                ) : (
+                                                    <td>{e.to[0]?.firstName} {e.to[0]?.lastName}</td>
+                                                )}
                                             </td>
+                                            <td>
+                                                {e.to?.length > 1 ? (
+                                                    <>
+                                                        <span>{e.to.length} Companies</span>
+                                                        <div className={`${css.companyDropdown} `}>
+                                                            {e.to.map((recipient, index) => (
+                                                                <div
+                                                                    key={index}
+                                                                    className={css.companyItem}
+                                                                    onClick={() => openCompanyModal(recipient.company)}
+                                                                >
+                                                                    {recipient.company?.name}
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </>
+                                                ) : (
+                                                    <td
+                                                        onClick={() => openCompanyModal(e.to[0]?.company)}
+                                                    >
+                                                        {e.to[0]?.company.name}
+                                                    </td>
+                                                )}
+                                            </td>
+
                                             <td>{e.updated_at}</td>
                                         </tr>
                                     ))}
@@ -287,7 +362,8 @@ const RfqTable = () => {
                     </div>
                 </div>
             </div>
-            {togglePopUp && <RfqTablePopUp type="sent" />}
+            {togglePopUpRfq && <RfqTablePopUp type="sent" />}
+            {togglePopUpCompany && <CompanyDetails closeModal={() => dispatch(setTogglePopUpCompany())} />}
         </>
     );
 };
