@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { brokerAPI } from "../components/api/BrokerEndpoint";
+
 export const fetchUserData = createAsyncThunk(
   "profileStore/fetchUserData",
   async ({ id, token }) => {
@@ -29,13 +30,14 @@ export const submitUserData = createAsyncThunk(
   "profileStore/submitUserData",
   async ({ id, token, data }) => {
     try {
-      const response = await axios.put(
+      const isFormData = data.formData instanceof FormData;
+      const response = await axios.post(
         `${brokerAPI}user/edit/${id}`,
-        JSON.stringify(data),
+        isFormData ? data.formData : JSON.stringify(data.plainData),
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
+            "Content-Type": isFormData ? "multipart/form-data" : "application/json",
           },
         }
       );
@@ -45,10 +47,11 @@ export const submitUserData = createAsyncThunk(
         "Error while submitting user data:",
         error.response?.data || error.message
       );
-      throw "Error while submitting user data:" || error;
+      throw error;
     }
   }
 );
+
 
 export const submitUserOptions = createAsyncThunk(
   "profileStore/submitUserOptions",

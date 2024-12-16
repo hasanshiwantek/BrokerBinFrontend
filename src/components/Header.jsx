@@ -299,7 +299,7 @@ const Header = () => {
                               <Link to={"/myprofile"}>
                                 <li>My Profile</li>
                               </Link>
-                              <Link>
+                              <Link to={"/mycompany"}>
                                 <li>My Company</li>
                               </Link>
                               <Link>
@@ -470,7 +470,7 @@ const Header = () => {
                   <Link to={"/myprofile"}>
                     <li>My Profile</li>
                   </Link>
-                  <Link>
+                  <Link to={"/mycompany"}>
                     <li>My Company</li>
                   </Link>
                   <Link to={"/manage/my-services"}>

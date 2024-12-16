@@ -63,6 +63,7 @@ const RfqTablePopUp = ({ type }) => {
             close
           </button>
         </div>
+
         {rfqPopBoxInfo.map((item, index) => {
           return (
             <div key={item.id} className={css.RfqTablePopUp_body_mail}>
@@ -71,12 +72,12 @@ const RfqTablePopUp = ({ type }) => {
                 {type === "sent" && Array.isArray(item.to)
                   ? item.to.map((user, idx) => (
                       <span key={idx}>
-                        {user.firstName} - {user.company}
+                        {user.firstName} - {user.company.name}
                         {idx < item.to.length - 1 && ", "}
                       </span>
                     ))
                   : item.from
-                  ? `${item.from.firstName} - ${item.from.company}`
+                  ? `${item.from.firstName} - ${item.from.company.name}`
                   : "N/A"}
               </p>
               <label>{type === "sent" ? "from:" : "to:"}</label>
@@ -122,6 +123,7 @@ const RfqTablePopUp = ({ type }) => {
               </tr>
             </thead>
             <tbody>
+
               {rfqPopBoxInfo.map((item) => {
                 return (
                   <React.Fragment key={item.id}>
@@ -141,12 +143,14 @@ const RfqTablePopUp = ({ type }) => {
                   </React.Fragment>
                 );
               })}
+
             </tbody>
             <tfoot>
               <tr>
                 <td className="pt-2">notes</td>
                 <td>
                 <span>
+
                 {rfqPopBoxInfo.map((item) => (
                   <React.Fragment key={item.id}>
                     {item.comment && (
@@ -154,6 +158,7 @@ const RfqTablePopUp = ({ type }) => {
                     )}
                   </React.Fragment>
                 ))}
+
                 </span>
                   <span> --------------- </span>
                   {type === "sent" ? (
@@ -167,7 +172,7 @@ const RfqTablePopUp = ({ type }) => {
                   rfqPopBoxInfo.map((item, index) => (
                     <div key={index}>
                       <span>{item.from?.firstName || "NA"}</span> {/* Sender's Name */}
-                      <span>{item.from?.company || "NA"}</span> {/* Sender's Company */}
+                      <span>{item.from?.company.name || "NA"}</span> {/* Sender's Company */}
                       <span>{item.from?.email || "NA"}</span> {/* Sender's Email */}
                     </div>
                   ))
