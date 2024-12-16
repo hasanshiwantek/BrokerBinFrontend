@@ -18,6 +18,8 @@ const Home = lazy(() => import("./components/Home/Home.jsx"));
 const Cart = lazy(() => import("./components/Tools/Cart.jsx"));
 const SearchProduct = lazy(() =>import("./components/Menu/Manage/SearchProduct.jsx"));
 const MyProfile = lazy(() => import("./components/Menu/Manage/MyProfile.jsx"));
+const CompanyProfile = lazy(() => import("./components/Menu/Manage/Mycompany/CompanyProfile.jsx"))
+const CreateAccount = lazy(() => import("./components/Menu/Manage/Mycompany/CreateAccount.jsx"))
 const Options = lazy(() => import("./components/Menu/Manage/Options.jsx"));
 const BroadcastFilters = lazy(() => import("./components/Menu/Manage/BroadcastFilter/BroadcastFilters.jsx"));
 const MyBroadcast = lazy(() => import("./components/Menu/Broadcast/MyBroadCast.jsx"));
@@ -210,6 +212,26 @@ const router = createBrowserRouter([
             <MyProfile />
             <Footer />
 
+          </Suspense>
+        ),
+      },
+      {
+        path: "/mycompany",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <CompanyProfile/>
+            <Footer />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/mycompany/Createaccount",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <CreateAccount/>
+            <Footer />
           </Suspense>
         ),
       },

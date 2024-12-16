@@ -115,7 +115,7 @@ const TabContent = () => {
                       css.Popup_Info_Main_right_tabs_contact_right_companies_list_details
                     }
                   >
-                    <h2>Rob Osgood</h2>
+                    <h2>faizan</h2>
                     <div>
                       <span>
                         <strong>title:</strong>
@@ -182,7 +182,7 @@ const TabContent = () => {
                       css.Popup_Info_Main_right_tabs_contact_right_companies_list_details
                     }
                   >
-                    <h2>john cena</h2>
+                    <h2>Hassan</h2>
                     <div>
                       <span>
                         <strong>title:</strong>
@@ -249,7 +249,7 @@ const TabContent = () => {
                       css.Popup_Info_Main_right_tabs_contact_right_companies_list_details
                     }
                   >
-                    <h2>undertaker</h2>
+                    <h2>Ahmed Raza</h2>
                     <div>
                       <span>
                         <strong>title:</strong>
@@ -316,7 +316,7 @@ const TabContent = () => {
                       css.Popup_Info_Main_right_tabs_contact_right_companies_list_details
                     }
                   >
-                    <h2>jetha laal</h2>
+                    <h2>Hasan Mujtaba</h2>
                     <div>
                       <span>
                         <strong>title:</strong>

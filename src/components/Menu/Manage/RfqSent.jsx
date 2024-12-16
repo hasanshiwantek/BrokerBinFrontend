@@ -238,7 +238,7 @@ const RfqTable = () => {
                                             </td>
                                             <td>{e.to[0]?.firstName} {e.to[0]?.lastName}</td>
                                             <td>
-                                                {e.to[0]?.company}
+                                                {e.to[0]?.company.name}
                                             </td>
                                             <td>{e.updated_at}</td>
                                         </tr>

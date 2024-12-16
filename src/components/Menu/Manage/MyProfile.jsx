@@ -88,94 +88,77 @@ const MyProfile = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+  
+    // Show loading state
     dispatch(setBlurWhileLoading(false));
+  
+    // Prepare FormData for API submission
     const formDataApi = new FormData(event.target);
-
-    const data = Object.fromEntries(
-      Object.entries(Object.fromEntries(formDataApi.entries())).map(
-        ([key, value]) => {
-          if (key === "signature" || key === "customSignature") {
-            value = value
-              .split("\n")
-              .filter(Boolean)
-              .map((item) => item.replace(/\s+/g, " ").trim());
-          } else if (typeof value === "string") {
-            value = value.replace(/\s+/g, " ").trim();
-          }
-          return [key, value];
-        }
-      )
-    );
-
-    if (customSignature) {
-      delete data.signature;
-    }
-
-    data.useCustomSignature = data.useCustomSignature ? 1 : 0;
-
+  
+    // Convert Base64 to Binary and append to FormData
     if (fileBase64) {
-      data.personalPhoto = { base64: fileBase64 };
-    } else {
-      delete data.personalPhoto;
+      const byteCharacters = atob(fileBase64);
+      const byteNumbers = Array.from(byteCharacters, (char) => char.charCodeAt(0));
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: "image/jpeg" });
+      const file = new File([blob], "profileImage.jpg", { type: "image/jpeg" });
+      formDataApi.set("profileImage", file);
     }
+  
+    // Extract non-file fields for debugging purposes only
+    const plainData = Object.fromEntries(formDataApi.entries());
 
-    const passwordFields = [
-      "currentPassword",
-      "newPassword",
-      "confirmNewPassword",
-    ];
-    const passwordValues = passwordFields.map((field) => data[field] || "");
+    // Exclude unchanged fields
+    Object.keys(plainData).forEach((key) => {
+      if (plainData[key] === initialData[key]) {
+        delete plainData[key];
+      }
+    });
+
+    if (!plainData.email || plainData.email === initialData.email) {
+      delete plainData.email;
+    }
+  
+    // Handle password validation
+    const passwordFields = ["currentPassword", "newPassword", "confirmNewPassword"];
+    const passwordValues = passwordFields.map((field) => plainData[field] || ""); // Fix: Use plainData
     const filledPasswords = passwordValues.filter((value) => value !== "");
-
-    if (
-      filledPasswords.length > 0 &&
-      filledPasswords.length < passwordFields.length
-    ) {
-      alert(
-        "Please fill in all password fields to update your password, or leave all empty if no update is intended."
-      );
-      return;
+  
+    if (filledPasswords.length > 0 && filledPasswords.length < passwordFields.length) {
+      return; // Exit if password fields are incomplete
     }
-
-    if (
-      filledPasswords.length === passwordFields.length &&
-      data.newPassword !== data.confirmNewPassword
-    ) {
-      alert("New passwords do not match.");
-      return;
+    if (filledPasswords.length === passwordFields.length && plainData.newPassword !== plainData.confirmNewPassword) {
+      return; // Exit if passwords do not match
     }
-
     passwordFields.forEach((field) => {
-      if (data[field] === "") {
-        delete data[field];
+      if (plainData[field] === "") {
+        delete plainData[field]; // Remove empty password fields
       }
     });
-
-    const userName = data.firstName;
-    const regex =
-      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d!@#$%^&*()_+]{8,24}$/;
-    if (data.newPassword && !regex.test(data.newPassword)) {
-      alert("Password does not meet the complexity requirements.");
-      return;
+  
+    // Log for debugging (exclude file from logs)
+    console.log("Prepared Data (excluding file):", plainData);
+  
+    try {
+      // Dispatch data: pass both FormData and plainData to the thunk
+      await dispatch(
+        submitUserData({
+          id,
+          token,
+          data: {
+            formData: formDataApi, // Binary data (e.g., file)
+            plainData, // Other fields for JSON compatibility
+          },
+        })
+      );
+    } catch (error) {
+      console.error("Error submitting data:", error);
     }
-    if (
-      data.newPassword &&
-      data.newPassword.toLowerCase().includes(userName.toLowerCase())
-    ) {
-      alert("Password cannot contain the username.");
-      return;
-    }
-
-    Object.keys(data).forEach((key) => {
-      if (data[key] === initialData[key]) {
-        delete data[key];
-      }
-    });
-
-    console.log(data);
-    dispatch(setFormData(data));
-    dispatch(submitUserData({ id, token, data }));
   };
+  
+  
+  
+  
 
   const checkAll = () => {
     dispatch(
@@ -315,7 +298,7 @@ const MyProfile = () => {
                     <span>
                       <label htmlFor="experience">Experience</label>
                       <input
-                        type="text"
+                        type="date"
                         name="experience"
                         id="experience"
                         onChange={handleChange}
