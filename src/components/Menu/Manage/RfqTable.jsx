@@ -14,7 +14,7 @@ import {
   setCurrentPagePrev,
 } from "../../../ReduxStore/RfqSlice.js";
 import { IoMail, IoMailOpen } from "react-icons/io5";
-import { receivedRfq } from "../../../ReduxStore/RfqSlice.js";
+import { receivedRfq, sentRfq } from "../../../ReduxStore/RfqSlice.js";
 import Cookies from "js-cookie";
 import myProfile from "../../../styles/Menu/Manage/MyProfile.module.css";
 import { NavLink } from "react-router-dom";
@@ -41,6 +41,7 @@ const RfqTable = () => {
   const token = Cookies.get("token");
 
   const { receiveRfqData } = useSelector((state) => state.rfqStore)
+  const sentRfqData = useSelector((state) => state.rfqStore.sentRfqData);
   console.log("Data From Page", receiveRfqData)
 
 
@@ -50,6 +51,10 @@ const RfqTable = () => {
 
   useEffect(() => {
     dispatch(receivedRfq({ token }));
+    // dispatch(sentRfq({ token }));
+    if (!sentRfqData?.totalCount){
+      dispatch(sentRfq({token}));
+    }
   }, [dispatch, token]); // Adding token and dispatch as dependencies
 
 
@@ -193,7 +198,7 @@ const RfqTable = () => {
                     to="/rfqSent"
                     className={({ isActive }) => (isActive ? myProfile.active : '')}
                   >
-                    <span>Sent</span>
+                     <span>Sent ({sentRfqData?.totalCount || 0})</span>
                   </NavLink>
                 </li>
                 <li>
