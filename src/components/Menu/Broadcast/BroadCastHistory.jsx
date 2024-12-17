@@ -6,6 +6,12 @@ import myProfile from "../../../styles/Menu/Manage/MyProfile.module.css";
 import { useSelector, useDispatch } from 'react-redux';
 import Cookies from 'js-cookie';
 import { fetchBroadCastData, deleteBroadCastData } from '../../../ReduxStore/BroadCast';
+import { FaFileAlt } from "react-icons/fa";
+import BroadcastFileModal from './Send/Field Components/BroadcastFileModal'
+import bullImage from "../../../assets/bullhornn.png"
+
+
+
 
 const BroadCastHistory = () => {
   const broadcastItems = useSelector((state) => state.broadcastStore.broadCastData);
@@ -18,6 +24,9 @@ const BroadCastHistory = () => {
   const [selectedBroadcasts, setSelectedBroadcasts] = useState([]);
   const [loading, setLoading] = useState(true); // Loading state
   const token = Cookies.get("token");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newselectedBroadcast, newsetSelectedBroadcast] = useState(null);
+  const [selectedBroadcast, setSelectedBroadcast] = useState({});
 
   useEffect(() => {
     setLoading(true);
@@ -71,6 +80,52 @@ const BroadCastHistory = () => {
     } else {
       alert("Select Broadcast for Deletion");
     }
+  };
+
+
+
+  const openModal = (broadcast) => {
+    newsetSelectedBroadcast(broadcast);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    newsetSelectedBroadcast(null);
+  };
+  const handleReplyClick = () => {
+    const selectedBroadcastIds = Object.keys(selectedBroadcast).filter(id => selectedBroadcast[id]);
+
+    if (selectedBroadcastIds.length === 0) {
+      alert('Please select a broadcast to reply to.');
+      return;
+    }
+
+    if (selectedBroadcastIds.length > 1) {
+      alert('You can only reply to one broadcast at a time.');
+      return;
+    }
+
+    // If only one broadcast is selected, proceed with navigation
+    const selected = filteredBroadcasts.find(item => item.id === parseInt(selectedBroadcastIds[0]));
+    navigate('/ReplyBroad', { state: { broadcast: selected } });
+  };
+
+
+  
+  const handleFileDownload = (file) => {
+    if (!file) {
+      alert('No file available for download.');
+      return;
+    }
+
+    // Create a new anchor element dynamically
+    const anchor = document.createElement('a');
+    anchor.href = file;  // Set href to the file URL
+    anchor.download = file.split('/').pop();  // Suggests a filename to save as, extracting from URL
+    document.body.appendChild(anchor);  // Append to body
+    anchor.click();  // Programmatically click the anchor to trigger download
+    document.body.removeChild(anchor);  // Clean up and remove the anchor
   };
 
   return (
@@ -175,7 +230,28 @@ const BroadCastHistory = () => {
                     }>
                       {item.type}
                     </td>
-                    <td>---</td>
+
+
+                    {/* <td>---</td> */}
+
+
+
+                       <td className='flex'>
+                                          <img src={bullImage} alt="" onClick={() => openModal(item)} style={{ width: "18px", fontWeight: "bold" }} />
+                                          {
+                                            item.file && (
+                                              <div className={css.tooltipWrapper}>
+                                                <FaFileAlt
+                                                  onClick={() => handleFileDownload(item.file)}
+                                                  style={{ cursor: "pointer", marginLeft: "8px" }}
+                                                  className={css.fileIcon}
+                                                />
+                                                <span className={css.tooltip}>Download File</span>
+                                              </div>
+                                            )
+                                          }
+                                        </td>
+
                     <td>{item.partModel}</td>
                     <td>{item.heciClei}</td>
                     <td>{item.mfg}</td>
@@ -212,6 +288,16 @@ const BroadCastHistory = () => {
           </div>
         </div>
       </div>
+
+
+
+      <BroadcastFileModal
+          isOpen={isModalOpen}
+          onRequestClose={closeModal}
+          broadcast={newselectedBroadcast}
+          handleReply={handleReplyClick}
+        />
+
     </>
   );
 };

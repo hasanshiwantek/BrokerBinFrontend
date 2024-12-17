@@ -42,14 +42,14 @@ function InventoryButtons() {
                   <span>export/remove</span>
                 </NavLink>
               </li>
-              <li>
+              {/* <li>
                 <NavLink
                   to="/venblock"
                   className={({ isActive }) => (isActive ? myProfile.active : '')}
                 >
                   <span>Block</span>
                 </NavLink>
-              </li>
+              </li> */}
             </ul>
           </div>
     </div> 

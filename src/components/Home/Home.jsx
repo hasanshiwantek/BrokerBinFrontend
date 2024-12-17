@@ -52,13 +52,13 @@ const Home = () => {
 
   const searchProduct = (event) => {
     event.preventDefault();
-  
+
     const form = new FormData(event.target);
     const formData = Object.fromEntries(form.entries());
-  
+
     const searchString = formData.searchStrings.trim();
     const searchBy = formData.searchBy; // Get selected radio button value (part, heciClei, keyword)
-  
+
     if (searchString === "") {
       alert("Blank search is not allowed");
       return;
@@ -74,14 +74,14 @@ const Home = () => {
       // If 'Keyword' is selected
       url = `/inventory/search?page=1&partModel=${encodeURIComponent(searchString)}`;
     }
-  
+
     // Clear selected products
     dispatch(setSelectedProducts([]));
-  
+
     // Navigate to the URL with appropriate parameters
     navigate(url, { replace: true });
   };
-  
+
 
 
 
@@ -188,7 +188,7 @@ const Home = () => {
                         </li>
                       </ul>
                     </li>
-                    <li className={css.gridHome1_MemberDetail_list_options}>
+                    {/* <li className={css.gridHome1_MemberDetail_list_options}>
                       <Link to="/feedback">my contacts</Link>
                       <ul>
                         <li className={css.gridHome1_MemberDetail_list_numbers}>
@@ -213,7 +213,7 @@ const Home = () => {
                           </a>
                         </li>
                       </ul>
-                    </li>
+                    </li> */}
                     <li className={css.gridHome1_MemberDetail_list_options}>
                       <Link to="/hotlist/view">hot list</Link>
                       <ul>
@@ -234,25 +234,71 @@ const Home = () => {
                 </div>
                 <div className={css.gridHome1_MemberDetail_reviews}>
                   <div className={css.gridHome1_MemberDetail_reviews_stars}>
-                    <div>
-                      <a href="#">
-                        <BsStarFill style={{ color: "yellow" }} />
-                      </a>
-                      <a href="#">
-                        <BsStarFill style={{ color: "yellow" }} />
-                      </a>
-                      <a href="#">
-                        <BsStarFill style={{ color: "yellow" }} />
-                      </a>
-                      <a href="#">
-                        <BsStarFill style={{ color: "yellow" }} />
-                      </a>
-                      <a href="#">
-                        <BsStarFill style={{ color: "yellow" }} />
-                      </a>
+                    <div data-v-217e3916="" class="vue-rate-it-rating">
+                      <div data-v-217e3916="" class="vue-rate-it-rating-item">
+                        <div data-v-217e3916="" step="50" style={{ display: "inline-block", marginRight: "1px" }}>
+                          <svg width="17" height="17" viewBox="0 0 179 179" style={{ overflow: "visible" }}>
+                            <linearGradient id="vgnr2v" x1="-2%" x2="100%" y1="0%" y2="0%">
+                              <stop offset="102%" stop-color="#FFD700"></stop>
+                              <stop offset="102%" stop-color="#CCC"></stop>
+                            </linearGradient>
+                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#vgnr2v)" stroke="#999" stroke-width="2" vector-effect="non-scaling-stroke" transform="scale(0.1)"></path>
+                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#vgnr2v)" transform="scale(0.1)"></path>
+                          </svg>
+                        </div>
+                      </div>
+                      <div data-v-217e3916="" class="vue-rate-it-rating-item">
+                        <div data-v-217e3916="" step="50" style={{ display: "inline-block", marginRight: "1px" }}>
+                          <svg width="17" height="17" viewBox="0 0 179 179" style={{ overflow: "visible" }}>
+                            <linearGradient id="sjx8c" x1="-2%" x2="100%" y1="0%" y2="0%">
+                              <stop offset="102%" stop-color="#FFD700"></stop>
+                              <stop offset="102%" stop-color="#CCC"></stop>
+                            </linearGradient>
+                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#sjx8c)" stroke="#999" stroke-width="2" vector-effect="non-scaling-stroke" transform="scale(0.1)"></path>
+                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#sjx8c)" transform="scale(0.1)"></path>
+                          </svg>
+                        </div>
+                      </div>
+                      <div data-v-217e3916="" class="vue-rate-it-rating-item">
+                        <div data-v-217e3916="" step="50" style={{ display: "inline-block", marginRight: "1px" }}>
+                          <svg width="17" height="17" viewBox="0 0 179 179" style={{ overflow: "visible" }}>
+                            <linearGradient id="ax5l1m" x1="-2%" x2="100%" y1="0%" y2="0%">
+                              <stop offset="102%" stop-color="#FFD700"></stop>
+                              <stop offset="102%" stop-color="#CCC"></stop>
+                            </linearGradient>
+                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#ax5l1m)" stroke="#999" stroke-width="2" vector-effect="non-scaling-stroke" transform="scale(0.1)"></path>
+                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#ax5l1m)" transform="scale(0.1)"></path>
+                          </svg>
+                        </div>
+                      </div>
+                      <div data-v-217e3916="" class="vue-rate-it-rating-item">
+                        <div data-v-217e3916="" step="50" style={{ display: "inline-block", marginRight: "1px" }}>
+                          <svg width="17" height="17" viewBox="0 0 179 179" style={{ overflow: "visible" }}>
+                            <linearGradient id="19xik" x1="-2%" x2="100%" y1="0%" y2="0%">
+                              <stop offset="102%" stop-color="#FFD700"></stop>
+                              <stop offset="102%" stop-color="#CCC"></stop>
+                            </linearGradient>
+                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#19xik)" stroke="#999" stroke-width="2" vector-effect="non-scaling-stroke" transform="scale(0.1)"></path>
+                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#19xik)" transform="scale(0.1)"></path>
+                          </svg>
+                        </div>
+                      </div>
+                      <div data-v-217e3916="" class="vue-rate-it-rating-item">
+                        <div data-v-217e3916="" step="50" style={{ display: "inline-block", marginRight: "1px" }}>
+                          <svg width="17" height="17" viewBox="0 0 179 179" style={{ overflow: "visible" }}>
+                            <linearGradient id="wiiipk" x1="-2%" x2="100%" y1="0%" y2="0%">
+                              <stop offset="102%" stop-color="#FFD700"></stop>
+                              <stop offset="102%" stop-color="#CCC"></stop>
+                            </linearGradient>
+                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#wiiipk)" stroke="#999" stroke-width="2" vector-effect="non-scaling-stroke" transform="scale(0.1)"></path>
+                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#wiiipk)" transform="scale(0.1)"></path>
+                          </svg>
+                        </div>
+                      </div>
                     </div>
                     <a href="#">100%</a>
                   </div>
+
                   <div className={css.gridHome1_MemberDetail_reviews_watchList}>
                     <a href="#">
                       Watch List Companies{" "}
@@ -391,7 +437,7 @@ const Home = () => {
                         </div>
                       </form>
                     </div>
-                    <div className={css.gridHome2_Details_Upper_Right_Bom}>
+                    {/* <div className={css.gridHome2_Details_Upper_Right_Bom}>
                       <div>
                         <h3>BOM Utility</h3>
                         <p>(Bill of Materials)</p>
@@ -410,7 +456,7 @@ const Home = () => {
                         </button>
                         <a href="#">Load test file .xls</a>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
                 <div className={css.gridHome2_Details_Bottom}>

@@ -405,13 +405,13 @@ const submitInventoryBtn = (e) => {
                 target="_blank"
                 href="https://members.brokerbin.com/help/example.xls"
               >
-                <u>example.xls</u>
+                <p>example.xls</p>
               </a>
               <a
                 target="_blank"
                 href="https://members.brokerbin.com/help/example.csv"
               >
-                <u>example.csv</u>
+                <label style={{color:"#444"}}>example.csv</label>
               </a>
             </div>
           </div>
@@ -423,13 +423,13 @@ const submitInventoryBtn = (e) => {
           >
             Send File
           </button>
-          <h1 className={css.inventory_main_AutoUploadh1}>Auto Uploads</h1>
+          {/* <h1 className={css.inventory_main_AutoUploadh1}>Auto Uploads</h1> */}
         </form>
-        <ScheduleNewUpload />
-        <div className={css.inventory_main_footer}>
+        {/* <ScheduleNewUpload /> */}
+        {/* <div className={css.inventory_main_footer}>
           <h1>Current Uploads</h1>
           <p>No Auto Uploads are currently scheduled for your company</p>
-        </div>
+        </div> */}
       </div>
     </div>
   );

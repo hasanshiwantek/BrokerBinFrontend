@@ -5,7 +5,10 @@
   width: 50vw;
   padding: 1rem;
   h1 {
-    font-weight: bolder;
+    /* font-weight: bolder; */
+    color: #444;
+    font-size: 1.5em;
+    font-weight: 700;
   }
   button {
     background: var(--primary-color);
@@ -177,7 +180,9 @@
     /* align-items: center; */
     gap: 1rem;
     select {
-      padding: 1rem 0;
+      padding: 0.5rem 0;
+      font-size: 8pt;
+      color: #444;
     }
     &_div {
       display: flex;
@@ -493,4 +498,23 @@ gap:80px;
 
 .inventory button{
   padding: 3px 6px;
+}
+
+input[type="file"] {
+  font-size: 8pt;
+  color: #444;
+}
+
+
+
+
+
+
+.inventory_main_ExampleFile p{
+  font-size: 8pt;
+  color: #444;
+}
+.inventory_exportRemove label{
+  font-size: 8pt;
+  color: #444;
 }
