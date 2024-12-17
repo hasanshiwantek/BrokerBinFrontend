@@ -14,23 +14,31 @@ import ErrorStatus from "../../../Error/ErrorStatus";
 import Cookies from "js-cookie";
 import { Link,NavLink } from "react-router-dom";
 import Footer from "../../../Footer/Footer";
+import axios from "axios";
+import { brokerAPI } from "../../../api/BrokerEndpoint";
 
 const MyProfile = () => {
   const token = Cookies.get("token");
   const user_id = Cookies.get("user_id");
 
+  const [formData, setFormData] = useState({});
+  const [fileBase64, setFileBase64] = useState("");
+  const [loading, setLoading] = useState(true);
+
   const {
     user,
-    formData,
+    // formData,
     initialData,
     blurWhileLoading,
     customSignature,
     error,
   } = useSelector((state) => state.profileStore);
+  console.log("INITAL DATA",initialData)
 
   const id = user?.user?.id || user_id;
+
   const dispatch = useDispatch();
-  const [fileBase64, setFileBase64] = useState("");
+  // const [fileBase64, setFileBase64] = useState("");
 
   const textAreaContent = [
     formData.sigcheckName ? `${formData.firstName} ${formData.lastName}` : "",
@@ -42,49 +50,87 @@ const MyProfile = () => {
     formData.sigcheckToll ? `${formData.tollFree}` : "",
     formData.sigcheckFax ? `${formData.faxNumber}` : "",
     formData.sigcheckIM ? `${formData.specialty}` : "",
-  ]
-    .filter(Boolean)
-    .join("\n");
+  ].filter(Boolean).join("\n");
+const customTextAreaContent = initialData?.customSignature?.filter(Boolean).join("\n");
 
-  const customTextAreaContent = initialData?.customSignature
-    ?.filter(Boolean)
-    .join("\n");
+useEffect(() => {
+  console.log(id)
+;
+  dispatch(fetchUserData({ id, token }));
+}, []);
 
-  useEffect(() => {
-    dispatch(fetchUserData({ id, token }));
-  }, [dispatch, id, token]);
+const companyId = initialData?.company_id;
 
-  const cleanInput = (input) => input.trimStart().replace(/\s+/g, " ");
+    useEffect(() => {
+      if (companyId) {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(`${brokerAPI}company/show/${companyId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setFormData(response.data); // API ka response direct set ho raha hai
+          setLoading(false);
+        } catch (error) {
+          console.error("Error fetching data", error);
+          setLoading(false);
+        }
+      };
+    
+      fetchData();
+    }
+    }, [companyId, token]);
+
+  // const cleanInput = (input) => input.trimStart().replace(/\s+/g, " ");
+
+  // const handleChange = (e) => {
+  //   const { name, type, value } = e.target;
+  //   const val = type === "checkbox" ? checked : cleanInput(value);
+  //   setFormData({ ...formData, [name]: val });
+  // };
 
   const handleChange = (e) => {
-    const { name, type, checked, value } = e.target;
-    const val = type === "checkbox" ? checked : cleanInput(value);
-    dispatch(setFormData({ ...formData, [name]: val }));
+    const { name, value } = e.target;
+  
+    setFormData((prevData) => {
+      const updatedData = { ...prevData };
+      if (!updatedData.data) updatedData.data = {}; // Ensure `data` exists
+      if (!updatedData.data.company) updatedData.data.company = {}; // Ensure `company` exists
+      if (!updatedData.data.company.primaryContact)
+        updatedData.data.company.primaryContact = {}; // Ensure `primaryContact` exists
+  
+      updatedData.data.company.primaryContact[name] = cleanInput(value);
+      return updatedData;
+    });
   };
+  
+  const cleanInput = (input) => input.trimStart().replace(/\s+/g, " ");
+  
+  
+  
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    const extension = String(file.name).split(".").pop().toLowerCase();
-    const allowedExtensions = ["jpeg", "jpg", "png", "webp"];
-    if (allowedExtensions.includes(extension)) {
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const base64String = e.target.result
-            .replace("data:", "")
-            .replace(/^.+,/, "");
-          setFileBase64(base64String);
-        };
-        reader.readAsDataURL(file);
-      } else {
-        setFileBase64("");
-      }
-    } else {
-      alert("Format should be a jpeg, jpg, png, or webp");
-      event.target.value = "";
-      setFileBase64("");
-    }
-  };
+  // const handleFileChange = (event) => {
+  //   const file = event.target.files[0];
+  //   const extension = String(file.name).split(".").pop().toLowerCase();
+  //   const allowedExtensions = ["jpeg", "jpg", "png", "webp"];
+  //   if (allowedExtensions.includes(extension)) {
+  //     if (file) {
+  //       const reader = new FileReader();
+  //       reader.onload = (e) => {
+  //         const base64String = e.target.result
+  //           .replace("data:", "")
+  //           .replace(/^.+,/, "");
+  //         setFileBase64(base64String);
+  //       };
+  //       reader.readAsDataURL(file);
+  //     } else {
+  //       setFileBase64("");
+  //     }
+  //   } else {
+  //     alert("Format should be a jpeg, jpg, png, or webp");
+  //     event.target.value = "";
+  //     setFileBase64("");
+  //   }
+  // };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -321,7 +367,7 @@ const MyProfile = () => {
                         name="firstName"
                         id="firstName"
                         onChange={handleChange}
-                        value={formData.firstName}
+                        value={formData.data?.company?.primaryContact.firstName || ""}
                         placeholder="Your first name"
                       />
                     </span>
@@ -332,52 +378,74 @@ const MyProfile = () => {
                         name="lastName"
                         id="lastName"
                         onChange={handleChange}
-                        value={formData.lastName}
+                        value={formData.data?.company?.primaryContact.lastName || ""}
                         placeholder="Your last name"
                       />
                     </span>
                     <span>
-                      <label htmlFor="title">Contact: Title</label>
-                      <input
-                        type="text"
-                        name="title"
-                        id="title"
-                        onChange={handleChange}
-                        value={formData.position}
-                        placeholder="title"
-                      />
-                    </span>
-                    <span>
-                      <label htmlFor="Direct Phone">Direct Phone</label>
-                      <input
-                        type="Direct Phone"
-                        name="experience"
-                        id="experience"
-                        onChange={handleChange}
-                        value={formData.experience}
-                        placeholder="Your experience"
-                      />
-                    </span>
-                    <span>
-                      <label htmlFor="specialty">Specialty (if any)</label>
+                      <label htmlFor="specialty">Contact: Title</label>
                       <input
                         type="text"
                         name="specialty"
                         id="specialty"
                         onChange={handleChange}
-                        value={formData.specialty}
-                        placeholder="Your specialty"
+                        value={formData.data?.company?.primaryContact.specialty || ""}
+                        placeholder="title"
                       />
                     </span>
                     <span>
-                      <label htmlFor="email">Email Address</label>
+                      <label htmlFor="phoneNumber">Direct Phone</label>
                       <input
-                        type="text"
-                        name="email"
+                        type="phoneNumber"
+                        name="phoneNumber"
+                        id="phoneNumber"
+                        onChange={handleChange}
+                        value={formData.data?.company?.primaryContact.phoneNumber || ""}
+                        placeholder="Your experience"
+                      />
+                    </span>
+                    <span>
+                      <label htmlFor="billingEmail">Billing Email</label>
+                      <input
+                        type="email"
+                        name="billingEmail"
                         id="email"
                         onChange={handleChange}
-                        value={formData.email}
-                        placeholder="Your email"
+                        value={formData.data?.company?.primaryContact.email || ""}
+                        placeholder="Billing email"
+                      />
+                    </span>
+                    <span>
+                      <label htmlFor="supportEmail">Support Email</label>
+                      <input
+                        type="email"
+                        name="supportEmail"
+                        id="email"
+                        onChange={handleChange}
+                        value={formData.data?.company?.primaryContact.email || ""}
+                        placeholder="Support Email"
+                      />
+                    </span>
+                    <span>
+                      <label htmlFor="salesEmail">Sales/RFQ Email</label>
+                      <input
+                        type="email"
+                        name="salesEmail"
+                        id="email"
+                        onChange={handleChange}
+                        value={formData.data?.company?.primaryContact.email || ""}
+                        placeholder="Sales/RFQ Email"
+                      />
+                    </span>
+                    <span>
+                      <label htmlFor="companyInfoEmail">Company Info Email</label>
+                      <input
+                        type="text"
+                        name="companyInfoEmail"
+                        id="email"
+                        onChange={handleChange}
+                        value={formData.data?.company?.primaryContact.email || ""}
+                        placeholder="Company Info Email"
                       />
                     </span>
                   </div>
@@ -391,7 +459,7 @@ const MyProfile = () => {
                         name="paymentGateway"
                         id="paymentGateway"
                         onChange={handleChange}
-                        value={formData.paymentGateway}
+                        value={formData.data?.company?.primaryContact.paymentGateway || ""}
                         placeholder="Identifier (Username, email, etc"
                       />
                     </span>
