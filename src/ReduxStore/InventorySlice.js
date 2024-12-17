@@ -80,11 +80,11 @@ export const getInventoryData = createAsyncThunk(
 
 export const updateInventoryData = createAsyncThunk(
   "inventoryStore/updateInventoryData",
-  async ({ token,data}) => {
+  async ({ token,inventories}) => {
     try {
       const response = await axios.put(
         `${brokerAPI}inventory/update`,
-        data,
+        inventories,
   
         {
           headers: {
@@ -97,13 +97,37 @@ export const updateInventoryData = createAsyncThunk(
       return response.data;
     } catch (error) {
       console.error(
-        "Error Fetching inventory Data:",
+        "Error Updating inventory Data:",
         error.response?.data 
       );
       throw error.response?.data 
     }
   }
 );
+
+export const deleteInventoryData = createAsyncThunk(
+  "inventoryStore/deleteInventoryData",
+  async ({ token, ids }) => {
+    console.log(token, "Attempting to delete inventories with IDs:", ids);
+    try {
+      const response = await axios.delete(
+        `${brokerAPI}inventory/delete`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          data: { ids } // Pass 'Ids' as part of the request body
+        }
+      );
+      return response.data; // Assuming the backend returns the deleted IDs or a success message
+    } catch (error) {
+      console.error("Error Deleting inventories:", error.response?.data);
+      throw error.response?.data; // Propagate the error message
+    }
+  }
+);
+
 
 
 
@@ -234,7 +258,18 @@ const InventorySlice = createSlice({
       .addCase(getInventoryData.rejected, (state, action) => {
         console.error("ERROR FETCHING INVENTORY DATA", action.error);
         if (action.error.message === "Unauthorized") {
-          // Redirect to login or show login prompt
+        }
+      })
+      .addCase(updateInventoryData .pending, (state) => {
+        console.log("UPDATING INVENTORY DATA FROM REDUX");
+      })
+      .addCase(updateInventoryData .fulfilled, (state, action) => {
+        state.inventoryData=action.payload
+        console.log("UPDATED INVENTORY PAYLOAD FROM REDUX",action.payload)
+      })
+      .addCase(updateInventoryData .rejected, (state, action) => {
+        console.error("ERROR UPDATING INVENTORY DATA", action.error);
+        if (action.error.message === "Unauthorized") {
         }
       });
   },

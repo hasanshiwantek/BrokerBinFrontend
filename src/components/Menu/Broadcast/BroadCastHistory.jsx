@@ -112,7 +112,7 @@ const BroadCastHistory = () => {
   };
 
 
-  
+
   const handleFileDownload = (file) => {
     if (!file) {
       alert('No file available for download.');
@@ -236,21 +236,21 @@ const BroadCastHistory = () => {
 
 
 
-                       <td className='flex'>
-                                          <img src={bullImage} alt="" onClick={() => openModal(item)} style={{ width: "18px", fontWeight: "bold" }} />
-                                          {
-                                            item.file && (
-                                              <div className={css.tooltipWrapper}>
-                                                <FaFileAlt
-                                                  onClick={() => handleFileDownload(item.file)}
-                                                  style={{ cursor: "pointer", marginLeft: "8px" }}
-                                                  className={css.fileIcon}
-                                                />
-                                                <span className={css.tooltip}>Download File</span>
-                                              </div>
-                                            )
-                                          }
-                                        </td>
+                    <td className='flex'>
+                      <img src={bullImage} alt="" onClick={() => openModal(item)} style={{ width: "18px", fontWeight: "bold" }} />
+                      {
+                        item.file && (
+                          <div className={css.tooltipWrapper}>
+                            <FaFileAlt
+                              onClick={() => handleFileDownload(item.file)}
+                              style={{ cursor: "pointer", marginLeft: "8px" }}
+                              className={css.fileIcon}
+                            />
+                            <span className={css.tooltip}>Download File</span>
+                          </div>
+                        )
+                      }
+                    </td>
 
                     <td>{item.partModel}</td>
                     <td>{item.heciClei}</td>
@@ -292,11 +292,11 @@ const BroadCastHistory = () => {
 
 
       <BroadcastFileModal
-          isOpen={isModalOpen}
-          onRequestClose={closeModal}
-          broadcast={newselectedBroadcast}
-          handleReply={handleReplyClick}
-        />
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        broadcast={newselectedBroadcast}
+        handleReply={handleReplyClick}
+      />
 
     </>
   );
