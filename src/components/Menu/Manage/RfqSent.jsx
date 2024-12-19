@@ -197,7 +197,7 @@ const RfqTableSent = () => {
     const handleCheckboxClick = (event, id) => {
         event.stopPropagation(); // Prevent the event from propagating to the row click event
         if (event.target.checked) {
-            const mails = currentItems.filter((m) => m.id === id);
+            const mails = filteredData.filter((m) => m.id === id);
             dispatch(setRfqMail([...rfqMail, ...mails]));
         } else {
             dispatch(setRfqMail(rfqMail.filter((e) => e.id !== id)));
@@ -279,7 +279,8 @@ const RfqTableSent = () => {
                         <div className={css.rfqTableDetail}>
                             <SearchComponent
                             onSearch={applyFilters}
-                            resetTrigger={resetTrigger} // Optional for resetting fields
+                            resetTrigger={resetTrigger}
+                            isSent={true} // Optional for resetting fields
                             />
                             <table>
                                 <thead>
@@ -320,7 +321,8 @@ const RfqTableSent = () => {
                                                     name="addToCart"
                                                     id="addToCart"
                                                     onClick={(event) => event.stopPropagation()}
-                                                    onChange={(event) => handleCheckboxClick(event, e.id)}
+                                                    onChange={(event) => {console.log("Checkbox Clicked for ID:", e.id);
+                                                        handleCheckboxClick(event, e.id)}}
                                                     checked={
                                                         rfqMail.some((mail) => mail.id === e.id) ||
                                                         rfqMailCheckAll

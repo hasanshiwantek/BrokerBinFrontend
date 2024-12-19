@@ -196,17 +196,15 @@ const RfqTable = () => {
     }
   };
   
-  const handleCheckboxClick = (event, id) => {
-    event.stopPropagation(); // Prevent propagation to the row's click handler
+  const handleCheckboxClick = (event, rfqId) => {
+    event.stopPropagation(); // Prevent event propagation
     if (event.target.checked) {
-      // Add the selected row to rfqMail
-      const selectedMail = receivedData.find((item) => item.id === id);
+      const selectedMail = filteredData.find((item) => item.rfqId === rfqId); // Match using userId
       if (selectedMail) {
-        dispatch(setRfqMail([...rfqMail, selectedMail]));
+        dispatch(setRfqMail([...rfqMail, selectedMail])); // Add the selected mail to rfqMail
       }
     } else {
-      // Remove the deselected row from rfqMail
-      dispatch(setRfqMail(rfqMail.filter((mail) => mail.id !== id)));
+      dispatch(setRfqMail(rfqMail.filter((mail) => mail.rfqId !== rfqId))); // Remove the deselected mail
     }
   };
   
@@ -274,7 +272,10 @@ const RfqTable = () => {
             </div>
 
             <div className={css.rfqTableDetail}>
-              <SearchComponent onSearch={applyFilters} resetTrigger={resetTrigger}/>
+              <SearchComponent 
+              onSearch={applyFilters} 
+              resetTrigger={resetTrigger}
+              isSent={false}/>
               <table>
                 <thead>
                   <tr>
@@ -299,6 +300,7 @@ const RfqTable = () => {
                   </tr>
                 </thead>
                 <tbody>
+                  {console.log("Filtered Data:", filteredData) /* Add this here */}
                   {(filteredData || []).map((e) => (
                     <tr
                       className={css.tableData}
@@ -312,10 +314,13 @@ const RfqTable = () => {
                         <input
                           type="checkbox"
                           name="addToCart"
-                          id="addToCart"
+                          id={`checbox-${e.from?.userId}`}
                           onClick={(event) => event.stopPropagation()}
-                          onChange={(event) => handleCheckboxClick(event, e.id)}
-                          checked={rfqMail.some((mail) => mail.id === e.id)}
+                          onChange={(event) => {
+                            console.log("Checkbox Clicked for ID:", e.rfqId); // Log the id
+                            handleCheckboxClick(event, e.rfqId);
+                          }}
+                          checked={rfqMail.some((mail) => mail.rfqId === e.rfqId)}
                         />
                         <td>(0|1)</td>
 

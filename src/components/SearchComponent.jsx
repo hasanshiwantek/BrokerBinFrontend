@@ -3,7 +3,7 @@ import SearchBarWithCalendar from "./SearchBarWithCalendar ";
 import css from "../styles/Menu/Manage/RfqTable.module.css";
 import Search from "../svgs/Search";
 
-const SearchComponent = ({onSearch, resetTrigger}) => {
+const SearchComponent = ({onSearch, resetTrigger, isSent}) => {
   const [toggleRfqSearch, setToggleRfqSearch] = useState(false);
   const [formValues, setFormValues] = useState({
     subject: "",
@@ -161,7 +161,7 @@ const SearchComponent = ({onSearch, resetTrigger}) => {
       />
                 </span>
                 <span>
-                  <p>Search sender information:</p>
+                <p>{isSent ? "Search recipient information:" : "Search sender information:"}</p>
                   <input
                     type="text"
                     name="firstName"
