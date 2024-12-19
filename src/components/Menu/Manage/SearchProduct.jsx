@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useRef,useState } from "react";
+
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import css from "../../../styles/SearchProducts.module.css";
 import Filter from "../../Filter";
 import CompaniesListingParts from "../../CompaniesListingParts";
@@ -25,6 +26,7 @@ import {
   searchProductHistory,
   setHoverCompanyDetail,
   searchByKeyword,
+
 } from "../../../ReduxStore/SearchProductSlice";
 import LoadingState from "../../../LoadingState";
 import { FaEye, FaShieldAlt } from "react-icons/fa";
@@ -46,8 +48,8 @@ const SearchProduct = () => {
   const page = parseInt(queryParams.get("page")) || 1;
   const searchString = queryParams.get("query") || "";
   const partModel = queryParams.get("partModel") || "";
-  console.log("Query" + searchString);
-  console.log("PartModel" + partModel);
+  console.log("Query " + searchString);
+  console.log("PartModel " + partModel);
   const {
     searchResponseMatched,
     searchResponseNotMatched,
@@ -63,43 +65,25 @@ const SearchProduct = () => {
 
   searchResponseMatched.map((item) => { console.log("Part Model " + item.partModel) })
   // Fetch data whenever 'page' or 'searchString' changes
+  // Fetch data whenever 'page' or 'searchString' changes
   useEffect(() => {
-    if (!searchString && !partModel) {
-      return;
+    const queryParams = new URLSearchParams(location.search);
+    const searchString = queryParams.get("query") || "";
+    const partModel = queryParams.get("partModel") || "";
+
+    if (searchString) {
+      // Dispatch action for general search with query
+      dispatch(searchProductQuery({ token, page, search: searchString }));
+    } else if (partModel) {
+      // Dispatch action for search by part model
+      dispatch(searchByKeyword({ token, page, partModel: partModel }));
     }
 
-    if (!partModel) {
-      dispatch(
-        searchProductQuery({
-          token,
-          page,
-          search: searchString,
-        })
-      );
-    } else {
-      dispatch(
-        searchByKeyword({
-          token,
-          page,
-          partModel: partModel,
-        })
-      );
-    }
-
+    // Dispatch action to get search history
     dispatch(searchProductHistory({ token }));
-  }, [token, page, searchString, dispatch]);
+  }, [location, dispatch, token, page]); // This will trigger when location or page changes
 
-  // Ensure 'searchString' exists before proceeding
-  if (!searchString && !partModel) {
-    // Handle the case where 'searchString' is not available
-    // You might want to redirect or show an error
-    return <div>No search query provided.</div>;
-  }
-  // else if (!searchString && !partModel) {
-  //   // Handle the case where 'searchString' is not available
-  //   // You might want to redirect or show an error
-  //   return <div>No search query provided.</div>;
-  // }
+
 
   if (gettingProducts) {
     return <LoadingState />;
@@ -113,45 +97,73 @@ const SearchProduct = () => {
     return <ErrorStatus error={error} />;
   }
 
-// if (!partModel) {
-//   return (
-//     <h2>
-//       No results found for Selected part model{" "}
-//       {partModel ? partModel : "N/A"}.
-//       <AddToHotList item={searchString} key={searchString} />
-//     </h2>
-//   );
-// }
-
+  // Show the Hotlist modal if no matching partModel results are found
+  //  if (searchResponseMatched?.length === 0 && partModel) {
+  //   return (
+  //     <div>
+  //       <h2>No Results Found For Selected Part Model: {partModel}</h2>
+  //       <AddToHotList item={partModel} />
+  //     </div>
+  //   );
+  // }
 
   return (
+    // <div className={css.layout}>
+    //   {filterToggle && <Filter />}
+    //   {/* If there are products that are not matched with search query */}
+    //   <div
+    //     className={css.layoutTables}
+    //     style={searchResponseMatched?.length <= 0 ? { margin: "0 auto" } : null}
+    //   >
+
+    //     {searchResponseNotMatched?.length > 0 && (
+    //       <div className={css.searchResult}>
+    //         {searchResponseNotMatched.map((search) => {
+    //           return <AddToHotList item={search} key={search} />;
+    //         })}
+    //       </div>
+    //     )}
+    //     {/* Products those are matched with search query */}
+    //     {searchResponseMatched?.length > 0 && (
+    //       <div className={css.tableArea}>
+    //         {graphToggle && <ProductsPieChart />}
+    //         <div className={css.productTable}>
+    //           <ProductTableBtn />
+    //           <ProductTableDetail />
+    //         </div>
+    //         {/* {companiesListingParts && <CompaniesListingParts />} */}
+    //       </div>
+    //     )}
+    //   </div>
+    //   {togglePopUp &&  <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
+    // </div>
+
+
     <div className={css.layout}>
       {filterToggle && <Filter />}
-      {/* If there are products that are not matched with search query */}
-      <div
-        className={css.layoutTables}
-        style={searchResponseMatched?.length <= 0 ? { margin: "0 auto" } : null}
-      >
-        {searchResponseNotMatched?.length > 0 && (
-          <div className={css.searchResult}>
-            {searchResponseNotMatched.map((search) => {
-              return <AddToHotList item={search} key={search} />;
-            })}
+
+      <div className={css.layoutTables} style={searchResponseMatched?.length <= 0 ? { margin: "0 auto" } : null}>
+        {/* Check if no search results matched and either partModel or searchString is available */}
+        {searchResponseMatched?.length === 0 && (searchString || partModel) ? (
+          <div>
+            <h2>No Results Found For Selected Part Model: {searchString || partModel}</h2>
+            <AddToHotList item={searchString || partModel} /> {/* This triggers the Hotlist modal */}
           </div>
-        )}
-        {/* Products those are matched with search query */}
-        {searchResponseMatched?.length > 0 && (
-          <div className={css.tableArea}>
-            {graphToggle && <ProductsPieChart />}
-            <div className={css.productTable}>
-              <ProductTableBtn />
-              <ProductTableDetail />
+        ) : (
+          // Render the products if available
+          searchResponseMatched?.length > 0 && (
+            <div className={css.tableArea}>
+              {graphToggle && <ProductsPieChart />}
+              <div className={css.productTable}>
+                <ProductTableBtn />
+                <ProductTableDetail />
+              </div>
             </div>
-            {/* {companiesListingParts && <CompaniesListingParts />} */}
-          </div>
+          )
         )}
       </div>
-      {togglePopUp &&  <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
+
+      {togglePopUp && <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
     </div>
   );
 };
@@ -178,7 +190,7 @@ const ProductTableBtn = React.memo(() => {
       {popUpRfq && <MyRFQNew />}
       <button type="button">Add</button>
       <button>
-      <a href="/cartpart" style={{ fontSize: "1em", color: "#444" }}>Cart</a>
+        <a href="/cartpart" style={{ fontSize: "1em", color: "#444" }}>Cart</a>
       </button>
       <button type="button" onClick={() => dispatch(setFilterToggle())}>
         Filters
@@ -226,22 +238,22 @@ const ProductTableDetail = React.memo(() => {
 
   const handleShowPopupCompanyDetails = (event, companyId) => {
     event.stopPropagation();
-  
+
     // Debugging: Log the companyId passed to the function
     console.log("Opening modal for companyId:", companyId);
-  
+
     // Debugging: Log the entire searchResponseMatched data to verify it has the expected structure
     console.log("searchResponseMatched:", searchResponseMatched);
-  
+
     // Find the company object by its companyId and addedBy.company.id
     const companyDetail = searchResponseMatched?.find((e) => {
       console.log("Checking company:", e.addedBy?.company?.id); // Log the company ids for comparison
       return e.addedBy?.company?.id === companyId;
     });
-  
+
     // Debugging: Log the companyDetail found (if any)
     console.log("Found companyDetail:", companyDetail);
-  
+
     // Check if companyDetail exists
     if (companyDetail?.addedBy?.company) {
       // Debugging: Log the company object before dispatching it
@@ -250,14 +262,14 @@ const ProductTableDetail = React.memo(() => {
     } else {
       console.error("Company not found!");
     }
-  
+
     // Toggle the modal visibility
     dispatch(setTogglePopUp());
   };
-  
 
 
-  
+
+
 
 
 
@@ -289,7 +301,7 @@ const ProductTableDetail = React.memo(() => {
     const newPage = page - 1;
     if (!partModel) {
       const url = `/inventory/search?page=${newPage}&query=${encodeURIComponent(
-        searchString
+        partModel
       )}`;
       navigate(url, { replace: true });
     } else {
@@ -304,7 +316,7 @@ const ProductTableDetail = React.memo(() => {
     const newPage = page + 1;
     if (!partModel) {
       const url = `/inventory/search?page=${newPage}&query=${encodeURIComponent(
-        searchString
+        partModel
       )}`;
       navigate(url, { replace: true });
     } else {
@@ -431,7 +443,7 @@ const ProductTableDetail = React.memo(() => {
         <button
           className="text-white text-lg font-bold"
           type="button"
-          onClick={handleNextPage}     
+          onClick={handleNextPage}
           disabled={page === totalPages}
         >
           Next

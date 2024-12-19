@@ -104,7 +104,7 @@
               background: var(--box-shadow);
               padding: 1rem;
               h3 {
-                font-size: 9pt;
+                font-size: 1.4rem;
                 font-weight: 700;
               }
             }
@@ -145,6 +145,8 @@
               display: flex;
               flex-direction: column;
               align-items: center;
+              color: #444;
+              cursor: pointer;
               > svg {
                 height: 3rem;
                 font-size: 3rem;
@@ -449,4 +451,29 @@
   width: 10%;
   height:10%;
 
+}
+
+.Popup_Info_Main_left_actions p:hover{
+  border-bottom:2px solid var(--primary-color);
+
+}
+
+.inventorySecSvgs{
+  color: #444;
+}
+
+.inventorySecSvgs span:hover{
+  border-bottom:2px solid var(--primary-color);
+
+}
+
+
+
+
+.Popup_Info_Main_right_tabs_terms h1{
+  border-bottom: 1px solid #bfbfbf;
+    color: #c1521a;
+    padding-bottom: .75rem;
+    font-size: 2rem;
+    font-weight: 600;
 }

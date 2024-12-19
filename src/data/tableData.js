@@ -7,6 +7,28 @@
 // };
 
 // const { searchResponse } = useSelector((store) => store.searchProductStore);
+
+
+// import { useState,useEffect } from "react";
+// import React from "react";
+// import { fetchBroadCastCount } from "../ReduxStore/BroadCast";
+// import Cookies from "js-cookie"
+// import { useDispatch, useSelector } from "react-redux";
+
+
+// const {broadcastCount}=useSelector((state)=>state.brodcastStore)
+// console.log(broadcastCount)
+// const token=Cookies.get("token")
+
+// const dispatch=useDispatch()
+
+// useEffect(()=>{
+// dispatch(fetchBroadCastCount({token}))
+  
+
+// },[])
+
+
 export const tableData = [
   {
     id: 1,
@@ -404,6 +426,7 @@ export const pieChartData = {
     "Request For Quote",
     "Service Broadcasts",
   ],
+
   datasets: [
     {
       // label: 'My First Dataset',
@@ -418,6 +441,7 @@ export const pieChartData = {
     },
   ],
 };
+
 export const inventoryData = [
   {
     name: "Inventory:",

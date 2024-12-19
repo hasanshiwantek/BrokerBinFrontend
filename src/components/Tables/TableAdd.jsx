@@ -2,6 +2,7 @@ import React from "react";
 import { inventoryAddTable } from "../../data/tableData";
 import { useDispatch, useSelector } from "react-redux";
 import { setInventoryAddData } from "../../ReduxStore/InventorySlice";
+import css from "../../styles/Menu/Manage/Inventory/Inventory.module.css";
 
 const TableAdd = () => {
   const inventoryAddData = useSelector(
@@ -25,7 +26,7 @@ const TableAdd = () => {
   };
 
   return (
-    <table>
+    <table className={css.addInvenInputs}>
       <thead>
         <tr>
           {inventoryAddTable.map((item) => {
