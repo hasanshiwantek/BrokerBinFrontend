@@ -1,10 +1,10 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const SearchBarWithCalendar = () => {
-  const [fromDate, setFromDate] = useState(null);
-  const [toDate, setToDate] = useState(null);
+const SearchBarWithCalendar = ({fromDate, toDate, setFromDate, setToDate}) => {
+  // const [fromDate, setFromDate] = useState(null);
+  // const [toDate, setToDate] = useState(null);
   const [showDatePickerFrom, setShowDatePickerFrom] = useState(false);
   const [showDatePickerTo, setShowDatePickerTo] = useState(false);
   const fromInputRef = useRef(null);
@@ -31,6 +31,15 @@ const SearchBarWithCalendar = () => {
     }, 200);
   };
 
+  useEffect(() => {
+    if (!fromDate) {
+      setShowDatePickerFrom(false);
+    }
+    if (!toDate) {
+      setShowDatePickerTo(false);
+    }
+  }, [fromDate, toDate]);
+
   const handleChangeFrom = (date) => {
     setFromDate(date);
     setShowDatePickerFrom(false);
@@ -53,24 +62,25 @@ const SearchBarWithCalendar = () => {
     }
   };
 
+
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: "0.2rem" }}>
+    <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
       <div style={{ position: "relative" }} ref={fromInputRef}>
         <input
           type="text"
           onFocus={handleFocusFrom}
           onBlur={handleBlurFrom}
-          onChange={handleInputChangeFrom}
-          value={fromDate ? fromDate.toLocaleDateString("en-US") : ""}
+          value={fromDate ? fromDate.toISOString().split("T")[0] : ""}
           style={{ height: "1rem" }}
           name="fromDate"
+          readOnly
         />
         {showDatePickerFrom && (
           <div style={{ position: "absolute", top: "100%", left: "0" }}>
             <DatePicker
               selected={fromDate}
               onChange={handleChangeFrom}
-              dateFormat="yy/MM/dd"
+              dateFormat="yyyy-MM-dd"
               inline
             />
           </div>
@@ -82,17 +92,17 @@ const SearchBarWithCalendar = () => {
           type="text"
           onFocus={handleFocusTo}
           onBlur={handleBlurTo}
-          onChange={handleInputChangeTo}
-          value={toDate ? toDate.toLocaleDateString("en-US") : ""}
+          value={toDate ? toDate.toISOString().split("T")[0] : ""}
           style={{ height: "1rem" }}
           name="toDate"
+          readOnly
         />
         {showDatePickerTo && (
           <div style={{ position: "absolute", top: "100%", left: "0" }}>
             <DatePicker
               selected={toDate}
               onChange={handleChangeTo}
-              dateFormat="yy/MM/dd"
+              dateFormat="yyyy-MM-dd"
               inline
             />
           </div>
