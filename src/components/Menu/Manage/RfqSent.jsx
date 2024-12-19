@@ -28,13 +28,14 @@ import {
 
 
 
-const RfqTable = () => {
+const RfqTableSent = () => {
 
 
     const { togglePopUp: togglePopUpRfq, rfqMail, rfqMailCheckAll, currentPage } = useSelector(
         (state) => state.rfqStore
     );
 
+    const [resetTrigger, setResetTrigger] = useState(false);
 
     const { togglePopUp: togglePopUpCompany } = useSelector((state) => state.searchProductStore)
 
@@ -51,6 +52,65 @@ const RfqTable = () => {
     const sentData = sentRfqData.data || [];
     console.log("SENDATA", sentData)
 
+    const [filteredData, setFilteredData] = useState(sentData);
+
+    const applyFilters = (filters) => {
+        let filtered = [...sentData];
+        console.log("Filters Applied:", filters);
+      
+        // Date Filter
+        if (filters.fromDate || filters.toDate) {
+          const fromDate = filters.fromDate ? new Date(filters.fromDate + "T00:00:00") : null;
+          const toDate = filters.toDate ? new Date(filters.toDate + "T23:59:59") : null;
+      
+          filtered = filtered.filter((item) => {
+            const itemDate = new Date(item.updated_at.replace(" ", "T"));
+            return (!fromDate || itemDate >= fromDate) && (!toDate || itemDate <= toDate);
+          });
+        }
+      
+        // Subject Filter
+        if (filters.subject) {
+          filtered = filtered.filter((item) =>
+            (item.subject || "").toLowerCase().includes(filters.subject.toLowerCase())
+          );
+        }
+      
+        // Sender (To) Information Filter
+        if (filters.firstName) {
+            filtered = filtered.filter((item) => {
+              const recipientInfo = item.to
+                ?.map((recipient) => 
+                  `${recipient.firstName || ""} ${recipient.lastName || ""} ${recipient.email || ""} ${recipient.company?.name || ""}`
+                )
+                .join(" ");
+              return recipientInfo?.toLowerCase().includes(filters.firstName.toLowerCase());
+            });
+          }
+      
+        // Part Numbers Filter
+        if (filters.partNumbers) {
+          filtered = filtered.filter((item) => {
+            const partNumbers = item.partNumbers || [];
+            return partNumbers.some((part) =>
+              (part || "").toLowerCase().includes(filters.partNumbers.toLowerCase())
+            );
+          });
+        }
+      
+        // Status Filter
+        if (filters.new || filters.forward || filters.reply || filters.unread) {
+          filtered = filtered.filter((item) => {
+            if (filters.new && !item.isNew) return false;
+            if (filters.forward && !item.isForwarded) return false;
+            if (filters.reply && !item.isReplied) return false;
+            if (filters.unread && item.isRead) return false;
+            return true;
+          });
+        }
+      
+        setFilteredData(filtered);
+      };
 
 
     const companyData = sentData?.map((item) => {
@@ -66,7 +126,14 @@ const RfqTable = () => {
         dispatch(sentRfq({ token }))
     }, [])
 
+    
 
+ useEffect(() => {
+    if (sentData.length > 0) {
+      setFilteredData(sentData);
+      console.log("Filtered data updated from receivedData:", sentData);
+    }
+  }, [sentData]);
 
 
 
@@ -158,6 +225,15 @@ const RfqTable = () => {
     console.log("togglePopUp", togglePopUpCompany);
 
 
+      const resetFilters = () => {
+        setFilteredData(sentData);
+        setResetTrigger((prev) => !prev);
+        console.log("Filters Reset. Data Reset to Original:", sentData);
+      };
+      
+      
+
+
     return (
         <>
             <div className={css.layout}>
@@ -201,7 +277,10 @@ const RfqTable = () => {
                             </ul>
                         </div>
                         <div className={css.rfqTableDetail}>
-                            <SearchComponent />
+                            <SearchComponent
+                            onSearch={applyFilters}
+                            resetTrigger={resetTrigger} // Optional for resetting fields
+                            />
                             <table>
                                 <thead>
                                     <tr>
@@ -226,7 +305,7 @@ const RfqTable = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {sentData?.map((e) => (
+                                    {(filteredData || []).map((e) => (
                                         <tr
                                             className={css.tableData}
                                             key={e.id}
@@ -346,7 +425,9 @@ const RfqTable = () => {
                         <div className={css.rfqTableBtn_bottom}>
                             <div>
                                 <button type="button">send</button>
-                                <button type="button">reset</button>
+                                <button 
+                                type="button"
+                                onClick={resetFilters}>reset</button>
                                 <button type="button">reply</button>
                                 <button type="button">forward</button>
                                 <button type="button">archive</button>
@@ -368,4 +449,4 @@ const RfqTable = () => {
     );
 };
 
-export default memo(RfqTable);
+export default memo(RfqTableSent);

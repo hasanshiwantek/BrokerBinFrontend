@@ -268,7 +268,7 @@ const RfqSlice = createSlice({
         console.error("Error while Fetching Received Data");
       })
       .addCase(sentRfq.pending, (state) => {
-        console.log("Pending....")
+        // console.log("Pending....")
       })
       .addCase(sentRfq.fulfilled, (state, action) => {
         state.sentRfqData =action.payload

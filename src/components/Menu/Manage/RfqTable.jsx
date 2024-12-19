@@ -32,7 +32,6 @@ const RfqTable = () => {
     (state) => state.rfqStore
   );
 
-
   const { togglePopUp: togglePopUpCompany } = useSelector((state) => state.searchProductStore)
 
   const { popupCompanyDetail } = useSelector((state) => state.searchProductStore)
@@ -42,12 +41,99 @@ const RfqTable = () => {
 
   const { receiveRfqData } = useSelector((state) => state.rfqStore)
   const sentRfqData = useSelector((state) => state.rfqStore.sentRfqData);
-  console.log("Data From Page", receiveRfqData)
 
 
   const receivedData = receiveRfqData.data || [];
   console.log("ReceivedData from Frontend", receivedData)
+  const itemsPerPage = 20;
+  const sliceTo = currentPage * itemsPerPage;
+  const sliceFrom = sliceTo - itemsPerPage;
 
+  const currentItems = receivedData.slice(sliceFrom, sliceTo);
+  // console.log("CURRENT ITEMS", currentItems)
+
+  const [filteredData, setFilteredData] = useState(receivedData);
+  const [resetTrigger, setResetTrigger] = useState(false);
+
+  const applyFilters = (filters) => {
+    let filtered = [...receivedData];
+    console.log("Filters Applied:", filters);
+    console.log("Original Data:", receivedData);
+    if (filters.fromDate || filters.toDate) {
+      console.log("Date Filter Condition Satisfied:", filters.fromDate, filters.toDate);
+      const fromDate = filters.fromDate ? new Date(filters.fromDate + "T00:00:00") : null;
+      const toDate = filters.toDate ? new Date(filters.toDate + "T23:59:59") : null;
+      console.log("From Date:", fromDate, "To Date:", toDate);
+      filtered = filtered.filter((item) => {
+        const itemDate = new Date(item.updated_at.replace(" ", "T")); // Parse `updated_at`
+        console.log("Item Date:", item.updated_at, "Parsed Date:", itemDate);
+        const isAfterFrom = !fromDate || itemDate >= fromDate;
+        const isBeforeTo = !toDate || itemDate <= toDate;
+        const isMatch = isAfterFrom && isBeforeTo;
+        console.log(
+          `ItemDate: ${itemDate}, FromDate: ${fromDate}, ToDate: ${toDate}, Match: ${isMatch}`
+        );
+        return isMatch;
+      });
+      console.log("Filtered Data After Date Filter:", filtered);
+    }
+    
+    // Subject filter
+    if (filters.subject) {
+      filtered = filtered.filter((item) => {
+        const subject = item.subject || ""; // Handle null values
+        const isMatch = subject.toLowerCase().includes(filters.subject.toLowerCase());
+        console.log(`Subject: "${subject}", Filter: "${filters.subject}", Match: ${isMatch}`);
+        return isMatch;
+      });
+      console.log("After Subject Filter:", filtered);
+    }
+  
+    // Status filter
+    if (filters.new || filters.forward || filters.reply || filters.unread) {
+      filtered = filtered.filter((item) => {
+        if (filters.new && !item.isNew) return false; // Filter for "New"
+        if (filters.forward && !item.isForwarded) return false; // Filter for "Forward"
+        if (filters.reply && !item.isReplied) return false; // Filter for "Reply"
+        if (filters.unread && item.isRead) return false; // Filter for "Unread"
+        return true;
+      });
+      console.log("After Status Filters:", filtered);
+    }
+    
+    // Part Number filter
+    if (filters.partNumbers) {
+      filtered = filtered.filter((item) => {
+        const partNumbers = item.partNumbers || []; // Handle null or empty arrays
+        const isMatch = partNumbers.some((part) =>
+          (part || "").toLowerCase().includes(filters.partNumbers.toLowerCase())
+        );
+        console.log(`Part Numbers: ${JSON.stringify(partNumbers)}, Filter: "${filters.partNumbers}", Match: ${isMatch}`);
+        return isMatch;
+      });
+      console.log("After Part Numbers Filter:", filtered);
+    }
+  
+    // Sender Information filter
+    if (filters.firstName) {
+      filtered = filtered.filter((item) => {
+        const senderInfo = `${item.from?.firstName || ""} ${item.from?.lastName || ""} ${item.from?.email || ""} ${item.from?.company?.name || ""}`; // Use `from` for sender details
+        const isMatch = senderInfo.toLowerCase().includes(filters.firstName.toLowerCase());
+        console.log(`Sender Info: "${senderInfo}", Filter: "${filters.firstName}", Match: ${isMatch}`);
+        return isMatch;
+      });
+      console.log("After Sender Information Filter:", filtered);
+    }
+  
+    setFilteredData(filtered);
+  };
+
+  const resetFilters = () => {
+    console.log("Reset button clicked");
+    setFilteredData(receivedData); // Reset table to original 
+    setResetTrigger((prev) => !prev);
+    console.log("Filters Reset. Data Reset to Original:", receivedData);
+  };
 
   useEffect(() => {
     dispatch(receivedRfq({ token }));
@@ -57,17 +143,13 @@ const RfqTable = () => {
     }
   }, [dispatch, token]); // Adding token and dispatch as dependencies
 
-
-
-
-
-
-  const itemsPerPage = 20;
-  const sliceTo = currentPage * itemsPerPage;
-  const sliceFrom = sliceTo - itemsPerPage;
-
-  const currentItems = receivedData.slice(sliceFrom, sliceTo);
-  console.log("CURRENT ITEMS", currentItems)
+  useEffect(() => {
+    if (receivedData.length > 0) {
+      setFilteredData(receivedData);
+      console.log("Filtered data updated from receivedData:", receivedData);
+    }
+  }, [receivedData]);
+  
 
   const prevPage = () => {
     if (currentPage === 1) {
@@ -82,21 +164,6 @@ const RfqTable = () => {
     }
     dispatch(setCurrentPageNext());
   };
-
-  const now = new Date();
-  const date = `${now.getHours() > 12
-    ? (now.getHours() % 12) +
-    `:` +
-    (now.getMinutes() < 9 ? `0` + now.getMinutes() : now.getMinutes()) +
-    `PM`
-    : `0` +
-    now.getHours() +
-    `:` +
-    (now.getMinutes() < 9 ? `0` + now.getMinutes() : now.getMinutes()) +
-    `AM`
-    } ${now.getDate()}/${now.getMonth()}/${now.getFullYear()}`;
-
-  
 
   const handleShowPopupRfq = (event, rfq) => {
     event.stopPropagation();
@@ -129,60 +196,46 @@ const RfqTable = () => {
     }
   };
   
-  
-  
-
-
   const handleCheckboxClick = (event, id) => {
-    event.stopPropagation(); // Prevent the event from propagating to the row click event
+    event.stopPropagation(); // Prevent propagation to the row's click handler
     if (event.target.checked) {
-      const mails = currentItems.filter((m) => m.id === id);
-      dispatch(setRfqMail([...rfqMail, ...mails]));
+      // Add the selected row to rfqMail
+      const selectedMail = receivedData.find((item) => item.id === id);
+      if (selectedMail) {
+        dispatch(setRfqMail([...rfqMail, selectedMail]));
+      }
     } else {
-      dispatch(setRfqMail(rfqMail.filter((e) => e.id !== id)));
+      // Remove the deselected row from rfqMail
+      dispatch(setRfqMail(rfqMail.filter((mail) => mail.id !== id)));
     }
   };
-
+  
   const handleCheckboxClickAll = (event) => {
-    event.stopPropagation(); // Prevent the event from propagating to the row click event
-    dispatch(setRfqMailCheckAll(event.target.checked));
-    if (event.target.checked) {
-      dispatch(setRfqMail(currentItems));
+    event.stopPropagation(); // Prevent propagation
+    const isChecked = event.target.checked;
+    dispatch(setRfqMailCheckAll(isChecked)); // Update "Select All" state
+    
+    if (isChecked) {
+      // Select all rows
+      dispatch(setRfqMail(receivedData));
     } else {
+      // Deselect all rows
       dispatch(setRfqMail([]));
     }
   };
+  
   // Company Modal Logic
   const openCompanyModal = (company) => {
     console.log("Opening Company Modal with Company:", company);
     dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
     dispatch(setTogglePopUpCompany()); // Show company modal
   };
-  console.log("popupCompanyDetail", popupCompanyDetail);
-  console.log("togglePopUp", togglePopUpCompany);
 
   return (
     <>
       <div className={css.layout}>
         <div className={css.tableArea}>
           <div className={css.rfqTable}>
-            {/* 
-            <div className={css.rfqTableBtn_top}>
-
-
-              <a href="/rfq" >received({tableData.length})</a>
-              <a href="/rfqSent">sent(0)</a>
-              <a >new</a>
-              <a >archive</a>
-
-
-            </div> */}
-
-
-
-
-
-
             <div className={myProfile.profileInfo_links}>
               <ul>
                 <li>
@@ -221,7 +274,7 @@ const RfqTable = () => {
             </div>
 
             <div className={css.rfqTableDetail}>
-              <SearchComponent />
+              <SearchComponent onSearch={applyFilters} resetTrigger={resetTrigger}/>
               <table>
                 <thead>
                   <tr>
@@ -246,7 +299,7 @@ const RfqTable = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {receivedData?.map((e) => (
+                  {(filteredData || []).map((e) => (
                     <tr
                       className={css.tableData}
                       key={e.id}
@@ -262,10 +315,7 @@ const RfqTable = () => {
                           id="addToCart"
                           onClick={(event) => event.stopPropagation()}
                           onChange={(event) => handleCheckboxClick(event, e.id)}
-                          checked={
-                            rfqMail.some((mail) => mail.id === e.id) ||
-                            rfqMailCheckAll
-                          }
+                          checked={rfqMail.some((mail) => mail.id === e.id)}
                         />
                         <td>(0|1)</td>
 
@@ -276,8 +326,6 @@ const RfqTable = () => {
                       <td>
                         {e.quantities?.reduce((total, quantity) => total + Number(quantity), 0)}
                       </td>
-
-
                       <td>
                         {e.partNumbers?.length > 1 ? (
                           <>
@@ -332,12 +380,18 @@ const RfqTable = () => {
             <div className={css.rfqTableBtn_bottom}>
               <div>
                 <button type="button">send</button>
-                <button type="button">reset</button>
+                <button 
+                  onClick={resetFilters} 
+                  className={css.resetFiltersBtn}
+                  type="button">
+                  Reset Filters
+                </button>
                 <button type="button">reply</button>
                 <button type="button">forward</button>
                 <button type="button">archive</button>
                 <button type="button">mark as read</button>
                 <button type="button">mark as unread</button>
+                
               </div>
               <div className={css.pagination}>
                 <button onClick={prevPage}>prev</button>
@@ -357,44 +411,3 @@ const RfqTable = () => {
 };
 
 export default memo(RfqTable);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
