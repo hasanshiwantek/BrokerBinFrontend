@@ -579,6 +579,8 @@ const TabContent = ({companyId}) => {
    const companyUserId=companyContactData.data.contacts.map((item)=>item.id)
    console.log("User Id from Comapny Modal",companyUserId)
 
+   const companyUsersCount=companyContactData.data.contacts.length
+
 
 
    const userDeleteHandler = (id) => {
@@ -632,7 +634,7 @@ const TabContent = ({companyId}) => {
             onClick={() => setToggleTabs(1)}
             className={toggleTabs === 1 ? css.activeTab : ""}
           >
-            contacts
+            contacts ({companyUsersCount})
           </li>
           <li
             onClick={() => setToggleTabs(2)}
@@ -843,21 +845,19 @@ return(
           <div className={css.Popup_Info_Main_right_tabs_terms}>
             <div>
               <h1>terms</h1>
-              <ul>
-                <li>Credit Card</li>
-                <li>Wire Transfer</li>
+                <p>Pofile Incomplete</p>
+                {/* <li>Wire Transfer</li>
                 <li>COD (Cash On Delivery)</li>
                 <li>Net 5</li>
                 <li>Net 10</li>
                 <li>Net 30</li>
                 <li>Cash</li>
                 <li>Call</li>
-                <li>Minimum Order: 0</li>
-              </ul>
+                <li>Minimum Order: 0</li> */}
             </div>
             <div>
               <h1>return policy</h1>
-              <p>30 days</p>
+              <p>Profile Incomplete</p>
             </div>
             <div>
               <h1>legal files</h1>

@@ -46,6 +46,7 @@ import dp6 from "../assets/drop-down6.svg"
 
 
 const Header = () => {
+
   const token = Cookies.get("token");
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -85,8 +86,8 @@ const Header = () => {
       .filter(Boolean)
       .join(",");
 
-    console.log(searchString);
-    console.log(searchType);
+    console.log("Search String from Home Page ",searchString);
+    console.log("Search Type from Home Page " ,searchType);
     // Clear selected products
     dispatch(setSelectedProducts([]));
 
@@ -105,7 +106,14 @@ const Header = () => {
       )}`;
       navigate(url, { replace: true });
     }
-  };
+  
+
+
+  
+
+
+
+  }
 
   return (
     <>

@@ -178,6 +178,33 @@ export const sendBroadcastReply = createAsyncThunk(
 
 
 
+export const fetchBroadCastCount = createAsyncThunk(
+  "broadcastStore/fetchBroadCastCount",
+  async ({ token }) => {
+    console.log(token)
+
+    try {
+      const response = await axios.get(
+        `${brokerAPI}broadcast/count`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log(response.data);
+
+      return response.data;
+
+    } catch (error) {
+      throw new Error("Error fetching broadcast count");
+    }
+  }
+);
+
+
 
 const initialState = {
   computerSelection: [],
@@ -188,6 +215,7 @@ const initialState = {
   filters: [],
   broadCastData: [],
   serviceData: [],
+  broadcastCount:{},
   togglePopUp: false,
   popupCompanyDetail: null,
 
@@ -290,12 +318,10 @@ const broadcastSlice = createSlice({
           state.broadCastData = []; // Reset it to an empty array to avoid further issues
         }
       })
-
       .addCase(deleteBroadCastData.rejected, (state, action) => {
         state.isLoading = false;
         console.log("REJECTED!!!... ")
         state.error = action.error.message;
-
       }).addCase(sendBroadcastReply.pending, (state) => {
         state.isLoading = true;
         console.log("Pending... ")
@@ -306,12 +332,27 @@ const broadcastSlice = createSlice({
         console.log("REPLY FULLFILLED")
 
       })
-
       .addCase(sendBroadcastReply.rejected, (state, action) => {
         state.isLoading = false;
         console.log("REJECTED!!!... ")
         state.error = action.error.message;
+      })
+      .addCase(fetchBroadCastCount.pending, (state) => {
+        state.isLoading = true;
+        console.log("Pending... ")
+        state.error = null;
+      })
+      .addCase(fetchBroadCastCount.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.broadcastCount=action.payload
+      })
+      .addCase(fetchBroadCastCount.rejected, (state, action) => {
+        state.isLoading = false;
+        console.log("REJECTED!!!... ")
+        state.error = action.error.message;
       });
+      
+      
   },
 });
 

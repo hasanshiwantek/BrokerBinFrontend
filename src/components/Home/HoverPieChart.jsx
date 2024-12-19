@@ -65,6 +65,9 @@ const HoverPieChart = () => {
             </div>
           );
         })}
+
+
+
         <Link to={"/sendbroad"} className={css.gridHome2_Details_Bottom_Chart_data_btn}>
           SEND BROADCAST
         </Link>
@@ -74,3 +77,7 @@ const HoverPieChart = () => {
 };
 
 export default HoverPieChart;
+
+
+
+

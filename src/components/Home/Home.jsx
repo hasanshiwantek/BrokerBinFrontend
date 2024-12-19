@@ -15,6 +15,8 @@ import Cookies from "js-cookie";
 import { searchProductHistory, searchProductQuery, setSelectedProducts } from "../../ReduxStore/SearchProductSlice";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { fetchBroadCastCount } from "../../ReduxStore/BroadCast";
+
 const Home = () => {
   const token = Cookies.get("token");
   const user_id = Cookies.get("user_id");
@@ -26,7 +28,9 @@ const Home = () => {
   );
 
   const { page, pageSize } = useSelector((store) => store.searchProductStore);
+  const {broadcastCount}=useSelector((state)=>state.broadcastStore)
 
+  // console.log("Broadcast Count ",broadcastCount)
   const id = user?.user?.id || user_id;
 
   const dispatch = useDispatch();
@@ -35,6 +39,10 @@ const Home = () => {
     console.log(id);
     dispatch(fetchUserData({ id, token }));
   }, []);
+
+  useEffect(()=>{
+    dispatch(fetchBroadCastCount({token}))
+  },[])
 
   const bomFileRef = useRef(null);
   // <----------------------------------------------------- Access uploaded file name ------------------------------------------------------->
