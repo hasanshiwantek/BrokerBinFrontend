@@ -12,6 +12,7 @@ const AddToHotList = ({ item }) => {
     e.preventDefault();
     // Add item to hotlist here
     console.log("Item added to hotlist:", item);
+    alert("Item Added to Hotlist!")
     const hotlists = [{partModel: item}]
     dispatch(addToHotList({ token, hotlists }));
   };
