@@ -44,6 +44,8 @@ const EditDelete = () => {
     setEditedItems(filteredItems);
   };
 
+  
+
   console.log("token", token);
 
   // Pagination details
@@ -178,7 +180,7 @@ const EditDelete = () => {
               <option value="0">N/A</option>
             </select>
           </span>
-          <button type="button" onClick={handleSearch} className="cursor-pointer transform active:scale-90 transition-all duration-100">
+          <button type="button" onClick={handleSearch}  className={`${inventory.editDeleteTable_bottom} cursor-pointer transform active:scale-90 transition-all duration-100  rounded-md`} >
             Search
           </button>
         </div>
@@ -217,7 +219,7 @@ const EditDelete = () => {
                   <tr key={item.id} className={inventory.tableInputData}>
                     <td>
                       <input
-                        className="cursor-pointer"
+                        className="cursor-pointer ml-2"
                         type="checkbox"
                         checked={selectedInventories.includes(item.id)}
                         onChange={() => handleCheckboxChange(item.id)}
@@ -246,7 +248,7 @@ const EditDelete = () => {
                     </td>
                     <td>
                       <input
-                        type="text"
+                        type="number"
                         value={item.quantity || ""}
                         onChange={(e) => handleFieldChange(index, "quantity", e.target.value)}
                       />
@@ -313,7 +315,7 @@ const EditDelete = () => {
             >
               Previous
             </button>
-            <span className="mt-3 text-gray-700 text-base">
+            <span className="mt-2 text-gray-700 text-lg">
               Page {currentPage} of {totalPages}
             </span>
             <button

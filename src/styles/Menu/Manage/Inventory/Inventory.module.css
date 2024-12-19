@@ -29,7 +29,6 @@
     display: flex;
     gap: 1rem;
     font-size: 1.5rem;
-    padding-bottom: 1rem;
   }
   &_main {
     background: white;
@@ -204,6 +203,10 @@
     th {
       color: white;
       background: var(--table-th-color);
+      padding: 0 4px;
+      font-size: 8.5pt;
+      font-weight: 600;
+  
     }
     tbody {
       background: white;
@@ -559,4 +562,17 @@ input[type="file"] {
 .addInvenInputs input:focus{
   outline: none;
   border: 1px solid var(--primary-color);
+}
+
+.editDeleteTable_bottom button{
+  font-size: 9pt;
+  padding: 4px 7px;
+  border-radius: 5px;
+  border: 1px solid orangered;
+
+}
+
+.editDeleteTable_bottom{
+  background-color: transparent;
+  margin-top: 4px;
 }
