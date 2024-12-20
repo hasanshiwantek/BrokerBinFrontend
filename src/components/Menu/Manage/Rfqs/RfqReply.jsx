@@ -59,20 +59,40 @@ useEffect(() => {
 }, [id, dispatch, token]);
 
 
-useEffect(() => {
-  if (initialData) {
-    // Format the user information for the text editor
+  useEffect(() => {
+  if (initialData && selectedRfqs.length > 0) {
+    // Format logged-in user information
     const userInfo = `
-     <p><strong>Quote Needed Looking for the best price, availability & lead time.</strong></p>
-        <p>--------------</p>
-        <p><strong>${initialData.firstName || " "} ${initialData.lastName || ""}</strong></p>
-        <p>${initialData?.company?.name || ""}</p>
-        <p><strong></strong> ${initialData.phoneNumber || ""}</p>
-        <p><strong></strong> ${initialData.email || ""}</p>
-    `;
-    setComment(userInfo); // Set the comment state to include the user data
+    <div className={css.paddedContent}>
+      <p><strong>Quote Needed Looking for the best price, availability & lead time.</strong></p>
+      <p>--------------</p>
+      <p><strong>${initialData.firstName || " "} ${initialData.lastName || ""}</strong></p>
+      <p>${initialData?.company?.name || ""}</p>
+      <p>${initialData.phoneNumber || ""}</p>
+      <p>${initialData.email || ""}</p>
+    </div>
+  `;
+  
+
+    // Format RFQ sender information and details
+    const rfqDetails = selectedRfqs.map((rfq) => `
+      <p><strong>RFQ initial Details:</strong></p>
+      <p>Name: ${rfq.from?.firstName || ""} ${rfq.from?.lastName || ""}</p>
+      <p>Email: ${rfq.from?.email || ""}</p>
+      <p>Part Numbers: ${rfq.partNumbers?.join(", ") || "N/A"}</p>
+      <p>Heci/CLI: ${rfq.heciCleis?.join(", ") || "N/A"}</p>
+      <p>Mfg: ${rfq.mfgs?.join(", ") || "N/A"}</p>
+      <p>Cond: ${rfq.conditions?.join(", ") || "N/A"}</p>
+      <p>Qty: ${rfq.quantities?.join(", ") || "N/A"}</p>
+      <p>Target Price: ${rfq.targetPrices?.join(", ") || "N/A"}</p>
+      <p>Terms: ${rfq.terms?.join(", ") || "N/A"}</p>
+    `).join("<br />");
+
+    // Combine logged-in user and RFQ details
+    setComment(`${userInfo}<br />${rfqDetails}`);
   }
-}, [initialData]);
+  }, [initialData, selectedRfqs]);
+
 
 
     // Combine recipients from all RFQs
