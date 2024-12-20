@@ -318,3 +318,15 @@ nav>ul>li:hover {
     }
   }
 }
+
+
+
+ .onHoverMenuIconDown {
+  font-size: 18px !important;
+  font-weight: bold;
+}
+
+.onHoverMenuIconUp {
+  font-size: 18px !important;
+  font-weight: bold;
+}  

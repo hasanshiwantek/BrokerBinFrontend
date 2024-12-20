@@ -20,6 +20,9 @@ import { setHoverCompanyDetail } from "../ReduxStore/SearchProductSlice";
 import { MdFileUpload } from "react-icons/md";
 import { FiTarget } from "react-icons/fi";
 import { BiLogOut, BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
+import { IoIosArrowDown } from "react-icons/io";
+import { IoIosArrowUp } from "react-icons/io";
+import { MdKeyboardArrowDown } from "react-icons/md";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
@@ -218,9 +221,9 @@ const Header = () => {
                         <div onClick={() => handleDropdownToggle("main")}>
                           <Link>main</Link>
                           {dropdownOpen.main ? (
-                            <BiSolidUpArrow />
+                            < IoIosArrowUp />
                           ) : (
-                            <BiSolidDownArrow />
+                            < IoIosArrowDown />
                           )}
                         </div>
                         {dropdownOpen.main && (
@@ -252,9 +255,9 @@ const Header = () => {
                         <div onClick={() => handleDropdownToggle("search")}>
                           <Link>search</Link>
                           {dropdownOpen.main ? (
-                            <BiSolidUpArrow />
+                            < IoIosArrowUp />
                           ) : (
-                            <BiSolidDownArrow />
+                            < IoIosArrowDown />
                           )}
                         </div>
                         {dropdownOpen.search && (
@@ -294,9 +297,9 @@ const Header = () => {
                         <div onClick={() => handleDropdownToggle("manage")}>
                           <Link>manage</Link>
                           {dropdownOpen.main ? (
-                            <BiSolidUpArrow />
+                            < IoIosArrowUp />
                           ) : (
-                            <BiSolidDownArrow />
+                            < IoIosArrowDown />
                           )}
                         </div>
                         {dropdownOpen.manage && (
@@ -343,8 +346,8 @@ const Header = () => {
 
             <li>
               <BsTools />
-              <BiSolidDownArrow className={css.onHoverMenuIconDown} />
-              <BiSolidUpArrow className={css.onHoverMenuIconUp} />
+              < IoIosArrowDown className={`${css.onHoverMenuIconDown}  `} />
+              < IoIosArrowUp  className={css.onHoverMenuIconUp} />
 
               <div className={css.dropdownMenu} style={{ marginLeft: "10px" }}>
                 <ul style={{ minWidth: "30px" }}>
@@ -376,8 +379,8 @@ const Header = () => {
             {/* Toggle Menus */}
             <li>
               <Link to={"/"}>main</Link>
-              <BiSolidDownArrow className={css.onHoverMenuIconDown} />
-              <BiSolidUpArrow className={css.onHoverMenuIconUp} />
+              < IoIosArrowDown  className={css.onHoverMenuIconDown} />
+              < IoIosArrowUp  className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
                 <ul>
                   <Link to={"/"}>
@@ -403,8 +406,8 @@ const Header = () => {
             </li>
             <li>
               <a href="/tools">tools</a>
-              <BiSolidDownArrow className={css.onHoverMenuIconDown} />
-              <BiSolidUpArrow className={css.onHoverMenuIconUp} />
+              < IoIosArrowDown className={css.onHoverMenuIconDown} />
+              < IoIosArrowUp className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
                 <ul>
                   <Link to={"/tools"}>
@@ -442,8 +445,8 @@ const Header = () => {
             </li>
             <li>
               <Link to={"/search"}>search</Link>
-              <BiSolidDownArrow className={css.onHoverMenuIconDown} />
-              <BiSolidUpArrow className={css.onHoverMenuIconUp} />
+              <IoIosArrowDown className={css.onHoverMenuIconDown} />
+              <IoIosArrowUp className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
                 <ul>
                   {/* <Link to="/inventory">
@@ -472,8 +475,8 @@ const Header = () => {
             </li>
             <li>
               <Link to={'/inventory'}>manage</Link>
-              <BiSolidDownArrow className={css.onHoverMenuIconDown} />
-              <BiSolidUpArrow className={css.onHoverMenuIconUp} />
+              < IoIosArrowDown  className={css.onHoverMenuIconDown} />
+              <IoIosArrowUp className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
                 <ul>
                   <Link to={"/inventory"}>
@@ -502,8 +505,8 @@ const Header = () => {
             </li>
             <li>
               <a href="/reports/email">reports</a>
-              <BiSolidDownArrow className={css.onHoverMenuIconDown} />
-              <BiSolidUpArrow className={css.onHoverMenuIconUp} />
+              < IoIosArrowDown className={css.onHoverMenuIconDown} />
+              <IoIosArrowUp className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
                 <ul>
                   <Link to={"/reports/Company"}>
@@ -529,8 +532,8 @@ const Header = () => {
             </li>
             <li>
               <Link to={"/broadcasts"}>broadcast</Link>
-              <BiSolidDownArrow className={css.onHoverMenuIconDown} />
-              <BiSolidUpArrow className={css.onHoverMenuIconUp} />
+              < IoIosArrowDown className={css.onHoverMenuIconDown} />
+              <IoIosArrowUp className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
                 <ul>
                   <Link to={"/sendbroad"}>
