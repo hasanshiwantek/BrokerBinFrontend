@@ -17,7 +17,7 @@ import { IoMail, IoMailOpen } from "react-icons/io5";
 import { receivedRfq, sentRfq } from "../../../ReduxStore/RfqSlice.js";
 import Cookies from "js-cookie";
 import myProfile from "../../../styles/Menu/Manage/MyProfile.module.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { setPopupCompanyDetail } from "../../../ReduxStore/SearchProductSlice.js";
 import CompanyDetails from "../../Popups/CompanyDetails/CompanyDetails.jsx";
 
@@ -35,9 +35,11 @@ const RfqTable = () => {
   const { togglePopUp: togglePopUpCompany } = useSelector((state) => state.searchProductStore)
 
   const { popupCompanyDetail } = useSelector((state) => state.searchProductStore)
-  const dispatch = useDispatch();
 
+  const dispatch = useDispatch();
   const token = Cookies.get("token");
+  const navigate = useNavigate();
+  
 
   const { receiveRfqData } = useSelector((state) => state.rfqStore)
   const sentRfqData = useSelector((state) => state.rfqStore.sentRfqData);
@@ -228,6 +230,25 @@ const RfqTable = () => {
     dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
     dispatch(setTogglePopUpCompany()); // Show company modal
   };
+  
+  // const handleReply = () => {
+  //   if (rfqMail.length === 0) {
+  //     alert("Please select an RFQ to reply.");
+  //     return;
+  //   }
+  //   const selectedRfq = rfqMail[0]; // For now, handle only the first selected RFQ
+  //   navigate("/rfq-reply", { state: { selectedRfq } }); // Pass the selected RFQ data
+  // };
+  
+  const handleReply = () => {
+    if (rfqMail.length === 0) {
+      alert("Please select at least one RFQ to reply.");
+      return;
+    }
+  
+    navigate("/rfq/create", { state: { selectedRfqs: rfqMail } }); // Pass all selected RFQs
+  };
+  
 
   return (
     <>
@@ -254,7 +275,7 @@ const RfqTable = () => {
                 </li>
                 <li>
                   <NavLink
-                    to="/"
+                    to="/rfq/create"
                     className={({ isActive }) => (isActive ? myProfile.active : '')}
                   >
                     <span>New</span>
@@ -385,13 +406,18 @@ const RfqTable = () => {
             <div className={css.rfqTableBtn_bottom}>
               <div>
                 <button type="button">send</button>
+
                 <button 
                   onClick={resetFilters} 
                   className={css.resetFiltersBtn}
                   type="button">
                   Reset Filters
                 </button>
-                <button type="button">reply</button>
+
+                <button type="button" onClick={handleReply}>
+                  reply
+                </button>
+                
                 <button type="button">forward</button>
                 <button type="button">archive</button>
                 <button type="button">mark as read</button>
