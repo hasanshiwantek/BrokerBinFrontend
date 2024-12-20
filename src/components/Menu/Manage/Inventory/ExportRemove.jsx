@@ -1,7 +1,13 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import InventoryButtons from "./InventoryButtons";
 import css from "../../../../styles/Menu/Manage/Inventory/Inventory.module.css";
+import { exportRemoveInventory } from "../../../../ReduxStore/InventorySlice";
+import Cookies from "js-cookie";
+
 const ExportRemove = () => {
+  const [loading, setLoading] = useState(false); // To track API call status
+
   const [exportRemove, setExportRemove] = useState({
     export: "off",
     remove: "off",
@@ -23,77 +29,106 @@ const ExportRemove = () => {
       }));
     }
   };
+  const dispatch = useDispatch(); // Initialize dispatch
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData.entries());
-    data.export = data.export === "export" ? 1 : 0;
-    data.remove = data.remove === "remove" ? 1 : 0;
-    console.log(data);
+
+    // Extract data from the current state
+    const actionType = exportRemove.export === "on" ? "export" : "delete";
+    const exportType =
+      exportRemove.exportRemove === "inventory only"
+        ? "Inventory"
+        : exportRemove.exportRemove === "broadcasts only"
+        ? "Broadcast"
+        : "Both";
+
+    const payload = {
+      actionType,
+      exportType,
+    };
+
+    // Dispatch the action
+    const token = Cookies.get("token");
+    try {
+      setLoading(true); // Start loading
+      await dispatch(exportRemoveInventory({ token, ...payload })).unwrap();
+      alert(`Your ${actionType} request for ${exportType} has been submitted.`);
+    } catch (error) {
+      console.error("Error during export/remove request:", error);
+      alert("There was an error processing your request.");
+    } finally {
+      setLoading(false); // End loading
+    }
   };
+
   return (
-    <>
-      <div className={css.inventory}>
-        <InventoryButtons />
-        <form onSubmit={handleSubmit}>
-          <div className={css.inventory_exportRemove}>
-            <h1>export / remove inventory</h1>
-            <span className={css.inventory_exportRemove_step1}>
-              <label htmlFor="">step 1:</label>
-              <div>
-                <div className={css.inventory_exportRemove_step1_radioBtn}>
-                  <div>
-                    <input
-                      type="radio"
-                      name="export"
-                      id="export"
-                      onChange={handleChange}
-                      value="export"
-                      checked={exportRemove.export === "on"}
-                    />
-                    <label>export</label>
-                  </div>
-                  <div>
-                    <input
-                      type="radio"
-                      name="remove"
-                      id="remove"
-                      onChange={handleChange}
-                      value="remove"
-                      checked={exportRemove.remove === "on"}
-                    />
-                    <label>remove</label>
-                  </div>
+    <div className={css.inventory}>
+      <InventoryButtons />
+      <form onSubmit={handleSubmit}>
+        <div className={css.inventory_exportRemove}>
+          <h1>Export / Remove Inventory</h1>
+          <span className={css.inventory_exportRemove_step1}>
+            <label htmlFor="">Step 1:</label>
+            <div>
+              <div className={css.inventory_exportRemove_step1_radioBtn}>
+                <div>
+                  <input
+                    type="radio"
+                    name="export"
+                    id="export"
+                    onChange={handleChange}
+                    value="export"
+                    checked={exportRemove.export === "on"}
+                  />
+                  <label>Export</label>
                 </div>
-                <p>*An export link will be emailed to admins on the account</p>
+                <div>
+                  <input
+                    type="radio"
+                    name="remove"
+                    id="remove"
+                    onChange={handleChange}
+                    value="remove"
+                    checked={exportRemove.remove === "on"}
+                  />
+                  <label>Remove</label>
+                </div>
               </div>
+              <p>*An export link will be emailed to admins on the account</p>
+            </div>
+          </span>
+          <span className={css.inventory_exportRemove_step2}>
+            <label htmlFor="">Step 2:</label>
+            <p>No inventory to export/remove</p>
+          </span>
+          <span className={css.inventory_exportRemove_step3}>
+            <label htmlFor="">Step 3:</label>
+            <span>
+              <label>Export/Remove</label>
+              <select
+                name="exportRemove"
+                onChange={handleChange}
+                className="p-2"
+              >
+                <option value="inventory only">Inventory Only</option>
+                <option value="all items">All Items</option>
+                <option value="broadcasts only">Broadcasts Only</option>
+              </select>
             </span>
-            <span className={css.inventory_exportRemove_step2}>
-              <label htmlFor="">step 2:</label>
-              {/* <input type="text" /> */}
-              <p>no inventory to export / remove</p>
-            </span>
-            <span className={css.inventory_exportRemove_step3}>
-              <label htmlFor="">step 3:</label>
-              <span>
-                <label>export/remove</label>
-                <select name="exportRemove" onChange={handleChange} className="p-2">
-                  <option value="inventory only">inventory only</option>
-                  <option value="all items">all items</option>
-                  <option value="broadcasts only">broadcasts only</option>
-                </select>
-              </span>
-            </span>
-          </div>
-          <div className={css.inventory_exportRemove_btn}>
-            <button type="button">
-              <input type="submit" value="Submit" />
-            </button>
-          </div>
-        </form>
-      </div>
-    </>
+          </span>
+        </div>
+        <div className={css.inventory_exportRemove_btn}>
+          <button
+            type="submit"
+            disabled={loading} // Disable while loading
+            className={loading ? "opacity-50 cursor-not-allowed" : ""}
+          >
+            {loading ? "Processing..." : "Submit"}
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
 

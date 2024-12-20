@@ -132,6 +132,34 @@ export const deleteInventoryData = createAsyncThunk(
 
 
 
+
+export const exportRemoveInventory = createAsyncThunk(
+  "inventoryStore/exportRemoveInventory",
+  async ({ token, actionType, exportType }) => {
+    try {
+      const response = await axios.post(
+        `${brokerAPI}exports/request`,
+        { actionType, exportType }, // Correct payload structure
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error during export/remove request:",
+        error.response?.data || error.message
+      );
+      throw error.response?.data || error;
+    }
+  }
+);
+
+
+
 const initialState = {
   // Add inventory data
   inventoryData:{},
@@ -271,6 +299,15 @@ const InventorySlice = createSlice({
         console.error("ERROR UPDATING INVENTORY DATA", action.error);
         if (action.error.message === "Unauthorized") {
         }
+      })
+      .addCase(exportRemoveInventory.pending, (state) => {
+        console.log("PENDING!!!!!");
+      })
+      .addCase(exportRemoveInventory.fulfilled, (state, action) => {
+        console.log("INVENTORY PAYLOAD FROM REDUX",action.payload)
+      })
+      .addCase(exportRemoveInventory.rejected, (state, action) => {
+        console.error("ERROR UPDATING INVENTORY DATA", action.error);
       });
   },
 });
