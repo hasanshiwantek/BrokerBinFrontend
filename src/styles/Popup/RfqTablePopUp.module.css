@@ -6,12 +6,14 @@
   width: 100%;
   background: var(--popup-bg-color);
   z-index: 5;
+  animation: fadeIn 0.3s ease-in-out;
+
   
 }
 .RfqTablePopUp_body {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 15%;
+  left: 15%;
   transform: translate(-50%, -50%);
   background: white;
   padding: 1rem;
@@ -22,6 +24,9 @@
   box-shadow: 0.1rem 0.1rem 1rem 0.1rem black;
   display: flex;
   flex-direction: column;
+  transform: scale(0.8);
+  animation: scaleUp 0.3s ease-in-out forwards;
+
 
   &_closeBtn {
     /* padding: 1rem; */
@@ -66,13 +71,13 @@
         tr {
           td {
             padding: 0 1rem;
-            font-size: 8pt;
+            font-size: 9pt;
             font-weight: 500;
 
           }
           th {
             padding: 0 1rem;
-            font-size: 8pt;
+            font-size: 9pt;
             color: #444;
             font-size: 700;
           }
@@ -114,8 +119,43 @@
   .RfqTablePopUp_body_btn button{
     padding: 8px 9px;
     border-radius: 10px;
-    font-size: 8.5pt;
+    font-size: 9pt;
 
   }
+  
+  @keyframes fadeIn {
+    from {
+      background-color: rgba(0, 0, 0, 0);
+    }
+    to {
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+  }
+  
+  @keyframes scaleUp {
+    from {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
 
+
+@keyframes scaleOut {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+}
+
+.RfqTablePopUp_body.closing {
+  animation: scaleOut 0.3s ease-in-out forwards;
+}
   

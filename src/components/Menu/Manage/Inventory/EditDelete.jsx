@@ -44,7 +44,7 @@ const EditDelete = () => {
     setEditedItems(filteredItems);
   };
 
-  
+
 
   console.log("token", token);
 
@@ -77,8 +77,10 @@ const EditDelete = () => {
     }
   };
 
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
+  const handlePageChange = (page) => {
+    if (page !== currentPage && page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
   };
 
   // Handle field editing
@@ -90,7 +92,6 @@ const EditDelete = () => {
     };
     setEditedItems(updatedItems);
   };
-
   const handleSaveModifications = () => {
     const dataToSave = {
       inventories: editedItems.map((item) => ({
@@ -105,16 +106,28 @@ const EditDelete = () => {
         status: item.status,
       })),
     };
+
     dispatch(updateInventoryData({ token, inventories: dataToSave }))
       .then(() => {
         alert("Inventory Updated Successfully");
-        console.log("Inventory updated successfully");
+
+        // Refetch inventory data while maintaining the current page
+        setLoading(true);
+        dispatch(getInventoryData({ token, page: currentPage }))
+          .then((response) => {
+            // Ensure currentPage is correctly set based on the response
+            if (response.payload.pagination) {
+              setCurrentPage(response.payload.pagination.currentPage || currentPage);
+            }
+          })
+          .finally(() => setLoading(false));
       })
       .catch((error) => {
         console.error("Error updating inventory", error);
         alert("Error Updating Inventory");
       });
   };
+
 
   // Initialize the editable items when inventory data is loaded
   useEffect(() => {
@@ -180,7 +193,7 @@ const EditDelete = () => {
               <option value="0">N/A</option>
             </select>
           </span>
-          <button type="button" onClick={handleSearch}  className={`${inventory.editDeleteTable_bottom} cursor-pointer transform active:scale-90 transition-all duration-100  rounded-md`} >
+          <button type="button" onClick={handleSearch} className={`${inventory.editDeleteTable_bottom} cursor-pointer transform active:scale-90 transition-all duration-100  rounded-md`} >
             Search
           </button>
         </div>
@@ -210,8 +223,8 @@ const EditDelete = () => {
                 </tr>
               ) : editedItems.length === 0 ? (
                 <tr>
-                  <td colSpan="10" style={{ textAlign: "center" ,fontSize:"9pt"}}>
-                    No search results found for the selected filters.
+                  <td colSpan="10" style={{ textAlign: "center", fontSize: "9pt" }}>
+                    No search results found .
                   </td>
                 </tr>
               ) : (
@@ -302,35 +315,71 @@ const EditDelete = () => {
             <button type="button" onClick={handleSaveModifications} className="transform active:scale-90 transition-all duration-100 ">
               Save Modifications
             </button>
-            <button type="button">Refresh All</button>
+            {/* <button type="button">Refresh All</button> */}
           </div>
 
           {/* Pagination Controls */}
-          <div className={inventory.editDeleteTable_bottom}>
-            <button
-              className="cursor-pointer transform active:scale-90 transition-all duration-100 "
-              type="button"
-              onClick={handlePreviousPage}
-              disabled={currentPage === 1}
+
+          {/* Pagination */}
+          <div className={inventory.pagination}>
+
+            <span className="text-orange-700 p-4 text-xl">
+              Page <span className="text-blue-800">{currentPage} </span >  of <span  className="text-blue-800">  {totalPages} </span> {totalRecords} records
+            </span>
+
+            {/* <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1 || loading}
             >
               Previous
-            </button>
-            <span className="mt-2 text-gray-700 text-lg">
-              Page {currentPage} of {totalPages}
-            </span>
-            <button
-              className="cursor-pointer transform active:scale-90 transition-all duration-100 "
-              type="button"
-              onClick={handleNextPage}
-              disabled={currentPage === totalPages}
+            </button> */}
+
+            {[...Array(totalPages).keys()]
+              .map((page) => page + 1)
+              .filter((page) => {
+                if (currentPage === 1) {
+                  return page <= 3;
+                } else if (currentPage === totalPages) {
+                  return page >= totalPages - 2;
+                } else {
+                  return page >= currentPage - 1 && page <= currentPage + 1;
+                }
+              })
+              .map((page) => (
+                <button
+                  key={page}
+                  onClick={() => handlePageChange(page)}
+                  className={`${inventory.pageButton} ${currentPage === page ? inventory.active : ""
+                    }`}
+                  disabled={loading}
+                >
+                  {page}
+                </button>
+              ))}
+
+            {/* <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages || loading}
             >
               Next
-            </button>
+            </button> */}
           </div>
+
         </div>
+
       </div>
     </div>
   );
 };
 
 export default EditDelete;
+
+
+
+
+
+
+
+
+
+

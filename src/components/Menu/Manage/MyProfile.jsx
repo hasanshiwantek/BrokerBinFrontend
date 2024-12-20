@@ -358,7 +358,10 @@ const MyProfile = () => {
                   <h1>IM Screen Names</h1>
                   <div>
                     <span>
+                    <div className="flex items-center justify-center"> 
                       <label htmlFor="skype">Skype</label>
+                      <img src="https://ben.cachefly.net/images/social_networks/tiny_skype.png" alt="Skype" title="Skype"></img>
+                      </div>
                       <input
                         type="text"
                         name="skype"
@@ -369,7 +372,10 @@ const MyProfile = () => {
                       />
                     </span>
                     <span>
+                    <div className="flex items-center justify-center"> 
                       <label htmlFor="whatsapp">WhatsApp</label>
+                      <img src="https://ben.cachefly.net/images/social_networks/tiny_whatsapp.png" alt="WhatsApp" title="WhatsApp"/>
+                      </div>
                       <input
                         type="text"
                         name="whatsapp"
@@ -380,7 +386,10 @@ const MyProfile = () => {
                       />
                     </span>
                     <span>
+                    <div className="flex items-center justify-center "> 
                       <label htmlFor="trillian">Trillian</label>
+                      <img src="https://ben.cachefly.net/images/social_networks/tiny_trillian.png" alt="Trillian" title="Trillian"/>
+                      </div>
                       <input
                         type="text"
                         name="trillian"
@@ -396,7 +405,11 @@ const MyProfile = () => {
                   <h1>Social Networking</h1>
                   <div>
                     <span>
+                    <div className="flex items-center  justify-center"> 
                       <label htmlFor="facebook">Facebook</label>
+                      <img src="https://ben.cachefly.net/images/social_networks/tiny_facebook.png" alt="Facebook" title="Facebook"/>
+                      </div>
+
                       <input
                         type="text"
                         name="facebook"
@@ -407,7 +420,10 @@ const MyProfile = () => {
                       />
                     </span>
                     <span>
+                    <div className="flex items-center justify-center "> 
                       <label htmlFor="twitter">Twitter</label>
+                      <img src="https://ben.cachefly.net/images/social_networks/tiny_twitter.png" alt="Twitter" title="Twitter"/>
+                      </div>
                       <input
                         type="text"
                         name="twitter"
@@ -418,7 +434,10 @@ const MyProfile = () => {
                       />
                     </span>
                     <span>
+                    <div className="flex items-center justify-center "> 
                       <label htmlFor="linkedin">LinkedIn</label>
+                      <img src="https://ben.cachefly.net/images/social_networks/tiny_linkedin.png" alt="Linked-In" title="Linked-In"/>
+                      </div>
                       <input
                         type="text"
                         name="linkedin"
