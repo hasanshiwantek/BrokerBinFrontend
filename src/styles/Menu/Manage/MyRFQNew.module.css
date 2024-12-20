@@ -392,3 +392,6 @@
   height: auto; /* Ensure content decides the height */
   overflow: hidden;
 }
+.paddedContent {
+  margin-top: 2vw !important;
+}

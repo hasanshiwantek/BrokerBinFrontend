@@ -104,5 +104,7 @@ input:checkbox {
 textarea {
   border: 1px solid var(--table-bg-color);
 }
-
+/* .padded-content {
+  margin-top: 2vw !important;
+} */
 
