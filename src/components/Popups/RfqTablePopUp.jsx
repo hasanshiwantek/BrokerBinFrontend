@@ -5,10 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { fetchUserData } from "../../ReduxStore/ProfleSlice";
 import { AiFillCloseCircle } from "react-icons/ai";
-
+import { useNavigate } from "react-router-dom";
 const RfqTablePopUp = ({ type }) => {
   const { rfqPopBoxInfo } = useSelector((state) => state.rfqStore);
   const dispatch = useDispatch();
+  const navigate=useNavigate();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -66,6 +67,14 @@ const RfqTablePopUp = ({ type }) => {
       }, 300); // Match the duration of the animation (0.3s)
     }
   };
+
+  const handleReply = (rfq) => {
+    // Navigate to the reply page with selected RFQ data
+    navigate("/rfq/create", {
+      state: { selectedRfqs: [rfq] }, // Pass the RFQ data via state
+    });
+  };
+
 
 
   return (
@@ -189,6 +198,8 @@ const RfqTablePopUp = ({ type }) => {
                         <span>{item.from?.company.name || "NA"}</span> {/* Sender's Company */}
                         <span>{item.from?.email || "NA"}</span> {/* Sender's Email */}
                       </div>
+
+                      
                     ))
                   )}
 
@@ -201,7 +212,9 @@ const RfqTablePopUp = ({ type }) => {
           <button type="button" onClick={printRfq}>
             print
           </button>
-          <button type="button">reply</button>
+          <button type="button" onClick={() => handleReply(rfqPopBoxInfo[0])}> {/* Pass the first RFQ */}
+            reply
+          </button>
           <button type="button">forward</button>
           <button type="button">archive</button>
         </div>

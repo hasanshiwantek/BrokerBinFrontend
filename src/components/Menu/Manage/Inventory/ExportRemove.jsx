@@ -122,7 +122,7 @@ const ExportRemove = () => {
           <button
             type="submit"
             disabled={loading} // Disable while loading
-            className={loading ? "opacity-50 cursor-not-allowed" : ""}
+            className={loading ? "opacity-50 cursor-not-allowed" : " !p-3 rounded-md "}
           >
             {loading ? "Processing..." : "Submit"}
           </button>

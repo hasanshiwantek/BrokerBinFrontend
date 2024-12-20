@@ -119,7 +119,7 @@
 }
 
 .rfqTableDetailBottom  tr th{
-  font-size: 8pt;
+  font-size: 8pt !important;
 }
 
 .tableArea {
@@ -237,7 +237,7 @@ td:hover .companyDropdown {
 .rfqTableBtn_bottom button{
   padding: 10px 12px;
   border-radius: 5px;
-  font-size: 9pt;
+  font-size: 9pt !important;
 }
 
 
@@ -248,7 +248,7 @@ td:hover .companyDropdown {
 .rfqTableDetail_search_btn {
   padding: 10px 12px;
   border-radius: 10px;
-  font-size: 9pt;
+  font-size: 9pt !important;
   cursor: pointer;
 
 }

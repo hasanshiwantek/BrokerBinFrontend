@@ -177,7 +177,7 @@
             margin-bottom: 1rem;
             li {
               color: white;
-              font-size: 8pt;
+              font-size: 9pt !important;
               font-weight: 400;
               background: var(--box-shadow);
               padding: 1rem;
@@ -209,12 +209,12 @@
                 align-items: center;
                 padding: 5rem 0;
                 gap: 1rem;
-                font-size: 8pt;
+                font-size: 8pt !important;
                 font-weight: 400;
                 input {
                   width: 30%;
                   padding: 1rem 2rem;
-                  font-size: 8pt;
+                  font-size: 8pt !important;
                   font-weight: 400;
                 }
               }
@@ -260,7 +260,7 @@
                     justify-content: space-between;
                     border: 1px solid var(--box-shadow);
                     padding: 1rem;
-                    font-size: 8pt;
+                    font-size: 8pt !important;
                     font-weight: 400;
                     span{
                       display: flex;
@@ -280,7 +280,7 @@
                       height: 11rem;
                       width: 100%;
                       resize: none;
-                      font-size: 8pt;
+                      font-size: 8pt !important;
                       font-weight: 400;
                       padding: 1rem;
                     }
@@ -392,14 +392,14 @@
 
 .Popup_Info_Main_left_companySideInformation_tabs ul li{
   
-    font-size: 8pt;
+    font-size: 8pt !important;
     font-weight: 500;
 
 }
 
 
 .Popup_Info_Main_left_companySideInformation .Popup_Info_Main_right_tabs_contact_right_companies_list_details h2,strong,p{
-  font-size: 8pt;
+  font-size: 9pt !important;
   font-weight:  500;  
   color: #444;
 
@@ -476,6 +476,6 @@
   border-bottom: 1px solid #bfbfbf;
     color: #c1521a;
     padding-bottom: .75rem;
-    font-size: 2rem;
+    font-size: 2rem !important;
     font-weight: 600;
 }

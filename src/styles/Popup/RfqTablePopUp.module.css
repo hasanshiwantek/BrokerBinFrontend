@@ -47,7 +47,7 @@
     border-top-right-radius: 5px;
     p {
       font-weight: bold;
-      font-size: 8pt;
+      font-size: 8pt !important;
       border-bottom: 1px solid black;
     }
   }
@@ -71,13 +71,13 @@
         tr {
           td {
             padding: 0 1rem;
-            font-size: 9pt;
+            font-size: 9pt !important;
             font-weight: 500;
 
           }
           th {
             padding: 0 1rem;
-            font-size: 9pt;
+            font-size: 9pt !important;
             color: #444;
             font-size: 700;
           }
@@ -95,7 +95,7 @@
   }
   &_btn {
     button {
-      font-size: 8.5pt;
+      font-size: 8.5pt !important;
       margin: 0 0.5rem;
       margin: 0 0.5rem;
       background: var(--primary-color);
@@ -106,7 +106,7 @@
 
 
   .emailSec span{
-    font-size: 8pt;
+    font-size: 8pt !important;
     font-weight: 500;
   }
 
@@ -119,7 +119,7 @@
   .RfqTablePopUp_body_btn button{
     padding: 8px 9px;
     border-radius: 10px;
-    font-size: 9pt;
+    font-size: 9pt !important;
 
   }
   
