@@ -34,6 +34,8 @@ const MyRFQ = lazy(() => import("./components/Menu/Manage/MyRFQ.jsx"));
 
 const RfqSent= lazy(() => import("./components/Menu/Manage/RfqSent.jsx"));
 
+const RfqReply = lazy (() => import("./components/Menu/Manage/Rfqs/RfqReply.jsx"))
+
 const Inventory = lazy(() =>
   import("./components/Menu/Manage/Inventory/Inventory.jsx")
 );
@@ -401,6 +403,20 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
+
+      
+      {
+        path: "/rfq/create",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <RfqReply/>
+            <Footer />
+
+          </Suspense>
+        ),
+      },
+
 
       {
         path: "/inventory",
