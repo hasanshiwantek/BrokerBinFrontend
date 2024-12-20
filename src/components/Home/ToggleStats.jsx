@@ -21,7 +21,7 @@ const ToggleStats = () => {
               </div>
             );
           })}
-          <Link to={"/reports/sitewide"}>more...</Link>
+          {/* <Link to={"/reports/sitewide"}>more...</Link> */}
         </div>
       )}
       {!toggleStats && (

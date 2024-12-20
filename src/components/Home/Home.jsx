@@ -28,7 +28,8 @@ const Home = () => {
   );
 
   const { page, pageSize } = useSelector((store) => store.searchProductStore);
-  const {broadcastCount}=useSelector((state)=>state.broadcastStore)
+
+  const {broadcastCount, loading}=useSelector((state)=>state.broadcastStore)
 
   // console.log("Broadcast Count ",broadcastCount)
   const id = user?.user?.id || user_id;
@@ -43,6 +44,8 @@ const Home = () => {
   useEffect(()=>{
     dispatch(fetchBroadCastCount({token}))
   },[])
+
+  
 
   const bomFileRef = useRef(null);
   // <----------------------------------------------------- Access uploaded file name ------------------------------------------------------->
@@ -469,7 +472,14 @@ const Home = () => {
                 </div>
                 <div className={css.gridHome2_Details_Bottom}>
                   <ToggleStats />
-                  <HoverPieChart />
+                  
+                    
+                  {loading || !broadcastCount?.data ? (
+                      <p>Loading...</p>
+                  ) : (
+                    <HoverPieChart data={broadcastCount.data} />
+                  )}
+                  
                 </div>
               </div>
             </div>

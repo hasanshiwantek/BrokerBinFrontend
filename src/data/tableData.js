@@ -1,33 +1,3 @@
-// import ShieldOfQuality from "../svgs/ShieldOfQuality"
-
-// import { useSelector } from "react-redux";
-
-// export const tableHeader = {
-//   th: ["Cart"],
-// };
-
-// const { searchResponse } = useSelector((store) => store.searchProductStore);
-
-
-// import { useState,useEffect } from "react";
-// import React from "react";
-// import { fetchBroadCastCount } from "../ReduxStore/BroadCast";
-// import Cookies from "js-cookie"
-// import { useDispatch, useSelector } from "react-redux";
-
-
-// const {broadcastCount}=useSelector((state)=>state.brodcastStore)
-// console.log(broadcastCount)
-// const token=Cookies.get("token")
-
-// const dispatch=useDispatch()
-
-// useEffect(()=>{
-// dispatch(fetchBroadCastCount({token}))
-  
-
-// },[])
-
 
 export const tableData = [
   {
@@ -464,6 +434,7 @@ export const inventoryData = [
     data: 0,
   },
 ];
+
 export const inventoryDataTotalParts = [
   {
     name: "Total Parts:",
@@ -1210,6 +1181,7 @@ export const partList = [
     age: 1,
   },
 ];
+
 const cartList = [
   {
     check: false,
@@ -1343,27 +1315,6 @@ export const organizedByCountryAndCompany = Object.entries(
   }, {});
   return acc;
 }, {});
-
-// Object.entries(organizedByCountry).map((e) => {
-// e[1].map(e=>console.log(e))
-// console.log(e[0]);
-// });
-// Object.entries(organizedByCountryAndCompany).map(([country, companies]) => {
-//   console.log(country);
-//   console.log(companies);
-//   Object.entries(companies).map(([company,data])=>{
-
-//     console.log(company);
-
-//     data.map((e)=>{
-//       console.log(e);
-//     })
-//   })
-//   // e[1].map(e=>console.log(e.check))
-// });
-
-// console.log(organizedByCountryAndCompany);
-// console.log(organizedByCountry);
 
 const companyInformation = [
   {
