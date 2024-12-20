@@ -224,7 +224,7 @@ const EditDelete = () => {
               ) : editedItems.length === 0 ? (
                 <tr>
                   <td colSpan="10" style={{ textAlign: "center", fontSize: "9pt" }}>
-                    No search results found for the selected filters.
+                    No search results found .
                   </td>
                 </tr>
               ) : (
