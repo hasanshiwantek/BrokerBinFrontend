@@ -35,7 +35,7 @@ const TextEditor = ({ comment, handleCommentChange }) => {
         onChange={handleCommentChange}
         modules={modules}
         formats={formats}
-        style={{ height: "22vh",marginBottom:"40px",width:"40vw" }} 
+        style={{ height: "30vh",marginBottom:"40px",width:"40vw" }} 
       />
     </div>
   );

@@ -29,6 +29,8 @@ const BroadcastForm = () => {
 
   // File and Input Data States
   const [files, setFiles] = useState("");
+  const [fileName, setFileName] = useState("");
+
   const [formData, setFormData] = useState({
     partModel: "",
     mfg: "",
@@ -118,15 +120,16 @@ const BroadcastForm = () => {
 
   // Handle file input change
   const handleFileChange = (event) => {
-    setFiles("");
     const selectedFiles = event.target.files[0];
     if (selectedFiles) {
       setFiles(selectedFiles);
+      setFileName(selectedFiles.name);  // Store the file name
     } else {
       setFiles("");
+      setFileName("");  // Clear file name if no file is selected
     }
   };
-
+  
   const cancelAllActions = () => {
     setBroadcastType("");
     setCategory("");
@@ -424,6 +427,8 @@ const BroadcastForm = () => {
                       </div>
                     </label>
                   </div>  
+                  {fileName && <p className="text-lg 
+                   text-orange-500 ">Selected file: {fileName}</p>}
                 </div>
                 <div className={css.mainFields}>
                   <div className={css.mainFields_1}>

@@ -296,6 +296,8 @@ const ProductTableDetail = React.memo(() => {
     dispatch(setHoverCompanyDetail(companyDetail?.addedBy?.company));
   };
 
+
+
   // Handle pagination
   const handlePrevPage = () => {
     const newPage = page - 1;
@@ -434,14 +436,14 @@ const ProductTableDetail = React.memo(() => {
         </tfoot>
       </table>
       <div className={`${css.tablePagination} `}>
-        <button type="button" onClick={handlePrevPage} disabled={page === 1} className="text-white text-lg font-bold">
+        <button type="button" onClick={handlePrevPage} disabled={page === 1} className="text-gray-600  text-lg font-bold">
           Prev
         </button>
         <span className="text-white text-lg font-bold ">
           {page}/{totalPages}
         </span>
         <button
-          className="text-white text-lg font-bold"
+          className="text-gray-600 text-lg font-bold"
           type="button"
           onClick={handleNextPage}
           disabled={page === totalPages}

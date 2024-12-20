@@ -43,8 +43,34 @@ const MyRFQNew = () => {
   const token = Cookies.get("token");
   const modalRef = useRef(null); // Create a reference to the modal
 
+  const { initialData, user } = useSelector((state) => state.profileStore);
+  const id = user?.user?.id;
+// Pre-populate user data in the comment
+useEffect(() => {
+  if (id) {
+    dispatch(fetchUserData({ id, token }));
+  }
+}, [id, dispatch, token]);
 
 
+useEffect(() => {
+  if (initialData) {
+    // Format the user information for the text editor
+    const userInfo = `
+     <p><strong>Quote Needed Looking for the best price, availability & lead time.</strong></p>
+        <p>--------------</p>
+        <p><strong>${initialData.firstName || " "} ${initialData.lastName || ""}</strong></p>
+        <p>${initialData?.company?.name || ""}</p>
+        <p><strong></strong> ${initialData.phoneNumber || ""}</p>
+        <p><strong></strong> ${initialData.email || ""}</p>
+    `;
+    setComment(userInfo); // Set the comment state to include the user data
+  }
+}, [initialData]);
+
+
+
+ 
 
   // Add event listener to detect click outside modal
   useEffect(() => {
@@ -81,12 +107,11 @@ const MyRFQNew = () => {
   }, []);
 
 
-  const handleCommentChange = (content, delta, source, editor) => {
-    const text = editor.getHTML();
-    
-    setComment(text); 
-
-  };
+ // Handle comment change
+ const handleCommentChange = (content, delta, source, editor) => {
+  const text = editor.getHTML();
+  setComment(text); // Update the comment state when the text editor changes
+};
 
   // make sure only unique models goes to rfq.
   const filterUniqueModels = (data) => {
@@ -491,18 +516,62 @@ const MyRFQNew = () => {
                       </div>
                     </div>
                   </div>
-
                   <div className={css.rfqBody_Main_left_comments}>
-                    <label htmlFor="" style={{ marginLeft: "50px" }}>comments</label>
-                    {/* <textarea name="comments"> */}
-                    <TextEditor
-                      handleCommentChange={handleCommentChange}
-                      comment={comment}
-                      className={css.ql_editor}
+                <label htmlFor="" style={{ marginLeft: "50px" }}>Comments</label>
+                
+                <TextEditor
+                  handleCommentChange={handleCommentChange}
+                  comment={comment}
+                  className={`${css.ql_editor}`}
+                />
+              </div>
 
-                    />
-                    {/* </textarea> */}
+              {/* Editable User Information inside TextEditor */}
+              {/* <div className={css.loggedInUserData}>
+                {initialData ? (
+                  <div>
+                    <p><strong>User Information:</strong></p>
+                    <div>
+                      <label htmlFor="firstName">First Name:</label>
+                      <input
+                        type="text"
+                        name="firstName"
+                        value={initialData.firstName}
+                        onChange={(e) => setComment(prev => prev.replace(initialData.firstName, e.target.value))}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="lastName">Last Name:</label>
+                      <input
+                        type="text"
+                        name="lastName"
+                        value={initialData.lastName}
+                        onChange={(e) => setComment(prev => prev.replace(initialData.lastName, e.target.value))}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="email">Email:</label>
+                      <input
+                        type="email"
+                        name="email"
+                        value={initialData.email}
+                        onChange={(e) => setComment(prev => prev.replace(initialData.email, e.target.value))}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="phoneNumber">Phone:</label>
+                      <input
+                        type="text"
+                        name="phoneNumber"
+                        value={initialData.phoneNumber}
+                        onChange={(e) => setComment(prev => prev.replace(initialData.phoneNumber, e.target.value))}
+                      />
+                    </div>
                   </div>
+                ) : (
+                  <p>Loading user data...</p>
+                )}
+              </div> */}
                   <div className={css.rfqBody_Main_left_bottom}>
                     <div></div>
                     <div>

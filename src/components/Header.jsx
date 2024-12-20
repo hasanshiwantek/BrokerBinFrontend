@@ -12,10 +12,11 @@ import {
   BsToggleOff,
   BsToggleOn,
   BsTools,
-  BsDatabaseFill ,
+  BsDatabaseFill,
   BsPeopleFill,
   // FaCoins,
 } from "react-icons/bs";
+import { setHoverCompanyDetail } from "../ReduxStore/SearchProductSlice";
 import { MdFileUpload } from "react-icons/md";
 import { FiTarget } from "react-icons/fi";
 import { BiLogOut, BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
@@ -34,7 +35,7 @@ import {
   setSelectedProducts,
 } from "../ReduxStore/SearchProductSlice";
 import { Link } from "react-router-dom";
-
+import { useLocation } from "react-router-dom";
 import dp1 from "../assets/drop-down1.svg"
 import dp2 from "../assets/drop-down-2.svg"
 import dp3 from "../assets/drop-down3.svg"
@@ -51,7 +52,8 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [searchType, setSearchType] = useState();
-
+  const location = useLocation(); // Detect current route
+  
   const { hoverCompanyDetail } = useSelector(
     (store) => store.searchProductStore
   );
@@ -86,8 +88,8 @@ const Header = () => {
       .filter(Boolean)
       .join(",");
 
-    console.log("Search String from Home Page ",searchString);
-    console.log("Search Type from Home Page " ,searchType);
+    console.log("Search String from Home Page ", searchString);
+    console.log("Search Type from Home Page ", searchType);
     // Clear selected products
     dispatch(setSelectedProducts([]));
 
@@ -106,14 +108,24 @@ const Header = () => {
       )}`;
       navigate(url, { replace: true });
     }
-  
 
 
-  
+
+
 
 
 
   }
+
+
+  // Clear hoverCompanyDetail when navigating to a new page
+  useEffect(() => {
+    // Reset hoverCompanyDetail on route change
+    return () => {
+      dispatch(setHoverCompanyDetail(null)); // Reset hoverCompanyDetail to null
+    };
+  }, [location, dispatch]); // Trigger effect on location changes
+
 
   return (
     <>
@@ -146,42 +158,40 @@ const Header = () => {
               </button>
             </form>
           </div>
-          {hoverCompanyDetail &&
-            hoverCompanyDetail?.map((detail) => {
-              return (
-                <div key={detail.id} className={css.hoverCompanyDetail}>
-                  <div className={css.hoverCompanyDetail_details}>
-                    <span>
-                      <span>
-                        <strong>{detail.name}</strong>
-                      </span>
-                    </span>
-                    <span>
-                      <p>ph:</p>
-                      <p>{detail.phone_num}</p>
-                    </span>
-                    <span>
-                      <p>loc:</p>
-                      <p>{detail.address}</p>
-                    </span>
-                    <span>
-                      <p>
-                        {detail.open_timing}-{detail.close}
-                      </p>
-                      <p>
-                        ship:
-                        {detail.shipping_deadline
-                          ? detail.shipping_deadline
-                          : "3PM"}
-                      </p>
-                    </span>
-                  </div>
-                  <div className={css.hoverCompanyDetail_img}>
-                    <img src={detail.image} alt="companyLogo" />
-                  </div>
-                </div>
-              );
-            })}
+          {hoverCompanyDetail && hoverCompanyDetail[0] && (
+            <div key={hoverCompanyDetail[0].id} className={css.hoverCompanyDetail}>
+              <div className={css.hoverCompanyDetail_details}>
+                <span>
+                  <span>
+                    <strong>{hoverCompanyDetail[0].name}</strong>
+                  </span>
+                </span>
+                <span>
+                  <p>ph:</p>
+                  <p>{hoverCompanyDetail[0].phone_num}</p>
+                </span>
+                <span>
+                  <p>loc:</p>
+                  <p>{hoverCompanyDetail[0].address}</p>
+                </span>
+                <span>
+                  <p>
+                    {hoverCompanyDetail[0].open_timing}-{hoverCompanyDetail[0].close}
+                  </p>
+                  <p>
+                    ship:
+                    {hoverCompanyDetail[0].shipping_deadline
+                      ? hoverCompanyDetail[0].shipping_deadline
+                      : "3PM"}
+                  </p>
+                </span>
+              </div>
+              <div className={css.hoverCompanyDetail_img}>
+                <img src={hoverCompanyDetail[0].image} alt="companyLogo" />
+              </div>
+            </div>
+          )}
+
         </header>
         <nav className={css.nav}>
           <ul className={css.nav_links}>
@@ -336,26 +346,26 @@ const Header = () => {
               <BiSolidDownArrow className={css.onHoverMenuIconDown} />
               <BiSolidUpArrow className={css.onHoverMenuIconUp} />
 
-              <div className={css.dropdownMenu} style={{marginLeft:"10px"}}>
-                <ul style={{minWidth:"30px"}}>
+              <div className={css.dropdownMenu} style={{ marginLeft: "10px" }}>
+                <ul style={{ minWidth: "30px" }}>
                   <Link to={"/myprofile/MyVendors"}>
                     <li>
                       <img src={dp1} alt="" srcset="" />........
                     </li>
                   </Link>
                   <Link to={"/feedback"}>
-                    <li><img src={dp2} alt="" srcset="" style={{color:"black"}}/>........</li>
+                    <li><img src={dp2} alt="" srcset="" style={{ color: "black" }} />........</li>
                   </Link>
                   <Link to={"/hotlist/view"}>
-                    <li><img src={dp3} alt="dsd" srcset="" style={{color:"black"}}/>........</li>
+                    <li><img src={dp3} alt="dsd" srcset="" style={{ color: "black" }} />........</li>
                   </Link>
                   <Link to={"/inventory"}>
-                    <li><img src={dp6} alt="" srcset="" style={{color:"black"}}/>........</li>
+                    <li><img src={dp6} alt="" srcset="" style={{ color: "black" }} />........</li>
                   </Link>
                   <Link to={"/reports/Company"}>
-                    <li><img src={dp5} alt="" srcset="" style={{color:"black"}}/>........</li>
+                    <li><img src={dp5} alt="" srcset="" style={{ color: "black" }} />........</li>
                   </Link>
-              
+
                 </ul>
               </div>
             </li>
@@ -363,7 +373,7 @@ const Header = () => {
 
 
 
-{/* Toggle Menus */}
+            {/* Toggle Menus */}
             <li>
               <Link to={"/"}>main</Link>
               <BiSolidDownArrow className={css.onHoverMenuIconDown} />
@@ -397,15 +407,15 @@ const Header = () => {
               <BiSolidUpArrow className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
                 <ul>
-                <Link to={"/tools"}>
-                  <li>
-                  Tools
-                  </li>
+                  <Link to={"/tools"}>
+                    <li>
+                      Tools
+                    </li>
                   </Link>
                   <Link to={"/myprofile/MyVendors"}>
-                  <li>
-                  My Vendors
-                  </li>
+                    <li>
+                      My Vendors
+                    </li>
                   </Link>
                   {/* <Link to={"/myprofile/MyContact"}>
                   <li>
@@ -413,9 +423,9 @@ const Header = () => {
                   </li>
                   </Link> */}
                   <Link to={"/hotList/view"}>
-                  <li>
-                   Hot List
-                  </li>
+                    <li>
+                      Hot List
+                    </li>
                   </Link>
                   {/* <Link to={"https://brokerbin.com/partners"}  target="blank">
                   <li>
@@ -436,9 +446,9 @@ const Header = () => {
               <BiSolidUpArrow className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
                 <ul>
-                  <Link to="/inventory">
+                  {/* <Link to="/inventory">
                     <li>inventory</li>
-                  </Link>
+                  </Link> */}
                   {/* <Link to={"/services"}>
                     <li>services</li>
                   </Link> */}
@@ -500,19 +510,19 @@ const Header = () => {
                     <li>Company</li>
                   </Link>
                   <Link to={"/reports/sitewide"}>
-                  <li>
-                  Site Wide
-                  </li>
+                    <li>
+                      Site Wide
+                    </li>
                   </Link>
                   <Link to={"/reports/email"}>
-                  <li>
-                   Email
-                  </li>
+                    <li>
+                      Email
+                    </li>
                   </Link>
                   <Link to={"/reports/serviceStats"} >
-                  <li>
-                  Service Directory Stats
-                  </li>
+                    <li>
+                      Service Directory Stats
+                    </li>
                   </Link>
                 </ul>
               </div>
@@ -526,25 +536,25 @@ const Header = () => {
                   <Link to={"/sendbroad"}>
                     <li>send</li>
                   </Link >
-                  <Link  to={"/broadcasts"}>
-                  <li>
-                   view
-                  </li>
+                  <Link to={"/broadcasts"}>
+                    <li>
+                      view
+                    </li>
                   </Link>
                   <Link to={"/myprofile/broadcastfilter"}>
-                  <li>
-                   set filters
-                  </li>
+                    <li>
+                      set filters
+                    </li>
                   </Link>
                   <Link to={"/broadcasthistory"}>
-                  <li>
-                   history
-                  </li>
+                    <li>
+                      history
+                    </li>
                   </Link>
                 </ul>
               </div>
             </li>
-            <li onClick={handleLogout} style={{cursor:"pointer"}}>
+            <li onClick={handleLogout} style={{ cursor: "pointer" }}>
               <BiLogOut />
               logout
             </li>
@@ -584,9 +594,9 @@ const Header = () => {
                   </Link>
                 </li>
                 <li >
-                <Link to={"/venprice"}>
-                  <BsDatabaseFill />
-                </Link>
+                  <Link to={"/venprice"}>
+                    <BsDatabaseFill />
+                  </Link>
                 </li>
                 <li>
                   <BsClockFill />
@@ -596,27 +606,27 @@ const Header = () => {
                 </li>
                 <li>
                   <Link to={"/myprofile/MyVendors"}>
-                  <BsPeopleFill/>
+                    <BsPeopleFill />
                   </Link>
                 </li>
                 <li>
                   <Link to={"/myprofile/MyContact"}>
-                  <BsPersonFill />
+                    <BsPersonFill />
                   </Link>
                 </li>
                 <li>
                   <Link to={"/hotList/view"}>
-                  <AiFillFile />
+                    <AiFillFile />
                   </Link>
                 </li>
                 <li>
                   <Link to={"/inventory"}>
-                  <MdFileUpload />
+                    <MdFileUpload />
                   </Link>
                 </li>
                 <li>
                   <Link to={"/reports/Company"}>
-                  <FiTarget />
+                    <FiTarget />
                   </Link>
                 </li>
                 <li className={css.navbar_search_options}>

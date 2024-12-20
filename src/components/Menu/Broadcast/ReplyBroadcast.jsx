@@ -7,8 +7,9 @@ import styles from "./BroadCast.module.css";
 import { useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { useDispatch } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 import { sendBroadcastReply } from '../../../ReduxStore/BroadCast';
+import { fetchUserData } from '../../../ReduxStore/ProfleSlice';
 const ReplyBroad = () => {
     const dispatch=useDispatch()
     const location = useLocation();
@@ -17,16 +18,37 @@ const ReplyBroad = () => {
     const recipientEmail = broadcast?.user_id?.email || '';
     const currentUserID = Cookies.get("user_id");
     const token=Cookies.get("token")
+    const user_id = Cookies.get("user_id");
+    
+  const {  initialData, user,} = useSelector(
+    (state) => state.profileStore
+  );
+    // Fallback to localStorage data if Redux data is not available
+  console.log("User Data",initialData)
+  const id = user?.user?.id || user_id;
+  console.log(id)
+  useEffect(() => {
+    if (id || token) {
+        dispatch(fetchUserData({ id, token })).then(response => {
+        }).catch(error => {
+            console.error("Error fetching user data:", error);
+        });
+    }
+}, [id, token]);
+
+
+    
+  // Now you can use `userData` for the logged-in user's data
 
     // Function to format comments data with <br> tags
     const formatComments = () => {
         if (!broadcast) return "Broadcast data is not available.";
     
-        const firstName = broadcast.user_id?.firstName || '';
-        const lastName = broadcast.user_id?.lastName || '';
-        const companyName = broadcast.user_id?.company?.name || '';
-        const phoneNumber = broadcast.user_id?.phoneNumber || '';
-        const email = broadcast.user_id?.email || '';
+        const firstName = initialData.firstName ;
+        const lastName = initialData.lastName ;
+        const companyName = initialData?.company?.name ||"";
+        const phoneNumber = initialData.phoneNumber;
+        const email = initialData?.email || '';
         const mfg = broadcast.mfg || '';
         const partModel = broadcast.partModel || '';
         const condition = broadcast.cond || '';
@@ -225,3 +247,21 @@ const ReplyBroad = () => {
 };
 
 export default ReplyBroad;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

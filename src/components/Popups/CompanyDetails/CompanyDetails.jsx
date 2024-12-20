@@ -11,8 +11,8 @@ import {
   FaPrint,
   FaRegListAlt,
 } from "react-icons/fa";
-import { RxOpenInNewWindow } from "react-icons/rx";
-import { AiFillCloseSquare } from "react-icons/ai";
+import { FaRegWindowClose } from "react-icons/fa";
+import { FaExternalLinkAlt } from "react-icons/fa";
 import { IoPersonAdd, IoPersonRemove } from "react-icons/io5";
 import { BsStarFill } from "react-icons/bs";
 import { setTogglePopUp } from "../../../ReduxStore/SearchProductSlice";
@@ -134,16 +134,16 @@ const CompanyDetails = ({closeModal}) => {
         <div className={css.Popup_Info_height}>
           <div className={css.Popup_Info_header}>
             <h1>{companyContactData.data?.company?.name}</h1>
-            <div>
-              <button type="button">
-                <RxOpenInNewWindow />
+            <div className="-mt-2 ">
+              <button type="button" className="">
+                <FaExternalLinkAlt />
               </button>
               <button
                 type="button"
                 onClick={() => closeModal()}
-                className="transform active:scale-95 transition-all duration-100 "
+                className="transform active:scale-95 transition-all duration-100  "
               >
-                <AiFillCloseSquare  />
+                < FaRegWindowClose />
               </button>
             </div>
           </div>
