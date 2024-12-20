@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import SearchBarWithCalendar from "./SearchBarWithCalendar ";
 import css from "../styles/Menu/Manage/RfqTable.module.css";
 import Search from "../svgs/Search";
-
-const SearchComponent = ({onSearch, resetTrigger, isSent}) => {
+import { FaSearch } from "react-icons/fa";
+const SearchComponent = ({ onSearch, resetTrigger, isSent }) => {
   const [toggleRfqSearch, setToggleRfqSearch] = useState(false);
   const [formValues, setFormValues] = useState({
     subject: "",
@@ -50,7 +50,7 @@ const SearchComponent = ({onSearch, resetTrigger, isSent}) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
-  const formData = Object.fromEntries(data.entries());
+    const formData = Object.fromEntries(data.entries());
 
     // Convert checkboxes to numeric values
     formData.new = formData.new === "on" ? 1 : 0;
@@ -59,7 +59,7 @@ const SearchComponent = ({onSearch, resetTrigger, isSent}) => {
     formData.unread = formData.unread === "on" ? 1 : 0;
 
     // console.log("Submitted Filters:", formData);
-    
+
     onSearch(formData); // Pass filter data to parent component
   };
 
@@ -70,7 +70,8 @@ const SearchComponent = ({onSearch, resetTrigger, isSent}) => {
         onClick={() => setToggleRfqSearch((prev) => !prev)}
         className={css.rfqTableSearchToggle}
       >
-        <Search />
+        {/* <Search /> */}
+        < FaSearch/>
         search
       </button>
       {toggleRfqSearch && (
@@ -78,15 +79,15 @@ const SearchComponent = ({onSearch, resetTrigger, isSent}) => {
           <form action="" method="post" onSubmit={handleSubmit}>
             <div className={css.rfqTableDetail_search_fields}>
               <div className={css.rfqTableDetail_search_fields_left}>
-              <span>
-                <p>date:</p>
-                <SearchBarWithCalendar 
-                  fromDate={formValues.fromDate} 
-                  toDate={formValues.toDate} 
-                  setFromDate={(date) => setFormValues((prev) => ({ ...prev, fromDate: date }))} 
-                  setToDate={(date) => setFormValues((prev) => ({ ...prev, toDate: date }))} 
-                />
-              </span>
+                <span>
+                  <p>date:</p>
+                  <SearchBarWithCalendar
+                    fromDate={formValues.fromDate}
+                    toDate={formValues.toDate}
+                    setFromDate={(date) => setFormValues((prev) => ({ ...prev, fromDate: date }))}
+                    setToDate={(date) => setFormValues((prev) => ({ ...prev, toDate: date }))}
+                  />
+                </span>
                 <span>
                   <p>Subject / Comments:</p>
                   <input
@@ -104,46 +105,46 @@ const SearchComponent = ({onSearch, resetTrigger, isSent}) => {
                     <span>
                       <p>new</p>
                       <input
-        type="checkbox"
-        name="new"
-        checked={formValues.new}
-        onChange={(e) =>
-          setFormValues((prev) => ({ ...prev, new: e.target.checked }))
-        }
-      />
+                        type="checkbox"
+                        name="new"
+                        checked={formValues.new}
+                        onChange={(e) =>
+                          setFormValues((prev) => ({ ...prev, new: e.target.checked }))
+                        }
+                      />
                     </span>
                     <span>
                       <p>forward</p>
                       <input
-        type="checkbox"
-        name="forward"
-        checked={formValues.forward}
-        onChange={(e) =>
-          setFormValues((prev) => ({ ...prev, forward: e.target.checked }))
-        }
-      />
+                        type="checkbox"
+                        name="forward"
+                        checked={formValues.forward}
+                        onChange={(e) =>
+                          setFormValues((prev) => ({ ...prev, forward: e.target.checked }))
+                        }
+                      />
                     </span>
                     <span>
                       <p>reply</p>
                       <input
-        type="checkbox"
-        name="reply"
-        checked={formValues.reply}
-        onChange={(e) =>
-          setFormValues((prev) => ({ ...prev, reply: e.target.checked }))
-        }
-      />
+                        type="checkbox"
+                        name="reply"
+                        checked={formValues.reply}
+                        onChange={(e) =>
+                          setFormValues((prev) => ({ ...prev, reply: e.target.checked }))
+                        }
+                      />
                     </span>
                     <span>
                       <p>unread</p>
                       <input
-        type="checkbox"
-        name="unread"
-        checked={formValues.unread}
-        onChange={(e) =>
-          setFormValues((prev) => ({ ...prev, unread: e.target.checked }))
-        }
-      />
+                        type="checkbox"
+                        name="unread"
+                        checked={formValues.unread}
+                        onChange={(e) =>
+                          setFormValues((prev) => ({ ...prev, unread: e.target.checked }))
+                        }
+                      />
                     </span>
                   </div>
                 </span>
@@ -152,16 +153,16 @@ const SearchComponent = ({onSearch, resetTrigger, isSent}) => {
                 <span>
                   <p>Part # in RFQ:</p>
                   <input
-        type="text"
-        name="partNumbers"
-        value={formValues.partNumbers}
-        onChange={(e) =>
-          setFormValues((prev) => ({ ...prev, partNumbers: e.target.value }))
-        }
-      />
+                    type="text"
+                    name="partNumbers"
+                    value={formValues.partNumbers}
+                    onChange={(e) =>
+                      setFormValues((prev) => ({ ...prev, partNumbers: e.target.value }))
+                    }
+                  />
                 </span>
                 <span>
-                <p>{isSent ? "Search recipient information:" : "Search sender information:"}</p>
+                  <p>{isSent ? "Search recipient information:" : "Search sender information:"}</p>
                   <input
                     type="text"
                     name="firstName"

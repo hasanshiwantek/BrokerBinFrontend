@@ -4,7 +4,7 @@ import { setTogglePopUp } from "../../ReduxStore/RfqSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { fetchUserData } from "../../ReduxStore/ProfleSlice";
-
+import { AiFillCloseCircle } from "react-icons/ai";
 
 const RfqTablePopUp = ({ type }) => {
   const { rfqPopBoxInfo } = useSelector((state) => state.rfqStore);
@@ -59,8 +59,8 @@ const RfqTablePopUp = ({ type }) => {
     <div className={css.RfqTablePopUp}>
       <div className={css.RfqTablePopUp_body}>
         <div className={css.RfqTablePopUp_body_closeBtn}>
-          <button type="button" onClick={() => dispatch(setTogglePopUp())}>
-            close
+          <button type="button" onClick={() => dispatch(setTogglePopUp())} className="text-black text-lg">
+          <AiFillCloseCircle/>
           </button>
         </div>
 
@@ -130,7 +130,7 @@ const RfqTablePopUp = ({ type }) => {
                     {item.partNumbers.map((partNumber, index) => (
                       <tr key={`${item.id}-${index}`}>
                         <td>
-                          <u>{partNumber}</u>
+                          <td>{partNumber}</td>
                         </td>
                         <td></td>
                         <td>{item.mfgs[index] || "N/A"}</td>

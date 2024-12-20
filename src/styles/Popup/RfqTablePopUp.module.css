@@ -24,8 +24,8 @@
   flex-direction: column;
 
   &_closeBtn {
-    padding: 1rem;
-    background: var(--primary-color);
+    /* padding: 1rem; */
+    /* background: var(--primary-color); */
     display: flex;
     button {
       margin-left: auto;
@@ -72,6 +72,9 @@
           }
           th {
             padding: 0 1rem;
+            font-size: 8pt;
+            color: #444;
+            font-size: 700;
           }
         }
       }
@@ -101,3 +104,18 @@
     font-size: 8pt;
     font-weight: 500;
   }
+
+  .RfqTablePopUp_body_closeBtn button svg{
+    font-size: 25px;
+    margin-bottom : 5px;
+   
+  }
+
+  .RfqTablePopUp_body_btn button{
+    padding: 8px 9px;
+    border-radius: 10px;
+    font-size: 8.5pt;
+
+  }
+
+  

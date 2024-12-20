@@ -296,6 +296,8 @@ const ProductTableDetail = React.memo(() => {
     dispatch(setHoverCompanyDetail(companyDetail?.addedBy?.company));
   };
 
+
+
   // Handle pagination
   const handlePrevPage = () => {
     const newPage = page - 1;

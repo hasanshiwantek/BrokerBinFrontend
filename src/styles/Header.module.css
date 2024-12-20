@@ -295,7 +295,7 @@ nav>ul>li:hover {
   background: #f0f0f0;
   gap: 3rem;
   margin-left: 5rem;
-  padding: 0.2rem;
+  padding: 0.7rem;
 
   &_details {
     display: flex;

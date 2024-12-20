@@ -230,3 +230,31 @@
 td:hover .companyDropdown {
   display: block;
 }
+
+
+
+
+.rfqTableBtn_bottom button{
+  padding: 10px 12px;
+  border-radius: 5px;
+  font-size: 9pt;
+}
+
+
+.rfqTableDetail_search input{
+  padding: 7px;
+}
+
+.rfqTableDetail_search_btn {
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 9pt;
+  cursor: pointer;
+
+}
+
+.rfqTableSearchToggle svg{
+  font-size: 13px;
+  margin: 3px;
+  color: #fff;
+}

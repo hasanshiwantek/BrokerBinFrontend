@@ -358,7 +358,7 @@ const RfqTableSent = () => {
                                             <td>
                                                 {e.to?.length > 1 ? (
                                                     <>
-                                                        <span>{e.to.length} Recipients</span>
+                                                        <td>{e.to.length} Recipients</td>
                                                         <div className={css.companyDropdown}>
                                                             {e.to.map((recipient, index) => (
                                                                 <div key={index} className={css.companyItem}>
@@ -374,7 +374,7 @@ const RfqTableSent = () => {
                                             <td>
                                                 {e.to?.length > 1 ? (
                                                     <>
-                                                        <span>{e.to.length} Companies</span>
+                                                        <td>{e.to.length} Companies</td>
                                                         <div className={`${css.companyDropdown} `}>
                                                             {e.to.map((recipient, index) => (
                                                                 <div
