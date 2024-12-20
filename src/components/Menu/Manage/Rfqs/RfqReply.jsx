@@ -539,7 +539,7 @@ useEffect(() => {
 
                       <div className={css.rfqBody_Main_left_addParts_AddBtn}>
                         <button type="button" onClick={addPart}>
-                          <AddCircle />
+                          <AddCircle  />
                           Add Part
                         </button>
                         <label htmlFor="uploadFile">

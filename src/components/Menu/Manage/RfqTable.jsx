@@ -365,7 +365,7 @@ const RfqTable = () => {
                             </div>
                           </>
                         ) : (
-                          <span>{e.partNumbers[0]}</span>
+                          <td>{e.partNumbers[0]}</td>
                         )}
                       </td>
                       <td>

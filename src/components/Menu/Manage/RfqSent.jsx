@@ -57,60 +57,60 @@ const RfqTableSent = () => {
     const applyFilters = (filters) => {
         let filtered = [...sentData];
         console.log("Filters Applied:", filters);
-      
+
         // Date Filter
         if (filters.fromDate || filters.toDate) {
-          const fromDate = filters.fromDate ? new Date(filters.fromDate + "T00:00:00") : null;
-          const toDate = filters.toDate ? new Date(filters.toDate + "T23:59:59") : null;
-      
-          filtered = filtered.filter((item) => {
-            const itemDate = new Date(item.updated_at.replace(" ", "T"));
-            return (!fromDate || itemDate >= fromDate) && (!toDate || itemDate <= toDate);
-          });
+            const fromDate = filters.fromDate ? new Date(filters.fromDate + "T00:00:00") : null;
+            const toDate = filters.toDate ? new Date(filters.toDate + "T23:59:59") : null;
+
+            filtered = filtered.filter((item) => {
+                const itemDate = new Date(item.updated_at.replace(" ", "T"));
+                return (!fromDate || itemDate >= fromDate) && (!toDate || itemDate <= toDate);
+            });
         }
-      
+
         // Subject Filter
         if (filters.subject) {
-          filtered = filtered.filter((item) =>
-            (item.subject || "").toLowerCase().includes(filters.subject.toLowerCase())
-          );
+            filtered = filtered.filter((item) =>
+                (item.subject || "").toLowerCase().includes(filters.subject.toLowerCase())
+            );
         }
-      
+
         // Sender (To) Information Filter
         if (filters.firstName) {
             filtered = filtered.filter((item) => {
-              const recipientInfo = item.to
-                ?.map((recipient) => 
-                  `${recipient.firstName || ""} ${recipient.lastName || ""} ${recipient.email || ""} ${recipient.company?.name || ""}`
-                )
-                .join(" ");
-              return recipientInfo?.toLowerCase().includes(filters.firstName.toLowerCase());
+                const recipientInfo = item.to
+                    ?.map((recipient) =>
+                        `${recipient.firstName || ""} ${recipient.lastName || ""} ${recipient.email || ""} ${recipient.company?.name || ""}`
+                    )
+                    .join(" ");
+                return recipientInfo?.toLowerCase().includes(filters.firstName.toLowerCase());
             });
-          }
-      
+        }
+
         // Part Numbers Filter
         if (filters.partNumbers) {
-          filtered = filtered.filter((item) => {
-            const partNumbers = item.partNumbers || [];
-            return partNumbers.some((part) =>
-              (part || "").toLowerCase().includes(filters.partNumbers.toLowerCase())
-            );
-          });
+            filtered = filtered.filter((item) => {
+                const partNumbers = item.partNumbers || [];
+                return partNumbers.some((part) =>
+                    (part || "").toLowerCase().includes(filters.partNumbers.toLowerCase())
+                );
+            });
         }
-      
+
         // Status Filter
         if (filters.new || filters.forward || filters.reply || filters.unread) {
-          filtered = filtered.filter((item) => {
-            if (filters.new && !item.isNew) return false;
-            if (filters.forward && !item.isForwarded) return false;
-            if (filters.reply && !item.isReplied) return false;
-            if (filters.unread && item.isRead) return false;
-            return true;
-          });
+            filtered = filtered.filter((item) => {
+                if (filters.new && !item.isNew) return false;
+                if (filters.forward && !item.isForwarded) return false;
+                if (filters.reply && !item.isReplied) return false;
+                if (filters.unread && item.isRead) return false;
+                return true;
+            });
         }
-      
+
         setFilteredData(filtered);
-      };
+    };
 
 
     const companyData = sentData?.map((item) => {
@@ -126,14 +126,14 @@ const RfqTableSent = () => {
         dispatch(sentRfq({ token }))
     }, [])
 
-    
 
- useEffect(() => {
-    if (sentData.length > 0) {
-      setFilteredData(sentData);
-      console.log("Filtered data updated from receivedData:", sentData);
-    }
-  }, [sentData]);
+
+    useEffect(() => {
+        if (sentData.length > 0) {
+            setFilteredData(sentData);
+            console.log("Filtered data updated from receivedData:", sentData);
+        }
+    }, [sentData]);
 
 
 
@@ -225,13 +225,23 @@ const RfqTableSent = () => {
     console.log("togglePopUp", togglePopUpCompany);
 
 
-      const resetFilters = () => {
+    const resetFilters = () => {
         setFilteredData(sentData);
         setResetTrigger((prev) => !prev);
         console.log("Filters Reset. Data Reset to Original:", sentData);
-      };
-      
-      
+    };
+
+
+
+    const handleReply = () => {
+        if (rfqMail.length === 0) {
+            alert("Please select at least one RFQ to reply.");
+            return;
+        }
+
+        navigate("/rfq/create", { state: { selectedRfqs: rfqMail } }); // Pass all selected RFQs
+    };
+
 
 
     return (
@@ -278,9 +288,9 @@ const RfqTableSent = () => {
                         </div>
                         <div className={css.rfqTableDetail}>
                             <SearchComponent
-                            onSearch={applyFilters}
-                            resetTrigger={resetTrigger}
-                            isSent={true} // Optional for resetting fields
+                                onSearch={applyFilters}
+                                resetTrigger={resetTrigger}
+                                isSent={true} // Optional for resetting fields
                             />
                             <table>
                                 <thead>
@@ -321,8 +331,10 @@ const RfqTableSent = () => {
                                                     name="addToCart"
                                                     id="addToCart"
                                                     onClick={(event) => event.stopPropagation()}
-                                                    onChange={(event) => {console.log("Checkbox Clicked for ID:", e.id);
-                                                        handleCheckboxClick(event, e.id)}}
+                                                    onChange={(event) => {
+                                                        console.log("Checkbox Clicked for ID:", e.id);
+                                                        handleCheckboxClick(event, e.id)
+                                                    }}
                                                     checked={
                                                         rfqMail.some((mail) => mail.id === e.id) ||
                                                         rfqMailCheckAll
@@ -427,10 +439,13 @@ const RfqTableSent = () => {
                         <div className={css.rfqTableBtn_bottom}>
                             <div>
                                 <button type="button">send</button>
-                                <button 
-                                type="button"
-                                onClick={resetFilters}>reset</button>
-                                <button type="button">reply</button>
+                                <button
+                                    type="button"
+                                    onClick={resetFilters}>reset</button>
+
+                                <button type="button" onClick={handleReply}>
+                                    reply   
+                                </button>
                                 <button type="button">forward</button>
                                 <button type="button">archive</button>
                                 <button type="button">mark as read</button>

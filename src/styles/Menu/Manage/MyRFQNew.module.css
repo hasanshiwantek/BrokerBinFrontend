@@ -138,6 +138,9 @@
     cursor: pointer;
   }
 
+  .rfqBody_Main_left_addParts_AddBtn svg{
+    width: 18px;
+  }
 
   .rfqBody_sendBtn button:active{
     transform: scale(0.95);
