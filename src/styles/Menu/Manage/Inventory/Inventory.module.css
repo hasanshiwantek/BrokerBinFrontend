@@ -234,7 +234,7 @@
 }
 
 .editDeleteTable table tbody td{
-  font-size: 8pt;
+  font-size: 9pt;
   font-weight: 400;
 }
 
@@ -576,3 +576,51 @@ input[type="file"] {
   background-color: transparent;
   margin-top: 4px;
 }
+
+
+.inventory_add_main button{
+  padding: 10px 15px;
+  color: #fff;
+  font-size: 9pt;
+}
+
+
+
+.pagination button{
+  color: white;
+  background-color: var(--primary-color);
+  border-radius: 5px;
+  border: 1px solid var(--primary-color);
+  font-size: 8.5pt;
+}
+
+.paginationSec{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.pagination{
+  text-align: end;
+}
+
+
+
+
+.pageButton {
+  /* Add default styling for all page buttons here */
+  margin: 0 4px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
+
+/* .pageButton:hover {
+  background-color: #e0e0e0;
+} */
+
+.pageButton.active {
+  background-color: #428bca;
+  color: white;
+  border-color: #428bca;
+}
+

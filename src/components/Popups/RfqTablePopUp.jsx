@@ -14,13 +14,13 @@ const RfqTablePopUp = ({ type }) => {
     const handleClickOutside = (event) => {
       const rfqNew = document.querySelector(`.${css.RfqTablePopUp_body}`);
       if (rfqNew && !rfqNew.contains(event.target)) {
-        dispatch(setTogglePopUp());
+        closeModal();
       }
     };
 
     const escKeyToggle = (event) => {
       if (event.key === "Escape") {
-        dispatch(setTogglePopUp());
+        closeModal();
       }
     };
 
@@ -31,37 +31,51 @@ const RfqTablePopUp = ({ type }) => {
       document.removeEventListener("click", handleClickOutside);
       document.removeEventListener("keydown", escKeyToggle);
     };
-  }, [dispatch]);
+  }, []);
+
 
   const printRfq = () => {
     window.print();
   };
 
-  const { blurWhileLoading, initialData, user, error} = useSelector(
-      (state) => state.profileStore
-    );
-    console.log("User Data",initialData)
-    const user_id = Cookies.get("user_id");
+  const { blurWhileLoading, initialData, user, error } = useSelector(
+    (state) => state.profileStore
+  );
+  console.log("User Data", initialData)
+  const user_id = Cookies.get("user_id");
 
-    const id = user?.user?.id || user_id;
-    useEffect(() => {
-      console.log("Logged in userid",id);
-      dispatch(fetchUserData({ id, token }));
-    }, []);
+  const id = user?.user?.id || user_id;
+  useEffect(() => {
+    console.log("Logged in userid", id);
+    dispatch(fetchUserData({ id, token }));
+  }, []);
 
-    const token = Cookies.get("token")
+  const token = Cookies.get("token")
 
 
   const loggedInEmail = Cookies.get("email");
   console.log("Logged-in User's Email:", loggedInEmail);
 
+
+  const closeModal = () => {
+    const modal = document.querySelector(`.${css.RfqTablePopUp_body}`);
+    if (modal) {
+      modal.classList.add(css.closing); // Add the closing class
+      setTimeout(() => {
+        dispatch(setTogglePopUp()); // Dispatch the action to close the modal after the animation ends
+      }, 300); // Match the duration of the animation (0.3s)
+    }
+  };
+
+
   return (
     <div className={css.RfqTablePopUp}>
       <div className={css.RfqTablePopUp_body}>
         <div className={css.RfqTablePopUp_body_closeBtn}>
-          <button type="button" onClick={() => dispatch(setTogglePopUp())} className="text-black text-lg">
-          <AiFillCloseCircle/>
+          <button type="button" onClick={closeModal} className="text-black text-lg">
+            <AiFillCloseCircle />
           </button>
+
         </div>
 
         {rfqPopBoxInfo.map((item, index) => {
@@ -71,20 +85,20 @@ const RfqTablePopUp = ({ type }) => {
               <p>
                 {type === "sent" && Array.isArray(item.to)
                   ? item.to.map((user, idx) => (
-                      <span key={idx}>
-                        {user.firstName} - {user.company.name}
-                        {idx < item.to.length - 1 && ", "}
-                      </span>
-                    ))
+                    <span key={idx}>
+                      {user.firstName} - {user.company.name}
+                      {idx < item.to.length - 1 && ", "}
+                    </span>
+                  ))
                   : item.from
-                  ? `${item.from.firstName} - ${item.from.company.name}`
-                  : "N/A"}
+                    ? `${item.from.firstName} - ${item.from.company.name}`
+                    : "N/A"}
               </p>
               <label>{type === "sent" ? "from:" : "to:"}</label>
               <p>
-              {type === "sent"
-                ? "Me"
-                : (() => {
+                {type === "sent"
+                  ? "Me"
+                  : (() => {
                     const loggedInEmail = Cookies.get("email"); // Fetch logged-in user's email
                     const userSpecificBcc = Array.isArray(item.bcc)
                       ? item.bcc.filter((email) => email === loggedInEmail)
@@ -149,34 +163,34 @@ const RfqTablePopUp = ({ type }) => {
               <tr>
                 <td className="pt-2">notes</td>
                 <td className={css.emailSec}>
-                <span>
+                  <span>
 
-                {rfqPopBoxInfo.map((item) => (
-                  <React.Fragment key={item.id}>
-                    {item.comment && (
-                      <div dangerouslySetInnerHTML={{ __html: item.comment }}></div>
-                    )}
-                  </React.Fragment>
-                ))}
+                    {rfqPopBoxInfo.map((item) => (
+                      <React.Fragment key={item.id}>
+                        {item.comment && (
+                          <div dangerouslySetInnerHTML={{ __html: item.comment }}></div>
+                        )}
+                      </React.Fragment>
+                    ))}
 
-                </span>
+                  </span>
                   <span> --------------- </span>
                   {type === "sent" ? (
-                  <>
-                    <span>{initialData.firstName || "NA"}</span>
-                    {/* <span>{initialData.to.company || "NA"}</span> */}
-                    <span>{initialData.email || "NA"}</span>
-                    <span>{initialData.user_id || "NA"}</span>
-                  </>
-                ) : (
-                  rfqPopBoxInfo.map((item, index) => (
-                    <div key={index}>
-                      <span>{item.from?.firstName || "NA"}</span> {/* Sender's Name */}
-                      <span>{item.from?.company.name || "NA"}</span> {/* Sender's Company */}
-                      <span>{item.from?.email || "NA"}</span> {/* Sender's Email */}
-                    </div>
-                  ))
-                )}
+                    <>
+                      <span>{initialData.firstName || "NA"}</span>
+                      {/* <span>{initialData.to.company || "NA"}</span> */}
+                      <span>{initialData.email || "NA"}</span>
+                      <span>{initialData.user_id || "NA"}</span>
+                    </>
+                  ) : (
+                    rfqPopBoxInfo.map((item, index) => (
+                      <div key={index}>
+                        <span>{item.from?.firstName || "NA"}</span> {/* Sender's Name */}
+                        <span>{item.from?.company.name || "NA"}</span> {/* Sender's Company */}
+                        <span>{item.from?.email || "NA"}</span> {/* Sender's Email */}
+                      </div>
+                    ))
+                  )}
 
                 </td>
               </tr>
