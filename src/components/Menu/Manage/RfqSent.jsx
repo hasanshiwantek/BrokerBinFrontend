@@ -24,11 +24,12 @@ import CompanyDetails from "../../Popups/CompanyDetails/CompanyDetails.jsx";
 import {
     setTogglePopUp as setTogglePopUpCompany
 } from "../../../ReduxStore/SearchProductSlice";
-
+import { useNavigate } from "react-router-dom";
 
 
 
 const RfqTableSent = () => {
+    const navigate=useNavigate()
 
 
     const { togglePopUp: togglePopUpRfq, rfqMail, rfqMailCheckAll, currentPage } = useSelector(
