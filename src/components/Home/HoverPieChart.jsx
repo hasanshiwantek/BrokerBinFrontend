@@ -19,7 +19,7 @@ const HoverPieChart = ({ data }) => {
           parseInt(data.rfqCount || 0),
           parseInt(data.serviceCount || 0),
         ],
-        backgroundColor: ["rgb(0, 76, 153)", "rgb(153, 0, 0)", "rgb(0, 102, 0)", "orange"],
+        backgroundColor: ["rgb(64, 120, 190)", "rgb(210, 64, 64)", "rgb(64, 160, 64)", "rgb(255, 140, 40)"],
         hoverOffset: 5,
       },
     ],

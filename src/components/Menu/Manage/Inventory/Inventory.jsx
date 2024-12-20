@@ -419,7 +419,7 @@ const submitInventoryBtn = (e) => {
             type="submit"
             value="send file"
             oncClick={submitInventoryBtn}
-            className={css.inventory_main_submitBtn}
+            className={`${css.inventory_main_submitBtn} !p-3 border rounded-lg transform active:scale-90 transition-all duration-100`}
           >
             Send File
           </button>

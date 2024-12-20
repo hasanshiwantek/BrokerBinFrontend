@@ -427,7 +427,7 @@ const BroadCast = () => {
             </tr>
           </thead>
         </table>
-
+        {/* PAGINATION */}
         <div className={styles.pagination}>
           <button
             onClick={() => handlePageChange(currentPage - 1)}
