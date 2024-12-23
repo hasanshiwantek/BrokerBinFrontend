@@ -283,10 +283,10 @@ const RfqTable = () => {
                 </li>
                 <li>
                   <NavLink
-                    to="/"
+                    to="/rfqArchived"
                     className={({ isActive }) => (isActive ? myProfile.active : '')}
                   >
-                    <span>Archeive</span>
+                    <span>Archive</span>
                   </NavLink>
                 </li>
               </ul>

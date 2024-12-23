@@ -64,7 +64,7 @@ const TableAdd = () => {
               </td>
               <td>
                 <input
-                  type="text"
+                  type="number"
                   name="price"
                   value={item.price}
                   onChange={(e) => handleChange(e, i)}

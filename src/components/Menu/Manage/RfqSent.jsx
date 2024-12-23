@@ -271,7 +271,7 @@ const RfqTableSent = () => {
                                 </li>
                                 <li>
                                     <NavLink
-                                        to="/"
+                                        to="/rfq/create"
                                         className={({ isActive }) => (isActive ? myProfile.active : '')}
                                     >
                                         <span>New</span>
@@ -279,10 +279,10 @@ const RfqTableSent = () => {
                                 </li>
                                 <li>
                                     <NavLink
-                                        to="/"
+                                        to="/rfqArchived"
                                         className={({ isActive }) => (isActive ? myProfile.active : '')}
                                     >
-                                        <span>Archeive</span>
+                                        <span>Archive</span>
                                     </NavLink>
                                 </li>
                             </ul>
