@@ -413,7 +413,7 @@ useEffect(() => {
 
   return (
     <>
-      <div className={`${css.rfqcontainer}`}>
+      <div className={`${css.rfqcontainer} `}>
         <form >
           <div className={`${css.rfqNew}  sm:h-[58vh] lg:h-[68vh]`} ref={modalRef}>
 
