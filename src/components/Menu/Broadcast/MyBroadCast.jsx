@@ -35,6 +35,7 @@ const BroadCast = () => {
   const [buyInFilters, setBuyInFilters] = useState([]);
   const [inputSearchTerm, setInputSearchTerm] = useState(''); // Temporary state for input field
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedMfg, setSelectedMfg] = useState("all");
   const [selectedBroadcast, setSelectedBroadcast] = useState({});
   const [loading, setLoading] = useState(true); // Loading state
   const [currentPage, setCurrentPage] = useState(1);
@@ -49,6 +50,11 @@ const BroadCast = () => {
       .catch(() => setLoading(false));
   }, [dispatch, token, currentPage]); // Make sure `currentPage` is in the dependency array
 
+  // Extract unique MFGs
+  const uniqueMfgs = broadcastItems && broadcastItems.broadcasts
+    ? [...new Set(broadcastItems.broadcasts.map((item) => item.mfg).filter(Boolean))]
+    : [];
+
 
   // Pagination Handlers
   const handlePageChange = (page) => {
@@ -61,12 +67,13 @@ const BroadCast = () => {
   console.log("Current Page State:", currentPage); // Debugging
   const filteredBroadcasts = broadcastItems && broadcastItems.broadcasts
     ? broadcastItems.broadcasts.filter(broadcast =>
-      (filterType === 'all' || broadcast.type === filterType) && // Add this condition
-      (buyInFilters.length === 0 || buyInFilters.includes(broadcast.buy_in))
-      &&
-      (searchTerm === '' || broadcast.partModel && broadcast.partModel.toLowerCase().includes(searchTerm.toLowerCase()))
+      (filterType === 'all' || broadcast.type === filterType) && // Filter by type
+      (buyInFilters.length === 0 || buyInFilters.includes(broadcast.buy_in)) && // Filter by Buy In
+      (searchTerm === '' || (broadcast.partModel && broadcast.partModel.toLowerCase().includes(searchTerm.toLowerCase()))) && // Filter by search term
+      (selectedMfg === 'all' || broadcast.mfg === selectedMfg) // Filter by MFG
     )
     : [];
+
   console.log("Filtered Broadcasts:", filteredBroadcasts);
 
   // const filterFiles = filteredBroadcasts.map((item) => {
@@ -191,6 +198,12 @@ const BroadCast = () => {
       return;
     }
 
+    // Handler for MFG selection
+    const handleMfgChange = (event) => {
+      setSelectedMfg(event.target.value);
+    };
+
+
     // Create a new anchor element dynamically
     const anchor = document.createElement('a');
     anchor.href = file;  // Set href to the file URL
@@ -252,10 +265,14 @@ const BroadCast = () => {
         <div className={styles.headerSec}>
           <div className={styles.tableWrapper}>
             <div className={styles.tableHeader}>
+              {/* MFG Dropdown */}
               <div className={styles.manufacturerDropdown}>
-                <span> View By:&nbsp;</span>
-                <select>
-                  <option value="all">Manufacturer</option>
+                <span>Manufacturer:&nbsp;</span>
+                <select value={selectedMfg} onChange={(e) => setSelectedMfg(e.target.value)}>
+                  <option value="all">All Manufacturers</option>
+                  {uniqueMfgs.map((mfg, index) => (
+                    <option key={index} value={mfg}>{mfg}</option>
+                  ))}
                 </select>
               </div>
               {/* First Dropdown for Category Selection */}
