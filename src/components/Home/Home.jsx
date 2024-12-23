@@ -145,7 +145,7 @@ const Home = () => {
                 </div>
                 <div className={css.gridHome1_MemberDetail_list}>
                   <ul>
-                    <li className={css.gridHome1_MemberDetail_list_options}>
+                    {/* <li className={css.gridHome1_MemberDetail_list_options}>
                       <a href="#">MYH</a>
                       <ul>
                         <li className={css.gridHome1_MemberDetail_list_numbers}>
@@ -171,7 +171,7 @@ const Home = () => {
                           </a>
                         </li>
                       </ul>
-                    </li>
+                    </li> */}
                     <li className={css.gridHome1_MemberDetail_list_options}>
                       <a href="/rfq">RFQ</a>
                       <ul>

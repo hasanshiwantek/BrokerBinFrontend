@@ -11,6 +11,8 @@ const Login = () => {
   const [passwordShown, setPasswordShown] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [forgotPassword, setForgotPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
   const popUpRef = useRef();
   const dispatch = useDispatch();
@@ -18,24 +20,21 @@ const Login = () => {
   const togglePasswordVisibility = () => {
     setPasswordShown(!passwordShown);
   };
-
   const handleSubmit = async (e) => {
-    "use server";
     e.preventDefault();
+    setLoading(true); // Start loading
+
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
+
     try {
       const response = await fetch(
-        // "https://brokerbinbackend.shiwantek.com/api/user/",
         "https://brokerbinbackend.shiwantek.com/api/user/login",
-
         {
           method: "POST",
           headers: {
-            // Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          // Use the JavaScript function JSON.stringify() to convert it into a string.
           body: JSON.stringify(data),
         }
       );
@@ -47,19 +46,17 @@ const Login = () => {
         const { id } = result.data.user;
 
         Cookies.set("token", access_token, { expires: 1, secure: true });
-
         Cookies.set("user_id", id, { expires: 1, secure: true });
         localStorage.setItem("user", JSON.stringify(user));
 
-        // Redirect the user to another page (e.g., dashboard)
-        navigate("/");
+        navigate("/"); // Redirect the user
       } else {
-        console.error("Login failed", result);
         setErrorMessage(result.message || "Login failed, please try again.");
       }
     } catch (error) {
-      console.error("Error during login", error);
       setErrorMessage("An error occurred, please try again later.");
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -113,7 +110,14 @@ const Login = () => {
               {errorMessage}
             </p>
           )}
-          <button type="submit">Sign in</button>
+          <button type="submit" disabled={loading}>
+            {loading ? (
+              <span className={css.loader}></span> // Loader class for styling
+            ) : (
+              "Sign in"
+            )}
+          </button>
+
           {/* {/ {!whileLogin ? ( /}
           {/ ) : ( /}
           {/ <button type="submit" disabled style={{ background: "red" }}> /}

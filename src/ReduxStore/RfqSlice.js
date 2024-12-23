@@ -173,6 +173,35 @@ export const getRfqArchived = createAsyncThunk(
 
 
 
+export const deleteArchiveRfq = createAsyncThunk(
+  "inventoryStore/deleteArchiveRfq ",
+  async ({ token, ids }) => {
+    console.log(token, "Attempting to delete RFQs with IDs:", ids);
+    try {
+      const response = await axios.delete(
+        `${brokerAPI}rfq/delete`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          data: { ids } // Pass 'Ids' as part of the request body
+        }
+      );
+      return response.data; // Assuming the backend returns the deleted IDs or a success message
+    } catch (error) {
+      console.error("Error Deleting RFQS:", error.response?.data);
+      throw error.response?.data; // Propagate the error message
+    }
+  }
+);
+
+
+
+
+
+
+
 export const deleteCompanyUser = createAsyncThunk(
   "deleteCompanyUser/submitRfq",
   async ({ token, id }) => {

@@ -14,7 +14,7 @@ import {
   setCurrentPagePrev,
 } from "../../../../ReduxStore/RfqSlice.js";
 import { IoMail, IoMailOpen } from "react-icons/io5";
-import { getRfqArchived } from "../../../../ReduxStore/RfqSlice.js";
+import { getRfqArchived, deleteArchiveRfq } from "../../../../ReduxStore/RfqSlice.js";
 import Cookies from "js-cookie";
 import myProfile from "../../../../styles/Menu/Manage/MyProfile.module.css";
 import { NavLink } from "react-router-dom";
@@ -250,6 +250,29 @@ const RfqTableSent = () => {
 
 
 
+  const handleDelete = () => {
+    if (rfqMail.length === 0) {
+      alert("Please select at least one RFQ to delete.");
+      return;
+    }
+
+    const rfqIdsToDelete = rfqMail.map((rfq) => rfq.rfqId); // Collect RFQ IDs
+    const token = Cookies.get("token"); // Get token
+
+    dispatch(deleteArchiveRfq({ token, ids: rfqIdsToDelete }))
+      .then(() => {
+        console.log("Selected RGQs Deleted")
+        alert("Selected RFQs deleted successfully!");
+        dispatch(getRfqArchived({ token })); // Refresh the data
+      })
+      .catch((error) => {
+        console.error("Error deleting RFQs:", error);
+        alert("Failed to delete RFQs. Please try again.");
+      });
+  };
+
+
+
   return (
     <>
       <div className={css.layout}>
@@ -419,9 +442,10 @@ const RfqTableSent = () => {
                   reply
                 </button>
                 <button type="button">forward</button>
-                <button type="button">archive</button>
-                <button type="button">mark as read</button>
-                <button type="button">mark as unread</button>
+                <button type="button" onClick={handleDelete}>
+                  Delete
+                </button>
+
               </div>
               <div className={css.pagination}>
                 <button onClick={prevPage}>prev</button>
