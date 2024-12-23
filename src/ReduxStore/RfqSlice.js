@@ -145,6 +145,33 @@ export const sentRfq = createAsyncThunk(
 
 
 
+export const getRfqArchived = createAsyncThunk(
+  "searchProductStore/getRfqArchived",
+  async ({ token }) => {
+    console.log("Token:", token);
+
+    try {
+      const response = await axios.get(
+        `${brokerAPI}rfq/archived`, 
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,  // Token passed correctly in headers
+          },
+        }
+      );
+
+      console.log(" RFQ Archive from backend", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error Fetching RFQ Archive data:", error.response?.data || error.message);
+    }
+  }
+);
+
+
+
+
 
 export const deleteCompanyUser = createAsyncThunk(
   "deleteCompanyUser/submitRfq",
@@ -186,7 +213,8 @@ const initialState = {
   searchResults: [],
   searchResponseMatched: [],
   receiveRfqData:[],
-  sentRfqData:[]
+  sentRfqData:[],
+  rfqArchiveData:[],
 };
 
 const RfqSlice = createSlice({
@@ -277,6 +305,17 @@ const RfqSlice = createSlice({
       })
       .addCase(sentRfq.rejected, (state, action) => {
         console.error("Error while Fetching Sent Data");
+      })
+      .addCase(getRfqArchived.pending, (state) => {
+        console.log("Pending....")
+      })
+      .addCase(getRfqArchived.fulfilled, (state, action) => {
+        state.rfqArchiveData =action.payload
+        console.log("PAYLOAD "+ action.payload)
+
+      })
+      .addCase(getRfqArchived.rejected, (state, action) => {
+        console.error("Error while Fetching Archive Data");
       })
 
   },

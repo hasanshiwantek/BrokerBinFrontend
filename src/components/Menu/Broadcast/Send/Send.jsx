@@ -237,7 +237,7 @@ const BroadcastForm = () => {
     // Dispatch the data with token
     dispatch(sendBroadcast({ token, data }))
     .then(() => {
-      alert("Data has been successfully stored in the backend");
+      alert("Your Broadcast Has Been Sent Succesfully");
     })
     .catch((error) => {
       console.error("Error storing data:", error);
