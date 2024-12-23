@@ -438,7 +438,7 @@ useEffect(() => {
 
   return (
     <>
-      <div className={`${css.rfqcontainer}`}>
+      <div className={`${css.rfqcontainer} `}>
         <form >
           <div className={`${css.rfqNew}  sm:h-[58vh] lg:h-[68vh]`} ref={modalRef}>
 
@@ -449,17 +449,17 @@ useEffect(() => {
                   <ul>
                     <li>
                       <a href="/rfq">
-                        received({total}|{received})
+                        received
                       </a>
                     </li>
                     <li>
-                      <a href="/rfqSent">sent({sent})</a>
+                      <a href="/rfqSent">sent</a>
                     </li>
                     <li>
                       <a href="/" style={{ color: " rgb(102, 142, 252)" }}>new</a>
                     </li>
                     <li>
-                      <a href="/">archive</a>
+                      <a href="/rfqArchived">archive</a>
                     </li>
                   </ul>
                 </div>

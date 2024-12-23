@@ -44,10 +44,10 @@ const ReplyBroad = () => {
     const formatComments = () => {
         if (!broadcast) return "Broadcast data is not available.";
     
-        const firstName = initialData.firstName ;
-        const lastName = initialData.lastName ;
+        const firstName = initialData.firstName || "" ;
+        const lastName = initialData.lastName || "";
         const companyName = initialData?.company?.name ||"";
-        const phoneNumber = initialData.phoneNumber;
+        const phoneNumber = initialData.phoneNumber || "";
         const email = initialData?.email || '';
         const mfg = broadcast.mfg || '';
         const partModel = broadcast.partModel || '';

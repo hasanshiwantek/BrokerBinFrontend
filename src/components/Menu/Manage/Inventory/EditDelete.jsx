@@ -106,11 +106,12 @@ const EditDelete = () => {
         status: item.status,
       })),
     };
-
+  
     dispatch(updateInventoryData({ token, inventories: dataToSave }))
+      .unwrap() // Ensures the Promise rejects on failure
       .then(() => {
         alert("Inventory Updated Successfully");
-
+  
         // Refetch inventory data while maintaining the current page
         setLoading(true);
         dispatch(getInventoryData({ token, page: currentPage }))
@@ -123,11 +124,11 @@ const EditDelete = () => {
           .finally(() => setLoading(false));
       })
       .catch((error) => {
-        console.error("Error updating inventory", error);
-        alert("Error Updating Inventory");
+        console.error("Error updating inventory:", error);
+        alert(`Error Updating Inventory: ${error.message || "Unknown Error"}`);
       });
   };
-
+  
 
   // Initialize the editable items when inventory data is loaded
   useEffect(() => {
@@ -144,12 +145,20 @@ const EditDelete = () => {
 
   const handleDeleteClick = () => {
     if (selectedInventories.length > 0) {
-      dispatch(deleteInventoryData({ token, ids: selectedInventories })).then(() => {
-        dispatch(getInventoryData({ token, page: currentPage }));
-      });
-      setSelectedInventories([]); // Clear selections after dispatch
-      alert("Inventory Deleted");
-      console.log("Inventory Deleted");
+      dispatch(deleteInventoryData({ token, ids: selectedInventories }))
+        .unwrap() // Ensures the Promise rejects on failure
+        .then(() => {
+          alert("Inventory Deleted Successfully");
+          setSelectedInventories([]); // Clear selections after dispatch
+  
+          // Refetch inventory data
+          setLoading(true);
+          dispatch(getInventoryData({ token, page: currentPage })).finally(() => setLoading(false));
+        })
+        .catch((error) => {
+          console.error("Error deleting inventory:", error);
+          alert(`Error Deleting Inventory: ${error.message || "Unknown Error"}`);
+        });
     } else {
       alert("Select Inventory for Deletion");
     }
@@ -254,7 +263,7 @@ const EditDelete = () => {
                     </td>
                     <td>
                       <input
-                        type="text"
+                        type="number"
                         value={item.price || ""}
                         onChange={(e) => handleFieldChange(index, "price", e.target.value)}
                       />

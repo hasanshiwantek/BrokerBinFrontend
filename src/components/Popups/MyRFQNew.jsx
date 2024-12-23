@@ -360,11 +360,11 @@ useEffect(() => {
                   <ul>
                     <li>
                       <a href="/rfq">
-                        received({total}|{received})
+                        received
                       </a>
                     </li>
                     <li>
-                      <a href="/rfqSent">sent({sent})</a>
+                      <a href="/rfqSent">sent</a>
                     </li>
                     <li>
                       <a href="/" style={{ color: " rgb(102, 142, 252)" }}>new</a>

@@ -145,6 +145,62 @@ export const sentRfq = createAsyncThunk(
 
 
 
+export const getRfqArchived = createAsyncThunk(
+  "searchProductStore/getRfqArchived",
+  async ({ token }) => {
+    console.log("Token:", token);
+
+    try {
+      const response = await axios.get(
+        `${brokerAPI}rfq/archived`, 
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,  // Token passed correctly in headers
+          },
+        }
+      );
+
+      console.log(" RFQ Archive from backend", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error Fetching RFQ Archive data:", error.response?.data || error.message);
+    }
+  }
+);
+
+
+
+
+
+export const deleteArchiveRfq = createAsyncThunk(
+  "inventoryStore/deleteArchiveRfq ",
+  async ({ token, ids }) => {
+    console.log(token, "Attempting to delete RFQs with IDs:", ids);
+    try {
+      const response = await axios.delete(
+        `${brokerAPI}rfq/delete`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          data: { ids } // Pass 'Ids' as part of the request body
+        }
+      );
+      return response.data; // Assuming the backend returns the deleted IDs or a success message
+    } catch (error) {
+      console.error("Error Deleting RFQS:", error.response?.data);
+      throw error.response?.data; // Propagate the error message
+    }
+  }
+);
+
+
+
+
+
+
 
 export const deleteCompanyUser = createAsyncThunk(
   "deleteCompanyUser/submitRfq",
@@ -224,7 +280,8 @@ const initialState = {
   searchResults: [],
   searchResponseMatched: [],
   receiveRfqData:[],
-  sentRfqData:[]
+  sentRfqData:[],
+  rfqArchiveData:[],
 };
 
 const RfqSlice = createSlice({
@@ -326,8 +383,18 @@ const RfqSlice = createSlice({
       .addCase(statusRfq.rejected, (state, action) => {
         console.error("Failed to update RFQ status:", action.error.message);
         // Handle error if necessary
-      });
-      
+      })
+      .addCase(getRfqArchived.pending, (state) => {
+        console.log("Pending....")
+      })
+      .addCase(getRfqArchived.fulfilled, (state, action) => {
+        state.rfqArchiveData =action.payload
+        console.log("PAYLOAD "+ action.payload)
+
+      })
+      .addCase(getRfqArchived.rejected, (state, action) => {
+        console.error("Error while Fetching Archive Data");
+      })
 
   },
   

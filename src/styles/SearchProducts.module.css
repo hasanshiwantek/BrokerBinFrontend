@@ -14,7 +14,7 @@
   display: flex;
   justify-content: flex-start;
   gap: 2rem;
-  padding: 0.6rem 0;
+  padding: 0.6rem 0 !important;
   > button {
     font-size: 1em;
     color: #444;
@@ -78,7 +78,7 @@
 
 .tableArea {
   margin: 2rem 2rem;
-  width: 105%;
+  width: 117%;
 }
 .productTable {
   background-color: var(--table-outer-color);

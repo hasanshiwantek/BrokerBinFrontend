@@ -378,7 +378,7 @@ const handleAction = async (action) => {
                 </li>
                 <li>
                   <NavLink
-                    to="/"
+                    to="/rfqArchived"
                     className={({ isActive }) => (isActive ? myProfile.active : '')}
                   >
                     <span>Archive</span>

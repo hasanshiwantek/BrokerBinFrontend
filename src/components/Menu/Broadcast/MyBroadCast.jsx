@@ -35,9 +35,13 @@ const BroadCast = () => {
   const [buyInFilters, setBuyInFilters] = useState([]);
   const [inputSearchTerm, setInputSearchTerm] = useState(''); // Temporary state for input field
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedMfg, setSelectedMfg] = useState("all");
   const [selectedBroadcast, setSelectedBroadcast] = useState({});
+  const [selectedRegion, setSelectedRegion] = useState("all");
+  const [selectedSubCategory, setSelectedSubCategory] = useState("");
   const [loading, setLoading] = useState(true); // Loading state
   const [currentPage, setCurrentPage] = useState(1);
+
 
 
   // Fetch data when currentPage changes
@@ -49,6 +53,11 @@ const BroadCast = () => {
       .catch(() => setLoading(false));
   }, [dispatch, token, currentPage]); // Make sure `currentPage` is in the dependency array
 
+  // Extract unique MFGs
+  const uniqueMfgs = broadcastItems && broadcastItems.broadcasts
+    ? [...new Set(broadcastItems.broadcasts.map((item) => item.mfg).filter(Boolean))]
+    : [];
+
 
   // Pagination Handlers
   const handlePageChange = (page) => {
@@ -57,26 +66,57 @@ const BroadCast = () => {
       setCurrentPage(page);
     }
   };
-
   console.log("Current Page State:", currentPage); // Debugging
-  const filteredBroadcasts = broadcastItems && broadcastItems.broadcasts
-    ? broadcastItems.broadcasts.filter(broadcast =>
-      (filterType === 'all' || broadcast.type === filterType) && // Add this condition
-      (buyInFilters.length === 0 || buyInFilters.includes(broadcast.buy_in))
-      &&
-      (searchTerm === '' || broadcast.partModel && broadcast.partModel.toLowerCase().includes(searchTerm.toLowerCase()))
-    )
-    : [];
-  console.log("Filtered Broadcasts:", filteredBroadcasts);
 
+
+
+
+
+  const Regions = [
+    "North America",
+    "South America",
+    "Europe",
+    "Asia",
+    "Africa",
+    "Middle East",
+    "Oceania",
+  ];
+
+  // Handle region selection
+  const handleRegionChange = (event) => {
+    setSelectedRegion(event.target.value);
+  };
+  const filteredBroadcasts = broadcastItems?.broadcasts?.filter((broadcast) =>
+    (filterType === "all" || broadcast.type === filterType) && // Filter by type
+    (selectedMfg === "all" || broadcast.mfg === selectedMfg) && // Filter by Manufacturer
+    (selectedRegion === "all" || broadcast.selectedRegion?.includes(selectedRegion)) && // Filter by Region
+    (searchTerm === "" || (broadcast.partModel?.toLowerCase().includes(searchTerm.toLowerCase()))) && // Filter by Search Term
+    (buyInFilters.length === 0 || buyInFilters.includes(broadcast.buy_in)) && // Filter by Buy-In
+    (
+      selectedCategory === "all" || // No category filtering
+      (selectedCategory === "selectedTelecom" && (!selectedSubCategory || broadcast.selectedTelecom?.includes(selectedSubCategory))) ||
+      (selectedCategory === "selectedMobileDevices" && (!selectedSubCategory || broadcast.selectedMobileDevices?.includes(selectedSubCategory))) ||
+      (selectedCategory === "selectedCompanies" && (!selectedSubCategory || broadcast.selectedCompanies?.includes(selectedSubCategory))) ||
+      (selectedCategory === "service" && (!selectedSubCategory || broadcast.service?.includes(selectedSubCategory)))
+    )
+  );
+  
+  console.log("Filtered Broadcasts:", filteredBroadcasts);
+  useEffect(() => {
+    console.log("Selected Category:", selectedCategory);
+    console.log("Selected Subcategory:", selectedSubCategory);
+    console.log("Options:", options);
+    console.log("Filtered Broadcasts:", filteredBroadcasts);
+  }, [selectedCategory, selectedSubCategory, options, filteredBroadcasts]);
+  
   // const filterFiles = filteredBroadcasts.map((item) => {
   //   return item.file
 
   // })
   // console.log("Files...", filterFiles)
   // Get Logged in IDS
-  const uniqueCompanyIds = [...new Set(filteredBroadcasts.map((item) => item.user_id.id))];
-  console.log(uniqueCompanyIds.toString());
+  // const uniqueCompanyIds = [...new Set(filteredBroadcasts.map((item) => item.user_id.id))];
+  // console.log(uniqueCompanyIds.toString());
 
   // Handler for Types like wtb,wts,rfq...
   const handleFilterChange = (event) => {
@@ -113,35 +153,61 @@ const BroadCast = () => {
     }
   };
 
-  // Update options based on selected category
+  // Handle Category Change
   const handleCategoryChange = (event) => {
     const category = event.target.value;
     setSelectedCategory(category);
-
+    setSelectedSubCategory(""); // Reset subcategory when category changes
+  
+    if (!broadcastItems?.broadcasts) return;
+  
     switch (category) {
-      case "computer":
-        setOptions(computers);
+      case "selectedTelecom":
+        setOptions(
+          [...new Set(
+            broadcastItems.broadcasts.flatMap(broadcast => broadcast.selectedTelecom || [])
+          )].map((subCategory, index) => ({ id: index, value: subCategory, label: subCategory }))
+        );
         break;
-      case "telecom":
-        setOptions(telecom);
+      case "selectedMobileDevices":
+        setOptions(
+          [...new Set(
+            broadcastItems.broadcasts.flatMap(broadcast => broadcast.selectedMobileDevices || [])
+          )].map((subCategory, index) => ({ id: index, value: subCategory, label: subCategory }))
+        );
         break;
-      case "mobileDevices":
-        setOptions(mobileDevice);
+      case "selectedCompanies":
+        setOptions(
+          [...new Set(
+            broadcastItems.broadcasts.flatMap(broadcast => broadcast.selectedCompanies || [])
+          )].map((subCategory, index) => ({ id: index, value: subCategory, label: subCategory }))
+        );
         break;
-      case "services":
-        setOptions(servicesList)
+      case "service":
+        setOptions(
+          [...new Set(
+            broadcastItems.broadcasts.flatMap(broadcast => broadcast.service || [])
+          )].map((subCategory, index) => ({ id: index, value: subCategory, label: subCategory }))
+        );
         break;
       default:
-        setOptions([]);
+        setOptions([]); // Clear options if no category is selected
         break;
     }
   };
+  
 
   const handleCheckboxChange = (broadcast) => {
     setSelectedBroadcast((prevSelected) => ({
       ...prevSelected,
       [broadcast.id]: !prevSelected[broadcast.id] // Toggle the checkbox
     }));
+  };
+
+  // Handle Subcategory Change
+  const handleSubCategoryChange = (event) => {
+    const subCategory = event.target.value;
+    setSelectedSubCategory(subCategory);
   };
 
   const navigate = useNavigate();
@@ -190,6 +256,12 @@ const BroadCast = () => {
       alert('No file available for download.');
       return;
     }
+
+    // Handler for MFG selection
+    const handleMfgChange = (event) => {
+      setSelectedMfg(event.target.value);
+    };
+
 
     // Create a new anchor element dynamically
     const anchor = document.createElement('a');
@@ -252,29 +324,34 @@ const BroadCast = () => {
         <div className={styles.headerSec}>
           <div className={styles.tableWrapper}>
             <div className={styles.tableHeader}>
+              {/* MFG Dropdown */}
               <div className={styles.manufacturerDropdown}>
-                <span> View By:&nbsp;</span>
-                <select>
-                  <option value="all">Manufacturer</option>
+                <span>Manufacturer:&nbsp;</span>
+                <select value={selectedMfg} onChange={(e) => setSelectedMfg(e.target.value)}>
+                  <option value="all">All Manufacturers</option>
+                  {uniqueMfgs.map((mfg, index) => (
+                    <option key={index} value={mfg}>{mfg.toUpperCase()}</option>
+                  ))}
                 </select>
               </div>
               {/* First Dropdown for Category Selection */}
               <div className={styles.manufacturerDropdown}>
                 <select value={selectedCategory} onChange={handleCategoryChange}>
-                  <option value="all">All</option>
-                  <option value="computer">Computers</option>
-                  <option value="telecom">Telecom</option>
-                  <option value="services">Services</option>
-                  <option value="mobileDevices">Mobile Devices</option>
+                  <option value="all">All Categories</option>
+                  <option value="selectedTelecom">Telecom</option>
+                  <option value="selectedMobileDevices">Mobile Devices</option>
+                  <option value="selectedCompanies">Companies</option>
+                  <option value="service">Services</option>
                 </select>
               </div>
+
               {/* Second Dropdown for Dynamic Options */}
               <div>
-                <select>
+                <select value={selectedSubCategory} onChange={handleSubCategoryChange}>
                   {selectedCategory === "all" ? (
-                    <option value="">- -Choose one</option>
+                    <option value="">--Choose One--</option>
                   ) : (
-                    <option value="">Sub Category</option>
+                    <option value="">Select Subcategory</option>
                   )}
                   {options.map((item) => (
                     <option key={item.id} value={item.value}>
@@ -283,6 +360,8 @@ const BroadCast = () => {
                   ))}
                 </select>
               </div>
+
+
               <div className={styles.manufacturerDropdown} >
                 <select onChange={handleFilterChange}>
                   <option value="all">Type</option>
@@ -292,8 +371,14 @@ const BroadCast = () => {
                 </select>
               </div>
               <div className={styles.manufacturerDropdown}>
-                <select>
-                  <option value="all">Region</option>
+                {/* <label htmlFor="region">Region:&nbsp;</label> */}
+                <select id="region" value={selectedRegion} onChange={handleRegionChange}>
+                  <option value="all">Regions</option>
+                  {Regions.map((region, index) => (
+                    <option key={index} value={region}>
+                      {region}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div>
