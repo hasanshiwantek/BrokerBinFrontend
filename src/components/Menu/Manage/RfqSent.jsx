@@ -103,7 +103,7 @@ const RfqTableSent = () => {
         if (filters.new || filters.forward || filters.reply || filters.unread) {
             filtered = filtered.filter((item) => {
                 if (filters.new && !item.isNew) return false;
-                if (filters.forward && !item.isForwarded) return false;
+                if (filters.forward && String(item.isForwarded) !== "1") return false; // Forward filter
                 if (filters.reply && !item.isReplied) return false;
                 if (filters.unread && item.isRead) return false;
                 return true;
@@ -234,14 +234,59 @@ const RfqTableSent = () => {
 
 
 
-    const handleReply = () => {
+    // const handleReply = () => {
+    //     if (rfqMail.length === 0) {
+    //         alert("Please select at least one RFQ to reply.");
+    //         return;
+    //     }
+
+    //     navigate("/rfq/create", { state: { selectedRfqs: rfqMail } }); // Pass all selected RFQs
+    // };
+
+    const handleForward = () => {
         if (rfqMail.length === 0) {
-            alert("Please select at least one RFQ to reply.");
+            alert("Please select at least one RFQ to forward.");
             return;
         }
-
-        navigate("/rfq/create", { state: { selectedRfqs: rfqMail } }); // Pass all selected RFQs
+    
+        const selectedRfqs = rfqMail.map((rfq) => ({
+            id: rfq.id, // Ensure you are mapping `id` properly from sent RFQs
+            ...rfq,
+        }));
+    
+        navigate("/rfq/create", { state: { selectedRfqs, type: "forward" } });
     };
+    
+
+    // const handleAction = async (action) => {
+    //     if (rfqMail.length === 0) {
+    //       alert("Please select at least one RFQ.");
+    //       return;
+    //     }
+      
+    //     // Mapping actions to payload fields
+    //     const actionMap = {
+    //       forward: { key: "isForwarded", value: 1 },
+    //     };
+      
+    //     const { key, value } = actionMap[action];
+      
+    //     const payload = {
+    //       items: rfqMail.map((rfq) => ({ id: rfq.id, [key]: value })), // Use `id` directly
+    //     };
+      
+    //     console.log("Payload being sent:", payload);
+      
+    //     try {
+    //       const token = Cookies.get("token");
+    //       const response = await dispatch(statusRfq({ token, data: payload })).unwrap();
+    //       alert(response.message || `RFQ(s) ${action} successfully!`);
+    //     } catch (error) {
+    //       console.error("Error handling action:", error);
+    //       alert(error?.response?.data?.message || `Failed to ${action} RFQ(s).`);
+    //     }
+    //     dispatch(sentRfq({ token })); // Re-fetch sent RFQs
+    //   };      
 
 
 
@@ -444,13 +489,10 @@ const RfqTableSent = () => {
                                     type="button"
                                     onClick={resetFilters}>reset</button>
 
-                                <button type="button" onClick={handleReply}>
-                                    reply   
+                                <button type="button" onClick={handleForward}>
+                                    forward
                                 </button>
-                                <button type="button">forward</button>
-                                <button type="button">archive</button>
-                                <button type="button">mark as read</button>
-                                <button type="button">mark as unread</button>
+                                <button type="button">Delete</button>
                             </div>
                             <div className={css.pagination}>
                                 <button onClick={prevPage}>prev</button>

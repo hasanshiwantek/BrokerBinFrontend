@@ -11,6 +11,8 @@ const SearchComponent = ({ onSearch, resetTrigger, isSent }) => {
     forward: false,
     reply: false,
     unread: false,
+    unread: false,
+    archive: false,
     partNumbers: "",
     fromDate: "",
     toDate: "",
@@ -26,6 +28,8 @@ const SearchComponent = ({ onSearch, resetTrigger, isSent }) => {
       forward: false,
       reply: false,
       unread: false,
+      read: false,
+      archive: false,
       partNumbers: "",
       fromDate: "",
       toDate: "",
@@ -57,6 +61,7 @@ const SearchComponent = ({ onSearch, resetTrigger, isSent }) => {
     formData.forward = formData.forward === "on" ? 1 : 0;
     formData.reply = formData.reply === "on" ? 1 : 0;
     formData.unread = formData.unread === "on" ? 1 : 0;
+    formData.read = formData.read === "on" ? 1 : 0; // Handle read
 
     // console.log("Submitted Filters:", formData);
 
@@ -102,51 +107,95 @@ const SearchComponent = ({ onSearch, resetTrigger, isSent }) => {
                 <span>
                   <p>status:</p>
                   <div>
-                    <span>
-                      <p>new</p>
-                      <input
-                        type="checkbox"
-                        name="new"
-                        checked={formValues.new}
-                        onChange={(e) =>
-                          setFormValues((prev) => ({ ...prev, new: e.target.checked }))
-                        }
-                      />
-                    </span>
-                    <span>
-                      <p>forward</p>
-                      <input
-                        type="checkbox"
-                        name="forward"
-                        checked={formValues.forward}
-                        onChange={(e) =>
-                          setFormValues((prev) => ({ ...prev, forward: e.target.checked }))
-                        }
-                      />
-                    </span>
-                    <span>
-                      <p>reply</p>
-                      <input
-                        type="checkbox"
-                        name="reply"
-                        checked={formValues.reply}
-                        onChange={(e) =>
-                          setFormValues((prev) => ({ ...prev, reply: e.target.checked }))
-                        }
-                      />
-                    </span>
-                    <span>
-                      <p>unread</p>
-                      <input
-                        type="checkbox"
-                        name="unread"
-                        checked={formValues.unread}
-                        onChange={(e) =>
-                          setFormValues((prev) => ({ ...prev, unread: e.target.checked }))
-                        }
-                      />
-                    </span>
-                  </div>
+  {isSent ? (
+    <>
+      <span>
+        <p>new</p>
+        <input
+          type="checkbox"
+          name="new"
+          checked={formValues.new}
+          onChange={(e) =>
+            setFormValues((prev) => ({ ...prev, new: e.target.checked }))
+          }
+        />
+      </span>
+      <span>
+        <p>forward</p>
+        <input
+          type="checkbox"
+          name="forward"
+          checked={formValues.forward}
+          onChange={(e) =>
+            setFormValues((prev) => ({ ...prev, forward: e.target.checked }))
+          }
+        />
+      </span>
+    </>
+  ) : (
+    <>
+      <span>
+        <p>new</p>
+        <input
+          type="checkbox"
+          name="new"
+          checked={formValues.new}
+          onChange={(e) =>
+            setFormValues((prev) => ({ ...prev, new: e.target.checked }))
+          }
+        />
+      </span>
+      <span>
+        <p>forward</p>
+        <input
+          type="checkbox"
+          name="forward"
+          checked={formValues.forward}
+          onChange={(e) =>
+            setFormValues((prev) => ({ ...prev, forward: e.target.checked }))
+          }
+        />
+      </span>
+      <span>
+        <p>reply</p>
+        <input
+          type="checkbox"
+          name="reply"
+          checked={formValues.reply}
+          onChange={(e) =>
+            setFormValues((prev) => ({ ...prev, reply: e.target.checked }))
+          }
+        />
+      </span>
+      <span>
+        <p>unread</p>
+        <input
+          type="checkbox"
+          name="unread"
+          checked={formValues.unread}
+          onChange={(e) =>
+            setFormValues((prev) => ({ ...prev, unread: e.target.checked }))
+          }
+        />
+      </span>
+      <span>
+        <p>read</p>
+        <input
+          type="checkbox"
+          name="read"
+          checked={formValues.read}
+          onChange={(e) =>
+            setFormValues((prev) => ({
+              ...prev,
+              read: e.target.checked,
+            }))
+          }
+        />
+      </span>
+    </>
+  )}
+</div>
+
                 </span>
               </div>
               <div className={css.rfqTableDetail_search_fields_right}>

@@ -9,7 +9,7 @@ import { setPopUpRfq } from "../../../../ReduxStore/SearchProductSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { addRecipients, searchProductQuery } from "../../../../ReduxStore/RfqSlice";
 import Cookies from "js-cookie";
-import { submitRfq, clearSearchResults } from "../../../../ReduxStore/RfqSlice";
+import { submitRfq, clearSearchResults, statusRfq } from "../../../../ReduxStore/RfqSlice";
 import AddParts from "../../../Popups/AddParts";
 import { fetchUserData } from "../../../../ReduxStore/ProfleSlice";
 import { useLocation } from "react-router-dom"; // Add this import
@@ -33,8 +33,17 @@ const RfqReply = () => {
 // <------>
 
 const location = useLocation(); // To get data passed via navigate
-    const selectedRfqs = location.state?.selectedRfqs || [];
+    // const selectedRfqs = location.state?.selectedRfqs || [];
+    const { selectedRfqs = [], type = "reply" } = location.state || {};
+
     console.log("SELECTEDRFQ", selectedRfqs)
+
+    const subjectPrefix = type === "forward" ? "FW:" : "RE:";
+    const subject = selectedRfqs.length > 0 
+  ? `${type === "forward" ? "FW:" : "RE:"} ${selectedRfqs[0]?.subject || ""}`
+  : "";
+
+
     
   const { selectedProducts } = useSelector((store) => store.searchProductStore);
   console.log("SelectedProducts", selectedProducts);
@@ -60,7 +69,7 @@ useEffect(() => {
 
 
   useEffect(() => {
-  if (initialData && selectedRfqs.length > 0) {
+  if (initialData) {
     // Format logged-in user information
     const userInfo = `
     <div className={css.paddedContent}>
@@ -320,6 +329,12 @@ useEffect(() => {
         formData.append(`recipients[${index}]`, recipient.email);
       });
 
+      if (!recipients.length) {
+        alert("Please add at least one recipient before sending.");
+        return;
+      }
+    
+
     // Add comment
     formData.append("comment", comment);
 
@@ -372,12 +387,22 @@ useEffect(() => {
       await dispatch(submitRfq({ token, data: formData }));
       alert("RFQ submitted successfully!");
 
+      // Check if the RFQ was forwarded and update its status
+    if (type === "forward") {
+      const payload = {
+        items: selectedRfqs.map((rfq) => ({ id: rfq.rfqId || rfq.id, isForwarded: 1 })),
+      };
+      await dispatch(statusRfq({ token, data: payload }));
+      console.log("Forward status updated successfully.");
+    }
+
       // Clear form fields after successful submission
       clearFields();
     } catch (error) {
       console.error("Error submitting RFQ:", error);
       alert("Error Submitting RFQ Data");
     }
+    
   };
 
   // Function to clear the form fields
@@ -524,7 +549,7 @@ useEffect(() => {
                     </span>
                     <span>
                       <label htmlFor="">Subject:</label>
-                      <input name="subject" type="text" />
+                      <input name="subject" type="text" defaultValue={subject}/>
                     </span>
                   </div>
 

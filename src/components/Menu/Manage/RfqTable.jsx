@@ -14,7 +14,7 @@ import {
   setCurrentPagePrev,
 } from "../../../ReduxStore/RfqSlice.js";
 import { IoMail, IoMailOpen } from "react-icons/io5";
-import { receivedRfq, sentRfq } from "../../../ReduxStore/RfqSlice.js";
+import { receivedRfq, sentRfq, statusRfq } from "../../../ReduxStore/RfqSlice.js";
 import Cookies from "js-cookie";
 import myProfile from "../../../styles/Menu/Manage/MyProfile.module.css";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -82,26 +82,45 @@ const RfqTable = () => {
     
     // Subject filter
     if (filters.subject) {
+      const lowerCaseSubject = filters.subject.toLowerCase();
+    
       filtered = filtered.filter((item) => {
         const subject = item.subject || ""; // Handle null values
-        const isMatch = subject.toLowerCase().includes(filters.subject.toLowerCase());
-        console.log(`Subject: "${subject}", Filter: "${filters.subject}", Match: ${isMatch}`);
+        const isPoInHand = lowerCaseSubject.includes("po") && item.po_in_hand === "1"; // Check for "po in hand"
+        const isMatch =
+          isPoInHand || subject.toLowerCase().includes(lowerCaseSubject);
+    
+        console.log(
+          `Subject: "${subject}", Filter: "${filters.subject}", Match: ${isMatch}`
+        );
         return isMatch;
       });
+    
       console.log("After Subject Filter:", filtered);
     }
+    
   
     // Status filter
-    if (filters.new || filters.forward || filters.reply || filters.unread) {
-      filtered = filtered.filter((item) => {
-        if (filters.new && !item.isNew) return false; // Filter for "New"
-        if (filters.forward && !item.isForwarded) return false; // Filter for "Forward"
-        if (filters.reply && !item.isReplied) return false; // Filter for "Reply"
-        if (filters.unread && item.isRead) return false; // Filter for "Unread"
-        return true;
-      });
-      console.log("After Status Filters:", filtered);
-    }
+    // Status filter
+  //   if (filters.forward) {
+  //     filtered = filtered.filter((item) => item.isForwarded === 1); // Filter where isForwarded is 1
+  //  }
+
+if (filters.new || filters.forward || filters.reply || filters.unread || filters.read || filters.archive) {
+  filtered = filtered.filter((item) => {
+    if (filters.new && !item.isNew) return false; // Filter for "New"
+    if (filters.forward && String(item.isForwarded) !== "1") return false;
+    if (filters.reply && !item.isReplied) return false; // Filter for "Reply"
+    if (filters.unread && item.isRead === "1") return false; // For string "1"
+if (filters.read && item.isRead === "0") return false; // For string "0"
+
+    if (filters.archive && item.isArchive !== 1) return false; // Filter for "Archive"
+    return true;
+  });
+  console.log("Filtered Data After Status Filters:", filtered);
+}
+
+
     
     // Part Number filter
     if (filters.partNumbers) {
@@ -248,6 +267,82 @@ const RfqTable = () => {
   
     navigate("/rfq/create", { state: { selectedRfqs: rfqMail } }); // Pass all selected RFQs
   };
+
+  const handleForward = () => {
+    if (rfqMail.length === 0) {
+        alert("Please select at least one RFQ to forward.");
+        return;
+    }
+
+    navigate("/rfq/create", { state: { selectedRfqs: rfqMail, type: "forward" } });
+};
+
+// const handleAction = async (action) => {
+//   if (rfqMail.length === 0) {
+//     alert("Please select at least one RFQ.");
+//     return;
+//   }
+
+//   // Mapping actions to payload fields
+//   const actionMap = {
+//     read: { key: "isRead", value: 1 },
+//     unread: { key: "isRead", value: 0 },
+//     archive: { key: "isArchive", value: 1 },
+//     unarchive: { key: "isArchive", value: 0 },
+//   };
+
+//   const { key, value } = actionMap[action];
+
+//   const payload = {
+//     items: rfqMail.map((rfq) => ({ id: rfq.id, [key]: value })),
+//   };
+
+//   try {
+//     const token = Cookies.get("token");
+//     await dispatch(statusRfq({ token, data: payload }));
+//     alert(`RFQ(s) ${action} successfully!`);
+//   } catch (error) {
+//     console.error("Error handling action:", error);
+//     alert(`Failed to ${action} RFQ(s).`);
+//   }
+// };
+
+const handleAction = async (action) => {
+  if (rfqMail.length === 0) {
+    alert("Please select at least one RFQ.");
+    return;
+  }
+
+  // Mapping actions to payload fields
+  const actionMap = {
+    read: { key: "isRead", value: 1 },
+    unread: { key: "isRead", value: 0 },
+    archive: { key: "isArchive", value: 1 },
+    unarchive: { key: "isArchive", value: 0 },
+  };
+
+  const { key, value } = actionMap[action];
+
+  const payload = {
+    items: rfqMail.map((rfq) => ({ id: rfq.rfqId, [key]: value })), // Map `rfqId` to `id`
+  };
+
+  console.log("Payload being sent:", payload);
+
+  try {
+    const token = Cookies.get("token");
+    const response = await dispatch(statusRfq({ token, data: payload })).unwrap();
+    alert(response.message || `RFQ(s) ${action} successfully!`);
+  } catch (error) {
+    console.error("Error handling action:", error);
+    alert(error?.response?.data?.message || `Failed to ${action} RFQ(s).`);
+  }
+  dispatch(receivedRfq({ token })); // Re-fetch received RFQs
+
+};
+
+
+
   
 
   return (
@@ -286,7 +381,7 @@ const RfqTable = () => {
                     to="/"
                     className={({ isActive }) => (isActive ? myProfile.active : '')}
                   >
-                    <span>Archeive</span>
+                    <span>Archive</span>
                   </NavLink>
                 </li>
               </ul>
@@ -418,10 +513,15 @@ const RfqTable = () => {
                   reply
                 </button>
                 
-                <button type="button">forward</button>
-                <button type="button">archive</button>
-                <button type="button">mark as read</button>
-                <button type="button">mark as unread</button>
+                <button type="button" onClick={handleForward}>
+                  forward
+                </button>
+                <button type="button"
+                onClick={() => handleAction("archive")}>archive</button>
+                <button type="button"
+                onClick={() => handleAction("read")}>mark as read</button>
+                <button type="button"
+                onClick={() => handleAction("unread")}>mark as unread</button>
                 
               </div>
               <div className={css.pagination}>
