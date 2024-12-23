@@ -229,6 +229,44 @@ export const deleteCompanyUser = createAsyncThunk(
   }
 );
 
+export const statusRfq = createAsyncThunk(
+  "rfqStore/statusRfq",
+  async ({ token, data }) => {
+    try {
+      console.log("Sending status RFQ data:", data);
+
+      const response = await axios.post(
+        `${brokerAPI}rfq/status`,
+        data, 
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, 
+          },
+        }
+      );
+
+      console.log("Response from backend:", response.data);
+
+      // Return the response data
+      return response.data;
+    } catch (error) {
+      // Log any errors for debugging
+      console.error(
+        "Error submitting RFQ status:",
+        error.response?.data || error.message
+      );
+
+      // Throw an error for Redux to handle
+      throw new Error(
+        "Error while updating RFQ status: " +
+          (error.response?.data?.message || error.message)
+      );
+    }
+  }
+);
+
+
 
 
 
@@ -334,6 +372,17 @@ const RfqSlice = createSlice({
       })
       .addCase(sentRfq.rejected, (state, action) => {
         console.error("Error while Fetching Sent Data");
+      })
+      .addCase(statusRfq.pending, (state) => {
+        console.log("Updating RFQ status..."); // Log for debugging
+      })
+      .addCase(statusRfq.fulfilled, (state, action) => {
+        console.log("RFQ status updated:", action.payload); // Log the response
+        // Optionally update state based on action.payload
+      })
+      .addCase(statusRfq.rejected, (state, action) => {
+        console.error("Failed to update RFQ status:", action.error.message);
+        // Handle error if necessary
       })
       .addCase(getRfqArchived.pending, (state) => {
         console.log("Pending....")
