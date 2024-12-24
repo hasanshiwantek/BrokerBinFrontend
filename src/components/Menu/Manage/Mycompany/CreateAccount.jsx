@@ -210,14 +210,16 @@ const CreateAccount = () => {
                             </span>
 
                             <span className='space-x-4'>
+                                <label>First Name</label>
+                                <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} required />
+                            </span>
+
+
+                            <span className='space-x-4'>
                                 <label>Last Name</label>
                                 <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} required />
                             </span>
 
-                            <span className='space-x-4'>
-                                <label>First Name</label>
-                                <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} required />
-                            </span>
 
                             <span className='space-x-4'>
                                 <label>Position</label>
@@ -286,44 +288,44 @@ const CreateAccount = () => {
                             </span>
 
                             <span className='space-x-4'>
-                            <div className="flex items-center "> 
-                      <label htmlFor="whatsapp">WhatsApp</label>
-                      <img src="https://ben.cachefly.net/images/social_networks/tiny_whatsapp.png" alt="WhatsApp" title="WhatsApp"/>
-                      </div>
+                                <div className="flex items-center ">
+                                    <label htmlFor="whatsapp">WhatsApp</label>
+                                    <img src="https://ben.cachefly.net/images/social_networks/tiny_whatsapp.png" alt="WhatsApp" title="WhatsApp" />
+                                </div>
                                 <input type="text" name="whatsapp" value={formData.imScreenNames.whatsapp} onChange={handleChange} />
                             </span>
 
                             <span className='space-x-4'>
-                            <div className="flex items-center"> 
-                      <label htmlFor="trillian">Trillian</label>
-                      <img src="https://ben.cachefly.net/images/social_networks/tiny_trillian.png" alt="Trillian" title="Trillian"/>
-                      </div>
+                                <div className="flex items-center">
+                                    <label htmlFor="trillian">Trillian</label>
+                                    <img src="https://ben.cachefly.net/images/social_networks/tiny_trillian.png" alt="Trillian" title="Trillian" />
+                                </div>
                                 <input type="text" name="trillian" value={formData.imScreenNames.trillian} onChange={handleChange} />
                             </span>
 
                             <h3>Social Networking</h3>
 
                             <span className='space-x-4'>
-                            <div className="flex items-center"> 
-                      <label htmlFor="facebook">Facebook</label>
-                      <img src="https://ben.cachefly.net/images/social_networks/tiny_facebook.png" alt="Facebook" title="Facebook"/>
-                      </div>
+                                <div className="flex items-center">
+                                    <label htmlFor="facebook">Facebook</label>
+                                    <img src="https://ben.cachefly.net/images/social_networks/tiny_facebook.png" alt="Facebook" title="Facebook" />
+                                </div>
                                 <input type="text" name="facebook" value={formData.socialNetworking.facebook || ''} onChange={handleChange} />
                             </span>
 
                             <span className='space-x-4'>
-                            <div className="flex items-center"> 
-                      <label htmlFor="twitter">Twitter</label>
-                      <img src="https://ben.cachefly.net/images/social_networks/tiny_twitter.png" alt="Twitter" title="Twitter"/>
-                      </div>
+                                <div className="flex items-center">
+                                    <label htmlFor="twitter">Twitter</label>
+                                    <img src="https://ben.cachefly.net/images/social_networks/tiny_twitter.png" alt="Twitter" title="Twitter" />
+                                </div>
                                 <input type="text" name="twitter" value={formData.socialNetworking.twitter} onChange={handleChange} />
                             </span>
 
                             <span className='space-x-4'>
-                            <div className="flex items-center"> 
-                      <label htmlFor="linkedin">LinkedIn</label>
-                      <img src="https://ben.cachefly.net/images/social_networks/tiny_linkedin.png" alt="Linked-In" title="Linked-In"/>
-                      </div>
+                                <div className="flex items-center">
+                                    <label htmlFor="linkedin">LinkedIn</label>
+                                    <img src="https://ben.cachefly.net/images/social_networks/tiny_linkedin.png" alt="Linked-In" title="Linked-In" />
+                                </div>
                                 <input type="text" name="linkedin" value={formData.socialNetworking.linkedin} onChange={handleChange} />
                             </span>
 

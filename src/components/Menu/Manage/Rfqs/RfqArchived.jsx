@@ -273,6 +273,23 @@ const RfqTableSent = () => {
 
 
 
+  const handleForward = () => {
+    if (rfqMail.length === 0) {
+        alert("Please select at least one RFQ to forward.");
+        return;
+    }
+
+    const selectedRfqs = rfqMail.map((rfq) => ({
+        id: rfq.id, // Ensure you are mapping `id` properly from sent RFQs
+        ...rfq,
+    }));
+
+    navigate("/rfq/create", { state: { selectedRfqs, type: "forward" } });
+};
+
+
+
+
   return (
     <>
       <div className={css.layout}>
@@ -441,7 +458,7 @@ const RfqTableSent = () => {
                 <button type="button" onClick={handleReply}>
                   reply
                 </button>
-                <button type="button">forward</button>
+                <button type="button" onClick={handleForward}>forward</button>
                 <button type="button" onClick={handleDelete}>
                   Delete
                 </button>

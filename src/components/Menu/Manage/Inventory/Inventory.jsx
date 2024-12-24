@@ -41,13 +41,13 @@ const Inventory = () => {
   // const submitInventoryBtn = (e) => {
   //   e.preventDefault();
   //   const formData = new FormData();
-  
+
   //   // Append other form data fields
   //   const formDataObject = Object.fromEntries(new FormData(e.target).entries());
   //   for (const [key, value] of Object.entries(formDataObject)) {
   //     formData.append(key, value);
   //   }
-  
+
   //   // Filter valid files and append them as an array
   //   const filteredInventoryFile = addAnotherFiles.filter((e) => e.file !== null);
   //   if (filteredInventoryFile.length > 0) {
@@ -56,7 +56,7 @@ const Inventory = () => {
   //         formData.append(`uploadFile[]`, new Blob([item.file]), `file${index}.csv`);
   //       }
   //     });
-  
+
   //     // Dispatch API call
   //     dispatch(sendInventoryFile({ token, formData }));
   //   } else {
@@ -64,17 +64,17 @@ const Inventory = () => {
   //     return; // Stop the function if validation fails
   //   }
   // };
-  
+
   // const submitInventoryBtn = (e) => {
   //   e.preventDefault();
   //   const formData = new FormData();
-  
+
   //   // Append other form fields
   //   const formDataObject = Object.fromEntries(new FormData(e.target).entries());
   //   for (const [key, value] of Object.entries(formDataObject)) {
   //     formData.append(key, value);
   //   }
-  
+
   //   // Filter valid files and append them to the FormData
   //   const filteredInventoryFile = addAnotherFiles.filter((fileObj) => fileObj.file !== null);
   //   if (filteredInventoryFile.length > 0) {
@@ -87,12 +87,12 @@ const Inventory = () => {
   //         );
   //       }
   //     });
-  
+
   //     // Debugging FormData
   //     for (let pair of formData.entries()) {
   //       console.log(pair[0], pair[1]);
   //     }
-  
+
   //     // Dispatch API call
   //     dispatch(sendInventoryFile({ token, formData }));
   //   } else {
@@ -100,17 +100,17 @@ const Inventory = () => {
   //     return;
   //   }
   // };
-  
+
   // const submitInventoryBtn = (e) => {
   //   e.preventDefault();
   //   const formData = new FormData();
-  
+
   //   // Add form fields
   //   const formDataObject = Object.fromEntries(new FormData(e.target).entries());
   //   for (const [key, value] of Object.entries(formDataObject)) {
   //     formData.append(key, value);
   //   }
-  
+
   //   // Add files as binary
   //   const filteredInventoryFile = addAnotherFiles.filter((fileObj) => fileObj.file !== null);
   //   if (filteredInventoryFile.length > 0) {
@@ -119,29 +119,29 @@ const Inventory = () => {
   //         formData.append("uploadFile[]", new Blob([fileObj.file], { type: "application/octet-stream" }), `file${index}.csv`);
   //       }
   //     });
-  
+
   //     // Debug FormData
   //     for (let pair of formData.entries()) {
   //       console.log(`${pair[0]}:`, pair[1]);
   //     }
-  
+
   //     // Dispatch API call
   //     dispatch(sendInventoryFile({ token, formData }));
   //   } else {
   //     alert("Please fill all required fields");
   //   }
   // };
-  
+
   // const submitInventoryBtn = (e) => {
   //   e.preventDefault();
   //   const formData = new FormData();
-  
+
   //   // Add other form data fields
   //   const formDataObject = Object.fromEntries(new FormData(e.target).entries());
   //   for (const [key, value] of Object.entries(formDataObject)) {
   //     formData.append(key, value);
   //   }
-  
+
   //   // Add binary files from local reference
   //   const filteredInventoryFile = addAnotherFiles.filter((fileObj) => fileObj.file && fileObj.binaryData);
   //   if (filteredInventoryFile.length > 0) {
@@ -152,12 +152,12 @@ const Inventory = () => {
   //         fileObj.file.name
   //       );
   //     });
-  
+
   //     // Debugging FormData
   //     for (let pair of formData.entries()) {
   //       console.log(pair[0], pair[1]);
   //     }
-  
+
   //     // Dispatch API call
   //     dispatch(sendInventoryFile({ token, formData }));
   //   } else {
@@ -165,22 +165,22 @@ const Inventory = () => {
   //     return;
   //   }
   // };
-  
+
   // const submitInventoryBtn = (e) => {
   //   e.preventDefault();
   //   const formData = new FormData();
-  
+
   //   // Add other form data fields
   //   const formDataObject = Object.fromEntries(new FormData(e.target).entries());
   //   for (const [key, value] of Object.entries(formDataObject)) {
   //     formData.append(key, value);
   //   }
-  
+
   //   // Add binary files
   //   const filteredInventoryFile = addAnotherFiles.filter(
   //     (fileObj) => fileObj.file && fileObj.binaryData
   //   );
-  
+
   //   if (filteredInventoryFile.length > 0) {
   //     filteredInventoryFile.forEach((fileObj, index) => {
   //       formData.append(
@@ -189,29 +189,29 @@ const Inventory = () => {
   //         fileObj.file.name
   //       );
   //     });
-  
+
   //     // Debugging FormData
   //     for (let pair of formData.entries()) {
   //       console.log(pair[0], pair[1]);
   //     }
-  
+
   //     // Dispatch API call
   //     dispatch(sendInventoryFile({ token, formData }));
   //   } else {
   //     alert("Please select at least one file.");
   //   }
   // };
-  
+
   // const submitInventoryBtn = (e) => {
   //   e.preventDefault();
   //   const formData = new FormData();
-  
+
   //   // Add other form data fields
   //   const formDataObject = Object.fromEntries(new FormData(e.target).entries());
   //   for (const [key, value] of Object.entries(formDataObject)) {
   //     formData.append(key, value);
   //   }
-  
+
   //   // Add binary files from local references
   //   const filteredInventoryFile = addAnotherFiles.filter((fileObj) => fileObj.file);
   //   if (filteredInventoryFile.length > 0) {
@@ -222,29 +222,29 @@ const Inventory = () => {
   //         fileObj.file.name
   //       );
   //     });
-  
+
   //     // Debugging FormData
   //     for (let pair of formData.entries()) {
   //       console.log(pair[0], pair[1]);
   //     }
-  
+
   //     // Dispatch API call
   //     dispatch(sendInventoryFile({ token, formData }));
   //   } else {
   //     alert("Please select at least one file.");
   //   }
   // };
-  
+
   // const submitInventoryBtn = (e) => {
   //   e.preventDefault();
   //   const formData = new FormData();
-  
+
   //   // Add other form fields
   //   const formDataObject = Object.fromEntries(new FormData(e.target).entries());
   //   for (const [key, value] of Object.entries(formDataObject)) {
   //     formData.append(key, value);
   //   }
-  
+
   //   // Add files to FormData
   //   const filteredInventoryFile = addAnotherFiles.filter((fileObj) => fileObj.file); // Ensure valid files
   //   if (filteredInventoryFile.length > 0) {
@@ -255,12 +255,12 @@ const Inventory = () => {
   //         fileObj.file.name
   //       );
   //     });
-  
+
   //     // Debugging: Log FormData to ensure correctness
   //     for (let pair of formData.entries()) {
   //       console.log(pair[0], pair[1]);
   //     }
-  
+
   //     // Dispatch API call
   //     dispatch(sendInventoryFile({ token, formData }));
   //   } else {
@@ -268,164 +268,120 @@ const Inventory = () => {
   //     return;
   //   }
   // };
+
+  //   const submitInventoryBtn = (e) => {
+  //   e.preventDefault();
+  //   const formData = new FormData();
+
+  //   // Add other form fields
+  //   const formDataObject = Object.fromEntries(new FormData(e.target).entries());
+  //   for (const [key, value] of Object.entries(formDataObject)) {
+  //     formData.append(key, value);
+  //   }
+
+  //   // Add files to FormData as an array
+  //   const filteredInventoryFile = addAnotherFiles.filter((fileObj) => fileObj.file); // Ensure valid files
+  //   if (filteredInventoryFile.length > 0) {
+  //     filteredInventoryFile.forEach((fileObj) => {
+  //       formData.append(
+  //         "uploadFile[]", // Use brackets to send as an array
+  //         new Blob([fileObj.binaryData], { type: fileObj.file.type }),
+  //         fileObj.file.name
+  //       );
+  //     });
+
+  //     // Debugging: Log FormData content
+  //     for (let pair of formData.entries()) {
+  //       console.log(pair[0], pair[1]);
+  //     }
+
+  //     // Dispatch API call
+  //     dispatch(sendInventoryFile({ token, formData }));
+  //   } else {
+  //     alert("Please select at least one file.");
+  //     return;
+  //   }
+  // };
+
+  // const submitInventoryBtn = (e) => {
+  //   e.preventDefault();
+  //   const formData = new FormData();
+
+  //   // Add form input fields to FormData
+  //   const formDataObject = Object.fromEntries(new FormData(e.target).entries());
+  //   for (const [key, value] of Object.entries(formDataObject)) {
+  //     formData.append(key, value);
+  //   }
+
+  //   // Add files with associated stock options to FormData
+  //   const filteredInventoryFile = addAnotherFiles.filter((fileObj) => fileObj.file);
+  //   if (filteredInventoryFile.length > 0) {
+  //     filteredInventoryFile.forEach((fileObj, index) => {
+  //       if (fileObj.file) {
+  //         formData.append(
+  //           "uploadFile[]", // File array key
+  //           new Blob([atob(fileObj.file.base64)], { type: fileObj.file.type }),
+  //           fileObj.file.name
+  //         );
+  //         formData.append(`stockOption[${index}]`, fileObj.stockOption || ""); // Add stock option
+  //       }
+  //     });
+
+  //     // Debugging FormData
+  //     for (let pair of formData.entries()) {
+  //       console.log(pair[0], pair[1]);
+  //     }
+
+  //     // Dispatch the API call
+  //     dispatch(sendInventoryFile({ token, formData }));
+  //   } else {
+  //     alert("Please fill all required fields");
+  //   }
+  // };
+
+  const submitInventoryBtn = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
   
-//   const submitInventoryBtn = (e) => {
-//   e.preventDefault();
-//   const formData = new FormData();
-
-//   // Add other form fields
-//   const formDataObject = Object.fromEntries(new FormData(e.target).entries());
-//   for (const [key, value] of Object.entries(formDataObject)) {
-//     formData.append(key, value);
-//   }
-
-//   // Add files to FormData as an array
-//   const filteredInventoryFile = addAnotherFiles.filter((fileObj) => fileObj.file); // Ensure valid files
-//   if (filteredInventoryFile.length > 0) {
-//     filteredInventoryFile.forEach((fileObj) => {
-//       formData.append(
-//         "uploadFile[]", // Use brackets to send as an array
-//         new Blob([fileObj.binaryData], { type: fileObj.file.type }),
-//         fileObj.file.name
-//       );
-//     });
-
-//     // Debugging: Log FormData content
-//     for (let pair of formData.entries()) {
-//       console.log(pair[0], pair[1]);
-//     }
-
-//     // Dispatch API call
-//     dispatch(sendInventoryFile({ token, formData }));
-//   } else {
-//     alert("Please select at least one file.");
-//     return;
-//   }
-// };
-
-// const submitInventoryBtn = (e) => {
-//   e.preventDefault();
-//   const formData = new FormData();
-
-//   // Add form input fields to FormData
-//   const formDataObject = Object.fromEntries(new FormData(e.target).entries());
-//   for (const [key, value] of Object.entries(formDataObject)) {
-//     formData.append(key, value);
-//   }
-
-//   // Add files with associated stock options to FormData
-//   const filteredInventoryFile = addAnotherFiles.filter((fileObj) => fileObj.file);
-//   if (filteredInventoryFile.length > 0) {
-//     filteredInventoryFile.forEach((fileObj, index) => {
-//       if (fileObj.file) {
-//         formData.append(
-//           "uploadFile[]", // File array key
-//           new Blob([atob(fileObj.file.base64)], { type: fileObj.file.type }),
-//           fileObj.file.name
-//         );
-//         formData.append(`stockOption[${index}]`, fileObj.stockOption || ""); // Add stock option
-//       }
-//     });
-
-//     // Debugging FormData
-//     for (let pair of formData.entries()) {
-//       console.log(pair[0], pair[1]);
-//     }
-
-//     // Dispatch the API call
-//     dispatch(sendInventoryFile({ token, formData }));
-//   } else {
-//     alert("Please fill all required fields");
-//   }
-// };
-
-const submitInventoryBtn = async (e) => {
-  e.preventDefault();
-  setIsLoading(true);
-  const formData = new FormData();
-
-  // Add form input fields to FormData
-  const formDataObject = Object.fromEntries(new FormData(e.target).entries());
-  for (const [key, value] of Object.entries(formDataObject)) {
-    formData.append(key, value);
-  }
-
-  // Add files and their statuses to FormData
-  const filteredInventoryFile = addAnotherFiles.filter((fileObj) => fileObj.file);
-  if (filteredInventoryFile.length > 0) {
-    filteredInventoryFile.forEach((fileObj, index) => {
-      if (fileObj.file) {
-        // Append file to FormData
-        formData.append(
-          "uploadFile[]",
-          new Blob([atob(fileObj.file.base64)], { type: fileObj.file.type }),
-          fileObj.file.name
-        );
-
-        // Append status to FormData
-        formData.append(`status[${index}]`, fileObj.status || "NA"); // Default to "NA" if not set
-      }
-    });
-
-    // Debugging: Log FormData content
-    for (let pair of formData.entries()) {
-      console.log(pair[0], pair[1]);
-    }
-
     try {
-      const response = await dispatch(sendInventoryFile({ token, formData })).unwrap();
-      alert("File uploaded successfully!"); // Success alert
+      const formDataObject = Object.fromEntries(new FormData(e.target).entries());
+      for (const [key, value] of Object.entries(formDataObject)) {
+        formData.append(key, value);
+      }
+  
+      const filteredInventoryFile = addAnotherFiles.filter((fileObj) => fileObj.file);
+      if (filteredInventoryFile.length > 0) {
+        filteredInventoryFile.forEach((fileObj, index) => {
+          formData.append("uploadFile[]", fileObj.file, fileObj.file.name);
+          formData.append(`status[${index}]`, fileObj.status || "NA");
+        });
+  
+        const resultAction = await dispatch(sendInventoryFile({ token, formData }));
+  
+        // Check for success
+        if (sendInventoryFile.fulfilled.match(resultAction)) {
+          alert("Inventory file submitted successfully!");
+        } else {
+          // Show backend error message if available
+          const errorMessage =  "Failed to submit inventory file.";
+          throw new Error(errorMessage);
+        }
+      } else {
+        throw new Error("Please select at least one file to upload.");
+      }
     } catch (error) {
-      const errorMessage = error.response?.error?.message?.join(", ") || "Each file must be a CSV, XLS, or XLSX file";
-      alert(errorMessage);
-    } finally {
-      setIsLoading(false); // Stop loading
+      console.error("Error while submitting inventory file:", error.message || error);
+      alert("An error occurred. Please try again.");
     }
-  } else {
-    setIsLoading(false); // Stop loading if no files
-    alert("Please fill all required fields");
-  }
-};
-
-// const submitInventoryBtn = async (e) => {
-//   e.preventDefault();
-//   const formData = new FormData();
-
-//   // Add form input fields to FormData
-//   const formDataObject = Object.fromEntries(new FormData(e.target).entries());
-//   for (const [key, value] of Object.entries(formDataObject)) {
-//     formData.append(key, value);
-//   }
-
-//   // Add files and their statuses to FormData
-//   const filteredInventoryFile = addAnotherFiles.filter((fileObj) => fileObj.file);
-//   if (filteredInventoryFile.length > 0) {
-//     filteredInventoryFile.forEach((fileObj, index) => {
-//       if (fileObj.file) {
-//         formData.append(
-//           "uploadFile[]",
-//           new Blob([atob(fileObj.file.base64)], { type: fileObj.file.type }),
-//           fileObj.file.name
-//         );
-//         formData.append(`status[${index}]`, fileObj.status || "NA");
-//       }
-//     });
-
-//     try {
-//       await dispatch(sendInventoryFile({ token, formData })).unwrap();
-//       toast.success("File uploaded successfully!");
-//     } catch (error) {
-//       toast.error(error.message || "An error occurred during upload.");
-//     }
-//   } else {
-//     toast.warn("Please fill all required fields.");
-//   }
-// };
+  };
   
 
-  // if (error) {
-  //   return <ErrorStatus error={error} />;
-  // }
+
+
+
+  if (error) {
+    return <ErrorStatus error={error} />;
+  }
 
   return (
   <>
@@ -459,7 +415,7 @@ const submitInventoryBtn = async (e) => {
                 target="_blank"
                 href="https://members.brokerbin.com/help/example.csv"
               >
-                <label style={{color:"#444"}}>example.csv</label>
+                <label style={{ color: "#444" }}>example.csv</label>
               </a>
             </div>
           </div>

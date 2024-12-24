@@ -1,521 +1,3 @@
-// import React, { useEffect, useState } from "react";
-// import css from "../../../styles/Popup/CompanyDetails.module.css";
-// import companyLogo from "../../../imgs/logo/companyContact.jpg";
-// import companyPhoto from "../../../imgs/logo/companyPhoto.jpg";
-// import companyContact from "../../../imgs/logo/companyContact.jpg";
-// import shadow from "../../../imgs/logo/shadow.png";
-// import { MdPersonRemoveAlt1 } from "react-icons/md";
-// import { BsStarFill } from "react-icons/bs";
-// import { useSelector,useDispatch } from "react-redux";
-// import { getCompanyContact } from "../../../ReduxStore/SearchProductSlice";
-// import { use } from "react";
-// import Cookies from "js-cookie";
-
-
-
-// const TabContent = () => {
-//   const [toggleTabs, setToggleTabs] = useState(1);
-
-//   const { popupCompanyDetail } = useSelector((store) => store.searchProductStore);
-//   const company = popupCompanyDetail[0];
-//   // console.log("Initial Company Dta",company)
-
-
-//   // const companyId = company?.id;
-//   // const { companyContactData } = useSelector((store) => store.searchProductStore);
-//   // const dispatch = useDispatch();
-//   // const token = Cookies.get("token");
-
-//   // console.log("CompanyId ", companyId);
-//   // console.log("COMPANY CONTACT DATA FROM FRONTEND", companyContactData);
-
-//   // useEffect(() => {
-//   //   if (companyId && token) { // Ensure companyId and token are available
-//   //     dispatch(getCompanyContact({ id: companyId, token }));
-//   //   } else {
-//   //     console.log("Company ID or Token is missing");
-//   //   }
-//   // }, [dispatch, companyId, token]);
-
-//   // // Handle loading state or empty popupCompanyDetail
-//   // if (!popupCompanyDetail || popupCompanyDetail.length === 0) {
-//   //   return <div>Loading...</div>;
-//   // }
-
-//   // const companyImages =
-//   // popupCompanyDetail[0] &&
-//   // popupCompanyDetail[0].addedBy &&
-//   // popupCompanyDetail[0].addedBy.company &&
-//   // popupCompanyDetail[0].addedBy.company.company_images
-//   //   ? popupCompanyDetail[0].addedBy.company.company_images
-//   //   : [];
-//   // console.log([popupCompanyDetail[0].addedBy.company.company_images][0]);
-
-
-
-//   return (
-//     <>
-//       <div className={css.Popup_Info_Main_right_tabs}>
-//         <ul className={css.Popup_Info_Main_right_tabs_toggle}>
-//           <li
-//             onClick={() => setToggleTabs(1)}
-//             className={toggleTabs === 1 ? css.activeTab : ""}
-//           >
-//             contacts
-//           </li>
-//           <li
-//             onClick={() => setToggleTabs(2)}
-//             className={toggleTabs === 2 ? css.activeTab : ""}
-//           >
-//             photos
-//           </li>
-//           <li
-//             onClick={() => setToggleTabs(3)}
-//             className={toggleTabs === 3 ? css.activeTab : ""}
-//           >
-//             credentials
-//           </li>
-//           <li
-//             onClick={() => setToggleTabs(4)}
-//             className={toggleTabs === 4 ? css.activeTab : ""}
-//           >
-//             terms / conditions
-//           </li>
-//         </ul>
-//         <div className={toggleTabs === 1 ? css.showContent : css.content}>
-//           <div className={css.Popup_Info_Main_right_tabs_contact}>
-//             <div className={css.Popup_Info_Main_right_tabs_contact_left}>
-//               <ul>
-//                 <li>#</li>
-//                 <li>A</li>
-//                 <li>B</li>
-//                 <li>C</li>
-//                 <li>D</li>
-//                 <li>E</li>
-//                 <li>F</li>
-//                 <li>G</li>
-//                 <li>H</li>
-//                 <li>I</li>
-//                 <li>J</li>
-//                 <li>K</li>
-//                 <li>L</li>
-//                 <li>M</li>
-//                 <li>N</li>
-//                 <li>O</li>
-//                 <li>P</li>
-//                 <li>Q</li>
-//                 <li>R</li>
-//                 <li>S</li>
-//                 <li>T</li>
-//                 <li>U</li>
-//                 <li>V</li>
-//                 <li>W</li>
-//                 <li>X</li>
-//                 <li>Y</li>
-//                 <li>Z</li>
-//               </ul>
-//             </div>
-
-//             <div className={css.Popup_Info_Main_right_tabs_contact_right}>
-//               <h1>company contacts</h1>
-//               <div
-//                 className={css.Popup_Info_Main_right_tabs_contact_right_search}
-//               >
-//                 <p>quick search:</p>
-//                 <input type="text" placeholder="Search Contacts" />
-//               </div>
-//               <h1>Contact: O</h1>
-//               <div
-//                 className={
-//                   css.Popup_Info_Main_right_tabs_contact_right_companies
-//                 }
-//               >
-//                 <div
-//                   className={
-//                     css.Popup_Info_Main_right_tabs_contact_right_companies_list
-//                   }
-//                 >
-//                   <img src={companyLogo} alt="company logo" />
-//                   <div
-//                     className={
-//                       css.Popup_Info_Main_right_tabs_contact_right_companies_list_details
-//                     }
-//                   >
-//                     <h2>Rob Osgood</h2>
-//                     <div>
-//                       <span>
-//                         <strong>title:</strong>
-//                         <p>Sales</p>
-//                       </span>
-//                       <span>
-//                         <strong>phone:</strong>
-//                         <a href="tel:+603 474 1111">603 474 1111</a>
-//                       </span>
-//                       <span>
-//                         <strong>fax:</strong>
-//                         <a href="tel:+603 474 1112">603 474 1112</a>
-//                       </span>
-//                       <span>
-//                         <strong>email:</strong>
-//                         <a
-//                           href="mailto:sales@alltechusa.net
-// "
-//                         >
-//                           sales@alltechusa.net
-//                         </a>
-//                       </span>
-//                     </div>
-//                   </div>
-//                   <span>
-//                     <MdPersonRemoveAlt1 />
-//                     remove contact
-//                   </span>
-//                 </div>
-//                 <div
-//                   className={
-//                     css.Popup_Info_Main_right_tabs_contact_right_companies_myNotes
-//                   }
-//                 >
-//                   <div>
-//                     <strong>my notes:</strong>
-//                     <span>
-//                       <strong>my rating</strong>
-//                       <span>
-//                         {new Array(5).fill(null).map((e, i) => {
-//                           return <BsStarFill key={i} />;
-//                         })}
-//                       </span>
-//                     </span>
-//                   </div>
-//                   <div>
-//                     <textarea placeholder="This section is only visible to you by your login. Enter your personal notes about this contact here."></textarea>
-//                   </div>
-//                 </div>
-//               </div>
-//               <div
-//                 className={
-//                   css.Popup_Info_Main_right_tabs_contact_right_companies
-//                 }
-//               >
-//                 <div
-//                   className={
-//                     css.Popup_Info_Main_right_tabs_contact_right_companies_list
-//                   }
-//                 >
-//                   <img src={companyLogo} alt="company logo" />
-//                   <div
-//                     className={
-//                       css.Popup_Info_Main_right_tabs_contact_right_companies_list_details
-//                     }
-//                   >
-//                     <h2>john cena</h2>
-//                     <div>
-//                       <span>
-//                         <strong>title:</strong>
-//                         <p>Sales</p>
-//                       </span>
-//                       <span>
-//                         <strong>phone:</strong>
-//                         <a href="tel:+603 474 1111">603 474 1111</a>
-//                       </span>
-//                       <span>
-//                         <strong>fax:</strong>
-//                         <a href="tel:+603 474 1112">603 474 1112</a>
-//                       </span>
-//                       <span>
-//                         <strong>email:</strong>
-//                         <a
-//                           href="mailto:sales@alltechusa.net
-// "
-//                         >
-//                           sales@alltechusa.net
-//                         </a>
-//                       </span>
-//                     </div>
-//                   </div>
-//                   <span>
-//                     <MdPersonRemoveAlt1 />
-//                     remove contact
-//                   </span>
-//                 </div>
-//                 <div
-//                   className={
-//                     css.Popup_Info_Main_right_tabs_contact_right_companies_myNotes
-//                   }
-//                 >
-//                   <div>
-//                     <strong>my notes:</strong>
-//                     <span>
-//                       <strong>my rating</strong>
-//                       <span>
-//                         {new Array(5).fill(null).map((e, i) => {
-//                           return <BsStarFill key={i} />;
-//                         })}
-//                       </span>
-//                     </span>
-//                   </div>
-//                   <div>
-//                     <textarea placeholder="This section is only visible to you by your login. Enter your personal notes about this contact here."></textarea>
-//                   </div>
-//                 </div>
-//               </div>
-//               <div
-//                 className={
-//                   css.Popup_Info_Main_right_tabs_contact_right_companies
-//                 }
-//               >
-//                 <div
-//                   className={
-//                     css.Popup_Info_Main_right_tabs_contact_right_companies_list
-//                   }
-//                 >
-//                   <img src={companyLogo} alt="company logo" />
-//                   <div
-//                     className={
-//                       css.Popup_Info_Main_right_tabs_contact_right_companies_list_details
-//                     }
-//                   >
-//                     <h2>undertaker</h2>
-//                     <div>
-//                       <span>
-//                         <strong>title:</strong>
-//                         <p>Sales</p>
-//                       </span>
-//                       <span>
-//                         <strong>phone:</strong>
-//                         <a href="tel:+603 474 1111">603 474 1111</a>
-//                       </span>
-//                       <span>
-//                         <strong>fax:</strong>
-//                         <a href="tel:+603 474 1112">603 474 1112</a>
-//                       </span>
-//                       <span>
-//                         <strong>email:</strong>
-//                         <a
-//                           href="mailto:sales@alltechusa.net
-// "
-//                         >
-//                           sales@alltechusa.net
-//                         </a>
-//                       </span>
-//                     </div>
-//                   </div>
-//                   <span>
-//                     <MdPersonRemoveAlt1 />
-//                     remove contact
-//                   </span>
-//                 </div>
-//                 <div
-//                   className={
-//                     css.Popup_Info_Main_right_tabs_contact_right_companies_myNotes
-//                   }
-//                 >
-//                   <div>
-//                     <strong>my notes:</strong>
-//                     <span>
-//                       <strong>my rating</strong>
-//                       <span>
-//                         {new Array(5).fill(null).map((e, i) => {
-//                           return <BsStarFill key={i} />;
-//                         })}
-//                       </span>
-//                     </span>
-//                   </div>
-//                   <div>
-//                     <textarea placeholder="This section is only visible to you by your login. Enter your personal notes about this contact here."></textarea>
-//                   </div>
-//                 </div>
-//               </div>
-//               <div
-//                 className={
-//                   css.Popup_Info_Main_right_tabs_contact_right_companies
-//                 }
-//               >
-//                 <div
-//                   className={
-//                     css.Popup_Info_Main_right_tabs_contact_right_companies_list
-//                   }
-//                 >
-//                   <img src={companyLogo} alt="company logo" />
-//                   <div
-//                     className={
-//                       css.Popup_Info_Main_right_tabs_contact_right_companies_list_details
-//                     }
-//                   >
-//                     <h2>jetha laal</h2>
-//                     <div>
-//                       <span>
-//                         <strong>title:</strong>
-//                         <p>Sales</p>
-//                       </span>
-//                       <span>
-//                         <strong>phone:</strong>
-//                         <a href="tel:+603 474 1111">603 474 1111</a>
-//                       </span>
-//                       <span>
-//                         <strong>fax:</strong>
-//                         <a href="tel:+603 474 1112">603 474 1112</a>
-//                       </span>
-//                       <span>
-//                         <strong>email:</strong>
-//                         <a
-//                           href="mailto:sales@alltechusa.net
-// "
-//                         >
-//                           sales@alltechusa.net
-//                         </a>
-//                       </span>
-//                     </div>
-//                   </div>
-//                   <span>
-//                     <MdPersonRemoveAlt1 />
-//                     remove contact
-//                   </span>
-//                 </div>
-//                 <div
-//                   className={
-//                     css.Popup_Info_Main_right_tabs_contact_right_companies_myNotes
-//                   }
-//                 >
-//                   <div>
-//                     <strong>my notes:</strong>
-//                     <span>
-//                       <strong>my rating</strong>
-//                       <span>
-//                         {new Array(5).fill(null).map((e, i) => {
-//                           return <BsStarFill key={i} />;
-//                         })}
-//                       </span>
-//                     </span>
-//                   </div>
-//                   <div>
-//                     <textarea placeholder="This section is only visible to you by your login. Enter your personal notes about this contact here."></textarea>
-//                   </div>
-//                 </div>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//         <div className={toggleTabs === 2 ? css.showContent : css.content}>
-//           <div className={css.Popup_Info_Main_right_tabs_photos}>
-//             <h1>company photos</h1>
-//             <div className={css.Popup_Info_Main_right_tabs_photos_img}>
-//               {/* {[popupCompanyDetail[0].addedBy.company.company_images][0].map(
-//                 (image) => {
-//                   console.log(image.image);
-
-//                   return (
-//                     <div key={image.id}>
-//                       <img src={image.image} alt="company photo" />
-//                     </div>
-//                   );
-//                 }
-//               )} */}
-
-
-//               {/* 
-// <div className={css.Popup_Info_Main_right_tabs_photos_img}>
-//               {companyImages.map((image) => (
-//                 <div key={image.id}>
-//                   <img src={image.image} alt="company photo" />
-//                 </div>
-//               ))}*/}
-
-
-//               {company.company_images && company.company_images.length > 0 ? (
-//                 company.company_images.map((image, index) => (
-//                   <div key={index}>
-//                     <img src={image.image} alt={`Company photo ${index + 1}`} />
-//                   </div>
-//                 ))
-//               ) : (
-//                 <p>No photos available.</p>
-//               )}
-
-
-
-//             </div>
-
-
-
-
-
-
-
-//           </div>
-//         </div>
-//         <div className={toggleTabs === 3 ? css.showContent : css.content}>
-//           <div className={css.Popup_Info_Main_right_tabs_credentials}></div>
-//         </div>
-//         <div className={toggleTabs === 4 ? css.showContent : css.content}>
-//           <div className={css.Popup_Info_Main_right_tabs_terms}>
-//             <div>
-//               <h1>terms</h1>
-//               <ul>
-//                 <li>Credit Card</li>
-//                 <li>Wire Transfer</li>
-//                 <li>COD (Cash On Delivery)</li>
-//                 <li>Net 5</li>
-//                 <li>Net 10</li>
-//                 <li>Net 30</li>
-//                 <li>Cash</li>
-//                 <li>Call</li>
-//                 <li>Minimum Order: 0</li>
-//               </ul>
-//             </div>
-//             <div>
-//               <h1>return policy</h1>
-//               <p>30 days</p>
-//             </div>
-//             <div>
-//               <h1>legal files</h1>
-//               <p>Profile Incomplete</p>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </>
-//   );
-// };
-
-// export default TabContent;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 import React, { useEffect, useState } from "react";
 import css from "../../../styles/Popup/CompanyDetails.module.css";
@@ -536,6 +18,8 @@ const TabContent = ({ companyId }) => {
   const [toggleTabs, setToggleTabs] = useState(1);
   // Loading state
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState(""); // Search query state
+  const [filteredContacts, setFilteredContacts] = useState([]); // Filtered contacts
   const [companyData, setCompanyData] = useState(null);
 
   const dispatch = useDispatch();
@@ -544,42 +28,47 @@ const TabContent = ({ companyId }) => {
 
   console.log("CompanyId From Tab Content Page", companyId);
 
-  useEffect(() => {
-    if (companyId && token) {
-      setLoading(true); // Set loading to true when fetching data
-      dispatch(getCompanyContact({ id: companyId, token }))
-        .then((data) => {
-          setCompanyData(data);
-          setLoading(false); // Set loading to false when data is fetched
-        })
-        .catch((error) => {
-          console.error("Error fetching company data:", error);
-          setLoading(false); // Set loading to false on error
-        });
-    } else {
-      console.log("Company ID or Token is missing");
-      setLoading(false); // In case no company ID or token is found
-    }
-  }, [dispatch, companyId, token]);
-
-  // const companyImages =
-  // popupCompanyDetail[0] &&
-  // popupCompanyDetail[0].addedBy &&
-  // popupCompanyDetail[0].addedBy.company &&
-  // popupCompanyDetail[0].addedBy.company.company_images
-  //   ? popupCompanyDetail[0].addedBy.company.company_images
-  //   : [];
-  // console.log([popupCompanyDetail[0].addedBy.company.company_images][0]);
-
-
-
-  // While loading, show loading indicator
-
-
   const companyUserId = companyContactData.data.contacts.map((item) => item.id)
   console.log("User Id from Comapny Modal", companyUserId)
 
   const companyUsersCount = companyContactData.data.contacts.length
+  useEffect(() => {
+    if (companyId && token) {
+      setLoading(true);
+      dispatch(getCompanyContact({ id: companyId, token }))
+        .then((data) => {
+          setFilteredContacts(data.payload.data.contacts); // Initialize filteredContacts
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching company data:", error);
+          setLoading(false);
+        });
+    }
+  }, [dispatch, companyId, token]);
+
+
+
+    // Filter contacts dynamically based on the search query
+    useEffect(() => {
+      if (companyContactData?.data?.contacts) {
+        const contacts = companyContactData.data.contacts;
+        if (!searchQuery) {
+          // Show all contacts if the search query is empty
+          setFilteredContacts(contacts);
+        } else {
+          // Filter contacts based on the search query
+          const filtered = contacts.filter((contact) =>
+            `${contact.firstName} ${contact.lastName}`
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase())
+          );
+          setFilteredContacts(filtered);
+        }
+      }
+    }, [searchQuery, companyContactData]);
+
+
 
 
 
@@ -695,15 +184,25 @@ const TabContent = ({ companyId }) => {
                 className={css.Popup_Info_Main_right_tabs_contact_right_search}
               >
                 <p>quick search:</p>
-                <input type="text" placeholder="Search Contacts" />
+                <input
+                type="text"
+                placeholder="Search Contacts"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="text-lg"
+              />
               </div>
               <h1>Contact: O</h1>
+ 
 
 
 
 
-              {
-                companyContactData?.data?.contacts?.map((user, id) => {
+
+
+
+
+              {filteredContacts.map((user, id) => {
                   return (
                     <div key={id}>
                       <div
@@ -716,7 +215,7 @@ const TabContent = ({ companyId }) => {
                             css.Popup_Info_Main_right_tabs_contact_right_companies_list
                           }
                         >
-                          <img src={user.profileImage} alt="company logo" />
+                          <img src={user.profileImage} alt="User Profile" />
                           <div
                             className={
                               css.Popup_Info_Main_right_tabs_contact_right_companies_list_details
@@ -892,7 +391,7 @@ const TabContent = ({ companyId }) => {
                             </span>
                           </div>
                           <div>
-                            <textarea  placeholder="This section is only visible to you by your login. Enter your personal notes about this here"></textarea>
+                            <textarea placeholder="This section is only visible to you by your login. Enter your personal notes about this here"></textarea>
                           </div>
                         </div>
                       </div>
@@ -915,38 +414,6 @@ const TabContent = ({ companyId }) => {
           <div className={css.Popup_Info_Main_right_tabs_photos}>
             <h1>company photos</h1>
             <div className={css.Popup_Info_Main_right_tabs_photos_img}>
-              {/* {[popupCompanyDetail[0].addedBy.company.company_images][0].map(
-                (image) => {
-                  console.log(image.image);
-                  
-                  return (
-                    <div key={image.id}>
-                      <img src={image.image} alt="company photo" />
-                    </div>
-                  );
-                }
-              )} */}
-
-
-              {/* 
-<div className={css.Popup_Info_Main_right_tabs_photos_img}>
-              {companyImages.map((image) => (
-                <div key={image.id}>
-                  <img src={image.image} alt="company photo" />
-                </div>
-              ))}*/}
-
-              {/* 
-              {company.company_images && company.company_images.length > 0 ? (
-                company.company_images.map((image, index) => (
-                  <div key={index}>
-                    <img src={image.image} alt={`Company photo ${index + 1}`} />
-                  </div>
-                ))
-              ) : (
-                <p>No photos available.</p>
-              )} */}
-
 
 
             </div>
@@ -967,14 +434,7 @@ const TabContent = ({ companyId }) => {
             <div>
               <h1>terms</h1>
               <p>Pofile Incomplete</p>
-              {/* <li>Wire Transfer</li>
-                <li>COD (Cash On Delivery)</li>
-                <li>Net 5</li>
-                <li>Net 10</li>
-                <li>Net 30</li>
-                <li>Cash</li>
-                <li>Call</li>
-                <li>Minimum Order: 0</li> */}
+
             </div>
             <div>
               <h1>return policy</h1>
