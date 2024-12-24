@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { sendBroadcast } from "../../../../ReduxStore/BroadCast";
 import Services from "./Field Components/Services";
-
+import { clearAllSelections } from "../../../../ReduxStore/BroadCast";
 const BroadcastForm = () => {
   const token = Cookies.get("token");
   const { user } = JSON.parse(localStorage.getItem("user"));
@@ -197,17 +197,15 @@ const BroadcastForm = () => {
 
 
 
-
   const handleSubmit = (e) => {
     e.preventDefault();
   
-    // If a file is selected, use FormData to include both file and JSON data
+    // Prepare data for submission
     let data;
     if (files) {
       data = new FormData();
-      data.append("uploadFile", files); // Key for file, expected by the backend
+      data.append("uploadFile", files);
   
-      // Append each key-value pair to FormData instead of using JSON.stringify
       data.append("type", broadcastType);
       data.append("selectedCompanies", JSON.stringify(computerSelection));
       data.append("selectedTelecom", JSON.stringify(telecomSelection));
@@ -216,12 +214,10 @@ const BroadcastForm = () => {
       data.append("companiesSelection", JSON.stringify(companiesSelection));
       data.append("service", JSON.stringify(serviceData));
   
-      // Append any additional form fields if needed
       for (const [key, value] of Object.entries(formData)) {
         data.append(key, value);
       }
     } else {
-      // If no file, just send a JSON object with key-value pairs
       data = {
         ...formData,
         type: broadcastType,
@@ -236,13 +232,17 @@ const BroadcastForm = () => {
   
     // Dispatch the data with token
     dispatch(sendBroadcast({ token, data }))
-    .then(() => {
-      alert("Your Broadcast Has Been Sent Succesfully");
-    })
-    .catch((error) => {
-      console.error("Error storing data:", error);
-      alert("Failed to store data in the backend");
-    });
+      .then(() => {
+        alert("Your Broadcast Has Been Sent Successfully");
+           // Clear serviceData after submission
+      dispatch(clearAllSelections());
+        // Clear the form fields after successful submission
+        cancelAllActions();
+      })
+      .catch((error) => {
+        console.error("Error storing data:", error);
+        alert("Failed to store data in the backend");
+      });
   
     // Set email format
     setEmailFormat((prev) => ({
@@ -252,10 +252,8 @@ const BroadcastForm = () => {
     }));
   
     console.log("Token:", token);
-
-    // Reset form if needed
-    cancelAllActions(); // Assuming this function clears the form and resets states
   };
+  
   
 
 
@@ -703,8 +701,8 @@ const BroadcastForm = () => {
                   <input
                     type="button"
                     value="SEND"
-                    style={{ cursor: "pointer" }}
-                    onClick={handleSubmit} 
+                    className="cursor-pointer px-4 py-5 border border-orange-500 rounded-3xl transform active:scale-90 transition-all duration-100  "
+                    onClick={handleSubmit}  
                   />
                 </span>
               </div>

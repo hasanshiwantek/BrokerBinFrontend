@@ -259,6 +259,15 @@ const broadcastSlice = createSlice({
     setPopupCompanyDetail: (state, action) => {
       state.popupCompanyDetail = action.payload;
     },
+    clearAllSelections: (state) => {
+      // Reset all related fields
+      state.computerSelection = [];
+      state.telecomSelection = [];
+      state.mobileDevicesSelection = [];
+      state.companiesSelection = [];
+      state.regionSelection = [];
+      state.serviceData = [];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -365,6 +374,7 @@ export const {
   setServiceSelection,
   setFormData,
   setTogglePopUp,
+  clearAllSelections,
   setPopupCompanyDetail
 } = broadcastSlice.actions;
 

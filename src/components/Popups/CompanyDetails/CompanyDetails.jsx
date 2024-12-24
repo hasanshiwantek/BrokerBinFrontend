@@ -19,10 +19,10 @@ import { setTogglePopUp } from "../../../ReduxStore/SearchProductSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { getCompanyContact } from "../../../ReduxStore/SearchProductSlice";
 import Cookies from "js-cookie";
-
+import { NavLink } from "react-router-dom";
 // import companyLogo from "../../../imgs/logo/CompanyDetailsLogo.jpg";
 
-const CompanyDetails = ({closeModal}) => {
+const CompanyDetails = ({ closeModal }) => {
   const dispatch = useDispatch();
   const { popupCompanyDetail } = useSelector((store) => store.searchProductStore);
   // Loading state
@@ -39,8 +39,8 @@ const CompanyDetails = ({closeModal}) => {
   // const company = popupCompanyDetail[0];
 
 
-   // Get the first company object passed to the modal
-   const company = popupCompanyDetail ? popupCompanyDetail[0] : null;
+  // Get the first company object passed to the modal
+  const company = popupCompanyDetail ? popupCompanyDetail[0] : null;
 
   // Log the company to check the details
   console.log("Company Data in Modal:", company);
@@ -51,10 +51,10 @@ const CompanyDetails = ({closeModal}) => {
   console.log("CompanyId ", companyId);
   console.log("COMPANY CONTACT DATA FROM FRONTEND", companyContactData);
 
-    // Handle empty company array or error
-    if (!company || !companyId) {
-      return <h2>No company data available.</h2>; // Show a message if no company is selected
-    }
+  // Handle empty company array or error
+  if (!company || !companyId) {
+    return <h2>No company data available.</h2>; // Show a message if no company is selected
+  }
 
   useEffect(() => {
     if (companyId && token) {
@@ -156,7 +156,7 @@ const CompanyDetails = ({closeModal}) => {
                   rel="noopener noreferrer"
                 >
                 </a>
-                  <img src={companyContactData.data?.company?.image} />
+                <img src={companyContactData.data?.company?.image} />
               </div>
               <div className={css.Popup_Info_Main_left_actions}>
                 <div>
@@ -183,77 +183,78 @@ const CompanyDetails = ({closeModal}) => {
               <div className={css.Popup_Info_Main_left_comments}>
                 <div>
 
-               <div className={css.gridHome1_MemberDetail_reviews_stars}>
-                                <div data-v-217e3916="" class="vue-rate-it-rating" style={{display:"flex",justifyContent:"space-between",alignItems:"center"
-                                }}>
-                                  <div data-v-217e3916="" class="vue-rate-it-rating-item">
-                                    <div data-v-217e3916="" step="50" style={{ display: "inline-block", marginRight: "1px" }}>
-                                      <svg width="17" height="17" viewBox="0 0 179 179" style={{ overflow: "visible" }}>
-                                        <linearGradient id="vgnr2v" x1="-2%" x2="100%" y1="0%" y2="0%">
-                                          <stop offset="102%" stop-color="#FFD700"></stop>
-                                          <stop offset="102%" stop-color="#CCC"></stop>
-                                        </linearGradient>
-                                        <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#vgnr2v)" stroke="#999" stroke-width="2" vector-effect="non-scaling-stroke" transform="scale(0.1)"></path>
-                                        <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#vgnr2v)" transform="scale(0.1)"></path>
-                                      </svg>
-                                    </div>
-                                  </div>
-                                  <div data-v-217e3916="" class="vue-rate-it-rating-item">
-                                    <div data-v-217e3916="" step="50" style={{ display: "inline-block", marginRight: "1px" }}>
-                                      <svg width="17" height="17" viewBox="0 0 179 179" style={{ overflow: "visible" }}>
-                                        <linearGradient id="sjx8c" x1="-2%" x2="100%" y1="0%" y2="0%">
-                                          <stop offset="102%" stop-color="#FFD700"></stop>
-                                          <stop offset="102%" stop-color="#CCC"></stop>
-                                        </linearGradient>
-                                        <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#sjx8c)" stroke="#999" stroke-width="2" vector-effect="non-scaling-stroke" transform="scale(0.1)"></path>
-                                        <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#sjx8c)" transform="scale(0.1)"></path>
-                                      </svg>
-                                    </div>
-                                  </div>
-                                  <div data-v-217e3916="" class="vue-rate-it-rating-item">
-                                    <div data-v-217e3916="" step="50" style={{ display: "inline-block", marginRight: "1px" }}>
-                                      <svg width="17" height="17" viewBox="0 0 179 179" style={{ overflow: "visible" }}>
-                                        <linearGradient id="ax5l1m" x1="-2%" x2="100%" y1="0%" y2="0%">
-                                          <stop offset="102%" stop-color="#FFD700"></stop>
-                                          <stop offset="102%" stop-color="#CCC"></stop>
-                                        </linearGradient>
-                                        <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#ax5l1m)" stroke="#999" stroke-width="2" vector-effect="non-scaling-stroke" transform="scale(0.1)"></path>
-                                        <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#ax5l1m)" transform="scale(0.1)"></path>
-                                      </svg>
-                                    </div>
-                                  </div>
-                                  <div data-v-217e3916="" class="vue-rate-it-rating-item">
-                                    <div data-v-217e3916="" step="50" style={{ display: "inline-block", marginRight: "1px" }}>
-                                      <svg width="17" height="17" viewBox="0 0 179 179" style={{ overflow: "visible" }}>
-                                        <linearGradient id="19xik" x1="-2%" x2="100%" y1="0%" y2="0%">
-                                          <stop offset="102%" stop-color="#FFD700"></stop>
-                                          <stop offset="102%" stop-color="#CCC"></stop>
-                                        </linearGradient>
-                                        <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#19xik)" stroke="#999" stroke-width="2" vector-effect="non-scaling-stroke" transform="scale(0.1)"></path>
-                                        <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#19xik)" transform="scale(0.1)"></path>
-                                      </svg>
-                                    </div>
-                                  </div>
-                                  <div data-v-217e3916="" class="vue-rate-it-rating-item">
-                                    <div data-v-217e3916="" step="50" style={{ display: "inline-block", marginRight: "1px" }}>
-                                      <svg width="17" height="17" viewBox="0 0 179 179" style={{ overflow: "visible" }}>
-                                        <linearGradient id="wiiipk" x1="-2%" x2="100%" y1="0%" y2="0%">
-                                          <stop offset="102%" stop-color="#FFD700"></stop>
-                                          <stop offset="102%" stop-color="#CCC"></stop>
-                                        </linearGradient>
-                                        <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#wiiipk)" stroke="#999" stroke-width="2" vector-effect="non-scaling-stroke" transform="scale(0.1)"></path>
-                                        <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#wiiipk)" transform="scale(0.1)"></path>
-                                      </svg>
-                                    </div>
-                                  </div>
-                                <a href="#">100%</a>
-                                </div>
-                              </div>
+                  <div className={css.gridHome1_MemberDetail_reviews_stars}>
+                    <div data-v-217e3916="" class="vue-rate-it-rating" style={{
+                      display: "flex", justifyContent: "space-between", alignItems: "center"
+                    }}>
+                      <div data-v-217e3916="" class="vue-rate-it-rating-item">
+                        <div data-v-217e3916="" step="50" style={{ display: "inline-block", marginRight: "1px" }}>
+                          <svg width="17" height="17" viewBox="0 0 179 179" style={{ overflow: "visible" }}>
+                            <linearGradient id="vgnr2v" x1="-2%" x2="100%" y1="0%" y2="0%">
+                              <stop offset="102%" stop-color="#FFD700"></stop>
+                              <stop offset="102%" stop-color="#CCC"></stop>
+                            </linearGradient>
+                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#vgnr2v)" stroke="#999" stroke-width="2" vector-effect="non-scaling-stroke" transform="scale(0.1)"></path>
+                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#vgnr2v)" transform="scale(0.1)"></path>
+                          </svg>
+                        </div>
+                      </div>
+                      <div data-v-217e3916="" class="vue-rate-it-rating-item">
+                        <div data-v-217e3916="" step="50" style={{ display: "inline-block", marginRight: "1px" }}>
+                          <svg width="17" height="17" viewBox="0 0 179 179" style={{ overflow: "visible" }}>
+                            <linearGradient id="sjx8c" x1="-2%" x2="100%" y1="0%" y2="0%">
+                              <stop offset="102%" stop-color="#FFD700"></stop>
+                              <stop offset="102%" stop-color="#CCC"></stop>
+                            </linearGradient>
+                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#sjx8c)" stroke="#999" stroke-width="2" vector-effect="non-scaling-stroke" transform="scale(0.1)"></path>
+                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#sjx8c)" transform="scale(0.1)"></path>
+                          </svg>
+                        </div>
+                      </div>
+                      <div data-v-217e3916="" class="vue-rate-it-rating-item">
+                        <div data-v-217e3916="" step="50" style={{ display: "inline-block", marginRight: "1px" }}>
+                          <svg width="17" height="17" viewBox="0 0 179 179" style={{ overflow: "visible" }}>
+                            <linearGradient id="ax5l1m" x1="-2%" x2="100%" y1="0%" y2="0%">
+                              <stop offset="102%" stop-color="#FFD700"></stop>
+                              <stop offset="102%" stop-color="#CCC"></stop>
+                            </linearGradient>
+                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#ax5l1m)" stroke="#999" stroke-width="2" vector-effect="non-scaling-stroke" transform="scale(0.1)"></path>
+                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#ax5l1m)" transform="scale(0.1)"></path>
+                          </svg>
+                        </div>
+                      </div>
+                      <div data-v-217e3916="" class="vue-rate-it-rating-item">
+                        <div data-v-217e3916="" step="50" style={{ display: "inline-block", marginRight: "1px" }}>
+                          <svg width="17" height="17" viewBox="0 0 179 179" style={{ overflow: "visible" }}>
+                            <linearGradient id="19xik" x1="-2%" x2="100%" y1="0%" y2="0%">
+                              <stop offset="102%" stop-color="#FFD700"></stop>
+                              <stop offset="102%" stop-color="#CCC"></stop>
+                            </linearGradient>
+                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#19xik)" stroke="#999" stroke-width="2" vector-effect="non-scaling-stroke" transform="scale(0.1)"></path>
+                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#19xik)" transform="scale(0.1)"></path>
+                          </svg>
+                        </div>
+                      </div>
+                      <div data-v-217e3916="" class="vue-rate-it-rating-item">
+                        <div data-v-217e3916="" step="50" style={{ display: "inline-block", marginRight: "1px" }}>
+                          <svg width="17" height="17" viewBox="0 0 179 179" style={{ overflow: "visible" }}>
+                            <linearGradient id="wiiipk" x1="-2%" x2="100%" y1="0%" y2="0%">
+                              <stop offset="102%" stop-color="#FFD700"></stop>
+                              <stop offset="102%" stop-color="#CCC"></stop>
+                            </linearGradient>
+                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#wiiipk)" stroke="#999" stroke-width="2" vector-effect="non-scaling-stroke" transform="scale(0.1)"></path>
+                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#wiiipk)" transform="scale(0.1)"></path>
+                          </svg>
+                        </div>
+                      </div>
+                      <a href="#">100%</a>
+                    </div>
+                  </div>
                 </div>
-                <div>
+                {/* <div>
                   <span>(3) comments</span>
                   <span>(0) new</span>
-                </div>
+                </div> */}
               </div>
               <div className={css.Popup_Info_Main_left_companySideInformation}>
                 <TabInformation companyId={companyId} />
@@ -295,10 +296,16 @@ const CompanyDetails = ({closeModal}) => {
                     <FaMapMarkerAlt />
                     map
                   </span>
-                  <span>
-                    <FaRegListAlt />
-                    inventory
-                  </span>
+
+
+                    <span>
+                      <FaRegListAlt />
+                  <NavLink to={"/inventory"} className="cursor-pointer">
+                      inventory
+                  </NavLink>
+                    </span>
+
+
                   <span>
                     <FaEnvelope />
                     email
@@ -325,10 +332,7 @@ const CompanyDetails = ({closeModal}) => {
             >
               Questions, Comments, or Concerns?
             </a>
-            <span>
-              <p>BrokerBin.com Account Representative:</p>
-              <a href="mailto:kaifabbas03111@gmail.com">Kaif Abbas</a>
-            </span>
+
           </div>
         </div>
       </div>
