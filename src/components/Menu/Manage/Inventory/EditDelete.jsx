@@ -92,7 +92,9 @@ const EditDelete = () => {
     };
     setEditedItems(updatedItems);
   };
+
   const handleSaveModifications = () => {
+    setLoading(true); // Star
     const dataToSave = {
       inventories: editedItems.map((item) => ({
         id: item.id,
@@ -321,8 +323,12 @@ const EditDelete = () => {
             <button type="button" onClick={handleDeleteClick} className="transform active:scale-90 transition-all duration-100 ">
               Delete
             </button>
-            <button type="button" onClick={handleSaveModifications} className="transform active:scale-90 transition-all duration-100 ">
-              Save Modifications
+            <button 
+            type="button" 
+            onClick={handleSaveModifications} 
+            className="transform active:scale-90 transition-all duration-100 "
+            disabled={loading}>
+              {loading ? "Processing..." : "Save Modifications"}
             </button>
             {/* <button type="button">Refresh All</button> */}
           </div>

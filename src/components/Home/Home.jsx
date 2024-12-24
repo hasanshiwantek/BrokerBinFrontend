@@ -45,7 +45,6 @@ const Home = () => {
     dispatch(fetchBroadCastCount({token}))
   },[])
 
-  
 
   const bomFileRef = useRef(null);
   // <----------------------------------------------------- Access uploaded file name ------------------------------------------------------->
@@ -93,6 +92,10 @@ const Home = () => {
     navigate(url, { replace: true });
   };
 
+  const handleNavigation = (path, params = {}) => {
+    const query = new URLSearchParams(params).toString();
+    navigate(`${path}${query ? `?${query}` : ""}`);
+  };
 
 
 
@@ -176,25 +179,26 @@ const Home = () => {
                       <a href="/rfq">RFQ</a>
                       <ul>
                         <li className={css.gridHome1_MemberDetail_list_numbers}>
-                          <a href="#">
-                            {(1)
-                              .toLocaleString("en-US")
-                              .toString()
-                              .padStart(2, "0")}
-                            /
+                        <a onClick={() => handleNavigation("/rfq", { filter: "unread" })}>
+                          {(broadcastCount?.data?.unRead || 0)
+                            .toLocaleString("en-US")
+                            .toString()
+                            .padStart(2, "0")}
+                          /
+                        </a>
+                          <a onClick={() => handleNavigation("/rfq")}>
+                            {(broadcastCount?.data?.received || 0)
+                            .toLocaleString("en-US")
+                            .toString()
+                            .padStart(2, "0")}
+                          /
                           </a>
-                          <a href="#">
-                            {(7)
-                              .toLocaleString("en-US")
-                              .toString()
-                              .padStart(2, "0")}
-                            /
-                          </a>
-                          <a href="#">
-                            {(9)
-                              .toLocaleString("en-US")
-                              .toString()
-                              .padStart(2, "0")}
+                          <a onClick={() => handleNavigation("/rfqSent")}>
+                            {(broadcastCount?.data?.sent || 0)
+                            .toLocaleString("en-US")
+                            .toString()
+                            .padStart(2, "0")}
+                          
                           </a>
                         </li>
                       </ul>
@@ -229,11 +233,12 @@ const Home = () => {
                       <Link to="/hotlist/view">hot list</Link>
                       <ul>
                         <li className={css.gridHome1_MemberDetail_list_numbers}>
-                          <a href="#">
-                            {(0)
-                              .toLocaleString("en-US")
-                              .toString()
-                              .padStart(2, "0")}
+                          <a onClick={() => handleNavigation("/hotList/view")}>
+                          {(broadcastCount?.data?.hotList || 0)
+                            .toLocaleString("en-US")
+                            .toString()
+                            .padStart(2, "0")}
+        
                           </a>
                         </li>
                       </ul>
@@ -244,7 +249,7 @@ const Home = () => {
                   <img src={spares} alt="spares" />
                 </div>
                 <div className={css.gridHome1_MemberDetail_reviews}>
-                  <div className={css.gridHome1_MemberDetail_reviews_stars}>
+                  {/* <div className={css.gridHome1_MemberDetail_reviews_stars}>
                     <div data-v-217e3916="" class="vue-rate-it-rating">
                       <div data-v-217e3916="" class="vue-rate-it-rating-item">
                         <div data-v-217e3916="" step="50" style={{ display: "inline-block", marginRight: "1px" }}>
@@ -308,9 +313,9 @@ const Home = () => {
                       </div>
                     </div>
                     <a href="#">100%</a>
-                  </div>
+                  </div> */}
 
-                  <div className={css.gridHome1_MemberDetail_reviews_watchList}>
+                  {/* <div className={css.gridHome1_MemberDetail_reviews_watchList}>
                     <a href="#">
                       Watch List Companies{" "}
                       <span className={css.newW}>
@@ -322,9 +327,9 @@ const Home = () => {
                         New)
                       </span>
                     </a>
-                  </div>
+                  </div> */}
                   {/* </div> */}
-                  <div className={css.gridHome1_MemberDetail_comments}>
+                  {/* <div className={css.gridHome1_MemberDetail_comments}>
                     <Link to={"/feedbackprofile"}>
                       Comments{" "}
                       <span>
@@ -352,7 +357,7 @@ const Home = () => {
                           .padStart(2, "0")}
                       </span>
                     </a>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -471,7 +476,7 @@ const Home = () => {
                   </div>
                 </div>
                 <div className={css.gridHome2_Details_Bottom}>
-                  <ToggleStats />
+                  <ToggleStats data={broadcastCount.data}/>
                   
                     
                   {loading || !broadcastCount?.data ? (

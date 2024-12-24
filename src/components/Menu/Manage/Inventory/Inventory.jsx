@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import css from "../../../../styles/Menu/Manage/Inventory/Inventory.module.css";
 import AddAnotherFile from "./AddAnotherFile";
 import ScheduleNewUpload from "./ScheduleNewUpload";
@@ -7,6 +7,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { sendInventoryFile } from "../../../../ReduxStore/InventorySlice";
 import ErrorStatus from "../../../Error/ErrorStatus";
 import Cookies from "js-cookie";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 
 const Inventory = () => {
@@ -16,6 +19,7 @@ const Inventory = () => {
   );
   // const { token } = useSelector((state) => state.profileStore);
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
 
   // const submitInventoryBtn = (e) => {
   //   e.preventDefault();
@@ -380,6 +384,8 @@ const Inventory = () => {
   }
 
   return (
+  <>
+    <ToastContainer/>
     <div className={css.inventory}>
       <InventoryButtons />
       <div className={css.inventory_main}>
@@ -418,8 +424,9 @@ const Inventory = () => {
             value="send file"
             oncClick={submitInventoryBtn}
             className={`${css.inventory_main_submitBtn} !p-3 border rounded-lg transform active:scale-90 transition-all duration-100`}
+            disabled={isLoading} // Disable button while loading
           >
-            Send File
+            {isLoading ? "Processing..." : "Send File"}
           </button>
           {/* <h1 className={css.inventory_main_AutoUploadh1}>Auto Uploads</h1> */}
         </form>
@@ -430,6 +437,7 @@ const Inventory = () => {
         </div> */}
       </div>
     </div>
+    </>
   );
 };
 
