@@ -357,7 +357,7 @@ const handleAction = async (action) => {
                     to="/rfq"
                     className={({ isActive }) => (isActive ? myProfile.active : '')}
                   >
-                    <span>Received({receiveRfqData.totalCount})</span>
+                    <span>Received({receiveRfqData.totalCount }/{receiveRfqData.unreadCount})</span>
                   </NavLink>
                 </li>
                 <li>
