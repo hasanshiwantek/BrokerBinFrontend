@@ -33,6 +33,9 @@ const BroadcastModal = ({ isOpen, onRequestClose, broadcast }) => {
         anchor.click();
         document.body.removeChild(anchor);
     };
+
+    const broadcastServices = broadcast.service.join(", "); // Join services with a comma and space
+    console.log(broadcastServices);
     return (
         <div className={styles.modalOverlay}>
             <div className={styles.modalContent}>
@@ -50,15 +53,17 @@ const BroadcastModal = ({ isOpen, onRequestClose, broadcast }) => {
                         <a href="#" onClick={(e) => handleFileDownload(e, broadcast.file)}
                             className={styles.downloadLink}>
                             <FaFileAlt className={styles.iconMargin} />
-                            {broadcast.file}
+                            {broadcast.file.slice(0,50)}...
                         </a>
                     </p>
                 )}
-                <p><strong>Mfg:</strong> {broadcast.mfg}</p>
-                <p><strong>Part / Model:</strong> {broadcast.partModel}</p>
-                <p><strong>Condition:</strong> {broadcast.cond}</p>
-                <p><strong>Quantity:</strong> {broadcast.quantity}</p>
-                <p><strong>Price:</strong> {broadcast.price}</p>
+                <p><strong>Mfg:</strong> {broadcast.mfg  || "N/A"}</p>
+                <p><strong>Part / Model:</strong> {broadcast.partModel || "N/A"}</p>
+                <p><strong>Condition:</strong> {broadcast.cond || "N/A"}</p>
+                <p><strong>Quantity:</strong> {broadcast.quantity || "N/A"}</p>
+                <p><strong>Price:</strong> {broadcast.price || "N/A"}</p>
+                <p><strong>Services:</strong> {broadcastServices || "N/A"}</p>
+
                 {/* <p><strong>Description:</strong> {broadcast.description}</p> */}
                 {broadcast.additional_comments && (
                     <p><strong>Additional Comments:</strong> {broadcast.additional_comments}</p>

@@ -11,8 +11,14 @@ import UniversalSelector from "./UniversalSelector";
 import MFGFilter from "./MFGFilter";
 import SearchCompanyInventory from "../../Reports/SearchCompanyInventory";
 import FiltersSearchCompanyInventory from "../../Reports/FiltersSearchCompanyInventory";
+import { setTogglePopUp } from "../../../../ReduxStore/SearchProductSlice";
+import CompanyDetails from "../../../Popups/CompanyDetails/CompanyDetails";
+import { setPopupCompanyDetail } from "../../../../ReduxStore/SearchProductSlice";
+
 const Options = () => {
 
+  const { filters } = useSelector((state) => state.broadcastStore)
+  console.log("bfilters ", filters)
   // Existing states and handlers...
   const [mfg, setIncludedMFGs] = useState([]);
 
@@ -212,54 +218,72 @@ const Options = () => {
 
   const submitBroadcastFilters = (event) => {
     event.preventDefault();
-    if (!isBroadcastSelected) return;
 
-    const combinedRegions = [
-      ...new Set([
-        ...broadcastFilterState.selectedRegions,
-        ...broadcastFilterState.selectedOutgoingRegions,
-      ]),
-    ];
+    if (!isBroadcastSelected) {
+      console.log("No broadcast selected.");
+      return;
+    }
 
-    const combinedCountries = [
-      ...new Set([
-        ...broadcastFilterState.selectedCountry,
-        ...broadcastFilterState.selectedOutgoingCountry,
-      ]),
-    ];
+    try {
+      console.log("Preparing to submit broadcast filters...");
 
-    const transformedData = {
-      daily_broadcast: broadcastFilterState.dailyBroadcast,
-      broadcasts: broadcastFilterState.broadcasts,
-      type_of_broadcast: broadcastFilterState.selectedBroadcastTypes,
-      categories: broadcastFilterState.selectedCategories,
-      services: broadcastFilterState.selectedServices,
-      groupings: broadcastFilterState.selectedGroupings,
-      region: combinedRegions,
-      country: combinedCountries,
-      mfg: filteredIncludedMFGs, // Include the selected manufacturers
-    };
+      const combinedRegions = [
+        ...new Set([
+          ...broadcastFilterState.selectedRegions,
+          ...broadcastFilterState.selectedOutgoingRegions,
+        ]),
+      ];
+      const combinedCountries = [
+        ...new Set([
+          ...broadcastFilterState.selectedCountry,
+          ...broadcastFilterState.selectedOutgoingCountry,
+        ]),
+      ];
 
-    // Save to local storage
-    localStorage.setItem(
-      "broadcastFilters",
-      JSON.stringify({
-        ...transformedData,
-        multicast: broadcastFilterState.multicast,
-        servicecast: broadcastFilterState.servicecast,
-        selectedRegions: broadcastFilterState.selectedRegions,
-        selectedOutgoingRegions: broadcastFilterState.selectedOutgoingRegions,
-        selectedCountry: broadcastFilterState.selectedCountry,
-        selectedOutgoingCountry: broadcastFilterState.selectedOutgoingCountry,
-      })
-    );
+      const transformedData = {
+        daily_broadcast: broadcastFilterState.dailyBroadcast,
+        broadcasts: broadcastFilterState.broadcasts,
+        type_of_broadcast: broadcastFilterState.selectedBroadcastTypes,
+        categories: broadcastFilterState.selectedCategories,
+        services: broadcastFilterState.selectedServices,
+        groupings: broadcastFilterState.selectedGroupings,
+        region: combinedRegions,
+        country: combinedCountries,
+        mfg: filteredIncludedMFGs, // Include the selected manufacturers
+      };
 
-    dispatch(broadCastFilters({ data: transformedData, token }));
+      console.log("Transformed Data: ", transformedData);
 
-    // if(transformedData){
-    //   alert("Form Data Submitted!")
-    //   }
+      // Save to local storage
+      try {
+        localStorage.setItem(
+          "broadcastFilters",
+          JSON.stringify({
+            ...transformedData,
+            multicast: broadcastFilterState.multicast,
+            servicecast: broadcastFilterState.servicecast,
+            selectedRegions: broadcastFilterState.selectedRegions,
+            selectedOutgoingRegions: broadcastFilterState.selectedOutgoingRegions,
+            selectedCountry: broadcastFilterState.selectedCountry,
+            selectedOutgoingCountry: broadcastFilterState.selectedOutgoingCountry,
+          })
+        );
+        console.log("Broadcast filters saved to local storage.");
+      } catch (storageError) {
+        console.error("Error saving broadcast filters to local storage: ", storageError);
+        alert("An error occurred while saving filters locally. Please try again.");
+      }
+
+      // Dispatch the action
+      dispatch(broadCastFilters({ data: transformedData, token }));
+      alert("Broadcast filters submitted successfully!");
+      console.log("Broadcast filters submitted successfully.");
+    } catch (error) {
+      console.error("Error during broadcast filter submission: ", error);
+      alert("An error occurred while submitting the broadcast filters. Please try again.");
+    }
   };
+
   const isBroadcastSelected = broadcastFilterState.selectedBroadcastTypes.length > 0;
 
   // Handler for clearing all the fields
@@ -283,6 +307,24 @@ const Options = () => {
     alert("All fields have been reset!");
   }
 
+  const { togglePopUp, popupCompanyDetail } = useSelector((state) => state.searchProductStore)
+  const company = filters?.data?.[0]?.user_id?.company;
+  console.log("COMPANY ", company);
+
+  // Company Modal Logic
+  const openCompanyModal = (company) => {
+    console.log("Opening Company Modal with Company:", company);
+    dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
+    dispatch(setTogglePopUp()); // Show company modal
+  };
+  console.log("popupCompanyDetail", popupCompanyDetail);
+  console.log("togglePopUp", togglePopUp);
+
+
+
+
+
+
   return (
     <>
       <div className={myProfile.profileLayout}>
@@ -291,9 +333,9 @@ const Options = () => {
             <p>my profile</p>
             <span>
               <input type="submit" value="submit changes" className={css.sumbitBtn} />
-              <Link to={"/compinfo"}>
-                <button type="button">view profile</button>
-              </Link>
+
+              <button type="button" onClick={() => openCompanyModal(company)}>view profile</button>
+
             </span>
           </div>
           <div className={myProfile.profileInfo}>
@@ -625,8 +667,8 @@ const Options = () => {
 
               <div className={css.btnGroup}>
                 <div className={css.btnGroupSec}>
-                  <button onClick={clearBroadCastFields}>Reset</button>
-                  <button onClick={submitBroadcastFilters}>Submit Changes</button>
+                  <button onClick={clearBroadCastFields} className="transform active:scale-90 transition-all duration-100" >Reset</button>
+                  <button onClick={submitBroadcastFilters} className="transform active:scale-90 transition-all duration-100" >Submit Changes</button>
                 </div>
               </div>
 
@@ -641,6 +683,7 @@ const Options = () => {
 
 
 
+      {togglePopUp && <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
 
     </>
   );

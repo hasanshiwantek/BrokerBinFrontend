@@ -392,8 +392,9 @@
 
 .Popup_Info_Main_left_companySideInformation_tabs ul li{
   
-    font-size: 8pt !important;
-    font-weight: 500;
+    font-size: 9pt !important;
+    font-weight: 400;
+    color: #444;
 
 }
 
