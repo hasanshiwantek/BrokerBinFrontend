@@ -110,9 +110,9 @@ if (filters.new || filters.forward || filters.reply || filters.unread || filters
   filtered = filtered.filter((item) => {
     if (filters.new && !item.isNew) return false; // Filter for "New"
     if (filters.forward && String(item.isForwarded) !== "1") return false;
-    if (filters.reply && !item.isReplied) return false; // Filter for "Reply"
-    if (filters.unread && item.isRead === "1") return false; // For string "1"
-if (filters.read && item.isRead === "0") return false; // For string "0"
+     if (filters.unread && String(item.isRead) === "1") return false; // For "Unread", ensure comparison is string "1"
+    if (filters.read && String(item.isRead) === "0") return false; // For "Read", ensure comparison is string "0"
+    if (filters.read && item.isRead === "0") return false; // For string "0"
 
     if (filters.archive && item.isArchive !== 1) return false; // Filter for "Archive"
     return true;
@@ -120,8 +120,6 @@ if (filters.read && item.isRead === "0") return false; // For string "0"
   console.log("Filtered Data After Status Filters:", filtered);
 }
 
-
-    
     // Part Number filter
     if (filters.partNumbers) {
       filtered = filtered.filter((item) => {

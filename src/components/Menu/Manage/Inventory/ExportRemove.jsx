@@ -53,7 +53,7 @@ const ExportRemove = () => {
     try {
       setLoading(true); // Start loading
       await dispatch(exportRemoveInventory({ token, ...payload })).unwrap();
-      alert(`Your ${actionType} request for ${exportType} has been submitted.`);
+      alert(`Your ${actionType} request for ${exportType} has been submitted to your admin.`);
     } catch (error) {
       console.error("Error during export/remove request:", error);
       alert("There was an error processing your request.");

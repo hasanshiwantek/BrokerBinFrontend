@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import css from "../../../../styles/Menu/Manage/Inventory/Inventory.module.css";
 import AddAnotherFile from "./AddAnotherFile";
 import ScheduleNewUpload from "./ScheduleNewUpload";
@@ -7,6 +7,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { sendInventoryFile } from "../../../../ReduxStore/InventorySlice";
 import ErrorStatus from "../../../Error/ErrorStatus";
 import Cookies from "js-cookie";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 
 const Inventory = () => {
@@ -16,6 +19,7 @@ const Inventory = () => {
   );
   // const { token } = useSelector((state) => state.profileStore);
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
 
   // const submitInventoryBtn = (e) => {
   //   e.preventDefault();
@@ -335,8 +339,9 @@ const Inventory = () => {
 //   }
 // };
 
-const submitInventoryBtn = (e) => {
+const submitInventoryBtn = async (e) => {
   e.preventDefault();
+  setIsLoading(true);
   const formData = new FormData();
 
   // Add form input fields to FormData
@@ -367,21 +372,64 @@ const submitInventoryBtn = (e) => {
       console.log(pair[0], pair[1]);
     }
 
-    // Dispatch the API call
-    dispatch(sendInventoryFile({ token, formData }));
+    try {
+      const response = await dispatch(sendInventoryFile({ token, formData })).unwrap();
+      alert("File uploaded successfully!"); // Success alert
+    } catch (error) {
+      const errorMessage = error.response?.error?.message?.join(", ") || "Each file must be a CSV, XLS, or XLSX file";
+      alert(errorMessage);
+    } finally {
+      setIsLoading(false); // Stop loading
+    }
   } else {
+    setIsLoading(false); // Stop loading if no files
     alert("Please fill all required fields");
   }
 };
 
-  
+// const submitInventoryBtn = async (e) => {
+//   e.preventDefault();
+//   const formData = new FormData();
+
+//   // Add form input fields to FormData
+//   const formDataObject = Object.fromEntries(new FormData(e.target).entries());
+//   for (const [key, value] of Object.entries(formDataObject)) {
+//     formData.append(key, value);
+//   }
+
+//   // Add files and their statuses to FormData
+//   const filteredInventoryFile = addAnotherFiles.filter((fileObj) => fileObj.file);
+//   if (filteredInventoryFile.length > 0) {
+//     filteredInventoryFile.forEach((fileObj, index) => {
+//       if (fileObj.file) {
+//         formData.append(
+//           "uploadFile[]",
+//           new Blob([atob(fileObj.file.base64)], { type: fileObj.file.type }),
+//           fileObj.file.name
+//         );
+//         formData.append(`status[${index}]`, fileObj.status || "NA");
+//       }
+//     });
+
+//     try {
+//       await dispatch(sendInventoryFile({ token, formData })).unwrap();
+//       toast.success("File uploaded successfully!");
+//     } catch (error) {
+//       toast.error(error.message || "An error occurred during upload.");
+//     }
+//   } else {
+//     toast.warn("Please fill all required fields.");
+//   }
+// };
   
 
-  if (error) {
-    return <ErrorStatus error={error} />;
-  }
+  // if (error) {
+  //   return <ErrorStatus error={error} />;
+  // }
 
   return (
+  <>
+    <ToastContainer/>
     <div className={css.inventory}>
       <InventoryButtons />
       <div className={css.inventory_main}>
@@ -420,8 +468,9 @@ const submitInventoryBtn = (e) => {
             value="send file"
             oncClick={submitInventoryBtn}
             className={`${css.inventory_main_submitBtn} !p-3 border rounded-lg transform active:scale-90 transition-all duration-100`}
+            disabled={isLoading} // Disable button while loading
           >
-            Send File
+            {isLoading ? "Processing..." : "Send File"}
           </button>
           {/* <h1 className={css.inventory_main_AutoUploadh1}>Auto Uploads</h1> */}
         </form>
@@ -432,6 +481,7 @@ const submitInventoryBtn = (e) => {
         </div> */}
       </div>
     </div>
+    </>
   );
 };
 
