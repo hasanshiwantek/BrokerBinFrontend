@@ -14,6 +14,11 @@ import ErrorStatus from "../../Error/ErrorStatus";
 import Cookies from "js-cookie";
 import { Link,NavLink } from "react-router-dom";
 import Footer from "../../Footer/Footer";
+import { setTogglePopUp } from "../../../ReduxStore/SearchProductSlice";
+import CompanyDetails from "../../Popups/CompanyDetails/CompanyDetails";
+import { setPopupCompanyDetail } from "../../../ReduxStore/SearchProductSlice";
+
+
 
 const MyProfile = () => {
   const token = Cookies.get("token");
@@ -200,6 +205,23 @@ const MyProfile = () => {
     );
   }
 
+
+console.log("formData",formData)  
+  const { togglePopUp, popupCompanyDetail } = useSelector((state) => state.searchProductStore)
+  const company =formData?.company;
+  console.log("COMPANY ", company);
+
+  // Company Modal Logic
+  const openCompanyModal = (company) => {
+    console.log("Opening Company Modal with Company:", company);
+    dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
+    dispatch(setTogglePopUp()); // Show company modal
+  };
+  console.log("popupCompanyDetail", popupCompanyDetail);
+  console.log("togglePopUp", togglePopUp);
+
+
+
   return (
     <>
       {!blurWhileLoading && <LoadingState />}
@@ -210,7 +232,7 @@ const MyProfile = () => {
               <p>my profile</p>
               <span>
                 <input type="submit" value="submit changes" />
-                <button type="button">view profile</button>
+                <button type="button"  onClick={() => openCompanyModal(company)}>view profile</button>
               </span>
             </div>
             <div className={css.profileInfo}>
@@ -295,7 +317,7 @@ const MyProfile = () => {
                         placeholder="Your position"
                       />
                     </span>
-                    <span>
+                    <span className="!ml-24">
                       <label htmlFor="experience">Experience</label>
                       <input
                         type="date"
@@ -339,6 +361,7 @@ const MyProfile = () => {
                           formData?.profileImage
                             ? formData.profileImage
                             : personalPhoto
+                            
                         }
                         alt="personal photo"
                       />
@@ -717,6 +740,8 @@ const MyProfile = () => {
           </form>
         </div>
       )}
+
+      {togglePopUp && <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
 
     </>
   );

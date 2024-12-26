@@ -34,7 +34,8 @@ const MyProfile = () => {
     error,
   } = useSelector((state) => state.profileStore);
   console.log("INITAL DATA",initialData)
-
+  console.log("FORM DATA",formData)
+console.log("User " ,user)
   const id = user?.user?.id || user_id;
 
   const dispatch = useDispatch();
@@ -297,19 +298,24 @@ const companyId = initialData?.company_id;
     );
   }
 
+
+
+  
+
+
   return (
     <>
       {!blurWhileLoading && <LoadingState />}
       {blurWhileLoading && (
         <div className={css.profileLayout}>
           <form onSubmit={handleSubmit}>
-            <div className={css.profileBtn}>
+            {/* <div className={css.profileBtn}>
               <p>my profile</p>
               <span>
                 <input type="submit" value="submit changes" />
                 <button type="button">view profile</button>
               </span>
-            </div>
+            </div> */}
             <div className={css.profileInfo}>
               <div className={css.profileInfo_links}>
               <ul>

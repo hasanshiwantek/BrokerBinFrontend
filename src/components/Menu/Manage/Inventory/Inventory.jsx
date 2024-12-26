@@ -334,7 +334,6 @@ const Inventory = () => {
 //     alert("Please fill all required fields");
 //   }
 // };
-
 const submitInventoryBtn = async (e) => {
   e.preventDefault(); // Prevent form submission
   const formData = new FormData();
@@ -374,6 +373,49 @@ const submitInventoryBtn = async (e) => {
   }
 };
 
+
+  
+  
+
+
+// const submitInventoryBtn = (e) => {
+//   e.preventDefault();
+//   const formData = new FormData();
+
+//   // Add form input fields to FormData
+//   const formDataObject = Object.fromEntries(new FormData(e.target).entries());
+//   for (const [key, value] of Object.entries(formDataObject)) {
+//     formData.append(key, value);
+//   }
+
+//   // Add files and their statuses to FormData
+//   const filteredInventoryFile = addAnotherFiles.filter((fileObj) => fileObj.file);
+//   if (filteredInventoryFile.length > 0) {
+//     filteredInventoryFile.forEach((fileObj, index) => {
+//       if (fileObj.file) {
+//         // Append file to FormData
+//         formData.append(
+//           "uploadFile[]",
+//           new Blob([atob(fileObj.file.base64)], { type: fileObj.file.type }),
+//           fileObj.file.name
+//         );
+
+//         // Append status to FormData
+//         formData.append(`status[${index}]`, fileObj.status || "NA"); // Default to "NA" if not set
+//       }
+//     });
+
+//     // Debugging: Log FormData content
+//     for (let pair of formData.entries()) {
+//       console.log(pair[0], pair[1]);
+//     }
+
+//     // Dispatch the API call
+//     dispatch(sendInventoryFile({ token, formData }));
+//   } else {
+//     alert("Please fill all required fields");
+//   }
+// };
 
   
   
