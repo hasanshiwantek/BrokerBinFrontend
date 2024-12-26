@@ -278,21 +278,21 @@ const BroadCast = () => {
   return (
     <>
       <main className={styles.mainSec}>
-        <nav className='menu-bar'>
-          <div className={myProfile.profileInfo_links}>
-            <ul>
-              <li>
+        <nav className='menu-bar !text-sm'>
+          <div className={`${myProfile.profileInfo_links} !text-sm`}>
+            <ul className='py-0 !h-[3.5vh] !text-sm'>
+              <li className='!text-[.7.8vw]'>
                 <button onClick={handleReplyClick} style={{ color: "black" }}>Reply</button>
               </li>
-              <li>
+              <li className='!text-[.7.8vw]'>
                 <NavLink
                   to="/sendbroad"
                   className={({ isActive }) => (isActive ? myProfile.active : '')}
                 >
                   <span>Send</span>
                 </NavLink>
-              </li>
-              <li>
+              </li >
+              <li className='!text-[.7.8vw]'>
                 <NavLink
                   to="/broadcasts"
                   className={({ isActive }) => (isActive ? myProfile.active : '')}
@@ -300,7 +300,7 @@ const BroadCast = () => {
                   <span>View</span>
                 </NavLink>
               </li>
-              <li>
+              <li className='!text-[.7.8vw]'>
                 <NavLink
                   to="/myprofile/broadcastfilter"
                   className={({ isActive }) => (isActive ? myProfile.active : '')}
@@ -308,7 +308,7 @@ const BroadCast = () => {
                   <span>Set Filters</span>
                 </NavLink>
               </li>
-              <li>
+              <li className='!text-[.7.8vw]'>
                 <NavLink
                   to="/broadcasthistory"
                   className={({ isActive }) => (isActive ? myProfile.active : '')}

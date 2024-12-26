@@ -373,10 +373,9 @@ const submitInventoryBtn = async (e) => {
   }
 };
 
+
   
-
-
-
+  
 
 
 // const submitInventoryBtn = (e) => {
