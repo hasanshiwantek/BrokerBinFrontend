@@ -20,7 +20,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCompanyContact } from "../../../ReduxStore/SearchProductSlice";
 import Cookies from "js-cookie";
 import { NavLink } from "react-router-dom";
-// import companyLogo from "../../../imgs/logo/CompanyDetailsLogo.jpg";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 const CompanyDetails = ({ closeModal }) => {
   const dispatch = useDispatch();
@@ -74,6 +75,11 @@ const CompanyDetails = ({ closeModal }) => {
     }
   }, [dispatch, companyId, token]);
 
+
+
+  const printCompanyModal = () => {
+    window.print();
+  }
 
 
   // Close modal when clicking outside or pressing Escape
@@ -158,7 +164,7 @@ const CompanyDetails = ({ closeModal }) => {
                 </a>
                 <img src={companyContactData.data?.company?.image} />
               </div>
-              <div className={css.Popup_Info_Main_left_actions}>
+              {/* <div className={css.Popup_Info_Main_left_actions}>
                 <div>
                   <div>
                     <IoPersonAdd />
@@ -179,7 +185,7 @@ const CompanyDetails = ({ closeModal }) => {
                     <p>give discount</p>
                   </div>
                 </div>
-              </div>
+              </div> */}
               <div className={css.Popup_Info_Main_left_comments}>
                 <div>
 
@@ -292,28 +298,29 @@ const CompanyDetails = ({ closeModal }) => {
                   </span>
                 </div>
                 <div className={css.inventorySecSvgs}>
-                  <span>
+                  {/* <span>
                     <FaMapMarkerAlt />
                     map
-                  </span>
-
-
-                    <span>
-                      <FaRegListAlt />
-                  <NavLink to={"/inventory"} className="cursor-pointer">
-                      inventory
-                  </NavLink>
-                    </span>
+                  </span> */}
 
 
                   <span>
+                    <FaRegListAlt />
+                    <NavLink to={"/inventory"} className="cursor-pointer">
+                      inventory
+                    </NavLink>
+                  </span>
+
+
+                  {/* <span>
                     <FaEnvelope />
                     email
-                  </span>
-                  <span>
+                  </span> */}
+                  <span className="cursor-pointer" onClick={printCompanyModal}>
                     <FaPrint />
-                    print
+                    Print
                   </span>
+
                 </div>
               </div>
 

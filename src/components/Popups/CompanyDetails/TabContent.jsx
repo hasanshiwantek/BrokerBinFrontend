@@ -123,25 +123,25 @@ const TabContent = ({ companyId }) => {
             onClick={() => setToggleTabs(1)}
             className={toggleTabs === 1 ? css.activeTab : ""}
           >
-            contacts ({companyUsersCount})
+            Contacts ({companyUsersCount})
           </li>
           <li
             onClick={() => setToggleTabs(2)}
             className={toggleTabs === 2 ? css.activeTab : ""}
           >
-            photos
+            Photos
           </li>
           <li
             onClick={() => setToggleTabs(3)}
             className={toggleTabs === 3 ? css.activeTab : ""}
           >
-            credentials
+            Credentials
           </li>
           <li
             onClick={() => setToggleTabs(4)}
             className={toggleTabs === 4 ? css.activeTab : ""}
           >
-            terms / conditions
+            Terms / Conditions
           </li>
         </ul>
         <div className={toggleTabs === 1 ? css.showContent : css.content}>
@@ -179,11 +179,11 @@ const TabContent = ({ companyId }) => {
             </div>
 
             <div className={css.Popup_Info_Main_right_tabs_contact_right}>
-              <h1>company contacts</h1>
+              <h1>Company Contacts</h1>
               <div
                 className={css.Popup_Info_Main_right_tabs_contact_right_search}
               >
-                <p>quick search:</p>
+                <p>Quick search:</p>
                 <input
                 type="text"
                 placeholder="Search Contacts"
@@ -224,19 +224,19 @@ const TabContent = ({ companyId }) => {
                             <h2>{user.firstName} {user.lastName}</h2>
                             <div>
                               <span>
-                                <strong>title:</strong>
+                                <strong>Title:</strong>
                                 <strong>{user.specialty}</strong>
                               </span>
                               <span>
-                                <strong>phone:</strong>
+                                <strong>Phone:</strong>
                                 <strong>{user.phoneNumber}</strong>
                               </span>
                               <span>
-                                <strong>fax:</strong>
+                                <strong>Fax:</strong>
                                 <strong>{user.faxNumber}</strong>
                               </span>
                               <span>
-                                <strong>email:</strong>
+                                <strong>Email:</strong>
                                 <strong
                                 >
                                   {user.email}
@@ -248,7 +248,7 @@ const TabContent = ({ companyId }) => {
 
                           <span className="cursor-pointer hover:text-orange-500 transition-colors" onClick={() => userDeleteHandler(user.id)}>
                             <MdPersonRemoveAlt1 />
-                            remove contact
+                            Remove contact
                           </span>
                           {/* </button> */}
 
@@ -259,9 +259,9 @@ const TabContent = ({ companyId }) => {
                           }
                         >
                           <div>
-                            <strong className="p-2 text-lg">my notes:</strong>
+                            <strong className="p-2 text-lg">My notes:</strong>
                             <span>
-                              <strong>my rating</strong>
+                              <strong>My rating</strong>
                               <div className="columns">
                                 <div className="column">
                                   <div className="vue-rate-it-rating vue-rate-it-rating-container">
@@ -412,7 +412,7 @@ const TabContent = ({ companyId }) => {
         </div>
         <div className={toggleTabs === 2 ? css.showContent : css.content}>
           <div className={css.Popup_Info_Main_right_tabs_photos}>
-            <h1>company photos</h1>
+            <h1>Company photos</h1>
             <div className={css.Popup_Info_Main_right_tabs_photos_img}>
 
 
@@ -432,7 +432,7 @@ const TabContent = ({ companyId }) => {
         <div className={toggleTabs === 4 ? css.showContent : css.content}>
           <div className={css.Popup_Info_Main_right_tabs_terms}>
             <div>
-              <h1>terms</h1>
+              <h1>Terms</h1>
               <p>Pofile Incomplete</p>
 
             </div>

@@ -14,7 +14,7 @@ import {
   setCurrentPagePrev,
 } from "../../../../ReduxStore/RfqSlice.js";
 import { IoMail, IoMailOpen } from "react-icons/io5";
-import { getRfqArchived, deleteArchiveRfq } from "../../../../ReduxStore/RfqSlice.js";
+import { getRfqArchived, deleteArchiveRfq,receivedRfq,sentRfq } from "../../../../ReduxStore/RfqSlice.js";
 import Cookies from "js-cookie";
 import myProfile from "../../../../styles/Menu/Manage/MyProfile.module.css";
 import { NavLink } from "react-router-dom";
@@ -129,6 +129,13 @@ const RfqTableSent = () => {
   }, [])
 
 
+  
+    useEffect(() => {
+      dispatch(receivedRfq({ token }));
+        dispatch(sentRfq({token}));
+    }, [dispatch, token]); // Adding token and dispatch as dependencies
+  
+
 
   useEffect(() => {
     if (sentData.length > 0) {
@@ -159,6 +166,9 @@ const RfqTableSent = () => {
     }
     dispatch(setCurrentPageNext());
   };
+  console.log("Current Page:", currentPage);
+console.log("Current Items:", currentItems);
+
 
   const now = new Date();
   const date = `${now.getHours() > 12
@@ -303,7 +313,7 @@ const RfqTableSent = () => {
                     to="/rfq"
                     className={({ isActive }) => (isActive ? myProfile.active : '')}
                   >
-                    <span>Received({receiveRfqData.totalCount})</span>
+                    <span>Received({receiveRfqData.totalCount }/{receiveRfqData.unreadCount})</span>
                   </NavLink>
                 </li>
                 <li>
@@ -311,7 +321,7 @@ const RfqTableSent = () => {
                     to="/rfqSent"
                     className={({ isActive }) => (isActive ? myProfile.active : '')}
                   >
-                    <span>Sent ({sentRfqData?.totalCount || 0})</span>
+                    <span>Sent ({sentRfqData?.totalCount})</span>
                   </NavLink>
                 </li>
                 <li>

@@ -6,6 +6,8 @@ import Cookies from "js-cookie";
 import { fetchUserData } from "../../ReduxStore/ProfleSlice";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
+
+
 const RfqTablePopUp = ({ type }) => {
   const { rfqPopBoxInfo } = useSelector((state) => state.rfqStore);
   const dispatch = useDispatch();

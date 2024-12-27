@@ -12,12 +12,12 @@ const AddAnotherFile = () => {
 
   const dispatch = useDispatch();
 
-  
-  
+
+
   // const handleFileChange = (e, index) => {
   //   const file = e.target.files[0];
   //   const fileSupported = ["xlsx", "csv", "xls"];
-  
+
   //   if (file) {
   //     if (fileSupported.includes(file.name.split(".").pop().toLowerCase())) {
   //       const reader = new FileReader();
@@ -49,13 +49,13 @@ const AddAnotherFile = () => {
   //     alert("No file selected.");
   //   }
   // };
-  
+
 
 
   const handleFileChange = (e, index) => {
     const file = e.target.files[0];
     const allowedFileExtensions = ["xlsx", "csv", "xls"];
-  
+
     if (file) {
       const fileExtension = file.name.split(".").pop().toLowerCase();
       if (allowedFileExtensions.includes(fileExtension)) {
@@ -76,7 +76,7 @@ const AddAnotherFile = () => {
       }
     }
   };
-  
+
 
 
 
@@ -112,9 +112,10 @@ const AddAnotherFile = () => {
         {addAnotherFiles.map((file, i) => (
           <div className={css.AddAnotherFile_uploads_div} key={i}>
             <label>Excel or CSV*</label>
-            
+
             <input type="file" onChange={(e) => handleFileChange(e, i)} />
-            
+
+
             <select
               value={file.status}
               onChange={(e) => handleStatusChange(e, i)}

@@ -632,7 +632,7 @@ const Header = () => {
                     <FiTarget />
                   </Link>
                 </li>
-                <li className={css.navbar_search_options}>
+                {/* <li className={css.navbar_search_options}>
                   <select name="navbarSearchOptions"  >
                     <option value="">MFG Filter</option>
                     <option value="3COM">3COM</option>
@@ -652,7 +652,7 @@ const Header = () => {
                     <option value="SUN">SUN</option>
                     <option value="TOSHIBA">TOSHIBA</option>
                   </select>
-                </li>
+                </li> */}
                 <li>
                   <AiOutlinePlus
                     style={{

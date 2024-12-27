@@ -56,7 +56,7 @@ const ExportRemove = () => {
       alert(`Your ${actionType} request for ${exportType} has been submitted to your admin.`);
     } catch (error) {
       console.error("Error during export/remove request:", error);
-      alert("There was an error processing your request.");
+      alert(error.message);
     } finally {
       setLoading(false); // End loading
     }

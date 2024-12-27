@@ -8,7 +8,9 @@ label {
     display: flex;
   }
   h1 {
-    font-size: 2rem;
+    font-size: 1.8rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
   }
   /* justify-content: center; */
 }

@@ -39,9 +39,46 @@ const EditDelete = () => {
   };
 
   // Handle search button click
-  const handleSearch = () => {
-    const filteredItems = filterInventories();
-    setEditedItems(filteredItems);
+  const handleSearch = async () => {
+    setLoading(true);
+
+    try {
+      const searchResults = [];
+      let page = 1;
+      let found = false;
+
+      while (!found && page <= totalPages) {
+        const response = await dispatch(getInventoryData({ token, page })).unwrap();
+
+        // Filter records on the current page
+        const filtered = response.data.filter(
+          (item) =>
+            (partModelSearch === "" || item.partModel.toLowerCase().includes(partModelSearch.toLowerCase())) &&
+            (mfgSearch === "" || item.mfg.toLowerCase().includes(mfgSearch.toLowerCase())) &&
+            (partModelHeciCleiSearch === "" || item.heciClei.toLowerCase().includes(partModelHeciCleiSearch.toLowerCase())) &&
+            (statusSearch === "-1" || item.status === statusSearch)
+        );
+
+        if (filtered.length > 0) {
+          searchResults.push(...filtered);
+          setCurrentPage(page); // Set the page containing the results
+          setEditedItems(filtered); // Update the UI with the filtered results
+          found = true; // Stop searching
+        }
+
+        page += 1; // Move to the next page
+      }
+
+      if (!found) {
+        alert("No results found for the given search criteria.");
+        setEditedItems([]); // Clear the UI if no results
+      }
+    } catch (error) {
+      console.error("Error during search:", error);
+      alert("Failed to search inventory. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
 
@@ -56,13 +93,19 @@ const EditDelete = () => {
     if (token) {
       setLoading(true);
       dispatch(getInventoryData({ token, page: currentPage }))
-        .then(() => setLoading(false))
-        .catch(() => setLoading(false));
+        .then((response) => {
+          setEditedItems(response.payload.data); // Initialize editable items
+        })
+        .catch((error) => {
+          console.error("Error fetching inventory data:", error);
+        })
+        .finally(() => setLoading(false));
     } else {
       console.error("No token found. User is not authenticated.");
       setLoading(false);
     }
   }, [dispatch, token, currentPage]);
+
 
   // Pagination control handlers
   const handleNextPage = () => {
@@ -76,10 +119,12 @@ const EditDelete = () => {
       setCurrentPage(currentPage - 1);
     }
   };
-
   const handlePageChange = (page) => {
     if (page !== currentPage && page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
+      setLoading(true);
+      dispatch(getInventoryData({ token, page }))
+        .then(() => setCurrentPage(page))
+        .finally(() => setLoading(false));
     }
   };
 
@@ -108,12 +153,12 @@ const EditDelete = () => {
         status: item.status,
       })),
     };
-  
+
     dispatch(updateInventoryData({ token, inventories: dataToSave }))
       .unwrap() // Ensures the Promise rejects on failure
       .then(() => {
         alert("Inventory Updated Successfully");
-  
+
         // Refetch inventory data while maintaining the current page
         setLoading(true);
         dispatch(getInventoryData({ token, page: currentPage }))
@@ -130,7 +175,7 @@ const EditDelete = () => {
         alert(`Error Updating Inventory: ${error.message || "Unknown Error"}`);
       });
   };
-  
+
 
   // Initialize the editable items when inventory data is loaded
   useEffect(() => {
@@ -152,7 +197,7 @@ const EditDelete = () => {
         .then(() => {
           alert("Inventory Deleted Successfully");
           setSelectedInventories([]); // Clear selections after dispatch
-  
+
           // Refetch inventory data
           setLoading(true);
           dispatch(getInventoryData({ token, page: currentPage })).finally(() => setLoading(false));
@@ -179,14 +224,7 @@ const EditDelete = () => {
               onChange={(e) => setPartModelHeciCleiSearch(e.target.value)}
             />
           </span>
-          <span>
-            <label>Part Search</label>
-            <input
-              type="text"
-              value={partModelSearch}
-              onChange={(e) => setPartModelSearch(e.target.value)}
-            />
-          </span>
+
           <span>
             <label>MFG</label>
             <input
@@ -195,6 +233,7 @@ const EditDelete = () => {
               onChange={(e) => setMfgSearch(e.target.value)} // Changed from setHeciCleiSearch to setMfgSearch
             />
           </span>
+
           <span>
             <label>Status</label>
             <select value={statusSearch} onChange={(e) => setStatusSearch(e.target.value)}>
@@ -204,9 +243,23 @@ const EditDelete = () => {
               <option value="0">N/A</option>
             </select>
           </span>
-          <button type="button" onClick={handleSearch} className={`${inventory.editDeleteTable_bottom} cursor-pointer transform active:scale-90 transition-all duration-100  rounded-md`} >
-            Search
-          </button>
+
+          <div className="flex items-center justify-center gap-4">
+
+            <span>
+              <label>Part Search</label>
+              <input
+                type="text"
+                value={partModelSearch}
+                onChange={(e) => setPartModelSearch(e.target.value)}
+              />
+            </span>
+            <button type="button" onClick={handleSearch} className={`${inventory.editDeleteTable_bottom} cursor-pointer transform active:scale-90 transition-all duration-100  rounded-md !-mt-[1px]`} >
+              Search
+            </button>
+          </div>
+
+
         </div>
 
         <div>
@@ -235,7 +288,7 @@ const EditDelete = () => {
               ) : editedItems.length === 0 ? (
                 <tr>
                   <td colSpan="10" style={{ textAlign: "center", fontSize: "9pt" }}>
-                    No search results found .
+                    No  results found .
                   </td>
                 </tr>
               ) : (
@@ -323,11 +376,11 @@ const EditDelete = () => {
             <button type="button" onClick={handleDeleteClick} className="transform active:scale-90 transition-all duration-100 ">
               Delete
             </button>
-            <button 
-            type="button" 
-            onClick={handleSaveModifications} 
-            className="transform active:scale-90 transition-all duration-100 "
-            disabled={loading}>
+            <button
+              type="button"
+              onClick={handleSaveModifications}
+              className="transform active:scale-90 transition-all duration-100 "
+              disabled={loading}>
               {loading ? "Processing..." : "Save Modifications"}
             </button>
             {/* <button type="button">Refresh All</button> */}
@@ -339,7 +392,7 @@ const EditDelete = () => {
           <div className={inventory.pagination}>
 
             <span className="text-orange-700 p-4 text-xl">
-              Page <span className="text-blue-800">{currentPage} </span >  of <span  className="text-blue-800">  {totalPages} </span> {totalRecords} records
+              Page <span className="text-blue-800">{currentPage} </span >  of <span className="text-blue-800">  {totalPages} </span> {totalRecords} records
             </span>
 
             {/* <button
@@ -388,6 +441,16 @@ const EditDelete = () => {
 };
 
 export default EditDelete;
+
+
+
+
+
+
+
+
+
+
 
 
 

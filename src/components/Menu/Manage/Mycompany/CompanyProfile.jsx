@@ -457,7 +457,7 @@ const companyId = initialData?.company_id;
                   </div>
                 </div>
                 <div>
-                  <h2 className="text-[1vw] font-thin text-black">Payment Gateways</h2>
+                  <h1 className="text-[1vw] font-thin text-black">Payment Gateways</h1>
                   <span className="space-x-[8.5vw]">
                       <label htmlFor="paymentGateways">PayPal</label>
                       <input

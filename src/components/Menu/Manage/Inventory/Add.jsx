@@ -15,22 +15,23 @@ const Add = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+  
     const filteredAddInventory = inventoryAddData.filter(
       (e) =>
-        e.heciClei !== "" ||
         e.mfg !== "" ||
         e.partModel !== "" ||
         e.price !== "" ||
         e.productDescription !== "" ||
         e.quantity !== ""
     );
-
+  
     if (filteredAddInventory.length > 0) {
       const incompleteRowExists = filteredAddInventory.some((item) =>
-        Object.values(item).some((value) => value === "")
+        Object.entries(item).some(([key, value]) =>
+          key === "heciClei" ? false : value === "" // Skip heciClei field
+        )
       );
-
+  
       if (incompleteRowExists) {
         alert("Please fill all fields in a whole row to add to an inventory.");
         return;
@@ -39,9 +40,9 @@ const Add = () => {
       alert("Please fill in the inventory data.");
       return;
     }
-
+  
     setButtonText("Adding Your Inventory...");
-
+  
     try {
       const response = await fetch(
         "https://brokerbinbackend.shiwantek.com/api/inventory/add",
@@ -54,14 +55,14 @@ const Add = () => {
           body: JSON.stringify({ addInventory: filteredAddInventory }),
         }
       );
-
+  
       if (response.ok) {
         alert("Inventory Added Successfully");
         dispatch(
           setInventoryAddData(
             inventoryAddData.map(() => ({
               partModel: "",
-              heciClei: "",
+              heciClei: "", // Reset heciClei as empty
               mfg: "",
               price: "",
               quantity: "",
@@ -80,7 +81,7 @@ const Add = () => {
       setButtonText("Save");
     }
   };
-
+  
   return (
     <div className={css.inventory}>
       <InventoryButtons />

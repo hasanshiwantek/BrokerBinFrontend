@@ -317,7 +317,7 @@ console.log("formData",formData)
                         placeholder="Your position"
                       />
                     </span>
-                    <span className="!ml-24">
+                    <span className="!ml-[41px]">
                       <label htmlFor="experience">Experience</label>
                       <input
                         type="date"
