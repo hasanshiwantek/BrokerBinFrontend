@@ -188,7 +188,7 @@ const initialState = {
   filterToggle: true,
   popUpRfq: false,
   togglePopUp: false,
-  searchResponseMatched: [],
+  searchResponseMatched: {},
   searchResponseNotMatched: [],
   popupCompanyDetail: [],
   hoverCompanyDetail: [],
@@ -266,9 +266,17 @@ const searchProductSlice = createSlice({
         state.error = null;
       })
       .addCase(searchProductQuery.fulfilled, (state, action) => {
-        state.searchResponseMatched = action.payload.data;
-        state.searchResponseNotMatched = action.payload.notFoundKeywords;
-        state.totalCount = action.payload.totalCount;
+        console.log("Payload from searchProductQuery:", action.payload);
+        state.searchResponseMatched = {
+          ...state.searchResponseMatched, // Keep existing matched data
+          ...action.payload,              // Merge new response payload
+        };
+        console.log("Updated searchResponseMatched:", state.searchResponseMatched);
+        state.searchResponseNotMatched = action.payload.notFoundKeywords || [];
+        state.totalCount += Object.values(action.payload || {}).reduce(
+          (acc, part) => acc + (part.totalCount || 0),
+          0
+        );
         state.gettingProducts = false; // Set to false after fetching is done
       })
       .addCase(searchProductQuery.rejected, (state, action) => {
@@ -281,9 +289,17 @@ const searchProductSlice = createSlice({
         state.error = null;
       })
       .addCase(searchByKeyword.fulfilled, (state, action) => {
-        state.searchResponseMatched = action.payload.foundItems;
-        state.searchResponseNotMatched = action.payload.notFoundPartModels;
-        state.totalCount = action.payload.totalCount;
+        console.log("Payload from searchByKeyword:", action.payload);
+        state.searchResponseMatched = {
+          ...state.searchResponseMatched,
+          ...action.payload.foundItems, // Assume this structure matches
+        };
+        onsole.log("Updated searchResponseMatched:", state.searchResponseMatched);
+        state.searchResponseNotMatched = action.payload.notFoundPartModels || [];
+        state.totalCount += Object.values(action.payload.foundItems || {}).reduce(
+          (acc, part) => acc + (part.totalCount || 0),
+          0
+        );
         state.gettingProducts = false; // Set to false after fetching is done
       })
       .addCase(searchByKeyword.rejected, (state, action) => {

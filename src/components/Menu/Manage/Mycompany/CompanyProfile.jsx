@@ -21,13 +21,13 @@ const MyProfile = () => {
   const token = Cookies.get("token");
   const user_id = Cookies.get("user_id");
 
-  const [formData, setFormData] = useState({});
+  // const [formData, setFormData] = useState({});
   const [fileBase64, setFileBase64] = useState("");
   const [loading, setLoading] = useState(true);
 
   const {
     user,
-    // formData,
+    formData,
     initialData,
     blurWhileLoading,
     customSignature,
@@ -61,24 +61,34 @@ useEffect(() => {
 
 const companyId = initialData?.company_id;
 
-    useEffect(() => {
-      if (companyId) {
-      const fetchData = async () => {
-        try {
-          const response = await axios.get(`${brokerAPI}company/show/${companyId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          setFormData(response.data); // API ka response direct set ho raha hai
-          setLoading(false);
-        } catch (error) {
-          console.error("Error fetching data", error);
-          setLoading(false);
-        }
-      };
-    
-      fetchData();
-    }
-    }, [companyId, token]);
+useEffect(() => {
+  if (companyId) {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${brokerAPI}company/show/${companyId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const apiData = response.data;
+        setFormData((prevData) => ({
+          ...prevData,
+          data: {
+            ...prevData.data,
+            company: {
+              ...prevData.data?.company,
+              primaryContact: apiData?.primaryContact || {},
+            },
+          },
+        }));
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching data", error);
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }
+}, [companyId, token]);
+
 
   // const cleanInput = (input) => input.trimStart().replace(/\s+/g, " ");
 
@@ -316,7 +326,7 @@ const companyId = initialData?.company_id;
                 <li>
                   <NavLink
                     to="/mycompany"
-                    end 
+                    end  // This ensures the exact match for /myprofile
                     className={({ isActive }) => (isActive ? css.active : '')}
                   >
                     <span>Primary Contact</span>
@@ -469,10 +479,7 @@ const companyId = initialData?.company_id;
                   <h1>IM Screen Names</h1>
                   <div className="!text-left">
                     <span>
-                      <div className="flex items-center justify-center"> 
                       <label htmlFor="skype">Skype</label>
-                      <img src="https://ben.cachefly.net/images/social_networks/tiny_skype.png" alt="Skype" title="Skype"></img>
-                      </div>
                       <input
                         type="text"
                         name="skype"
@@ -483,10 +490,7 @@ const companyId = initialData?.company_id;
                       />
                     </span>
                     <span>
-                    <div className="flex items-center justify-center"> 
                       <label htmlFor="whatsapp">WhatsApp</label>
-                      <img src="https://ben.cachefly.net/images/social_networks/tiny_whatsapp.png" alt="WhatsApp" title="WhatsApp"/>
-                      </div>
                       <input
                         type="text"
                         name="whatsapp"
@@ -497,10 +501,7 @@ const companyId = initialData?.company_id;
                       />
                     </span>
                     <span>
-                    <div className="flex items-center justify-center "> 
                       <label htmlFor="trillian">Trillian</label>
-                      <img src="https://ben.cachefly.net/images/social_networks/tiny_trillian.png" alt="Trillian" title="Trillian"/>
-                      </div>
                       <input
                         type="text"
                         name="trillian"
@@ -516,12 +517,7 @@ const companyId = initialData?.company_id;
                   <h1>Social Networking</h1>
                   <div className="!text-left">
                     <span>
-
-                       <div className="flex items-center  justify-center"> 
                       <label htmlFor="facebook">Facebook</label>
-                      <img src="https://ben.cachefly.net/images/social_networks/tiny_facebook.png" alt="Facebook" title="Facebook"/>
-                      </div>
-
                       <input
                         type="text"
                         name="facebook"
@@ -532,10 +528,7 @@ const companyId = initialData?.company_id;
                       />
                     </span>
                     <span>
-                    <div className="flex items-center justify-center "> 
                       <label htmlFor="twitter">Twitter</label>
-                      <img src="https://ben.cachefly.net/images/social_networks/tiny_twitter.png" alt="Twitter" title="Twitter"/>
-                      </div>
                       <input
                         type="text"
                         name="twitter"
@@ -546,10 +539,7 @@ const companyId = initialData?.company_id;
                       />
                     </span>
                     <span>
-                    <div className="flex items-center justify-center "> 
                       <label htmlFor="linkedin">LinkedIn</label>
-                      <img src="https://ben.cachefly.net/images/social_networks/tiny_linkedin.png" alt="Linked-In" title="Linked-In"/>
-                      </div>
                       <input
                         type="text"
                         name="linkedin"
@@ -575,7 +565,6 @@ const companyId = initialData?.company_id;
 };
 
 export default MyProfile;
-
 
 
 
