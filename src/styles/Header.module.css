@@ -114,11 +114,11 @@ button {
 } */
 
 
-
 .navbar_search_options select {
   background-color: white;  /* Set the background color */
-  color: black;  /* Set the text color */
-  padding: 0.5rem;  /* Optional: to make the dropdown look better */
+  color: black !important;  /* Set the text color */
+  /* height: -webkit-fill-available; */
+  padding: 10px;
   border-radius: 4px;  /* Optional: rounded corners */
   border: none;  /* Remove default border */
 }

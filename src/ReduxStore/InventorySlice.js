@@ -263,6 +263,9 @@ const InventorySlice = createSlice({
       // state.addAnotherFiles.push(action.payload);
       state.addAnotherFiles = action.payload;
     },
+    resetFiles: (state) => {
+      state.addAnotherFiles = [{ file: null, status: "Stock" }]; // Reset to initial state
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -271,6 +274,7 @@ const InventorySlice = createSlice({
       })
       .addCase(sendInventoryFile.fulfilled, (state, action) => {
         console.log(action.payload);
+        state.addAnotherFiles = [{ file: null, status: "Stock" }]; // Reset files
       })
       .addCase(sendInventoryFile.rejected, (state, action) => {
         console.log(action.error.message);
@@ -313,7 +317,7 @@ const InventorySlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setAddInventory, setInventoryAddData, setAddAnotherFiles } =
+export const { setAddInventory, setInventoryAddData, setAddAnotherFiles,resetFiles } =
   InventorySlice.actions;
 
 export default InventorySlice.reducer;

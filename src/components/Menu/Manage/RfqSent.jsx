@@ -12,6 +12,7 @@ import {
     setRfqMailCheckAll,
     setCurrentPageNext,
     setCurrentPagePrev,
+    receivedRfq,
 } from "../../../ReduxStore/RfqSlice.js";
 import { IoMail, IoMailOpen } from "react-icons/io5";
 import { sentRfq } from "../../../ReduxStore/RfqSlice.js";
@@ -46,7 +47,7 @@ const RfqTableSent = () => {
 
     const token = Cookies.get("token");
 
-    const { sentRfqData } = useSelector((state) => state.rfqStore)
+    const { sentRfqData,receiveRfqData } = useSelector((state) => state.rfqStore)
     console.log("Data From Page", sentRfqData)
 
 
@@ -125,6 +126,10 @@ const RfqTableSent = () => {
 
     useEffect(() => {
         dispatch(sentRfq({ token }))
+         if (!receiveRfqData?.totalCount){
+              dispatch(receivedRfq({token}));
+            }
+
     }, [])
 
 
@@ -303,7 +308,7 @@ const RfqTableSent = () => {
                                         to="/rfq"
                                         className={({ isActive }) => (isActive ? myProfile.active : '')}
                                     >
-                                        <span>Received</span>
+                                        <span>Received({receiveRfqData.totalCount }/{receiveRfqData.unreadCount})</span>
                                     </NavLink>
                                 </li>
                                 <li>

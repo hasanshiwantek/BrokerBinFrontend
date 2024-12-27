@@ -16,6 +16,10 @@ import { searchProductHistory, searchProductQuery, setSelectedProducts } from ".
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { fetchBroadCastCount } from "../../ReduxStore/BroadCast";
+import { setTogglePopUp } from "../../ReduxStore/SearchProductSlice";
+import CompanyDetails from "../Popups/CompanyDetails/CompanyDetails";
+import { setPopupCompanyDetail } from "../../ReduxStore/SearchProductSlice";
+
 
 const Home = () => {
   const token = Cookies.get("token");
@@ -27,9 +31,11 @@ const Home = () => {
     (state) => state.profileStore
   );
 
+  console.log("Initial Data ", initialData);
+
   const { page, pageSize } = useSelector((store) => store.searchProductStore);
 
-  const {broadcastCount, loading}=useSelector((state)=>state.broadcastStore)
+  const { broadcastCount, loading } = useSelector((state) => state.broadcastStore)
 
   // console.log("Broadcast Count ",broadcastCount)
   const id = user?.user?.id || user_id;
@@ -41,9 +47,9 @@ const Home = () => {
     dispatch(fetchUserData({ id, token }));
   }, []);
 
-  useEffect(()=>{
-    dispatch(fetchBroadCastCount({token}))
-  },[])
+  useEffect(() => {
+    dispatch(fetchBroadCastCount({ token }))
+  }, [])
 
 
   const bomFileRef = useRef(null);
@@ -99,6 +105,22 @@ const Home = () => {
 
 
 
+  const { togglePopUp, popupCompanyDetail } = useSelector((state) => state.searchProductStore)
+  const company = initialData?.company;
+  console.log("COMPANY ", company);
+
+  // Company Modal Logic
+  const openCompanyModal = (company) => {
+    console.log("Opening Company Modal with Company:", company);
+    dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
+    dispatch(setTogglePopUp()); // Show company modal
+  };
+  console.log("popupCompanyDetail", popupCompanyDetail);
+  console.log("togglePopUp", togglePopUp);
+
+
+
+
   return (
     <>
       {!blurWhileLoading ? (
@@ -139,7 +161,8 @@ const Home = () => {
                     alt="person"
                   />
                   <h3>
-                    welcome back,
+                    
+                    Welcome back,
                     {initialData.firstName}
                   </h3>
                   <div style={{ color: "var(--primary-color)" }}>
@@ -179,26 +202,26 @@ const Home = () => {
                       <a href="/rfq">RFQ</a>
                       <ul>
                         <li className={css.gridHome1_MemberDetail_list_numbers}>
-                        <a onClick={() => handleNavigation("/rfq", { filter: "unread" })}>
-                          {(broadcastCount?.data?.unRead || 0)
-                            .toLocaleString("en-US")
-                            .toString()
-                            .padStart(2, "0")}
-                          /
-                        </a>
+                          <a onClick={() => handleNavigation("/rfq", { filter: "unread" })}>
+                            {(broadcastCount?.data?.unRead || 0)
+                              .toLocaleString("en-US")
+                              .toString()
+                              .padStart(2, "0")}
+                            /
+                          </a>
                           <a onClick={() => handleNavigation("/rfq")}>
                             {(broadcastCount?.data?.received || 0)
-                            .toLocaleString("en-US")
-                            .toString()
-                            .padStart(2, "0")}
-                          /
+                              .toLocaleString("en-US")
+                              .toString()
+                              .padStart(2, "0")}
+                            /
                           </a>
                           <a onClick={() => handleNavigation("/rfqSent")}>
                             {(broadcastCount?.data?.sent || 0)
-                            .toLocaleString("en-US")
-                            .toString()
-                            .padStart(2, "0")}
-                          
+                              .toLocaleString("en-US")
+                              .toString()
+                              .padStart(2, "0")}
+
                           </a>
                         </li>
                       </ul>
@@ -234,19 +257,19 @@ const Home = () => {
                       <ul>
                         <li className={css.gridHome1_MemberDetail_list_numbers}>
                           <a onClick={() => handleNavigation("/hotList/view")}>
-                          {(broadcastCount?.data?.hotList || 0)
-                            .toLocaleString("en-US")
-                            .toString()
-                            .padStart(2, "0")}
-        
+                            {(broadcastCount?.data?.hotList || 0)
+                              .toLocaleString("en-US")
+                              .toString()
+                              .padStart(2, "0")}
+
                           </a>
                         </li>
                       </ul>
                     </li>
                   </ul>
                 </div>
-                <div className={css.gridHome1_MemberDetail_logo}>
-                  <img src={spares} alt="spares" />
+                <div className={css.gridHome1_MemberDetail_logo} >
+                  <img src={initialData.company.image} alt="spares" onClick={() => openCompanyModal(company)} className="cursor-pointer !mt-28" width={"60%"} height={"60%"} />
                 </div>
                 <div className={css.gridHome1_MemberDetail_reviews}>
                   {/* <div className={css.gridHome1_MemberDetail_reviews_stars}>
@@ -371,7 +394,7 @@ const Home = () => {
 
                 <div className={`mailSection ${css.mailSection}`}>
                   <MdManageAccounts />
-                  <p>manage</p>
+                  <p>Manage</p>
                   <div style={{ color: "var(--primary-color)" }}>
                     <BiDotsHorizontalRounded />
                   </div>
@@ -476,15 +499,15 @@ const Home = () => {
                   </div>
                 </div>
                 <div className={css.gridHome2_Details_Bottom}>
-                  <ToggleStats data={broadcastCount.data}/>
-                  
-                    
+                  <ToggleStats data={broadcastCount.data} />
+
+
                   {loading || !broadcastCount?.data ? (
-                      <p>Loading...</p>
+                    <p>Loading...</p>
                   ) : (
                     <HoverPieChart data={broadcastCount.data} />
                   )}
-                  
+
                 </div>
               </div>
             </div>
@@ -493,6 +516,8 @@ const Home = () => {
 
         </>
       )}
+      {togglePopUp && <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
+
     </>
   );
 };

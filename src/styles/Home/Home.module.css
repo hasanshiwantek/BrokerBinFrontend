@@ -1,5 +1,5 @@
   * {
-  text-transform: capitalize;
+  /* text-transform: capitalize; */
 }
 .gridHome {
   display: grid;
@@ -432,7 +432,7 @@ justify-content: space-around;
   padding: 10px 12px;
   font-size: 12px;
   color: #4a4a4a ;
-  font-weight: bold;
+  font-weight: 500;
 
 }
 

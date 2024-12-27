@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react'
 import "../../Menu/Main/MenuBar.css"
 import { Link, NavLink } from 'react-router-dom'
@@ -16,7 +15,7 @@ import BroadcastFileModal from './Send/Field Components/BroadcastFileModal'
 import CompanyDetails from '../../Popups/CompanyDetails/CompanyDetails'
 import { setPopupCompanyDetail, setTogglePopUp } from '../../../ReduxStore/SearchProductSlice'
 import { FaFileAlt } from "react-icons/fa";
-
+ 
 
 const BroadCast = () => {
   const broadcastItems = useSelector((state) => state.broadcastStore.broadCastData)
@@ -41,8 +40,7 @@ const BroadCast = () => {
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
   const [loading, setLoading] = useState(true); // Loading state
   const [currentPage, setCurrentPage] = useState(1);
-
-
+  const [filteredBroadcast, setFilteredBroadcasts] = useState([]);
 
   // Fetch data when currentPage changes
   useEffect(() => {
@@ -141,10 +139,12 @@ const BroadCast = () => {
     setInputSearchTerm(event.target.value);
   };
 
-  // Search Button Handler to apply the search term
+  // // Search Button Handler to apply the search term
   const handleSearchClick = () => {
     setSearchTerm(inputSearchTerm.trim()); // Update the main search term to trigger filtering
   };
+
+
 
   // Trigger search on Enter key press
   const handleKeyDown = (event) => {
