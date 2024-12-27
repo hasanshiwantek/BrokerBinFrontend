@@ -54,7 +54,7 @@ const ToggleStats = ({ data }) => {
   const navigate = useNavigate();
 
   const backendData = [
-    { name: "Inventory:", value: data?.inventoryCount || 0, route: "/inventory" },
+    { name: "Inventory:", value: data?.inventoryUser || 0, route: "/inventory" },
     { name: "Uploaded:", value: `${data?.lastUploaded || 0} day[s] ago`, route: "/inventory" },
     // { name: "Expires:", value: "+9 Days" },
     { name: "Want to Sell:", value: data?.wtsCount || 0 },

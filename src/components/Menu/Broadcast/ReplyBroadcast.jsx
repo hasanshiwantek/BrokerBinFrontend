@@ -7,46 +7,48 @@ import styles from "./BroadCast.module.css";
 import { useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { useDispatch,useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { sendBroadcastReply } from '../../../ReduxStore/BroadCast';
 import { fetchUserData } from '../../../ReduxStore/ProfleSlice';
 const ReplyBroad = () => {
-    const dispatch=useDispatch()
+    const dispatch = useDispatch()
     const location = useLocation();
     const navigate = useNavigate();
     const [broadcast, setBroadcast] = useState(location.state?.broadcast || JSON.parse(localStorage.getItem("broadcastData")));
+    const [loading, setLoading] = useState(false); // To track API call status
+
     const recipientEmail = broadcast?.user_id?.email || '';
     const currentUserID = Cookies.get("user_id");
-    const token=Cookies.get("token")
+    const token = Cookies.get("token")
     const user_id = Cookies.get("user_id");
-    
-  const {  initialData, user,} = useSelector(
-    (state) => state.profileStore
-  );
+
+    const { initialData, user, } = useSelector(
+        (state) => state.profileStore
+    );
     // Fallback to localStorage data if Redux data is not available
-  console.log("User Data",initialData)
-  const id = user?.user?.id || user_id;
-  console.log(id)
-  useEffect(() => {
-    if (id || token) {
-        dispatch(fetchUserData({ id, token })).then(response => {
-        }).catch(error => {
-            console.error("Error fetching user data:", error);
-        });
-    }
-}, [id, token]);
+    console.log("User Data", initialData)
+    const id = user?.user?.id || user_id;
+    console.log(id)
+    useEffect(() => {
+        if (id || token) {
+            dispatch(fetchUserData({ id, token })).then(response => {
+            }).catch(error => {
+                console.error("Error fetching user data:", error);
+            });
+        }
+    }, [id, token]);
 
 
-    
-  // Now you can use `userData` for the logged-in user's data
+
+    // Now you can use `userData` for the logged-in user's data
 
     // Function to format comments data with <br> tags
     const formatComments = () => {
         if (!broadcast) return "Broadcast data is not available.";
-    
-        const firstName = initialData.firstName || "" ;
+
+        const firstName = initialData.firstName || "";
         const lastName = initialData.lastName || "";
-        const companyName = initialData?.company?.name ||"";
+        const companyName = initialData?.company?.name || "";
         const phoneNumber = initialData.phoneNumber || "";
         const email = initialData?.email || '';
         const mfg = broadcast.mfg || '';
@@ -56,7 +58,7 @@ const ReplyBroad = () => {
         const price = broadcast.price || '';
         const additionalComments = broadcast.additional_comments || '';
         const description = broadcast.description || '';
-    
+
         return `- ------------------ -<br />
     ${firstName} ${lastName}<br />
     ${companyName}<br />
@@ -73,7 +75,7 @@ const ReplyBroad = () => {
     Comments: ${additionalComments}<br />
     Description: ${description}<br />`;
     };
-    
+
 
     const [email, setEmail] = useState({
         to: broadcast ? `${broadcast.user_id.email} ` : '',
@@ -91,7 +93,7 @@ const ReplyBroad = () => {
             .replace(/<br\s*\/?>/gi, '\n')     // Replace <br> with a newline
             .replace(/<\/?[^>]+(>|$)/g, "");   // Remove any remaining HTML tags
     };
-     
+
     useEffect(() => {
         if (broadcast) {
             setEmail((prev) => ({
@@ -111,10 +113,11 @@ const ReplyBroad = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-    
+        setLoading(true); // Start loading
+
         // Convert HTML comments to plain text with line breaks
         const plainTextComments = stripHtmlTagsWithLineBreaks(email.comments);
-    
+
         // Prepare data for backend submission
         const emailData = {
             emailData: {  // Wrap in an 'emailData' object
@@ -124,27 +127,23 @@ const ReplyBroad = () => {
                 sendCopy: email.sendCopy
             }
         };
-    
+
         // Log the emailData with line breaks visible in console
         console.log("Email Data:", emailData);
+
         dispatch(sendBroadcastReply({ token, data: emailData }))
-        .then(response => {
-            // Display an alert message after successful sending
-            alert("Email sent successfully!");
-
-            // Navigate to the view page
-            navigate('/broadcasts');  // Adjust the path as necessary
-        })
-        .catch(error => {
-            // Handle any errors
-            console.error("Failed to send email:", error);
-            alert("Failed to send email.");
-        });
-
-
-
+            .then((response) => {
+                alert("Email sent successfully!");
+                navigate("/broadcasts");
+            })
+            .catch((error) => {
+                console.error("Failed to send email:", error);
+                alert("Failed to send email.");
+            })
+            .finally(() => {
+                setLoading(false); // Stop loading
+            });
     };
-    
 
     useEffect(() => {
 
@@ -165,7 +164,7 @@ const ReplyBroad = () => {
             <main className={myProfile.profileInfo}>
                 <nav className='menu-bar'>
                     <ul>
-                        <li style={{color:"#428bca"}}><Link to={'/'}>Reply</Link></li>
+                        <li style={{ color: "#428bca" }}><Link to={'/'}>Reply</Link></li>
                         <li><Link to={'/sendbroad'}>Send</Link></li>
                         <li><Link to={'/broadcasts'}>View</Link></li>
                         <li><Link to={"/myprofile/broadcastfilter"}>Set Filters</Link></li>
@@ -231,7 +230,9 @@ const ReplyBroad = () => {
                     </div>
                 </div>
                 <div className={styles.buttonContainer}>
-                    <button type="button" className={styles.sendButton} onClick={handleSubmit}>Send</button>
+                    <button type="button" className={styles.sendButton} onClick={handleSubmit} disabled={loading}>
+                        {loading ? "Processing..." : "Send"}
+                    </button>
                     <button
                         type="button"
                         onClick={() => setEmail({ comments: '', sendCopy: false })}
@@ -240,8 +241,8 @@ const ReplyBroad = () => {
                         Reset
                     </button>
                 </div>
-            </main> 
-          
+            </main>
+
         </>
     );
 };
