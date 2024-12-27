@@ -60,8 +60,8 @@ useEffect(() => {
   dispatch(fetchUserData({ id, token }));
 }, []);
 
-const companyId = initialData?.company_id;
-
+const companyId = initialData?.company?.id;
+console.log("Company ID",companyId)
     useEffect(() => {
       if (companyId) {
       const fetchData = async () => {
@@ -581,19 +581,6 @@ const companyId = initialData?.company_id;
 };
 
 export default MyProfile;
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

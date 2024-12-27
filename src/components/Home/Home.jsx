@@ -161,7 +161,8 @@ const Home = () => {
                     alt="person"
                   />
                   <h3>
-                    welcome back,
+                    
+                    Welcome back,
                     {initialData.firstName}
                   </h3>
                   <div style={{ color: "var(--primary-color)" }}>
@@ -393,7 +394,7 @@ const Home = () => {
 
                 <div className={`mailSection ${css.mailSection}`}>
                   <MdManageAccounts />
-                  <p>manage</p>
+                  <p>Manage</p>
                   <div style={{ color: "var(--primary-color)" }}>
                     <BiDotsHorizontalRounded />
                   </div>
