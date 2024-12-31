@@ -390,11 +390,21 @@ console.log("Current Items:", currentItems);
                           onChange={(event) => handleCheckboxClick(event, e.rfqId)} // Correctly handle checkbox clicks
                           checked={rfqMail.some((mail) => mail.rfqId === e.rfqId)} // Check if this item is selected
                         />
-                        {/* <td>{e.isRead === "0" ? <IoMail /> : <IoMailOpen />}</td> */}
-                        <img
-                          src="https://static.brokerbin.com/version/v8.2.9/images/New.png"
-                          alt="Status"
-                        />
+                   
+                        {/* Dynamic image based on isRead */}
+                        {/* {e.isRead === 1 ? (
+                          <img
+                            src="https://static.brokerbin.com/version/v8.2.9/images/Open.png"
+                            alt="Read"
+                            title="Read"
+                          />
+                        ) : (
+                          <img
+                            src="https://static.brokerbin.com/version/v8.2.9/images/New.png"
+                            alt="Unread"
+                            title="Unread"
+                          />
+                        )} */}
                       </td>
                       <td>
                         {e.quantities?.reduce(

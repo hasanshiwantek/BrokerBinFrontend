@@ -340,7 +340,7 @@ const CreateAccount = () => {
                     </div>
 
                     <button type="button" onClick={handleSubmit}
-                        className='bg-[#ef6421] h-[1.2vw] rounded-[.3xl]  px-12 '>Save</button>
+                        className='bg-[#ef6421] rounded-lg  px-12  !h-16'>Save</button>
                 </div>
 
 

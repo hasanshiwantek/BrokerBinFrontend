@@ -241,7 +241,7 @@ const BroadcastForm = () => {
       })
       .catch((error) => {
         console.error("Error storing data:", error);
-        alert("Failed to store data in the backend");
+        alert("Failed to send BroadCast");
       });
   
     // Set email format

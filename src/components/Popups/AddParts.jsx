@@ -184,7 +184,7 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
           />
           <input
             type="text"
-            value={part.targetPrice}
+            value={part.price}
             onChange={(e) => handleInputChange("targetPrice", e.target.value)}
           />
           <input
@@ -199,3 +199,25 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
   
 
   export default AddParts
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

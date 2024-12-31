@@ -11,12 +11,13 @@ const TableAdd = () => {
   const dispatch = useDispatch();
 
   const handleChange = (e, i) => {
-    // The error Cannot assign to read only property 'partModel' of object '#<Object>' occurs because the inventoryAddData state object is being directly mutated, which is not allowed in Redux. To solve this, we need to make a deep copy of the state object before modifying it.Here, I'll provide a solution using a deep copy with JavaScript's spread operator and the map method.
+    const { name, value } = e.target;
+
     const updatedFiles = inventoryAddData.map((item, index) => {
       if (index === i) {
         return {
           ...item,
-          [e.target.name]: e.target.value,
+          [name]: name === "price" ? value.replace(/[^0-9.]/g, "") : value, // Remove $ and keep only numeric value
         };
       }
       return item;
@@ -64,12 +65,13 @@ const TableAdd = () => {
               </td>
               <td>
                 <input
-                  type="number"
+                  type="text"
                   name="price"
-                  value={item.price}
-                  onChange={(e) => handleChange(e, i)}
+                  value={`$${item.price || ""}`} // Add the $ sign for display
+                  onChange={(e) => handleChange(e, i)} // Strip the $ when updating state
                 />
               </td>
+
               <td>
                 <input
                   type="number"

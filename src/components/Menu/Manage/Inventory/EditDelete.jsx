@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import inventory from "../../../../styles/Menu/Manage/Inventory/Inventory.module.css";
-import TableEditDelete from "../../../Tables/TableEditDelete";
 import InventoryButtons from "./InventoryButtons";
-import { getInventoryData, updateInventoryData, deleteInventoryData } from "../../../../ReduxStore/InventorySlice";
+import {
+  getInventoryData,
+  getFilterInventories,
+  updateInventoryData,
+  deleteInventoryData,
+} from "../../../../ReduxStore/InventorySlice";
 import Cookies from "js-cookie";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -10,136 +14,96 @@ const EditDelete = () => {
   const token = Cookies.get("token");
   const dispatch = useDispatch();
 
-  const { inventoryData } = useSelector((state) => state.inventoryStore);
+  const { inventoryData, filteredInventoryData } = useSelector(
+    (state) => state.inventoryStore
+  );
   console.log("Inventory Data from Frontend", inventoryData);
+  console.log("Filtered Inventory Data from Frontend", filteredInventoryData)
+  const pagination = filteredInventoryData?.pagination || inventoryData?.pagination || {};
 
-  // Local state for loading
-  const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1); // Track the current page
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const [selectedInventories, setSelectedInventories] = useState([]);
+  const [filters, setFilters] = useState({
+    partModel: "",
+    mfg: "",
+    status: "",
+    heciClei: "",
+  });
+  const [editedItems, setEditedItems] = useState([]); // Track editable rows
+  const [visiblePages, setVisiblePages] = useState([1, 10]); // Start with pages 1 to 10
 
-  const [editedItems, setEditedItems] = useState([]); // Keep track of edited rows
-
-  // State for search filters
-  const [partModelSearch, setPartModelSearch] = useState("");
-  const [mfgSearch, setMfgSearch] = useState(""); // Changed from heciClei to mfg
-  const [statusSearch, setStatusSearch] = useState("-1");
-  const [partModelHeciCleiSearch, setPartModelHeciCleiSearch] = useState("");
-
-  // Filter inventories based on search criteria
-  const filterInventories = () => {
-    return inventoryData?.data.filter((item) => {
-      return (
-        (partModelSearch === "" || item.partModel.toLowerCase().includes(partModelSearch.toLowerCase())) &&
-        (mfgSearch === "" || item.mfg.toLowerCase().includes(mfgSearch.toLowerCase())) && // Filter based on mfg
-        (partModelHeciCleiSearch === "" || item.heciClei.toLowerCase().includes(partModelHeciCleiSearch.toLowerCase())) && // Filter based on mfg
-        (statusSearch === "-1" || item.status === statusSearch)
-      );
-    });
-  };
-
-  // Handle search button click
-  const handleSearch = async () => {
+  // Fetch inventory data (default)
+  const fetchInventoryData = () => {
     setLoading(true);
+    dispatch(getInventoryData({ token, page: currentPage }))
+      .unwrap()
+      .then((response) => {
+        setEditedItems(response?.data || []);
+      })
+      .catch((error) => {
+        console.error("Error fetching inventory data:", error);
+        alert("Failed to fetch inventory data. Please try again.");
+      })
+      .finally(() => setLoading(false));
+  };
 
-    try {
-      const searchResults = [];
-      let page = 1;
-      let found = false;
+  // Build payload with only non-empty filters
+  const buildFilterPayload = () => {
+    const payload = { token, page: currentPage };
 
-      while (!found && page <= totalPages) {
-        const response = await dispatch(getInventoryData({ token, page })).unwrap();
+    Object.entries(filters).forEach(([key, value]) => {
+      payload[key] = value?.trim() || ""; // Add empty string for undefined or null values
+    });
 
-        // Filter records on the current page
-        const filtered = response.data.filter(
-          (item) =>
-            (partModelSearch === "" || item.partModel.toLowerCase().includes(partModelSearch.toLowerCase())) &&
-            (mfgSearch === "" || item.mfg.toLowerCase().includes(mfgSearch.toLowerCase())) &&
-            (partModelHeciCleiSearch === "" || item.heciClei.toLowerCase().includes(partModelHeciCleiSearch.toLowerCase())) &&
-            (statusSearch === "-1" || item.status === statusSearch)
-        );
-
-        if (filtered.length > 0) {
-          searchResults.push(...filtered);
-          setCurrentPage(page); // Set the page containing the results
-          setEditedItems(filtered); // Update the UI with the filtered results
-          found = true; // Stop searching
-        }
-
-        page += 1; // Move to the next page
-      }
-
-      if (!found) {
-        alert("No results found for the given search criteria.");
-        setEditedItems([]); // Clear the UI if no results
-      }
-    } catch (error) {
-      console.error("Error during search:", error);
-      alert("Failed to search inventory. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    return payload;
   };
 
 
+  const fetchFilteredData = () => {
+    setLoading(true);
+    const payload = buildFilterPayload();
+    console.log("Payload", payload);
+    dispatch(getFilterInventories(payload))
+      .unwrap()
+      .then((response) => {
+        setEditedItems(response?.inventories || []); // Update the editedItems state
+      })
+      .catch((error) => {
+        console.error("Error fetching filtered inventory data:", error);
+        alert("Failed to fetch inventory data. Please try again.");
+      })
+      .finally(() => setLoading(false));
+  };
+  console.log("Payload sent to API:", buildFilterPayload());
 
-  console.log("token", token);
-
-  // Pagination details
-  const totalPages = inventoryData?.pagination?.totalPages || 1;
-  const totalRecords = inventoryData?.pagination?.totalRecords || 0;
 
   useEffect(() => {
-    if (token) {
-      setLoading(true);
-      dispatch(getInventoryData({ token, page: currentPage }))
-        .then((response) => {
-          setEditedItems(response.payload.data); // Initialize editable items
-        })
-        .catch((error) => {
-          console.error("Error fetching inventory data:", error);
-        })
-        .finally(() => setLoading(false));
+    if (
+      filters.partModel ||
+      filters.mfg ||
+      filters.status ||
+      filters.heciClei
+    ) {
+      // Fetch filtered data if any filter is applied
+      fetchFilteredData();
     } else {
-      console.error("No token found. User is not authenticated.");
-      setLoading(false);
+      // Fetch default inventory data if no filter is applied
+      fetchInventoryData();
     }
-  }, [dispatch, token, currentPage]);
+  }, [currentPage]);
 
 
-  // Pagination control handlers
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
+  const handleFilterChange = (field, value) => {
+    setFilters((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-  const handlePageChange = (page) => {
-    if (page !== currentPage && page >= 1 && page <= totalPages) {
-      setLoading(true);
-      dispatch(getInventoryData({ token, page }))
-        .then(() => setCurrentPage(page))
-        .finally(() => setLoading(false));
-    }
-  };
-
-  // Handle field editing
-  const handleFieldChange = (index, field, value) => {
-    const updatedItems = [...editedItems];
-    updatedItems[index] = {
-      ...updatedItems[index],
-      [field]: value,
-    };
-    setEditedItems(updatedItems);
+  const handleSearch = () => {
+    setCurrentPage(1);
+    fetchFilteredData();
   };
 
   const handleSaveModifications = () => {
-    setLoading(true); // Star
     const dataToSave = {
       inventories: editedItems.map((item) => ({
         id: item.id,
@@ -154,35 +118,73 @@ const EditDelete = () => {
       })),
     };
 
+    setLoading(true);
     dispatch(updateInventoryData({ token, inventories: dataToSave }))
-      .unwrap() // Ensures the Promise rejects on failure
+      .unwrap()
       .then(() => {
-        alert("Inventory Updated Successfully");
-
-        // Refetch inventory data while maintaining the current page
-        setLoading(true);
-        dispatch(getInventoryData({ token, page: currentPage }))
-          .then((response) => {
-            // Ensure currentPage is correctly set based on the response
-            if (response.payload.pagination) {
-              setCurrentPage(response.payload.pagination.currentPage || currentPage);
-            }
-          })
-          .finally(() => setLoading(false));
+        alert("Inventory updated successfully");
+        // fetchFilteredData();
+        fetchInventoryData();
       })
       .catch((error) => {
         console.error("Error updating inventory:", error);
-        alert(`Error Updating Inventory: ${error.message || "Unknown Error"}`);
-      });
+        alert("Failed to update inventory. Please try again.");
+      })
+      .finally(() => setLoading(false));
+  };
+
+  const handleDeleteClick = () => {
+    if (selectedInventories.length > 0) {
+      setLoading(true);
+      dispatch(deleteInventoryData({ token, ids: selectedInventories }))
+        .unwrap()
+        .then(() => {
+          alert("Inventory deleted successfully");
+          setSelectedInventories([]);
+          fetchInventoryData();
+        })
+        .catch((error) => {
+          console.error("Error deleting inventory:", error);
+          alert("Failed to delete inventory. Please try again.");
+        })
+        .finally(() => setLoading(false));
+    } else {
+      alert("Please select inventory items to delete");
+    }
+  };
+  // Function to update visible pages when reaching the last button in the range
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= pagination.totalPages) {
+      setCurrentPage(page);
+
+      // Extend pagination when the user clicks the last button in the current range
+      if (page === visiblePages[1] && page !== pagination.totalPages) {
+        setVisiblePages([visiblePages[1] + 1, Math.min(visiblePages[1] + 10, pagination.totalPages)]);
+      }
+
+      // Shrink pagination when clicking the first page of the current range
+      if (page === visiblePages[0] && page > 1) {
+        setVisiblePages([Math.max(visiblePages[0] - 10, 1), visiblePages[0] - 1]);
+      }
+    }
   };
 
 
-  // Initialize the editable items when inventory data is loaded
-  useEffect(() => {
-    if (inventoryData?.data) {
-      setEditedItems(inventoryData.data);
+  const handlePrevious = () => {
+    if (visiblePages[0] > 1) {
+      setVisiblePages([Math.max(visiblePages[0] - 10, 1), visiblePages[0] - 1]);
+      setCurrentPage(visiblePages[0] - 1);
     }
-  }, [inventoryData]);
+  };
+
+
+  const handleNext = () => {
+    if (visiblePages[1] < pagination.totalPages) {
+      setVisiblePages([visiblePages[1] + 1, Math.min(visiblePages[1] + 10, pagination.totalPages)]);
+      setCurrentPage(visiblePages[1] + 1);
+    }
+  };
+
 
   const handleCheckboxChange = (id) => {
     setSelectedInventories((prev) =>
@@ -190,29 +192,17 @@ const EditDelete = () => {
     );
   };
 
-  const handleDeleteClick = () => {
-    if (selectedInventories.length > 0) {
-      dispatch(deleteInventoryData({ token, ids: selectedInventories }))
-        .unwrap() // Ensures the Promise rejects on failure
-        .then(() => {
-          alert("Inventory Deleted Successfully");
-          setSelectedInventories([]); // Clear selections after dispatch
-
-          // Refetch inventory data
-          setLoading(true);
-          dispatch(getInventoryData({ token, page: currentPage })).finally(() => setLoading(false));
-        })
-        .catch((error) => {
-          console.error("Error deleting inventory:", error);
-          alert(`Error Deleting Inventory: ${error.message || "Unknown Error"}`);
-        });
-    } else {
-      alert("Select Inventory for Deletion");
-    }
+  const handleFieldChange = (index, field, value) => {
+    const updatedItems = [...editedItems];
+    updatedItems[index] = {
+      ...updatedItems[index],
+      [field]: value,
+    };
+    setEditedItems(updatedItems);
   };
 
   return (
-    <div className={`${inventory.inventory}  `}>
+    <div className={`${inventory.inventory} !w-[50vw]`}>
       <InventoryButtons />
       <div className={inventory.editDeleteTable}>
         <div className={inventory.editDeleteTable_top}>
@@ -220,8 +210,8 @@ const EditDelete = () => {
             <label>Heci/Clei</label>
             <input
               type="text"
-              value={partModelHeciCleiSearch}
-              onChange={(e) => setPartModelHeciCleiSearch(e.target.value)}
+              value={filters.heciClei}
+              onChange={(e) => handleFilterChange("heciClei", e.target.value)}
             />
           </span>
 
@@ -229,15 +219,18 @@ const EditDelete = () => {
             <label>MFG</label>
             <input
               type="text"
-              value={mfgSearch} // Changed from heciCleiSearch to mfgSearch
-              onChange={(e) => setMfgSearch(e.target.value)} // Changed from setHeciCleiSearch to setMfgSearch
+              value={filters.mfg}
+              onChange={(e) => handleFilterChange("mfg", e.target.value)}
             />
           </span>
 
           <span>
             <label>Status</label>
-            <select value={statusSearch} onChange={(e) => setStatusSearch(e.target.value)}>
-              <option value="-1">ALL</option>
+            <select
+              value={filters.status}
+              onChange={(e) => handleFilterChange("status", e.target.value)}
+            >
+              <option value="all">ALL</option>
               <option value="stock">Stock</option>
               <option value="dist">DIST</option>
               <option value="0">N/A</option>
@@ -245,21 +238,22 @@ const EditDelete = () => {
           </span>
 
           <div className="flex items-center justify-center gap-4">
-
             <span>
               <label>Part Search</label>
               <input
                 type="text"
-                value={partModelSearch}
-                onChange={(e) => setPartModelSearch(e.target.value)}
+                value={filters.partModel}
+                onChange={(e) => handleFilterChange("partModel", e.target.value)}
               />
             </span>
-            <button type="button" onClick={handleSearch} className={`${inventory.editDeleteTable_bottom} cursor-pointer transform active:scale-90 transition-all duration-100  rounded-md !-mt-[1px]`} >
+            <button
+              type="button"
+              onClick={handleSearch}
+              className={`${inventory.editDeleteTable_bottom} cursor-pointer transform active:scale-90 transition-all duration-100 rounded-md !-mt-[1px]`}
+            >
               Search
             </button>
           </div>
-
-
         </div>
 
         <div>
@@ -287,8 +281,11 @@ const EditDelete = () => {
                 </tr>
               ) : editedItems.length === 0 ? (
                 <tr>
-                  <td colSpan="10" style={{ textAlign: "center", fontSize: "9pt" }}>
-                    No  results found .
+                  <td
+                    colSpan="10"
+                    style={{ textAlign: "center", fontSize: "9pt" ,color:"red"}}
+                  >
+                    No results found.
                   </td>
                 </tr>
               ) : (
@@ -306,34 +303,44 @@ const EditDelete = () => {
                       <input
                         type="text"
                         value={item.partModel || ""}
-                        onChange={(e) => handleFieldChange(index, "partModel", e.target.value)}
+                        onChange={(e) =>
+                          handleFieldChange(index, "partModel", e.target.value)
+                        }
                       />
                     </td>
                     <td>
                       <input
                         type="text"
                         value={item.heciClei || ""}
-                        onChange={(e) => handleFieldChange(index, "heciClei", e.target.value)}
+                        onChange={(e) =>
+                          handleFieldChange(index, "heciClei", e.target.value)
+                        }
                       />
                     </td>
                     <td>
                       <input
                         type="number"
                         value={item.price || ""}
-                        onChange={(e) => handleFieldChange(index, "price", e.target.value)}
+                        onChange={(e) =>
+                          handleFieldChange(index, "price", e.target.value)
+                        }
                       />
                     </td>
                     <td>
                       <input
                         type="number"
                         value={item.quantity || ""}
-                        onChange={(e) => handleFieldChange(index, "quantity", e.target.value)}
+                        onChange={(e) =>
+                          handleFieldChange(index, "quantity", e.target.value)
+                        }
                       />
                     </td>
                     <td>
                       <select
                         value={item.status || "stock"}
-                        onChange={(e) => handleFieldChange(index, "status", e.target.value)}
+                        onChange={(e) =>
+                          handleFieldChange(index, "status", e.target.value)
+                        }
                       >
                         <option value="stock">Stock</option>
                         <option value="dist">DIST</option>
@@ -344,21 +351,31 @@ const EditDelete = () => {
                       <input
                         type="text"
                         value={item.productDescription || ""}
-                        onChange={(e) => handleFieldChange(index, "productDescription", e.target.value)}
+                        onChange={(e) =>
+                          handleFieldChange(
+                            index,
+                            "productDescription",
+                            e.target.value
+                          )
+                        }
                       />
                     </td>
                     <td>
                       <input
                         type="text"
                         value={item.mfg || ""}
-                        onChange={(e) => handleFieldChange(index, "mfg", e.target.value)}
+                        onChange={(e) =>
+                          handleFieldChange(index, "mfg", e.target.value)
+                        }
                       />
                     </td>
                     <td>
                       <input
                         type="text"
                         value={item.cond || ""}
-                        onChange={(e) => handleFieldChange(index, "cond", e.target.value)}
+                        onChange={(e) =>
+                          handleFieldChange(index, "cond", e.target.value)
+                        }
                       />
                     </td>
                     <td>
@@ -373,91 +390,72 @@ const EditDelete = () => {
 
         <div className="flex justify-between items-center p-1">
           <div className={inventory.editDeleteTable_bottom}>
-            <button type="button" onClick={handleDeleteClick} className="transform active:scale-90 transition-all duration-100 ">
+            <button
+              type="button"
+              onClick={handleDeleteClick}
+              className="transform active:scale-90 transition-all duration-100"
+            >
               Delete
             </button>
             <button
               type="button"
               onClick={handleSaveModifications}
-              className="transform active:scale-90 transition-all duration-100 "
-              disabled={loading}>
+              className="transform active:scale-90 transition-all duration-100"
+              disabled={loading}
+            >
               {loading ? "Processing..." : "Save Modifications"}
             </button>
-            {/* <button type="button">Refresh All</button> */}
           </div>
 
-          {/* Pagination Controls */}
+            {/* Pagination Controls */}
+          <div className="flex justify-between items-center p-1">
+            <div className={inventory.pagination}>
+              <span className="text-orange-700 p-4 text-xl">
+                Page <span className="text-blue-800">{currentPage}</span> of
+                <span className="text-blue-800"> {pagination.totalPages}</span>
+              </span>
 
-          {/* Pagination */}
-          <div className={inventory.pagination}>
+              {/* Previous Button */}
+              <button
+                onClick={handlePrevious}
+                className={`${inventory.pageButton} ${visiblePages[0] === 1 ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                disabled={visiblePages[0] === 1 || loading}
+              >
+                Previous
+              </button>
 
-            <span className="text-orange-700 p-4 text-xl">
-              Page <span className="text-blue-800">{currentPage} </span >  of <span className="text-blue-800">  {totalPages} </span> {totalRecords} records
-            </span>
+              {/* Dynamic Page Buttons */}
+              {[...Array(pagination.totalPages || 1).keys()]
+                .map((page) => page + 1)
+                .filter((page) => page >= visiblePages[0] && page <= visiblePages[1])
+                .map((page) => (
+                  <button
+                    key={page}
+                    onClick={() => handlePageChange(page)}
+                    className={`${inventory.pageButton} ${currentPage === page ? inventory.active : ""
+                      }`}
+                    disabled={loading}
+                  >
+                    {page}
+                  </button>
+                ))}
 
-            {/* <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1 || loading}
-            >
-              Previous
-            </button> */}
-
-            {[...Array(totalPages).keys()]
-              .map((page) => page + 1)
-              .filter((page) => {
-                if (currentPage === 1) {
-                  return page <= 3;
-                } else if (currentPage === totalPages) {
-                  return page >= totalPages - 2;
-                } else {
-                  return page >= currentPage - 1 && page <= currentPage + 1;
-                }
-              })
-              .map((page) => (
-                <button
-                  key={page}
-                  onClick={() => handlePageChange(page)}
-                  className={`${inventory.pageButton} ${currentPage === page ? inventory.active : ""
-                    }`}
-                  disabled={loading}
-                >
-                  {page}
-                </button>
-              ))}
-
-            {/* <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages || loading}
-            >
-              Next
-            </button> */}
+              {/* Next Button */}
+              <button
+                onClick={handleNext}
+                className={`${inventory.pageButton} ${visiblePages[1] === pagination.totalPages ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                disabled={visiblePages[1] === pagination.totalPages || loading}
+              >
+                Next
+              </button>
+            </div>
           </div>
-
         </div>
-
       </div>
     </div>
   );
 };
 
 export default EditDelete;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

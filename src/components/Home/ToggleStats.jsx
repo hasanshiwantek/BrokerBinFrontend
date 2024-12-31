@@ -80,7 +80,7 @@ const ToggleStats = ({ data }) => {
           onClick={() => setToggleStats(true)}
           style={toggleStats ? { borderBottom: "2px solid red" } : {}}
         >
-          my 24hr stats
+          My 24hr stats
         </p>
         <p
           onClick={() => setToggleStats(false)}

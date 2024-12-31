@@ -18,33 +18,33 @@ import { useLocation } from "react-router-dom"; // Add this import
 const RfqReply = () => {
 
   // LOGGED IN USERID DATA
-    // const { blurWhileLoading, initialData, user, error} = useSelector(
-    //   (state) => state.profileStore
-    // );
-    // console.log("User Data",initialData)
-    // const user_id = Cookies.get("user_id");
+  // const { blurWhileLoading, initialData, user, error} = useSelector(
+  //   (state) => state.profileStore
+  // );
+  // console.log("User Data",initialData)
+  // const user_id = Cookies.get("user_id");
 
-    // const id = user?.user?.id || user_id;
-    // useEffect(() => {
-    //   console.log("Logged in userid",id);
-    //   dispatch(fetchUserData({ id, token }));
-    // }, []);
-  
-// <------>
+  // const id = user?.user?.id || user_id;
+  // useEffect(() => {
+  //   console.log("Logged in userid",id);
+  //   dispatch(fetchUserData({ id, token }));
+  // }, []);
 
-const location = useLocation(); // To get data passed via navigate
-    // const selectedRfqs = location.state?.selectedRfqs || [];
-    const { selectedRfqs = [], type = "reply" } = location.state || {};
+  // <------>
 
-    console.log("SELECTEDRFQ", selectedRfqs)
+  const location = useLocation(); // To get data passed via navigate
+  // const selectedRfqs = location.state?.selectedRfqs || [];
+  const { selectedRfqs = [], type = "reply" } = location.state || {};
 
-    const subjectPrefix = type === "forward" ? "FW:" : "RE:";
-    const subject = selectedRfqs.length > 0 
-  ? `${type === "forward" ? "FW:" : "RE:"} ${selectedRfqs[0]?.subject || ""}`
-  : "";
+  console.log("SELECTEDRFQ", selectedRfqs)
+
+  const subjectPrefix = type === "forward" ? "FW:" : "RE:";
+  // const subject = selectedRfqs.length > 0
+  //   ? `${subjectPrefix} ${selectedRfqs[0]?.subject || "Quote Needed"}`
+  //   : "Quote Needed"; // Default to "Quote Needed" if no RFQ is selected
+  const subject ="Quote Needed"; // Default to "Quote Needed" if no RFQ is selected
 
 
-    
   const { selectedProducts } = useSelector((store) => store.searchProductStore);
   console.log("SelectedProducts", selectedProducts);
   const dispatch = useDispatch();
@@ -60,31 +60,26 @@ const location = useLocation(); // To get data passed via navigate
 
   const { initialData, user } = useSelector((state) => state.profileStore);
   const id = user?.user?.id;
-// Pre-populate user data in the comment
-useEffect(() => {
-  if (id) {
-    dispatch(fetchUserData({ id, token }));
-  }
-}, [id, dispatch, token]);
+  // Pre-populate user data in the comment
+  useEffect(() => {
+    if (id) {
+      dispatch(fetchUserData({ id, token }));
+    }
+  }, [id, dispatch, token]);
 
 
   useEffect(() => {
-  if (initialData) {
-    // Format logged-in user information
-    const userInfo = `
+    if (initialData) {
+      // Format logged-in user information
+      const userInfo = `
     <div className={css.paddedContent}>
       <p><strong>Quote Needed Looking for the best price, availability & lead time.</strong></p>
-      <p>--------------</p>
-      <p><strong>${initialData.firstName || " "} ${initialData.lastName || ""}</strong></p>
-      <p>${initialData?.company?.name || ""}</p>
-      <p>${initialData.phoneNumber || ""}</p>
-      <p>${initialData.email || ""}</p>
     </div>
   `;
-  
 
-    // Format RFQ sender information and details
-    const rfqDetails = selectedRfqs.map((rfq) => `
+
+      // Format RFQ sender information and details
+      const rfqDetails = selectedRfqs.map((rfq) => `
       <p><strong>RFQ initial Details:</strong></p>
       <p>Name: ${rfq.from?.firstName || ""} ${rfq.from?.lastName || ""}</p>
       <p>Email: ${rfq.from?.email || ""}</p>
@@ -95,96 +90,108 @@ useEffect(() => {
       <p>Qty: ${rfq.quantities?.join(", ") || "N/A"}</p>
       <p>Target Price: ${rfq.targetPrices?.join(", ") || "N/A"}</p>
       <p>Terms: ${rfq.terms?.join(", ") || "N/A"}</p>
+
+
+      
+
+            <p>--------------</p>
+      <p>${initialData.firstName || " "} ${initialData.lastName || ""}</p>
+      <p>${initialData?.company?.name || ""}</p>
+      <p>${initialData.phoneNumber || ""}</p>
+      <p>${initialData.email || ""}</p>
+
+
+
     `).join("<br />");
 
-    // Combine logged-in user and RFQ details
-    setComment(`${userInfo}<br />${rfqDetails}`);
-  }
+      // Combine logged-in user and RFQ details
+      setComment(`${userInfo}<br />${rfqDetails}`);
+    }
   }, [initialData, selectedRfqs]);
 
 
 
-    // Combine recipients from all RFQs
-    const [recipients, setRecipients] = useState(() => {
-        const uniqueRecipients = new Map();
-        selectedRfqs.forEach((rfq) => {
-            if (rfq.from) {
-                const email = rfq.from.email;
-                if (!uniqueRecipients.has(email)) {
-                    uniqueRecipients.set(email, {
-                        firstName: rfq.from.firstName,
-                        lastName: rfq.from.lastName,
-                        email: email,
-                    });
-                }
-            }
-        });
-        return Array.from(uniqueRecipients.values());
+  // Combine recipients from all RFQs
+  const [recipients, setRecipients] = useState(() => {
+    const uniqueRecipients = new Map();
+    selectedRfqs.forEach((rfq) => {
+      if (rfq.from) {
+        const email = rfq.from.email;
+        if (!uniqueRecipients.has(email)) {
+          uniqueRecipients.set(email, {
+            firstName: rfq.from.firstName,
+            lastName: rfq.from.lastName,
+            email: email,
+          });
+        }
+      }
+    });
+    return Array.from(uniqueRecipients.values());
+  });
+
+  // Combine parts from all RFQs
+  const [parts, setParts] = useState(() => {
+    const uniqueParts = new Map();
+
+    selectedRfqs.forEach((rfq) => {
+      rfq.partNumbers?.forEach((partNumber, index) => {
+        if (!uniqueParts.has(partNumber)) {
+          uniqueParts.set(partNumber, {
+            id: rfq.partId[index] || Date.now() + Math.random(), // Use `partId` or generate a unique ID
+            partModel: partNumber,
+            heciClei: rfq.heciCleis[index] || "", // Use corresponding index
+            mfg: rfq.mfgs[index] || "",
+            condition: rfq.conditions[index] || "",
+            quantity: rfq.quantities[index] || "",
+            targetPrice: rfq.targetPrices[index] || "",
+            terms: rfq.terms[index] || "",
+          });
+        }
+      });
     });
 
-    // Combine parts from all RFQs
-    const [parts, setParts] = useState(() => {
-        const uniqueParts = new Map();
-      
-        selectedRfqs.forEach((rfq) => {
-          rfq.partNumbers?.forEach((partNumber, index) => {
-            if (!uniqueParts.has(partNumber)) {
-              uniqueParts.set(partNumber, {
-                id: rfq.partId[index] || Date.now() + Math.random(), // Use `partId` or generate a unique ID
-                partModel: partNumber,
-                heciClei: rfq.heciCleis[index] || "", // Use corresponding index
-                mfg: rfq.mfgs[index] || "",
-                condition: rfq.conditions[index] || "",
-                quantity: rfq.quantities[index] || "",
-                targetPrice: rfq.targetPrices[index] || "",
-                terms: rfq.terms[index] || "",
-              });
-            }
-          });
-        });
-      
-        return Array.from(uniqueParts.values());
-      });
-      
+    return Array.from(uniqueParts.values());
+  });
+
 
   // Add event listener to detect click outside modal
-//   useEffect(() => {
-//     const handleClickOutside = (event) => {
-//       if (modalRef.current && !modalRef.current.contains(event.target)) {
-//         // Close modal if click is outside
-//         dispatch(setPopUpRfq(false));
-//       }
-//     };
+  //   useEffect(() => {
+  //     const handleClickOutside = (event) => {
+  //       if (modalRef.current && !modalRef.current.contains(event.target)) {
+  //         // Close modal if click is outside
+  //         dispatch(setPopUpRfq(false));
+  //       }
+  //     };
 
-//     // Attach event listener to the document
-//     document.addEventListener("mousedown", handleClickOutside);
+  //     // Attach event listener to the document
+  //     document.addEventListener("mousedown", handleClickOutside);
 
-//     // Clean up the event listener on unmount
-//     return () => {
-//       document.removeEventListener("mousedown", handleClickOutside);
-//     };
-//   }, [dispatch]);
+  //     // Clean up the event listener on unmount
+  //     return () => {
+  //       document.removeEventListener("mousedown", handleClickOutside);
+  //     };
+  //   }, [dispatch]);
 
-//   useEffect(() => {
-//     const handleClickOutside = (event) => {
-//       if (recipientDropdownRef.current && !recipientDropdownRef.current.contains(event.target)) {
-//         setShowRecipientDropdown(false); // Close the dropdown if the click is outside
-//       }
-//     };
-//     document.addEventListener('mousedown', handleClickOutside);
-//     return () => {
-//       // Clean up the event listener when the component unmounts
-//       document.removeEventListener('mousedown', handleClickOutside);
-//     };
-//   }, []);
+  //   useEffect(() => {
+  //     const handleClickOutside = (event) => {
+  //       if (recipientDropdownRef.current && !recipientDropdownRef.current.contains(event.target)) {
+  //         setShowRecipientDropdown(false); // Close the dropdown if the click is outside
+  //       }
+  //     };
+  //     document.addEventListener('mousedown', handleClickOutside);
+  //     return () => {
+  //       // Clean up the event listener when the component unmounts
+  //       document.removeEventListener('mousedown', handleClickOutside);
+  //     };
+  //   }, []);
 
 
- // Handle comment change
- 
- const handleCommentChange = (content, delta, source, editor) => {
-  const text = editor.getHTML();
-  setComment(text); // Update the comment state when the text editor changes
-};
+  // Handle comment change
+
+  const handleCommentChange = (content, delta, source, editor) => {
+    const text = editor.getHTML();
+    setComment(text); // Update the comment state when the text editor changes
+  };
 
   // make sure only unique models goes to rfq.
   const filterUniqueModels = (data) => {
@@ -203,7 +210,7 @@ useEffect(() => {
   const filteredData = filterUniqueModels(selectedProducts);
   console.log(filteredData);
 
-//   const [parts, setParts] = useState(filteredData);
+  //   const [parts, setParts] = useState(filteredData);
   const [selectedProductsBCC, setSelectedProductsBCC] =
     useState(selectedProducts);
 
@@ -229,7 +236,7 @@ useEffect(() => {
     );
   };
 
-//   const [recipients, setRecipients] = useState([]);
+  //   const [recipients, setRecipients] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [uploadFile, setFile] = useState(null);
 
@@ -329,11 +336,11 @@ useEffect(() => {
         formData.append(`recipients[${index}]`, recipient.email);
       });
 
-      if (!recipients.length) {
-        alert("Please add at least one recipient before sending.");
-        return;
-      }
-    
+    if (!recipients.length) {
+      alert("Please add at least one recipient before sending.");
+      return;
+    }
+
 
     // Add comment
     formData.append("comment", comment);
@@ -388,13 +395,13 @@ useEffect(() => {
       alert("RFQ submitted successfully!");
 
       // Check if the RFQ was forwarded and update its status
-    if (type === "forward") {
-      const payload = {
-        items: selectedRfqs.map((rfq) => ({ id: rfq.rfqId || rfq.id, isForwarded: 1 })),
-      };
-      await dispatch(statusRfq({ token, data: payload }));
-      console.log("Forward status updated successfully.");
-    }
+      if (type === "forward") {
+        const payload = {
+          items: selectedRfqs.map((rfq) => ({ id: rfq.rfqId || rfq.id, isForwarded: 1 })),
+        };
+        await dispatch(statusRfq({ token, data: payload }));
+        console.log("Forward status updated successfully.");
+      }
 
       // Clear form fields after successful submission
       clearFields();
@@ -402,7 +409,7 @@ useEffect(() => {
       console.error("Error submitting RFQ:", error);
       alert("Error Submitting RFQ Data");
     }
-    
+
   };
 
   // Function to clear the form fields
@@ -463,7 +470,7 @@ useEffect(() => {
                     </li>
                   </ul>
                 </div>
-               
+
               </div>
               <div className={css.rfqBody_Main}>
                 <div className={css.rfqBody_Main_left}>
@@ -549,7 +556,7 @@ useEffect(() => {
                     </span>
                     <span>
                       <label htmlFor="">Subject:</label>
-                      <input name="subject" type="text" defaultValue={subject}/>
+                      <input name="subject" type="text" defaultValue={subject}  />
                     </span>
                   </div>
 
@@ -584,7 +591,7 @@ useEffect(() => {
 
                       <div className={css.rfqBody_Main_left_addParts_AddBtn}>
                         <button type="button" onClick={addPart}>
-                          <AddCircle  />
+                          <AddCircle />
                           Add Part
                         </button>
                         <label htmlFor="uploadFile">
@@ -602,17 +609,17 @@ useEffect(() => {
                     </div>
                   </div>
                   <div className={css.rfqBody_Main_left_comments}>
-                <label htmlFor="" style={{ marginLeft: "50px" }}>Comments</label>
-                
-                <TextEditor
-                  handleCommentChange={handleCommentChange}
-                  comment={comment}
-                  className={`${css.ql_editor}`}
-                />
-              </div>
+                    <label htmlFor="" style={{ marginLeft: "50px" }}>Comments</label>
 
-              {/* Editable User Information inside TextEditor */}
-              {/* <div className={css.loggedInUserData}>
+                    <TextEditor
+                      handleCommentChange={handleCommentChange}
+                      comment={comment}
+                      className={`${css.ql_editor}`}
+                    />
+                  </div>
+
+                  {/* Editable User Information inside TextEditor */}
+                  {/* <div className={css.loggedInUserData}>
                 {initialData ? (
                   <div>
                     <p><strong>User Information:</strong></p>

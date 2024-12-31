@@ -186,7 +186,7 @@
 .rfqTableDetail table tbody td{
   font-size: 8pt !important;
   color: #444 !important;
-  font-weight: 600 !important;
+  font-weight: 500 !important;
 }
 
 .rfqTableDetail table thead th{
@@ -238,6 +238,12 @@ td:hover .companyDropdown {
   padding: 10px 12px;
   border-radius: 5px;
   font-size: 9pt !important;
+}
+
+.rfqTableBtn_bottom button:active{
+
+  transform: scale(1.05);
+  transition: all 0.2s ease-in-out;
 }
 
 

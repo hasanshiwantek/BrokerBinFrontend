@@ -160,9 +160,39 @@ export const exportRemoveInventory = createAsyncThunk(
 
 
 
+
+export const getFilterInventories = createAsyncThunk(
+  "inventoryStore/getFilterInventories",
+  async ({ token,partModel,mfg,status,heciClei}) => {
+    try {
+      const response = await axios.get(
+        `${brokerAPI}inventory/filter?partModel=${partModel}&mfg=${mfg}&status=${status}&heciClei=${heciClei}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error Fetching inventory Data:", error.response?.data);
+      throw error.response?.data;
+    }
+  }
+);
+
+
+
+
+
+
+
 const initialState = {
   // Add inventory data
   inventoryData:{},
+  filteredInventoryData:{},
+
   inventoryAddData: [
     {
       partModel: "",
@@ -312,6 +342,17 @@ const InventorySlice = createSlice({
       })
       .addCase(exportRemoveInventory.rejected, (state, action) => {
         console.error("ERROR UPDATING INVENTORY DATA", action.error);
+      })
+      .addCase(getFilterInventories.pending, (state) => {
+        console.log("PENDING!!!!!");
+      })
+      .addCase(getFilterInventories.fulfilled, (state, action) => {
+        console.log("FILTERED INVENTORY PAYLOAD FROM REDUX",action.payload)
+        state.filteredInventoryData=action.payload
+
+      })
+      .addCase(getFilterInventories.rejected, (state, action) => {
+        console.error("ERROR FETCHING FILTERED INVENTORY DATA", action.error);
       });
   },
 });
