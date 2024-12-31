@@ -333,7 +333,7 @@ console.log("Company ID",companyId)
                     to="/mycompany/Createaccount"
                     className={({ isActive }) => (isActive ? css.active : '')}
                   >
-                    <span>CreateAccount</span>
+                    <span>Create Account</span>
                   </NavLink>
                 </li>
                 <li>
