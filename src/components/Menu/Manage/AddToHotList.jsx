@@ -36,10 +36,10 @@ const AddToHotList = ({ item }) => {
                   Please notify me when this part is available!
                 </label>
               </span>
-              <span>
+              {/* <span>
                 <input type="checkbox" name={item} id={item} />
                 <label htmlFor={item}>Add item to Hot List.</label>
-              </span>
+              </span> */}
               <span>
                 <input type="checkbox" name="addToCart" id="addToCart" />
                 <label htmlFor="addToCart">Add item to Part Cart.</label>

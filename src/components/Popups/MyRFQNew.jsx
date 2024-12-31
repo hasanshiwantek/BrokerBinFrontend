@@ -16,20 +16,6 @@ import { fetchUserData } from "../../ReduxStore/ProfleSlice";
 
 const MyRFQNew = () => {
 
-  // LOGGED IN USERID DATA
-    // const { blurWhileLoading, initialData, user, error} = useSelector(
-    //   (state) => state.profileStore
-    // );
-    // console.log("User Data",initialData)
-    // const user_id = Cookies.get("user_id");
-
-    // const id = user?.user?.id || user_id;
-    // useEffect(() => {
-    //   console.log("Logged in userid",id);
-    //   dispatch(fetchUserData({ id, token }));
-    // }, []);
-  
-// <------>
   const { selectedProducts } = useSelector((store) => store.searchProductStore);
   console.log("SelectedProducts", selectedProducts);
   const dispatch = useDispatch();
@@ -68,27 +54,19 @@ useEffect(() => {
   }
 }, [initialData]);
 
-
-
- 
-
-  // Add event listener to detect click outside modal
   useEffect(() => {
     const handleClickOutside = (event) => {
+      // Check if the click is outside the modal area
       if (modalRef.current && !modalRef.current.contains(event.target)) {
-        // Close modal if click is outside
-        dispatch(setPopUpRfq(false));
+        return; // Ignore clicks outside the modal area
       }
     };
-
-    // Attach event listener to the document
+  
     document.addEventListener("mousedown", handleClickOutside);
-
-    // Clean up the event listener on unmount
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -525,53 +503,6 @@ useEffect(() => {
                   className={`${css.ql_editor}`}
                 />
               </div>
-
-              {/* Editable User Information inside TextEditor */}
-              {/* <div className={css.loggedInUserData}>
-                {initialData ? (
-                  <div>
-                    <p><strong>User Information:</strong></p>
-                    <div>
-                      <label htmlFor="firstName">First Name:</label>
-                      <input
-                        type="text"
-                        name="firstName"
-                        value={initialData.firstName}
-                        onChange={(e) => setComment(prev => prev.replace(initialData.firstName, e.target.value))}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="lastName">Last Name:</label>
-                      <input
-                        type="text"
-                        name="lastName"
-                        value={initialData.lastName}
-                        onChange={(e) => setComment(prev => prev.replace(initialData.lastName, e.target.value))}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="email">Email:</label>
-                      <input
-                        type="email"
-                        name="email"
-                        value={initialData.email}
-                        onChange={(e) => setComment(prev => prev.replace(initialData.email, e.target.value))}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="phoneNumber">Phone:</label>
-                      <input
-                        type="text"
-                        name="phoneNumber"
-                        value={initialData.phoneNumber}
-                        onChange={(e) => setComment(prev => prev.replace(initialData.phoneNumber, e.target.value))}
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <p>Loading user data...</p>
-                )}
-              </div> */}
                   <div className={css.rfqBody_Main_left_bottom}>
                     <div></div>
                     <div>

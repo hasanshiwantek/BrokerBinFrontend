@@ -290,18 +290,26 @@ const searchProductSlice = createSlice({
       })
       .addCase(searchByKeyword.fulfilled, (state, action) => {
         console.log("Payload from searchByKeyword:", action.payload);
-        state.searchResponseMatched = {
-          ...state.searchResponseMatched,
-          ...action.payload.foundItems, // Assume this structure matches
-        };
-        onsole.log("Updated searchResponseMatched:", state.searchResponseMatched);
+        const foundItems = action.payload.foundItems;
+        const structuredResponse = foundItems.reduce((acc, item) => {
+            const { partModel } = item;
+            if (!acc[partModel]) {
+                acc[partModel] = { data: [] };
+            }
+            acc[partModel].data.push(item);
+            return acc;
+        }, {});
+    
+        state.searchResponseMatched = structuredResponse;
+        console.log("Updated searchResponseMatched:", state.searchResponseMatched);
+    
         state.searchResponseNotMatched = action.payload.notFoundPartModels || [];
-        state.totalCount += Object.values(action.payload.foundItems || {}).reduce(
-          (acc, part) => acc + (part.totalCount || 0),
-          0
+        state.totalCount = Object.values(structuredResponse).reduce(
+            (acc, part) => acc + part.data.length,
+            0
         );
-        state.gettingProducts = false; // Set to false after fetching is done
-      })
+        state.gettingProducts = false;
+    })    
       .addCase(searchByKeyword.rejected, (state, action) => {
         state.error = action.error.message;
         console.error(
