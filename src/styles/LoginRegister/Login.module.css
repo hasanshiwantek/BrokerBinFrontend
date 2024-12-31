@@ -61,6 +61,7 @@
         right: 2%;
         height: 100%;
         color: black;
+        background-color:none !important;
         svg {
           height: 2rem;
           width: 2rem;

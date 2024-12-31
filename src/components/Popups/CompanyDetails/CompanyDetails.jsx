@@ -20,8 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCompanyContact } from "../../../ReduxStore/SearchProductSlice";
 import Cookies from "js-cookie";
 import { NavLink } from "react-router-dom";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+
 
 const CompanyDetails = ({ closeModal }) => {
   const dispatch = useDispatch();

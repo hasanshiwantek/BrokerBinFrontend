@@ -30,7 +30,7 @@ import { useNavigate } from "react-router-dom";
 
 
 const RfqTableSent = () => {
-    const navigate=useNavigate()
+    const navigate = useNavigate()
 
 
     const { togglePopUp: togglePopUpRfq, rfqMail, rfqMailCheckAll, currentPage } = useSelector(
@@ -47,7 +47,7 @@ const RfqTableSent = () => {
 
     const token = Cookies.get("token");
 
-    const { sentRfqData,receiveRfqData } = useSelector((state) => state.rfqStore)
+    const { sentRfqData, receiveRfqData } = useSelector((state) => state.rfqStore)
     console.log("Data From Page", sentRfqData)
 
 
@@ -126,9 +126,9 @@ const RfqTableSent = () => {
 
     useEffect(() => {
         dispatch(sentRfq({ token }))
-         if (!receiveRfqData?.totalCount){
-              dispatch(receivedRfq({token}));
-            }
+        if (!receiveRfqData?.totalCount) {
+            dispatch(receivedRfq({ token }));
+        }
 
     }, [])
 
@@ -253,35 +253,35 @@ const RfqTableSent = () => {
             alert("Please select at least one RFQ to forward.");
             return;
         }
-    
+
         const selectedRfqs = rfqMail.map((rfq) => ({
             id: rfq.id, // Ensure you are mapping `id` properly from sent RFQs
             ...rfq,
         }));
-    
+
         navigate("/rfq/create", { state: { selectedRfqs, type: "forward" } });
     };
-    
+
 
     // const handleAction = async (action) => {
     //     if (rfqMail.length === 0) {
     //       alert("Please select at least one RFQ.");
     //       return;
     //     }
-      
+
     //     // Mapping actions to payload fields
     //     const actionMap = {
     //       forward: { key: "isForwarded", value: 1 },
     //     };
-      
+
     //     const { key, value } = actionMap[action];
-      
+
     //     const payload = {
     //       items: rfqMail.map((rfq) => ({ id: rfq.id, [key]: value })), // Use `id` directly
     //     };
-      
+
     //     console.log("Payload being sent:", payload);
-      
+
     //     try {
     //       const token = Cookies.get("token");
     //       const response = await dispatch(statusRfq({ token, data: payload })).unwrap();
@@ -308,7 +308,7 @@ const RfqTableSent = () => {
                                         to="/rfq"
                                         className={({ isActive }) => (isActive ? myProfile.active : '')}
                                     >
-                                        <span>Received({receiveRfqData.totalCount }/{receiveRfqData.unreadCount})</span>
+                                        <span>Received({receiveRfqData.totalCount}/{receiveRfqData.unreadCount})</span>
                                     </NavLink>
                                 </li>
                                 <li>
@@ -392,8 +392,21 @@ const RfqTableSent = () => {
                                                     }
                                                 />
                                                 <td>(0|1)</td>
-                                                {/* {!e.read ? <IoMail /> : <IoMailOpen />} */}
-                                                <img src="https://static.brokerbin.com/version/v8.2.9/images/New.png" alt="" srcset="" />
+
+                                                {/* Dynamic image based on isRead */}
+                                                {e.isRead === 1 ? (
+                                                    <img
+                                                        src="https://static.brokerbin.com/version/v8.2.9/images/Open.png"
+                                                        alt="Read"
+                                                        title="Read"
+                                                    />
+                                                ) : (
+                                                    <img
+                                                        src="https://static.brokerbin.com/version/v8.2.9/images/New.png"
+                                                        alt="Unread"
+                                                        title="Unread"
+                                                    />
+                                                )}
                                             </td>
                                             <td>
                                                 {e.quantities?.reduce((total, quantity) => total + Number(quantity), 0)}

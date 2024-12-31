@@ -208,7 +208,6 @@ const ReplyBroad = () => {
                                         modules={{
                                             toolbar: [
                                                 ['bold', 'italic', 'underline'],
-                                                ['link', 'image'],
                                             ],
                                         }}
                                     />

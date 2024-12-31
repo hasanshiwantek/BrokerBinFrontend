@@ -5,7 +5,7 @@ import myProfile from "../../../styles/Menu/Manage/MyProfile.module.css";
 import styles from "./BroadCast.module.css"
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
-import { fetchBroadCastData } from '../../../ReduxStore/BroadCast'
+import { fetchBroadCastData, filterBroadCastPartModel } from '../../../ReduxStore/BroadCast'
 import Cookies from "js-cookie";
 import shieldImage from "../../../assets/shield-img.png"
 import bullImage from "../../../assets/bullhornn.png"
@@ -15,12 +15,14 @@ import BroadcastFileModal from './Send/Field Components/BroadcastFileModal'
 import CompanyDetails from '../../Popups/CompanyDetails/CompanyDetails'
 import { setPopupCompanyDetail, setTogglePopUp } from '../../../ReduxStore/SearchProductSlice'
 import { FaFileAlt } from "react-icons/fa";
- 
+
 
 const BroadCast = () => {
   const broadcastItems = useSelector((state) => state.broadcastStore.broadCastData)
   const { togglePopUp, popupCompanyDetail } = useSelector((state) => state.searchProductStore);
   const { pagination = {} } = broadcastItems || {}; // Default to empty object if undefined
+
+  const { filterBroadcastPartModelData } = useSelector((state) => state.broadcastStore)
   const token = Cookies.get("token");
   const currentUserID = Cookies.get("user_id");
   const dispatch = useDispatch()
@@ -50,6 +52,20 @@ const BroadCast = () => {
       .then(() => setLoading(false))
       .catch(() => setLoading(false));
   }, [dispatch, token, currentPage]); // Make sure `currentPage` is in the dependency array
+
+
+  // Fetch filtered data when `searchTerm` changes
+  useEffect(() => {
+    if (searchTerm) {
+      console.log("Fetching filtered data for PartModel:", searchTerm);
+      setLoading(true);
+      dispatch(filterBroadCastPartModel({ token, partModel: searchTerm }))
+        .then(() => setLoading(false))
+        .catch(() => setLoading(false));
+    }
+  }, [dispatch, token, searchTerm]);
+
+
 
   // Extract unique MFGs
   const uniqueMfgs = broadcastItems && broadcastItems.broadcasts
@@ -84,21 +100,38 @@ const BroadCast = () => {
   const handleRegionChange = (event) => {
     setSelectedRegion(event.target.value);
   };
-  const filteredBroadcasts = broadcastItems?.broadcasts?.filter((broadcast) =>
-    (filterType === "all" || broadcast.type === filterType) && // Filter by type
-    (selectedMfg === "all" || broadcast.mfg === selectedMfg) && // Filter by Manufacturer
-    (selectedRegion === "all" || broadcast.selectedRegion?.includes(selectedRegion)) && // Filter by Region
-    (searchTerm === "" || (broadcast.partModel?.toLowerCase().includes(searchTerm.toLowerCase()))) && // Filter by Search Term
-    (buyInFilters.length === 0 || buyInFilters.includes(broadcast.buy_in)) && // Filter by Buy-In
-    (
-      selectedCategory === "all" || // No category filtering
-      (selectedCategory === "selectedTelecom" && (!selectedSubCategory || broadcast.selectedTelecom?.includes(selectedSubCategory))) ||
-      (selectedCategory === "selectedMobileDevices" && (!selectedSubCategory || broadcast.selectedMobileDevices?.includes(selectedSubCategory))) ||
-      (selectedCategory === "selectedCompanies" && (!selectedSubCategory || broadcast.selectedCompanies?.includes(selectedSubCategory))) ||
-      (selectedCategory === "service" && (!selectedSubCategory || broadcast.service?.includes(selectedSubCategory)))
+
+
+  const filteredBroadcasts = searchTerm
+    ? filterBroadcastPartModelData?.broadcasts?.filter((broadcast) =>
+      (filterType === "all" || broadcast.type === filterType) && // Filter by type
+      (selectedMfg === "all" || broadcast.mfg === selectedMfg) && // Filter by Manufacturer
+      (selectedRegion === "all" || broadcast.selectedRegion?.includes(selectedRegion)) && // Filter by Region
+      (buyInFilters.length === 0 || buyInFilters.includes(broadcast.buy_in)) && // Filter by Buy-In
+      (
+        selectedCategory === "all" || // No category filtering
+        (selectedCategory === "selectedTelecom" && (!selectedSubCategory || broadcast.selectedTelecom?.includes(selectedSubCategory))) ||
+        (selectedCategory === "selectedMobileDevices" && (!selectedSubCategory || broadcast.selectedMobileDevices?.includes(selectedSubCategory))) ||
+        (selectedCategory === "selectedCompanies" && (!selectedSubCategory || broadcast.selectedCompanies?.includes(selectedSubCategory))) ||
+        (selectedCategory === "service" && (!selectedSubCategory || broadcast.service?.includes(selectedSubCategory)))
+      )
     )
-  );
-  
+    : broadcastItems?.broadcasts?.filter((broadcast) =>
+      (filterType === "all" || broadcast.type === filterType) && // Filter by type
+      (selectedMfg === "all" || broadcast.mfg === selectedMfg) && // Filter by Manufacturer
+      (selectedRegion === "all" || broadcast.selectedRegion?.includes(selectedRegion)) && // Filter by Region
+      (searchTerm === "" || (broadcast.partModel?.toLowerCase().includes(searchTerm.toLowerCase()))) && // Filter by Search Term
+      (buyInFilters.length === 0 || buyInFilters.includes(broadcast.buy_in)) && // Filter by Buy-In
+      (
+        selectedCategory === "all" || // No category filtering
+        (selectedCategory === "selectedTelecom" && (!selectedSubCategory || broadcast.selectedTelecom?.includes(selectedSubCategory))) ||
+        (selectedCategory === "selectedMobileDevices" && (!selectedSubCategory || broadcast.selectedMobileDevices?.includes(selectedSubCategory))) ||
+        (selectedCategory === "selectedCompanies" && (!selectedSubCategory || broadcast.selectedCompanies?.includes(selectedSubCategory))) ||
+        (selectedCategory === "service" && (!selectedSubCategory || broadcast.service?.includes(selectedSubCategory)))
+      )
+    );
+
+
   console.log("Filtered Broadcasts:", filteredBroadcasts);
   useEffect(() => {
     console.log("Selected Category:", selectedCategory);
@@ -106,17 +139,8 @@ const BroadCast = () => {
     console.log("Options:", options);
     console.log("Filtered Broadcasts:", filteredBroadcasts);
   }, [selectedCategory, selectedSubCategory, options, filteredBroadcasts]);
-  
-  // const filterFiles = filteredBroadcasts.map((item) => {
-  //   return item.file
 
-  // })
-  // console.log("Files...", filterFiles)
-  // Get Logged in IDS
-  // const uniqueCompanyIds = [...new Set(filteredBroadcasts.map((item) => item.user_id.id))];
-  // console.log(uniqueCompanyIds.toString());
 
-  // Handler for Types like wtb,wts,rfq...
   const handleFilterChange = (event) => {
     setFilterType(event.target.value);
   };
@@ -139,11 +163,11 @@ const BroadCast = () => {
     setInputSearchTerm(event.target.value);
   };
 
-  // // Search Button Handler to apply the search term
+  // Search Button Handler to apply the search term
   const handleSearchClick = () => {
     setSearchTerm(inputSearchTerm.trim()); // Update the main search term to trigger filtering
+    setCurrentPage(1);
   };
-
 
 
   // Trigger search on Enter key press
@@ -158,9 +182,9 @@ const BroadCast = () => {
     const category = event.target.value;
     setSelectedCategory(category);
     setSelectedSubCategory(""); // Reset subcategory when category changes
-  
+
     if (!broadcastItems?.broadcasts) return;
-  
+
     switch (category) {
       case "selectedTelecom":
         setOptions(
@@ -195,7 +219,7 @@ const BroadCast = () => {
         break;
     }
   };
-  
+
 
   const handleCheckboxChange = (broadcast) => {
     setSelectedBroadcast((prevSelected) => ({
@@ -434,7 +458,7 @@ const BroadCast = () => {
               <tr>
                 <td colSpan="14" style={{ textAlign: "center" }}>Loading broadcasts...</td>
               </tr>
-            ) : filteredBroadcasts.length > 0 ? (
+            ) : filteredBroadcasts?.length > 0 ? (
               filteredBroadcasts.map((item, index) => (
                 item && item.id ? (
                   <tr key={index} style={item.user_id && String(item.user_id.id) === currentUserID ? { backgroundColor: "#ffb" } : null}>
@@ -452,7 +476,7 @@ const BroadCast = () => {
                         {item.user_id.company.name}
                       </span>
                     </td>
-                    <td>{item.user_id.company.country}</td>
+                    <td style={{ textTransform: "uppercase" }} >{item.user_id.company.country}</td>
                     <td className={
                       item.type === 'wtb' ? styles['type-wtb'] :
                         item.type === 'wts' ? styles['type-wts'] :
@@ -487,7 +511,7 @@ const BroadCast = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="14" style={{ textAlign: "center" }}>
+                <td colSpan="14" style={{ textAlign: "center" ,color:"red"}}>
                   No broadcasts found for the selected type.
                 </td>
               </tr>

@@ -217,8 +217,8 @@ const RfqTablePopUp = ({ type }) => {
           <button type="button" onClick={() => handleReply(rfqPopBoxInfo[0])}> {/* Pass the first RFQ */}
             reply
           </button>
-          <button type="button">forward</button>
-          <button type="button">archive</button>
+          <button type="button" onClick={() => handleReply(rfqPopBoxInfo[0])} >forward</button>
+          {/* <button type="button">archive</button> */}
         </div>
       </div>
     </div>
