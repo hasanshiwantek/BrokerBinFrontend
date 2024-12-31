@@ -206,6 +206,38 @@ export const fetchBroadCastCount = createAsyncThunk(
 
 
 
+
+export const filterBroadCastPartModel = createAsyncThunk(
+  "broadcastStore/filterBroadCastPartModel",
+  async ({ token,partModel }) => {
+    console.log(token)
+
+    try {
+      const response = await axios.get(
+        `${brokerAPI}broadcast/filter?search=${partModel}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log(response.data);
+
+      return response.data;
+
+    } catch (error) {
+      throw new Error("Error fetching broadcast count");
+    }
+  }
+);
+
+
+
+
+
+
 const initialState = {
   computerSelection: [],
   telecomSelection: [],
@@ -216,6 +248,7 @@ const initialState = {
   broadCastData: [],
   serviceData: [],
   broadcastCount:{},
+  filterBroadcastPartModelData:{},
   togglePopUp: false,
   popupCompanyDetail: null,
 
@@ -356,6 +389,21 @@ const broadcastSlice = createSlice({
         state.broadcastCount=action.payload
       })
       .addCase(fetchBroadCastCount.rejected, (state, action) => {
+        state.isLoading = false;
+        console.log("REJECTED!!!... ")
+        state.error = action.error.message;
+      })
+      .addCase(filterBroadCastPartModel.pending, (state) => {
+        state.isLoading = true;
+        console.log("Pending... ")
+        state.error = null;
+      })
+      .addCase(filterBroadCastPartModel.fulfilled, (state, action) => {
+        state.isLoading = false;
+        console.log("Filtered PartModels from Redux ",action.payload)
+        state.filterBroadcastPartModelData=action.payload
+      })
+      .addCase(filterBroadCastPartModel.rejected, (state, action) => {
         state.isLoading = false;
         console.log("REJECTED!!!... ")
         state.error = action.error.message;

@@ -295,7 +295,8 @@ nav>ul>li:hover {
   background: #f0f0f0;
   gap: 3rem;
   margin-left: 5rem;
-  padding: 0.7rem;
+  padding: 0.8rem;
+  border-radius: 0.5rem;
 
   &_details {
     display: flex;
@@ -309,7 +310,6 @@ nav>ul>li:hover {
 
   &_img {
     height: 7rem;
-    border: 1px solid rgb(158, 158, 158);
 
     >img {
       height: 100%;

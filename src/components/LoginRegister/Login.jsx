@@ -95,7 +95,7 @@ const Login = () => {
               <button
                 onClick={togglePasswordVisibility}
                 type="button"
-                className={css.togglePasswordButton}
+                className={`${css.togglePasswordButton} !bg-transparent`}
               >
                 {passwordShown ? <FaEyeSlash /> : <FaEye />}
               </button>

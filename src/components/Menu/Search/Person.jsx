@@ -8,6 +8,10 @@ import Cookies from "js-cookie"
 import { useDispatch } from 'react-redux'
 
 const Person = () => {
+    const [loading, setLoading] = useState(false); // To track API call status
+    const [buttonText, setButtonText] = useState("Submit");
+
+
     // State variables to track input values
     const [formData, setFormData] = useState({
         firstName: '',
@@ -18,7 +22,7 @@ const Person = () => {
         state: '',
         region: '',
         email: ''
- } );
+    });
 
     const dispatch = useDispatch();
     const token = Cookies.get("token");
@@ -39,14 +43,16 @@ const Person = () => {
     //     console.log("Form Data Submitted:", data);
     //     dispatch(submitUserSearch({data,token}))
     // };
-
-
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         console.log("Form Data Submitted:", formData); // Check the values being sent
+        setButtonText("Processing..."); // Set the button text to "Processing..."
+        setLoading(true); // Start loading
+
         try {
             const result = await dispatch(submitUserSearch({ data: formData, token })).unwrap();
-            
+
             console.log("API Result:", result);
             if (result.length === 0) {
                 alert('No matching records found.');
@@ -58,19 +64,22 @@ const Person = () => {
                     state: '',
                     region: '',
                     email: ''
-                })
+                });
             } else {
                 navigate('/search-result', { state: { searchResults: result } });
             }
         } catch (error) {
             console.error('Error fetching user search data:', error);
             alert('An error occurred while fetching data.');
+        } finally {
+            setLoading(false); // End loading
+            setButtonText("Submit"); // Reset the button text
         }
     };
-    
-    
-  
-    
+
+
+
+
     return (
         <>
             <main className={styles.main}>
@@ -257,13 +266,21 @@ const Person = () => {
                         </div>
 
                         <div className={styles.buttonContainer}>
-                            <button type="submit" className={styles.submitButton}>Submit</button>
+                            <button
+                                type="submit"
+                                disabled={loading} // Disable the button while processing
+                                className={`transform active:scale-90 transition-all duration-100 cursor-pointer p-4 text-white border rounded-lg ${loading ? "bg-orange-600" : "bg-orange-600"
+                                    }`}
+                            >
+                                {buttonText}
+                            </button>
+
                         </div>
                     </form>
                 </div>
             </main>
 
-  
+
         </>
     );
 }

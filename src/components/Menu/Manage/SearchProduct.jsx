@@ -470,4 +470,5 @@ const ProductTableDetail = React.memo(({partModel, partData}) => {
 });
 
 
+
 export default SearchProduct;
