@@ -21,7 +21,6 @@ import { getCompanyContact } from "../../../ReduxStore/SearchProductSlice";
 import Cookies from "js-cookie";
 import { NavLink } from "react-router-dom";
 
-
 const CompanyDetails = ({ closeModal }) => {
   const dispatch = useDispatch();
   const { popupCompanyDetail } = useSelector((store) => store.searchProductStore);

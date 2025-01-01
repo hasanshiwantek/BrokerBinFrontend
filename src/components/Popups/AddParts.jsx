@@ -199,25 +199,3 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
   
 
   export default AddParts
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

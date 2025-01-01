@@ -83,7 +83,7 @@
 .productTable {
   background-color: var(--table-outer-color);
   padding: 0 1rem;
-  margin-bottom: 10rem;
+  /* margin-bottom: 10rem; */
 }
 
 .tablePagination {
