@@ -68,50 +68,94 @@ const RfqReply = () => {
   }, [id, dispatch, token]);
 
 
-  useEffect(() => {
-    if (initialData) {
-      // Format logged-in user information
-      const userInfo = `
-    <div className={css.paddedContent}>
-      <p><strong>Quote Needed Looking for the best price, availability & lead time.</strong></p>
-    </div>
-  `;
+  // useEffect(() => {
+  //   if (initialData && selectedRfqs.length === 0) {
+  //     // Format logged-in user information
+  //     const userInfo = `
+  //   <div className={css.paddedContent}>
+  //     <p><strong>Quote Needed Looking for the best price, availability & lead time.</strong></p>
+      
+  //     <p>${initialData.firstName || " "} ${initialData.lastName || ""}</p>
+  //     <p>${initialData?.company?.name || ""}</p>
+  //     <p>${initialData.phoneNumber || ""}</p>
+  //     <p>${initialData.email || ""}</p>
+  //   </div>
+    
+  // `;
 
 
-      // Format RFQ sender information and details
-      const rfqDetails = selectedRfqs.map((rfq) => `
-      <p><strong>RFQ initial Details:</strong></p>
-      <p>Name: ${rfq.from?.firstName || ""} ${rfq.from?.lastName || ""}</p>
-      <p>Email: ${rfq.from?.email || ""}</p>
-      <p>Part Numbers: ${rfq.partNumbers?.join(", ") || "N/A"}</p>
-      <p>Heci/CLI: ${rfq.heciCleis?.join(", ") || "N/A"}</p>
-      <p>Mfg: ${rfq.mfgs?.join(", ") || "N/A"}</p>
-      <p>Cond: ${rfq.conditions?.join(", ") || "N/A"}</p>
-      <p>Qty: ${rfq.quantities?.join(", ") || "N/A"}</p>
-      <p>Target Price: ${rfq.targetPrices?.join(", ") || "N/A"}</p>
-      <p>Terms: ${rfq.terms?.join(", ") || "N/A"}</p>
+  //     // Format RFQ sender information and details
+  //     const rfqDetails = selectedRfqs.map((rfq) => `
+  //     <p><strong>RFQ initial Details:</strong></p>
+  //     <p>Name: ${rfq.from?.firstName || ""} ${rfq.from?.lastName || ""}</p>
+  //     <p>Email: ${rfq.from?.email || ""}</p>
+  //     <p>Part Numbers: ${rfq.partNumbers?.join(", ") || "N/A"}</p>
+  //     <p>Heci/CLI: ${rfq.heciCleis?.join(", ") || "N/A"}</p>
+  //     <p>Mfg: ${rfq.mfgs?.join(", ") || "N/A"}</p>
+  //     <p>Cond: ${rfq.conditions?.join(", ") || "N/A"}</p>
+  //     <p>Qty: ${rfq.quantities?.join(", ") || "N/A"}</p>
+  //     <p>Target Price: ${rfq.targetPrices?.join(", ") || "N/A"}</p>
+  //     <p>Terms: ${rfq.terms?.join(", ") || "N/A"}</p>
 
 
       
 
-            <p>--------------</p>
-      <p>${initialData.firstName || " "} ${initialData.lastName || ""}</p>
-      <p>${initialData?.company?.name || ""}</p>
-      <p>${initialData.phoneNumber || ""}</p>
-      <p>${initialData.email || ""}</p>
+  //           <p>--------------</p>
+  //     <p>${initialData.firstName || " "} ${initialData.lastName || ""}</p>
+  //     <p>${initialData?.company?.name || ""}</p>
+  //     <p>${initialData.phoneNumber || ""}</p>
+  //     <p>${initialData.email || ""}</p>
 
 
 
-    `).join("<br />");
+  //   `).join("<br />");
 
-      // Combine logged-in user and RFQ details
-      setComment(`${userInfo}<br />${rfqDetails}`);
+  //     // Combine logged-in user and RFQ details
+  //     setComment(`${userInfo}<br />${rfqDetails}`);
+  //   }
+  // }, [initialData, selectedRfqs]);
+
+
+  useEffect(() => {
+    if (initialData) {
+      if (selectedRfqs.length === 0) {
+        // Show only logged-in user information when no RFQs are selected
+        const userInfo = `
+          <div className={css.paddedContent}>
+            <p><strong>Quote Needed Looking for the best price, availability & lead time.</strong></p>
+            <p>${initialData.firstName || ""} ${initialData.lastName || ""}</p>
+            <p>${initialData?.company?.name || ""}</p>
+            <p>${initialData.phoneNumber || ""}</p>
+            <p>${initialData.email || ""}</p>
+          </div>
+        `;
+        setComment(userInfo);
+      } else {
+        // Show RFQ details along with logged-in user details when RFQs are selected
+        const rfqDetails = selectedRfqs.map((rfq) => `
+          <p><strong>RFQ initial Details:</strong></p>
+          <p>Name: ${rfq.from?.firstName || ""} ${rfq.from?.lastName || ""}</p>
+          <p>Email: ${rfq.from?.email || ""}</p>
+          <p>Part Numbers: ${rfq.partNumbers?.join(", ") || "N/A"}</p>
+          <p>Heci/CLI: ${rfq.heciCleis?.join(", ") || "N/A"}</p>
+          <p>Mfg: ${rfq.mfgs?.join(", ") || "N/A"}</p>
+          <p>Cond: ${rfq.conditions?.join(", ") || "N/A"}</p>
+          <p>Qty: ${rfq.quantities?.join(", ") || "N/A"}</p>
+          <p>Target Price: ${rfq.targetPrices?.join(", ") || "N/A"}</p>
+          <p>Terms: ${rfq.terms?.join(", ") || "N/A"}</p>
+          <p>--------------</p>
+          <p>${initialData.firstName || ""} ${initialData.lastName || ""}</p>
+          <p>${initialData?.company?.name || ""}</p>
+          <p>${initialData.phoneNumber || ""}</p>
+          <p>${initialData.email || ""}</p>
+        `).join("<br />");
+        setComment(rfqDetails);
+      }
     }
   }, [initialData, selectedRfqs]);
+  
 
 
-
-  // Combine recipients from all RFQs
   const [recipients, setRecipients] = useState(() => {
     const uniqueRecipients = new Map();
     selectedRfqs.forEach((rfq) => {

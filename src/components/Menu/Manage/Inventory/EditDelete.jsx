@@ -319,7 +319,7 @@ const EditDelete = () => {
                     </td>
                     <td>
                       <input
-                        type="number"
+                        type="text"
                         value={item.price || ""}
                         onChange={(e) =>
                           handleFieldChange(index, "price", e.target.value)
