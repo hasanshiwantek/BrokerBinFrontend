@@ -309,7 +309,7 @@ const searchProductSlice = createSlice({
             0
         );
         state.gettingProducts = false;
-    })    
+    })
       .addCase(searchByKeyword.rejected, (state, action) => {
         state.error = action.error.message;
         console.error(

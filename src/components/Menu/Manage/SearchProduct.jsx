@@ -1,4 +1,3 @@
-
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import css from "../../../styles/SearchProducts.module.css";
 import Filter from "../../Filter";
@@ -74,14 +73,14 @@ const SearchProduct = () => {
 
     });
   }
-  
+
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const searchString = queryParams.get("query") || ""; // For multi-part search (e.g., "part1 part2")
     const partModel = queryParams.get("partModel") || ""; // For single specific part model search
 
     dispatch(setSearchResponse({}));
-  
+
     if (searchString) {
       // Split the search string into parts and dispatch actions for each part
       const parts = searchString.split(" ");
@@ -91,20 +90,20 @@ const SearchProduct = () => {
         );
       });
     }
-  
+
     if (partModel) {
       // Dispatch action for single specific part model
       dispatch(searchByKeyword({ token, page, partModel })).then((result) =>
         console.log("searchByKeyword result:", result)
       );
     }
-  
+
     // Fetch search history
     dispatch(searchProductHistory({ token })).then((result) =>
       console.log("searchProductHistory result:", result)
     );
   }, [location, dispatch, token, page]);
-  
+
   if (gettingProducts) {
     return <LoadingState />;
   }
@@ -123,34 +122,33 @@ const SearchProduct = () => {
   return (
 
     <div className={css.layout}>
-    {filterToggle && <Filter />}
+      {filterToggle && <Filter />}
 
-    <div className={css.layoutTables} style={Object.keys(searchResponseMatched || {}).length <= 0 ? { margin: "0 auto" } : null}>
-      {/* Check if no search results matched and either partModel or searchString is available */}
-      {Object.keys(searchResponseMatched || {}).length === 0 || Object.values(searchResponseMatched).every(part => part.data.length === 0) ? (
-  <div>
-    <h2>No Results Found For Selected Part Model: {searchString || partModel}</h2>
-    <AddToHotList item={searchString || partModel} /> {/* This triggers the Hotlist modal */}
-  </div>
-) : (
-  // Render the products if available
-  Object.entries(searchResponseMatched || {}).map(([partModel, details]) => 
-    details.data.length > 0 && ( // Check if data is not empty
-      <div className={css.tableArea} key={partModel}>
-        {graphToggle && <ProductsPieChart />} {/* Graph toggle for each part */}
-        <div className={css.productTable}>
-          <ProductTableBtn />
-          <ProductTableDetail partData={details.data} partModel={partModel} page={details.page} totalCount={details.totalCount} />
-        </div>
+      <div className={css.layoutTables} style={Object.keys(searchResponseMatched || {}).length <= 0 ? { margin: "0 auto" } : null}>
+        {Object.keys(searchResponseMatched || {}).length === 0 || Object.values(searchResponseMatched).every(part => part.data.length === 0) ? (
+          <div>
+            <h2>No Results Found For Selected Part Model: {searchString || partModel}</h2>
+            <AddToHotList item={searchString || partModel} /> 
+          </div>
+        ) : (
+          // Render the products if available
+          Object.entries(searchResponseMatched || {}).map(([partModel, details]) =>
+            details.data.length > 0 && ( // Check if data is not empty
+              <div className={css.tableArea} key={partModel}>
+                {graphToggle && <ProductsPieChart />} 
+                <div className={css.productTable}>
+                  <ProductTableBtn />
+                  <ProductTableDetail partData={details.data} partModel={partModel} page={details.page} totalCount={details.totalCount} />
+                </div>
+              </div>
+            )
+          )
+        )}
+
       </div>
-    )
-  )
-)}
-0
-    </div>
 
-    {togglePopUp && <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
-  </div>
+      {togglePopUp && <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
+    </div>
   );
 };
 
@@ -188,7 +186,7 @@ const ProductTableBtn = React.memo(() => {
   );
 });
 
-const ProductTableDetail = React.memo(({partModel, partData}) => {
+const ProductTableDetail = React.memo(({ partModel, partData }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -204,7 +202,7 @@ const ProductTableDetail = React.memo(({partModel, partData}) => {
 
   const handleShowPopupCompanyDetails = (event, companyId) => {
     event.stopPropagation();
-    
+
     const companyDetail = Object.values(searchResponseMatched || {}).flatMap((item) =>
       item.data.find((e) => e.addedBy?.company?.id === companyId)
     )[0];
@@ -214,11 +212,11 @@ const ProductTableDetail = React.memo(({partModel, partData}) => {
     // const companyDetail = searchResponseMatched[partModel]?.data.find(
     //   (e) => e.addedBy?.company?.id === companyId
     // );
-    
+
     if (companyDetail?.addedBy?.company) {
       dispatch(setPopupCompanyDetail([companyDetail.addedBy.company]));
       console.log('SETPOPUPCOMPANYDETAIL:', setPopupCompanyDetail);
-      
+
     } else {
       console.error("Company not found!");
     }
@@ -254,7 +252,7 @@ const ProductTableDetail = React.memo(({partModel, partData}) => {
   //       const selectedProduct = searchResponseMatched[partModel]?.data.find(
   //         (item) => item.id === id
   //       );
-  
+
   //       return [...selectedProducts, selectedProduct];
   //     }
   //   };
@@ -272,9 +270,9 @@ const ProductTableDetail = React.memo(({partModel, partData}) => {
     const companyDetail = Object.values(searchResponseMatched).flatMap((item) =>
       item.data.find((e) => e.id === id)
     )[0]; // Get the first matching result
-  
+
     console.log("HOVERED COMPANY DETAIL:", companyDetail);
-  
+
     if (companyDetail?.addedBy?.company) {
       dispatch(setHoverCompanyDetail(companyDetail.addedBy.company));
       console.log("SET HOVER COMPANY DETAIL:", companyDetail.addedBy.company);
@@ -289,182 +287,202 @@ const ProductTableDetail = React.memo(({partModel, partData}) => {
 
   const handlePrevPage = () => {
     const newPage = page - 1;
-    if (!partModel) {
-      const url = `/inventory/search?page=${newPage}&query=${encodeURIComponent(
-        partModel
-      )}`;
-      navigate(url, { replace: true });
-    } else {
-      const url = `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(
-        partModel
-      )}`;
-      navigate(url, { replace: true });
-    }
-  };
-  
 
-  const {
-    // selectedProducts,
-    // searchResponseMatched,
-    pageSize,
-    totalCount,
-    // hoverCompanyDetail,
-  } = useSelector((store) => store.searchProductStore);
+    // Ensure we don't navigate to a page number less than 1
+    if (newPage < 1) return;
+
+    // Determine which parameter to use based on the current URL
+    const queryParams = new URLSearchParams(location.search);
+    const currentQuery = queryParams.get("query");
+    const currentPartModel = queryParams.get("partModel");
+
+    // Use the same parameter as in the current URL
+    const url = currentQuery
+      ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(currentQuery)}`
+      : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(currentPartModel)}`;
+
+    navigate(url, { replace: true });
+
+    console.log("Navigating to URL:", url); // Debug log
+  };
+
+
+  // const {
+  //   // selectedProducts,
+  //   // searchResponseMatched,
+  //   pageSize,
+  //   totalCount,
+  //   // hoverCompanyDetail,
+  // } = useSelector((store) => store.searchProductStore);
+
+
+  const totalCount=searchResponseMatched[partModel]?.totalCount;
+  const pageSize=searchResponseMatched[partModel]?.pageSize;
+  console.log("Total Count:", totalCount);
+  console.log("Page Size:", pageSize);
 
   const totalPages = Math.ceil(totalCount / pageSize);
 
+  console.log("Total Pages:", totalPages);
+
+
+  
   const handleNextPage = () => {
     const newPage = page + 1;
-    if (!partModel) {
-      const url = `/inventory/search?page=${newPage}&query=${encodeURIComponent(
-        partModel
-      )}`;
-      navigate(url, { replace: true });
-    } else {
-      const url = `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(
-        partModel
-      )}`;
-      navigate(url, { replace: true });
-    }
+
+    // Determine which parameter to use based on the current URL
+    const queryParams = new URLSearchParams(location.search);
+    const currentQuery = queryParams.get("query");
+    const currentPartModel = queryParams.get("partModel");
+
+    // Use the same parameter as in the current URL
+    const url = currentQuery
+      ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(currentQuery)}`
+      : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(currentPartModel)}`;
+
+    navigate(url, { replace: true });
+
+    console.log("Navigating to URL:", url); // Debug log
   };
+
 
 
   return (
 
-<div className={css.productTableDetail}>
-  <div className={css.tableContainer}>
-    <h3>Results for: {partModel}</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Cart</th>
-          <th>
-            <img
-              src={shieldImage}
-              alt=""
-              style={{ width: "18px", fontWeight: "bold" }}
-            />
-          </th>
-          <th>Company</th>
-          <th>PVR</th>
-          <th>Ctry</th>
-          <th>Part / Model</th>
-          <th>History</th>
-          <th>TS</th>
-          <th>HECI / CLEI</th>
-          <th>Mfg</th>
-          <th>Cond</th>
-          <th>Price</th>
-          <th>Qty</th>
-          <th>Age</th>
-          <th>Product Description</th>
-        </tr>
-      </thead>
-      <tbody>
-        {partData?.map((e, i) => (
-          <tr key={i} className={css.tableData}>
-            <td>
-              <input
-                type="checkbox"
-                checked={isSelected(e.id)}
-                onChange={() => selectProduct(e.id)}
-                style={{ cursor: "pointer" }}
-              />
-            </td>
-            <td></td>
-            <td>
-              <a
-                style={{ color: "#428bca", fontWeight: "500" }}
-                onClick={(event) =>
-                  handleShowPopupCompanyDetails(event, e.addedBy.company.id)
-                }
-                onMouseEnter={(event) =>
-                  handleHoverCompanyDetail(event, e.id)
-                }
-              >
-                {e.addedBy.company.name}
-              </a>
-            </td>
-            <td>
-              <FaEye />
-            </td>
-            <td>
-              {countriesList.find(
-                (country) =>
-                  country.label.toLowerCase().trim() ===
-                  e.addedBy.company.country.toLowerCase().trim()
-              )?.value || e.addedBy.company.country}
-            </td>
-            <td>{e.partModel}</td>
-            <td>
-              <MdShowChart />
-            </td>
-            <td>
-              {e.ts ? (
-                <IoCheckmarkCircle style={{ color: "red" }} />
-              ) : (
-                <BiBlock style={{ color: "red" }} />
-              )}
-            </td>
-            <td>{e.heciClei}</td>
-            <td>{e.mfg}</td>
-            <td>{e.cond}</td>
-            <td>{e.price}</td>
-            <td>{e.quantity}</td>
-            <td>{e.age}</td>
-            <td>{e.productDescription}</td>
-          </tr>
-        ))}
-      </tbody>
-      <tfoot>
-        <tr>
-          <th>Cart</th>
-          <th>
-            <img
-              src={shieldImage}
-              alt=""
-              style={{ width: "18px", fontWeight: "bold" }}
-            />
-          </th>
-          <th>Company</th>
-          <th>PVR</th>
-          <th>Ctry</th>
-          <th>Part / Model</th>
-          <th>History</th>
-          <th>TS</th>
-          <th>HECI / CLEI</th>
-          <th>Mfg</th>
-          <th>Cond</th>
-          <th>Price</th>
-          <th>Qty</th>
-          <th>Age</th>
-          <th>Product Description</th>
-        </tr>
-      </tfoot>
-    </table>
-    <div className={`${css.tablePagination}`}>
-      <button
-        type="button"
-        onClick={handlePrevPage}
-        disabled={page === 1}
-        className="text-gray-600 text-lg font-bold"
-      >
-        Prev
-      </button>
-      <span className="text-white text-lg font-bold ">
-        {page}/{totalPages}
-      </span>
-      <button
-        className="text-gray-600 text-lg font-bold"
-        type="button"
-        onClick={handleNextPage}
-        disabled={page === totalPages}
-      >
-        Next
-      </button>
+    <div className={css.productTableDetail}>
+      <div className={css.tableContainer}>
+        <h3>Results for: {partModel}</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Cart</th>
+              <th>
+                <img
+                  src={shieldImage}
+                  alt=""
+                  style={{ width: "18px", fontWeight: "bold" }}
+                />
+              </th>
+              <th>Company</th>
+              <th>PVR</th>
+              <th>Ctry</th>
+              <th>Part / Model</th>
+              <th>History</th>
+              <th>TS</th>
+              <th>HECI / CLEI</th>
+              <th>Mfg</th>
+              <th>Cond</th>
+              <th>Price</th>
+              <th>Qty</th>
+              <th>Age</th>
+              <th>Product Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {partData?.map((e, i) => (
+              <tr key={i} className={css.tableData}>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={isSelected(e.id)}
+                    onChange={() => selectProduct(e.id)}
+                    style={{ cursor: "pointer" }}
+                  />
+                </td>
+                <td></td>
+                <td>
+                  <a
+                    style={{ color: "#428bca", fontWeight: "500" }}
+                    onClick={(event) =>
+                      handleShowPopupCompanyDetails(event, e.addedBy.company.id)
+                    }
+                    onMouseEnter={(event) =>
+                      handleHoverCompanyDetail(event, e.id)
+                    }
+                  >
+                    {e.addedBy.company.name}
+                  </a>
+                </td>
+                <td>
+                  <FaEye />
+                </td>
+                <td>
+                  {countriesList.find(
+                    (country) =>
+                      country.label.toLowerCase().trim() ===
+                      e.addedBy.company.country.toLowerCase().trim()
+                  )?.value || e.addedBy.company.country}
+                </td>
+                <td>{e.partModel}</td>
+                <td>
+                  <MdShowChart />
+                </td>
+                <td>
+                  {e.ts ? (
+                    <IoCheckmarkCircle style={{ color: "red" }} />
+                  ) : (
+                    <BiBlock style={{ color: "red" }} />
+                  )}
+                </td>
+                <td>{e.heciClei}</td>
+                <td>{e.mfg}</td>
+                <td>{e.cond}</td>
+                <td>{e.price}</td>
+                <td>{e.quantity}</td>
+                <td>{e.age}</td>
+                <td>{e.productDescription}</td>
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr>
+              <th>Cart</th>
+              <th>
+                <img
+                  src={shieldImage}
+                  alt=""
+                  style={{ width: "18px", fontWeight: "bold" }}
+                />
+              </th>
+              <th>Company</th>
+              <th>PVR</th>
+              <th>Ctry</th>
+              <th>Part / Model</th>
+              <th>History</th>
+              <th>TS</th>
+              <th>HECI / CLEI</th>
+              <th>Mfg</th>
+              <th>Cond</th>
+              <th>Price</th>
+              <th>Qty</th>
+              <th>Age</th>
+              <th>Product Description</th>
+            </tr>
+          </tfoot>
+        </table>
+        <div className={`${css.tablePagination}`}>
+          <button
+            type="button"
+            onClick={handlePrevPage}
+            disabled={page === 1}
+            className="text-gray-600 text-lg font-bold"
+          >
+            Prev
+          </button>
+          <span className="text-white text-lg font-bold ">
+            {page}/{totalPages}
+          </span>
+          <button
+            className="text-gray-600 text-lg font-bold"
+            type="button"
+            onClick={handleNextPage}
+            disabled={page === totalPages}
+          >
+            Next
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
   );
 });
