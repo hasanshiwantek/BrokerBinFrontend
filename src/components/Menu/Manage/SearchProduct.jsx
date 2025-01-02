@@ -125,18 +125,17 @@ const SearchProduct = () => {
       {filterToggle && <Filter />}
 
       <div className={css.layoutTables} style={Object.keys(searchResponseMatched || {}).length <= 0 ? { margin: "0 auto" } : null}>
-        {/* Check if no search results matched and either partModel or searchString is available */}
         {Object.keys(searchResponseMatched || {}).length === 0 || Object.values(searchResponseMatched).every(part => part.data.length === 0) ? (
           <div>
             <h2>No Results Found For Selected Part Model: {searchString || partModel}</h2>
-            <AddToHotList item={searchString || partModel} /> {/* This triggers the Hotlist modal */}
+            <AddToHotList item={searchString || partModel} /> 
           </div>
         ) : (
           // Render the products if available
           Object.entries(searchResponseMatched || {}).map(([partModel, details]) =>
             details.data.length > 0 && ( // Check if data is not empty
               <div className={css.tableArea} key={partModel}>
-                {graphToggle && <ProductsPieChart />} {/* Graph toggle for each part */}
+                {graphToggle && <ProductsPieChart />} 
                 <div className={css.productTable}>
                   <ProductTableBtn />
                   <ProductTableDetail partData={details.data} partModel={partModel} page={details.page} totalCount={details.totalCount} />
