@@ -40,8 +40,8 @@ const ExportRemove = () => {
       exportRemove.exportRemove === "inventory only"
         ? "Inventory"
         : exportRemove.exportRemove === "broadcasts only"
-        ? "Broadcast"
-        : "Both";
+          ? "Broadcast"
+          : "Both";
 
     const payload = {
       actionType,
@@ -121,11 +121,12 @@ const ExportRemove = () => {
         <div className={css.inventory_exportRemove_btn}>
           <button
             type="submit"
-            disabled={loading} // Disable while loading
+            disabled={loading || (exportRemove.export === "off" && exportRemove.remove === "off")} // Disable if no option selected
             className={loading ? "opacity-50 cursor-not-allowed" : " !p-3 rounded-md "}
           >
             {loading ? "Processing..." : "Submit"}
           </button>
+
         </div>
       </form>
     </div>

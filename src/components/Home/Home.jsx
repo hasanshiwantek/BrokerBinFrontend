@@ -66,37 +66,78 @@ const Home = () => {
     return <ErrorStatus error={error} />;
   }
 
+  // const searchProduct = (event) => {
+  //   event.preventDefault();
+
+  //   const form = new FormData(event.target);
+  //   const formData = Object.fromEntries(form.entries());
+
+  //   const searchString = formData.searchStrings.trim();
+  //   const searchBy = formData.searchBy; // Get selected radio button value (part, heciClei, keyword)
+
+  //   if (searchString === "") {
+  //     alert("Blank search is not allowed");
+  //     return;
+  //   }
+  //   let url = '';
+  //   if (searchBy === "part") {
+  //     // If 'Part#' is selected
+  //     url = `/inventory/search?page=1&query=${encodeURIComponent(searchString)}`;
+  //   } else if (searchBy === "heciClei") {
+  //     // If 'HECI / CLEI' is selected
+  //     url = `/inventory/search?page=1&query=${encodeURIComponent(searchString)}`;
+  //   } else if (searchBy === "keyword") {
+  //     // If 'Keyword' is selected
+  //     url = `/inventory/search?page=1&partModel=${encodeURIComponent(searchString)}`;
+  //   }
+
+  //   // Clear selected products
+  //   dispatch(setSelectedProducts([]));
+
+  //   // Navigate to the URL with appropriate parameters
+  //   navigate(url, { replace: true });
+  // };
+
   const searchProduct = (event) => {
     event.preventDefault();
-
+  
     const form = new FormData(event.target);
     const formData = Object.fromEntries(form.entries());
-
-    const searchString = formData.searchStrings.trim();
-    const searchBy = formData.searchBy; // Get selected radio button value (part, heciClei, keyword)
-
-    if (searchString === "") {
+  
+    let searchString = formData.searchStrings.trim(); // User's search input
+    const searchBy = formData.searchBy; // Selected search type (part, heciClei, keyword)
+  
+    if (!searchString) {
       alert("Blank search is not allowed");
       return;
     }
-    let url = '';
-    if (searchBy === "part") {
-      // If 'Part#' is selected
-      url = `/inventory/search?page=1&query=${encodeURIComponent(searchString)}`;
-    } else if (searchBy === "heciClei") {
-      // If 'HECI / CLEI' is selected
-      url = `/inventory/search?page=1&query=${encodeURIComponent(searchString)}`;
-    } else if (searchBy === "keyword") {
-      // If 'Keyword' is selected
-      url = `/inventory/search?page=1&partModel=${encodeURIComponent(searchString)}`;
+  
+    // Replace spaces with commas
+    searchString = searchString.replace(/\s+/g, ",");
+  
+    // Build the correct URL based on searchBy
+    let url = '/inventory/search?page=1';
+    if (searchBy === 'part' || searchBy === 'heciClei') {
+      // Use `query` for 'Part#' and 'HECI / CLEI'
+      url += `&query=${encodeURIComponent(searchString)}`;
+    } else if (searchBy === 'keyword') {
+      // Use `partModel` for 'Keyword'
+      url += `&partModel=${encodeURIComponent(searchString)}`;
     }
-
-    // Clear selected products
+  
+    // Clear selected products before navigating
     dispatch(setSelectedProducts([]));
-
-    // Navigate to the URL with appropriate parameters
+  
+    // Navigate to the SearchProduct page with the constructed URL
     navigate(url, { replace: true });
+  
+    console.log("Navigated to URL:", url); // Debug log to verify the URL
   };
+  
+
+
+
+
 
   const handleNavigation = (path, params = {}) => {
     const query = new URLSearchParams(params).toString();

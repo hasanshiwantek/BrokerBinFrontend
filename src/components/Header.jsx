@@ -415,16 +415,16 @@ const Header = () => {
                       Tools
                     </li>
                   </Link>
-                  <Link to={"/myprofile/MyVendors"}>
+                  {/* <Link to={"/myprofile/MyVendors"}>
                     <li>
                       My Vendors
                     </li>
-                  </Link>
-                  {/* <Link to={"/myprofile/MyContact"}>
-                  <li>
-                   My Contacts
-                  </li>
                   </Link> */}
+                  <Link to={"/myprofile/MyContact"}>
+                  <li>
+                   My Vendors
+                  </li>
+                  </Link>
                   <Link to={"/hotList/view"}>
                     <li>
                       Hot List

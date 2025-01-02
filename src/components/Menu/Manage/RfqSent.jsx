@@ -510,6 +510,7 @@ const RfqTableSent = () => {
                                 <button type="button" onClick={handleForward}>
                                     forward
                                 </button>
+                                
                                 <button type="button">Delete</button>
                             </div>
                             <div className={css.pagination}>

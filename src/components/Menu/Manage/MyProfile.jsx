@@ -255,14 +255,14 @@ console.log("formData",formData)
                     <span>Options</span>
                   </NavLink>
                 </li>
-                <li>
-                  <NavLink
-                    to="/myprofile/MyVendors"
-                    className={({ isActive }) => (isActive ? css.active : '')}
-                  >
-                    <span>My Vendors</span>
-                  </NavLink>
-                </li>
+                  {/* <li>
+                    <NavLink
+                      to="/myprofile/MyVendors"
+                      className={({ isActive }) => (isActive ? css.active : '')}
+                    >
+                      <span>My Vendors</span>
+                    </NavLink>
+                  </li> */}
                 <li>
                   <NavLink
                     to="/myprofile/MyContact"
@@ -748,6 +748,21 @@ console.log("formData",formData)
 };
 
 export default MyProfile;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
