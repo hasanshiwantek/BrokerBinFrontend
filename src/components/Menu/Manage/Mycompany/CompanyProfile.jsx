@@ -9,10 +9,11 @@ import {
   setCustomSignature,
   setBlurWhileLoading,
   submitUserData,
+  submitCompanyLogo,
 } from "../../../../ReduxStore/ProfleSlice";
 import ErrorStatus from "../../../Error/ErrorStatus";
 import Cookies from "js-cookie";
-import { Link,NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import Footer from "../../../Footer/Footer";
 import axios from "axios";
 import { brokerAPI } from "../../../api/BrokerEndpoint";
@@ -32,10 +33,17 @@ const MyProfile = () => {
     blurWhileLoading,
     customSignature,
     error,
+    companyLogo,
   } = useSelector((state) => state.profileStore);
-  console.log("INITAL DATA",initialData)
-  console.log("FORM DATA",formData)
-console.log("User " ,user)
+  console.log("INITAL DATA", initialData)
+  console.log("FORM DATA", formData)
+  console.log("COMPANY LOGO", companyLogo)
+  const image = formData.data?.company?.image
+
+  console.log("Company Image", image)
+
+
+  console.log("User ", user)
   const id = user?.user?.id || user_id;
 
   const dispatch = useDispatch();
@@ -52,18 +60,18 @@ console.log("User " ,user)
     formData.sigcheckFax ? `${formData.faxNumber}` : "",
     formData.sigcheckIM ? `${formData.specialty}` : "",
   ].filter(Boolean).join("\n");
-const customTextAreaContent = initialData?.customSignature?.filter(Boolean).join("\n");
+  const customTextAreaContent = initialData?.customSignature?.filter(Boolean).join("\n");
 
-useEffect(() => {
-  console.log(id)
-;
-  dispatch(fetchUserData({ id, token }));
-}, []);
+  useEffect(() => {
+    console.log(id)
+      ;
+    dispatch(fetchUserData({ id, token }));
+  }, []);
 
-const companyId = initialData?.company?.id;
-console.log("Company ID",companyId)
-    useEffect(() => {
-      if (companyId) {
+  const companyId = initialData?.company?.id;
+  console.log("Company ID", companyId)
+  useEffect(() => {
+    if (companyId) {
       const fetchData = async () => {
         try {
           const response = await axios.get(`${brokerAPI}company/show/${companyId}`, {
@@ -76,10 +84,10 @@ console.log("Company ID",companyId)
           setLoading(false);
         }
       };
-    
+
       fetchData();
     }
-    }, [companyId, token]);
+  }, [companyId, token]);
 
   // const cleanInput = (input) => input.trimStart().replace(/\s+/g, " ");
 
@@ -91,23 +99,23 @@ console.log("Company ID",companyId)
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-  
+
     setFormData((prevData) => {
       const updatedData = { ...prevData };
       if (!updatedData.data) updatedData.data = {}; // Ensure `data` exists
       if (!updatedData.data.company) updatedData.data.company = {}; // Ensure `company` exists
       if (!updatedData.data.company.primaryContact)
         updatedData.data.company.primaryContact = {}; // Ensure `primaryContact` exists
-  
+
       updatedData.data.company.primaryContact[name] = cleanInput(value);
       return updatedData;
     });
   };
-  
+
   const cleanInput = (input) => input.trimStart().replace(/\s+/g, " ");
-  
-  
-  
+
+
+
 
   // const handleFileChange = (event) => {
   //   const file = event.target.files[0];
@@ -132,6 +140,22 @@ console.log("Company ID",companyId)
   //     setFileBase64("");
   //   }
   // };
+
+
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    const extension = String(file.name).split(".").pop().toLowerCase();
+    const allowedExtensions = ["jpeg", "jpg", "png", "webp"];
+    if (allowedExtensions.includes(extension)) {
+      setFileBase64(file); // Store the actual file, not base64 string
+    } else {
+      alert("Format should be a jpeg, jpg, png, or webp");
+      event.target.value = "";
+    }
+  };
+
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -160,12 +184,11 @@ console.log("Company ID",companyId)
 
     data.useCustomSignature = data.useCustomSignature ? 1 : 0;
 
+    // Convert Base64 to Binary and append to FormData
     if (fileBase64) {
-      data.personalPhoto = { base64: fileBase64 };
-    } else {
-      delete data.personalPhoto;
+      // Dispatch the submitCompanyLogo action with the selected file
+      dispatch(submitCompanyLogo({ token, file: fileBase64 }));
     }
-
     const passwordFields = [
       "currentPassword",
       "newPassword",
@@ -173,7 +196,7 @@ console.log("Company ID",companyId)
     ];
     const passwordValues = passwordFields.map((field) => data[field] || "");
     const filledPasswords = passwordValues.filter((value) => value !== "");
-    
+
     // Skip validation for empty or partial passwords
     if (
       filledPasswords.length > 0 &&
@@ -182,7 +205,7 @@ console.log("Company ID",companyId)
       // Temporarily skipping validation
       return;
     }
-    
+
     // Skip mismatch check
     if (
       filledPasswords.length === passwordFields.length &&
@@ -191,7 +214,7 @@ console.log("Company ID",companyId)
       // Temporarily skipping validation
       return;
     }
-    
+
     // Skip regex validation and username check
     // Cleanup empty password fields
     passwordFields.forEach((field) => {
@@ -254,7 +277,7 @@ console.log("Company ID",companyId)
 
 
 
-  
+
 
 
   return (
@@ -272,49 +295,49 @@ console.log("Company ID",companyId)
             </div> */}
             <div className={css.profileInfo}>
               <div className={css.profileInfo_links}>
-              <ul>
-                <li>
-                  <NavLink
-                    to="/mycompany"
-                    end 
-                    className={({ isActive }) => (isActive ? css.active : '')}
-                  >
-                    <span>Primary Contact</span>
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/mycompany/Createaccount"
-                    className={({ isActive }) => (isActive ? css.active : '')}
-                  >
-                    <span>Create Account</span>
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/myprofile/MyVendors"
-                    className={({ isActive }) => (isActive ? css.active : '')}
-                  >
-                    <span>My Vendors</span>
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/myprofile/MyContact"
-                    className={({ isActive }) => (isActive ? css.active : '')}
-                  >
-                    <span>My Contacts</span>
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/myprofile/broadcastfilter"
-                    className={({ isActive }) => (isActive ? css.active : '')}
-                  >
-                    <span>Broadcast Filters</span>
-                  </NavLink>
-                </li>
-              </ul>
+                <ul>
+                  <li>
+                    <NavLink
+                      to="/mycompany"
+                      end
+                      className={({ isActive }) => (isActive ? css.active : '')}
+                    >
+                      <span>Primary Contact</span>
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to="/mycompany/Createaccount"
+                      className={({ isActive }) => (isActive ? css.active : '')}
+                    >
+                      <span>Create Account</span>
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to="/myprofile/MyVendors"
+                      className={({ isActive }) => (isActive ? css.active : '')}
+                    >
+                      <span>My Vendors</span>
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to="/myprofile/MyContact"
+                      className={({ isActive }) => (isActive ? css.active : '')}
+                    >
+                      <span>My Contacts</span>
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to="/myprofile/broadcastfilter"
+                      className={({ isActive }) => (isActive ? css.active : '')}
+                    >
+                      <span>Broadcast Filters</span>
+                    </NavLink>
+                  </li>
+                </ul>
               </div>
               <div className={css.profileInfo_form}>
                 <div className={`${css.profileInfo_form_personalInfo} font-thin text-left `}>
@@ -413,25 +436,50 @@ console.log("Company ID",companyId)
                 <div>
                   <h1 className="text-[1vw] font-thin text-black">Payment Gateways</h1>
                   <span className="space-x-[8.5vw]">
-                      <label htmlFor="paymentGateways">PayPal</label>
+                    <label htmlFor="paymentGateways">PayPal</label>
+                    <input
+                      type="text"
+                      name="paymentGateway"
+                      id="paymentGateway"
+                      onChange={handleChange}
+                      value={formData.data?.company?.primaryContact.paymentGateway || ""}
+                      placeholder="Identifier (Username, email, etc"
+                    />
+                  </span>
+
+                  <div className={css.profileInfo_form_personalPhoto}>
+                    <div>
+                      <h1>Personal Photo</h1>
+                      <div>
+                        <img
+                          src={
+                            companyLogo?.data}
+                          alt="companyImage"
+                        />
+                      </div>
+                    </div>
+                    <div>
                       <input
-                        type="text"
-                        name="paymentGateway"
-                        id="paymentGateway"
-                        onChange={handleChange}
-                        value={formData.data?.company?.primaryContact.paymentGateway || ""}
-                        placeholder="Identifier (Username, email, etc"
+                        type="file"
+                        name="image"
+                        id="image"
+                        onChange={handleFileChange}
                       />
-                    </span>
+                      <button type="submit">Submit Changes</button>
+                    </div>
+                  </div>
+
+
+
 
                 </div>
                 <div className={`${css.profileInfo_form_IMScreenNames} pt-5`}>
                   <h1>IM Screen Names</h1>
                   <div className="!text-left">
                     <span>
-                      <div className="flex items-center justify-center"> 
-                      <label htmlFor="skype">Skype</label>
-                      <img src="https://ben.cachefly.net/images/social_networks/tiny_skype.png" alt="Skype" title="Skype"></img>
+                      <div className="flex items-center justify-center">
+                        <label htmlFor="skype">Skype</label>
+                        <img src="https://ben.cachefly.net/images/social_networks/tiny_skype.png" alt="Skype" title="Skype"></img>
                       </div>
                       <input
                         type="text"
@@ -443,9 +491,9 @@ console.log("Company ID",companyId)
                       />
                     </span>
                     <span>
-                    <div className="flex items-center justify-center"> 
-                      <label htmlFor="whatsapp">WhatsApp</label>
-                      <img src="https://ben.cachefly.net/images/social_networks/tiny_whatsapp.png" alt="WhatsApp" title="WhatsApp"/>
+                      <div className="flex items-center justify-center">
+                        <label htmlFor="whatsapp">WhatsApp</label>
+                        <img src="https://ben.cachefly.net/images/social_networks/tiny_whatsapp.png" alt="WhatsApp" title="WhatsApp" />
                       </div>
                       <input
                         type="text"
@@ -457,9 +505,9 @@ console.log("Company ID",companyId)
                       />
                     </span>
                     <span>
-                    <div className="flex items-center justify-center "> 
-                      <label htmlFor="trillian">Trillian</label>
-                      <img src="https://ben.cachefly.net/images/social_networks/tiny_trillian.png" alt="Trillian" title="Trillian"/>
+                      <div className="flex items-center justify-center ">
+                        <label htmlFor="trillian">Trillian</label>
+                        <img src="https://ben.cachefly.net/images/social_networks/tiny_trillian.png" alt="Trillian" title="Trillian" />
                       </div>
                       <input
                         type="text"
@@ -477,9 +525,9 @@ console.log("Company ID",companyId)
                   <div className="!text-left">
                     <span>
 
-                       <div className="flex items-center  justify-center"> 
-                      <label htmlFor="facebook">Facebook</label>
-                      <img src="https://ben.cachefly.net/images/social_networks/tiny_facebook.png" alt="Facebook" title="Facebook"/>
+                      <div className="flex items-center  justify-center">
+                        <label htmlFor="facebook">Facebook</label>
+                        <img src="https://ben.cachefly.net/images/social_networks/tiny_facebook.png" alt="Facebook" title="Facebook" />
                       </div>
 
                       <input
@@ -492,9 +540,9 @@ console.log("Company ID",companyId)
                       />
                     </span>
                     <span>
-                    <div className="flex items-center justify-center "> 
-                      <label htmlFor="twitter">Twitter</label>
-                      <img src="https://ben.cachefly.net/images/social_networks/tiny_twitter.png" alt="Twitter" title="Twitter"/>
+                      <div className="flex items-center justify-center ">
+                        <label htmlFor="twitter">Twitter</label>
+                        <img src="https://ben.cachefly.net/images/social_networks/tiny_twitter.png" alt="Twitter" title="Twitter" />
                       </div>
                       <input
                         type="text"
@@ -506,9 +554,9 @@ console.log("Company ID",companyId)
                       />
                     </span>
                     <span>
-                    <div className="flex items-center justify-center "> 
-                      <label htmlFor="linkedin">LinkedIn</label>
-                      <img src="https://ben.cachefly.net/images/social_networks/tiny_linkedin.png" alt="Linked-In" title="Linked-In"/>
+                      <div className="flex items-center justify-center ">
+                        <label htmlFor="linkedin">LinkedIn</label>
+                        <img src="https://ben.cachefly.net/images/social_networks/tiny_linkedin.png" alt="Linked-In" title="Linked-In" />
                       </div>
                       <input
                         type="text"
@@ -524,7 +572,7 @@ console.log("Company ID",companyId)
               </div>
               <div className="pt-2">
                 <button className="!bg-[#ef6421] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-5"
-                type="submit">Submit Changes</button>
+                  type="submit">Submit Changes</button>
               </div>
             </div>
           </form>
@@ -536,6 +584,9 @@ console.log("Company ID",companyId)
 };
 
 export default MyProfile;
+
+
+
 
 
 
