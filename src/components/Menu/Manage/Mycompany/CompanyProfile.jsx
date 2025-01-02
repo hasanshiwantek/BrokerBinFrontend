@@ -613,7 +613,7 @@ import LoadingState from "../../../../LoadingState";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchUserData,
-  setFormData,
+  setFormData as updateFormData,
   setCustomSignature,
   setBlurWhileLoading,
   submitUserData,
@@ -774,53 +774,6 @@ console.log("Company ID",companyId)
       delete data.personalPhoto;
     }
 
-    // const passwordFields = [
-    //   "currentPassword",
-    //   "newPassword",
-    //   "confirmNewPassword",
-    // ];
-    // const passwordValues = passwordFields.map((field) => data[field] || "");
-    // const filledPasswords = passwordValues.filter((value) => value !== "");
-
-    // if (
-    //   filledPasswords.length > 0 &&
-    //   filledPasswords.length < passwordFields.length
-    // ) {
-    //   alert(
-    //     "Please fill in all password fields to update your password, or leave all empty if no update is intended."
-    //   );
-    //   return;
-    // }
-
-    // if (
-    //   filledPasswords.length === passwordFields.length &&
-    //   data.newPassword !== data.confirmNewPassword
-    // ) {
-    //   alert("New passwords do not match.");
-    //   return;
-    // }
-
-    // passwordFields.forEach((field) => {
-    //   if (data[field] === "") {
-    //     delete data[field];
-    //   }
-    // });
-
-    // const userName = data.firstName;
-    // const regex =
-    //   /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d!@#$%^&*()_+]{8,24}$/;
-    // if (data.newPassword && !regex.test(data.newPassword)) {
-    //   alert("Password does not meet the complexity requirements.");
-    //   return;
-    // }
-    // if (
-    //   data.newPassword &&
-    //   data.newPassword.toLowerCase().includes(userName.toLowerCase())
-    // ) {
-    //   alert("Password cannot contain the username.");
-    //   return;
-    // }
-
     const passwordFields = [
       "currentPassword",
       "newPassword",
@@ -861,8 +814,9 @@ console.log("Company ID",companyId)
       }
     });
 
+    console.log("ID:", id, "Token:", token, "Data:", data);
     console.log(data);
-    dispatch(setFormData(data));
+    dispatch(updateFormData(data));
     dispatch(submitUserData({ id, token, data }));
   };
 
@@ -1177,7 +1131,8 @@ console.log("Company ID",companyId)
                 </div>
               </div>
               <div className="pt-2">
-                <button className="!bg-[#ef6421] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-5">Submit Changes</button>
+                <button className="!bg-[#ef6421] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-5"
+                type="submit">Submit Changes</button>
               </div>
             </div>
           </form>
