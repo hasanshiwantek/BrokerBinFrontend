@@ -391,3 +391,31 @@ export const {
 } = searchProductSlice.actions;
 
 export default searchProductSlice.reducer;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

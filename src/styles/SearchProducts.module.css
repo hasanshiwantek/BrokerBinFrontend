@@ -78,7 +78,7 @@
 
 .tableArea {
   margin: 2rem 2rem;
-  width: 117%;
+  /* width: 117%; */
 }
 .productTable {
   background-color: var(--table-outer-color);
@@ -134,7 +134,7 @@
 
 
  .productTableDetail table td {
-  padding: 4px 9px ;
+  padding: 3px 8px ;
   margin-left: 10px;
   text-align: left;
   font-size: 8pt;

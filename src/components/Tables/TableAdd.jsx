@@ -85,6 +85,7 @@ const TableAdd = () => {
                   name="status"
                   value={item.status}
                   onChange={(e) => handleChange(e, i)}
+                  className="!p-1"
                 >
                   <option value="stock">Stock</option>
                   <option value="dist">DIST</option>
@@ -103,6 +104,8 @@ const TableAdd = () => {
                   name="cond"
                   value={item.cond}
                   onChange={(e) => handleChange(e, i)}
+                  className="!p-1"
+
                 >
                   <option value="new">NEW</option>
                   <option value="asis">ASIS</option>
