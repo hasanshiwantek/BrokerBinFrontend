@@ -107,6 +107,32 @@ export const submitUserSearch = createAsyncThunk(
 );
 
 
+
+
+
+export const submitCompanyLogo = createAsyncThunk(
+  'profile/submitCompanyLogo',
+  async ({ token, file }, { rejectWithValue }) => {
+    try {
+      const formData = new FormData();
+      formData.append('image', file);  // append the file to the form data
+
+      const response = await axios.post(`${brokerAPI}company/logo`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data || error.message);
+    }
+  }
+);
+
+
+
 const initialState = {
   user: JSON.parse(localStorage.getItem("user")),
   formData: {
@@ -184,7 +210,8 @@ const initialState = {
   blurWhileLoading: false,
   customSignature: true,
   error: null,
-  searchUserData:[]
+  searchUserData:[],
+  companyLogo: null,
 };
 
 const profileSlice = createSlice({
@@ -240,6 +267,7 @@ const profileSlice = createSlice({
       })
       .addCase(submitUserData.fulfilled, (state, action) => {
         state.initialData = action.payload;
+        console.log("Data from front-end:", action.payload);
         state.formData = {
           ...state.formData,
           ...action.payload,
@@ -285,7 +313,20 @@ const profileSlice = createSlice({
         state.error = action.error.message;
         state.blurWhileLoading = false;
       })
-      
+      .addCase(submitCompanyLogo.pending, (state) => {
+        state.blurWhileLoading = false;
+        console.log("Pending....");
+      })
+      .addCase(submitCompanyLogo.fulfilled, (state, action) => {
+        state.blurWhileLoading = true;
+        state.companyLogo = action.payload;
+        console.log("Fulfilled....");
+      })
+      .addCase(submitCompanyLogo.rejected, (state, action) => {
+        console.log(action.error.message);
+        state.error = action.error.message;
+        state.blurWhileLoading = false;
+      });
   },
 });
 
