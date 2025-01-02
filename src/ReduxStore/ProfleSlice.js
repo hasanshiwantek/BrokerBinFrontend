@@ -80,11 +80,6 @@ export const submitUserOptions = createAsyncThunk(
 );
 
 
-
-
-
-
-
 export const submitUserSearch = createAsyncThunk(
   "profileStore/submitUserSearch",
   async ({ data, token }, { rejectWithValue }) => {
@@ -237,6 +232,7 @@ const profileSlice = createSlice({
       })
       .addCase(submitUserData.fulfilled, (state, action) => {
         state.initialData = action.payload;
+        console.log("Data from front-end:", action.payload);
         state.formData = {
           ...state.formData,
           ...action.payload,
