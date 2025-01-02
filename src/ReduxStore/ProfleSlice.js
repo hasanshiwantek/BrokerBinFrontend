@@ -238,6 +238,12 @@ const profileSlice = createSlice({
     setBlurWhileLoading: (state, action) => {
       state.blurWhileLoading = action.payload;
     },
+    resetProfileState: (state) => {
+      state.user = null;
+      state.formData = initialState.formData;
+      state.optionFormData = initialState.optionFormData;
+      // Add any other state reset logic here
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -329,6 +335,7 @@ export const {
   setOptionFormData,
   setCustomSignature,
   setBlurWhileLoading,
+  resetProfileState
 } = profileSlice.actions;
 
 export default profileSlice.reducer;
