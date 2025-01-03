@@ -117,31 +117,6 @@ const MyProfile = () => {
 
 
 
-  // const handleFileChange = (event) => {
-  //   const file = event.target.files[0];
-  //   const extension = String(file.name).split(".").pop().toLowerCase();
-  //   const allowedExtensions = ["jpeg", "jpg", "png", "webp"];
-  //   if (allowedExtensions.includes(extension)) {
-  //     if (file) {
-  //       const reader = new FileReader();
-  //       reader.onload = (e) => {
-  //         const base64String = e.target.result
-  //           .replace("data:", "")
-  //           .replace(/^.+,/, "");
-  //         setFileBase64(base64String);
-  //       };
-  //       reader.readAsDataURL(file);
-  //     } else {
-  //       setFileBase64("");
-  //     }
-  //   } else {
-  //     alert("Format should be a jpeg, jpg, png, or webp");
-  //     event.target.value = "";
-  //     setFileBase64("");
-  //   }
-  // };
-
-
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -449,11 +424,11 @@ const MyProfile = () => {
 
                   <div className={css.profileInfo_form_personalPhoto}>
                     <div>
-                      <h1>Personal Photo</h1>
+                      <h1>Company Logo</h1>
                       <div>
                         <img
                           src={
-                            companyLogo?.data}
+                            image ? image : null}
                           alt="companyImage"
                         />
                       </div>

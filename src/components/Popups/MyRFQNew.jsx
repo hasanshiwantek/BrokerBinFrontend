@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useRef } from "react";
 import css from "../../styles/Menu/Manage/MyRFQNew.module.css";
 import AddCircle from "../../svgs/AddCircle";
@@ -106,9 +105,11 @@ useEffect(() => {
 
   // filtered Unique models because we don't want to send RFQ with same model numbers.
   const filteredData = filterUniqueModels(selectedProducts);
-  console.log(filteredData);
+  console.log("Filtered Data ",filteredData);
 
   const [parts, setParts] = useState(filteredData);
+  console.log("Parts", parts);
+  
   const [selectedProductsBCC, setSelectedProductsBCC] =
     useState(selectedProducts);
 
@@ -378,7 +379,6 @@ useEffect(() => {
                               zIndex: 1000,
                               background: "#fff",
                               border: "1px solid #ccc",
-                              padding: "10px 15px",
                               top: "0%",
                               left: "132px",
                               width: "223%",
@@ -470,6 +470,8 @@ useEffect(() => {
                             onSearch={handlePartModelSearch}
                             searchResponseMatched={searchResponseMatched}
                             isNew={part.isNew}
+                            selectedProducts={selectedProducts}
+                            parts={parts}
                           />
 
                         ))}

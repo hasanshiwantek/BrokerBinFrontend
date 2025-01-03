@@ -97,7 +97,7 @@ const Options = () => {
                     to="/myprofile/MyContact"
                     className={({ isActive }) => (isActive ? myProfile.active : '')}
                   >
-                    <span>My Contacts</span>
+                    <span>My Vendors</span>
                   </NavLink>
                 </li>
                 <li>
