@@ -449,11 +449,11 @@ const MyProfile = () => {
 
                   <div className={css.profileInfo_form_personalPhoto}>
                     <div>
-                      <h1>Personal Photo</h1>
+                      <h1>Company Logo</h1>
                       <div>
                         <img
                           src={
-                            companyLogo?.data}
+                            image ? image : null}
                           alt="companyImage"
                         />
                       </div>
