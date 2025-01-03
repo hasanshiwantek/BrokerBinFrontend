@@ -32,6 +32,8 @@ import {
   setDropdownOpen,
   setToolToggle,
 } from "../ReduxStore/HomeSlice";
+import { clearUserDetails } from "../ReduxStore/UserSlice";
+import {resetProfileState} from "../ReduxStore/ProfleSlice"
 import {
   searchProductHistory,
   searchProductQuery,
@@ -66,6 +68,8 @@ const Header = () => {
   );
 
   const handleLogout = () => {
+    dispatch(clearUserDetails());
+    dispatch(resetProfileState());
     localStorage.removeItem("user");
     Cookies.remove("token");
     Cookies.remove("user_id");
