@@ -459,9 +459,9 @@ const Header = () => {
                   {/* <Link to={"/services"}>
                     <li>services</li>
                   </Link> */}
-                  <Link to={"/searchcompany"}>
+                  {/* <Link to={"/searchcompany"}>
                     <li>company</li>
-                  </Link>
+                  </Link> */}
                   <Link to={"/person"}>
                     <li>person</li>
                   </Link>
@@ -498,16 +498,16 @@ const Header = () => {
                   <Link to={"/mycompany"}>
                     <li>My Company</li>
                   </Link>
-                  <Link to={"/manage/my-services"}>
+                  {/* <Link to={"/manage/my-services"}>
                     <li>My Services</li>
                   </Link>
                   <Link to={"/venprice"}>
                     <li>Vendor Pricing</li>
-                  </Link>
+                  </Link> */}
                 </ul>
               </div>
             </li>
-            <li>
+            {/* <li>
               <a href="/reports/email">reports</a>
               < IoIosArrowDown className={css.onHoverMenuIconDown} />
               <IoIosArrowUp className={css.onHoverMenuIconUp} />
@@ -533,7 +533,7 @@ const Header = () => {
                   </Link>
                 </ul>
               </div>
-            </li>
+            </li> */}
             <li>
               <Link to={"/broadcasts"}>broadcast</Link>
               < IoIosArrowDown className={css.onHoverMenuIconDown} />

@@ -1,6 +1,8 @@
-import { useState,useEffect,useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import css from "../../styles/Menu/Manage/MyRFQNew.module.css";
 import { MdRemoveCircle } from "react-icons/md";
+import { useSelector } from "react-redux";
+import { use } from "react";
 
 
 
@@ -198,25 +200,25 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
             ))}
           </select>
 
-          <input
-            type="text"
-            value={part.quantity}
-            onChange={(e) => handleInputChange("quantity", e.target.value)}
-          />
-          <input
-            type="text"
-            value={part.targetPrice}
-            onChange={(e) => handleInputChange("targetPrice", e.target.value)}
-          />
-          <input
-            type="text"
-            value={part.terms}
-            onChange={(e) => handleInputChange("terms", e.target.value)}
-          />
-        </div>
+        <input
+          type="text"
+          value={part.quantity}
+          onChange={(e) => handleInputChange("quantity", e.target.value)}
+        />
+        <input
+          type="text"
+          value={part.targetPrice}
+          onChange={(e) => handleInputChange("targetPrice", e.target.value)}
+        />
+        <input
+          type="text"
+          value={part.terms}
+          onChange={(e) => handleInputChange("terms", e.target.value)}
+        />
       </div>
-    );
-  };
-  
+    </div>
+  );
+};
 
-  export default AddParts
+
+export default AddParts
