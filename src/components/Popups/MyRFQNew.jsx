@@ -92,21 +92,31 @@ useEffect(() => {
 };
 
   // make sure only unique models goes to rfq.
-  const filterUniqueModels = (data) => {
-    const uniqueModels = new Set();
-    return data.filter((item) => {
-      if (uniqueModels.has(item.partModel)) {
-        return false;
-      } else {
-        uniqueModels.add(item.partModel);
-        return true;
+  const groupByPartModel = (data) => {
+    return data.reduce((acc, part) => {
+      if (!acc[part.partModel]) {
+        acc[part.partModel] = [];
       }
+      acc[part.partModel].push(part);
+      return acc;
+    }, {});
+  };
+  
+  const getUniqueMFGsAndConditions = (groupedParts) => {
+    return Object.keys(groupedParts).map((partModel) => {
+      const parts = groupedParts[partModel];
+      const mfgs = [...new Set(parts.map((part) => part.mfg))];
+      const conds = [...new Set(parts.map((part) => part.cond))];
+  
+      return { partModel, mfgs, conds };
     });
   };
-
-  // filtered Unique models because we don't want to send RFQ with same model numbers.
-  const filteredData = filterUniqueModels(selectedProducts);
+  
+  // Grouping and getting unique MFGs and Conds for each partModel
+  const groupedParts = groupByPartModel(selectedProducts);
+  const filteredData = getUniqueMFGsAndConditions(groupedParts);
   console.log(filteredData);
+  
 
   const [parts, setParts] = useState(filteredData);
   const [selectedProductsBCC, setSelectedProductsBCC] =
@@ -128,11 +138,18 @@ useEffect(() => {
   };
 
   // Function to update part fields
-  const updatePart = (id, field, value) => {
+  const updatePart = (partModel, field, value) => {
     setParts((parts) =>
-      parts.map((part) => (part.id === id ? { ...part, [field]: value } : part))
+      parts.map((part) =>
+        part.partModel === partModel
+          ? field === "bulkUpdate"
+            ? { ...part, ...value } // Merge all updates in one go
+            : { ...part, [field]: value }
+          : part
+      )
     );
   };
+  
 
   const [recipients, setRecipients] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -207,8 +224,6 @@ useEffect(() => {
   };
 
   console.log("BCC", selectedProductsBCC)
-
-
 
   const isValidEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -324,6 +339,7 @@ useEffect(() => {
       }
     });
   };
+  
 
   return (
     <>
@@ -362,7 +378,7 @@ useEffect(() => {
                 <div className={css.rfqBody_Main_left}>
                   <div className={css.rfqBody_Main_left_receptions}>
                     <span>
-                      <label htmlFor="">Add Recipient:</label>
+                      <label htmlFor="recepient">Add Recipient:</label>
                       <input
                         name="recipient"
                         type="text"
@@ -470,6 +486,7 @@ useEffect(() => {
                             onSearch={handlePartModelSearch}
                             searchResponseMatched={searchResponseMatched}
                             isNew={part.isNew}
+                            selectedProducts={selectedProducts}
                           />
 
                         ))}
