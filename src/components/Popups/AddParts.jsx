@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import css from "../../styles/Menu/Manage/MyRFQNew.module.css";
 import { MdRemoveCircle } from "react-icons/md";
-import { useSelector } from "react-redux";
-import { use } from "react";
 
 
 
@@ -222,3 +220,14 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
 
 
 export default AddParts
+
+
+
+
+
+
+
+
+
+
+
