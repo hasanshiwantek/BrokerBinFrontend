@@ -323,7 +323,7 @@ const searchProductSlice = createSlice({
         state.error = null;
       })
       .addCase(searchProductFilter.fulfilled, (state, action) => {
-        console.log(action.payload);
+        console.log("Filter data from Redux ",action.payload);
         state.searchResponseMatched = action.payload;
         state.gettingProducts = false; // Set to false after fetching is done
       })

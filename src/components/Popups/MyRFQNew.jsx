@@ -472,6 +472,7 @@ useEffect(() => {
                             isNew={part.isNew}
                             selectedProducts={selectedProducts}
                             parts={parts}
+                            selectedProductsBCC={selectedProductsBCC}
                           />
 
                         ))}
@@ -660,4 +661,49 @@ useEffect(() => {
   );
 };
 
-export default MyRFQNew;
+export default  MyRFQNew;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

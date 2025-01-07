@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import css from "../../styles/Menu/Manage/MyRFQNew.module.css";
 import { MdRemoveCircle } from "react-icons/md";
-import { useSelector } from "react-redux";
-import { use } from "react";
 
 
 const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePartModelSearch, isNew, searchResponseMatched, selectedProducts, parts }) => {
@@ -13,6 +11,9 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
 
   const conditions = selectedProducts.map((item) => item.cond);
   console.log("Conditions in AddParts:", conditions);
+
+
+
 
 
   useEffect(() => {
@@ -80,16 +81,22 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
 
 
   console.log("Part ID:", part.id, "Condition Options:", part.conditionOptions);
-
-
   useEffect(() => {
-    if (!part.mfgOptions?.length) {
-      onUpdate(part.id, "mfgOptions", [part.mfg]); // Initialize MFG options with the RFQ data
+    if (!part.mfgOptions?.length && part.mfg) {
+      onUpdate(part.id, "mfgOptions", [part.mfg]); // Initialize MFG options
     }
-    if (!part.conditionOptions?.length) {
+  
+    if (!part.conditionOptions?.length && part.cond) {
       onUpdate(part.id, "conditionOptions", [part.cond]);
+    } else if (
+      part.conditionOptions?.length !== conditions?.length || 
+      !part.conditionOptions.every((cond, index) => cond === conditions[index])
+    ) {
+      onUpdate(part.id, "conditionOptions", conditions);
     }
-  }, [part.mfg, part.cond, part.mfgOptions, part.conditionOptions, onUpdate]);
+  }, [part.mfg, part.cond, part.mfgOptions, part.conditionOptions, conditions, part.id, onUpdate]);
+  
+
 
   console.log("Part Model:", part.partModel, "Part ID:", part.id, "Condition Options:", part.conditionOptions);
 
@@ -184,7 +191,7 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
 
 
 
-{/* 
+        {/* 
 
         <select
             value={part.cond || ""}
@@ -200,7 +207,7 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
 
 
 
-      
+
 
 
         <select
@@ -210,20 +217,20 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
           <option value="">Select Cond</option>
           {partsLength > 1 ? (
             // If there are more parts, use specific condition options for this part
-            part.conditionOptions?.map((Cond) => (
-              <option key={Cond} value={Cond}>
+            part.conditionOptions?.map((Cond, index) => (
+              <option key={index} value={Cond}>
                 {Cond}
               </option>
             ))
           ) : (
             // Otherwise, use global conditions for initial RFQ parts
-            conditions.map((Cond) => (
-              <option key={Cond} value={Cond}>
+      part.conditionOptions?.map((Cond, index) => (
+              <option key={index} value={Cond}>
                 {Cond}
               </option>
             ))
           )}
-        </select>  
+        </select>
 
 
 
@@ -249,3 +256,14 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
 
 
 export default AddParts
+
+
+
+
+
+
+
+
+
+
+
