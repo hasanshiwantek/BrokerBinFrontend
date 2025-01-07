@@ -52,7 +52,6 @@ export const submitUserData = createAsyncThunk(
   }
 );
 
-
 export const submitUserOptions = createAsyncThunk(
   "profileStore/submitUserOptions",
   async ({ id, token, data }) => {
@@ -79,9 +78,6 @@ export const submitUserOptions = createAsyncThunk(
   }
 );
 
-
-
-
 export const submitUserSearch = createAsyncThunk(
   "profileStore/submitUserSearch",
   async ({ data, token }, { rejectWithValue }) => {
@@ -106,10 +102,6 @@ export const submitUserSearch = createAsyncThunk(
   }
 );
 
-
-
-
-
 export const submitCompanyLogo = createAsyncThunk(
   'profile/submitCompanyLogo',
   async ({ token, file }, { rejectWithValue }) => {
@@ -130,8 +122,6 @@ export const submitCompanyLogo = createAsyncThunk(
     }
   }
 );
-
-
 
 const initialState = {
   user: JSON.parse(localStorage.getItem("user")),
