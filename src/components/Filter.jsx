@@ -125,12 +125,6 @@ const submitProductFilter = (event) => {
     // console.log("Filters Applied:", filters);
   };
 
-  console.log("Filters with Part Models:", filters);
-
-  // Dispatch the action with the updated filters
-  dispatch(searchProductFilter({ token, filters })).then((response) => {
-    console.log("Response from searchProductFilter action:", response);
-  });
 };
 
 
