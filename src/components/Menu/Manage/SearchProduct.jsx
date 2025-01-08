@@ -61,6 +61,7 @@ const SearchProduct = () => {
     graphToggle,
     companiesListingParts,
     togglePopUp,
+    filteredSearchResponse
   } = useSelector((store) => store.searchProductStore);
 
   useEffect(() => {
@@ -120,25 +121,25 @@ const SearchProduct = () => {
   }
 
 
-
   return (
 
     <div className={css.layout}>
 
       {filterToggle && <Filter/>}
 
-      <div className={css.layoutTables} style={Object.keys(searchResponseMatched || {}).length <= 0 ? { margin: "0 auto" } : null}>
-        {Object.keys(searchResponseMatched || {}).length === 0 || Object.values(searchResponseMatched).every(part => part?.data?.length === 0) ? (
+      <div className={css.layoutTables} style={Object.keys(filteredSearchResponse || searchResponseMatched || {}).length <= 0 ? { margin: "0 auto" } : null}>
+        {Object.keys(filteredSearchResponse || searchResponseMatched || {}).length === 0 || Object.values(filteredSearchResponse || searchResponseMatched).every((part) => Array.isArray(part?.data) && part.data.length === 0
+   ) ? (
           <div>
             <h2>No Results Found For Selected Part Model: {searchString || partModel}</h2>
             <AddToHotList item={searchString || partModel} />
           </div>
         ) : (
           // Render the products if available
-          Object.entries(searchResponseMatched || {}).map(([partModel, details]) =>
+          Object.entries(filteredSearchResponse || searchResponseMatched || {}).map(([partModel, details], index) =>
             details?.data?.length > 0 && ( // Check if data is not empty
-              <div className={css.tableArea} key={partModel}>
-                {graphToggle && <ProductsPieChart />}
+              <div className={css.tableArea} key={`${partModel}-${index}`}>
+                {graphToggle && <ProductsPieChart />} 
                 <div className={css.productTable}>
                   <ProductTableBtn />
                   <ProductTableDetail partData={details.data} partModel={partModel} page={details.page} totalCount={details.totalCount} />

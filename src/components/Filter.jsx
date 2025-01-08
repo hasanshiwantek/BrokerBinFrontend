@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 import {
   searchProductFilter,
   setFilterToggle,
+  applyFilters
 } from "../ReduxStore/SearchProductSlice";
 import { NavLink, useLocation } from "react-router-dom";
 
@@ -29,7 +30,7 @@ const Filter = () => {
   );
 
   useEffect(() => {
-    console.log("Updated searchResponseMatched in Filter:", searchResponseMatched);
+    // console.log("Updated searchResponseMatched in Filter:", searchResponseMatched);
   }, [searchResponseMatched]);
 
 
@@ -45,44 +46,18 @@ const Filter = () => {
     }));
   };
 
-  // Aggregate counts for filters
-  // const manufacturerCount = {};
-  // Object.values(searchResponseMatched || []).forEach(item => {
-  //   console.log("item", item);
-  //   console.log("itemMFG", item?.mfg);  
-  //   if (Array.isArray(item.data)) 
-  //     item.data.forEach(subItem => {
-  //       const manufacturer = subItem?.mfg;
-  //       console.log("Item in Filter:", subItem);
-  //       console.log("Manufacturer in Filter:", manufacturer);
-  
-  //       if (manufacturer) {
-  //         manufacturerCount[manufacturer] = (manufacturerCount[manufacturer] || 0) + 1;
-  //       } else {
-  //         console.log("Manufacturer is missing or undefined for item:", subItem);
-  //       }
-  //     });
-  //    else {
-  //     console.log("item.data is not an array or missing in item:", item);
-  //   }
-  // });
-  // console.log("Manufacturer Count:", manufacturerCount);
-
-
-
-
   const manufacturerCount = {};
 
   Object.values(searchResponseMatched || []).forEach(item => {
-    console.log("item", item);
+    // console.log("item", item);
   
     // Check if item contains an array under 'data'
     const dataItems = Array.isArray(item?.data) ? item?.data : [item];  // If it's not an array, treat the item as a single object
   
     dataItems.forEach(subItem => {
       const manufacturer = subItem?.mfg;
-      console.log("Item in Filter:", subItem);
-      console.log("Manufacturer in Filter:", manufacturer);
+      // console.log("Item in Filter:", subItem);
+      // console.log("Manufacturer in Filter:", manufacturer);
   
       if (manufacturer) {
         manufacturerCount[manufacturer] = (manufacturerCount[manufacturer] || 0) + 1;
@@ -90,39 +65,39 @@ const Filter = () => {
     });
   });
   
-  console.log("Manufacturer Count:", manufacturerCount);
+  // console.log("Manufacturer Count:", manufacturerCount);
   
-
-  
-
 // Condition Count
 const conditionCount = {};
 Object.values(searchResponseMatched || {}).flatMap(item => item?.data ? item.data : [item]).forEach((item) => {
   const condition = item?.cond;
-  console.log("Condition in Filter:", condition);   
+  // console.log("Condition in Filter:", condition);   
   conditionCount[condition] = (conditionCount[condition] || 0) + 1;
-  console.log("conditionCount", conditionCount);
+  // console.log("conditionCount", conditionCount);
 });
 
 // Region Count
 const regionCount = {};
 Object.values(searchResponseMatched || {}).flatMap(item => item?.data ? item.data : [item]).forEach((item) => {
   const region = item?.company_region;
-  console.log("region ",region)
+  // console.log("region ",region)
   regionCount[region] = (regionCount[region] || 0) + 1;
-  console.log("Region in Filter:", region + " RegionCount: " + regionCount[region]);
+  // console.log("Region in Filter:", region + " RegionCount: " + regionCount[region]);
 });
 
 // Country Count
 const countryCount = {};
 Object.values(searchResponseMatched || {}).flatMap(item => item?.data ? item.data : [item]).forEach((item) => {
   const country = item?.company_country;
-  console.log("country ",country)
+  // console.log("country ",country)
   countryCount[country] = (countryCount[country] || 0) + 1;
-  console.log("Country in Filter:", country + " CountryCount: " + countryCount[country]);
+  // console.log("Country in Filter:", country + " CountryCount: " + countryCount[country]);
 });
 
-
+  const submitProductFilter = (event) => {
+    event.preventDefault();
+    let filters = {};
+    const formData = new FormData(event.target);
 
 
 
@@ -145,13 +120,10 @@ const submitProductFilter = (event) => {
     }
   });
 
-  // Convert array values in filters to comma-separated strings
-  for (let key in filters) {
-    if (Array.isArray(filters[key])) {
-      filters[key] = filters[key].join(",");
-    }
-  }
-
+    console.log("filters ",filters)
+    dispatch(applyFilters(filters));
+    // console.log("Filters Applied:", filters);
+  };
 
   console.log("Filters with Part Models:", filters);
 
@@ -239,7 +211,6 @@ const submitProductFilter = (event) => {
             )}
           </div>
 
-          {/* Region Section */}
           <div className={css.interSection}>
             <div>
               <h6>Region</h6>
@@ -293,8 +264,6 @@ const submitProductFilter = (event) => {
             )}
           </div>
 
-          {/* Submit Button */}
-          
           <input type="submit" id={css.applyFilter} value="Apply Filters" className={css.applyFilterBtn} />
         </form>
 

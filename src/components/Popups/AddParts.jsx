@@ -5,7 +5,7 @@ import { MdRemoveCircle } from "react-icons/md";
 
 const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePartModelSearch, isNew, searchResponseMatched, selectedProducts }) => {
     const [showDropdown, setShowDropdown] = useState(false)
-    const [mfgOptions, setMfgOptions] = useState([]);  // Store MFG options
+    // const [mfgOptions, setMfgOptions] = useState([]);  // Store MFG options
     const [conditionOptions, setConditionOptions] = useState([]);  // Store Condition options
 
     const dropdownRef = useRef(null);

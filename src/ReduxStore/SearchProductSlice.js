@@ -175,6 +175,29 @@ export const getCompanyContact = createAsyncThunk(
   }
 );
 
+export const applyFilters = (filters) => (dispatch, getState) => {
+  const { searchResponseMatched, page, pageSize } = getState().searchProductStore;
+  const filteredData = {};
+
+  Object.entries(searchResponseMatched).forEach(([partModel, details]) => {
+    const currentPageData = details.data.slice((page - 1) * pageSize, page * pageSize);
+    const filteredPartData = currentPageData.filter((item) => {
+      return Object.entries(filters).every(([key, values]) =>
+        values.includes(item[key]?.toString())
+      );
+    });
+
+    if (filteredPartData.length > 0) {
+      filteredData[partModel] = {
+        ...details,
+        data: filteredPartData,
+      };
+    }
+  });
+  console.log("Filtered Data:", filteredData);
+  dispatch(setFilteredSearchResponse(filteredData)); // Update Redux state
+  console.log("Filtered Data:", filteredData);
+};
 
 
 
@@ -195,6 +218,7 @@ const initialState = {
   selectedProducts: [],
   searchHistory: [],
   companyContactData:[],
+  filteredSearchResponse: {},
   error: null,
   page: 1,
   pageSize: 20,
@@ -234,6 +258,9 @@ const searchProductSlice = createSlice({
     },
     setSearchResponse: (state, action) => {
       state.searchResponseMatched = action.payload.data;
+      if (Object.keys(state.filteredSearchResponse || {}).length === 0) {
+        state.filteredSearchResponse = action.payload.data; // Default filtered data
+      }
     },
     setPopupCompanyDetail: (state, action) => {
       state.popupCompanyDetail = action.payload;
@@ -257,6 +284,9 @@ const searchProductSlice = createSlice({
     },
     setHoverCompanyDetail: (state, action) => {
       state.hoverCompanyDetail = [action.payload];
+    },
+    setFilteredSearchResponse: (state, action) => {
+      state.filteredSearchResponse = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -388,6 +418,7 @@ export const {
   setCurrentPage,
   setPopupCompanyDetail,
   setHoverCompanyDetail,
+  setFilteredSearchResponse,
 } = searchProductSlice.actions;
 
 export default searchProductSlice.reducer;
