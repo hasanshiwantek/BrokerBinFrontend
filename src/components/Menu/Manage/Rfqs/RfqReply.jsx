@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useRef } from "react";
 import css from "../../../../styles/Menu/Manage/MyRFQNew.module.css";
 import AddCircle from "../../../../svgs/AddCircle";
@@ -10,27 +9,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { addRecipients, searchProductQuery } from "../../../../ReduxStore/RfqSlice";
 import Cookies from "js-cookie";
 import { submitRfq, clearSearchResults, statusRfq } from "../../../../ReduxStore/RfqSlice";
-import AddParts from "../../../Popups/AddParts";
+import RfqAddPart from "./RfqAddPart";
 import { fetchUserData } from "../../../../ReduxStore/ProfleSlice";
 import { useLocation } from "react-router-dom"; // Add this import
 
 
 const RfqReply = () => {
-
-  // LOGGED IN USERID DATA
-  // const { blurWhileLoading, initialData, user, error} = useSelector(
-  //   (state) => state.profileStore
-  // );
-  // console.log("User Data",initialData)
-  // const user_id = Cookies.get("user_id");
-
-  // const id = user?.user?.id || user_id;
-  // useEffect(() => {
-  //   console.log("Logged in userid",id);
-  //   dispatch(fetchUserData({ id, token }));
-  // }, []);
-
-  // <------>
 
   const location = useLocation(); // To get data passed via navigate
   // const selectedRfqs = location.state?.selectedRfqs || [];
@@ -39,9 +23,6 @@ const RfqReply = () => {
   console.log("SELECTEDRFQ", selectedRfqs)
 
   const subjectPrefix = type === "forward" ? "FW:" : "RE:";
-  // const subject = selectedRfqs.length > 0
-  //   ? `${subjectPrefix} ${selectedRfqs[0]?.subject || "Quote Needed"}`
-  //   : "Quote Needed"; // Default to "Quote Needed" if no RFQ is selected
   const subject ="Quote Needed"; // Default to "Quote Needed" if no RFQ is selected
 
 
@@ -185,6 +166,7 @@ const RfqReply = () => {
             partModel: partNumber,
             heciClei: rfq.heciCleis[index] || "", // Use corresponding index
             mfg: rfq.mfgs[index] || "",
+            cond: rfq.conditions[index] || "",
             condition: rfq.conditions[index] || "",
             quantity: rfq.quantities[index] || "",
             targetPrice: rfq.targetPrices[index] || "",
@@ -196,41 +178,6 @@ const RfqReply = () => {
 
     return Array.from(uniqueParts.values());
   });
-
-
-  // Add event listener to detect click outside modal
-  //   useEffect(() => {
-  //     const handleClickOutside = (event) => {
-  //       if (modalRef.current && !modalRef.current.contains(event.target)) {
-  //         // Close modal if click is outside
-  //         dispatch(setPopUpRfq(false));
-  //       }
-  //     };
-
-  //     // Attach event listener to the document
-  //     document.addEventListener("mousedown", handleClickOutside);
-
-  //     // Clean up the event listener on unmount
-  //     return () => {
-  //       document.removeEventListener("mousedown", handleClickOutside);
-  //     };
-  //   }, [dispatch]);
-
-  //   useEffect(() => {
-  //     const handleClickOutside = (event) => {
-  //       if (recipientDropdownRef.current && !recipientDropdownRef.current.contains(event.target)) {
-  //         setShowRecipientDropdown(false); // Close the dropdown if the click is outside
-  //       }
-  //     };
-  //     document.addEventListener('mousedown', handleClickOutside);
-  //     return () => {
-  //       // Clean up the event listener when the component unmounts
-  //       document.removeEventListener('mousedown', handleClickOutside);
-  //     };
-  //   }, []);
-
-
-  // Handle comment change
 
   const handleCommentChange = (content, delta, source, editor) => {
     const text = editor.getHTML();
@@ -306,12 +253,8 @@ const RfqReply = () => {
     }
 
     setInputValue(""); // Clear input field
-
     dispatch(clearSearchResults()) ? console.log("Cleared") : console.log("Not cleared");
-
   };
-
-  console.log(recipients)
 
   const handleRecipientSearch = async (e) => {
     const query = e.target.value;
@@ -352,27 +295,19 @@ const RfqReply = () => {
     console.log("After removal:", recipients);
   };
 
-  console.log("BCC", selectedProductsBCC)
-
-
-
   const isValidEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
   const submitHandle = async (e) => {
-
     const formData = new FormData();
-
     // Add Region field
     const region = document.querySelector('[name="send_all_vendors_region"]')?.value;
     formData.append("region", region || "");
-
     // Add the subject field
     const subject = document.querySelector('[name="subject"]')?.value;
     formData.append("subject", subject || "");
-
     // Add valid BCC emails
     recipients
       .filter((recipient) => isValidEmail(recipient.email)) // Validate email
@@ -384,11 +319,8 @@ const RfqReply = () => {
       alert("Please add at least one recipient before sending.");
       return;
     }
-
-
     // Add comment
     formData.append("comment", comment);
-
     // Add parts
     parts.forEach((part, index) => {
       formData.append(`parts[${index}][id]`, part.id || index + 1); // Ensure id is present
@@ -400,7 +332,6 @@ const RfqReply = () => {
       formData.append(`parts[${index}][targetPrice]`, part.targetPrice || "");
       formData.append(`parts[${index}][terms]`, part.terms || "");
     });
-
     // Add valid bcc emails
     const validEmails = selectedProductsBCC
       .map((item) => item.addedBy.email) // Extract the `email` field instead of `mfg`
@@ -408,7 +339,6 @@ const RfqReply = () => {
     validEmails.forEach((email, index) => {
       formData.append(`bcc[${index}]`, email); // Append valid emails to `bcc`
     });
-
     // Boolean fields
     const booleanFields = [
       "poInHand",
@@ -420,24 +350,20 @@ const RfqReply = () => {
     booleanFields.forEach((field) => {
       formData.append(field, document.querySelector(`[name="${field}"]`)?.checked ? 1 : 0);
     });
-
     // Add file to FormData
     if (uploadFile) {
       formData.append("uploadFile", uploadFile); // Use 'uploadFile' as the key name
     } else {
       console.error("No file selected.");
     }
-
     console.log("FormData contents:");
     for (const pair of formData.entries()) {
       console.log(`${pair[0]}:`, pair[1]);
     }
-
     // Send the data
     try {
       await dispatch(submitRfq({ token, data: formData }));
       alert("RFQ submitted successfully!");
-
       // Check if the RFQ was forwarded and update its status
       if (type === "forward") {
         const payload = {
@@ -446,14 +372,12 @@ const RfqReply = () => {
         await dispatch(statusRfq({ token, data: payload }));
         console.log("Forward status updated successfully.");
       }
-
       // Clear form fields after successful submission
       clearFields();
     } catch (error) {
       console.error("Error submitting RFQ:", error);
       alert("Error Submitting RFQ Data");
     }
-
   };
 
   // Function to clear the form fields
@@ -620,7 +544,7 @@ const RfqReply = () => {
                       </div>
                       <span name="parts">
                         {parts.map((part) => (
-                          <AddParts
+                          <RfqAddPart
                             key={part.id}
                             part={part}
                             onUpdate={updatePart}
@@ -661,53 +585,6 @@ const RfqReply = () => {
                       className={`${css.ql_editor}`}
                     />
                   </div>
-
-                  {/* Editable User Information inside TextEditor */}
-                  {/* <div className={css.loggedInUserData}>
-                {initialData ? (
-                  <div>
-                    <p><strong>User Information:</strong></p>
-                    <div>
-                      <label htmlFor="firstName">First Name:</label>
-                      <input
-                        type="text"
-                        name="firstName"
-                        value={initialData.firstName}
-                        onChange={(e) => setComment(prev => prev.replace(initialData.firstName, e.target.value))}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="lastName">Last Name:</label>
-                      <input
-                        type="text"
-                        name="lastName"
-                        value={initialData.lastName}
-                        onChange={(e) => setComment(prev => prev.replace(initialData.lastName, e.target.value))}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="email">Email:</label>
-                      <input
-                        type="email"
-                        name="email"
-                        value={initialData.email}
-                        onChange={(e) => setComment(prev => prev.replace(initialData.email, e.target.value))}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="phoneNumber">Phone:</label>
-                      <input
-                        type="text"
-                        name="phoneNumber"
-                        value={initialData.phoneNumber}
-                        onChange={(e) => setComment(prev => prev.replace(initialData.phoneNumber, e.target.value))}
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <p>Loading user data...</p>
-                )}
-              </div> */}
                   <div className={css.rfqBody_Main_left_bottom}>
                     <div></div>
                     <div>

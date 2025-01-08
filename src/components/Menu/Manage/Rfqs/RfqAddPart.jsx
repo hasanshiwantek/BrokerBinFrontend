@@ -1,14 +1,11 @@
-import { useState, useEffect, useRef } from "react";
-import css from "../../styles/Menu/Manage/MyRFQNew.module.css";
+import { useState,useEffect,useRef } from "react";
+import css from "../../../../styles/Menu/Manage/MyRFQNew.module.css";
 import { MdRemoveCircle } from "react-icons/md";
 
 
 
-const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePartModelSearch, isNew, searchResponseMatched, selectedProducts }) => {
+const RfqAddPart = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePartModelSearch, isNew, searchResponseMatched }) => {
     const [showDropdown, setShowDropdown] = useState(false)
-    // const [mfgOptions, setMfgOptions] = useState([]);  // Store MFG options
-    const [conditionOptions, setConditionOptions] = useState([]);  // Store Condition options
-
     const dropdownRef = useRef(null);
   
     useEffect(() => {
@@ -23,28 +20,7 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
         document.removeEventListener('mousedown', handleClickOutside);
       };
     }, []);
-
- 
-    const conditions = selectedProducts.map((item) => item.cond);
-    console.log("Conditions in AddParts:", conditions);
-
-    useEffect(() => {
-      if (isNew && !part.mfgOptions?.length && !part.conditionOptions?.length) {
-        if (part.mfg) {
-          setMfgOptions([part.mfg]);  // Set MFG based on RFQ data
-        }
-        if (part.cond) {
-          setConditionOptions([part.cond]);  // Set Cond based on RFQ data
-        }
-      }
-    }, [part.mfg, part.cond, isNew]);
-
-    console.log("conditionOptions ",conditionOptions);
-
-    console.log("partconditions ",part.conditionOptions)
-    
-    
-
+  
     const handleRemove = (event) => {
       event.stopPropagation(); 
       onRemove(part.id);
@@ -58,53 +34,54 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
       }, 200);
     };
 
-    useEffect(() => {
-      console.log("MFG Options:", part.mfgOptions);
-      console.log("Condition Options:", part.conditionOptions);
-    }, [part.mfgOptions, part.conditionOptions]);
-
-
     const handleInputChange = (field, value) => {
-      console.log("Field Updated:", field, "Value:", value); // Debugging log
-      onUpdate(part.partModel, field, value); // Pass partModel instead of part.id
+      onUpdate(part.id, field, value); // Update the selected value in state
     
       if (field === "mfg") {
-        const selectedMfg = part.mfgCondQuantities?.find((item) => item.mfg === value.split(" (")[0]);
-        onUpdate(part.partModel, "conditionOptions", selectedMfg?.cond || []); // Update condition options
+        // Find conditions for the selected MFG
+        const selectedMfg = part.mfgCondQuantities?.find((item) => item.mfg === value.split(" (")[0]); // Match MFG name without count
+        onUpdate(part.id, "conditionOptions", selectedMfg?.cond || []); // Update Cond options
       }
     
-      if (field === "partModel") {
-        if (value.trim() !== "") {
-          onSearch(value); // Trigger search
-          setShowDropdown(true);
-        } else {
-          onUpdate(part.partModel, "mfgOptions", []); // Clear MFG options
-          onUpdate(part.partModel, "conditionOptions", []); // Clear Condition options
-        }
+      if (field === "partModel" && value.trim() !== "") {
+        onSearch(value); // Trigger search for partModel
+        setShowDropdown(true);
+      } else if (field === "partModel" && value.trim() === "") {
+        onUpdate(part.id, "mfgOptions", []); // Clear MFG options
+        onUpdate(part.id, "conditionOptions", []); // Clear Condition options
       }
     };
     
-   
     const handleSuggestionSelect = (selectedItem) => {
-      const updates = {
-        partModel: selectedItem.partModel,
-        mfgOptions: selectedItem.mfg || [],
-        mfgCondQuantities: selectedItem.mfg_cond_quantities || [],
-      };
+      console.log("Selected Item:", selectedItem);
     
+      // Update partModel
+      onUpdate(part.id, "partModel", selectedItem.partModel);
+    
+      // Use backend response for MFG with counts
+      onUpdate(part.id, "mfgOptions", selectedItem.mfg || []); 
+    
+      // Save the full mapping for MFG and Condition
+      onUpdate(part.id, "mfgCondQuantities", selectedItem.mfg_cond_quantities);
+    
+      // Default MFG and Conditions
       if (selectedItem.mfg_cond_quantities?.length) {
         const defaultMfg = selectedItem.mfg_cond_quantities[0];
-        updates.mfg = `${defaultMfg.mfg} (${defaultMfg.total_quantity})`;
-        updates.conditionOptions = defaultMfg.cond || [];
+        onUpdate(part.id, "mfg", `${defaultMfg.mfg} (${defaultMfg.total_quantity})`); // Default MFG with count
+        onUpdate(part.id, "conditionOptions", defaultMfg.cond || []); // Default Cond options
       }
     
-      // Bulk update single call
-      onUpdate(part.partModel, "bulkUpdate", updates);
-    
-      // Close dropdown
-      setShowDropdown(false);
+      setShowDropdown(false); // Close dropdown
     };
     
+    useEffect(() => {
+      if (!part.mfgOptions?.length) {
+        onUpdate(part.id, "mfgOptions", [part.mfg]); // Initialize MFG options with the RFQ data
+      }
+      if (!part.conditionOptions?.length) {
+        onUpdate(part.id, "conditionOptions", [part.cond]);
+      }
+    }, [part.mfg, part.cond, part.mfgOptions, part.conditionOptions, onUpdate]);
     
     return (
       <div className={css.rfqBody_Main_left_addParts_Addfields}>
@@ -133,6 +110,8 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
               }}
               onBlur={handleInputBlur} // Updated blur handler
             />
+            {console.log("Dropdown visibility:", showDropdown)}
+            {console.log("Search Results in AddParts:", searchResponseMatched)}
   
             {showDropdown && searchResponseMatched?.length > 0 && (
               <ul
@@ -179,8 +158,8 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
             onChange={(e) => handleInputChange("mfg", e.target.value)}
           >
             <option value="">Select Mfg</option>
-            {(part.mfgs?.length ? part.mfgs : part.mfgOptions)?.map((Mfg, index) => (
-              <option key={index} value={Mfg}>
+            {part.mfgOptions?.map((Mfg) => (
+              <option key={Mfg} value={Mfg}>
                 {Mfg}
               </option>
             ))}
@@ -191,43 +170,32 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
             onChange={(e) => handleInputChange("cond", e.target.value)}
           >
             <option value="">Select Cond</option>
-            {(part.conds?.length ? part.conds : part.conditionOptions)?.map((Cond, index) => (
-              <option key={index} value={Cond}>
+            {part.conditionOptions?.map((Cond) => (
+              <option key={Cond} value={Cond}>
                 {Cond}
               </option>
             ))}
           </select>
 
-        <input
-          type="text"
-          value={part.quantity}
-          onChange={(e) => handleInputChange("quantity", e.target.value)}
-        />
-        <input
-          type="text"
-          value={part.targetPrice}
-          onChange={(e) => handleInputChange("targetPrice", e.target.value)}
-        />
-        <input
-          type="text"
-          value={part.terms}
-          onChange={(e) => handleInputChange("terms", e.target.value)}
-        />
+          <input
+            type="text"
+            value={part.quantity}
+            onChange={(e) => handleInputChange("quantity", e.target.value)}
+          />
+          <input
+            type="text"
+            value={part.price}
+            onChange={(e) => handleInputChange("targetPrice", e.target.value)}
+          />
+          <input
+            type="text"
+            value={part.terms}
+            onChange={(e) => handleInputChange("terms", e.target.value)}
+          />
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  };
+  
 
-
-export default AddParts
-
-
-
-
-
-
-
-
-
-
-
+  export default RfqAddPart
