@@ -27,6 +27,7 @@ import {
   setHoverCompanyDetail,
   searchByKeyword,
   setSearchResponse,
+  clearSearchResponseMatched
   // setSearchResponseMatched
 
 } from "../../../ReduxStore/SearchProductSlice";
@@ -83,7 +84,7 @@ const SearchProduct = () => {
     const queryParams = new URLSearchParams(location.search);
     const searchString = queryParams.get("query") || ""; // For multi-part search (e.g., "part1 part2")
     const partModel = queryParams.get("partModel") || ""; // For single specific part model search
-
+    dispatch(clearSearchResponseMatched());
     dispatch(setSearchResponse({}));
 
     if (searchString) {

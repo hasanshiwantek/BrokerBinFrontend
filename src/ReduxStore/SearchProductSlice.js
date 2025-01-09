@@ -288,6 +288,10 @@ const searchProductSlice = createSlice({
     setFilteredSearchResponse: (state, action) => {
       state.filteredSearchResponse = action.payload;
     },
+    clearSearchResponseMatched: (state) => {
+      state.searchResponseMatched = {};
+      state.filteredSearchResponse = {}; // Optional: Clear filtered data as well
+    },    
   },
   extraReducers: (builder) => {
     builder
@@ -419,6 +423,7 @@ export const {
   setPopupCompanyDetail,
   setHoverCompanyDetail,
   setFilteredSearchResponse,
+  clearSearchResponseMatched
 } = searchProductSlice.actions;
 
 export default searchProductSlice.reducer;
