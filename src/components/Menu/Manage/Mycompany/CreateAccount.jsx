@@ -163,28 +163,28 @@ const CreateAccount = () => {
                                     <span>Primary Contact</span>
                                 </NavLink>
                             </li>
-                            <li>
+                            {/* <li>
                                 <NavLink
                                     to="/myprofile/Options"
                                     className={({ isActive }) => (isActive ? css.active : '')}
                                 >
                                     <span>Options</span>
                                 </NavLink>
-                            </li>
-                            <li>
+                            </li> */}
+                            {/* <li>
                                 <NavLink
                                     to="/myprofile/MyVendors"
                                     className={({ isActive }) => (isActive ? css.active : '')}
                                 >
                                     <span>My Vendors</span>
                                 </NavLink>
-                            </li>
+                            </li> */}
                             <li>
                                 <NavLink
                                     to="/myprofile/MyContact"
                                     className={({ isActive }) => (isActive ? css.active : '')}
                                 >
-                                    <span>My Contacts</span>
+                                    <span>My Vendors</span>
                                 </NavLink>
                             </li>
                             <li>

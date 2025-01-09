@@ -3,7 +3,6 @@ import css from "../../styles/Menu/Manage/MyRFQNew.module.css";
 import { MdRemoveCircle } from "react-icons/md";
 
 
-
 const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePartModelSearch, isNew, searchResponseMatched, selectedProducts }) => {
     const [showDropdown, setShowDropdown] = useState(false)
     // const [mfgOptions, setMfgOptions] = useState([]);  // Store MFG options
@@ -25,7 +24,7 @@ const AddParts = ({ part, onUpdate, onRemove, onSearch, searchResults, handlePar
     }, []);
 
  
-    const conditions = selectedProducts.map((item) => item.cond);
+    const conditions = selectedProducts?.map((item) => item.cond);
     console.log("Conditions in AddParts:", conditions);
 
     useEffect(() => {

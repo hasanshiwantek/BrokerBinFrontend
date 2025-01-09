@@ -95,24 +95,25 @@ const RfqReply = () => {
   //     setComment(`${userInfo}<br />${rfqDetails}`);
   //   }
   // }, [initialData, selectedRfqs]);
-
-
   useEffect(() => {
-    if (initialData) {
+    if (initialData && !comment) {
+      // Always include logged-in user information
+      const userInfo = `
+        <div>
+          <p><strong>Quote Needed Looking for the best price, availability & lead time.</strong></p>
+            <p>--------------</p>
+          <p>${initialData.firstName || ""} ${initialData.lastName || ""}</p>
+          <p>${initialData?.company?.name || ""}</p>
+          <p>${initialData.phoneNumber || ""}</p>
+          <p>${initialData.email || ""}</p>
+        </div>
+      `;
+  
       if (selectedRfqs.length === 0) {
-        // Show only logged-in user information when no RFQs are selected
-        const userInfo = `
-          <div className={css.paddedContent}>
-            <p><strong>Quote Needed Looking for the best price, availability & lead time.</strong></p>
-            <p>${initialData.firstName || ""} ${initialData.lastName || ""}</p>
-            <p>${initialData?.company?.name || ""}</p>
-            <p>${initialData.phoneNumber || ""}</p>
-            <p>${initialData.email || ""}</p>
-          </div>
-        `;
+        // If no RFQs are selected, only show the user info
         setComment(userInfo);
       } else {
-        // Show RFQ details along with logged-in user details when RFQs are selected
+        // If RFQs are selected, append the RFQ details to the user info
         const rfqDetails = selectedRfqs.map((rfq) => `
           <p><strong>RFQ initial Details:</strong></p>
           <p>Name: ${rfq.from?.firstName || ""} ${rfq.from?.lastName || ""}</p>
@@ -130,10 +131,18 @@ const RfqReply = () => {
           <p>${initialData.phoneNumber || ""}</p>
           <p>${initialData.email || ""}</p>
         `).join("<br />");
-        setComment(rfqDetails);
+  
+        setComment(`${userInfo}<br />${rfqDetails}`);
       }
     }
-  }, [initialData, selectedRfqs]);
+  }, [initialData, selectedRfqs]); // Removed `comment` from dependencies
+  
+
+  
+  console.log("Comment:", comment);
+  console.log("Initial Data:", initialData);
+  console.log("Selected RFQs:", selectedRfqs);
+  
   
 
 

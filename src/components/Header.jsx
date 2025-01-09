@@ -355,7 +355,7 @@ const Header = () => {
 
               <div className={css.dropdownMenu} style={{ marginLeft: "10px" }}>
                 <ul style={{ minWidth: "30px" }}>
-                  <Link to={"/myprofile/MyVendors"}>
+                  <Link to={"/myprofile/MyContact"}>
                     <li>
                       <img src={dp1} alt="" srcset="" />........
                     </li>
@@ -369,9 +369,9 @@ const Header = () => {
                   <Link to={"/inventory"}>
                     <li><img src={dp6} alt="" srcset="" style={{ color: "black" }} />........</li>
                   </Link>
-                  <Link to={"/reports/Company"}>
+                  {/* <Link to={"/reports/Company"}>
                     <li><img src={dp5} alt="" srcset="" style={{ color: "black" }} />........</li>
-                  </Link>
+                  </Link> */}
 
                 </ul>
               </div>

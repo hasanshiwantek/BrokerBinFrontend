@@ -30,18 +30,21 @@ const MyRFQNew = () => {
 
   const { initialData, user } = useSelector((state) => state.profileStore);
   const id = user?.user?.id;
-// Pre-populate user data in the comment
-useEffect(() => {
-  if (id) {
-    dispatch(fetchUserData({ id, token }));
-  }
-}, [id, dispatch, token]);
+
+  const subject = "Quote Needed"; // Default to "Quote Needed" if no RFQ is selected
+
+  // Pre-populate user data in the comment
+  useEffect(() => {
+    if (id) {
+      dispatch(fetchUserData({ id, token }));
+    }
+  }, [id, dispatch, token]);
 
 
-useEffect(() => {
-  if (initialData) {
-    // Format the user information for the text editor
-    const userInfo = `
+  useEffect(() => {
+    if (initialData) {
+      // Format the user information for the text editor
+      const userInfo = `
      <p><strong>Quote Needed Looking for the best price, availability & lead time.</strong></p>
         <p>--------------</p>
         <p><strong>${initialData.firstName || " "} ${initialData.lastName || ""}</strong></p>
@@ -49,9 +52,9 @@ useEffect(() => {
         <p><strong></strong> ${initialData.phoneNumber || ""}</p>
         <p><strong></strong> ${initialData.email || ""}</p>
     `;
-    setComment(userInfo); // Set the comment state to include the user data
-  }
-}, [initialData]);
+      setComment(userInfo); // Set the comment state to include the user data
+    }
+  }, [initialData]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -60,7 +63,7 @@ useEffect(() => {
         return; // Ignore clicks outside the modal area
       }
     };
-  
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -84,11 +87,11 @@ useEffect(() => {
   }, []);
 
 
- // Handle comment change
- const handleCommentChange = (content, delta, source, editor) => {
-  const text = editor.getHTML();
-  setComment(text); // Update the comment state when the text editor changes
-};
+  // Handle comment change
+  const handleCommentChange = (content, delta, source, editor) => {
+    const text = editor.getHTML();
+    setComment(text); // Update the comment state when the text editor changes
+  };
 
   // make sure only unique models goes to rfq.
   const groupByPartModel = (data) => {
@@ -100,26 +103,26 @@ useEffect(() => {
       return acc;
     }, {});
   };
-  
+
   const getUniqueMFGsAndConditions = (groupedParts) => {
     return Object.keys(groupedParts).map((partModel) => {
       const parts = groupedParts[partModel];
       const mfgs = [...new Set(parts.map((part) => part.mfg))];
       const conds = [...new Set(parts.map((part) => part.cond))];
-  
+
       return { partModel, mfgs, conds };
     });
   };
-  
+
   // Grouping and getting unique MFGs and Conds for each partModel
   const groupedParts = groupByPartModel(selectedProducts);
   const filteredData = getUniqueMFGsAndConditions(groupedParts);
   console.log(filteredData);
-  
+
 
   const [parts, setParts] = useState(filteredData);
   console.log("Parts", parts);
-  
+
   const [selectedProductsBCC, setSelectedProductsBCC] =
     useState(selectedProducts);
 
@@ -150,7 +153,7 @@ useEffect(() => {
       )
     );
   };
-  
+
 
   const [recipients, setRecipients] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -230,6 +233,25 @@ useEffect(() => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
+
+
+
+  const getUniqueBCC = (data) => {
+    const seen = new Set();
+    return data.filter((item) => {
+      const identifier = `${item.addedBy.firstName}-${item.addedBy.lastName}-${item.addedBy.company.name}`;
+      if (seen.has(identifier)) {
+        return false;
+      }
+      seen.add(identifier);
+      return true;
+    });
+  };
+
+  // Filtered BCC list to ensure uniqueness
+  const uniqueBCCList = getUniqueBCC(selectedProductsBCC);
+  console.log("Unique BCCS ",uniqueBCCList)
+
 
   const submitHandle = async (e) => {
 
@@ -340,7 +362,8 @@ useEffect(() => {
       }
     });
   };
-  
+
+
 
   return (
     <>
@@ -428,19 +451,19 @@ useEffect(() => {
                     <span>
                       <label htmlFor="">BCC:</label>
                       <span className={css.rfqBody_Main_left_receptions_bcc}>
-                        {selectedProductsBCC.map((item) => {
-                          return (
-                            <span key={item.id}>
-
+                        {uniqueBCCList.map((item) => (
+                          <span key={item.id}>
+                            <div className="flex items-center mt-2 gap-2">
                               <MdRemoveCircle
                                 onClick={(e) => removeBCC(e, item.id)}
                                 style={{ cursor: "pointer" }}
                               />
-
-                              <strong>{item.addedBy.firstName}</strong>
-                            </span>
-                          );
-                        })}
+                              <strong>
+                                {item.addedBy.company.name} ({item.addedBy.firstName} {item.addedBy.lastName})
+                              </strong>
+                            </div>
+                          </span>
+                        ))}
                         {
                           recipients.map((item, i) => {
                             return (
@@ -449,7 +472,7 @@ useEffect(() => {
                                   onClick={(e) => handleRemoveRecipient(e, item.email)} // Pass the email
                                   style={{ cursor: "pointer" }}
                                 />
-                                <strong>{item.firstName} {item.lastName}</strong>
+                                <strong> {item.firstName} {item.lastName}</strong>
                               </span>
                             );
                           })
@@ -458,7 +481,7 @@ useEffect(() => {
                     </span>
                     <span>
                       <label htmlFor="">Subject:</label>
-                      <input name="subject" type="text" />
+                      <input name="subject" type="text" defaultValue={subject} />
                     </span>
                   </div>
 
@@ -512,14 +535,14 @@ useEffect(() => {
                     </div>
                   </div>
                   <div className={css.rfqBody_Main_left_comments}>
-                <label htmlFor="" style={{ marginLeft: "50px" }}>Comments</label>
-                
-                <TextEditor
-                  handleCommentChange={handleCommentChange}
-                  comment={comment}
-                  className={`${css.ql_editor}`}
-                />
-              </div>
+                    <label htmlFor="" style={{ marginLeft: "50px" }}>Comments</label>
+
+                    <TextEditor
+                      handleCommentChange={handleCommentChange}
+                      comment={comment}
+                      className={`${css.ql_editor}`}
+                    />
+                  </div>
                   <div className={css.rfqBody_Main_left_bottom}>
                     <div></div>
                     <div>
@@ -616,23 +639,19 @@ useEffect(() => {
                       <tr>
                         <th>RFQ Send Summary</th>
                       </tr>
-
-                      {selectedProductsBCC.map((item) => {
-                        return (
-                          <span key={item.id}>
-                            <div className="flex items-center mt-2 gap-2">
-                              <MdRemoveCircle
-                                onClick={(e) => removeBCC(e, item.id)}
-                                style={{ cursor: "pointer" }}
-                              />
-
-                              <strong> {item.addedBy.company.name} ({item.addedBy.firstName} {item.addedBy.lastName})</strong>
-                            </div>
-
-                          </span>
-                        );
-                      })}
-
+                      {uniqueBCCList.map((item) => (
+                        <span key={item.id}>
+                          <div className="flex items-center mt-2 gap-2">
+                            <MdRemoveCircle
+                              onClick={(e) => removeBCC(e, item.id)}
+                              style={{ cursor: "pointer" }}
+                            />
+                            <strong>
+                              {item.addedBy.company.name} ({item.addedBy.firstName} {item.addedBy.lastName})
+                            </strong>
+                          </div>
+                        </span>
+                      ))}
                       {
                         recipients.map((item, i) => {
                           return (
@@ -675,7 +694,41 @@ useEffect(() => {
   );
 };
 
-export default  MyRFQNew;
+export default MyRFQNew;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -247,14 +247,14 @@ console.log("formData",formData)
                     <span>Personal Info</span>
                   </NavLink>
                 </li>
-                <li>
+                {/* <li>
                   <NavLink
                     to="/myprofile/Options"
                     className={({ isActive }) => (isActive ? css.active : '')}
                   >
                     <span>Options</span>
                   </NavLink>
-                </li>
+                </li> */}
                 {/* <li>
                   <NavLink
                     to="/myprofile/MyVendors"
