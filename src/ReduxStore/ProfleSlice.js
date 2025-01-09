@@ -116,6 +116,7 @@ export const submitCompanyLogo = createAsyncThunk(
         },
       });
 
+      console.log("Logo Response From Backend ",response.data)
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data || error.message);

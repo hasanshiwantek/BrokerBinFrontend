@@ -431,7 +431,7 @@ const MyProfile = () => {
                       <div>
                         <img
                           src={
-                            companyLogo?.data}
+                            initialData?.company?.image}
                           alt="companyImage"
                         />
                       </div>
