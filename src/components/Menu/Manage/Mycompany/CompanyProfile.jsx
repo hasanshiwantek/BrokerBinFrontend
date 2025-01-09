@@ -10,6 +10,7 @@ import {
   setBlurWhileLoading,
   submitUserData,
   submitCompanyLogo,
+  clearLogo
 } from "../../../../ReduxStore/ProfleSlice";
 import ErrorStatus from "../../../Error/ErrorStatus";
 import Cookies from "js-cookie";
@@ -123,6 +124,7 @@ const MyProfile = () => {
     const extension = String(file.name).split(".").pop().toLowerCase();
     const allowedExtensions = ["jpeg", "jpg", "png", "webp"];
     if (allowedExtensions.includes(extension)) {
+      dispatch(clearLogo())
       setFileBase64(file); // Store the actual file, not base64 string
     } else {
       alert("Format should be a jpeg, jpg, png, or webp");
@@ -162,6 +164,7 @@ const MyProfile = () => {
     // Convert Base64 to Binary and append to FormData
     if (fileBase64) {
       // Dispatch the submitCompanyLogo action with the selected file
+      dispatch(clearLogo())
       dispatch(submitCompanyLogo({ token, file: fileBase64 }));
     }
     const passwordFields = [
@@ -426,11 +429,19 @@ const MyProfile = () => {
                     <div>
                       <h1>Company Logo</h1>
                       <div>
-                        <img
-                          src={
-                            image ? image : null}
-                          alt="companyImage"
-                        />
+                        {
+                          blurWhileLoading ?(
+                            <img
+                            src={
+                              companyLogo?.data}
+                            alt="companyImage"
+                          />
+
+                          ) :(
+                            <span>Uploading...</span>
+                          )
+                        }
+                    
                       </div>
                     </div>
                     <div>

@@ -234,6 +234,10 @@ const profileSlice = createSlice({
       state.optionFormData = initialState.optionFormData;
       // Add any other state reset logic here
     },
+    clearLogo:(state)=>{
+      state.companyLogo=null
+
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -325,7 +329,8 @@ export const {
   setOptionFormData,
   setCustomSignature,
   setBlurWhileLoading,
-  resetProfileState
+  resetProfileState,
+  clearLogo
 } = profileSlice.actions;
 
 export default profileSlice.reducer;
