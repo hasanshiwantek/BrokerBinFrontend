@@ -429,19 +429,11 @@ const MyProfile = () => {
                     <div>
                       <h1>Company Logo</h1>
                       <div>
-                        {
-                          blurWhileLoading ?(
-                            <img
-                            src={
-                              companyLogo?.data}
-                            alt="companyImage"
-                          />
-
-                          ) :(
-                            <span>Uploading...</span>
-                          )
-                        }
-                    
+                        <img
+                          src={
+                            companyLogo?.data}
+                          alt="companyImage"
+                        />
                       </div>
                     </div>
                     <div>
