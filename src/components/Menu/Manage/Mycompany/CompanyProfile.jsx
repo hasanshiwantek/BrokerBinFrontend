@@ -288,20 +288,20 @@ const MyProfile = () => {
                       <span>Create Account</span>
                     </NavLink>
                   </li>
-                  <li>
+                  {/* <li>
                     <NavLink
                       to="/myprofile/MyVendors"
                       className={({ isActive }) => (isActive ? css.active : '')}
                     >
                       <span>My Vendors</span>
                     </NavLink>
-                  </li>
+                  </li> */}
                   <li>
                     <NavLink
                       to="/myprofile/MyContact"
                       className={({ isActive }) => (isActive ? css.active : '')}
                     >
-                      <span>My Contacts</span>
+                      <span>My Vendors</span>
                     </NavLink>
                   </li>
                   <li>
