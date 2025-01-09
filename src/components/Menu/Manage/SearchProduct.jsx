@@ -1,3 +1,4 @@
+
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import css from "../../../styles/SearchProducts.module.css";
 import Filter from "../../Filter";
@@ -64,9 +65,9 @@ const SearchProduct = () => {
     filteredSearchResponse
   } = useSelector((store) => store.searchProductStore);
 
-  useEffect(() => {
+  useEffect(()=>{
     console.log("filterToggle:", filterToggle);
-  }, [])
+  },[])
 
   // searchResponseMatched.map((item) => { console.log("Part Model " + item.partModel) })
   if (searchResponseMatched) {
@@ -125,14 +126,14 @@ const SearchProduct = () => {
 
     <div className={css.layout}>
 
-      {filterToggle && <Filter/>}
+      {filterToggle && <Filter />}
 
       <div className={css.layoutTables} style={Object.keys(filteredSearchResponse || searchResponseMatched || {}).length <= 0 ? { margin: "0 auto" } : null}>
         {Object.keys(filteredSearchResponse || searchResponseMatched || {}).length === 0 || Object.values(filteredSearchResponse || searchResponseMatched).every((part) => Array.isArray(part?.data) && part.data.length === 0
    ) ? (
           <div>
             <h2>No Results Found For Selected Part Model: {searchString || partModel}</h2>
-            <AddToHotList item={searchString || partModel} />
+            <AddToHotList item={searchString || partModel} /> 
           </div>
         ) : (
           // Render the products if available
@@ -320,8 +321,8 @@ const ProductTableDetail = React.memo(({ partModel, partData }) => {
   // } = useSelector((store) => store.searchProductStore);
 
 
-  const totalCount = searchResponseMatched[partModel]?.totalCount;
-  const pageSize = searchResponseMatched[partModel]?.pageSize;
+  const totalCount=searchResponseMatched[partModel]?.totalCount;
+  const pageSize=searchResponseMatched[partModel]?.pageSize;
   console.log("Total Count:", totalCount);
   console.log("Page Size:", pageSize);
 
@@ -330,7 +331,7 @@ const ProductTableDetail = React.memo(({ partModel, partData }) => {
   console.log("Total Pages:", totalPages);
 
 
-
+  
   const handleNextPage = () => {
     const newPage = page + 1;
 
@@ -494,37 +495,3 @@ const ProductTableDetail = React.memo(({ partModel, partData }) => {
 
 
 export default SearchProduct;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

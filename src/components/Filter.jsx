@@ -32,8 +32,6 @@ const Filter = () => {
   useEffect(() => {
     // console.log("Updated searchResponseMatched in Filter:", searchResponseMatched);
   }, [searchResponseMatched]);
-
-
   
 
   const dispatch = useDispatch();
@@ -99,44 +97,25 @@ Object.values(searchResponseMatched || {}).flatMap(item => item?.data ? item.dat
     let filters = {};
     const formData = new FormData(event.target);
 
+    formData.forEach((value, key) => {
+      if (filters[key]) {
+        filters[key].push(value);
+      } else {
+        filters[key] = [value];
+      }
+    });
 
-
-
-
-
-
-const submitProductFilter = (event) => {
-  event.preventDefault();
-
-  let filters = {};
-  const formData = new FormData(event.target);
-
-  // Process form data into the filters object
-  formData.forEach((value, key) => {
-    if (filters[key]) {
-      filters[key].push(value);
-    } else {
-      filters[key] = [value];
+    for (let key in filters) {
+      if (Array.isArray(filters[key])) {
+        filters[key] = filters[key].join(",");
+      }
     }
-  });
 
     console.log("filters ",filters)
     dispatch(applyFilters(filters));
     // console.log("Filters Applied:", filters);
   };
 
-};
-
-
-  
-  const totalCount=searchResponseMatched?.totalCount;
-  const pageSize=searchResponseMatched?.pageSize;
-  console.log("Total Count from Filter Page:", totalCount);
-  console.log("Page Size from Filter Page:", pageSize);
-
-  const totalPages = Math.ceil(totalCount / pageSize);
-
-  console.log("Total Pages from Filter Page:", totalPages);
   return (
       <div className={css.filterSection}>
         <div id={css.advancedFilters}>
