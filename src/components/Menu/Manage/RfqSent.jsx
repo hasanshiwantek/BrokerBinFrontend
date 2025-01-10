@@ -13,6 +13,7 @@ import {
     setCurrentPageNext,
     setCurrentPagePrev,
     receivedRfq,
+    deleteArchiveRfq
 } from "../../../ReduxStore/RfqSlice.js";
 import { IoMail, IoMailOpen } from "react-icons/io5";
 import { sentRfq } from "../../../ReduxStore/RfqSlice.js";
@@ -48,7 +49,13 @@ const RfqTableSent = () => {
     const token = Cookies.get("token");
 
     const { sentRfqData, receiveRfqData } = useSelector((state) => state.rfqStore)
-    console.log("Data From Page", sentRfqData)
+    console.log("SentData From Frontend", sentRfqData)
+
+
+
+
+
+
 
 
     const sentData = sentRfqData.data || [];
@@ -124,13 +131,35 @@ const RfqTableSent = () => {
 
     console.log("Sent Data Received", sentData)
 
+    // Extract pagination details
+    const pagination = sentRfqData?.pagination || {}; // Assuming pagination is present in sentRfqData
+    console.log("Pagination ", pagination)
+    const totalPages = pagination.totalPages || 1;
+    console.log("TOTAL PAGES ", totalPages)
+    const currPage = pagination.currentPage || 1;
+    console.log("current page  ", currPage)
+
     useEffect(() => {
-        dispatch(sentRfq({ token }))
+        // Fetch data and ensure pagination details are retrieved
+        dispatch(sentRfq({ token, page: currPage }))
+            .unwrap()
+            .then((response) => {
+                // Optional: You can set local state based on response if needed
+                const { pagination } = response;
+                if (pagination) {
+                    setVisiblePages([1, Math.min(10, pagination.totalPages)]); // Initialize visible pages
+                }
+            })
+            .catch((error) => {
+                console.error("Error fetching sent RFQs:", error);
+            });
+
+        // Fetch received RFQ data if not already present
         if (!receiveRfqData?.totalCount) {
             dispatch(receivedRfq({ token }));
         }
+    }, [dispatch, token, currPage]);
 
-    }, [])
 
 
 
@@ -150,19 +179,19 @@ const RfqTableSent = () => {
     const currentItems = sentData.slice(sliceFrom, sliceTo);
     console.log("CURRENT ITEMS", currentItems)
 
-    const prevPage = () => {
-        if (currentPage === 1) {
-            return;
-        }
-        dispatch(setCurrentPagePrev());
-    };
+    // const prevPage = () => {
+    //     if (currentPage === 1) {
+    //         return;
+    //     }
+    //     dispatch(setCurrentPagePrev());
+    // };
 
-    const nextPage = () => {
-        if (currentPage === Math.ceil(tableData.length / itemsPerPage)) {
-            return;
-        }
-        dispatch(setCurrentPageNext());
-    };
+    // const nextPage = () => {
+    //     if (currentPage === Math.ceil(tableData.length / itemsPerPage)) {
+    //         return;
+    //     }
+    //     dispatch(setCurrentPageNext());
+    // };
 
     const now = new Date();
     const date = `${now.getHours() > 12
@@ -295,6 +324,70 @@ const RfqTableSent = () => {
 
 
 
+
+
+
+    const handleDelete = () => {
+        if (rfqMail.length === 0) {
+            alert("Please select at least one RFQ to delete.");
+            return;
+        }
+
+        const rfqIdsToDelete = rfqMail.map((rfq) => rfq.id); // Collect RFQ IDs
+        console.log("RFQS IDS ",rfqIdsToDelete)
+
+        dispatch(deleteArchiveRfq({ token, ids: rfqIdsToDelete }))
+            .then(() => {
+                console.log("Selected RGQs Deleted")
+                alert("Selected RFQs deleted successfully!");
+                dispatch(sentRfq({ token, page: currPage })); // Refresh the data
+            })
+            .catch((error) => {
+                console.error("Error deleting RFQs:", error);
+                alert("Failed to delete RFQs. Please try again.");
+            });
+    };
+
+    console.log("rfqMail:", rfqMail);
+
+
+
+
+
+
+    // PAGINATION  LOGIC
+
+
+    // Dynamic pagination range
+    const [visiblePages, setVisiblePages] = useState([1, Math.min(10, totalPages)]);
+
+    const handlePageChange = (page) => {
+        if (page >= 1 && page <= totalPages) {
+            dispatch(sentRfq({ token, page })) // Fetch data for the selected page
+                .unwrap()
+                .then((response) => {
+                    const { pagination } = response;
+                    if (pagination) {
+                        setVisiblePages([1, Math.min(10, pagination.totalPages)]); // Update visible pages
+                    }
+                })
+                .catch((error) => console.error("Error changing page:", error));
+        }
+    };
+
+    const handlePrevious = () => {
+        if (visiblePages[0] > 1) {
+            setVisiblePages([Math.max(visiblePages[0] - 10, 1), visiblePages[0] - 1]);
+            dispatch(sentRfq({ token, page: visiblePages[0] - 1 }));
+        }
+    };
+
+    const handleNext = () => {
+        if (visiblePages[1] < totalPages) {
+            setVisiblePages([visiblePages[1] + 1, Math.min(visiblePages[1] + 10, totalPages)]);
+            dispatch(sentRfq({ token, page: visiblePages[1] + 1 }));
+        }
+    };
     return (
         <>
             <div className={css.layout}>
@@ -502,7 +595,9 @@ const RfqTableSent = () => {
                         </div>
                         <div className={css.rfqTableBtn_bottom}>
                             <div>
-                                <button type="button">send</button>
+                                <NavLink to={"/rfq/create"}>
+                                    <button type="button">send</button>
+                                </NavLink>
                                 <button
                                     type="button"
                                     onClick={resetFilters}>reset</button>
@@ -510,17 +605,61 @@ const RfqTableSent = () => {
                                 <button type="button" onClick={handleForward}>
                                     forward
                                 </button>
-                                
-                                <button type="button">Delete</button>
+
+                                <button type="button" onClick={handleDelete}>
+                                    Delete
+                                </button>
                             </div>
+
+                            {/* PAGINATION CONTROLS */}
                             <div className={css.pagination}>
-                                <button onClick={prevPage}>prev</button>
-                                <p>{currentPage}</p>
-                                <button onClick={nextPage}>next</button>
+                                <span className="text-orange-700 p-4 text-xl">
+                                    Page <span className="text-blue-800">{currPage}</span> of
+                                    <span className="text-blue-800"> {totalPages}</span>
+                                </span>
+
+                                {/* Previous Button */}
+                                <button
+                                    onClick={handlePrevious}
+                                    className={`${css.pageButton} ${visiblePages[0] === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
+                                    disabled={visiblePages[0] === 1}
+                                >
+                                    Previous
+                                </button>
+
+                                {/* Dynamic Page Buttons */}
+                                {Array.from(
+                                    { length: visiblePages[1] - visiblePages[0] + 1 },
+                                    (_, i) => visiblePages[0] + i
+                                )
+                                    .filter((page) => page >= 1 && page <= totalPages)
+                                    .map((page) => (
+                                        <button
+                                            key={page}
+                                            onClick={() => handlePageChange(page)}
+                                            className={`${css.pageButton} ${currPage === page ? css.active : ""}`}
+                                        >
+                                            {page}
+                                        </button>
+                                    ))}
+
+                                {/* Next Button */}
+                                <button
+                                    onClick={handleNext}
+                                    className={`${css.pageButton} ${visiblePages[1] === totalPages ? "opacity-50 cursor-not-allowed" : ""}`}
+                                    disabled={visiblePages[1] === totalPages}
+                                >
+                                    Next
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
+
+
+
+
+
             </div>
             {togglePopUpRfq && <RfqTablePopUp type="sent" />}
             {togglePopUpCompany && <CompanyDetails closeModal={() => dispatch(setTogglePopUpCompany())} />}
