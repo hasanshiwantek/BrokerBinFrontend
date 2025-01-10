@@ -99,10 +99,17 @@ const EditDelete = () => {
   };
 
   const handleSearch = () => {
+    // Check if all filters are empty
+    if (!filters.partModel.trim() && !filters.mfg.trim() && !filters.status.trim() && !filters.heciClei.trim()) {
+      alert("Please apply at least one filter before searching.");
+      return; // Stop execution if no filters are applied
+    }
+  
+    // Proceed with search if filters are applied
     setCurrentPage(1);
     fetchFilteredData();
   };
-
+  
   const handleSaveModifications = () => {
     const dataToSave = {
       inventories: editedItems.map((item) => ({
@@ -152,6 +159,8 @@ const EditDelete = () => {
       alert("Please select inventory items to delete");
     }
   };
+
+  
   // Function to update visible pages when reaching the last button in the range
   const handlePageChange = (page) => {
     if (page >= 1 && page <= pagination.totalPages) {

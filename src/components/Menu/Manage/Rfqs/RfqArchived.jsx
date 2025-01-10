@@ -14,7 +14,7 @@ import {
   setCurrentPagePrev,
 } from "../../../../ReduxStore/RfqSlice.js";
 import { IoMail, IoMailOpen } from "react-icons/io5";
-import { getRfqArchived, deleteArchiveRfq,receivedRfq,sentRfq } from "../../../../ReduxStore/RfqSlice.js";
+import { getRfqArchived, deleteArchiveRfq, receivedRfq, sentRfq } from "../../../../ReduxStore/RfqSlice.js";
 import Cookies from "js-cookie";
 import myProfile from "../../../../styles/Menu/Manage/MyProfile.module.css";
 import { NavLink } from "react-router-dom";
@@ -48,6 +48,17 @@ const RfqTableSent = () => {
   const token = Cookies.get("token");
 
   const { rfqArchiveData } = useSelector((state) => state.rfqStore)
+  console.log("Archived Data ", rfqArchiveData)
+
+  // Extract pagination details
+  const pagination = rfqArchiveData?.pagination || {}; // Assuming pagination is present in sentRfqData
+  console.log("Pagination ", pagination)
+  const totalPages = pagination.totalPages || 1;
+  console.log("TOTAL PAGES ", totalPages)
+  const currPage = pagination.currentPage || 1;
+  console.log("current page  ", currPage)
+
+
   console.log("Data From Page", sentRfqData)
 
 
@@ -125,16 +136,29 @@ const RfqTableSent = () => {
   console.log("Sent Data Received", sentData)
 
   useEffect(() => {
-    dispatch(getRfqArchived({ token }))
-  }, [])
+    // Fetch data and ensure pagination details are retrieved
+    dispatch(getRfqArchived({ token, page: currPage }))
+      .unwrap()
+      .then((response) => {
+        // Optional: You can set local state based on response if needed
+        const { pagination } = response;
+        if (pagination) {
+          setVisiblePages([1, Math.min(10, pagination.totalPages)]); // Initialize visible pages
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching sent RFQs:", error);
+      });
+
+  }, [dispatch, token, currPage]);
 
 
-  
-    useEffect(() => {
-      dispatch(receivedRfq({ token }));
-        dispatch(sentRfq({token}));
-    }, [dispatch, token]); // Adding token and dispatch as dependencies
-  
+
+  useEffect(() => {
+    dispatch(receivedRfq({ token }));
+    dispatch(sentRfq({ token }));
+  }, [dispatch, token]); // Adding token and dispatch as dependencies
+
 
 
   useEffect(() => {
@@ -167,7 +191,7 @@ const RfqTableSent = () => {
     dispatch(setCurrentPageNext());
   };
   console.log("Current Page:", currentPage);
-console.log("Current Items:", currentItems);
+  console.log("Current Items:", currentItems);
 
 
   const now = new Date();
@@ -273,7 +297,7 @@ console.log("Current Items:", currentItems);
       .then(() => {
         console.log("Selected RGQs Deleted")
         alert("Selected RFQs deleted successfully!");
-        dispatch(getRfqArchived({ token })); // Refresh the data
+        dispatch(getRfqArchived({ token,page:currPage })); // Refresh the data
       })
       .catch((error) => {
         console.error("Error deleting RFQs:", error);
@@ -285,17 +309,54 @@ console.log("Current Items:", currentItems);
 
   const handleForward = () => {
     if (rfqMail.length === 0) {
-        alert("Please select at least one RFQ to forward.");
-        return;
+      alert("Please select at least one RFQ to forward.");
+      return;
     }
 
     const selectedRfqs = rfqMail.map((rfq) => ({
-        id: rfq.id, // Ensure you are mapping `id` properly from sent RFQs
-        ...rfq,
+      id: rfq.id, // Ensure you are mapping `id` properly from sent RFQs
+      ...rfq,
     }));
 
     navigate("/rfq/create", { state: { selectedRfqs, type: "forward" } });
-};
+  };
+
+
+
+  // PAGINATION LOGIC
+
+  // Dynamic pagination range
+  const [visiblePages, setVisiblePages] = useState([1, Math.min(10, totalPages)]);
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      dispatch(getRfqArchived({ token, page })) // Fetch data for the selected page
+        .unwrap()
+        .then((response) => {
+          const { pagination } = response;
+          if (pagination) {
+            setVisiblePages([1, Math.min(10, pagination.totalPages)]); // Update visible pages
+          }
+        })
+        .catch((error) => console.error("Error changing page:", error));
+    }
+  };
+
+  const handlePrevious = () => {
+    if (visiblePages[0] > 1) {
+      setVisiblePages([Math.max(visiblePages[0] - 10, 1), visiblePages[0] - 1]);
+      dispatch(getRfqArchived({ token, page: visiblePages[0] - 1 }));
+    }
+  };
+
+  const handleNext = () => {
+    if (visiblePages[1] < totalPages) {
+      setVisiblePages([visiblePages[1] + 1, Math.min(visiblePages[1] + 10, totalPages)]);
+      dispatch(getRfqArchived({ token, page: visiblePages[1] + 1 }));
+    }
+  };
+
+  console.log("rfqMail ",rfqMail)
 
 
 
@@ -313,7 +374,7 @@ console.log("Current Items:", currentItems);
                     to="/rfq"
                     className={({ isActive }) => (isActive ? myProfile.active : '')}
                   >
-                    <span>Received({receiveRfqData.totalCount }/{receiveRfqData.unreadCount})</span>
+                    <span>Received({receiveRfqData.totalCount}/{receiveRfqData.unreadCount})</span>
                   </NavLink>
                 </li>
                 <li>
@@ -390,7 +451,7 @@ console.log("Current Items:", currentItems);
                           onChange={(event) => handleCheckboxClick(event, e.rfqId)} // Correctly handle checkbox clicks
                           checked={rfqMail.some((mail) => mail.rfqId === e.rfqId)} // Check if this item is selected
                         />
-                   
+
                         {/* Dynamic image based on isRead */}
                         {/* {e.isRead === 1 ? (
                           <img
@@ -470,7 +531,9 @@ console.log("Current Items:", currentItems);
             </div>
             <div className={css.rfqTableBtn_bottom}>
               <div>
-                <button type="button">send</button>
+                <NavLink to={"/rfq/create"}>
+                  <button type="button">send</button>
+                </NavLink>
                 <button
                   type="button"
                   onClick={resetFilters}>reset</button>
@@ -483,12 +546,52 @@ console.log("Current Items:", currentItems);
                   Delete
                 </button>
 
+
+
               </div>
+
+              {/* PAGINATION CONTROLS */}
               <div className={css.pagination}>
-                <button onClick={prevPage}>prev</button>
-                <p>{currentPage}</p>
-                <button onClick={nextPage}>next</button>
+                <span className="text-orange-700 p-4 text-xl">
+                  Page <span className="text-blue-800">{currPage}</span> of
+                  <span className="text-blue-800"> {totalPages}</span>
+                </span>
+
+                {/* Previous Button */}
+                <button
+                  onClick={handlePrevious}
+                  className={`${css.pageButton} ${visiblePages[0] === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
+                  disabled={visiblePages[0] === 1}
+                >
+                  Previous
+                </button>
+
+                {/* Dynamic Page Buttons */}
+                {Array.from(
+                  { length: visiblePages[1] - visiblePages[0] + 1 },
+                  (_, i) => visiblePages[0] + i
+                )
+                  .filter((page) => page >= 1 && page <= totalPages)
+                  .map((page) => (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`${css.pageButton} ${currPage === page ? css.active : ""}`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+
+                {/* Next Button */}
+                <button
+                  onClick={handleNext}
+                  className={`${css.pageButton} ${visiblePages[1] === totalPages ? "opacity-50 cursor-not-allowed" : ""}`}
+                  disabled={visiblePages[1] === totalPages}
+                >
+                  Next
+                </button>
               </div>
+
             </div>
           </div>
         </div>

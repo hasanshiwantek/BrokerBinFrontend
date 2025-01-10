@@ -94,15 +94,13 @@ export const submitRfq = createAsyncThunk(
 
 
 export const receivedRfq = createAsyncThunk(
-
-  
   "searchProductStore/receivedRfq",
-  async ({ token }) => {
+  async ({ token,page }) => {
     console.log("Token:", token);
 
     try {
       const response = await axios.get(
-        `${brokerAPI}rfq/received`, 
+        `${brokerAPI}rfq/received?page=${page}`, 
         {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -123,12 +121,12 @@ export const receivedRfq = createAsyncThunk(
 
 export const sentRfq = createAsyncThunk(
   "searchProductStore/sentRfq",
-  async ({ token }) => {
+  async ({ token,page }) => {
     console.log("Token:", token);
 
     try {
       const response = await axios.get(
-        `${brokerAPI}rfq/sent`, 
+        `${brokerAPI}rfq/sent?page=${page}`, 
         {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -149,12 +147,12 @@ export const sentRfq = createAsyncThunk(
 
 export const getRfqArchived = createAsyncThunk(
   "searchProductStore/getRfqArchived",
-  async ({ token }) => {
+  async ({ token,page }) => {
     console.log("Token:", token);
 
     try {
       const response = await axios.get(
-        `${brokerAPI}rfq/archived`, 
+        `${brokerAPI}rfq/archived?page=${page}`, 
         {
           headers: {
             "Content-Type": "multipart/form-data",

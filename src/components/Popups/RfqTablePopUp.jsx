@@ -119,7 +119,7 @@ const RfqTablePopUp = ({ type }) => {
                         <span key={idx}>{email}</span>
                       ))
                     ) : (
-                      "N/A"
+                      "Me"
                     );
                   })()}
 

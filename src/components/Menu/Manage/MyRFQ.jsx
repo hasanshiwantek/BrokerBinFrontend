@@ -19,11 +19,9 @@ const MyRFQ = () => {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    // Dispatch both thunks in parallel
-    dispatch(receivedRfq({ token }));
-    // dispatch(sentRfq({ token }));
-  }, [ ]);
+  // useEffect(() => {
+  //   dispatch(receivedRfq({ token }));
+  // }, [ ]);
   
   return (
     <RfqTable/>
