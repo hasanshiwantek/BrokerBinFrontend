@@ -21,11 +21,11 @@ const Tools = () => {
                     <li>
                         <Link to={'/tools'}>Tools</Link>
                     </li>
-                    <li>
+                    {/* <li>
                         <Link to={'/myprofile/MyVendors'}>My Vendors</Link>
-                    </li>
+                    </li> */}
                     <li>
-                        <Link to={'/myprofile/MyContact'}>My Contacts</Link>
+                        <Link to={'/myprofile/MyContact'}>My Vendors</Link>
                     </li>
                     <li> <Link to={"/hotlist/add"}>HotList</Link> </li>
                     <li>
