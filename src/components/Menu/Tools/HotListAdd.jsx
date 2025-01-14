@@ -34,7 +34,13 @@ const HotListAdd = () => {
 
     const hotlists = rows;
 
-    dispatch(addHotListItem({ hotlists, token }));
+    dispatch(addHotListItem({ hotlists, token })).then(()=>{
+      alert("Hotlist Saved SuccesFully")
+    }).catch((error)=>{
+      console.log("Error Saving Hotlists",error)
+      alert(error)
+
+    })
   };
 
   return (
