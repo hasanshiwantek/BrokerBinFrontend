@@ -44,8 +44,8 @@ const SiteMap = () => {
                                <Link to={"/tools"}> <li><img src={siteIcon} alt="icon" /> Tools</li></Link>
                                <Link to={"/myprofile/MyContacts"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> My Vendors</li></Link>
                                <Link to={"/hotlist/view"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Hot List</li></Link>
-                               <Link to={"/tools"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Track Shipment</li></Link>
-                               <Link to={"/cartpart"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Part Cart</li></Link>
+                               {/* <Link to={"/tools"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Track Shipment</li></Link> */}
+                               {/* <Link to={"/cartpart"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Part Cart</li></Link> */}
                                <Link to={"/tools"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> More Tools...</li></Link>
                             </ul>
                         </div>
@@ -73,7 +73,7 @@ const SiteMap = () => {
                                <Link to={"/inventory/Export-Remove"}> <li><img src={siteIcon} alt="icon" /> Export/Remove</li></Link>
                                <Link to={"/myprofile"}> <li><img src={siteIcon} alt="icon" /> My Profile</li></Link>
                                <Link to={"/myprofile"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Personal Info</li></Link>
-                               <Link to={"/myprofile/Options"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Options</li></Link>
+                               {/* <Link to={"/myprofile/Options"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Options</li></Link> */}
                                <Link to={"/myprofile/broadcastfilter"}> <li style={{ marginLeft: "18px" }}><img src={siteIcon} alt="icon" /> BroadCast</li></Link>
                                {/* <Link to={"/reports/email"}> <li style={{ marginLeft: "18px" }}><img src={siteIcon} alt="icon" /> Email</li></Link>
                                <Link to={"/reports/Company"}> <li><img src={siteIcon} alt="icon" />Supply & Demand</li></Link>
@@ -83,7 +83,7 @@ const SiteMap = () => {
                                <Link  to={"/mycompany"}> <li><img src={siteIcon} alt="icon" />Company Profile</li></Link>
                                <Link  to={"/mycompany"}>  <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" />Company Info</li></Link>
                                <Link  to={"/mycompany"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Contacts</li></Link>
-                               <Link  to={"/mycompany"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Options [Admin]</li></Link>
+                               {/* <Link  to={"/mycompany"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Options [Admin]</li></Link> */}
                               {/* <Link>  <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Billing Info [Admin]</li></Link>
                                <Link> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Accounts [Admin]</li></Link> */}
 
@@ -94,7 +94,7 @@ const SiteMap = () => {
                         <div id="box5">
                             <ul>
                                <Link to={"/reports/email"}> <li Lim><img src={siteIcon} alt="icon" /> Reports</li></Link>
-                               <Link to={"/reports/Company"}> <li Lim><img src={siteIcon} alt="icon" /> Company</li></Link>
+                               {/* <Link to={"/reports/Company"}> <li Lim><img src={siteIcon} alt="icon" /> Company</li></Link> */}
                                 <Link  to={"/inventory/Edit-Delete"}><li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Company Inventory</li></Link>
                                <Link to={"/inventory/Edit-Delete"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> My Inventory</li></Link>
                                <Link to={"/broadcasts"}> <li  style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Want To Buy</li></Link>
