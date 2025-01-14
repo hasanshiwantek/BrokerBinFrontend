@@ -1,13 +1,15 @@
-import { React, useEffect } from 'react';
+import { React, useEffect,useState } from 'react';
 import css from '../../../styles/Menu/Tools/HotListView.module.css'; // Assuming you have styles in CSS module
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Cookies from "js-cookie";
 import styles from "../../../styles/Menu/Tools/Tools.module.css"
-import { showHotListItem } from '../../../ReduxStore/ToolsSlice';
+import { showHotListItem,deleteHotlists } from '../../../ReduxStore/ToolsSlice';
 const HotListView = () => {
   // const [selectedItems, setSelectedItems] = useState([]);
   const items = useSelector((state) => state.toolsStore.myHotListItems)
+
+  const [selectedIds, setSelectedIds] = useState([]);
 
   console.log("items:", items);
 
@@ -21,6 +23,34 @@ const HotListView = () => {
 
 
 
+    // Handle checkbox toggle
+    const handleCheckboxChange = (id) => {
+      setSelectedIds((prev) =>
+        prev.includes(id) ? prev.filter((selectedId) => selectedId !== id) : [...prev, id]
+      );
+    };
+  
+    // Handle delete button click
+  // Handle delete button click
+  const handleDelete = () => {
+    if (selectedIds.length === 0) {
+      alert("No items selected for deletion.");
+      return;
+    }
+  
+    const payload = selectedIds; // Only send an array of IDs
+    console.log("Payload for Backend:", payload);
+  
+    dispatch(deleteHotlists({ token, ids: payload }))
+      .then(() => {
+        console.log("Deletion successful.");
+        dispatch(showHotListItem({ token })); // Refresh the list
+      })
+      .catch((error) => {
+        console.error("Error during deletion:", error);
+      });
+  };
+  
   return (
     <>
       <div className={css.container}>
@@ -41,7 +71,7 @@ const HotListView = () => {
 
         {/* Table Section */}
         <div className={css.tableWrapper}>
-          <div className={css.tableHeader}>
+          {/* <div className={css.tableHeader}>
             <div >
               <button className={css.tabTitle}>Telecom</button>
               <Link to={"/reports/email"}>
@@ -50,7 +80,6 @@ const HotListView = () => {
             </div>
 
 
-            {/* Manufacturer Dropdown */}
             <div className={css.manufacturerDropdown}>
               <span> Manufacturer:&nbsp;</span>
               <select>
@@ -60,7 +89,7 @@ const HotListView = () => {
                 <option value="lenovo">Lenovo</option>
               </select>
             </div>
-          </div>
+          </div> */}
 
           {/* Table */}
           <table className={css.table}>
@@ -89,7 +118,7 @@ const HotListView = () => {
 
                     <tr >
                       <td>
-                        <input type="checkbox" />
+                        <input type="checkbox" onChange={() => handleCheckboxChange(item.id)}/>
                       </td>
 
 
@@ -106,7 +135,9 @@ const HotListView = () => {
                       <td>6</td>
                       <td>{item.product_description}</td>
                       <td>
+                        <Link to={"/sendbroad"}>
                         <button className={css.broadcastButton}>Broadcast</button>
+                        </Link>
 
                       </td>
                     </tr>
@@ -123,8 +154,8 @@ const HotListView = () => {
 
           <div className={css.actionButtons}>
 
-            <button className={css.deleteButton}>Delete</button>
-            <button className={css.previewButton}>Preview/Print</button>
+            <button className={css.deleteButton} onClick={handleDelete}>Delete</button>
+            {/* <button className={css.previewButton}>Preview/Print</button> */}
           </div>
 
 

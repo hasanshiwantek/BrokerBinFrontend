@@ -1,16 +1,16 @@
 
 import './Help.css'
 import BroadCast from './BroadCast';
-import Contacts from './Contacts';
+// import Contacts from './Contacts';
 import Email from './Email';
 import FeedBack from './FeedBack';
 import HotList from './HotList';
 import Icons from './Icons';
 import MenuBar from './MenuBar';
-import Miscalleneous from './Miscalleneous';
+// import Miscalleneous from './Miscalleneous';
 import MultiCast from './MultiCast';
 import NavBar from './NavBar';
-import PartCart from './PartCart';
+// import PartCart from './PartCart';
 import Profile from './Profile';
 import QuickLinks from './QuickLinks';
 import Reports from './Reports';
@@ -37,14 +37,14 @@ function Help() {
         <Icons />
         <Reports />
         <Email />
-        <Miscalleneous />
+        {/* <Miscalleneous /> */}
         <Searching />
         <UploadingParts />
         <MultiCast />
         <Profile />
         <Vendors />
-        <Contacts />
-        <PartCart />
+        {/* <Contacts /> */}
+        {/* <PartCart /> */}
         <HotList />
         <FeedBack />
       </main>

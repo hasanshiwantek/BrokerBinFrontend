@@ -47,6 +47,7 @@ import dp3 from "../assets/drop-down3.svg"
 import dp4 from "../assets/drop-down4.svg"
 import dp5 from "../assets/drop-down5.svg"
 import dp6 from "../assets/drop-down6.svg"
+import SiteMap from "./Menu/Main/SiteMap";
 // import vendorIcon from "../assets/vendor-pricing.svg"
 
 
@@ -156,13 +157,13 @@ const Header = () => {
               >
                 search
               </button>
-              <button
+              {/* <button
                 type="submit"
                 onClick={() => setSearchType("keyword")}
                 className={css.search_btn}
               >
                 keyword
-              </button>
+              </button> */}
             </form>
           </div>
           {hoverCompanyDetail && hoverCompanyDetail[0] && (
@@ -396,15 +397,15 @@ const Header = () => {
                   <Link to={"/feedback"}>
                     <li>contact</li>
                   </Link>
-                  <Link to={"/ethics"}>
+                  {/* <Link to={"/ethics"}>
                     <li>ethics</li>
-                  </Link>
+                  </Link> */}
                   <Link to={"/sitemap"}>
                     <li>site map</li>
                   </Link>
-                  <Link to={"/badges"}>
+                  {/* <Link to={"/badges"}>
                     <li>badges</li>
-                  </Link>
+                  </Link> */}
                 </ul>
               </div>
             </li>
@@ -589,33 +590,38 @@ const Header = () => {
             </li>
             {toolToggle && (
               <>
-                <li>
+                <li >
+              <Link to={"/rfq"}>
                   <AiOutlineMail />
+              </Link>
                 </li>
-                <li>
+
+                {/* <li>
                   <BsFillTelephonePlusFill />
-                </li>
-                <li>
+                </li> */}
+                {/* <li>
                   <Link to={"/cartpart"}>
                     <BsCartFill />
                   </Link>
-                </li>
-                <li >
+                </li> */}
+                {/* <li >
                   <Link to={"/venprice"}>
                     <BsDatabaseFill />
                   </Link>
-                </li>
-                <li>
+                </li> */}
+                <li> 
+                  <Link to={"/broadcasthistory"}>
                   <BsClockFill />
+                  </Link>
                 </li>
-                <li>
+                {/* <li>
                   <BsStarFill />
-                </li>
-                <li>
+                </li> */}
+                {/* <li>
                   <Link to={"/myprofile/MyVendors"}>
                     <BsPeopleFill />
                   </Link>
-                </li>
+                </li> */}
                 <li>
                   <Link to={"/myprofile/MyContact"}>
                     <BsPersonFill />
@@ -631,11 +637,11 @@ const Header = () => {
                     <MdFileUpload />
                   </Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link to={"/reports/Company"}>
                     <FiTarget />
                   </Link>
-                </li>
+                </li> */}
                 {/* <li className={css.navbar_search_options}>
                   <select name="navbarSearchOptions"  >
                     <option value="">MFG Filter</option>
@@ -657,20 +663,26 @@ const Header = () => {
                     <option value="TOSHIBA">TOSHIBA</option>
                   </select>
                 </li> */}
-                <li>
+                {/* <li>
                   <AiOutlinePlus
                     style={{
                       color: "#3700ff",
                     }}
                   />
-                </li>
+                </li> */}
               </>
             )}
           </ul>
         </nav>
       </div>
+
+
+
+
     </>
   );
+
+  
 };
 
 export default memo(Header);

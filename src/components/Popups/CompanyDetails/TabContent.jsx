@@ -250,13 +250,13 @@ const TabContent = ({ companyId }) => {
 
                         </div>
                         {/* <button> */}
-                          <span
+                          {/* <span
                             className="cursor-pointer hover:text-orange-500 transition-colors"
                             onClick={() => userDeleteHandler(user.id)}
                           >
                             <MdPersonRemoveAlt1 />
                             Remove contact
-                          </span>
+                          </span> */}
                         {/* </button> */}
                       </div>
                       <div

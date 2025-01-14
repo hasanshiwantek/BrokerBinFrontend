@@ -188,6 +188,9 @@ export const getFilterInventories = createAsyncThunk(
 
 
 
+
+
+
 const initialState = {
   // Add inventory data
   inventoryData:{},
@@ -354,6 +357,7 @@ const InventorySlice = createSlice({
       .addCase(getFilterInventories.rejected, (state, action) => {
         console.error("ERROR FETCHING FILTERED INVENTORY DATA", action.error);
       });
+
   },
 });
 

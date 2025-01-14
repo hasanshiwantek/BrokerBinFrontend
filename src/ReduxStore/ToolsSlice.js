@@ -206,6 +206,36 @@ export const editHotListItem = createAsyncThunk(
   }
 );
 
+
+
+
+
+
+export const deleteHotlists = createAsyncThunk(
+  "inventoryStore/deleteHotlists ",
+  async ({ token, ids }) => {
+    console.log(token, "Attempting to delete Hotlists with IDs:", ids);
+    try {
+      const response = await axios.delete(
+        `${brokerAPI}hot-lists/delete`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          data: { ids } // Pass 'Ids' as part of the request body
+        }
+      );
+      return response.data; // Assuming the backend returns the deleted IDs or a success message
+    } catch (error) {
+      console.error("Error Deleting Hotlists:", error.response?.data);
+      throw error.response?.data; // Propagate the error message
+    }
+  }
+);
+
+
+
 const initialState = {
   tools: [],
   searchCompanies: [],
@@ -352,6 +382,15 @@ const ToolsSlice = createSlice({
       .addCase(editHotListItem.rejected, (state, action) => {
         console.error("Error searching company name", action.error);
         state.loading = true;
+      })
+      .addCase(deleteHotlists.pending, (state) => {
+        console.log("DELETING HOTLISTS....");
+      })
+      .addCase(deleteHotlists.fulfilled, (state, action) => {
+        console.log(action.payload);
+      })
+      .addCase(deleteHotlists.rejected, (state, action) => {
+        console.error("Error Deleting Hotlists", action.error);
       });
   },
 });

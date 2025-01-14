@@ -317,7 +317,7 @@ console.log("formData",formData)
                         placeholder="Your position"
                       />
                     </span>
-                    <span className="!ml-[41px]">
+                    {/* <span className="!ml-[41px]">
                       <label htmlFor="experience">Experience</label>
                       <input
                         type="date"
@@ -327,7 +327,7 @@ console.log("formData",formData)
                         value={formData.experience}
                         placeholder="Your experience"
                       />
-                    </span>
+                    </span> */}
                     <span>
                       <label htmlFor="specialty">Specialty (if any)</label>
                       <input
