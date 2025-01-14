@@ -201,6 +201,31 @@ export const applyFilters = (filters) => (dispatch, getState) => {
 
 
 
+export const sortInventory = createAsyncThunk(
+  "inventoryStore/sortInventory",
+  async ({token, payload}) => {
+    try {
+      const response = await axios.post(
+        `${brokerAPI}inventory/sort`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("Response From AsyncThunk: " + response.data)
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error Sorting Inventory",
+        error.response?.data || error.message
+      );
+      throw error.response?.data || error;
+    }
+  }
+);
 
 
 
@@ -405,7 +430,19 @@ const searchProductSlice = createSlice({
       .addCase(getCompanyContact.rejected, (state, action) => {
         state.error = action.error.message;
         console.error(" Data Not Available:");
+      })
+      .addCase(sortInventory.pending, (state) => {
+        console.log("PENDING!!!!!");
+      })
+      .addCase(sortInventory.fulfilled, (state, action) => {
+        state.searchResponseMatched=action.payload
+        console.log("SORTED INVENTORY PAYLOAD FROM REDUX",action.payload)
+
+      })
+      .addCase(sortInventory.rejected, (state, action) => {
+        console.error("ERROR FETCHING SORTED INVENTORY DATA", action.error);
       });
+
   },
 });
 

@@ -56,7 +56,7 @@ const HotListAdd = () => {
 
         <div className={css.tableWrapper}>
           <div className={css.tableHeader}>
-            <span className={css.tabTitle}>Telecom</span>
+            {/* <span className={css.tabTitle}>Telecom</span> */}
             <span className={css.subTitle}>Add to Hot List</span>
           </div>
 

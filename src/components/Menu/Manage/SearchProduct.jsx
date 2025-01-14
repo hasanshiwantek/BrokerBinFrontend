@@ -1,4 +1,3 @@
-
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import css from "../../../styles/SearchProducts.module.css";
 import Filter from "../../Filter";
@@ -10,7 +9,7 @@ import Cookies from "js-cookie";
 import { useLocation, useNavigate } from "react-router-dom";
 import shieldImage from "../../../assets/shield-img.png"
 import { countriesList } from "../../../data/services"
-
+import { NavLink } from "react-router-dom";
 
 import {
   searchProductQuery,
@@ -39,6 +38,8 @@ import { IoCheckmarkCircle } from "react-icons/io5";
 import MyRFQNew from "../../Popups/MyRFQNew";
 import ErrorStatus from "../../Error/ErrorStatus";
 import AddToHotList from "./AddToHotList";
+import { sortInventory } from "../../../ReduxStore/SearchProductSlice";
+
 
 const SearchProduct = () => {
 
@@ -66,9 +67,9 @@ const SearchProduct = () => {
     filteredSearchResponse
   } = useSelector((store) => store.searchProductStore);
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log("filterToggle:", filterToggle);
-  },[])
+  }, [])
 
   // searchResponseMatched.map((item) => { console.log("Part Model " + item.partModel) })
   if (searchResponseMatched) {
@@ -122,6 +123,40 @@ const SearchProduct = () => {
     return <ErrorStatus error={error} />;
   }
 
+  const partModels = []
+  partModels.push(searchString)
+  console.log("Searched PartModels ", partModels)
+
+  // Extracting all prices
+  let priceKey = null;
+
+  for (const key in searchResponseMatched) {
+    const dataArray = searchResponseMatched[key].data;
+    if (dataArray && dataArray.length > 0) {
+      priceKey = Object.keys(dataArray[0]).find(k => k === 'price');
+      break; // Stop after finding the first 'price' key
+    }
+  }
+
+  console.log("Key:", priceKey);
+
+
+  const sortPage = 1;
+  console.log("Page ", sortPage)
+  const sortPageSize = 20;
+  console.log("sortPageSize", sortPageSize)
+
+
+  // const payload = {
+  //   search: partModels,
+  //   sortBy: priceKey,
+  //   sortOrder: "desc",
+  //   page: sortPage,
+  //   pageSize: sortPageSize
+  // }
+
+  // console.log("Payload For Sorting ", payload)
+
 
   return (
 
@@ -131,20 +166,20 @@ const SearchProduct = () => {
 
       <div className={css.layoutTables} style={Object.keys(filteredSearchResponse || searchResponseMatched || {}).length <= 0 ? { margin: "0 auto" } : null}>
         {Object.keys(filteredSearchResponse || searchResponseMatched || {}).length === 0 || Object.values(filteredSearchResponse || searchResponseMatched).every((part) => Array.isArray(part?.data) && part.data.length === 0
-   ) ? (
+        ) ? (
           <div>
             <h2>No Results Found For Selected Part Model: {searchString || partModel}</h2>
-            <AddToHotList item={searchString || partModel} /> 
+            <AddToHotList item={searchString || partModel} />
           </div>
         ) : (
           // Render the products if available
           Object.entries(filteredSearchResponse || searchResponseMatched || {}).map(([partModel, details], index) =>
             details?.data?.length > 0 && ( // Check if data is not empty
               <div className={css.tableArea} key={`${partModel}-${index}`}>
-                {graphToggle && <ProductsPieChart />} 
+                {graphToggle && <ProductsPieChart />}
                 <div className={css.productTable}>
                   <ProductTableBtn />
-                  <ProductTableDetail partData={details.data} partModel={partModel} page={details.page} totalCount={details.totalCount} />
+                  <ProductTableDetail partData={details.data} partModel={partModel} page={details.page} totalCount={details.totalCount} partModels={partModels} sortPageSize={sortPageSize} sortPage={sortPage} token={token} searchString={searchString} />
                 </div>
               </div>
             )
@@ -178,21 +213,30 @@ const ProductTableBtn = React.memo(() => {
         RFQ
       </button>
       {popUpRfq && <MyRFQNew />}
-      <button type="button">Add</button>
+      <button  >
+        <NavLink to={"/inventory/add"} className="!text-2xl !ml-4" >
+          Add
+        </NavLink>
+      </button>
       <button>
-        <a href="/cartpart" style={{ fontSize: "1em", color: "#444" }}>Cart</a>
+        {/* <a href="/cartpart" style={{ fontSize: "1em", color: "#444" }}>Cart</a> */}
       </button>
       <button type="button" onClick={() => dispatch(setFilterToggle())}>
         Filters
       </button>
-      <button type="button" onClick={() => dispatch(setGraphToggle())}>
+      {/* <button type="button" onClick={() => dispatch(setGraphToggle())}>
         GraphView
-      </button>
+      </button> */}
     </div>
   );
 });
 
-const ProductTableDetail = React.memo(({ partModel, partData }) => {
+const ProductTableDetail = React.memo(({ partModel, partData, partModels,token }) => {
+
+
+
+
+
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -200,11 +244,17 @@ const ProductTableDetail = React.memo(({ partModel, partData }) => {
   const queryParams = new URLSearchParams(location.search);
   const page = parseInt(queryParams.get("page")) || 1;
 
+
   const {
     selectedProducts,
     searchResponseMatched,
     hoverCompanyDetail,
   } = useSelector((store) => store.searchProductStore);
+
+  console.log("SearchResponse From UI ",searchResponseMatched)
+
+  const keys = Object.keys(searchResponseMatched);
+console.log(keys); // Output: ["001NFM", "002CR", "003442U"]
 
   const handleShowPopupCompanyDetails = (event, companyId) => {
     event.stopPropagation();
@@ -322,8 +372,8 @@ const ProductTableDetail = React.memo(({ partModel, partData }) => {
   // } = useSelector((store) => store.searchProductStore);
 
 
-  const totalCount=searchResponseMatched[partModel]?.totalCount;
-  const pageSize=searchResponseMatched[partModel]?.pageSize;
+  const totalCount = searchResponseMatched[partModel]?.totalCount;
+  const pageSize = searchResponseMatched[partModel]?.pageSize;
   console.log("Total Count:", totalCount);
   console.log("Page Size:", pageSize);
 
@@ -332,7 +382,7 @@ const ProductTableDetail = React.memo(({ partModel, partData }) => {
   console.log("Total Pages:", totalPages);
 
 
-  
+
   const handleNextPage = () => {
     const newPage = page + 1;
 
@@ -350,6 +400,50 @@ const ProductTableDetail = React.memo(({ partModel, partData }) => {
 
     console.log("Navigating to URL:", url); // Debug log
   };
+
+
+  const [sortBy, setSortBy] = useState(null); // Initially no column is sorted
+  const [sortOrder, setSortOrder] = useState("desc"); // Default to "desc"
+  
+
+  // const payloadData  = {
+  //   search: partModels[0].split(","),
+  //   sortBy: column,
+  //   sortOrder: sortBy === column && sortOrder === "asc" ? "desc" : "asc",
+  //   page: 1, // Reset to the first page
+  //   pageSize: 20, // Adjust page size if necessary
+  // }
+
+
+
+
+
+  // console.log("Payload from ProductTable Page", payload)
+  console.log("token", token)
+
+  const handleSort = (column) => {
+    if (sortBy === column) {
+      // If the same column is clicked, toggle the sortOrder
+      setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
+    } else {
+      // For a new column, reset sortBy to the column and keep sortOrder as "desc"
+      setSortBy(column);
+      setSortOrder("desc");
+    }
+  
+    // Create the payload for dispatch
+    const payload = {
+      search: keys, // Ensure search is formatted as an array
+      sortBy: column,
+      sortOrder: sortBy === column ? (sortOrder === "asc" ? "desc" : "asc") : "desc", // Toggle or default to "desc"
+      page: 1,                         // Reset to the first page
+      pageSize: 20,                    // Adjust page size if needed
+    };
+  
+    console.log("Sorting Payload:", payload);
+    dispatch(sortInventory({ token, payload }));
+  };
+  
 
 
 
@@ -375,12 +469,22 @@ const ProductTableDetail = React.memo(({ partModel, partData }) => {
               <th>Part / Model</th>
               <th>History</th>
               <th>TS</th>
-              <th>HECI / CLEI</th>
-              <th>Mfg</th>
-              <th>Cond</th>
-              <th>Price</th>
-              <th>Qty</th>
-              <th>Age</th>
+
+              <th onClick={() => handleSort("heciClei")} style={{ cursor: "pointer" }}>HECI / CLEI {sortBy === "heciClei" && (sortOrder === "asc" ? "↑" : "↓")} </th>
+
+              <th onClick={() => handleSort("mfg")} style={{ cursor: "pointer" }} >Mfg {sortBy === "mfg" && (sortOrder === "asc" ? "↑" : "↓")}</th>
+
+              <th onClick={() => handleSort("cond")} style={{ cursor: "pointer" }} >Cond{sortBy === "cond" && (sortOrder === "asc" ? "↑" : "↓")}</th>
+
+              <th onClick={() => handleSort("price")} style={{ cursor: "pointer" }}>
+                Price {sortBy === "price" && (sortOrder === "asc" ? "↑" : "↓")}
+              </th>
+
+              <th onClick={() => handleSort("quantity")} style={{ cursor: "pointer" }}>
+                Quantity {sortBy === "quantity" && (sortOrder === "asc" ? "↑" : "↓")}
+              </th>
+
+              <th>Age </th>
               <th>Product Description</th>
             </tr>
           </thead>
