@@ -250,6 +250,10 @@ const initialState = {
   totalCount: 0,
   gettingProducts: false,
   gettingHistory: false,
+  keywordPage:null,
+  keywordPageSize:null,
+  keywordTotalCount:null,
+
 };
 
 const searchProductSlice = createSlice({
@@ -349,6 +353,10 @@ const searchProductSlice = createSlice({
       })
       .addCase(searchByKeyword.fulfilled, (state, action) => {
         console.log("Payload from searchByKeyword:", action.payload);
+        state.keywordPage=action.payload.page;
+        state.keywordPageSize=action.payload.pageSize;
+        state.keywordTotalCount=action.payload.totalCount
+        console.log("Page from Keyword: ", state.keywordPage + " " + "Page Size from Keyword: " + state.keywordPageSize + " " + "keyword TotalCount: " + state.keywordTotalCount )
         const foundItems = action.payload.foundItems;
         const structuredResponse = foundItems.reduce((acc, item) => {
             const { partModel } = item;
