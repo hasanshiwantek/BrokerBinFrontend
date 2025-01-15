@@ -25,6 +25,7 @@ button {
   border-top: 0.5rem solid var(--primary-color);
   min-height: 8rem;
 
+
   @media only screen and (max-width: 54.375em) {
     justify-content: space-between;
   }
@@ -125,8 +126,15 @@ button {
 
 
 .nav {
+  /* ORIGINAL */
+  /* position: relative;
+  height: 31px !important; */
+/* .......... */
+
   position: relative;
   height: 31px !important;
+  position: fixed;
+  width: 100vw;
 }
 
 .nav_tools {

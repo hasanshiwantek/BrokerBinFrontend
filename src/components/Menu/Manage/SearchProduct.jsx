@@ -1,3 +1,4 @@
+
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import css from "../../../styles/SearchProducts.module.css";
 import Filter from "../../Filter";
@@ -10,6 +11,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import shieldImage from "../../../assets/shield-img.png"
 import { countriesList } from "../../../data/services"
 import { NavLink } from "react-router-dom";
+import { fetchUserData } from "../../../ReduxStore/ProfleSlice";
 
 import {
   searchProductQuery,
@@ -64,7 +66,10 @@ const SearchProduct = () => {
     graphToggle,
     companiesListingParts,
     togglePopUp,
-    filteredSearchResponse
+    filteredSearchResponse,
+    keywordPage,
+    keywordPageSize,
+    keywordTotalCount
   } = useSelector((store) => store.searchProductStore);
 
   useEffect(() => {
@@ -137,25 +142,13 @@ const SearchProduct = () => {
       break; // Stop after finding the first 'price' key
     }
   }
-
   console.log("Key:", priceKey);
-
-
   const sortPage = 1;
-  console.log("Page ", sortPage)
   const sortPageSize = 20;
-  console.log("sortPageSize", sortPageSize)
 
 
-  // const payload = {
-  //   search: partModels,
-  //   sortBy: priceKey,
-  //   sortOrder: "desc",
-  //   page: sortPage,
-  //   pageSize: sortPageSize
-  // }
 
-  // console.log("Payload For Sorting ", payload)
+
 
 
   return (
@@ -231,7 +224,7 @@ const ProductTableBtn = React.memo(() => {
   );
 });
 
-const ProductTableDetail = React.memo(({ partModel, partData, partModels,token }) => {
+const ProductTableDetail = React.memo(({ partModel, partData, partModels, token, searchString }) => {
 
 
 
@@ -251,10 +244,40 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels,token }
     hoverCompanyDetail,
   } = useSelector((store) => store.searchProductStore);
 
-  console.log("SearchResponse From UI ",searchResponseMatched)
+  console.log("SearchResponse From UI ", searchResponseMatched)
+
+
+  const user_id = Cookies.get("user_id");
+  const { initialData, user } = useSelector(
+    (state) => state.profileStore
+  );
+
+  const id = user?.user?.id || user_id;
+
+  console.log("Logged In User Data from Search Product Page ", initialData);
+
+
+  const loggedInUserCompany = initialData?.company?.name
+  console.log("LoggedIn User Company ", loggedInUserCompany)
+
+  useEffect(() => {
+    console.log(id);
+    dispatch(fetchUserData({ id, token }));
+  }, []);
+
+  // Extract all company names
+  const companyNames = Object.values(searchResponseMatched)
+    .flatMap((response) => response.data) // Extract all `data` arrays
+    .map((item) => item.addedBy?.company?.name) // Extract `company.name`
+    .filter(Boolean); // Remove undefined or null names
+
+  console.log("Company Names:", companyNames);
+
+
+
 
   const keys = Object.keys(searchResponseMatched);
-console.log(keys); // Output: ["001NFM", "002CR", "003442U"]
+  console.log(keys); // Output: ["001NFM", "002CR", "003442U"]
 
   const handleShowPopupCompanyDetails = (event, companyId) => {
     event.stopPropagation();
@@ -279,41 +302,6 @@ console.log(keys); // Output: ["001NFM", "002CR", "003442U"]
     dispatch(setTogglePopUp());
   };
 
-  // const selectProduct = (id) => {
-  //   const filteredProducts = () => {
-  //     if (
-  //       selectedProducts.length !== 0 &&
-  //       selectedProducts.some((product) => product.id === id)
-  //     ) {
-  //       return selectedProducts.filter((product) => product.id !== id);
-  //     } else {
-  //       const selectedProduct = Object.values(searchResponseMatched).flatMap(
-  //         (item) => item.data
-  //       ).find((item) => item.id === id);
-
-  //       return [...selectedProducts, selectedProduct];
-  //     }
-  //   };
-  //   dispatch(setSelectedProducts(filteredProducts()));
-  // };
-
-  // const selectProduct = (id, partModel) => {
-  //   const filteredProducts = () => {
-  //     if (
-  //       selectedProducts.length !== 0 &&
-  //       selectedProducts.some((product) => product.id === id)
-  //     ) {
-  //       return selectedProducts.filter((product) => product.id !== id);
-  //     } else {
-  //       const selectedProduct = searchResponseMatched[partModel]?.data.find(
-  //         (item) => item.id === id
-  //       );
-
-  //       return [...selectedProducts, selectedProduct];
-  //     }
-  //   };
-  //   dispatch(setSelectedProducts(filteredProducts()));
-  // };
 
   const selectProduct = (id) => {
     const filteredProducts = selectedProducts.some((product) => product.id === id)
@@ -341,35 +329,11 @@ console.log(keys); // Output: ["001NFM", "002CR", "003442U"]
     return selectedProducts.some((product) => product.id === id);
   };
 
-  const handlePrevPage = () => {
-    const newPage = page - 1;
-
-    // Ensure we don't navigate to a page number less than 1
-    if (newPage < 1) return;
-
-    // Determine which parameter to use based on the current URL
-    const queryParams = new URLSearchParams(location.search);
-    const currentQuery = queryParams.get("query");
-    const currentPartModel = queryParams.get("partModel");
-
-    // Use the same parameter as in the current URL
-    const url = currentQuery
-      ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(currentQuery)}`
-      : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(currentPartModel)}`;
-
-    navigate(url, { replace: true });
-
-    console.log("Navigating to URL:", url); // Debug log
-  };
 
 
-  // const {
-  //   // selectedProducts,
-  //   // searchResponseMatched,
-  //   pageSize,
-  //   totalCount,
-  //   // hoverCompanyDetail,
-  // } = useSelector((store) => store.searchProductStore);
+
+
+  const [searchSource, setSearchSource] = useState("search"); // "search" or "keyword"
 
 
   const totalCount = searchResponseMatched[partModel]?.totalCount;
@@ -383,39 +347,115 @@ console.log(keys); // Output: ["001NFM", "002CR", "003442U"]
 
 
 
+
+  const { keywordPage, keywordPageSize, keywordTotalCount } = useSelector((state) => state.searchProductStore)
+  const keywordTotalPages = Math.ceil(keywordTotalCount, keywordPageSize)
+  console.log("Keyword Page From Frontend: ", keywordPage)
+  console.log("Keyword PageSize From Frontend: ", keywordPageSize)
+  console.log("Keyword totalCount From Frontend: ", keywordTotalCount)
+  console.log("Keyword TotalPages: ", keywordTotalPages)
+
+
+  // Check if searchString or partModel is present
+  const isSearchPagination = Boolean(searchString);
+  const isKeywordPagination = Boolean(partModel);
+
+  console.log("isKeywordPgination " + isKeywordPagination)
+  console.log("isSearchPagination " + isSearchPagination)
+
+  // Determine totalPages and currentPage based on the condition
+  const totalPagess = isSearchPagination
+    ? Math.ceil(totalCount / pageSize) // Use search pagination
+    : isKeywordPagination
+      ? Math.ceil(keywordTotalCount / keywordPageSize) // Use keyword pagination
+      : 1; // Default to 1 if no condition is met
+
+  const currentPage = isSearchPagination ? page : keywordPage;
+
+  console.log("Pagination Source:", isSearchPagination ? "Search" : "Keyword");
+  console.log("Total Pages:", totalPagess);
+  console.log("Current Page:", currentPage);
+
+
+
+
+  // const handleNextPage = () => {
+  //   const newPage = page + 1;
+
+  //   // Determine which parameter to use based on the current URL
+  //   const queryParams = new URLSearchParams(location.search);
+  //   const currentQuery = queryParams.get("query");
+  //   const currentPartModel = queryParams.get("partModel");
+
+  //   // Use the same parameter as in the current URL
+  //   const url = currentQuery
+  //     ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(currentQuery)}`
+  //     : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(currentPartModel)}`;
+
+  //   navigate(url, { replace: true });
+
+  //   console.log("Navigating to URL:", url); // Debug log
+  // };
+
+  // const handlePrevPage = () => {
+  //   const newPage = page - 1;
+
+  //   // Ensure we don't navigate to a page number less than 1
+  //   if (newPage < 1) return;
+
+  //   // Determine which parameter to use based on the current URL
+  //   const queryParams = new URLSearchParams(location.search);
+  //   const currentQuery = queryParams.get("query");
+  //   const currentPartModel = queryParams.get("partModel");
+
+  //   // Use the same parameter as in the current URL
+  //   const url = currentQuery
+  //     ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(currentQuery)}`
+  //     : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(currentPartModel)}`;
+
+  //   navigate(url, { replace: true });
+
+  //   console.log("Navigating to URL:", url); // Debug log
+  // };
+
+
+
+
+
   const handleNextPage = () => {
-    const newPage = page + 1;
+    const newPage = currentPage + 1;
+    if (newPage > totalPages) return;
 
-    // Determine which parameter to use based on the current URL
-    const queryParams = new URLSearchParams(location.search);
-    const currentQuery = queryParams.get("query");
-    const currentPartModel = queryParams.get("partModel");
-
-    // Use the same parameter as in the current URL
-    const url = currentQuery
-      ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(currentQuery)}`
-      : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(currentPartModel)}`;
+    const url = isSearchPagination
+      ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(searchString)}`
+      : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(partModel)}`;
 
     navigate(url, { replace: true });
-
-    console.log("Navigating to URL:", url); // Debug log
   };
+
+  const handlePrevPage = () => {
+    const newPage = currentPage - 1;
+    if (newPage < 1) return;
+
+    const url = isSearchPagination
+      ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(searchString)}`
+      : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(partModel)}`;
+
+    navigate(url, { replace: true });
+  };
+
+
+
+
+
+
+
+
+
 
 
   const [sortBy, setSortBy] = useState(null); // Initially no column is sorted
   const [sortOrder, setSortOrder] = useState("desc"); // Default to "desc"
-  
-
-  // const payloadData  = {
-  //   search: partModels[0].split(","),
-  //   sortBy: column,
-  //   sortOrder: sortBy === column && sortOrder === "asc" ? "desc" : "asc",
-  //   page: 1, // Reset to the first page
-  //   pageSize: 20, // Adjust page size if necessary
-  // }
-
-
-
 
 
   // console.log("Payload from ProductTable Page", payload)
@@ -430,7 +470,7 @@ console.log(keys); // Output: ["001NFM", "002CR", "003442U"]
       setSortBy(column);
       setSortOrder("desc");
     }
-  
+
     // Create the payload for dispatch
     const payload = {
       search: keys, // Ensure search is formatted as an array
@@ -439,11 +479,11 @@ console.log(keys); // Output: ["001NFM", "002CR", "003442U"]
       page: 1,                         // Reset to the first page
       pageSize: 20,                    // Adjust page size if needed
     };
-  
+
     console.log("Sorting Payload:", payload);
     dispatch(sortInventory({ token, payload }));
   };
-  
+
 
 
 
@@ -469,7 +509,6 @@ console.log(keys); // Output: ["001NFM", "002CR", "003442U"]
               <th>Part / Model</th>
               <th>History</th>
               <th>TS</th>
-
               <th onClick={() => handleSort("heciClei")} style={{ cursor: "pointer" }}>HECI / CLEI {sortBy === "heciClei" && (sortOrder === "asc" ? "↑" : "↓")} </th>
 
               <th onClick={() => handleSort("mfg")} style={{ cursor: "pointer" }} >Mfg {sortBy === "mfg" && (sortOrder === "asc" ? "↑" : "↓")}</th>
@@ -489,61 +528,85 @@ console.log(keys); // Output: ["001NFM", "002CR", "003442U"]
             </tr>
           </thead>
           <tbody>
-            {partData?.map((e, i) => (
-              <tr key={i} className={css.tableData}>
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={isSelected(e.id)}
-                    onChange={() => selectProduct(e.id)}
-                    style={{ cursor: "pointer" }}
-                  />
-                </td>
-                <td></td>
-                <td>
-                  <a
-                    style={{ color: "#428bca", fontWeight: "500" }}
-                    onClick={(event) =>
-                      handleShowPopupCompanyDetails(event, e.addedBy.company.id)
-                    }
-                    onMouseEnter={(event) =>
-                      handleHoverCompanyDetail(event, e.id)
-                    }
-                  >
-                    {e.addedBy.company.name}
-                  </a>
-                </td>
-                <td>
-                  <FaEye />
-                </td>
-                <td>
-                  {countriesList.find(
-                    (country) =>
-                      country.label.toLowerCase().trim() ===
-                      e.addedBy.company.country.toLowerCase().trim()
-                  )?.value || e.addedBy.company.country}
-                </td>
-                <td>{e.partModel}</td>
-                <td>
-                  <MdShowChart />
-                </td>
-                <td>
-                  {e.ts ? (
-                    <IoCheckmarkCircle style={{ color: "red" }} />
-                  ) : (
-                    <BiBlock style={{ color: "red" }} />
-                  )}
-                </td>
-                <td>{e.heciClei}</td>
-                <td>{e.mfg}</td>
-                <td>{e.cond}</td>
-                <td>{e.price}</td>
-                <td>{e.quantity}</td>
-                <td>{e.age}</td>
-                <td>{e.productDescription}</td>
-              </tr>
-            ))}
+            {partData
+              ?.slice() // Create a shallow copy of partData to avoid mutating the original array
+              .sort((a, b) => {
+                // Check if the company matches the logged-in user's company
+                const isAUserCompany =
+                  a.addedBy?.company?.name?.toLowerCase() === loggedInUserCompany?.toLowerCase();
+                const isBUserCompany =
+                  b.addedBy?.company?.name?.toLowerCase() === loggedInUserCompany?.toLowerCase();
+
+                // Sort to prioritize logged-in user's company
+                if (isAUserCompany && !isBUserCompany) return -1; // a comes before b
+                if (!isAUserCompany && isBUserCompany) return 1; // b comes before a
+                return 0; // Keep the same order for others
+              })
+              .map((e, i) => (
+                <tr
+                  key={i}
+                  style={
+                    e.addedBy?.company?.name?.toLowerCase() === loggedInUserCompany?.toLowerCase()
+                      ? { backgroundColor: "#ffb" } // Highlight if the company matches
+                      : null
+                  }
+                >
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={isSelected(e.id)}
+                      onChange={() => selectProduct(e.id)}
+                      style={{ cursor: "pointer" }}
+                    />
+                  </td>
+                  <td></td>
+                  <td>
+                    <a
+                      style={{ color: "#428bca", fontWeight: "500" }}
+                      onClick={(event) =>
+                        handleShowPopupCompanyDetails(event, e.addedBy.company.id)
+                      }
+                      onMouseEnter={(event) =>
+                        handleHoverCompanyDetail(event, e.id)
+                      }
+                    >
+                      {e.addedBy.company.name}
+                    </a>
+                  </td>
+                  <td>
+                    <FaEye />
+                  </td>
+                  <td>
+                    {countriesList.find(
+                      (country) =>
+                        country.label.toLowerCase().trim() ===
+                        e.addedBy?.company?.country?.toLowerCase().trim()
+                    )?.value || e.addedBy?.company?.country || "N/A"}
+                  </td>
+                  <td>{e.partModel}</td>
+                  <td>
+                    <MdShowChart />
+                  </td>
+                  <td>
+                    {e.ts ? (
+                      <IoCheckmarkCircle style={{ color: "red" }} />
+                    ) : (
+                      <BiBlock style={{ color: "red" }} />
+                    )}
+                  </td>
+                  <td>{e.heciClei}</td>
+                  <td>{e.mfg}</td>
+                  <td>{e.cond}</td>
+                  <td>{e.price}</td>
+                  <td>{e.quantity}</td>
+                  <td>{e.age}</td>
+                  <td>{e.productDescription}</td>
+                </tr>
+              ))}
           </tbody>
+
+
+
           <tfoot>
             <tr>
               <th>Cart</th>
@@ -560,37 +623,49 @@ console.log(keys); // Output: ["001NFM", "002CR", "003442U"]
               <th>Part / Model</th>
               <th>History</th>
               <th>TS</th>
-              <th>HECI / CLEI</th>
-              <th>Mfg</th>
-              <th>Cond</th>
-              <th>Price</th>
-              <th>Qty</th>
+              <th onClick={() => handleSort("heciClei")} style={{ cursor: "pointer" }}>HECI / CLEI {sortBy === "heciClei" && (sortOrder === "asc" ? "↑" : "↓")} </th>
+
+              <th onClick={() => handleSort("mfg")} style={{ cursor: "pointer" }} >Mfg {sortBy === "mfg" && (sortOrder === "asc" ? "↑" : "↓")}</th>
+
+              <th onClick={() => handleSort("cond")} style={{ cursor: "pointer" }} >Cond{sortBy === "cond" && (sortOrder === "asc" ? "↑" : "↓")}</th>
+
+              <th onClick={() => handleSort("price")} style={{ cursor: "pointer" }}>
+                Price {sortBy === "price" && (sortOrder === "asc" ? "↑" : "↓")}
+              </th>
+
+              <th onClick={() => handleSort("quantity")} style={{ cursor: "pointer" }}>
+                Quantity {sortBy === "quantity" && (sortOrder === "asc" ? "↑" : "↓")}
+              </th>
               <th>Age</th>
               <th>Product Description</th>
             </tr>
           </tfoot>
         </table>
+
+
+
         <div className={`${css.tablePagination}`}>
           <button
             type="button"
             onClick={handlePrevPage}
-            disabled={page === 1}
+            disabled={currentPage === 1}
             className="text-gray-600 text-lg font-bold"
           >
             Prev
           </button>
           <span className="text-white text-lg font-bold ">
-            {page}/{totalPages}
+            {currentPage}/{totalPagess}
           </span>
           <button
             className="text-gray-600 text-lg font-bold"
             type="button"
             onClick={handleNextPage}
-            disabled={page === totalPages}
+            disabled={currentPage === totalPagess}
           >
             Next
           </button>
         </div>
+
       </div>
     </div>
 
@@ -600,3 +675,5 @@ console.log(keys); // Output: ["001NFM", "002CR", "003442U"]
 
 
 export default SearchProduct;
+
+

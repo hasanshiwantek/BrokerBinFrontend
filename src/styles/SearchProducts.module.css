@@ -48,7 +48,7 @@
       text-align: left;
     }
     td {
-      background-color: white;
+      /* background-color: white; */
       color: black;
       > svg {
         margin: 0 auto;
@@ -134,7 +134,7 @@
 
 
  .productTableDetail table td {
-  padding: 3px 8px ;
+  padding: 1px 8px ;
   margin-left: 10px;
   text-align: left;
   font-size: 8pt;
@@ -171,12 +171,17 @@
 
 
 /* Assuming the CSS file is named SearchProducts.module.css */
-.productTableDetail table tr:nth-child(odd) td {
-  background-color: #f2f2f2; /* Light grey for odd rows */
+/* .productTableDetail table tr:nth-child(odd) td {
+  background-color: #f2f2f2; 
 }
 
 .productTableDetail table tr:nth-child(even) td {
-  background-color: #ffffff; /* White for even rows */
+  background-color: #ffffff; 
+} */
+
+.productTableDetail table tr{
+  background-color: #ffffff;
+  border-bottom: 1px solid rgb(228, 225, 225);
 }
 
 .searchProductAddToHotList_main_bg {
@@ -187,4 +192,9 @@
   font-size: 9pt;
   font-weight: 500;
   padding: 3px;
+}
+
+
+.highlightRow {
+  background-color: #ffb !important; /* Add !important to override any other styles */
 }

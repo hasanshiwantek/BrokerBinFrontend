@@ -9,16 +9,26 @@ import {
 } from "../../../../ReduxStore/InventorySlice";
 import Cookies from "js-cookie";
 import { useSelector, useDispatch } from "react-redux";
+import { fetchUserData } from "../../../../ReduxStore/ProfleSlice";
+
 
 const EditDelete = () => {
   const token = Cookies.get("token");
+ 
+
+  
   const dispatch = useDispatch();
+
+
 
   const { inventoryData, filteredInventoryData } = useSelector(
     (state) => state.inventoryStore
   );
   console.log("Inventory Data from Frontend", inventoryData);
   console.log("Filtered Inventory Data from Frontend", filteredInventoryData)
+  const companyFromInventory=inventoryData?.data?.map((item)=>item.addedBy.company.name)
+  console.log("Companies from Inventory ",companyFromInventory)
+
   const pagination = filteredInventoryData?.pagination || inventoryData?.pagination || {};
 
   const [loading, setLoading] = useState(false);
