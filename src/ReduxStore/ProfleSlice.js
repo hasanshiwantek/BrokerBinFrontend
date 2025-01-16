@@ -133,6 +133,15 @@ const initialState = {
     experience: "",
     specialty: "",
     email: "",
+    imScreenNames: {
+      skype: '',
+      whatsapp: '',
+      trillian: '',
+  },
+  socialNetworking: {
+    facebook: '',
+    linkedin: '',
+},
     skype: "",
     whatsapp: "",
     trillian: "",

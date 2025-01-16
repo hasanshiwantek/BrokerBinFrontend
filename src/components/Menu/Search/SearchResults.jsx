@@ -12,7 +12,7 @@ const SearchResults = () => {
     console.log(results);
 
     const location = useLocation(); 
-    const { searchResults } = location.state; 
+    const { searchResults } = location.state;
 
     return (
         <main className='mainSec'>

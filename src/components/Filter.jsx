@@ -8,11 +8,14 @@ import Cookies from "js-cookie";
 import {
   searchProductFilter,
   setFilterToggle,
-  applyFilters
+  setAppliedFilters,
+  clearSearchResponseMatched,
+  searchProductQuery
+  // applyFilters
 } from "../ReduxStore/SearchProductSlice";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
-const Filter = () => {
+const Filter = ({ currentQuery }) => {
   const [collapsedSections, setCollapsedSections] = useState({
     manufacturer: false,
     condition: false,
@@ -24,7 +27,7 @@ const Filter = () => {
 
   const token = Cookies.get("token");
   const location = useLocation();
-  const searchString = location.state || {};
+  // const searchString = location.state || {};
   const { searchResponseMatched, searchHistory } = useSelector(
     (store) => store.searchProductStore
   );
@@ -35,6 +38,7 @@ const Filter = () => {
   
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // Toggle section collapse state
   const toggleSection = (sectionName) => {
@@ -92,6 +96,9 @@ Object.values(searchResponseMatched || {}).flatMap(item => item?.data ? item.dat
   // console.log("Country in Filter:", country + " CountryCount: " + countryCount[country]);
 });
 
+// const { searchString, partModel } = useSelector((store) => store.searchProductStore);
+// console.log("partModel from Props:", partModel);
+
   const submitProductFilter = (event) => {
     event.preventDefault();
     let filters = {};
@@ -110,11 +117,27 @@ Object.values(searchResponseMatched || {}).flatMap(item => item?.data ? item.dat
         filters[key] = filters[key].join(",");
       }
     }
+    const partModels = Object.keys(searchResponseMatched || {});
+    filters.partModel = partModels.join(",");
 
     console.log("filters ",filters)
-    dispatch(applyFilters(filters));
+    console.log("Filters Before Dispatch:", filters);
+    // dispatch(searchProductFilter({ token, filters }));
+    dispatch(setAppliedFilters(filters));
+    dispatch(searchProductFilter({ token, filters }));
+    // dispatch(applyFilters(filters));
     // console.log("Filters Applied:", filters);
   };
+
+  const handleClearFilters = (event) => {
+    event.preventDefault();
+    dispatch(clearSearchResponseMatched());
+    dispatch(setAppliedFilters({})); // Clear filters
+    navigate(`/inventory/search?page=1&query=${encodeURIComponent(currentQuery)}`); // Reset to initial query
+    dispatch(searchProductQuery({ token, page: 1, search: currentQuery })); // Fetch initial query data
+  };
+  
+  
 
   return (
       <div className={css.filterSection}>
@@ -238,6 +261,9 @@ Object.values(searchResponseMatched || {}).flatMap(item => item?.data ? item.dat
           </div>
 
           <input type="submit" id={css.applyFilter} value="Apply Filters" className={css.applyFilterBtn} />
+          <button 
+          className={`${css.applyFilterBtn}   !bg-[#f06622] !rounded`}
+          onClick={handleClearFilters}>Clear filters</button>
         </form>
 
         {/* Search History Section */}

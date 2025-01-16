@@ -47,6 +47,9 @@ const Search = lazy(() =>
 const SearchCompany = lazy(() =>
   import("./components/Menu/Search/Company.jsx")
 );
+const InventorySearch = lazy(() =>
+  import("./components/Menu/Search/Inventory/InventorySearch.jsx")
+);
 const SearchResult = lazy(() =>
   import("./components/Menu/Search/SearchResults.jsx")
 );
@@ -349,6 +352,17 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <SearchCompany />
+            <Footer />
+
+          </Suspense>
+        ),
+      },
+      {
+        path: "/advance",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <InventorySearch />
             <Footer />
 
           </Suspense>
