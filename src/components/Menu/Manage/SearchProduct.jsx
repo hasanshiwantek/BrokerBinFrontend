@@ -27,7 +27,8 @@ import {
   setHoverCompanyDetail,
   searchByKeyword,
   setSearchResponse,
-  clearSearchResponseMatched
+  clearSearchResponseMatched,
+  searchProductFilter,
   // setSearchResponseMatched
 
 } from "../../../ReduxStore/SearchProductSlice";
@@ -41,6 +42,7 @@ import ErrorStatus from "../../Error/ErrorStatus";
 import AddToHotList from "./AddToHotList";
 
 const SearchProduct = () => {
+
 
   const token = Cookies.get("token");
   const location = useLocation();
@@ -66,6 +68,13 @@ const SearchProduct = () => {
     filteredSearchResponse
   } = useSelector((store) => store.searchProductStore);
 
+  const isFilterActive = !!(
+    filteredSearchResponse &&
+    searchResponseMatched &&
+    Object.keys(filteredSearchResponse).length > 0 &&
+    JSON.stringify(filteredSearchResponse) !== JSON.stringify(searchResponseMatched)
+  );
+
   useEffect(()=>{
     console.log("filterToggle:", filterToggle);
   },[])
@@ -81,11 +90,14 @@ const SearchProduct = () => {
   }
 
   useEffect(() => {
+    
     const queryParams = new URLSearchParams(location.search);
     const searchString = queryParams.get("query") || ""; // For multi-part search (e.g., "part1 part2")
     const partModel = queryParams.get("partModel") || ""; // For single specific part model search
-    dispatch(clearSearchResponseMatched());
-    dispatch(setSearchResponse({}));
+    if (!isFilterActive) {
+      dispatch(clearSearchResponseMatched());
+      dispatch(setSearchResponse({}));
+    }
 
     if (searchString) {
       // Split the search string into parts and dispatch actions for each part
@@ -110,6 +122,21 @@ const SearchProduct = () => {
     );
   }, [location, dispatch, token, page]);
 
+  const [currentQuery, setCurrentQuery] = useState(searchString || partModel);
+
+  useEffect(() => {
+    if (searchString || partModel) {
+      setCurrentQuery(searchString || partModel); // Update with latest search or partModel
+    }
+  }, [searchString, partModel]);
+  // const initialQuery = useRef(searchString); // Save the initial query
+  
+
+  useEffect(() => {
+    console.log("Filtered Search Response:", filteredSearchResponse);
+  }, [filteredSearchResponse]);
+
+
   if (gettingProducts) {
     return <LoadingState />;
   }
@@ -127,7 +154,7 @@ const SearchProduct = () => {
 
     <div className={css.layout}>
 
-      {filterToggle && <Filter />}
+      {filterToggle && <Filter currentQuery={currentQuery}/>}
 
       <div className={css.layoutTables} style={Object.keys(filteredSearchResponse || searchResponseMatched || {}).length <= 0 ? { margin: "0 auto" } : null}>
         {Object.keys(filteredSearchResponse || searchResponseMatched || {}).length === 0 || Object.values(filteredSearchResponse || searchResponseMatched).every((part) => Array.isArray(part?.data) && part.data.length === 0
@@ -144,7 +171,12 @@ const SearchProduct = () => {
                 {graphToggle && <ProductsPieChart />} 
                 <div className={css.productTable}>
                   <ProductTableBtn />
-                  <ProductTableDetail partData={details.data} partModel={partModel} page={details.page} totalCount={details.totalCount} />
+                  <ProductTableDetail 
+                  partData={details.data} 
+                  partModel={partModel} 
+                  page={details.page} 
+                  totalCount={details.totalCount}
+                  isFilterActive={isFilterActive} />
                 </div>
               </div>
             )
@@ -192,7 +224,7 @@ const ProductTableBtn = React.memo(() => {
   );
 });
 
-const ProductTableDetail = React.memo(({ partModel, partData }) => {
+const ProductTableDetail = React.memo(({ partModel, partData, isFilterActive }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -203,7 +235,9 @@ const ProductTableDetail = React.memo(({ partModel, partData }) => {
   const {
     selectedProducts,
     searchResponseMatched,
+    filteredSearchResponse,
     hoverCompanyDetail,
+    appliedFilters,
   } = useSelector((store) => store.searchProductStore);
 
   const handleShowPopupCompanyDetails = (event, companyId) => {
@@ -228,42 +262,6 @@ const ProductTableDetail = React.memo(({ partModel, partData }) => {
     }
     dispatch(setTogglePopUp());
   };
-
-  // const selectProduct = (id) => {
-  //   const filteredProducts = () => {
-  //     if (
-  //       selectedProducts.length !== 0 &&
-  //       selectedProducts.some((product) => product.id === id)
-  //     ) {
-  //       return selectedProducts.filter((product) => product.id !== id);
-  //     } else {
-  //       const selectedProduct = Object.values(searchResponseMatched).flatMap(
-  //         (item) => item.data
-  //       ).find((item) => item.id === id);
-
-  //       return [...selectedProducts, selectedProduct];
-  //     }
-  //   };
-  //   dispatch(setSelectedProducts(filteredProducts()));
-  // };
-
-  // const selectProduct = (id, partModel) => {
-  //   const filteredProducts = () => {
-  //     if (
-  //       selectedProducts.length !== 0 &&
-  //       selectedProducts.some((product) => product.id === id)
-  //     ) {
-  //       return selectedProducts.filter((product) => product.id !== id);
-  //     } else {
-  //       const selectedProduct = searchResponseMatched[partModel]?.data.find(
-  //         (item) => item.id === id
-  //       );
-
-  //       return [...selectedProducts, selectedProduct];
-  //     }
-  //   };
-  //   dispatch(setSelectedProducts(filteredProducts()));
-  // };
 
   const selectProduct = (id) => {
     const filteredProducts = selectedProducts.some((product) => product.id === id)
@@ -293,24 +291,39 @@ const ProductTableDetail = React.memo(({ partModel, partData }) => {
 
   const handlePrevPage = () => {
     const newPage = page - 1;
-
+  
     // Ensure we don't navigate to a page number less than 1
     if (newPage < 1) return;
-
-    // Determine which parameter to use based on the current URL
+  
     const queryParams = new URLSearchParams(location.search);
     const currentQuery = queryParams.get("query");
     const currentPartModel = queryParams.get("partModel");
-
-    // Use the same parameter as in the current URL
-    const url = currentQuery
-      ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(currentQuery)}`
-      : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(currentPartModel)}`;
-
-    navigate(url, { replace: true });
-
-    console.log("Navigating to URL:", url); // Debug log
+  
+    console.log("isFilterActive in handlePrevPage:", isFilterActive); // Add this here
+    console.log("Filters sent to searchProductFilter:", { ...filteredSearchResponse, page: newPage }); // Add this here
+  
+    if (isFilterActive) {
+      // Handle pagination for filtered data
+      const filters = {
+        ...appliedFilters, // Include applied filters
+        partModel: partModel,
+        page: newPage,
+        pageSize: 20,
+      };
+  
+      dispatch(searchProductFilter({ token, filters }));
+      const url = `/inventory/search?page=${newPage}`; // Update URL for filtered pagination
+      navigate(url, { replace: true });
+    } else {
+      // Navigate normally for search API
+      const url = currentQuery
+        ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(currentQuery)}`
+        : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(currentPartModel)}`;
+  
+      navigate(url, { replace: true });
+    }
   };
+  
 
 
   // const {
@@ -331,27 +344,48 @@ const ProductTableDetail = React.memo(({ partModel, partData }) => {
 
   console.log("Total Pages:", totalPages);
 
+  const token = Cookies.get("token")
 
   
   const handleNextPage = () => {
     const newPage = page + 1;
-
-    // Determine which parameter to use based on the current URL
+  
+    // Determine query parameters for current search
     const queryParams = new URLSearchParams(location.search);
     const currentQuery = queryParams.get("query");
     const currentPartModel = queryParams.get("partModel");
+  
+    console.log("isFilterActive in handleNextPage:", isFilterActive); // Add this here
+    console.log("Filters sent to searchProductFilter:", { ...filteredSearchResponse, page: newPage }); // Add this here
 
-    // Use the same parameter as in the current URL
-    const url = currentQuery
-      ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(currentQuery)}`
-      : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(currentPartModel)}`;
-
+    if (isFilterActive) {
+      // Handle pagination for filtered data
+      const filters = {
+        // ...filteredSearchResponse, // Include the filtered data
+        ...appliedFilters,
+        partModel: partModel,
+        page: newPage,
+        pageSize: 20,
+    };
+    
+      dispatch(searchProductFilter({token, filters}));
+      const url = `/inventory/search?page=${newPage}`;
     navigate(url, { replace: true });
-
-    console.log("Navigating to URL:", url); // Debug log
+      
+    } else {
+      // Navigate normally for search API
+      const url = currentQuery
+        ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(
+            currentQuery
+          )}`
+        : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(
+            currentPartModel
+          )}`;
+  
+      navigate(url, { replace: true });
+    }
   };
-
-
+  
 
   return (
 

@@ -22,17 +22,17 @@ const Tools = () => {
                         <Link to={'/tools'}>Tools</Link>
                     </li>
                     <li>
-                        <Link to={'/myprofile/MyVendors'}>My Vendors</Link>
+                        <Link to={'/myprofile/MyContact'}>My Vendors</Link>
                     </li>
                     <li>
-                        <Link to={'/myprofile/MyContact'}>My Contacts</Link>
+                        {/* <Link to={'/myprofile/MyContact'}>My Contacts</Link> */}
                     </li>
                     <li> <Link to={"/hotlist/add"}>HotList</Link> </li>
                     <li>
-                        <Link to={'/'}>Partners</Link>
+                        {/* <Link to={'/'}>Partners</Link> */}
                     </li>
                     <li>
-                        <Link to={'/'}>Events</Link>
+                        {/* <Link to={'/'}>Events</Link> */}
                     </li>
                 </ul>
             </nav>

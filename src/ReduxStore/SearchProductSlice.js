@@ -66,7 +66,9 @@ export const searchByKeyword = createAsyncThunk(
 export const searchProductFilter = createAsyncThunk(
   "searchProductStore/searchProductFilter",
   async ({ token, filters }) => {
-    console.log(filters);
+    console.log("Thunk Execution Started"); // Add this line
+    // debugger;
+    console.log(filters); // Debug filters
     try {
       const response = await axios.post(
         `${brokerAPI}inventory/fetch`,
@@ -79,8 +81,9 @@ export const searchProductFilter = createAsyncThunk(
         }
       );
 
-      console.log(response.data);
-      return response.data.data;
+      // console.log("RESPONSE.DATA",response.data.data);
+      console.log("RESPONSE.Data", response.data)
+      return response.data;
     } catch (error) {
       console.log(error);
       console.error(
@@ -175,29 +178,29 @@ export const getCompanyContact = createAsyncThunk(
   }
 );
 
-export const applyFilters = (filters) => (dispatch, getState) => {
-  const { searchResponseMatched, page, pageSize } = getState().searchProductStore;
-  const filteredData = {};
+// export const applyFilters = (filters) => (dispatch, getState) => {
+//   const { searchResponseMatched, page, pageSize } = getState().searchProductStore;
+//   const filteredData = {};
 
-  Object.entries(searchResponseMatched).forEach(([partModel, details]) => {
-    const currentPageData = details.data.slice((page - 1) * pageSize, page * pageSize);
-    const filteredPartData = currentPageData.filter((item) => {
-      return Object.entries(filters).every(([key, values]) =>
-        values.includes(item[key]?.toString())
-      );
-    });
+//   Object.entries(searchResponseMatched).forEach(([partModel, details]) => {
+//     const currentPageData = details.data.slice((page - 1) * pageSize, page * pageSize);
+//     const filteredPartData = currentPageData.filter((item) => {
+//       return Object.entries(filters).every(([key, values]) =>
+//         values.includes(item[key]?.toString())
+//       );
+//     });
 
-    if (filteredPartData.length > 0) {
-      filteredData[partModel] = {
-        ...details,
-        data: filteredPartData,
-      };
-    }
-  });
-  console.log("Filtered Data:", filteredData);
-  dispatch(setFilteredSearchResponse(filteredData)); // Update Redux state
-  console.log("Filtered Data:", filteredData);
-};
+//     if (filteredPartData.length > 0) {
+//       filteredData[partModel] = {
+//         ...details,
+//         data: filteredPartData,
+//       };
+//     }
+//   });
+//   console.log("Filtered Data:", filteredData);
+//   dispatch(setFilteredSearchResponse(filteredData)); // Update Redux state
+//   console.log("Filtered Data:", filteredData);
+// };
 
 
 
@@ -219,6 +222,7 @@ const initialState = {
   searchHistory: [],
   companyContactData:[],
   filteredSearchResponse: {},
+  appliedFilters: {},
   error: null,
   page: 1,
   pageSize: 20,
@@ -262,6 +266,12 @@ const searchProductSlice = createSlice({
         state.filteredSearchResponse = action.payload.data; // Default filtered data
       }
     },
+  //   setSearchResponse: (state, action) => {
+  //     state.searchResponseMatched = action.payload.data;
+  //     if (!state.filteredSearchResponse || Object.keys(state.filteredSearchResponse).length === 0) {
+  //         state.filteredSearchResponse = action.payload.data; // Set only if it's initially empty
+  //     }
+  // },  
     setPopupCompanyDetail: (state, action) => {
       state.popupCompanyDetail = action.payload;
       console.log("CompanyDetails",action.payload)
@@ -291,7 +301,10 @@ const searchProductSlice = createSlice({
     clearSearchResponseMatched: (state) => {
       state.searchResponseMatched = {};
       state.filteredSearchResponse = {}; // Optional: Clear filtered data as well
-    },    
+    },
+    setAppliedFilters: (state, action) => {
+      state.appliedFilters = action.payload; // Save filters
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -356,11 +369,21 @@ const searchProductSlice = createSlice({
         state.gettingProducts = true; // Set to true when starting the fetch
         state.error = null;
       })
+      // .addCase(searchProductFilter.fulfilled, (state, action) => {
+      //   console.log("Filter data from Redux ",action.payload);
+      //   // state.searchResponseMatched = action.payload;
+      //   state.filteredSearchResponse = action.payload;
+      //   // state.searchResponseMatched = action.payload
+      //   state.gettingProducts = false; // Set to false after fetching is done
+      // })
       .addCase(searchProductFilter.fulfilled, (state, action) => {
-        console.log("Filter data from Redux ",action.payload);
-        state.searchResponseMatched = action.payload;
-        state.gettingProducts = false; // Set to false after fetching is done
-      })
+        state.filteredSearchResponse = action.payload;
+        state.page = action.meta.arg.filters.page;
+        // state.page = action.payload.page; // Current page
+        state.pageSize = action.payload.pageSize; // Items per page
+        state.totalCount = action.payload.totalCount; // Total items
+        state.gettingProducts = false;
+    })
       .addCase(searchProductFilter.rejected, (state, action) => {
         state.error = action.error.message;
         console.error("Error while filtering:", action.error.message);
@@ -423,7 +446,8 @@ export const {
   setPopupCompanyDetail,
   setHoverCompanyDetail,
   setFilteredSearchResponse,
-  clearSearchResponseMatched
+  clearSearchResponseMatched,
+  setAppliedFilters
 } = searchProductSlice.actions;
 
 export default searchProductSlice.reducer;

@@ -61,11 +61,27 @@ const MyProfile = () => {
 
   const cleanInput = (input) => input.trimStart().replace(/\s+/g, " ");
 
+  // const handleChange = (e) => {
+  //   const { name, type, checked, value } = e.target;
+  //   const val = type === "checkbox" ? checked : cleanInput(value);
+  //   dispatch(setFormData({ ...formData, [name]: val }));
+  // };
+
   const handleChange = (e) => {
-    const { name, type, checked, value } = e.target;
-    const val = type === "checkbox" ? checked : cleanInput(value);
-    dispatch(setFormData({ ...formData, [name]: val }));
+    const { name, value } = e.target;
+    if (name in formData.imScreenNames) {
+      dispatch(setFormData({
+        ...formData,
+        imScreenNames: {
+          ...formData.imScreenNames,
+          [name]: value,
+        },
+      }));
+    } else {
+      dispatch(setFormData({ ...formData, [name]: value }));
+    }
   };
+  
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -317,7 +333,7 @@ console.log("formData",formData)
                         placeholder="Your position"
                       />
                     </span>
-                    <span className="!ml-[41px]">
+                    {/* <span className="!ml-[41px]">
                       <label htmlFor="experience">Experience</label>
                       <input
                         type="date"
@@ -327,7 +343,7 @@ console.log("formData",formData)
                         value={formData.experience}
                         placeholder="Your experience"
                       />
-                    </span>
+                    </span> */}
                     <span>
                       <label htmlFor="specialty">Specialty (if any)</label>
                       <input
@@ -404,7 +420,7 @@ console.log("formData",formData)
                         name="whatsapp"
                         id="whatsapp"
                         onChange={handleChange}
-                        value={formData.whatsapp}
+                        value={formData?.imScreenNames?.whatsapp || ""}
                         placeholder="Enter WhatsApp number"
                       />
                     </span>

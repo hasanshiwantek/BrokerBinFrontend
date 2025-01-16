@@ -101,7 +101,7 @@ const Header = () => {
     dispatch(setSelectedProducts([]));
 
     // Search products history.
-    dispatch(searchProductHistory({ token }));
+    // dispatch(searchProductHistory({ token }));
 
     // Navigate to the search results page with 'page' and 'search' or 'keyword' parameters
     if (searchType === "search") {
@@ -115,10 +115,6 @@ const Header = () => {
       )}`;
       navigate(url, { replace: true });
     }
-
-
-
-
 
 
 
@@ -453,9 +449,9 @@ const Header = () => {
               <IoIosArrowUp className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
                 <ul>
-                  {/* <Link to="/inventory">
-                    <li>inventory</li>
-                  </Link> */}
+                  <Link to="/advance">
+                    <li>Inventory</li>
+                  </Link>
                   {/* <Link to={"/services"}>
                     <li>services</li>
                   </Link> */}
