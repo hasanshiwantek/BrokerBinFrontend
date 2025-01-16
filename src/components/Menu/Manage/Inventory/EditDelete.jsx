@@ -9,16 +9,26 @@ import {
 } from "../../../../ReduxStore/InventorySlice";
 import Cookies from "js-cookie";
 import { useSelector, useDispatch } from "react-redux";
+import { fetchUserData } from "../../../../ReduxStore/ProfleSlice";
+
 
 const EditDelete = () => {
   const token = Cookies.get("token");
+ 
+
+  
   const dispatch = useDispatch();
+
+
 
   const { inventoryData, filteredInventoryData } = useSelector(
     (state) => state.inventoryStore
   );
   console.log("Inventory Data from Frontend", inventoryData);
   console.log("Filtered Inventory Data from Frontend", filteredInventoryData)
+  const companyFromInventory=inventoryData?.data?.map((item)=>item.addedBy.company.name)
+  console.log("Companies from Inventory ",companyFromInventory)
+
   const pagination = filteredInventoryData?.pagination || inventoryData?.pagination || {};
 
   const [loading, setLoading] = useState(false);
@@ -99,10 +109,17 @@ const EditDelete = () => {
   };
 
   const handleSearch = () => {
+    // Check if all filters are empty
+    if (!filters.partModel.trim() && !filters.mfg.trim() && !filters.status.trim() && !filters.heciClei.trim()) {
+      alert("Please apply at least one filter before searching.");
+      return; // Stop execution if no filters are applied
+    }
+  
+    // Proceed with search if filters are applied
     setCurrentPage(1);
     fetchFilteredData();
   };
-
+  
   const handleSaveModifications = () => {
     const dataToSave = {
       inventories: editedItems.map((item) => ({
@@ -152,6 +169,8 @@ const EditDelete = () => {
       alert("Please select inventory items to delete");
     }
   };
+
+  
   // Function to update visible pages when reaching the last button in the range
   const handlePageChange = (page) => {
     if (page >= 1 && page <= pagination.totalPages) {

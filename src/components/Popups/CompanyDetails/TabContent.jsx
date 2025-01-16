@@ -24,6 +24,7 @@ const TabContent = ({ companyId }) => {
 
   const dispatch = useDispatch();
   const { companyContactData } = useSelector((store) => store.searchProductStore);
+  console.log("Company Id........ ",companyContactData.data.company.id)
   const token = Cookies.get("token");
 
   console.log("CompanyId From Tab Content Page", companyId);
@@ -246,23 +247,17 @@ const TabContent = ({ companyId }) => {
                               </strong>
                             </span>
                           </div>
+
                         </div>
                         {/* <button> */}
-
- 
-                          <span
+                          {/* <span
                             className="cursor-pointer hover:text-orange-500 transition-colors"
                             onClick={() => userDeleteHandler(user.id)}
                           >
                             <MdPersonRemoveAlt1 />
                             Remove contact
-                          </span>
-                  
-
-
-
+                          </span> */}
                         {/* </button> */}
-
                       </div>
                       <div
                         className={

@@ -34,7 +34,13 @@ const HotListAdd = () => {
 
     const hotlists = rows;
 
-    dispatch(addHotListItem({ hotlists, token }));
+    dispatch(addHotListItem({ hotlists, token })).then(()=>{
+      alert("Hotlist Saved SuccesFully")
+    }).catch((error)=>{
+      console.log("Error Saving Hotlists",error)
+      alert(error)
+
+    })
   };
 
   return (
@@ -56,7 +62,7 @@ const HotListAdd = () => {
 
         <div className={css.tableWrapper}>
           <div className={css.tableHeader}>
-            <span className={css.tabTitle}>Telecom</span>
+            {/* <span className={css.tabTitle}>Telecom</span> */}
             <span className={css.subTitle}>Add to Hot List</span>
           </div>
 

@@ -42,6 +42,16 @@ const RfqTable = () => {
 
 
   const { receiveRfqData } = useSelector((state) => state.rfqStore)
+
+  // Extract pagination details
+  const pagination = receiveRfqData?.pagination || {}; // Assuming pagination is present in sentRfqData
+  console.log("Pagination ", pagination)
+  const totalPages = pagination.totalPages || 1;
+  console.log("TOTAL PAGES ", totalPages)
+  const currPage = pagination.currentPage || 1;
+  console.log("current page  ", currPage)
+
+
   const sentRfqData = useSelector((state) => state.rfqStore.sentRfqData);
 
 
@@ -155,12 +165,30 @@ const RfqTable = () => {
   };
 
   useEffect(() => {
-    dispatch(receivedRfq({ token }));
+
+    // Fetch data and ensure pagination details are retrieved
+    dispatch(receivedRfq({ token, page: currPage }))
+      .unwrap()
+      .then((response) => {
+        // Optional: You can set local state based on response if needed
+        const { pagination } = response;
+        if (pagination) {
+          setVisiblePages([1, Math.min(10, pagination.totalPages)]); // Initialize visible pages
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching sent RFQs:", error);
+      });
+
     // dispatch(sentRfq({ token }));
     if (!sentRfqData?.totalCount) {
       dispatch(sentRfq({ token }));
     }
   }, [dispatch, token]); // Adding token and dispatch as dependencies
+
+
+
+
 
   useEffect(() => {
     if (receivedData.length > 0) {
@@ -335,9 +363,50 @@ const RfqTable = () => {
       console.error("Error handling action:", error);
       alert(error?.response?.data?.message || `Failed to ${action} RFQ(s).`);
     }
-    dispatch(receivedRfq({ token })); // Re-fetch received RFQs
+    dispatch(receivedRfq({ token,page:currPage })); // Re-fetch received RFQs
 
   };
+
+
+
+
+
+
+  // PAGINATION LOGIC
+
+  // Dynamic pagination range
+  const [visiblePages, setVisiblePages] = useState([1, Math.min(10, totalPages)]);
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      dispatch(receivedRfq({ token, page })) // Fetch data for the selected page
+        .unwrap()
+        .then((response) => {
+          const { pagination } = response;
+          if (pagination) {
+            setVisiblePages([1, Math.min(10, pagination.totalPages)]); // Update visible pages
+          }
+        })
+        .catch((error) => console.error("Error changing page:", error));
+    }
+  };
+
+  const handlePrevious = () => {
+    if (visiblePages[0] > 1) {
+      setVisiblePages([Math.max(visiblePages[0] - 10, 1), visiblePages[0] - 1]);
+      dispatch(receivedRfq({ token, page: visiblePages[0] - 1 }));
+    }
+  };
+
+  const handleNext = () => {
+    if (visiblePages[1] < totalPages) {
+      setVisiblePages([visiblePages[1] + 1, Math.min(visiblePages[1] + 10, totalPages)]);
+      dispatch(receivedRfq({ token, page: visiblePages[1] + 1 }));
+    }
+  };
+
+
+
 
 
 
@@ -509,35 +578,72 @@ const RfqTable = () => {
             </div>
             <div className={css.rfqTableBtn_bottom}>
               <div>
-                <button type="button">send</button>
+                <button type="button" className="!p-3">send</button>
 
                 <button
                   onClick={resetFilters}
-                  className={css.resetFiltersBtn}
+                  className={`${css.resetFiltersBtn} !p-3`}
                   type="button">
                   Reset Filters
                 </button>
 
-                <button type="button" onClick={handleReply}>
+                <button type="button" onClick={handleReply} className="!p-3">
                   reply
                 </button>
 
-                <button type="button" onClick={handleForward}>
+                <button type="button" onClick={handleForward} className="!p-3">
                   forward
                 </button>
                 <button type="button"
-                  onClick={() => handleAction("archive")}>archive</button>
+                  onClick={() => handleAction("archive")} className="!p-3">archive</button>
                 <button type="button"
-                  onClick={() => handleAction("read")}>mark as read</button>
+                  onClick={() => handleAction("read")} className="!p-3">mark as read</button>
                 <button type="button"
-                  onClick={() => handleAction("unread")}>mark as unread</button>
+                  onClick={() => handleAction("unread")} className="!p-3">mark as unread</button>
 
               </div>
-              <div className={css.pagination}>
-                <button onClick={prevPage}>prev</button>
-                <p>{currentPage}</p>
-                <button onClick={nextPage}>next</button>
-              </div>
+           {/* PAGINATION CONTROLS */}
+                   <div className={css.pagination}>
+                     <span className="text-orange-700 p-4 text-xl">
+                       Page <span className="text-blue-800">{currPage}</span> of
+                       <span className="text-blue-800"> {totalPages}</span>
+                     </span>
+     
+                     {/* Previous Button */}
+                     <button
+                       onClick={handlePrevious}
+                       className={`${css.pageButton} ${visiblePages[0] === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
+                       disabled={visiblePages[0] === 1}
+                     >
+                       Previous
+                     </button>
+     
+                     {/* Dynamic Page Buttons */}
+                     {Array.from(
+                       { length: visiblePages[1] - visiblePages[0] + 1 },
+                       (_, i) => visiblePages[0] + i
+                     )
+                       .filter((page) => page >= 1 && page <= totalPages)
+                       .map((page) => (
+                         <button
+                           key={page}
+                           onClick={() => handlePageChange(page)}
+                           className={`${css.pageButton} ${currPage === page ? css.active : ""}`}
+                         >
+                           {page}
+                         </button>
+                       ))}
+     
+                     {/* Next Button */}
+                     <button
+                       onClick={handleNext}
+                       className={`${css.pageButton} ${visiblePages[1] === totalPages ? "opacity-50 cursor-not-allowed" : ""}`}
+                       disabled={visiblePages[1] === totalPages}
+                     >
+                       Next
+                     </button>
+                   </div>
+     
             </div>
           </div>
         </div>

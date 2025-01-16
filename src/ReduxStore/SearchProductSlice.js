@@ -204,6 +204,31 @@ export const getCompanyContact = createAsyncThunk(
 
 
 
+export const sortInventory = createAsyncThunk(
+  "inventoryStore/sortInventory",
+  async ({token, payload}) => {
+    try {
+      const response = await axios.post(
+        `${brokerAPI}inventory/sort`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("Response From AsyncThunk: " + response.data)
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error Sorting Inventory",
+        error.response?.data || error.message
+      );
+      throw error.response?.data || error;
+    }
+  }
+);
 
 
 
@@ -229,6 +254,10 @@ const initialState = {
   totalCount: 0,
   gettingProducts: false,
   gettingHistory: false,
+  keywordPage:null,
+  keywordPageSize:null,
+  keywordTotalCount:null,
+
 };
 
 const searchProductSlice = createSlice({
@@ -337,6 +366,10 @@ const searchProductSlice = createSlice({
       })
       .addCase(searchByKeyword.fulfilled, (state, action) => {
         console.log("Payload from searchByKeyword:", action.payload);
+        state.keywordPage=action.payload.page;
+        state.keywordPageSize=action.payload.pageSize;
+        state.keywordTotalCount=action.payload.totalCount
+        console.log("Page from Keyword: ", state.keywordPage + " " + "Page Size from Keyword: " + state.keywordPageSize + " " + "keyword TotalCount: " + state.keywordTotalCount )
         const foundItems = action.payload.foundItems;
         const structuredResponse = foundItems.reduce((acc, item) => {
             const { partModel } = item;
@@ -428,7 +461,19 @@ const searchProductSlice = createSlice({
       .addCase(getCompanyContact.rejected, (state, action) => {
         state.error = action.error.message;
         console.error(" Data Not Available:");
+      })
+      .addCase(sortInventory.pending, (state) => {
+        console.log("PENDING!!!!!");
+      })
+      .addCase(sortInventory.fulfilled, (state, action) => {
+        state.searchResponseMatched=action.payload
+        console.log("SORTED INVENTORY PAYLOAD FROM REDUX",action.payload)
+
+      })
+      .addCase(sortInventory.rejected, (state, action) => {
+        console.error("ERROR FETCHING SORTED INVENTORY DATA", action.error);
       });
+
   },
 });
 

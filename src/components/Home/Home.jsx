@@ -179,13 +179,13 @@ const Home = () => {
                     <BiDotsHorizontalRounded />
                   </div>
 
-                  <div className={css.manageDropdown}>
+                  {/* <div className={css.manageDropdown}>
                     <ul>
                       <Link to={"/search"}> <li>Search</li></Link>
                       <Link to={"/manage/my-services"}> <li>Manage my Services</li></Link>
 
                     </ul>
-                  </div>
+                  </div> */}
                 </div>
               </div>
 
@@ -443,11 +443,11 @@ const Home = () => {
                     <ul>
                       <Link to={"/inventory"}> <li>Inventory</li></Link>
                       <Link to={"/rfq"}> <li>My RFQs</li></Link>
-                      <Link> <li>My BOM</li></Link>
+                      {/* <Link> <li>My BOM</li></Link> */}
                       <Link to={"/myprofile"}> <li>My Profile</li></Link>
-                      <Link> <li>My Company</li></Link>
-                      <Link to={"/manage/my-services"}> <li>My Services</li></Link>
-                      <Link to={"/venprice"}> <li>Vendor Pricing</li></Link>
+                      <Link to={"/mycompany"}> <li>My Company</li></Link>
+                      {/* <Link to={"/manage/my-services"}> <li>My Services</li></Link> */}
+                      {/* <Link to={"/venprice"}> <li>Vendor Pricing</li></Link> */}
 
                     </ul>
                   </div>
@@ -465,9 +465,9 @@ const Home = () => {
                   </div>
                   <div className={css.manageDropdown}>
                     <ul>
-                      <Link to={"/ethics"}> <li>Ethics Complaint</li></Link>
+                      {/* <Link to={"/ethics"}> <li>Ethics Complaint</li></Link> */}
                       <Link to={"/feedback"}> <li>Report an Issue</li></Link>
-                      <Link> <li>Watch List Companies</li></Link>
+                      {/* <Link> <li>Watch List Companies</li></Link> */}
 
                     </ul>
                   </div>

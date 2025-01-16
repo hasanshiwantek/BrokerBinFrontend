@@ -54,7 +54,14 @@ const HotListEdit = () => {
           item.productDescription
       ); // Filter out rows where all fields are empty
 
-    dispatch(editHotListItem({ token, hotlists }));
+    dispatch(editHotListItem({ token, hotlists })).then(()=>{
+      console.log("Hotlist Edit Succesfully")
+      alert("Hotlist Updated Succesfully!")
+    }).catch((error)=>{
+      console.log("Error Updating",error)
+      alert(error.message)
+
+    })
   };
 
   return (
@@ -75,7 +82,7 @@ const HotListEdit = () => {
         </div>
 
         <div className={css.tableWrapper}>
-          <div className={css.secHeader}>
+          {/* <div className={css.secHeader}>
             <div className={css.tableHeader}>
               <span className={css.tabTitle}>Telecom</span>
               <span className={css.subTitle}>Edit HotList</span>
@@ -89,7 +96,7 @@ const HotListEdit = () => {
                 <option value="lenovo">Lenovo</option>
               </select>
             </div>
-          </div>
+          </div> */}
 
           <form onSubmit={updateHotList}>
             <table className={css.table}>

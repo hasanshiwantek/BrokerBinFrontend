@@ -271,3 +271,95 @@ td:hover .companyDropdown {
 rfqTableBtn_bottom button{
   transition: all 0.5s ease-in-out;
 }
+
+
+
+
+
+
+
+
+
+/* Pagination Container */
+/* .pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+} */
+
+/* Default Button Style */
+/* .pagination button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  background-color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  color: #444;
+}
+
+.pagination button:hover {
+  background-color: #f0f0f0;
+}
+
+.pagination button.active {
+  background-color: #007bff;
+  color: #fff;
+  font-weight: bold;
+}
+
+.pagination button.disabled {
+  background-color: #e0e0e0;
+  color: #a0a0a0;
+  cursor: not-allowed;
+}
+
+ */
+
+
+
+
+
+
+
+
+.pagination button{
+  color: white;
+  background-color: var(--primary-color);
+  border-radius: 5px;
+  border: 1px solid var(--primary-color);
+  font-size: 7pt;
+  padding: 2px 6px !important;
+ }
+
+.paginationSec{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.pagination{
+  text-align: end;
+}
+
+
+
+
+.pageButton {
+  /* Add default styling for all page buttons here */
+  margin: 0 4px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
+
+/* .pageButton:hover {
+  background-color: #e0e0e0;
+} */
+
+.pageButton.active {
+  background-color: #428bca;
+  color: white;
+  border-color: #428bca;
+}
+
