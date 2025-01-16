@@ -261,9 +261,7 @@ const ProductTableBtn = React.memo(() => {
   );
 });
 
-const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilterActive, token, searchString }) => {
-
-
+const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilterActive,  searchString }) => {
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -271,7 +269,6 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
 
   const queryParams = new URLSearchParams(location.search);
   const page = parseInt(queryParams.get("page")) || 1;
-
 
   const {
     selectedProducts,
