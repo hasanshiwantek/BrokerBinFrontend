@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from "react";
 import React from "react";
 import css from "../styles/Header.module.css";
-import logo from "../imgs/logo/broker_header_logo.jpg";
+import logo from "../imgs/logo/BrokerCell - Logo.svg";
 import { AiFillFile, AiOutlineMail, AiOutlinePlus } from "react-icons/ai";
 import {
   BsCartFill,
