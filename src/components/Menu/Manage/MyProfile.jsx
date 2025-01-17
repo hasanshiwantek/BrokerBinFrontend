@@ -56,32 +56,44 @@ const MyProfile = () => {
     .join("\n");
 
   useEffect(() => {
-    dispatch(fetchUserData({ id, token }));
+    const fetchData = async () => {
+      const response = await dispatch(fetchUserData({ id, token }));
+      dispatch(
+        setFormData({
+          ...response.payload, // API response
+          imScreenNames: response.payload.imScreenNames || { skype: "", whatsapp: "", trillian: "" },
+          socialNetworking: response.payload.socialNetworking || { facebook: "", twitter: "", linkedin: "" },
+        })
+      );
+    };
+    fetchData();
   }, [dispatch, id, token]);
-
-  const cleanInput = (input) => input.trimStart().replace(/\s+/g, " ");
-
-  // const handleChange = (e) => {
-  //   const { name, type, checked, value } = e.target;
-  //   const val = type === "checkbox" ? checked : cleanInput(value);
-  //   dispatch(setFormData({ ...formData, [name]: val }));
-  // };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    if (name in formData.imScreenNames) {
-      dispatch(setFormData({
-        ...formData,
-        imScreenNames: {
-          ...formData.imScreenNames,
-          [name]: value,
-        },
-      }));
-    } else {
-      dispatch(setFormData({ ...formData, [name]: value }));
-    }
-  };
   
+  // const cleanInput = (input) => input.trimStart().replace(/\s+/g, " ");
+
+const handleChange = (e) => {
+  const { name, value } = e.target;
+  const [parentKey, childKey] = name.split(".");
+
+  if (childKey) {
+    dispatch(
+      setFormData({
+        ...formData,
+        [parentKey]: {
+          ...(formData[parentKey] || {}), // Ensure initialization
+          [childKey]: value,
+        },
+      })
+    );
+  } else {
+    dispatch(
+      setFormData({
+        ...formData,
+        [name]: value,
+      })
+    );
+  }
+};
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -106,112 +118,74 @@ const MyProfile = () => {
       setFileBase64("");
     }
   };
+  
+const handleSubmit = async (event) => {
+  event.preventDefault();
+  dispatch(setBlurWhileLoading(false));
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-  
-    // Show loading state
-    dispatch(setBlurWhileLoading(false));
-  
-    // Prepare FormData for API submission
-    const formDataApi = new FormData(event.target);
-  
-    // Convert Base64 to Binary and append to FormData
-    if (fileBase64) {
-      const byteCharacters = atob(fileBase64);
-      const byteNumbers = Array.from(byteCharacters, (char) => char.charCodeAt(0));
-      const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: "image/jpeg" });
-      const file = new File([blob], "profileImage.jpg", { type: "image/jpeg" });
-      formDataApi.set("profileImage", file);
-    }
-  
-    // Extract non-file fields for debugging purposes only
-    const plainData = Object.fromEntries(formDataApi.entries());
+  const formDataApi = new FormData(event.target);
 
-    // Exclude unchanged fields
-    Object.keys(plainData).forEach((key) => {
-      if (plainData[key] === initialData[key]) {
-        delete plainData[key];
-      }
-    });
-
-    if (!plainData.email || plainData.email === initialData.email) {
-      delete plainData.email;
-    }
-  
-    // Handle password validation
-    const passwordFields = ["currentPassword", "newPassword", "confirmNewPassword"];
-    const passwordValues = passwordFields.map((field) => plainData[field] || ""); // Fix: Use plainData
-    const filledPasswords = passwordValues.filter((value) => value !== "");
-  
-    if (filledPasswords.length > 0 && filledPasswords.length < passwordFields.length) {
-      return; // Exit if password fields are incomplete
-    }
-    if (filledPasswords.length === passwordFields.length && plainData.newPassword !== plainData.confirmNewPassword) {
-      return; // Exit if passwords do not match
-    }
-    passwordFields.forEach((field) => {
-      if (plainData[field] === "") {
-        delete plainData[field]; // Remove empty password fields
-      }
-    });
-  
-    // Log for debugging (exclude file from logs)
-    console.log("Prepared Data (excluding file):", plainData);
-  
-    try {
-      // Dispatch data: pass both FormData and plainData to the thunk
-      await dispatch(
-        submitUserData({
-          id,
-          token,
-          data: {
-            formData: formDataApi, // Binary data (e.g., file)
-            plainData, // Other fields for JSON compatibility
-          },
-        })
-      );
-    } catch (error) {
-      console.error("Error submitting data:", error);
-    }
+  // Build nested objects manually
+  const imScreenNames = {
+    skype: formData?.imScreenNames?.skype || "",
+    whatsapp: formData?.imScreenNames?.whatsapp || "",
+    trillian: formData?.imScreenNames?.trillian || "",
   };
-  
-  
-  
-  
 
-  const checkAll = () => {
+  const socialNetworking = {
+    facebook: formData?.socialNetworking?.facebook || "",
+    twitter: formData?.socialNetworking?.twitter || "",
+    linkedin: formData?.socialNetworking?.linkedin || "",
+  };
+
+  // Set nested objects in FormData
+  formDataApi.set("imScreenNames", JSON.stringify(imScreenNames));
+  formDataApi.set("socialNetworking", JSON.stringify(socialNetworking));
+
+  // Handle file
+  if (fileBase64) {
+    const byteCharacters = atob(fileBase64);
+    const byteNumbers = Array.from(byteCharacters, (char) => char.charCodeAt(0));
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: "image/jpeg" });
+    const file = new File([blob], "profileImage.jpg", { type: "image/jpeg" });
+    formDataApi.set("profileImage", file);
+  }
+
+  const plainData = Object.fromEntries(formDataApi.entries());
+
+  try {
+    await dispatch(
+      submitUserData({
+        id,
+        token,
+        data: {
+          formData: formDataApi,
+          plainData,
+        },
+      })
+    );
+  } catch (error) {
+    console.error("Error submitting data:", error);
+  }
+};
+
+  const toggleCheckAll = (value) => {
     dispatch(
       setFormData({
-        sigcheckName: true,
-        sigcheckEmailAddress: true,
-        sigcheckPosition: true,
-        sigcheckPhone: true,
-        sigcheckCell: true,
-        sigcheckCompany: true,
-        sigcheckToll: true,
-        sigcheckFax: true,
-        sigcheckIM: true,
+        sigcheckName: value,
+        sigcheckEmailAddress: value,
+        sigcheckPosition: value,
+        sigcheckPhone: value,
+        sigcheckCell: value,
+        sigcheckCompany: value,
+        sigcheckToll: value,
+        sigcheckFax: value,
+        sigcheckIM: value,
       })
     );
   };
-
-  const unCheckAll = () => {
-    dispatch(
-      setFormData({
-        sigcheckName: false,
-        sigcheckEmailAddress: false,
-        sigcheckPosition: false,
-        sigcheckPhone: false,
-        sigcheckCell: false,
-        sigcheckCompany: false,
-        sigcheckToll: false,
-        sigcheckFax: false,
-        sigcheckIM: false,
-      })
-    );
-  };
+  
 
   if (error) {
     return (
@@ -221,22 +195,16 @@ const MyProfile = () => {
     );
   }
 
-
-console.log("formData",formData)  
   const { togglePopUp, popupCompanyDetail } = useSelector((state) => state.searchProductStore)
   const company =formData?.company;
-  console.log("COMPANY ", company);
 
   // Company Modal Logic
   const openCompanyModal = (company) => {
-    console.log("Opening Company Modal with Company:", company);
+    // console.log("Opening Company Modal with Company:", company);
     dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
     dispatch(setTogglePopUp()); // Show company modal
   };
-  console.log("popupCompanyDetail", popupCompanyDetail);
-  console.log("togglePopUp", togglePopUp);
-
-
+ 
 
   return (
     <>
@@ -374,9 +342,7 @@ console.log("formData",formData)
                     <div>
                       <img
                         src={
-                          formData?.profileImage
-                            ? formData.profileImage
-                            : personalPhoto
+                         formData?.profileImage
                             
                         }
                         alt="personal photo"
@@ -386,7 +352,7 @@ console.log("formData",formData)
                   <div>
                     <input
                       type="file"
-                      name="personalPhoto"
+                      name="profileImage"
                       id="personalPhoto"
                       onChange={handleFileChange}
                     />
@@ -403,10 +369,10 @@ console.log("formData",formData)
                       </div>
                       <input
                         type="text"
-                        name="skype"
+                        name="imScreenNames.skype"
                         id="skype"
                         onChange={handleChange}
-                        value={formData.skype}
+                        value={formData?.imScreenNames?.skype || ""}
                         placeholder="Enter Skype username"
                       />
                     </span>
@@ -417,7 +383,7 @@ console.log("formData",formData)
                       </div>
                       <input
                         type="text"
-                        name="whatsapp"
+                        name="imScreenNames.whatsapp"
                         id="whatsapp"
                         onChange={handleChange}
                         value={formData?.imScreenNames?.whatsapp || ""}
@@ -431,10 +397,10 @@ console.log("formData",formData)
                       </div>
                       <input
                         type="text"
-                        name="trillian"
+                        name="imScreenNames.trillian"
                         id="trillian"
                         onChange={handleChange}
-                        value={formData.trillian}
+                        value={formData?.imScreenNames?.trillian}
                         placeholder="Enter Trillian ID"
                       />
                     </span>
@@ -451,10 +417,10 @@ console.log("formData",formData)
 
                       <input
                         type="text"
-                        name="facebook"
+                        name="socialNetworking.facebook"
                         id="facebook"
                         onChange={handleChange}
-                        value={formData.facebook}
+                        value={formData?.socialNetworking?.facebook || ""}
                         placeholder="Facebook link"
                       />
                     </span>
@@ -465,10 +431,10 @@ console.log("formData",formData)
                       </div>
                       <input
                         type="text"
-                        name="twitter"
+                        name="socialNetworking.twitter"
                         id="twitter"
                         onChange={handleChange}
-                        value={formData.twitter}
+                        value={formData?.socialNetworking?.twitter || ""}
                         placeholder="Twitter handle"
                       />
                     </span>
@@ -479,10 +445,10 @@ console.log("formData",formData)
                       </div>
                       <input
                         type="text"
-                        name="linkedin"
+                        name="socialNetworking.linkedin"
                         id="linkedin"
                         onChange={handleChange}
-                        value={formData.linkedin}
+                        value={formData?.socialNetworking?.linkedin || ""}
                         placeholder="LinkedIn profile"
                       />
                     </span>
@@ -653,12 +619,9 @@ console.log("formData",formData)
                       css.profileInfo_form_signature_checkbox_checkUncheck
                     }
                   >
-                    <button type="button" onClick={checkAll}>
-                      check all
-                    </button>
-                    <button type="button" onClick={unCheckAll}>
-                      uncheck all
-                    </button>
+                    <button type="button" onClick={() => toggleCheckAll(true)}>Check All</button>
+                    <button type="button" onClick={() => toggleCheckAll(false)}>Uncheck All</button>
+
                   </div>
                   <p>
                     Uncheck Use Custom Signature to use the checkboxes above.

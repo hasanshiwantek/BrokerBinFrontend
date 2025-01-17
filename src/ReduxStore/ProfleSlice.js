@@ -140,14 +140,9 @@ const initialState = {
   },
   socialNetworking: {
     facebook: '',
+    twitter: '',
     linkedin: '',
 },
-    skype: "",
-    whatsapp: "",
-    trillian: "",
-    facebook: "",
-    twitter: "",
-    linkedin: "",
     phoneNumber: "",
     tollFree: "",
     cellular: "",
@@ -271,7 +266,7 @@ const profileSlice = createSlice({
       })
       .addCase(submitUserData.fulfilled, (state, action) => {
         state.initialData = action.payload;
-        console.log("Data from front-end:", action.payload);
+        // console.log("Data from front-end:", action.payload);
         state.formData = {
           ...state.formData,
           ...action.payload,

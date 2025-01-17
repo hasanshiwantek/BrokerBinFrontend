@@ -233,17 +233,8 @@ const InventorySearch = () => {
                       />
                     </span>
                     <span>
-                      {/* <label htmlFor="Company">Company</label>
-                      <input
-                        type="text"
-                        name="company"
-                        id="specialty"
-                        onChange={handleChange}
-                        value={formData.company}
-                      /> */}
                       <CompanySearch setFormData={setFormData} formData={formData}/>
                     </span>
-                      {/* <FiltersSearchCompanyInventory /> */}
                     <span className={''}>
                         <label htmlFor="State">State</label>
                         <select
