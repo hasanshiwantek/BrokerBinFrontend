@@ -159,6 +159,33 @@ export const exportRemoveInventory = createAsyncThunk(
 );
 
 
+export const inventorySearch = createAsyncThunk(
+  "inventoryStore/inventorySearch",
+  async ({ token,data }) => {
+    try {
+      const response = await axios.post(
+        `${brokerAPI}inventory/inventory-search`,
+          {data}, // Correct payload structure
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("Response from backend: "+response.data)
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error Searching Inventory:",
+        error.response?.data || error.message
+      );
+      throw error.response?.data || error;
+    }
+  }
+);
+
+
 
 
 export const getFilterInventories = createAsyncThunk(
@@ -195,6 +222,7 @@ const initialState = {
   // Add inventory data
   inventoryData:{},
   filteredInventoryData:{},
+  inventorySearchData:{},
 
   inventoryAddData: [
     {
@@ -356,9 +384,20 @@ const InventorySlice = createSlice({
       })
       .addCase(getFilterInventories.rejected, (state, action) => {
         console.error("ERROR FETCHING FILTERED INVENTORY DATA", action.error);
+      })
+      .addCase(inventorySearch.pending, (state) => {
+        console.log("PENDING!!!!!");
+      })
+      .addCase(inventorySearch.fulfilled, (state, action) => {
+        console.log("SEARCH INVENTORY PAYLOAD FROM REDUX",action.payload)
+        state.inventorySearchData=action.payload
+
+      })
+      .addCase(inventorySearch.rejected, (state, action) => {
+          console.error("ERROR FETCHING SEARCHED INVENTORY DATA", action.error);
       });
 
-  },
+  }
 });
 
 // Action creators are generated for each case reducer function
