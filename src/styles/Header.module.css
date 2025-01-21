@@ -176,7 +176,7 @@ nav>ul>li:hover .dropdownMenu {
   position: absolute;
   top: 100%;
   left: 0;
-  background-color:  #bf501a;
+  background-color:  #2c83ec;
   color: black;
   box-shadow: 1px 1px 1rem 1px var(--box-shadow);
   z-index: 1;
@@ -184,7 +184,7 @@ nav>ul>li:hover .dropdownMenu {
   ul {
     li:hover {
       color: var(--font-color);
-      background-color:  #bf501a;
+      background-color:  #2c83ec;
     }
   }
 }
@@ -291,7 +291,7 @@ nav>ul>li:hover {
       /* justify-content: flex-end; */
       gap: 1rem;
       padding: 1rem 2rem;
-      background: orangered;
+      background: #2c83ec;
     }
   }
 }

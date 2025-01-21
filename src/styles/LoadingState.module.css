@@ -24,23 +24,23 @@
     position: absolute;
     top: 20%;
     left: 5%;
-    background: #f06622;
+    background: #2c83ec;
   }
   > :nth-child(2) {
     position: absolute;
     top: 0%;
     left: 38%;
-    background: #f06622;
+    background: #2c83ec;
   }
   > :nth-child(3) {
     position: absolute;
     top: 20%;
     right: 5%;
-    background: #f06622;
+    background: #2c83ec;
   }
   > :nth-child(4) {
     position: absolute;
-    background: #f06622;
+    background: #2c83ec;
     bottom: 20%;
     left: 5%;
   }
@@ -48,13 +48,13 @@
     position: absolute;
     bottom: 0%;
     left: 38%;
-    background: #f06622;
+    background: #2c83ec;
   }
   > :nth-child(6) {
     position: absolute;
     bottom: 20%;
     right: 5%;
-    background: #f06622;
+    background: #2c83ec;
   }
 }
 

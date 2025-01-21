@@ -37,7 +37,7 @@
 /* Active tab highlight */
 .activeTab {
     font-weight: bold;
-    color: #f06622;
+    color: #2c83ec;
 }
 
 /* Table Wrapper */
@@ -88,7 +88,7 @@
 .deleteButton,
 .previewButton,
 .tabTitle {
-    background-color: #f06622;
+    background-color: #2c83ec;
     color: white;
     border: none;
     padding: 8px 12px;
@@ -98,7 +98,7 @@
 .broadcastButton:hover,
 .deleteButton:hover,
 .previewButton:hover {
-    background-color: #f06622;
+    background-color: #2c83ec;
 }
 .subTitle{
     color: black;

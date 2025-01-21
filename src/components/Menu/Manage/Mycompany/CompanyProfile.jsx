@@ -19,7 +19,7 @@ import Footer from "../../../Footer/Footer";
 import axios from "axios";
 import { brokerAPI } from "../../../api/BrokerEndpoint";
 
-const MyProfile = () => {
+const MyCompany = () => {
   const token = Cookies.get("token");
   const user_id = Cookies.get("user_id");
 
@@ -48,22 +48,8 @@ const MyProfile = () => {
   const id = user?.user?.id || user_id;
 
   const dispatch = useDispatch();
-  // const [fileBase64, setFileBase64] = useState("");
 
-  const textAreaContent = [
-    formData.sigcheckName ? `${formData.firstName} ${formData.lastName}` : "",
-    formData.sigcheckEmailAddress ? `${formData.email}` : "",
-    formData.sigcheckPosition ? `${formData.position}` : "",
-    formData.sigcheckPhone ? `${formData.phoneNumber}` : "",
-    formData.sigcheckCell ? `${formData.cellular}` : "",
-    formData.sigcheckCompany ? `${formData.experience}` : "",
-    formData.sigcheckToll ? `${formData.tollFree}` : "",
-    formData.sigcheckFax ? `${formData.faxNumber}` : "",
-    formData.sigcheckIM ? `${formData.specialty}` : "",
-  ].filter(Boolean).join("\n");
-  const customTextAreaContent = initialData?.customSignature?.filter(Boolean).join("\n");
-
-  useEffect(() => {
+   useEffect(() => {
     console.log(id)
       ;
     dispatch(fetchUserData({ id, token }));
@@ -71,6 +57,8 @@ const MyProfile = () => {
 
   const companyId = initialData?.company?.id;
   console.log("Company ID", companyId)
+  console.log("TOKEN", token)
+
   useEffect(() => {
     if (companyId) {
       const fetchData = async () => {
@@ -90,14 +78,6 @@ const MyProfile = () => {
     }
   }, [companyId, token]);
 
-  // const cleanInput = (input) => input.trimStart().replace(/\s+/g, " ");
-
-  // const handleChange = (e) => {
-  //   const { name, type, value } = e.target;
-  //   const val = type === "checkbox" ? checked : cleanInput(value);
-  //   setFormData({ ...formData, [name]: val });
-  // };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -116,9 +96,6 @@ const MyProfile = () => {
   const cleanInput = (input) => input.trimStart().replace(/\s+/g, " ");
 
 
-
-
-
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     const extension = String(file.name).split(".").pop().toLowerCase();
@@ -132,118 +109,160 @@ const MyProfile = () => {
     }
   };
 
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
+  //   dispatch(setBlurWhileLoading(false));
+  //   const formDataApi = new FormData(event.target);
 
+  //   const data = Object.fromEntries(
+  //     Object.entries(Object.fromEntries(formDataApi.entries())).map(
+  //       ([key, value]) => {
+  //         if (key === "signature" || key === "customSignature") {
+  //           value = value
+  //             .split("\n")
+  //             .filter(Boolean)
+  //             .map((item) => item.replace(/\s+/g, " ").trim());
+  //         } else if (typeof value === "string") {
+  //           value = value.replace(/\s+/g, " ").trim();
+  //         }
+  //         return [key, value];
+  //       }
+  //     )
+  //   );
+
+  //   // Convert Base64 to Binary and append to FormData
+  //   if (fileBase64) {
+  //     // Dispatch the submitCompanyLogo action with the selected file
+  //     dispatch(clearLogo())
+  //     dispatch(submitCompanyLogo({ token, file: fileBase64 }));
+  //   }
+
+  //   // Object.keys(data).forEach((key) => {
+  //   //   if (data[key] === initialData[key]) {
+  //   //     delete data[key];
+  //   //   }
+  //   // });
+
+  //   console.log("ID:", id, "Token:", token, "Data:", data);
+  //   console.log(data);
+  //   dispatch(updateFormData(data));
+  //   dispatch(submitUserData({ id, token, data }));
+  // };
+
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
+  //   dispatch(setBlurWhileLoading(false));
+  //   const formDataApi = new FormData(event.target);
+  
+  //   // Extract data from the form
+  //   const plainData = {
+  //     company: {
+  //         id: formData?.data?.company?.id || null,
+  //         name: formData?.data?.company?.name || "",
+  //         address: formData?.data?.company?.address || "",
+  //         phone_num: formData?.data?.company?.phone_num || "",
+  //         primaryContact: {
+  //             firstName: formData?.data?.company?.primaryContact?.firstName || "",
+  //             lastName: formData?.data?.company?.primaryContact?.lastName || "",
+  //             email: formData?.data?.company?.primaryContact?.email || "",
+  //             phoneNumber: formData?.data?.company?.primaryContact?.phoneNumber || "",
+  //             specialty: formData?.data?.company?.primaryContact?.specialty || "",
+  //             imScreenNames: {
+  //                 skype: formData?.data?.company?.primaryContact?.imScreenNames?.skype || "",
+  //                 whatsapp: formData?.data?.company?.primaryContact?.imScreenNames?.whatsapp || "",
+  //                 trillian: formData?.data?.company?.primaryContact?.imScreenNames?.trillian || "",
+  //             },
+  //             socialNetworking: {
+  //                 facebook: formData?.data?.company?.primaryContact?.socialNetworking?.facebook || "",
+  //                 twitter: formData?.data?.company?.primaryContact?.socialNetworking?.twitter || "",
+  //                 linkedin: formData?.data?.company?.primaryContact?.socialNetworking?.linkedin || "",
+  //             },
+  //         },
+  //     },
+  // };
+  
+  //   // console.log("Form Data:", data);
+  
+  //   // Handle company logo upload separately
+  //   const logoFile = formDataApi.get("image");
+  //   if (logoFile && logoFile.size > 0) {
+  //     dispatch(clearLogo());
+  //     dispatch(submitCompanyLogo({ token, file: logoFile }));
+  //   }
+    
+  
+  //   // Dispatch updated form data to the backend
+  //   dispatch(updateFormData(plainData));
+  //   console.log("Payload being sent:", { id, token, plainData });
+  //   dispatch(submitUserData({ id, token, data: plainData }));
+  //   // console.log("Final Payload:", { id, token, data });
+  // };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     dispatch(setBlurWhileLoading(false));
+    // setLoading(true);
     const formDataApi = new FormData(event.target);
 
-    const data = Object.fromEntries(
-      Object.entries(Object.fromEntries(formDataApi.entries())).map(
-        ([key, value]) => {
-          if (key === "signature" || key === "customSignature") {
-            value = value
-              .split("\n")
-              .filter(Boolean)
-              .map((item) => item.replace(/\s+/g, " ").trim());
-          } else if (typeof value === "string") {
-            value = value.replace(/\s+/g, " ").trim();
-          }
-          return [key, value];
+  
+    const plainData = {
+      company: {
+        id: formData?.data?.company?.id || null,
+        name: formData?.data?.company?.name || "",
+        address: formData?.data?.company?.address || "",
+        phone_num: formData?.data?.company?.phone_num || "",
+        primaryContact: {
+          firstName: formData?.data?.company?.primaryContact?.firstName || "",
+          lastName: formData?.data?.company?.primaryContact?.lastName || "",
+          email: formData?.data?.company?.primaryContact?.email || "",
+          phoneNumber: formData?.data?.company?.primaryContact?.phoneNumber || "",
+          specialty: formData?.data?.company?.primaryContact?.specialty || "",
+          imScreenNames: {
+            skype: formData?.data?.company?.primaryContact?.imScreenNames?.skype || "",
+            whatsapp: formData?.data?.company?.primaryContact?.imScreenNames?.whatsapp || "",
+            trillian: formData?.data?.company?.primaryContact?.imScreenNames?.trillian || "",
+          },
+          socialNetworking: {
+            facebook: formData?.data?.company?.primaryContact?.socialNetworking?.facebook || "",
+            twitter: formData?.data?.company?.primaryContact?.socialNetworking?.twitter || "",
+            linkedin: formData?.data?.company?.primaryContact?.socialNetworking?.linkedin || "",
+          },
+        },
+      },
+    };
+  
+    // Handle company logo upload separately
+    const logoFile = formDataApi.get("image");
+    if (logoFile && logoFile.size > 0) {
+      dispatch(clearLogo());
+      dispatch(submitCompanyLogo({ token, file: logoFile }));
+    }
+  
+    // Direct API call for plainData
+    try {
+      const response = await axios.post(
+        `${brokerAPI}user/edit/${id}`,
+        JSON.stringify(plainData),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         }
-      )
-    );
-
-    if (customSignature) {
-      delete data.signature;
+      );
+      console.log("API Response:", response.data);
+    } catch (error) {
+      console.error("Error submitting data:", error.response?.data || error.message);
     }
-
-    data.useCustomSignature = data.useCustomSignature ? 1 : 0;
-
-    // Convert Base64 to Binary and append to FormData
-    if (fileBase64) {
-      // Dispatch the submitCompanyLogo action with the selected file
-      dispatch(clearLogo())
-      dispatch(submitCompanyLogo({ token, file: fileBase64 }));
+    finally {
+      console.log("Setting loading to false");
+      setLoading(false); // Stop loading after API response
     }
-    const passwordFields = [
-      "currentPassword",
-      "newPassword",
-      "confirmNewPassword",
-    ];
-    const passwordValues = passwordFields.map((field) => data[field] || "");
-    const filledPasswords = passwordValues.filter((value) => value !== "");
-
-    // Skip validation for empty or partial passwords
-    if (
-      filledPasswords.length > 0 &&
-      filledPasswords.length < passwordFields.length
-    ) {
-      // Temporarily skipping validation
-      return;
-    }
-
-    // Skip mismatch check
-    if (
-      filledPasswords.length === passwordFields.length &&
-      data.newPassword !== data.confirmNewPassword
-    ) {
-      // Temporarily skipping validation
-      return;
-    }
-
-    // Skip regex validation and username check
-    // Cleanup empty password fields
-    passwordFields.forEach((field) => {
-      if (data[field] === "") {
-        delete data[field];
-      }
-    });
-
-    Object.keys(data).forEach((key) => {
-      if (data[key] === initialData[key]) {
-        delete data[key];
-      }
-    });
-
-    console.log("ID:", id, "Token:", token, "Data:", data);
-    console.log(data);
-    dispatch(updateFormData(data));
-    dispatch(submitUserData({ id, token, data }));
+    dispatch(updateFormData(plainData));
+    console.log("Payload Sent:", plainData);
   };
-
-  const checkAll = () => {
-    dispatch(
-      setFormData({
-        sigcheckName: true,
-        sigcheckEmailAddress: true,
-        sigcheckPosition: true,
-        sigcheckPhone: true,
-        sigcheckCell: true,
-        sigcheckCompany: true,
-        sigcheckToll: true,
-        sigcheckFax: true,
-        sigcheckIM: true,
-      })
-    );
-  };
-
-  const unCheckAll = () => {
-    dispatch(
-      setFormData({
-        sigcheckName: false,
-        sigcheckEmailAddress: false,
-        sigcheckPosition: false,
-        sigcheckPhone: false,
-        sigcheckCell: false,
-        sigcheckCompany: false,
-        sigcheckToll: false,
-        sigcheckFax: false,
-        sigcheckIM: false,
-      })
-    );
-  };
+  
+  
 
   if (error) {
     return (
@@ -253,24 +272,12 @@ const MyProfile = () => {
     );
   }
 
-
-
-
-
-
   return (
     <>
       {!blurWhileLoading && <LoadingState />}
       {blurWhileLoading && (
         <div className={css.profileLayout}>
           <form onSubmit={handleSubmit}>
-            {/* <div className={css.profileBtn}>
-              <p>my profile</p>
-              <span>
-                <input type="submit" value="submit changes" />
-                <button type="button">view profile</button>
-              </span>
-            </div> */}
             <div className={css.profileInfo}>
               <div className={css.profileInfo_links}>
                 <ul>
@@ -372,7 +379,7 @@ const MyProfile = () => {
                         name="billingEmail"
                         id="email"
                         onChange={handleChange}
-                        value={formData.data?.company?.primaryContact.email || ""}
+                        value={formData.data?.company?.primaryContact.billingEmail || ""}
                         placeholder="Billing email"
                       />
                     </span>
@@ -383,7 +390,7 @@ const MyProfile = () => {
                         name="supportEmail"
                         id="email"
                         onChange={handleChange}
-                        value={formData.data?.company?.primaryContact.email || ""}
+                        value={formData.data?.company?.primaryContact.supportEmail || ""}
                         placeholder="Support Email"
                       />
                     </span>
@@ -394,7 +401,7 @@ const MyProfile = () => {
                         name="salesEmail"
                         id="email"
                         onChange={handleChange}
-                        value={formData.data?.company?.primaryContact.email || ""}
+                        value={formData.data?.company?.primaryContact.salesEmail || ""}
                         placeholder="Sales/RFQ Email"
                       />
                     </span>
@@ -405,14 +412,14 @@ const MyProfile = () => {
                         name="companyInfoEmail"
                         id="email"
                         onChange={handleChange}
-                        value={formData.data?.company?.primaryContact.email || ""}
+                        value={formData.data?.company?.primaryContact.companyInfoEmail || ""}
                         placeholder="Company Info Email"
                       />
                     </span>
                   </div>
                 </div>
                 <div>
-                  <h1 className="text-[1vw] font-thin text-black">Payment Gateways</h1>
+                  {/* <h1 className="text-[1vw] font-thin text-black">Payment Gateways</h1>
                   <span className="space-x-[8.5vw]">
                     <label htmlFor="paymentGateways">PayPal</label>
                     <input
@@ -423,7 +430,7 @@ const MyProfile = () => {
                       value={formData.data?.company?.primaryContact.paymentGateway || ""}
                       placeholder="Identifier (Username, email, etc"
                     />
-                  </span>
+                  </span> */}
 
                   <div className={css.profileInfo_form_personalPhoto}>
                     <div>
@@ -448,8 +455,6 @@ const MyProfile = () => {
                   </div>
 
 
-
-
                 </div>
                 <div className={`${css.profileInfo_form_IMScreenNames} pt-5`}>
                   <h1>IM Screen Names</h1>
@@ -461,10 +466,10 @@ const MyProfile = () => {
                       </div>
                       <input
                         type="text"
-                        name="skype"
+                        name="imScreenNames.skype"
                         id="skype"
                         onChange={handleChange}
-                        value={formData.skype}
+                        value={formData?.data?.company?.primaryContact?.imScreenNames?.skype || ""}
                         placeholder="Enter Skype username"
                       />
                     </span>
@@ -475,10 +480,10 @@ const MyProfile = () => {
                       </div>
                       <input
                         type="text"
-                        name="whatsapp"
+                        name="imScreenNames.whatsapp"
                         id="whatsapp"
                         onChange={handleChange}
-                        value={formData.whatsapp}
+                        value={formData?.data?.company?.primaryContact?.imScreenNames?.whatsapp || ""}
                         placeholder="Enter WhatsApp number"
                       />
                     </span>
@@ -489,10 +494,10 @@ const MyProfile = () => {
                       </div>
                       <input
                         type="text"
-                        name="trillian"
+                        name="imScreenNames.trillian"
                         id="trillian"
                         onChange={handleChange}
-                        value={formData.trillian}
+                        value={formData?.data?.company?.primaryContact?.imScreenNames?.trillian}
                         placeholder="Enter Trillian ID"
                       />
                     </span>
@@ -510,10 +515,10 @@ const MyProfile = () => {
 
                       <input
                         type="text"
-                        name="facebook"
+                        name="socialNetworking.facebook"
                         id="facebook"
                         onChange={handleChange}
-                        value={formData.facebook}
+                        value={formData?.data?.company?.primaryContact?.socialNetworking?.facebook || ""}
                         placeholder="Facebook link"
                       />
                     </span>
@@ -524,10 +529,10 @@ const MyProfile = () => {
                       </div>
                       <input
                         type="text"
-                        name="twitter"
+                        name="socialNetworking.twitter"
                         id="twitter"
                         onChange={handleChange}
-                        value={formData.twitter}
+                        value={formData?.data?.company?.primaryContact?.socialNetworking?.twitter || ""}
                         placeholder="Twitter handle"
                       />
                     </span>
@@ -538,10 +543,10 @@ const MyProfile = () => {
                       </div>
                       <input
                         type="text"
-                        name="linkedin"
+                        name="socialNetworking.linkedin"
                         id="linkedin"
                         onChange={handleChange}
-                        value={formData.linkedin}
+                        value={formData?.data?.company?.primaryContact?.socialNetworking?.linkedin || ""}
                         placeholder="LinkedIn profile"
                       />
                     </span>
@@ -549,7 +554,7 @@ const MyProfile = () => {
                 </div>
               </div>
               <div className="pt-2">
-                <button className="!bg-[#ef6421] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-5"
+                <button className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-5"
                   type="submit">Submit Changes</button>
               </div>
             </div>
@@ -561,13 +566,4 @@ const MyProfile = () => {
   );
 };
 
-export default MyProfile;
-
-
-
-
-
-
-
-
-
+export default MyCompany;
