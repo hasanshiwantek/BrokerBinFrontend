@@ -81,7 +81,7 @@ const SearchProduct = () => {
     JSON.stringify(filteredSearchResponse) !== JSON.stringify(searchResponseMatched)
   );
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log("filterToggle:", filterToggle);
   }, [])
 
@@ -96,7 +96,7 @@ const SearchProduct = () => {
   }
 
   useEffect(() => {
-    
+
     const queryParams = new URLSearchParams(location.search);
     const searchString = queryParams.get("query") || ""; // For multi-part search (e.g., "part1 part2")
     const partModel = queryParams.get("partModel") || ""; // For single specific part model search
@@ -136,7 +136,7 @@ const SearchProduct = () => {
     }
   }, [searchString, partModel]);
   // const initialQuery = useRef(searchString); // Save the initial query
-  
+
 
   useEffect(() => {
     console.log("Filtered Search Response:", filteredSearchResponse);
@@ -182,7 +182,7 @@ const SearchProduct = () => {
 
     <div className={css.layout}>
 
-      {filterToggle && <Filter currentQuery={currentQuery}/>}
+      {filterToggle && <Filter currentQuery={currentQuery} />}
 
       <div className={css.layoutTables} style={Object.keys(filteredSearchResponse || searchResponseMatched || {}).length <= 0 ? { margin: "0 auto" } : null}>
         {Object.keys(filteredSearchResponse || searchResponseMatched || {}).length === 0 || Object.values(filteredSearchResponse || searchResponseMatched).every((part) => Array.isArray(part?.data) && part.data.length === 0
@@ -199,17 +199,17 @@ const SearchProduct = () => {
                 {graphToggle && <ProductsPieChart />}
                 <div className={css.productTable}>
                   <ProductTableBtn />
-                  <ProductTableDetail 
-                  partData={details.data} 
-                  partModel={partModel} 
-                  page={details.page}
-                  totalCount={details.totalCount}
-                  partModels={partModels} 
-                  sortPageSize={sortPageSize} 
-                  sortPage={sortPage} 
-                  token={token} 
-                  searchString={searchString}
-                  isFilterActive={isFilterActive} />
+                  <ProductTableDetail
+                    partData={details.data}
+                    partModel={partModel}
+                    page={details.page}
+                    totalCount={details.totalCount}
+                    partModels={partModels}
+                    sortPageSize={sortPageSize}
+                    sortPage={sortPage}
+                    token={token}
+                    searchString={searchString}
+                    isFilterActive={isFilterActive} />
                 </div>
               </div>
             )
@@ -261,7 +261,7 @@ const ProductTableBtn = React.memo(() => {
   );
 });
 
-const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilterActive,  searchString }) => {
+const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilterActive, searchString }) => {
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -365,17 +365,17 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
 
   const handlePrevPage = () => {
     const newPage = page - 1;
-  
+
     // Ensure we don't navigate to a page number less than 1
     if (newPage < 1) return;
-  
+
     const queryParams = new URLSearchParams(location.search);
     const currentQuery = queryParams.get("query");
     const currentPartModel = queryParams.get("partModel");
-  
+
     console.log("isFilterActive in handlePrevPage:", isFilterActive); // Add this here
     console.log("Filters sent to searchProductFilter:", { ...filteredSearchResponse, page: newPage }); // Add this here
-  
+
     if (isFilterActive) {
       // Handle pagination for filtered data
       const filters = {
@@ -384,7 +384,7 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
         page: newPage,
         pageSize: 20,
       };
-  
+
       dispatch(searchProductFilter({ token, filters }));
       const url = `/inventory/search?page=${newPage}`; // Update URL for filtered pagination
       navigate(url, { replace: true });
@@ -393,11 +393,11 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
       const url = currentQuery
         ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(currentQuery)}`
         : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(currentPartModel)}`;
-  
+
       navigate(url, { replace: true });
     }
   };
-  
+
 
 
 
@@ -494,12 +494,12 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
 
   const handleNextPage = () => {
     const newPage = page + 1;
-  
+
     // Determine query parameters for current search
     const queryParams = new URLSearchParams(location.search);
     const currentQuery = queryParams.get("query");
     const currentPartModel = queryParams.get("partModel");
-  
+
     console.log("isFilterActive in handleNextPage:", isFilterActive); // Add this here
     console.log("Filters sent to searchProductFilter:", { ...filteredSearchResponse, page: newPage }); // Add this here
 
@@ -511,56 +511,59 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
         partModel: partModel,
         page: newPage,
         pageSize: 20,
-    };
-    
-      dispatch(searchProductFilter({token, filters}));
+      };
+
+      dispatch(searchProductFilter({ token, filters }));
       const url = `/inventory/search?page=${newPage}`;
-    navigate(url, { replace: true });
-      
+      navigate(url, { replace: true });
+
     } else {
       // Navigate normally for search API
       const url = currentQuery
         ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(
-            currentQuery
-          )}`
+          currentQuery
+        )}`
         : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(
-            currentPartModel
-          )}`;
-  
+          currentPartModel
+        )}`;
+
       navigate(url, { replace: true });
     }
   };
-  
 
-const [sortBy, setSortBy] = useState(null); // Initially no column is sorted
+
+  const [sortBy, setSortBy] = useState(null); // Initially no column is sorted
   const [sortOrder, setSortOrder] = useState("desc"); // Default to "desc"
 
 
   // console.log("Payload from ProductTable Page", payload)
   console.log("token", token)
+  
 
   const handleSort = (column) => {
     if (sortBy === column) {
-      // If the same column is clicked, toggle the sortOrder
-      setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
+      // If the same column is clicked again, toggle the sortOrder
+      setSortOrder(prevOrder => (prevOrder === "asc" ? "desc" : "asc"));
     } else {
-      // For a new column, reset sortBy to the column and keep sortOrder as "desc"
+      // For a new column, reset sortBy to the column and adjust the sortOrder:
+      // Start in ascending order only for the 'price' column, otherwise start in descending
       setSortBy(column);
-      setSortOrder("desc");
+      setSortOrder(column === "price" ? "asc" : "desc");
     }
-
+  
     // Create the payload for dispatch
     const payload = {
       search: keys, // Ensure search is formatted as an array
       sortBy: column,
-      sortOrder: sortBy === column ? (sortOrder === "asc" ? "desc" : "asc") : "desc", // Toggle or default to "desc"
-      page: 1,                         // Reset to the first page
-      pageSize: 20,                    // Adjust page size if needed
+      sortOrder: (column === "price" && sortBy !== "price") ? "asc" : sortOrder,
+      page: 1, // Reset to the first page
+      pageSize: 20, // Adjust page size if needed
     };
-
+  
     console.log("Sorting Payload:", payload);
     dispatch(sortInventory({ token, payload }));
   };
+  
 
   return (
 
@@ -585,7 +588,6 @@ const [sortBy, setSortBy] = useState(null); // Initially no column is sorted
               <th>History</th>
               <th>TS</th>
               <th onClick={() => handleSort("heciClei")} style={{ cursor: "pointer" }}>HECI / CLEI {sortBy === "heciClei" && (sortOrder === "asc" ? "↑" : "↓")} </th>
-
               <th onClick={() => handleSort("mfg")} style={{ cursor: "pointer" }} >Mfg {sortBy === "mfg" && (sortOrder === "asc" ? "↑" : "↓")}</th>
 
               <th onClick={() => handleSort("cond")} style={{ cursor: "pointer" }} >Cond{sortBy === "cond" && (sortOrder === "asc" ? "↑" : "↓")}</th>
@@ -593,7 +595,6 @@ const [sortBy, setSortBy] = useState(null); // Initially no column is sorted
               <th onClick={() => handleSort("price")} style={{ cursor: "pointer" }}>
                 Price {sortBy === "price" && (sortOrder === "asc" ? "↑" : "↓")}
               </th>
-
               <th onClick={() => handleSort("quantity")} style={{ cursor: "pointer" }}>
                 Quantity {sortBy === "quantity" && (sortOrder === "asc" ? "↑" : "↓")}
               </th>

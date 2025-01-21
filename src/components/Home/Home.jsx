@@ -313,7 +313,7 @@ const Home = () => {
                   <img src={initialData.company.image} alt="Company Logo" onClick={() => openCompanyModal(company)} className="cursor-pointer !mt-28" width={"60%"} height={"60%"} />
                 </div>
                 <div className={css.gridHome1_MemberDetail_reviews}>
-                  {/* <div className={css.gridHome1_MemberDetail_reviews_stars}>
+                  <div className={css.gridHome1_MemberDetail_reviews_stars}>
                     <div data-v-217e3916="" class="vue-rate-it-rating">
                       <div data-v-217e3916="" class="vue-rate-it-rating-item">
                         <div data-v-217e3916="" step="50" style={{ display: "inline-block", marginRight: "1px" }}>
@@ -377,7 +377,7 @@ const Home = () => {
                       </div>
                     </div>
                     <a href="#">100%</a>
-                  </div> */}
+                  </div>
 
                   {/* <div className={css.gridHome1_MemberDetail_reviews_watchList}>
                     <a href="#">

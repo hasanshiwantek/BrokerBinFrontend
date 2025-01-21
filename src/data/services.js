@@ -60,6 +60,7 @@ export const groupingsList = [
 ];
 
 export const regionsList = [
+  {label: "N/A" , value: "", id: "N/A"},
   { label: 'North America', value: 'North America', id: 'NorthAmerica' },
   { label: 'Middle East', value: 'Middle East', id: 'MiddleEast' },
   { label: 'South America', value: 'South America', id: 'SouthAmerica' },

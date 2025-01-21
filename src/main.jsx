@@ -16,7 +16,7 @@ const Header = lazy(() => import("./components/Header.jsx"));
 const Footer = lazy(() => import("./components/Footer/Footer.jsx"))
 const Home = lazy(() => import("./components/Home/Home.jsx"));
 const Cart = lazy(() => import("./components/Tools/Cart.jsx"));
-const SearchProduct = lazy(() =>import("./components/Menu/Manage/SearchProduct.jsx"));
+const SearchProduct = lazy(() => import("./components/Menu/Manage/SearchProduct.jsx"));
 const MyProfile = lazy(() => import("./components/Menu/Manage/MyProfile.jsx"));
 const CompanyProfile = lazy(() => import("./components/Menu/Manage/Mycompany/CompanyProfile.jsx"))
 const CreateAccount = lazy(() => import("./components/Menu/Manage/Mycompany/CreateAccount.jsx"))
@@ -32,11 +32,11 @@ const CompanyDetails = lazy(() =>
 );
 const MyRFQ = lazy(() => import("./components/Menu/Manage/MyRFQ.jsx"));
 
-const RfqSent= lazy(() => import("./components/Menu/Manage/RfqSent.jsx"));
+const RfqSent = lazy(() => import("./components/Menu/Manage/RfqSent.jsx"));
 
-const RfqReply = lazy (() => import("./components/Menu/Manage/Rfqs/RfqReply.jsx"))
+const RfqReply = lazy(() => import("./components/Menu/Manage/Rfqs/RfqReply.jsx"))
 
-const RfqArcheived=lazy (() => import("./components/Menu/Manage/Rfqs/RfqArchived.jsx"))
+const RfqArcheived = lazy(() => import("./components/Menu/Manage/Rfqs/RfqArchived.jsx"))
 
 const Inventory = lazy(() =>
   import("./components/Menu/Manage/Inventory/Inventory.jsx")
@@ -50,6 +50,9 @@ const SearchCompany = lazy(() =>
 const InventorySearch = lazy(() =>
   import("./components/Menu/Search/Inventory/InventorySearch.jsx")
 );
+
+const InventorySearchResult = lazy(() => import("./components/Menu/Search/Inventory/InventorySearchResult.jsx"));
+
 const SearchResult = lazy(() =>
   import("./components/Menu/Search/SearchResults.jsx")
 );
@@ -197,7 +200,7 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <Cart />
-            <Footer/>
+            <Footer />
 
           </Suspense>
         ),
@@ -227,7 +230,7 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingState />}>
             <Header />
-            <CompanyProfile/>
+            <CompanyProfile />
             <Footer />
           </Suspense>
         ),
@@ -237,7 +240,7 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingState />}>
             <Header />
-            <CreateAccount/>
+            <CreateAccount />
             <Footer />
           </Suspense>
         ),
@@ -289,7 +292,7 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingState />}>
             <Header />
-            <ReplyBroadcast/>
+            <ReplyBroadcast />
             <Footer />
           </Suspense>
         ),
@@ -333,7 +336,7 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
-      
+
 
       {
         path: "/search",
@@ -384,10 +387,19 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <SearchResult />
-<Footer/>
-
+            <Footer />
           </Suspense>
         ),
+      },
+        {
+          path: "/inventory-searchResult",
+          element: (
+            <Suspense fallback={<LoadingState />}>
+              <Header />
+              <InventorySearchResult/>
+              <Footer />
+            </Suspense>
+          ),
       },
       {
         path: "/services",
@@ -432,13 +444,13 @@ const router = createBrowserRouter([
         ),
       },
 
-      
+
       {
         path: "/rfq/create",
         element: (
           <Suspense fallback={<LoadingState />}>
             <Header />
-            <RfqReply/>
+            <RfqReply />
             {/* <Footer /> */}
 
           </Suspense>
@@ -570,7 +582,7 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <Send />
-            <Footer/>
+            <Footer />
           </Suspense>
         ),
       },
@@ -813,8 +825,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   // <React.StrictMode>
-    <Provider store={store}>
-      <RouterProvider router={router} />
-    </Provider>
+  <Provider store={store}>
+    <RouterProvider router={router} />
+  </Provider>
   // </React.StrictMode>
 );
