@@ -121,7 +121,15 @@ const MyRFQNew = () => {
       const mfgs = [...new Set(parts.map((part) => part.mfg))];
       const conds = [...new Set(parts.map((part) => part.cond))];
 
-      return { partModel, mfgs, conds };
+      // return { partModel, mfgs, conds };
+      return {
+        partModel,
+        mfgs,
+        conds,
+        mfg: mfgs[0] || "", // Default to the first MFG
+        cond: conds[0] || "", // Default to the first Condition
+      };
+      
     });
   };
 
@@ -503,8 +511,8 @@ const MyRFQNew = () => {
                         <div>
                           <label htmlFor="text">part</label>
                           <label htmlFor="text">HECI / CLEI</label>
-                          <label htmlFor="select">Mfg</label>
-                          <label htmlFor="select">Cond</label>
+                          <label htmlFor="select">Mfg *</label>
+                          <label htmlFor="select">Cond *</label>
                           <label htmlFor="number">Qty *</label>
                           <label htmlFor="number">Target Price </label>
                           <label htmlFor="text">Terms</label>
