@@ -170,6 +170,12 @@ const handleSubmit = async (event) => {
   }
 };
 
+useEffect(() => {
+  console.log("MyProfile component mounted");
+  return () => console.log("MyProfile component unmounted");
+}, []);
+
+
   const toggleCheckAll = (value) => {
     dispatch(
       setFormData({

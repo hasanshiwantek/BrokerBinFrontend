@@ -78,23 +78,89 @@ const MyCompany = () => {
     }
   }, [companyId, token]);
 
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+
+  //   setFormData((prevData) => {
+  //     const updatedData = { ...prevData };
+  //     if (!updatedData.data) updatedData.data = {}; // Ensure `data` exists
+  //     if (!updatedData.data.company) updatedData.data.company = {}; // Ensure `company` exists
+  //     if (!updatedData.data.company.primaryContact)
+  //       updatedData.data.company.primaryContact = {}; // Ensure `primaryContact` exists
+
+  //     updatedData.data.company.primaryContact[name] = cleanInput(value);
+  //     return updatedData;
+  //   });
+  // };
+
+  // const cleanInput = (input) => input.trimStart().replace(/\s+/g, " ");
+
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  
+  //   // Update Local State
+  //   setFormData((prevData) => {
+  //     const updatedData = { ...prevData };
+  
+  //     // Ensure nested structure exists in local state
+  //     if (!updatedData.data) updatedData.data = {};
+  //     if (!updatedData.data.company) updatedData.data.company = {};
+  //     if (!updatedData.data.company.primaryContact)
+  //       updatedData.data.company.primaryContact = {};
+  
+  //     updatedData.data.company.primaryContact[name] = value; // Update the local state
+  //     return updatedData;
+  //   });
+  
+  //   // Update Redux State
+  //   dispatch(updateFormData((prevReduxData) => {
+  //     const updatedReduxData = { ...prevReduxData };
+  
+  //     if (["skype", "whatsapp", "trillian"].includes(name)) {
+  //       // For `imScreenNames` update
+  //       updatedReduxData.imScreenNames = {
+  //         ...updatedReduxData.imScreenNames,
+  //         [name]: value,
+  //       };
+  //     } else if (["facebook", "twitter", "linkedin"].includes(name)) {
+  //       // For `socialNetworking` update
+  //       updatedReduxData.socialNetworking = {
+  //         ...updatedReduxData.socialNetworking,
+  //         [name]: value,
+  //       };
+  //     } else {
+  //       // For other fields directly in the Redux state
+  //       updatedReduxData[name] = value;
+  //     }
+  
+  //     return updatedReduxData;
+  //   }));
+  // };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-
+  
+    // Update Local State for Nested Structure
     setFormData((prevData) => {
       const updatedData = { ...prevData };
-      if (!updatedData.data) updatedData.data = {}; // Ensure `data` exists
-      if (!updatedData.data.company) updatedData.data.company = {}; // Ensure `company` exists
+  
+      if (!updatedData.data) updatedData.data = {};
+      if (!updatedData.data.company) updatedData.data.company = {};
       if (!updatedData.data.company.primaryContact)
-        updatedData.data.company.primaryContact = {}; // Ensure `primaryContact` exists
-
-      updatedData.data.company.primaryContact[name] = cleanInput(value);
+        updatedData.data.company.primaryContact = {};
+  
+      updatedData.data.company.primaryContact[name] = value; // Update the nested local state
       return updatedData;
     });
+  
+    // Update Redux State for Flat Structure
+    dispatch(
+      updateFormData({
+        [name]: value, // Match the flat structure for Redux state
+      })
+    );
   };
-
-  const cleanInput = (input) => input.trimStart().replace(/\s+/g, " ");
-
+  
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -154,35 +220,22 @@ const MyCompany = () => {
   //   dispatch(setBlurWhileLoading(false));
   //   const formDataApi = new FormData(event.target);
   
-  //   // Extract data from the form
-  //   const plainData = {
-  //     company: {
-  //         id: formData?.data?.company?.id || null,
-  //         name: formData?.data?.company?.name || "",
-  //         address: formData?.data?.company?.address || "",
-  //         phone_num: formData?.data?.company?.phone_num || "",
-  //         primaryContact: {
-  //             firstName: formData?.data?.company?.primaryContact?.firstName || "",
-  //             lastName: formData?.data?.company?.primaryContact?.lastName || "",
-  //             email: formData?.data?.company?.primaryContact?.email || "",
-  //             phoneNumber: formData?.data?.company?.primaryContact?.phoneNumber || "",
-  //             specialty: formData?.data?.company?.primaryContact?.specialty || "",
-  //             imScreenNames: {
-  //                 skype: formData?.data?.company?.primaryContact?.imScreenNames?.skype || "",
-  //                 whatsapp: formData?.data?.company?.primaryContact?.imScreenNames?.whatsapp || "",
-  //                 trillian: formData?.data?.company?.primaryContact?.imScreenNames?.trillian || "",
-  //             },
-  //             socialNetworking: {
-  //                 facebook: formData?.data?.company?.primaryContact?.socialNetworking?.facebook || "",
-  //                 twitter: formData?.data?.company?.primaryContact?.socialNetworking?.twitter || "",
-  //                 linkedin: formData?.data?.company?.primaryContact?.socialNetworking?.linkedin || "",
-  //             },
-  //         },
-  //     },
-  // };
-  
-  //   // console.log("Form Data:", data);
-  
+  //   const data = Object.fromEntries(
+  //     Object.entries(Object.fromEntries(formDataApi.entries())).map(
+  //       ([key, value]) => {
+  //         if (key === "signature" || key === "customSignature") {
+  //           value = value
+  //             .split("\n")
+  //             .filter(Boolean)
+  //             .map((item) => item.replace(/\s+/g, " ").trim());
+  //         } else if (typeof value === "string") {
+  //           value = value.replace(/\s+/g, " ").trim();
+  //         }
+  //         return [key, value];
+  //       }
+  //     )
+  //   );
+
   //   // Handle company logo upload separately
   //   const logoFile = formDataApi.get("image");
   //   if (logoFile && logoFile.size > 0) {
@@ -192,44 +245,34 @@ const MyCompany = () => {
     
   
   //   // Dispatch updated form data to the backend
-  //   dispatch(updateFormData(plainData));
-  //   console.log("Payload being sent:", { id, token, plainData });
-  //   dispatch(submitUserData({ id, token, data: plainData }));
+  //   dispatch(updateFormData(data));
+  //   console.log("Payload being sent:", { id, token, data });
+  //   dispatch(submitUserData({ id, token, data }));
   //   // console.log("Final Payload:", { id, token, data });
   // };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    dispatch(setBlurWhileLoading(false));
-    // setLoading(true);
-    const formDataApi = new FormData(event.target);
-
+    dispatch(setBlurWhileLoading(false)); // Set blur loading state
   
-    const plainData = {
-      company: {
-        id: formData?.data?.company?.id || null,
-        name: formData?.data?.company?.name || "",
-        address: formData?.data?.company?.address || "",
-        phone_num: formData?.data?.company?.phone_num || "",
-        primaryContact: {
-          firstName: formData?.data?.company?.primaryContact?.firstName || "",
-          lastName: formData?.data?.company?.primaryContact?.lastName || "",
-          email: formData?.data?.company?.primaryContact?.email || "",
-          phoneNumber: formData?.data?.company?.primaryContact?.phoneNumber || "",
-          specialty: formData?.data?.company?.primaryContact?.specialty || "",
-          imScreenNames: {
-            skype: formData?.data?.company?.primaryContact?.imScreenNames?.skype || "",
-            whatsapp: formData?.data?.company?.primaryContact?.imScreenNames?.whatsapp || "",
-            trillian: formData?.data?.company?.primaryContact?.imScreenNames?.trillian || "",
-          },
-          socialNetworking: {
-            facebook: formData?.data?.company?.primaryContact?.socialNetworking?.facebook || "",
-            twitter: formData?.data?.company?.primaryContact?.socialNetworking?.twitter || "",
-            linkedin: formData?.data?.company?.primaryContact?.socialNetworking?.linkedin || "",
-          },
-        },
-      },
-    };
+    const formDataApi = new FormData(event.target);
+  
+    // Prepare payload
+    const data = Object.fromEntries(
+      Object.entries(Object.fromEntries(formDataApi.entries())).map(
+        ([key, value]) => {
+          if (key === "signature" || key === "customSignature") {
+            value = value
+              .split("\n")
+              .filter(Boolean)
+              .map((item) => item.replace(/\s+/g, " ").trim());
+          } else if (typeof value === "string") {
+            value = value.replace(/\s+/g, " ").trim();
+          }
+          return [key, value];
+        }
+      )
+    );
   
     // Handle company logo upload separately
     const logoFile = formDataApi.get("image");
@@ -238,11 +281,11 @@ const MyCompany = () => {
       dispatch(submitCompanyLogo({ token, file: logoFile }));
     }
   
-    // Direct API call for plainData
+    // Direct API call to backend
     try {
       const response = await axios.post(
         `${brokerAPI}user/edit/${id}`,
-        JSON.stringify(plainData),
+        JSON.stringify(data),
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -251,15 +294,17 @@ const MyCompany = () => {
         }
       );
       console.log("API Response:", response.data);
+  
+      // If required, update Redux state here
+      dispatch(updateFormData(data));
     } catch (error) {
       console.error("Error submitting data:", error.response?.data || error.message);
-    }
-    finally {
+    } finally {
       console.log("Setting loading to false");
-      setLoading(false); // Stop loading after API response
+      dispatch(setBlurWhileLoading(true)); // Reset blur loading state
     }
-    dispatch(updateFormData(plainData));
-    console.log("Payload Sent:", plainData);
+  
+    console.log("Payload Sent:", data);
   };
   
   
@@ -471,6 +516,7 @@ const MyCompany = () => {
                         onChange={handleChange}
                         value={formData?.data?.company?.primaryContact?.imScreenNames?.skype || ""}
                         placeholder="Enter Skype username"
+                        readOnly
                       />
                     </span>
                     <span>
@@ -485,6 +531,7 @@ const MyCompany = () => {
                         onChange={handleChange}
                         value={formData?.data?.company?.primaryContact?.imScreenNames?.whatsapp || ""}
                         placeholder="Enter WhatsApp number"
+                        readOnly
                       />
                     </span>
                     <span>
@@ -499,6 +546,7 @@ const MyCompany = () => {
                         onChange={handleChange}
                         value={formData?.data?.company?.primaryContact?.imScreenNames?.trillian}
                         placeholder="Enter Trillian ID"
+                        readOnly
                       />
                     </span>
                   </div>
@@ -520,6 +568,7 @@ const MyCompany = () => {
                         onChange={handleChange}
                         value={formData?.data?.company?.primaryContact?.socialNetworking?.facebook || ""}
                         placeholder="Facebook link"
+                        readOnly
                       />
                     </span>
                     <span>
@@ -534,6 +583,7 @@ const MyCompany = () => {
                         onChange={handleChange}
                         value={formData?.data?.company?.primaryContact?.socialNetworking?.twitter || ""}
                         placeholder="Twitter handle"
+                        readOnly
                       />
                     </span>
                     <span>
@@ -548,6 +598,7 @@ const MyCompany = () => {
                         onChange={handleChange}
                         value={formData?.data?.company?.primaryContact?.socialNetworking?.linkedin || ""}
                         placeholder="LinkedIn profile"
+                        readOnly
                       />
                     </span>
                   </div>

@@ -133,16 +133,12 @@ const initialState = {
     experience: "",
     specialty: "",
     email: "",
-    imScreenNames: {
       skype: '',
       whatsapp: '',
       trillian: '',
-  },
-  socialNetworking: {
     facebook: '',
     twitter: '',
     linkedin: '',
-},
     phoneNumber: "",
     tollFree: "",
     cellular: "",
