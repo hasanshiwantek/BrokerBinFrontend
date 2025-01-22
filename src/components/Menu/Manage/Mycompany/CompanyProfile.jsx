@@ -544,7 +544,7 @@ const MyCompany = () => {
                         name="imScreenNames.trillian"
                         id="trillian"
                         onChange={handleChange}
-                        value={formData?.data?.company?.primaryContact?.imScreenNames?.trillian}
+                        value={formData?.data?.company?.primaryContact?.imScreenNames?.trillian || ""}
                         placeholder="Enter Trillian ID"
                         readOnly
                       />

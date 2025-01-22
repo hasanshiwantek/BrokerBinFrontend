@@ -93,7 +93,7 @@ const SiteMap = () => {
                         </div>
                         <div id="box5">
                             <ul>
-                               <Link to={"/reports/email"}> <li Lim><img src={siteIcon} alt="icon" /> Reports</li></Link>
+                               <Link to={"/reports/email"}> <li ><img src={siteIcon} alt="icon" /> Reports</li></Link>
                                {/* <Link to={"/reports/Company"}> <li Lim><img src={siteIcon} alt="icon" /> Company</li></Link> */}
                                 <Link  to={"/inventory/Edit-Delete"}><li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Company Inventory</li></Link>
                                <Link to={"/inventory/Edit-Delete"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> My Inventory</li></Link>

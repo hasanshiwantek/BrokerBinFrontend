@@ -209,7 +209,9 @@ const BroadCastHistory = () => {
             <tbody>
               {loading ? (
                 <tr>
-                  <strong colSpan="9">Loading broadcasts...</strong>
+                  <td>
+                    <strong colSpan="9">Loading broadcasts...</strong>
+                  </td>
                 </tr>
               ) : filteredBroadcasts && filteredBroadcasts.length > 0 ? (
                 filteredBroadcasts.map((item, index) => (

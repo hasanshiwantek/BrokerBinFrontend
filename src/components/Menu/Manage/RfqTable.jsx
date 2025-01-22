@@ -487,7 +487,7 @@ const RfqTable = () => {
                   {(filteredData || []).map((e) => (
                     <tr
                       className={css.tableData}
-                      key={e.id}
+                      key={e.rfqId}
                       onClick={(event) => {
                         console.log("Passed RFQ Object:", e);
                         handleShowPopupRfq(event, e);
@@ -505,7 +505,7 @@ const RfqTable = () => {
                           }}
                           checked={rfqMail.some((mail) => mail.rfqId === e.rfqId)}
                         />
-                        <td>(0|1)</td>
+                        <span>(0|1)</span>
 
                         {/* Dynamic image based on isRead */}
                         {e.isRead === 1 ? (
@@ -528,7 +528,7 @@ const RfqTable = () => {
                       <td>
                         {e.partNumbers?.length > 1 ? (
                           <>
-                            <td>{e.partNumbers.length} Parts</td>
+                            <span>{e.partNumbers.length} Parts</span>
                             <div className={css.companyDropdown}>
                               {e.partNumbers.map((part, index) => (
                                 <div key={index} className={css.companyItem}>
@@ -538,7 +538,7 @@ const RfqTable = () => {
                             </div>
                           </>
                         ) : (
-                          <td>{e.partNumbers[0]}</td>
+                          <span>{e.partNumbers[0]}</span>
                         )}
                       </td>
                       <td>

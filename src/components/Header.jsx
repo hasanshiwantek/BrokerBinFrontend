@@ -354,17 +354,17 @@ const Header = () => {
                 <ul style={{ minWidth: "30px" }}>
                   <Link to={"/myprofile/MyContact"}>
                     <li>
-                      <img src={dp1} alt="" srcset="" />........
+                      <img src={dp1} alt="" srcSet="" />........
                     </li>
                   </Link>
                   <Link to={"/feedback"}>
-                    <li><img src={dp2} alt="" srcset="" style={{ color: "black" }} />........</li>
+                    <li><img src={dp2} alt="" srcSet="" style={{ color: "black" }} />........</li>
                   </Link>
                   <Link to={"/hotlist/view"}>
-                    <li><img src={dp3} alt="dsd" srcset="" style={{ color: "black" }} />........</li>
+                    <li><img src={dp3} alt="dsd" srcSet="" style={{ color: "black" }} />........</li>
                   </Link>
                   <Link to={"/inventory"}>
-                    <li><img src={dp6} alt="" srcset="" style={{ color: "black" }} />........</li>
+                    <li><img src={dp6} alt="" srcSet="" style={{ color: "black" }} />........</li>
                   </Link>
                   {/* <Link to={"/reports/Company"}>
                     <li><img src={dp5} alt="" srcset="" style={{ color: "black" }} />........</li>
