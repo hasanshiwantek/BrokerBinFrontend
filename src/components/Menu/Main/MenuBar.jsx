@@ -38,7 +38,7 @@ const MenuBar = () => {
             </div>
 
             <div className='help-sec'>
-                <img src={helpimg} alt="help" srcset="" />
+                <img src={helpimg} alt="help" srcSet="" />
                 <div className="help-content">
                     <h2 style={{fontSize:"1.5em" , fontWeight:"bold"}}>BrokenBin.com Help Center</h2>
                     <p>Use the BrokerBin.com Help Center to find out how to get the most out of our site and answer any questions you may have encountered. Feel free to call us, we're here to help. Call 507-535-7563 or TF at 866-241-0639</p>

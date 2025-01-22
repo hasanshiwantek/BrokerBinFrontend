@@ -242,7 +242,7 @@ const InventorySearch = () => {
                       onChange={handleChange}
                     >
                       {
-                        countriesList.map((country) => <option value={country.value}>{country.label}</option>)
+                        countriesList.map((country) => <option key={country.value} value={country.value}>{country.label}</option>)
                       }
 
                     </select>
@@ -255,7 +255,7 @@ const InventorySearch = () => {
                       onChange={handleChange}
                     >
                       {
-                        regionsList.map((region) => <option value={region.value}>{region.label}</option>)
+                        regionsList.map((region) => <option  key={region.value} value={region.value}>{region.label}</option>)
                       }
                     </select>
                     <div className="Ship Deadline">

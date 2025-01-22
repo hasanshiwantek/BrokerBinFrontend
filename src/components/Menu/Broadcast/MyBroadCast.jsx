@@ -439,7 +439,7 @@ const BroadCast = () => {
             <tr>
               <th>Cart</th>
               <th>Posted</th>
-              <th><img src={shieldImage} alt="" srcset="" style={{ width: "18px", fontWeight: "bold" }} /> </th>
+              <th><img src={shieldImage} alt="" srcSet="" style={{ width: "18px", fontWeight: "bold" }} /> </th>
               <th>Company</th>
               <th>Ctry</th>
               <th>Type</th>
@@ -521,7 +521,7 @@ const BroadCast = () => {
             <tr>
               <th>Cart</th>
               <th>Posted</th>
-              <th><img src={shieldImage} alt="" srcset="" style={{ width: "18px", fontWeight: "bold" }} /> </th>
+              <th><img src={shieldImage} alt="" srcSet="" style={{ width: "18px", fontWeight: "bold" }} /> </th>
               <th>Company</th>
               <th>Ctry</th>
               <th>Type</th>
