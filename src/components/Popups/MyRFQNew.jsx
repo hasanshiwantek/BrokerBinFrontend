@@ -25,11 +25,22 @@ const MyRFQNew = () => {
   const recipientDropdownRef = useRef(null); // Reference to the recipient dropdown
   const [showRecipientDropdown, setShowRecipientDropdown] = useState(false);
   console.log("Search Results in Component:", searchResults);
+  const [isFormValid, setFormValid] = useState(false);
+  const validParts = useRef({});  // Use a ref to track validity of each part
   const token = Cookies.get("token");
   const modalRef = useRef(null); // Create a reference to the modal
 
   const { initialData, user } = useSelector((state) => state.profileStore);
   const id = user?.user?.id;
+
+  const handlePartValidity = (partId, isValid) => {
+    validParts.current[partId] = isValid;
+    // Check if all parts are valid
+    setFormValid(Object.values(validParts.current).every(status => status));
+  };
+
+
+
 
   const subject = "Quote Needed"; // Default to "Quote Needed" if no RFQ is selected
 
@@ -250,7 +261,7 @@ const MyRFQNew = () => {
 
   // Filtered BCC list to ensure uniqueness
   const uniqueBCCList = getUniqueBCC(selectedProductsBCC);
-  console.log("Unique BCCS ",uniqueBCCList)
+  console.log("Unique BCCS ", uniqueBCCList)
 
 
   const submitHandle = async (e) => {
@@ -510,6 +521,7 @@ const MyRFQNew = () => {
                             searchResponseMatched={searchResponseMatched}
                             isNew={part.isNew}
                             selectedProducts={selectedProducts}
+                            onValidityChange={handlePartValidity}
                           />
 
                         ))}
@@ -676,15 +688,22 @@ const MyRFQNew = () => {
               </div>
               <div className={css.rfqBody_sendBtn}>
                 <button
-                  type="submit "
+                  type="submit"
+                  disabled={!isFormValid}
                   onClick={(e) => {
-                    e.preventDefault()
-                    submitHandle(); // Call the submit handler
-                    dispatch(setPopUpRfq(false))
+                    e.preventDefault();
+                    submitHandle();
+                    dispatch(setPopUpRfq(false));
                   }}
+                  className={`${isFormValid
+                      ? "bg-blue-500 hover:bg-blue-700 text-white"
+                      : "bg-blue-500 text-white opacity-50 cursor-not-allowed"
+                    } px-4 py-2 rounded shadow`}
                 >
-                  send
+                  Send
                 </button>
+
+
               </div>
             </div>
           </div>
