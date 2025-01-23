@@ -14,6 +14,8 @@ const InventorySearchResult = () => {
 
     // State to manage current page
     const [currentPage, setCurrentPage] = useState(pagination.currentPage);
+    const [selectedRows, setSelectedRows] = useState([]);
+
 
     // Handle page change
     const handlePageChange = (newPage) => {
@@ -24,6 +26,25 @@ const InventorySearchResult = () => {
         // Optionally, here you could fetch new data based on `newPage`
         // navigate('/path-to-fetch-new-data', { state: { page: newPage } });
     };
+
+    const handleReply = () => {
+        if (selectedRows.length === 0) {
+            alert("Please select at least one row to reply.");
+            return;
+        }
+        navigate("/rfq/create", { state: { selectedRows } });
+    };
+    
+
+      const handleCheckboxChange = (rowData) => {
+        setSelectedRows((prev) =>
+            prev.some((row) => row.id === rowData.id)
+                ? prev.filter((row) => row.id !== rowData.id) // Remove if already selected
+                : [...prev, rowData] // Add if not selected
+        );
+    };
+    
+
     return (
         <>
             <div className={`${css.productTableDetail} m-28 !bg-[#e8e8e8]`}>
@@ -78,7 +99,9 @@ const InventorySearchResult = () => {
                         <tbody>
                             {searchResults?.data?.length > 0 ? (searchResults?.data?.map((val, index) => (
                                 <tr key={index}>
-                                    <td><input type="checkbox" /></td>
+                                    <td><input type="checkbox"
+                                    onChange={() => handleCheckboxChange(val)}
+                                    checked={selectedRows.some((row) => row.id === val.id)} /></td>
                                     <td></td>
                                     <td>{val.addedBy.company.name}</td>
                                     <td>10</td>
@@ -131,6 +154,9 @@ const InventorySearchResult = () => {
                             className="text-gray-600 text-lg font-bold"
                         >
                             Next
+                        </button>
+                        <button type="button" onClick={handleReply} className={`${css.productTableBtn}`}>
+                            RFQ
                         </button>
                     </div>
                 </div>
