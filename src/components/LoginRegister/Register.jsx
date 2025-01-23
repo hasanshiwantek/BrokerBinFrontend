@@ -60,7 +60,7 @@ const Register = () => {
 
       try {
         const response = await fetch(
-          "https://brokerbinbackend.shiwantek.com/api/user/register",
+          "https://backend.brokercell.com/api/user/register",
           {
             method: "POST",
             headers: {
