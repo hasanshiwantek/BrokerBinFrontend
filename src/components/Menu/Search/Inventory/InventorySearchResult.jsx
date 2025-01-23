@@ -99,7 +99,7 @@ const InventorySearchResult = () => {
             alert("Please select at least one row to reply.");
             return;
         }
-        navigate("/rfq/create", { state: { selectedRows } });
+        navigate("/rfq/create", { state: { selectedRows: selectedRows } });
     };
 
     // Company Modal Handler
@@ -108,6 +108,15 @@ const InventorySearchResult = () => {
         dispatch(setTogglePopUp()); // Show company modal
     };
 
+    const handleCheckboxChange = (rowData) => {
+        setSelectedRows((prev) => {
+            const updatedRows = prev.some((row) => row.id === rowData.id)
+                ? prev.filter((row) => row.id !== rowData.id)
+                : [...prev, rowData];
+            console.log("Updated Selected Rows:", updatedRows); // Correctly logs updated state
+            return updatedRows;
+        });
+    };
     return (
         <div className={`${css.productTableDetail} m-28 !bg-[#e8e8e8]`}>
             <div className={styles.profileInfo_links}>
@@ -220,6 +229,15 @@ const InventorySearchResult = () => {
                 </table>
                 {/* Pagination Controls */}
                 <div className="mt-4 flex justify-between items-center">
+                    <button
+                        type="button"
+                        onClick={handleReply}
+                        className="!text-xl !flex !justify-start !gap-8 !py-[0.6rem] !px-8 !bg-blue-500 !text-white !capitalize"
+                    >
+                        RFQ
+                    </button>
+
+
                     <span className="text-orange-700 text-lg m-3">
                         Page <span className="text-blue-800">{currentPage}</span> of{" "}
                         <span className="text-blue-800">{pagination.totalPages}</span>
@@ -243,8 +261,8 @@ const InventorySearchResult = () => {
                                     key={page}
                                     onClick={() => handlePageChange(page)}
                                     className={`px-4 py-2 mx-1 rounded-md ${currentPage === page
-                                            ? "bg-blue-700 text-white"
-                                            : "bg-gray-200 hover:bg-gray-300 text-gray-800"
+                                        ? "bg-blue-700 text-white"
+                                        : "bg-gray-200 hover:bg-gray-300 text-gray-800"
                                         }`}
                                     disabled={loading}
                                 >
@@ -255,13 +273,14 @@ const InventorySearchResult = () => {
                         <button
                             onClick={handleNext}
                             className={`px-4 py-2 bg-blue-500 text-white rounded-md mx-1 ${visiblePages[1] === pagination.totalPages
-                                    ? "opacity-50 cursor-not-allowed"
-                                    : "hover:bg-blue-600"
+                                ? "opacity-50 cursor-not-allowed"
+                                : "hover:bg-blue-600"
                                 }`}
                             disabled={visiblePages[1] === pagination.totalPages || loading}
                         >
                             Next
                         </button>
+
                     </div>
                 </div>
 
