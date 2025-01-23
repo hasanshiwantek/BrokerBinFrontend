@@ -49,48 +49,6 @@ const InventorySearch = () => {
     });
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   console.log("Form Data Submitted:", formData); // Check the values being sent
-  //   setButtonText("Processing..."); // Set the button text to "Processing..."
-  //   setLoading(true); // Start loading
-
-  //   try {
-  //     const result = await dispatch(inventorySearch({ data: formData, token })).unwrap();
-
-  //     console.log("API Result:", result);
-  //     if (result.length === 0) {
-  //       alert('No matching records found.');
-  //       setFormData({
-  //         part: '',
-  //         heci: '',
-  //         description: '',
-  //         manufacturer: '',
-  //         keyword: '',
-  //         condition: '',
-  //         category: '',
-  //         company: '',
-  //         state: '',
-  //         country: '',
-  //         region: '',
-  //         shipDeadline: '',
-  //       });
-  //     }
-  //     else {
-  //       const pagination = result.pagination;
-  //       console.log("pagination", pagination);
-  //       navigate('/inventory-searchResult', { state: { searchResults: result , pagination } });
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching user search data:', error);
-  //     alert('An error occurred while fetching data.');
-  //   } finally {
-  //     setLoading(false); // End loading
-  //     setButtonText("Submit"); // Reset the button text
-  //   }
-  // };
-
-
 
 
   const handleSubmit = async (e) => {
