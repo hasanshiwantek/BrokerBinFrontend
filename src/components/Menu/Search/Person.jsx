@@ -1,11 +1,12 @@
 
 import React, { useState } from 'react'
 import "../Main/MenuBar.css"
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate,NavLink  } from 'react-router-dom'
 import styles from "../../../styles/Menu/Search/Person.module.css"
 import { submitUserSearch } from '../../../ReduxStore/ProfleSlice'
 import Cookies from "js-cookie"
 import { useDispatch } from 'react-redux'
+import css from "../../../styles/Menu/Manage/MyProfile.module.css";
 
 const Person = () => {
     const [loading, setLoading] = useState(false); // To track API call status
@@ -84,17 +85,27 @@ const Person = () => {
     return (
         <>
             <main className={styles.main}>
-                <nav className='menu-bar'>
-                    <ul>
-                        <li><Link to={'/advance'}>Inventory</Link></li>
-                        {/* <li><Link to={'/searchcompany'}>Company</Link></li> */}
-                        <li><Link to={'/person'}>Person</Link></li>
-                        {/* <li><Link to={"/"}>TechSpecs</Link></li> */}
-                        {/* <li><Link to={'/'}>NSN</Link></li> */}
-                        {/* <li><Link to={'/'}>Alt#</Link></li> */}
-                    </ul>
-                </nav>
-
+                       <div className={css.profileInfo_links}>
+                           <ul className='!bg-[#e5e7eb]'>
+                             <li>
+                               <NavLink
+                                 to="/advance"
+                                 end  // This ensures the exact match for /myprofile
+                                 className={({ isActive }) => (isActive ? css.active : '')}
+                               >
+                                 <span>Inventory</span>
+                               </NavLink>
+                             </li>
+                             <li>
+                               <NavLink
+                                 to="/person"
+                                 className={({ isActive }) => (isActive ? css.active : '')}
+                               >
+                                 <span>Person</span>
+                               </NavLink>
+                             </li>
+                           </ul>
+                         </div>
                 {/* Form Section */}
                 <h2 style={{ margin: "15px" }}>Person Search</h2>
                 <div className={styles.formContainer}>

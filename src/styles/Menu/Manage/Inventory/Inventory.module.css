@@ -568,7 +568,7 @@ input[type="file"] {
   font-size: 9pt  !important;
   padding: 4px 7px;
   border-radius: 5px;
-  border: 1px solid orangered;
+  border: 1px solid #6eb3ef;;
 
 }
 
@@ -619,7 +619,7 @@ input[type="file"] {
 } */
 
 .pageButton.active {
-  background-color: #428bca;
+  background-color: #6eb3ef;
   color: white;
   border-color: #428bca;
 }

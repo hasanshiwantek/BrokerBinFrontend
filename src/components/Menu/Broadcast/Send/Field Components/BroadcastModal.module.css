@@ -64,7 +64,7 @@
   }
   
   .replyButton {
-    background: #ff6600;
+    background-color: var(--primary-color);
     color: #fff;
   }
   
