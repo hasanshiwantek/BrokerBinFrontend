@@ -50,7 +50,7 @@ const Contact = () => {
     };
 
     const response = await fetch(
-      "https://brokerbinbackend.shiwantek.com/api/contact/store",
+      "https://backend.brokercell.com/api/contact/store",
       {
         method: "POST",
         headers: {
