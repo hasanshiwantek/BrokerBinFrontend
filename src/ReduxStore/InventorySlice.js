@@ -53,8 +53,6 @@ export const sendInventoryFile = createAsyncThunk(
   }
 );
 
-
-
 export const getInventoryData = createAsyncThunk(
   "inventoryStore/getInventoryData",
   async ({ token, page }) => {
@@ -75,8 +73,6 @@ export const getInventoryData = createAsyncThunk(
     }
   }
 );
-
-
 
 export const updateInventoryData = createAsyncThunk(
   "inventoryStore/updateInventoryData",
@@ -128,11 +124,6 @@ export const deleteInventoryData = createAsyncThunk(
   }
 );
 
-
-
-
-
-
 export const exportRemoveInventory = createAsyncThunk(
   "inventoryStore/exportRemoveInventory",
   async ({ token, actionType, exportType }) => {
@@ -157,7 +148,6 @@ export const exportRemoveInventory = createAsyncThunk(
     }
   }
 );
-
 
 export const inventorySearch = createAsyncThunk(
   "inventoryStore/inventorySearch",
@@ -185,9 +175,6 @@ export const inventorySearch = createAsyncThunk(
   }
 );
 
-
-
-
 export const getFilterInventories = createAsyncThunk(
   "inventoryStore/getFilterInventories",
   async ({ token,partModel,mfg,status,heciClei}) => {
@@ -208,15 +195,6 @@ export const getFilterInventories = createAsyncThunk(
     }
   }
 );
-
-
-
-
-
-
-
-
-
 
 const initialState = {
   // Add inventory data
