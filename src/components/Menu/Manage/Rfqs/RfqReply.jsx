@@ -19,6 +19,7 @@ const RfqReply = () => {
   const location = useLocation(); // To get data passed via navigate
   // const selectedRfqs = location.state?.selectedRfqs || [];
   const { selectedRfqs = [], type = "reply" } = location.state || {};
+  const { selectedRows = [] } = location.state || {};
 
   console.log("SELECTEDRFQ", selectedRfqs)
 
@@ -47,6 +48,10 @@ const RfqReply = () => {
       dispatch(fetchUserData({ id, token }));
     }
   }, [id, dispatch, token]);
+
+  useEffect(() => {
+    console.log("Selected Rows in RfqReply:", selectedRfqs);
+}, [selectedRfqs]);
 
 
   // useEffect(() => {
@@ -142,6 +147,7 @@ const RfqReply = () => {
   console.log("Comment:", comment);
   console.log("Initial Data:", initialData);
   console.log("Selected RFQs:", selectedRfqs);
+  console.log("Selected RFQs:", selectedRows);
   
   
 
@@ -160,6 +166,19 @@ const RfqReply = () => {
         }
       }
     });
+
+    selectedRows.forEach((row) => {
+        const email = row.addedBy.company.email;
+        if (!uniqueRecipients.has(email)) {
+          uniqueRecipients.set(email, {
+            firstName: row.addedBy.firstName,
+            lastName: row.addedBy.lastName,
+            email: email,
+          });
+      }
+    });
+
+
     return Array.from(uniqueRecipients.values());
   });
 
@@ -184,6 +203,23 @@ const RfqReply = () => {
         }
       });
     });
+    
+    selectedRows.forEach((row) => {
+      console.log("Row Data:", row); // Debug row data here
+      if (!uniqueParts.has(row.partModel)) {
+          uniqueParts.set(row.partModel, {
+              id: row.id,
+              partModel: row.partModel,
+              heciClei: row.heciClei || "",
+              mfg: row.mfg,
+              cond: row.cond,
+              quantity: row.quantity,
+              targetPrice: row.price || "",
+              terms: "",
+          });
+      }
+  });
+  
 
     return Array.from(uniqueParts.values());
   });
@@ -552,18 +588,19 @@ const RfqReply = () => {
                         </div>
                       </div>
                       <span name="parts">
-                        {parts.map((part) => (
-                          <RfqAddPart
-                            key={part.id}
-                            part={part}
-                            onUpdate={updatePart}
-                            onRemove={removePart}
-                            onSearch={handlePartModelSearch}
-                            searchResponseMatched={searchResponseMatched}
-                            isNew={part.isNew}
-                          />
-
-                        ))}
+                        {parts.map((part, index) => {
+    console.log("Part being passed to AddPart:", part); // Debug part data
+    return (
+        <RfqAddPart
+            key={part.id}
+            part={part}
+            onUpdate={updatePart}
+            onRemove={removePart}
+            onSearch={handlePartModelSearch}
+            searchResponseMatched={searchResponseMatched}
+        />
+    );
+})}
                       </span>
 
                       <div className={css.rfqBody_Main_left_addParts_AddBtn}>

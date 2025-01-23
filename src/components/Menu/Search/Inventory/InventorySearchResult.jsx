@@ -11,6 +11,7 @@ const InventorySearchResult = () => {
     const navigate = useNavigate();
     const { searchResults } = location.state;
     const { data, pagination } = searchResults;
+    console.log("SEARCHRESULTS", searchResults)
 
     // State to manage current page
     const [currentPage, setCurrentPage] = useState(pagination.currentPage);
@@ -32,17 +33,19 @@ const InventorySearchResult = () => {
             alert("Please select at least one row to reply.");
             return;
         }
-        navigate("/rfq/create", { state: { selectedRows } });
+        navigate("/rfq/create", { state: { selectedRows: selectedRows } });
     };
     
 
-      const handleCheckboxChange = (rowData) => {
-        setSelectedRows((prev) =>
-            prev.some((row) => row.id === rowData.id)
-                ? prev.filter((row) => row.id !== rowData.id) // Remove if already selected
-                : [...prev, rowData] // Add if not selected
-        );
-    };
+    const handleCheckboxChange = (rowData) => {
+        setSelectedRows((prev) => {
+            const updatedRows = prev.some((row) => row.id === rowData.id)
+                ? prev.filter((row) => row.id !== rowData.id)
+                : [...prev, rowData];
+            console.log("Updated Selected Rows:", updatedRows); // Correctly logs updated state
+            return updatedRows;
+        });
+    };    
     
 
     return (
