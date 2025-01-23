@@ -14,20 +14,14 @@ import { fetchUserData } from "../../../../ReduxStore/ProfleSlice";
 
 const EditDelete = () => {
   const token = Cookies.get("token");
- 
-
-  
   const dispatch = useDispatch();
-
-
-
   const { inventoryData, filteredInventoryData } = useSelector(
     (state) => state.inventoryStore
   );
   console.log("Inventory Data from Frontend", inventoryData);
   console.log("Filtered Inventory Data from Frontend", filteredInventoryData)
-  const companyFromInventory=inventoryData?.data?.map((item)=>item.addedBy.company.name)
-  console.log("Companies from Inventory ",companyFromInventory)
+  const companyFromInventory = inventoryData?.data?.map((item) => item.addedBy.company.name)
+  console.log("Companies from Inventory ", companyFromInventory)
 
   const pagination = filteredInventoryData?.pagination || inventoryData?.pagination || {};
 
@@ -114,12 +108,12 @@ const EditDelete = () => {
       alert("Please apply at least one filter before searching.");
       return; // Stop execution if no filters are applied
     }
-  
+
     // Proceed with search if filters are applied
     setCurrentPage(1);
     fetchFilteredData();
   };
-  
+
   const handleSaveModifications = () => {
     const dataToSave = {
       inventories: editedItems.map((item) => ({
@@ -170,7 +164,7 @@ const EditDelete = () => {
     }
   };
 
-  
+
   // Function to update visible pages when reaching the last button in the range
   const handlePageChange = (page) => {
     if (page >= 1 && page <= pagination.totalPages) {
@@ -302,7 +296,7 @@ const EditDelete = () => {
                 <tr>
                   <td
                     colSpan="10"
-                    style={{ textAlign: "center", fontSize: "9pt" ,color:"red"}}
+                    style={{ textAlign: "center", fontSize: "9pt", color: "red" }}
                   >
                     No results found.
                   </td>
@@ -426,7 +420,7 @@ const EditDelete = () => {
             </button>
           </div>
 
-            {/* Pagination Controls */}
+          {/* Pagination Controls */}
           <div className="flex justify-between items-center p-1">
             <div className={inventory.pagination}>
               <span className="text-orange-700 p-4 text-xl">

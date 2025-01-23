@@ -49,44 +49,43 @@ const InventorySearch = () => {
     });
   };
 
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Form Data Submitted:", formData); // Check the values being sent
     setButtonText("Processing..."); // Set the button text to "Processing..."
     setLoading(true); // Start loading
-
+  
     try {
-      const result = await dispatch(inventorySearch({ data: formData, token })).unwrap();
-
+      // Include page and pageSize in the formData
+      const updatedFormData = { ...formData, page: 1, pageSize: 20 };
+  
+      const result = await dispatch(inventorySearch({ data: updatedFormData, token })).unwrap();
+  
       console.log("API Result:", result);
       if (result.length === 0) {
-        alert('No matching records found.');
-        setFormData({
-          part: '',
-          heci: '',
-          description: '',
-          manufacturer: '',
-          keyword: '',
-          condition: '',
-          category: '',
-          company: '',
-          state: '',
-          country: '',
-          region: '',
-          shipDeadline: '',
+        alert("No matching records found.");
+        resetHandler(); // Reset form data if no results
+      } else {
+        const pagination = result.pagination;
+        console.log("pagination", pagination);
+  
+        // Pass the updated formData and results to the results page
+        navigate("/inventory-searchResult", {
+          state: { searchResults: result, pagination, filters: updatedFormData },
         });
       }
-      else {
-        navigate('/inventory-searchResult', { state: { searchResults: result } });
-      }
     } catch (error) {
-      console.error('Error fetching user search data:', error);
-      alert('An error occurred while fetching data.');
+      console.error("Error fetching user search data:", error);
+      alert("An error occurred while fetching data.");
     } finally {
       setLoading(false); // End loading
       setButtonText("Submit"); // Reset the button text
     }
   };
+
+  
 
   const resetHandler = () => {
     setFormData({
@@ -232,11 +231,12 @@ const InventorySearch = () => {
                     <CompanySearch setFormData={setFormData} formData={formData} />
                   </span>
 
-                  <span className={"flex flex-col gap-2 "}>
+                  <div className={"flex flex-col gap-4"}>
+                    <div>
                     <label htmlFor="Country">Country</label>
                     <select
                       name="country"
-                      className="border-2"
+                      className="border-2 w-72"
                       id="region"
                       value={formData.country}
                       onChange={handleChange}
@@ -246,11 +246,14 @@ const InventorySearch = () => {
                       }
 
                     </select>
+                    </div>
+                    <div>
+
                     <label htmlFor="Region">Region</label>
                     <select
                       name="region"
                       id="region"
-                      className="border-2"
+                      className="border-2  w-72"
                       value={formData.region}
                       onChange={handleChange}
                     >
@@ -258,6 +261,8 @@ const InventorySearch = () => {
                         regionsList.map((region) => <option  key={region.value} value={region.value}>{region.label}</option>)
                       }
                     </select>
+                    </div>
+
                     <div className="Ship Deadline">
                       <label htmlFor="ShipDeadline">ShipDeadline</label>
                       <select
@@ -271,7 +276,7 @@ const InventorySearch = () => {
                       </select>
 
                     </div>
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>

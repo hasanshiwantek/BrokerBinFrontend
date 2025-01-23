@@ -18,12 +18,13 @@ const SearchResults = () => {
         <main className='mainSec'>
             <nav className='menu-bar'>
                 <ul>
-                    <li><Link to={'/inventory'}>Inventory</Link></li>
+                    <li><Link to={'/advance'}>Inventory</Link></li>
                     <li><Link to={'/searchcompany'}>Company</Link></li>
                     <li><Link to={'/person'}>Person</Link></li>
-                    <li><Link to={"/"}>TechSpecs</Link></li>
+                    
+                    {/* <li><Link to={"/"}>TechSpecs</Link></li>
                     <li><Link to={'/'}>NSN</Link></li>
-                    <li><Link to={'/'}>Alt#</Link></li>
+                    <li><Link to={'/'}>Alt#</Link></li> */}
                 </ul>
             </nav>
 
