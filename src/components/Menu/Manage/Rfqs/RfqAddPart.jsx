@@ -26,6 +26,10 @@ const RfqAddPart = ({ part, onUpdate, onRemove, onSearch, searchResults, handleP
       onRemove(part.id);
     };
 
+    useEffect(() => {
+      console.log("Part received in AddPart:", part);
+  }, [part]);
+
     const handleInputBlur = () => {
       setTimeout(() => {
         if (!part.partModel || part.partModel.trim() === "") {
@@ -156,6 +160,7 @@ const RfqAddPart = ({ part, onUpdate, onRemove, onSearch, searchResults, handleP
           <select
             value={part.mfg || ""}
             onChange={(e) => handleInputChange("mfg", e.target.value)}
+            required
           >
             <option value="">Select Mfg</option>
             {part.mfgOptions?.map((Mfg) => (
@@ -168,6 +173,7 @@ const RfqAddPart = ({ part, onUpdate, onRemove, onSearch, searchResults, handleP
           <select
             value={part.cond || ""}
             onChange={(e) => handleInputChange("cond", e.target.value)}
+            required
           >
             <option value="">Select Cond</option>
             {part.conditionOptions?.map((Cond) => (
@@ -181,6 +187,7 @@ const RfqAddPart = ({ part, onUpdate, onRemove, onSearch, searchResults, handleP
             type="text"
             value={part.quantity}
             onChange={(e) => handleInputChange("quantity", e.target.value)}
+            required
           />
           <input
             type="text"
