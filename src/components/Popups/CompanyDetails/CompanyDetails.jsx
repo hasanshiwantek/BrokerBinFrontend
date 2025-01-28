@@ -20,6 +20,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCompanyContact } from "../../../ReduxStore/SearchProductSlice";
 import Cookies from "js-cookie";
 import { NavLink } from "react-router-dom";
+import { FaStar } from "react-icons/fa";
+import { brokerAPI } from "../../api/BrokerEndpoint";
+import axios from 'axios';
+
 
 const CompanyDetails = ({ closeModal }) => {
   const dispatch = useDispatch();
@@ -28,6 +32,7 @@ const CompanyDetails = ({ closeModal }) => {
   const [isModalOpen, setIsModalOpen] = useState(true); // Modal initially open
   const [loading, setLoading] = useState(true);
   const [companyData, setCompanyData] = useState(null);
+  const [feedbackData, setFeedbackData] = useState(null);
 
   if (!popupCompanyDetail || !popupCompanyDetail[0]) {
     return <p>Loading company details...</p>;
@@ -74,11 +79,39 @@ const CompanyDetails = ({ closeModal }) => {
   }, [dispatch, companyId, token]);
 
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${brokerAPI}feedback/ratings/${companyId}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          }
+        })
+        setFeedbackData(response.data);
+        console.log("RATINGDATA", feedbackData);
+      } catch (error) {
+        console.log("ERRORRATIMG", error)
+      } 
+    }
+    fetchData();
+  }, [companyId])
 
   const printCompanyModal = () => {
     window.print();
   }
 
+  const [rating, setRating] = useState(0);
+
+  const handleHover = (index) => {
+    // Tooltip logic
+    return index <= rating ? "View Comments" : "";
+  };
+
+  const handleClick = () => {
+    // Redirect to feedbacks tab
+    window.location.href = "/feedbacks"; // Adjust the link as needed
+  };
 
   // Close modal when clicking outside or pressing Escape
   // useEffect(() => {
@@ -107,6 +140,7 @@ const CompanyDetails = ({ closeModal }) => {
   // }, [closeModal]);
 
 
+  const ratings = parseFloat(feedbackData?.rating?.averageRating || 5);
 
 
   // While loading, show loading indicator
@@ -191,68 +225,31 @@ const CompanyDetails = ({ closeModal }) => {
                     <div data-v-217e3916="" class="vue-rate-it-rating" style={{
                       display: "flex", justifyContent: "space-between", alignItems: "center"
                     }}>
-                      <div data-v-217e3916="" class="vue-rate-it-rating-item">
-                        <div data-v-217e3916="" step="50" style={{ display: "inline-block", marginRight: "1px" }}>
-                          <svg width="17" height="17" viewBox="0 0 179 179" style={{ overflow: "visible" }}>
-                            <linearGradient id="vgnr2v" x1="-2%" x2="100%" y1="0%" y2="0%">
-                              <stop offset="102%" stop-color="#FFD700"></stop>
-                              <stop offset="102%" stop-color="#CCC"></stop>
-                            </linearGradient>
-                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#vgnr2v)" stroke="#999" stroke-width="2" vector-effect="non-scaling-stroke" transform="scale(0.1)"></path>
-                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#vgnr2v)" transform="scale(0.1)"></path>
-                          </svg>
-                        </div>
+                       <div style={{ display: "flex", alignItems: "center" }}>
+                        {[...Array(5)].map((_, index) => {
+                          const isFilled = index + 1 <= Math.floor(ratings); // Full yellow stars
+                          const isPartial = index < ratings && index + 1 > Math.floor(ratings); // Partial yellow star
+
+                          return (
+                            <FaStar
+                              key={index}
+                              size={24}
+                              color={isFilled ? "#FFD700" : isPartial ? "rgba(255, 215, 0, 0.5)" : "#CCC"} // Partial star is dim yellow
+                              style={{ cursor: "pointer", marginRight: 4 }}
+                              onMouseEnter={() => setRating(index + 1)}
+                              // onClick={handleClick}
+                              title={handleHover(index + 1)} // Tooltip text
+                            />
+                          );
+                        })}
                       </div>
-                      <div data-v-217e3916="" class="vue-rate-it-rating-item">
-                        <div data-v-217e3916="" step="50" style={{ display: "inline-block", marginRight: "1px" }}>
-                          <svg width="17" height="17" viewBox="0 0 179 179" style={{ overflow: "visible" }}>
-                            <linearGradient id="sjx8c" x1="-2%" x2="100%" y1="0%" y2="0%">
-                              <stop offset="102%" stop-color="#FFD700"></stop>
-                              <stop offset="102%" stop-color="#CCC"></stop>
-                            </linearGradient>
-                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#sjx8c)" stroke="#999" stroke-width="2" vector-effect="non-scaling-stroke" transform="scale(0.1)"></path>
-                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#sjx8c)" transform="scale(0.1)"></path>
-                          </svg>
-                        </div>
-                      </div>
-                      <div data-v-217e3916="" class="vue-rate-it-rating-item">
-                        <div data-v-217e3916="" step="50" style={{ display: "inline-block", marginRight: "1px" }}>
-                          <svg width="17" height="17" viewBox="0 0 179 179" style={{ overflow: "visible" }}>
-                            <linearGradient id="ax5l1m" x1="-2%" x2="100%" y1="0%" y2="0%">
-                              <stop offset="102%" stop-color="#FFD700"></stop>
-                              <stop offset="102%" stop-color="#CCC"></stop>
-                            </linearGradient>
-                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#ax5l1m)" stroke="#999" stroke-width="2" vector-effect="non-scaling-stroke" transform="scale(0.1)"></path>
-                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#ax5l1m)" transform="scale(0.1)"></path>
-                          </svg>
-                        </div>
-                      </div>
-                      <div data-v-217e3916="" class="vue-rate-it-rating-item">
-                        <div data-v-217e3916="" step="50" style={{ display: "inline-block", marginRight: "1px" }}>
-                          <svg width="17" height="17" viewBox="0 0 179 179" style={{ overflow: "visible" }}>
-                            <linearGradient id="19xik" x1="-2%" x2="100%" y1="0%" y2="0%">
-                              <stop offset="102%" stop-color="#FFD700"></stop>
-                              <stop offset="102%" stop-color="#CCC"></stop>
-                            </linearGradient>
-                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#19xik)" stroke="#999" stroke-width="2" vector-effect="non-scaling-stroke" transform="scale(0.1)"></path>
-                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#19xik)" transform="scale(0.1)"></path>
-                          </svg>
-                        </div>
-                      </div>
-                      <div data-v-217e3916="" class="vue-rate-it-rating-item">
-                        <div data-v-217e3916="" step="50" style={{ display: "inline-block", marginRight: "1px" }}>
-                          <svg width="17" height="17" viewBox="0 0 179 179" style={{ overflow: "visible" }}>
-                            <linearGradient id="wiiipk" x1="-2%" x2="100%" y1="0%" y2="0%">
-                              <stop offset="102%" stop-color="#FFD700"></stop>
-                              <stop offset="102%" stop-color="#CCC"></stop>
-                            </linearGradient>
-                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#wiiipk)" stroke="#999" stroke-width="2" vector-effect="non-scaling-stroke" transform="scale(0.1)"></path>
-                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#wiiipk)" transform="scale(0.1)"></path>
-                          </svg>
-                        </div>
-                      </div>
-                      <a href="#">100%</a>
+                      <a href="#">
+                        {feedbackData?.rating?.averageRating
+                          ? `${((feedbackData.rating.averageRating / 5) * 100).toFixed(1)}%`
+                          : "100%"}
+                      </a>
                     </div>
+                    <h1 className="text-center pt-2"> ({feedbackData?.rating?.totalFeedbacks || 0}) Feedbacks</h1>
                   </div>
                 </div>
                 {/* <div>

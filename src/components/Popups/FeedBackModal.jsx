@@ -1,49 +1,124 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styles from "../../styles/Menu/Search/FeedBackProfile.module.css";
+import { brokerAPI } from '../api/BrokerEndpoint';
+import Cookies from "js-cookie";
+import axios from 'axios';
+import { BiSolidMessageRoundedDots } from "react-icons/bi";
 
-const FeedbackModal = ({ isOpen, onClose }) => {
+
+
+const FeedbackModal = ({ isOpen, onClose, company,  }) => {
     if (!isOpen) return null; // Don't render the modal if it's not open
+
+    const [formData, setFormData] = useState({
+        to: company.id || "",
+        poNumber: "",
+        feedbackIssue: "",
+        feedbackRating: "",
+        feedbackPost: "",
+        emailACopy: 0,
+    })
+    
+    const [loading, setLoading] = useState(false);
+
+    const token = Cookies.get('token')
+    console.log("TOKEN", token)
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            const response = await axios.post(`${brokerAPI}feedback/store`, formData, {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`, 
+                },
+            });
+            const data = await response.data
+            console.log("DATA", data);
+            alert("Feedback has been submitted successfully")
+            onClose();
+        } catch (error) {
+            console.log("ERROR:", error);
+            alert("Error submitting feedback please try again later")
+        }
+        setLoading(false);
+    };
 
     return (
         <div className={styles.modalOverlay}>
-            <div className={styles.modalContent}>
+            <div className={`${styles.modalContent} !w-[30vw]`}>
                 <h2>Post Feedback to a Member</h2>
-                <form action="">
+                <form onSubmit={handleSubmit}>
                     <div className={styles.formSection}>
 
                         <label>
                             Member Name:
-                            <input type="text" />
+                            <input 
+                            type="text" 
+                            value={company.name || ""} 
+                            name="to" 
+                            readOnly />
                         </label>
 
                         <label>
-                            PO #:
-                            <input type="text" />
+                            PO #
+                            <input 
+                            type="text" 
+                            value={formData.poNumber || ''} 
+                            name='poNumber' 
+                            onChange={(e) => setFormData({...formData, [e.target.name] : e.target.value})}/>
                         </label>
 
                         <label>
                             Feedback Issue:
-                            <select>
-                                <option>Pick Issue</option>
+                            <select
+                            value={formData.feedbackIssue || ''}
+                            name='feedbackIssue'
+                            onChange={(e) => setFormData({...formData, [e.target.name]: e.target.value})}>
+                                <option value="">Pick Issue</option>
+                                <option value="Customer Service">Customer Service</option>
+                                <option value="Product">Product</option>
+                                <option value="Returns">Returns</option>
+                                <option value="Shipping">Shipping</option>
+                                <option value="Other">Other</option>
                                 {/* Add other options here */}
                             </select>
                         </label>
 
                         <label>
                             Feedback Rating:
-                            <select>
-                                <option>Pick One</option>
+                            <select
+                            name='feedbackRating'
+                            onChange={(e) => setFormData({...formData, [e.target.name] : e.target.value})}>
+                                <option value="">Pick One</option>
+                                <option value="Positive">Positive</option>
+                                <option value="Neutral">Neutral</option>
+                                <option value="Negative">Negative</option>
                                 {/* Add other options here */}
                             </select>
                         </label>
 
                         <label>
                             Feedback Post:
-                            <textarea rows="4" placeholder="Write your feedback..."></textarea>
+                            <p className='text-[#ff0000]'>{61 - formData.feedbackPost.length} characters left</p>
+                            <textarea 
+                            placeholder="Write your feedback..."
+                            name="feedbackPost"
+                            value={formData.feedbackPost}
+                            onChange={(e) => setFormData({...formData, [e.target.name]: e.target.value})}
+                            maxLength="61"
+                            className="h-[3vh]"></textarea>
                         </label>
 
                         <label className={styles.checkboxLabel}>
-                            <input type="checkbox" className={styles.checkbox} />
+                            <input 
+                            type="checkbox"
+                            name="emailACopy"
+                            checked={formData.emailACopy}
+                            className={styles.checkbox}
+                            onChange={(e) => setFormData({...formData, [e.target.name]: e.target.checked ? 1 : 0 })} 
+                            />
                             Email me a copy of this post.
                         </label>
 
@@ -63,7 +138,9 @@ const FeedbackModal = ({ isOpen, onClose }) => {
 
 
                         <div className={styles.modalButtons}>
-                            <button onClick={onClose}>Submit Feedback</button>
+                            <button type="submit" disabled={loading}>
+                                {loading ? "Submitting..." : "Submit Feedback"}
+                            </button>
                             <button onClick={onClose}>Cancel</button>
 
                         </div>
