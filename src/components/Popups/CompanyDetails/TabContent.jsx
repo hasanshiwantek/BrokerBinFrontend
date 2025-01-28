@@ -12,6 +12,14 @@ import { getCompanyContact } from "../../../ReduxStore/SearchProductSlice";
 import { use } from "react";
 import Cookies from "js-cookie";
 import { deleteCompanyUser } from "../../../ReduxStore/RfqSlice";
+import { LiaWindowClose } from "react-icons/lia";
+import { VscFeedback } from "react-icons/vsc";
+import FeedbackModal from "../FeedBackModal"
+import { brokerAPI } from "../../api/BrokerEndpoint";
+import axios from 'axios';
+import { BiSolidMessageRoundedDots } from "react-icons/bi";
+import { BiMessageRoundedMinus } from "react-icons/bi";
+
 
 
 const TabContent = ({ companyId }) => {
@@ -21,16 +29,22 @@ const TabContent = ({ companyId }) => {
   const [searchQuery, setSearchQuery] = useState(""); // Search query state
   const [filteredContacts, setFilteredContacts] = useState([]); // Filtered contacts
   const [companyData, setCompanyData] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [feedbacks, setFeedbacks] = useState([]);
 
   const dispatch = useDispatch();
   const { companyContactData } = useSelector((store) => store.searchProductStore);
-  console.log("Company Id........ ",companyContactData.data.company.id)
+  const [visibleFeedbacks, setVisibleFeedbacks] = useState(10);
   const token = Cookies.get("token");
-
+  
   console.log("CompanyId From Tab Content Page", companyId);
-
+  
   const companyUserId = companyContactData.data.contacts.map((item) => item.id)
   console.log("User Id from Comapny Modal", companyUserId)
+  
+  const compId = companyContactData.data.company.id
+  const companyName = companyContactData.data.company.name
+  console.log("COMPANYNAME", companyName)
 
   const companyUsersCount = companyContactData.data.contacts.length
   useEffect(() => {
@@ -93,9 +107,43 @@ const TabContent = ({ companyId }) => {
     }
   }
 
-
-
-
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await axios.get(`${brokerAPI}feedback/company/${companyId}`, {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       });
+  //       const data = response.data;
+  //       console.log("FEEDBACKDATA", data);
+  //     } catch (error) {
+  //       console.log("Error", error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, [companyId]);
+  
+  const handleFetchData = async () => {
+    try {
+      const response = await axios.get(`${brokerAPI}feedback/company/${compId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = response.data;
+      console.log("DATA", data);
+      setFeedbacks(data.feedbacks)
+    } catch (error) {
+      console.log("Error", error);
+    }
+  };
+  
+  const loadMore = () => {
+    setVisibleFeedbacks(prev => prev + 10);
+  };
 
   if (loading) {
     return (
@@ -146,6 +194,12 @@ const TabContent = ({ companyId }) => {
             className={toggleTabs === 4 ? css.activeTab : ""}
           >
             Terms / Conditions
+          </li>
+          <li
+            onClick={() => {setToggleTabs(5); handleFetchData();}}
+            className={toggleTabs === 5 ? css.activeTab : ""}
+          >
+            Feedback
           </li>
         </ul>
         <div className={toggleTabs === 1 ? css.showContent : css.content}>
@@ -407,12 +461,6 @@ const TabContent = ({ companyId }) => {
               })
               }
 
-
-
-
-
-
-
             </div>
           </div>
         </div>
@@ -423,12 +471,6 @@ const TabContent = ({ companyId }) => {
 
 
             </div>
-
-
-
-
-
-
 
           </div>
         </div>
@@ -450,6 +492,64 @@ const TabContent = ({ companyId }) => {
               <h1>legal files</h1>
               <p>Profile Incomplete</p>
             </div>
+          </div>
+        </div>
+        
+        <div className={toggleTabs === 5 ? css.showContent : css.content}>
+          <div className={css.Popup_Info_Main_right_tabs_photos}>
+            <div className={`flex justify-between border-b`}>
+              <h1 className="font-bold">Feedback Received</h1>
+              <span className={`flex space-x-4 cursor-pointer`}>
+              <span 
+                onClick={() => { console.log("Icon clicked!"); setIsOpen(true); }}
+                className="hover:text-[#2c83ec] cursor-pointer"
+              >
+                {/* <VscFeedback size={20}/> */}
+                <BiSolidMessageRoundedDots size={20}/>
+                {/* <BiMessageRoundedMinus size={20}/> */}
+              </span>
+                {isOpen && <FeedbackModal company={{id: compId, name: companyName}} isOpen={isOpen} onClose={() => setIsOpen(false)} />}
+                {/* <span><LiaWindowClose /></span> */}
+              </span>
+            </div>
+            <div className={`flex flex-col`}>
+              <div className={`flex justify-between px-4 font-bold`}>
+                <div>
+                  <h1>Comment</h1>
+                </div>
+                <div>
+                  <h1>Commenter</h1>
+                </div>
+                <div>
+                  <h1>Date</h1>
+                </div>
+              </div>
+  
+              {feedbacks.slice(0, visibleFeedbacks).map((feedback, index) => (
+                <div key={index} className={`flex justify-between px-4 border-b py-2`}>
+                  <div className="w-[5.1vw]">
+                    <p className="font-bold"> {feedback.feedbackIssue || "Option"}</p>
+                    <p>PO #: {feedback.poNumber || "N/A"}</p>
+                    <p>{feedback.feedbackPost || "No Feedback Provided"}</p>
+                  </div>
+
+                  <div className="">
+                    <p className="font-bold">{feedback.fromUsername || "Anonymous"}</p>
+                    <p>{feedback.fromCompanyName || "No Company Name"}</p>
+                  </div>
+
+                  <div className="w-[]">
+                    <p>{feedback.date.split(" ")[0]}</p>
+                    <p>{feedback.date.split(" ")[1]}</p>
+                  </div>
+                </div>
+              ))}
+              <div className="justify-center flex">
+                {visibleFeedbacks < feedbacks.length && (
+                  <button onClick={loadMore} className="mt-4 p-2 bg-blue-500 text-white rounded w-[10vw] ">Load More</button>
+                )}
+              </div>
+          </div>
           </div>
         </div>
       </div>

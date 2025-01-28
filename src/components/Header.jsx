@@ -564,12 +564,14 @@ const Header = () => {
             </li>
           </ul>
           <ul className={css.nav_tools}>
-            <li>
+            <li className="gap-1px cursor-pointer"
+            onClick={() => dispatch(setToolToggle())}
+            >
               tools
               {toolToggle ? (
                 <button
                   type="button"
-                  onClick={() => dispatch(setToolToggle())}
+                  // onClick={() => dispatch(setToolToggle())}
                   className={css.tools_toggle}
                 >
                   <BsToggleOn style={{ color: "white" }} />
