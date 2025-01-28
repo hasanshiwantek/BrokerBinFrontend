@@ -3,7 +3,6 @@ import styles from "../../styles/Menu/Search/FeedBackProfile.module.css";
 import { brokerAPI } from '../api/BrokerEndpoint';
 import Cookies from "js-cookie";
 import axios from 'axios';
-import { BiSolidMessageRoundedDots } from "react-icons/bi";
 
 
 
@@ -44,6 +43,8 @@ const FeedbackModal = ({ isOpen, onClose, company,  }) => {
         }
         setLoading(false);
     };
+
+    const isDisabled = !formData.feedbackRating;
 
     return (
         <div className={styles.modalOverlay}>
@@ -87,7 +88,7 @@ const FeedbackModal = ({ isOpen, onClose, company,  }) => {
                         </label>
 
                         <label>
-                            Feedback Rating:
+                            Feedback Rating: *
                             <select
                             name='feedbackRating'
                             onChange={(e) => setFormData({...formData, [e.target.name] : e.target.value})}>
@@ -138,7 +139,12 @@ const FeedbackModal = ({ isOpen, onClose, company,  }) => {
 
 
                         <div className={styles.modalButtons}>
-                            <button type="submit" disabled={loading}>
+                            <button 
+                            type="submit" 
+                            disabled={loading || !formData.feedbackRating}
+                            className={`p-2 rounded text-white 
+                                ${loading || !formData.feedbackRating ? "bg-gray-400 cursor-not-allowed opacity-50" : "bg-blue-500"}`}
+                            >
                                 {loading ? "Submitting..." : "Submit Feedback"}
                             </button>
                             <button onClick={onClose}>Cancel</button>
