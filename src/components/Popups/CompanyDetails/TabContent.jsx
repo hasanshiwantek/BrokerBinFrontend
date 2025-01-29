@@ -514,7 +514,7 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
                 <BiSolidMessageRoundedDots size={20}/>
                 {/* <BiMessageRoundedMinus size={20}/> */}
               </span>
-                {isOpen && <FeedbackModal company={{id: compId, name: companyName}} isOpen={isOpen} onClose={() => setIsOpen(false)} />}
+                {isOpen && <FeedbackModal company={{id: compId, name: companyName}} isOpen={isOpen} onClose={() => setIsOpen(false)} onSucces={handleFetchData} />}
                 {/* <span><LiaWindowClose /></span> */}
               </span>
             </div>
