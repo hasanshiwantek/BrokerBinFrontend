@@ -22,8 +22,8 @@ import { BiMessageRoundedMinus } from "react-icons/bi";
 
 
 
-const TabContent = ({ companyId }) => {
-  const [toggleTabs, setToggleTabs] = useState(1);
+const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
+  // const [toggleTabs, setToggleTabs] = useState(1);
   // Loading state
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState(""); // Search query state
@@ -124,6 +124,12 @@ const TabContent = ({ companyId }) => {
   //   };
   //   fetchData();
   // }, [companyId]);
+
+  useEffect(() => {
+    if (toggleTabs === 5) {
+      handleFetchData(); // API call function
+    }
+  }, [toggleTabs]);
   
   const handleFetchData = async () => {
     try {
@@ -526,14 +532,14 @@ const TabContent = ({ companyId }) => {
               </div>
   
               {feedbacks.slice(0, visibleFeedbacks).map((feedback, index) => (
-                <div key={index} className={`flex justify-between px-4 border-b py-2`}>
-                  <div className="w-[5.1vw]">
+                <div key={index} className={`flex justify-between px-4 border-b py-2 text-balance`}>
+                  <div className="w-[5.1vw] text-balance">
                     <p className="font-bold"> {feedback.feedbackIssue || "Option"}</p>
                     <p>PO #: {feedback.poNumber || "N/A"}</p>
-                    <p>{feedback.feedbackPost || "No Feedback Provided"}</p>
+                    <p className="break-words w-[21vw]">{feedback.feedbackPost || "No Feedback Provided"}</p>
                   </div>
 
-                  <div className="">
+                  <div className="md:pl-10 2xl:pl-0">
                     <p className="font-bold">{feedback.fromUsername || "Anonymous"}</p>
                     <p>{feedback.fromCompanyName || "No Company Name"}</p>
                   </div>

@@ -19,6 +19,7 @@ const FeedbackModal = ({ isOpen, onClose, company,  }) => {
     })
     
     const [loading, setLoading] = useState(false);
+    const [isChecked, setIsChecked] = useState(false);
 
     const token = Cookies.get('token')
     console.log("TOKEN", token)
@@ -47,12 +48,11 @@ const FeedbackModal = ({ isOpen, onClose, company,  }) => {
     const isDisabled = !formData.feedbackRating;
 
     return (
-        <div className={styles.modalOverlay}>
+        <div className={`${styles.modalOverlay} `}>
             <div className={`${styles.modalContent} !w-[30vw]`}>
                 <h2>Post Feedback to a Member</h2>
                 <form onSubmit={handleSubmit}>
                     <div className={styles.formSection}>
-
                         <label>
                             Member Name:
                             <input 
@@ -125,7 +125,11 @@ const FeedbackModal = ({ isOpen, onClose, company,  }) => {
 
 
                         <label className={styles.checkboxLabel}>
-                            <input type="checkbox" className={styles.checkbox} />
+                            <input 
+                            type="checkbox" 
+                            className={styles.checkbox}
+                            onChange={(e) => setIsChecked(e.target.checked)} 
+                            />
                             I understand that inappropriate comments may violate the Terms of Service.
                         </label>
                         <div className={styles.termsNotes}>
@@ -141,19 +145,16 @@ const FeedbackModal = ({ isOpen, onClose, company,  }) => {
                         <div className={styles.modalButtons}>
                             <button 
                             type="submit" 
-                            disabled={loading || !formData.feedbackRating}
+                            disabled={loading || !formData.feedbackRating || !isChecked}
                             className={`p-2 rounded text-white 
-                                ${loading || !formData.feedbackRating ? "bg-gray-400 cursor-not-allowed opacity-50" : "bg-blue-500"}`}
+                                ${loading || !formData.feedbackRating || !isChecked ? "bg-gray-400 cursor-not-allowed opacity-50" : "bg-blue-500"}`}
                             >
                                 {loading ? "Submitting..." : "Submit Feedback"}
                             </button>
                             <button onClick={onClose}>Cancel</button>
-
                         </div>
                     </div>
-
                 </form>
-
                 {/* Close Button */}
                 {/* <button className={styles.closeButton} onClick={onClose}>✖</button> */}
             </div>

@@ -564,7 +564,7 @@ const Header = () => {
             </li>
           </ul>
           <ul className={css.nav_tools}>
-            <li className="gap-1px cursor-pointer"
+            <li className="gap-[1vw] cursor-pointer"
             onClick={() => dispatch(setToolToggle())}
             >
               tools
