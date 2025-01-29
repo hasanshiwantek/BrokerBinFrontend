@@ -6,7 +6,7 @@ import axios from 'axios';
 
 
 
-const FeedbackModal = ({ isOpen, onClose, company,  }) => {
+const FeedbackModal = ({ isOpen, onClose, company, onSucces }) => {
     if (!isOpen) return null; // Don't render the modal if it's not open
 
     const [formData, setFormData] = useState({
@@ -38,6 +38,7 @@ const FeedbackModal = ({ isOpen, onClose, company,  }) => {
             console.log("DATA", data);
             alert("Feedback has been submitted successfully")
             onClose();
+            onSucces();
         } catch (error) {
             console.log("ERROR:", error);
             alert("Error submitting feedback please try again later")
