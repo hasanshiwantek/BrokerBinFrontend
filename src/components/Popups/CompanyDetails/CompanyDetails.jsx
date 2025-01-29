@@ -33,6 +33,8 @@ const CompanyDetails = ({ closeModal }) => {
   const [loading, setLoading] = useState(true);
   const [companyData, setCompanyData] = useState(null);
   const [feedbackData, setFeedbackData] = useState(null);
+  const [toggleTabs, setToggleTabs] = useState(1);
+
 
   if (!popupCompanyDetail || !popupCompanyDetail[0]) {
     return <p>Loading company details...</p>;
@@ -225,7 +227,8 @@ const CompanyDetails = ({ closeModal }) => {
                     <div data-v-217e3916="" class="vue-rate-it-rating" style={{
                       display: "flex", justifyContent: "space-between", alignItems: "center"
                     }}>
-                       <div style={{ display: "flex", alignItems: "center" }}>
+                       <div style={{ display: "flex", alignItems: "center" }}
+                       onClick={() => setToggleTabs(5)}>
                         {[...Array(5)].map((_, index) => {
                           const isFilled = index + 1 <= Math.floor(ratings); // Full yellow stars
                           const isPartial = index < ratings && index + 1 > Math.floor(ratings); // Partial yellow star
@@ -320,7 +323,7 @@ const CompanyDetails = ({ closeModal }) => {
               </div>
 
               <div className={css.Popup_Info_Main_right_tabs_layout}>
-                <TabContent companyId={companyId} />
+                <TabContent companyId={companyId} toggleTabs={toggleTabs} setToggleTabs={setToggleTabs}/>
 
               </div>
 
