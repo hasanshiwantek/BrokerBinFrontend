@@ -448,50 +448,6 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
 
 
 
-
-  // const handleNextPage = () => {
-  //   const newPage = page + 1;
-
-  //   // Determine which parameter to use based on the current URL
-  //   const queryParams = new URLSearchParams(location.search);
-  //   const currentQuery = queryParams.get("query");
-  //   const currentPartModel = queryParams.get("partModel");
-
-  //   // Use the same parameter as in the current URL
-  //   const url = currentQuery
-  //     ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(currentQuery)}`
-  //     : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(currentPartModel)}`;
-
-  //   navigate(url, { replace: true });
-
-  //   console.log("Navigating to URL:", url); // Debug log
-  // };
-
-  // const handlePrevPage = () => {
-  //   const newPage = page - 1;
-
-  //   // Ensure we don't navigate to a page number less than 1
-  //   if (newPage < 1) return;
-
-  //   // Determine which parameter to use based on the current URL
-  //   const queryParams = new URLSearchParams(location.search);
-  //   const currentQuery = queryParams.get("query");
-  //   const currentPartModel = queryParams.get("partModel");
-
-  //   // Use the same parameter as in the current URL
-  //   const url = currentQuery
-  //     ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(currentQuery)}`
-  //     : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(currentPartModel)}`;
-
-  //   navigate(url, { replace: true });
-
-  //   console.log("Navigating to URL:", url); // Debug log
-  // };
-
-
-
-
-
   const handleNextPage = () => {
     const newPage = page + 1;
 
@@ -538,7 +494,7 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
 
   // console.log("Payload from ProductTable Page", payload)
   console.log("token", token)
-  
+
 
   const handleSort = (column) => {
     if (sortBy === column) {
@@ -550,7 +506,7 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
       setSortBy(column);
       setSortOrder(column === "price" ? "asc" : "desc");
     }
-  
+
     // Create the payload for dispatch
     const payload = {
       search: keys, // Ensure search is formatted as an array
@@ -559,11 +515,11 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
       page: 1, // Reset to the first page
       pageSize: 20, // Adjust page size if needed
     };
-  
+
     console.log("Sorting Payload:", payload);
     dispatch(sortInventory({ token, payload }));
   };
-  
+
 
   return (
 
@@ -661,7 +617,7 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
                   </td>
                   <td>{e.partModel}</td>
                   <td>
-                    <MdShowChart />
+                  <img src="https://static.brokerbin.com/version/v8.3.2/images/nohistory_icon.png" alt="Stats"/>
                   </td>
                   <td>
                     {e.ts ? (
@@ -751,5 +707,16 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
 
 
 export default SearchProduct;
+
+
+
+
+
+
+
+
+
+
+
 
 

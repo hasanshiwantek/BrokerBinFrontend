@@ -263,20 +263,27 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    background: rgba(0, 0, 0, 0.5); 
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000; /* Ensure it appears above other elements */
+    /* backdrop-filter: none !important;  */
+    margin-left: 0 !important;
 }
 
 .modalContent {
     background: white;
     padding: 20px;
     border-radius: 8px;
-    width: 400px; /* Adjust width as needed */
+    width: 400px; 
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
- 
+    overflow-y: auto;
+    max-height: 80vh;
+    /* box-shadow: none !important; */
+    /* text-shadow: none !important; */
+    /* filter: none !important; */
+    /* backdrop-filter: none !important; */
 }
 
 .termsNotes p{
@@ -288,7 +295,7 @@
     grid-template-columns: 1fr; /* Two columns for inputs */
     gap: 12px; /* Space between rows */
     /* width: 100%;  */
-    overflow: scroll;
+    /* overflow: scroll; */
   }
      
   label {
@@ -310,11 +317,11 @@
 
 .modalButtons button {
     margin-left: 10px; /* Space between buttons */
-    background-color: #ef6421;
+    background-color: #2c83ec;
     display: inline-block;
     padding: 10px ;
     color: white;
-    background-color: #ef6421;
+    background-color: #2c83ec;
     text-decoration: none;
     border-radius: 5px;
     text-align: center; /* Center the text */

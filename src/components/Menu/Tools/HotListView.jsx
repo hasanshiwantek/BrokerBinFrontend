@@ -44,10 +44,12 @@ const HotListView = () => {
     dispatch(deleteHotlists({ token, ids: payload }))
       .then(() => {
         console.log("Deletion successful.");
+        alert("Hotlists Deleted Successfully");
         dispatch(showHotListItem({ token })); // Refresh the list
       })
       .catch((error) => {
         console.error("Error during deletion:", error);
+        alert("Error deleting hotlist,Please try again");
       });
   };
   

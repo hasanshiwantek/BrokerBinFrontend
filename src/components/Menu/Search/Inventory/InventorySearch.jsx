@@ -17,6 +17,7 @@ const InventorySearch = () => {
   const token = Cookies.get("token");
   const { inventorySearchData } = useSelector((state) => state.inventoryStore);
   console.log(inventorySearchData)
+  
   const [formData, setFormData] = useState({
     part: '',
     heci: '',
@@ -113,11 +114,19 @@ const InventorySearch = () => {
               <ul>
                 <li>
                   <NavLink
-                    to="/advance"
+                    to="/search/Inventory"
                     end  // This ensures the exact match for /myprofile
                     className={({ isActive }) => (isActive ? css.active : '')}
                   >
                     <span>Inventory</span>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/search/Company"
+                    className={({ isActive }) => (isActive ? css.active : '')}
+                  >
+                    <span>Company</span>
                   </NavLink>
                 </li>
                 <li>
@@ -131,10 +140,10 @@ const InventorySearch = () => {
               </ul>
             </div>
 
-            <div className={css.profileInfo_form}>
+            <div className={`${css.profileInfo_form} !flex !flex-col`}>
               <h2 style={{ margin: "" }}>Inventory Search</h2>
-              <div className={'!flex !flex-col'}>
-                <div className={`flex flex-col !text-right px-[5vw] gap-[.5vw] `}>
+              <div className={'!flex !flex-col '}>
+                <div className={`!flex !flex-col !text-right !px-[5vw] !gap-[.5vw] `}>
                   <span>
                     <label htmlFor="part">Part#</label>
                     <input
@@ -143,6 +152,7 @@ const InventorySearch = () => {
                       id="firstName"
                       onChange={handleChange}
                       value={formData.part}
+                      className="ml-[1vw]"
                     />
                   </span>
                   <span>
@@ -153,6 +163,7 @@ const InventorySearch = () => {
                       id="lastName"
                       onChange={handleChange}
                       value={formData.heci}
+                      className="ml-[1vw]"
                     />
                   </span>
                   <span>
@@ -163,6 +174,8 @@ const InventorySearch = () => {
                       id="position"
                       onChange={handleChange}
                       value={formData.description}
+                      className="ml-[1vw]"
+
                     />
                   </span>
                   <span>
@@ -173,6 +186,8 @@ const InventorySearch = () => {
                       id="specialty"
                       onChange={handleChange}
                       value={formData.manufacturer}
+                      className="ml-[1vw]"
+
                     />
                   </span>
                   <h2>Keyword Searches</h2>
@@ -194,6 +209,8 @@ const InventorySearch = () => {
                       id="email"
                       onChange={handleChange}
                       value={formData.keyword}
+                      className="ml-[1vw]"
+
                     />
                   </span>
                   <div className={''}>
@@ -203,7 +220,8 @@ const InventorySearch = () => {
                       id="region"
                       value={formData.condition}
                       onChange={handleChange}
-                      className="border-2"
+                      className="ml-[1vw] border-2"
+
                     >
                       <option value="">All</option>
                       <option value="NEW">NEW</option>
@@ -225,6 +243,7 @@ const InventorySearch = () => {
                       id="specialty"
                       onChange={handleChange}
                       value={formData.category}
+                      className="ml-[1vw]"
                     />
                   </span>
                   <span>
@@ -233,34 +252,35 @@ const InventorySearch = () => {
 
                   <div className={"flex flex-col gap-4"}>
                     <div>
-                      <label htmlFor="Country">Country</label>
-                      <select
-                        name="country"
-                        className="border-2 w-72"
-                        id="region"
-                        value={formData.country}
-                        onChange={handleChange}
-                      >
-                        {
-                          countriesList.map((country) => <option key={country.value} value={country.value}>{country.label}</option>)
-                        }
+                    <label htmlFor="Country">Country</label>
+                    <select
+                      name="country"
+                      id="region"
+                      value={formData.country}
+                      onChange={handleChange}
+                      className="ml-[1vw] w-72 border-2"
+
+                    >
+                      {
+                        countriesList.map((country) => <option key={country.value} value={country.value}>{country.label}</option>)
+                      }
 
                       </select>
                     </div>
                     <div>
 
-                      <label htmlFor="Region">Region</label>
-                      <select
-                        name="region"
-                        id="region"
-                        className="border-2  w-72"
-                        value={formData.region}
-                        onChange={handleChange}
-                      >
-                        {
-                          regionsList.map((region) => <option key={region.value} value={region.value}>{region.label}</option>)
-                        }
-                      </select>
+                    <label htmlFor="Region">Region</label>
+                    <select
+                      name="region"
+                      id="region"
+                      value={formData.region}
+                      onChange={handleChange}
+                      className="ml-[1vw] w-72 border-2"
+                    >
+                      {
+                        regionsList.map((region) => <option  key={region.value} value={region.value}>{region.label}</option>)
+                      }
+                    </select>
                     </div>
 
                     <div className="Ship Deadline">

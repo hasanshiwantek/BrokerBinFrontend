@@ -45,7 +45,7 @@ const Add = () => {
   
     try {
       const response = await fetch(
-        "https://brokerbinbackend.shiwantek.com/api/inventory/add",
+        "https://backend.brokercell.com/api/inventory/add",
         {
           method: "POST",
           headers: {
