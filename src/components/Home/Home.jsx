@@ -310,7 +310,7 @@ const Home = () => {
                   </ul>
                 </div>
                 <div className={css.gridHome1_MemberDetail_logo} >
-                  <img src={initialData.company.image} alt="Company Logo" onClick={() => openCompanyModal(company)} className="cursor-pointer !mt-28" width={"60%"} height={"60%"} />
+                  <img src={initialData?.company?.image} alt="Company Logo" onClick={() => openCompanyModal(company)} className="cursor-pointer !mt-28" width={"60%"} height={"60%"} />
                 </div>
                 <div className={css.gridHome1_MemberDetail_reviews}>
                   <div className={css.gridHome1_MemberDetail_reviews_stars}>

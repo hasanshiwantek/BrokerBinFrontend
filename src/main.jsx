@@ -45,7 +45,10 @@ const Search = lazy(() =>
   import("./components/Menu/Search/Search.jsx")
 );
 const SearchCompany = lazy(() =>
-  import("./components/Menu/Search/Company.jsx")
+  import("./components/Menu/Search/Company/Company.jsx")
+);
+const CompanySearchResults = lazy(() =>
+  import("./components/Menu/Search/Company/CompanySearchResults.jsx")
 );
 const InventorySearch = lazy(() =>
   import("./components/Menu/Search/Inventory/InventorySearch.jsx")
@@ -350,7 +353,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/searchcompany",
+        path: "/search/Company",
         element: (
           <Suspense fallback={<LoadingState />}>
             <Header />
@@ -361,7 +364,18 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/advance",
+        path: "/search/company-searchresults",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <CompanySearchResults />
+            <Footer />
+
+          </Suspense>
+        ),
+      },
+      {
+        path: "/search/Inventory",
         element: (
           <Suspense fallback={<LoadingState />}>
             <Header />
