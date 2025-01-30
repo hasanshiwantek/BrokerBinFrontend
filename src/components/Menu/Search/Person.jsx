@@ -89,11 +89,19 @@ const Person = () => {
                            <ul className='!bg-[#e5e7eb]'>
                              <li>
                                <NavLink
-                                 to="/advance"
+                                 to="/search/Inventory"
                                  end  // This ensures the exact match for /myprofile
                                  className={({ isActive }) => (isActive ? css.active : '')}
                                >
                                  <span>Inventory</span>
+                               </NavLink>
+                             </li>
+                             <li>
+                               <NavLink
+                                 to="/search/Company"
+                                 className={({ isActive }) => (isActive ? css.active : '')}
+                               >
+                                 <span>Company</span>
                                </NavLink>
                              </li>
                              <li>
