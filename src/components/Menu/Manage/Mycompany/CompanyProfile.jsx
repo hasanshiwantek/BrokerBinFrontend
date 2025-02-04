@@ -18,6 +18,9 @@ import { Link, NavLink } from "react-router-dom";
 import Footer from "../../../Footer/Footer";
 import axios from "axios";
 import { brokerAPI } from "../../../api/BrokerEndpoint";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const MyCompany = () => {
   const token = Cookies.get("token");
@@ -297,8 +300,16 @@ const MyCompany = () => {
   
       // If required, update Redux state here
       dispatch(updateFormData(data));
+            // ✅ Show success toast with light blue color
+                          toast.info("Company Data Updated Successfully", {
+                           style: { fontSize:"12px" ,marginTop:"-10px",fontWeight:"bold"} , // 
+                         });
     } catch (error) {
-      console.error("Error submitting data:", error.response?.data || error.message);
+      console.error("Error updating Company Data:", error.response?.data || error.message);
+      toast.error("Error Updating  Company Data", {
+        style: { fontSize:"15px" ,marginTop:"-10px",fontWeight:"bold"} , // 
+      });
+
     } finally {
       console.log("Setting loading to false");
       dispatch(setBlurWhileLoading(true)); // Reset blur loading state
@@ -612,6 +623,8 @@ const MyCompany = () => {
           </form>
         </div>
       )}
+
+            <ToastContainer position="top-center" autoClose={2000} />
 
     </>
   );

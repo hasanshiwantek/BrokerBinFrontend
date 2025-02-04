@@ -33,7 +33,7 @@ import {
   setToolToggle,
 } from "../ReduxStore/HomeSlice";
 import { clearUserDetails } from "../ReduxStore/UserSlice";
-import {resetProfileState} from "../ReduxStore/ProfleSlice"
+import { resetProfileState } from "../ReduxStore/ProfleSlice"
 import {
   searchProductHistory,
   searchProductQuery,
@@ -59,7 +59,7 @@ const Header = () => {
   const navigate = useNavigate();
   const [searchType, setSearchType] = useState();
   const location = useLocation(); // Detect current route
-  
+
   const { hoverCompanyDetail } = useSelector(
     (store) => store.searchProductStore
   );
@@ -146,20 +146,22 @@ const Header = () => {
                 id={css.search}
                 placeholder="What are you looking for?"
               />
+       
               <button
                 type="submit"
                 onClick={() => setSearchType("search")}
                 className={css.search_btn}
               >
-                search
+                Search
               </button>
               {/* <button
                 type="submit"
                 onClick={() => setSearchType("keyword")}
-                className={css.search_btn}
+                className={css.search_btn} 
               >
-                keyword
+                Keyword
               </button> */}
+
             </form>
           </div>
           {hoverCompanyDetail && hoverCompanyDetail[0] && (
@@ -348,7 +350,7 @@ const Header = () => {
             <li>
               <BsTools />
               < IoIosArrowDown className={`${css.onHoverMenuIconDown}  `} />
-              < IoIosArrowUp  className={css.onHoverMenuIconUp} />
+              < IoIosArrowUp className={css.onHoverMenuIconUp} />
 
               <div className={css.dropdownMenu} style={{ marginLeft: "10px" }}>
                 <ul style={{ minWidth: "30px" }}>
@@ -380,8 +382,8 @@ const Header = () => {
             {/* Toggle Menus */}
             <li>
               <Link to={"/"}>main</Link>
-              < IoIosArrowDown  className={css.onHoverMenuIconDown} />
-              < IoIosArrowUp  className={css.onHoverMenuIconUp} />
+              < IoIosArrowDown className={css.onHoverMenuIconDown} />
+              < IoIosArrowUp className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
                 <ul>
                   <Link to={"/"}>
@@ -393,9 +395,9 @@ const Header = () => {
                   <Link to={"/feedback"}>
                     <li>contact</li>
                   </Link>
-                  {/* <Link to={"/ethics"}>
+                  <Link to={"/ethics"}>
                     <li>ethics</li>
-                  </Link> */}
+                  </Link>
                   <Link to={"/sitemap"}>
                     <li>site map</li>
                   </Link>
@@ -422,9 +424,9 @@ const Header = () => {
                     </li>
                   </Link> */}
                   <Link to={"/myprofile/MyContact"}>
-                  <li>
-                   My Vendors
-                  </li>
+                    <li>
+                      My Vendors
+                    </li>
                   </Link>
                   <Link to={"/hotList/view"}>
                     <li>
@@ -445,7 +447,7 @@ const Header = () => {
               </div>
             </li>
             <li>
-              <Link to={"/search"}>search</Link>
+              <Link to={"/search/Inventory"}>search</Link>
               <IoIosArrowDown className={css.onHoverMenuIconDown} />
               <IoIosArrowUp className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
@@ -476,7 +478,7 @@ const Header = () => {
             </li>
             <li>
               <Link to={'/inventory'}>manage</Link>
-              < IoIosArrowDown  className={css.onHoverMenuIconDown} />
+              < IoIosArrowDown className={css.onHoverMenuIconDown} />
               <IoIosArrowUp className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
                 <ul>
@@ -565,7 +567,7 @@ const Header = () => {
           </ul>
           <ul className={css.nav_tools}>
             <li className="gap-[1vw] cursor-pointer"
-            onClick={() => dispatch(setToolToggle())}
+              onClick={() => dispatch(setToolToggle())}
             >
               tools
               {toolToggle ? (
@@ -589,9 +591,9 @@ const Header = () => {
             {toolToggle && (
               <>
                 <li >
-              <Link to={"/rfq"}>
-                  <AiOutlineMail />
-              </Link>
+                  <Link to={"/rfq"}>
+                    <AiOutlineMail />
+                  </Link>
                 </li>
 
                 {/* <li>
@@ -607,9 +609,9 @@ const Header = () => {
                     <BsDatabaseFill />
                   </Link>
                 </li> */}
-                <li> 
+                <li>
                   <Link to={"/broadcasthistory"}>
-                  <BsClockFill />
+                    <BsClockFill />
                   </Link>
                 </li>
                 {/* <li>
@@ -680,7 +682,7 @@ const Header = () => {
     </>
   );
 
-  
+
 };
 
 export default memo(Header);

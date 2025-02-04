@@ -23,25 +23,31 @@ const MenuBar = () => {
                         Ethics
                     </Link>
                 </li>
-                <li>Site Map</li>
                 <li>
-                <Link to={'/badges'}>
-                        Ethics
+                    <Link to={"/sitemap"}>
+                    Site Map
+                    </Link>
+                    </li>
+                <li>
+                <Link to={'/tools'}>
+                        Tools
                     </Link>
                 </li>
             </ul>
         </nav >
             <div>
                 <h2 style={{ backgroundColor: "#bfbfbf", color: "white", fontSize: "20px",fontWeight:"bold", padding: "8px" }}>
-                    BrokerBinHelpTopics
+                BrokerCell Help Topics
                 </h2>
             </div>
 
             <div className='help-sec'>
                 <img src={helpimg} alt="help" srcSet="" />
                 <div className="help-content">
-                    <h2 style={{fontSize:"1.5em" , fontWeight:"bold"}}>BrokenBin.com Help Center</h2>
-                    <p>Use the BrokerBin.com Help Center to find out how to get the most out of our site and answer any questions you may have encountered. Feel free to call us, we're here to help. Call 507-535-7563 or TF at 866-241-0639</p>
+                    <h2 style={{fontSize:"1.5em" , fontWeight:"bold"}}>BrokerCell.com Support Center
+                    </h2>
+                    <p>Explore the BrokerCell.com Support Center to discover tips on maximizing your site experience and addressing any inquiries you might have. We're here for you—don't hesitate to reach out. Call ********** or Toll-Free at ***********.
+                    </p>
                 </div>
             </div>
         </>
@@ -49,4 +55,4 @@ const MenuBar = () => {
     )
 }
 
-export default MenuBar
+export default MenuBar 

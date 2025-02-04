@@ -9,7 +9,9 @@ import { fetchBroadCastData, deleteBroadCastData } from '../../../ReduxStore/Bro
 import { FaFileAlt } from "react-icons/fa";
 import BroadcastFileModal from './Send/Field Components/BroadcastFileModal'
 import bullImage from "../../../assets/bullhornn.png"
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 
 
@@ -76,7 +78,10 @@ const BroadCastHistory = () => {
         dispatch(fetchBroadCastData({ token }));
       });
       setSelectedBroadcasts([]); // Clear selections after dispatch
-      alert("Broadcast Deleted");
+                 // ✅ Show success toast with light blue color
+                    toast.info("Broadcast Deleted Successfully", {
+                     style: { fontSize:"15px" ,marginTop:"-10px",fontWeight:"bold"} , // 
+                   });
     } else {
       alert("Select Broadcast for Deletion");
     }
@@ -299,6 +304,7 @@ const BroadCastHistory = () => {
         broadcast={newselectedBroadcast}
         handleReply={handleReplyClick}
       />
+            <ToastContainer position="top-center" autoClose={1000} />
 
     </>
   );

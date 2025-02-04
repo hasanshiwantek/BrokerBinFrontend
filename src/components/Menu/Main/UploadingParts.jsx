@@ -7,43 +7,41 @@ const UploadingParts = () => {
 
                 <h5>Uploading Parts</h5>
 
-                <div className="email-sec box " style={{fontSize:"11px"}}>
-                    <p style={{ color: "rgb(218, 63, 24)" }}>Q: How many parts can I list at one time?</p>
-                    <p>A: As many as you have in stock. The Platinum service offers unlimited part listings. Our Standard service offers up to 100 items.
+                <div className="email-sec box " style={{ fontSize: "11px" }}>
+                    <p style={{ color: "#2c83ec" }}>Q: How many parts can I upload at once?</p>
+                    <p>A: You can list as many parts as you have available. Our Platinum service allows for unlimited listings, while our Standard service allows up to 100 items.
                     </p>
-                    <p style={{ color: "rgb(218, 63, 24)" }}>Q: How do I upload my parts?</p>
-                    <p>A: You can send us an inventory list in Excel or CSV to Upload@BrokerBin.com<br />
+                    <p style={{ color: "#2c83ec" }}>Q: How do I upload my parts?</p>
+                    <p>A: For uploading, you can use an inventory list in Excel or CSV format. Follow these steps in the Manage Inventory section:<br />
                         A: You can Upload, Edit, Add, and Delete inventory in the Manage Inventory section.
-                        To Upload...<br />
-                        1. Click Browse to find your file<br />
-                        2. Click Send File, wait for it to display on the screen (it may take a minute)<br />
-                        3. Click the Import Parts to Database button (it may take a minute to process) and total parts uploaded will <br />be displayed</p>
+                        1.To Upload, navigate to the appropriate section.<br />
+                        2. Click 'Browse' to find your file and then 'Send File' to display it on the screen.<br />
+                        3. Click 'Import Parts to Database' to start the upload, which might take a moment to complete. You will see a tally of the total parts uploaded.</p>
 
-                    <p style={{ color: "rgb(218, 63, 24)" }}>Q: Why can't I add parts to the database?</p>
-                    <p> A: Check your Access Level (go to My Profile/Options to view your access level). Speak with your company administrator and ask to have your access level increased.</p>
-                    <p style={{ color: "rgb(218, 63, 24)" }}>
+                    <p style={{ color: "#2c83ec" }}>Q: Why can't I add parts to the database?</p>
+                    <p>A: Ensure you have sufficient access levels by going to My Profile/Options. If necessary, contact your administrator to increase your access.</p>
+                    <p style={{ color: "#2c83ec" }}>
                         Q: Why do my item conditions not match what I uploaded?
                     </p>
 
-                    <p> A: You need to use our site's condition codes (F/S, NOB, NEW, REF, USED, ASIS, EXC, REP)</p>
+                    <p>A: Our site utilizes specific condition codes. If there’s a mismatch, ensure your entries correspond to the site’s standards like F/S, NOB, NEW, REF, USED, ASIS, EX, or REP.</p>
 
-                    <p style={{ color: "rgb(218, 63, 24)" }}>Q: Why won't your system take my part list?</p>
+                    <p style={{ color: "#2c83ec" }}>Q: Why won't your system take my part list?</p>
 
-                    <p> A: View Our Sample Inventory Files
-                        - Use our approved column headings. Click on the drop down box and see if your headings will be accepted.
-                        - Submit your spreadsheet for review. If our system can't detect your format you can submit it to our programming staff and they will integrate your format into our system. Submit spreadsheets to Upload@BrokerBin.com.</p>
+                    <p> A: First, check our Sample Inventory Files for acceptable column formats. If your file differs, adjust your headers accordingly and resubmit. If issues persist, our team can assist in integrating your format into our system.
+                    </p>
 
-                    <p style={{ color: "rgb(218, 63, 24)" }}>Q: Can different work groups manage their own inventory?</p>
-                    <p> A: Yes, they can. Each rep must have Update Personal Inventory as their Access Level. Note: Company must maintain one Admin login.</p>
-                    <p style={{ color: "rgb(218, 63, 24)" }}>Q: Can I add parts to our current list?</p>
+                    <p style={{ color: "#2c83ec" }}>Q: How can different workgroups manage their inventory?</p>
+                    <p>A: Each workgroup must update their inventory individually but must maintain a unified administrative oversight.</p>
+                    <p style={{ color: "#2c83ec" }}>Q: Can I add parts to our current list?</p>
 
-                    <p> A: Yes, you can. Go to the Manage Inventory section, click Add, fill in the appropriate info, and click Save.</p>
+                    <p>A: Yes. Navigate to the Manage Inventory section, select Add, input the details, and save your updates.</p>
 
-                    <p style={{ color: "rgb(218, 63, 24)" }}>Q: Why are some of my line items not being displayed?</p>
-                    <p>A: Our system will "munch" or group double listed line items together to appear as one line item on your list.</p>
-                    <p style={{ color: "rgb(218, 63, 24)" }}>
-                        Q: Can I add my own parts to the database?</p>
-                    <p> A: Yes, you can. You must have Update Personal Inventory listed as your Access Level, which can be found in the My Profile/Options section. Add them manually, upload them on the site, or send your list to Upload@BrokerBin.com</p>
+                    <p style={{ color: "#2c83ec" }}>Q:Why are some of my line items not showing up correctly?</p>
+                    <p>A: Our system consolidates or 'munches' similar items to streamline displays and searches.</p>
+                    <p style={{ color: "#2c83ec" }}>
+                    Q: Can I manually add parts to the database?</p>
+                    <p> A: Absolutely, you can manually add items if you have the necessary permissions in your profile settings, or you can upload them through the Manage Inventory section.</p>
 
                 </div>
 

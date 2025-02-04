@@ -13,6 +13,10 @@ import Cookies from "js-cookie";
 import { FaUsers } from "react-icons/fa";
 import { CiSquareRemove } from "react-icons/ci";
 import Footer from "../../Footer/Footer";
+import { fetchUserData } from "../../../ReduxStore/ProfleSlice";
+import { brokerAPI } from "../../api/BrokerEndpoint";
+import axios from "axios";
+import { FaStar } from "react-icons/fa";
 
 const MyContact = () => {
   const token = Cookies.get("token");
@@ -21,8 +25,55 @@ const MyContact = () => {
   let [viewAsCountry, setViewAsCountry] = useState(false);
   let [viewAsState, setViewAsState] = useState(false);
   const { myVendor, loading } = useSelector((store) => store.toolsStore);
+  console.log("MY Vendors",myVendor)
 
   const dispatch = useDispatch();
+
+  const user_id = Cookies.get("user_id");
+  
+  const { blurWhileLoading, initialData, user, error } = useSelector(
+    (state) => state.profileStore
+  );
+
+  console.log("Initial Data ", initialData);
+const id = user?.user?.id || user_id;
+
+useEffect(() => {
+  console.log(id);
+  dispatch(fetchUserData({ id, token }));
+}, []);
+
+const companyId=initialData?.company?.id
+console.log("Company ID",companyId)
+
+  const [feedbackData, setFeedbackData] = useState(null);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${brokerAPI}feedback/ratings/${companyId}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          }
+        })
+        setFeedbackData(response.data);
+        console.log("RATINGDATA", feedbackData);
+      } catch (error) {
+        console.log("ERRORRATIMG", error)
+      } 
+    }
+    fetchData();
+  }, [companyId])
+  const handleHover = (index) => {
+    // Tooltip logic
+    return index <= rating ? "View Comments" : "";
+  };
+    const [rating, setRating] = useState(0);
+  
+  const ratings = parseFloat(feedbackData?.rating?.averageRating || 5);
+
 
   const handleChange = (e) => {
     if (e.target.value === "company") {
@@ -64,6 +115,8 @@ const MyContact = () => {
   if (loading) {
     return <p>Loading...</p>;
   }
+
+
 
   return (
     <>
@@ -185,30 +238,67 @@ const MyContact = () => {
                           </div>
                           <div className={css.myVendor_company_list_main_info}>
                             <span>
-                              <strong>company:</strong>
+                              <p >{vendor.company.name}</p>
+                                     <div>
+                              
+                                                <div className={css.gridHome1_MemberDetail_reviews_stars}>
+                                                  <div data-v-217e3916="" class="vue-rate-it-rating" style={{
+                                                    display: "flex", justifyContent: "space-between", alignItems: "center"
+                                                  }}>
+                                                     <div style={{ display: "flex", alignItems: "center" }}
+                                                     onClick={() => setToggleTabs(5)}>
+                                                      {[...Array(5)].map((_, index) => {
+                                                        const isFilled = index + 1 <= Math.floor(ratings); // Full yellow stars
+                                                        const isPartial = index < ratings && index + 1 > Math.floor(ratings); // Partial yellow star
+                              
+                                                        return (
+                                                          <FaStar
+                                                            key={index}
+                                                            size={24}
+                                                            color={isFilled ? "#FFD700" : isPartial ? "rgba(255, 215, 0, 0.5)" : "#CCC"} // Partial star is dim yellow
+                                                            style={{ cursor: "pointer", marginRight: 4 }}
+                                                            onMouseEnter={() => setRating(index + 1)}
+                                                            // onClick={handleClick}
+                                                            title={handleHover(index + 1)} // Tooltip text
+                                                          />
+                                                        );
+                                                      })}
+                                                    </div>
+                                                    <a href="#">
+                                                      {feedbackData?.rating?.averageRating
+                                                        ? `${((feedbackData.rating.averageRating / 5) * 100).toFixed(1)}%`
+                                                        : "100%"}
+                                                    </a>
+                                                  </div>
+                                                  <h4 className="text-center pt-2"> ({feedbackData?.rating?.totalFeedbacks || 0}) Feedbacks</h4>
+                                                </div>
+                                              </div>
+                            </span>
+                            <span>
+                              <p>company:</p>
                               <p>{vendor.company.name}</p>
                             </span>
                             <span>
-                              <strong>fax:</strong>
+                              <p>fax:</p>
                               <p>{vendor.company.phone_num}</p>
                             </span>
                             <span>
-                              <strong>phone:</strong>
+                              <p>phone:</p>
                               <p>{vendor.company.phone_num}</p>
                             </span>
                             <span>
-                              <strong>hours:</strong>
+                              <p>hours:</p>
                               <p>
                                 {vendor.company.open_timing} to{" "}
                                 {vendor.company.close}
                               </p>
                             </span>
                             <span>
-                              <strong>ship by:</strong>
+                              <p>ship by:</p>
                               <p>4pm</p>
                             </span>
                             <span>
-                              <strong>location:</strong>
+                              <p>location:</p>
                               <p>{vendor.company.address}</p>
                             </span>
                           </div>
@@ -221,7 +311,7 @@ const MyContact = () => {
                               className={css.myVendor_company_list_main_notes}
                             >
                               <span>
-                                <strong>Notes:</strong>
+                                <p>Notes:</p>
                               </span>
                               <span>
                                 <textarea
@@ -229,6 +319,7 @@ const MyContact = () => {
                                   id="notes"
                                   cols={10}
                                   rows={6}
+                                  className="!w-80"
                                 ></textarea>
                               </span>
                               <span>
@@ -242,7 +333,7 @@ const MyContact = () => {
                                 </button>
                               </span>
                             </div>
-                            <div
+                            {/* <div
                               className={css.myVendor_company_list_main_rating}
                             >
                               <input
@@ -253,7 +344,7 @@ const MyContact = () => {
                                 max={5}
                               />
                               <span>My Rating: 4</span>
-                            </div>
+                            </div> */}
                           </div>
                           <div
                             className={css.myVendor_company_list_main_actions}

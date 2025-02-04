@@ -17,7 +17,7 @@ const InventorySearch = () => {
   const token = Cookies.get("token");
   const { inventorySearchData } = useSelector((state) => state.inventoryStore);
   console.log(inventorySearchData)
-  
+
   const [formData, setFormData] = useState({
     part: '',
     heci: '',
@@ -144,7 +144,7 @@ const InventorySearch = () => {
               <h2 style={{ margin: "" }}>Inventory Search</h2>
               <div className={'!flex !flex-col '}>
                 <div className={`!flex !flex-col !text-right !px-[5vw] !gap-[.5vw] `}>
-                  <span>
+                  <span className="!flex !justify-end ">
                     <label htmlFor="part">Part#</label>
                     <input
                       type="text"
@@ -155,7 +155,7 @@ const InventorySearch = () => {
                       className="ml-[1vw]"
                     />
                   </span>
-                  <span>
+                  <span  className="!flex !justify-end ">
                     <label htmlFor="heci">HECI</label>
                     <input
                       type="text"
@@ -166,7 +166,7 @@ const InventorySearch = () => {
                       className="ml-[1vw]"
                     />
                   </span>
-                  <span>
+                  <span  className="!flex !justify-end ">
                     <label htmlFor="Description">Description</label>
                     <input
                       type="text"
@@ -178,7 +178,7 @@ const InventorySearch = () => {
 
                     />
                   </span>
-                  <span>
+                  <span  className="!flex !justify-end ">
                     <label htmlFor="manufacturer">Manufacturer</label>
                     <input
                       type="text"
@@ -201,7 +201,7 @@ const InventorySearch = () => {
                       value={formData.partHeci}
                     />
                   </span> */}
-                  <span>
+                  <span  className="!flex !justify-end ">
                     <label htmlFor="keyword">Keyword</label>
                     <input
                       type="text"
@@ -213,7 +213,7 @@ const InventorySearch = () => {
 
                     />
                   </span>
-                  <div className={''}>
+                  <div   className="!flex !justify-end ">
                     <label htmlFor="condition">Condition</label>
                     <select
                       name="condition"
@@ -235,7 +235,7 @@ const InventorySearch = () => {
                       <option value="USED">USED</option>
                     </select>
                   </div>
-                  <span>
+                  <span  className="!flex !justify-end ">
                     <label htmlFor="category">Category</label>
                     <input
                       type="text"
@@ -246,44 +246,44 @@ const InventorySearch = () => {
                       className="ml-[1vw]"
                     />
                   </span>
-                  <span>
+                  <span  className="!flex !justify-end ">
                     <CompanySearch setFormData={setFormData} formData={formData} />
                   </span>
 
                   <div className={"flex flex-col gap-4"}>
                     <div>
-                    <label htmlFor="Country">Country</label>
-                    <select
-                      name="country"
-                      id="region"
-                      value={formData.country}
-                      onChange={handleChange}
-                      className="ml-[1vw] w-72 border-2"
+                      <label htmlFor="Country">Country</label>
+                      <select
+                        name="country"
+                        id="region"
+                        value={formData.country}
+                        onChange={handleChange}
+                        className="ml-[1vw] w-72 border-2"
 
-                    >
-                      {
-                        countriesList.map((country) => <option key={country.value} value={country.value}>{country.label}</option>)
-                      }
+                      >
+                        {
+                          countriesList.map((country) => <option key={country.value} value={country.value}>{country.label}</option>)
+                        }
 
                       </select>
                     </div>
-                    <div>
+                    <div  className="!flex !justify-end ">
 
-                    <label htmlFor="Region">Region</label>
-                    <select
-                      name="region"
-                      id="region"
-                      value={formData.region}
-                      onChange={handleChange}
-                      className="ml-[1vw] w-72 border-2"
-                    >
-                      {
-                        regionsList.map((region) => <option  key={region.value} value={region.value}>{region.label}</option>)
-                      }
-                    </select>
+                      <label htmlFor="Region">Region</label>
+                      <select
+                        name="region"
+                        id="region"
+                        value={formData.region}
+                        onChange={handleChange}
+                        className="ml-[1vw] w-72 border-2"
+                      >
+                        {
+                          regionsList.map((region) => <option key={region.value} value={region.value}>{region.label}</option>)
+                        }
+                      </select>
                     </div>
 
-                    <div className="Ship Deadline">
+                    <div   className="!flex !justify-end ">
                       <label htmlFor="ShipDeadline">ShipDeadline</label>
                       <select
                         name="ShipDeadline"

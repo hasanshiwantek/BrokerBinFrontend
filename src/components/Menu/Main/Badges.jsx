@@ -50,8 +50,8 @@ const Badges = () => {
                 <div className='badge-section'>
 
                     <div className='badge-sec'>
-                        <h1>Available badges ready for display</h1>
-                        <p>If you're a member of BrokerBin.com and want to proudly display as such, you now can.  Just copy and paste any of the badge code snippets below to be used on your own website or email signature. If you have any questions or need help getting it to work - give us a call and we will walk you through it.</p>
+                        <h1>Ready-to-Use Badges for Members</h1>
+                        <p>If you're affiliated with BrokerCell.com and wish to showcase your membership, you're welcome to do so. Simply copy and paste any of the badge code snippets provided below into your website or email signature. Should you encounter any issues or have questions about implementation, don’t hesitate to contact us. We’re here to assist every step of the way.</p>
 
                         <div className='select-sec'>
                             <label htmlFor="badge-select">Select Type: </label>

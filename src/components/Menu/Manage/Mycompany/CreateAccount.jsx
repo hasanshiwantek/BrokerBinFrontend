@@ -5,7 +5,9 @@ import { brokerAPI } from '../../../api/BrokerEndpoint';
 import Cookies from "js-cookie";
 import css from "../../../../styles/Menu/Manage/MyProfile.module.css";
 import { Link, NavLink } from "react-router-dom";
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 
 
@@ -110,7 +112,11 @@ const CreateAccount = () => {
         try {
             const result = await dispatch(createUser(formData));
             if (createUser.fulfilled.match(result)) {
-                alert('Account created successfully!');
+                // alert('Account created successfully!');
+                // ✅ Show success toast with light blue color
+                                          toast.info("Account Created Successfully", {
+                                           style: { fontSize:"12px" ,marginTop:"-10px",fontWeight:"bold"} , // 
+                                         });
                 // Reset formData to initial values
                 setFormData({
                     userId: '',
@@ -142,13 +148,17 @@ const CreateAccount = () => {
                 alert(`Error creating account: ${result.payload}`);
             }
         } catch (error) {
-            alert('Unexpected error occurred!');
+            // alert('Unexpected error occurred!');
+            toast.info("Error Creating Account.Please Try Again.", {
+                style: { fontSize:"12px" ,marginTop:"-10px",fontWeight:"bold"} , // 
+              });
+
             console.error(error);
         }
     };
 
     return (
-        <div className={`px-5 ${css.profileLayout}`}>
+            <div className={`px-5 ${css.profileLayout} `}>
             <form onSubmit={(e) => e.preventDefault()}>
                 <div className={`${css.profileInfo} !bg-white border border-2 rounded-2xl`}>
 
@@ -340,7 +350,7 @@ const CreateAccount = () => {
                     </div>
 
                     <button type="button" onClick={handleSubmit}
-                        className='bg-[#ef6421] rounded-lg  px-12  !h-16'>Save</button>
+                        className='bg-[#2c83ec] rounded-lg  px-12 !h-16 !mt-5'>Save</button>
                 </div>
 
 

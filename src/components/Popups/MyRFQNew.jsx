@@ -717,6 +717,7 @@ const MyRFQNew = () => {
           </div>
         </form>
       </div>
+      
     </>
   );
 };

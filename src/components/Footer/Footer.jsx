@@ -1,14 +1,18 @@
 import React from 'react'
 import css from "./Footer.module.css"
 const Footer = () => {
+
+    const year=new Date().getFullYear();
+
+
     return (
         <>
             <footer className={css.footerSec}>
                 <a href="/">Advertising Programs</a>
                 <a href="/">Business Solutions</a>
-                <a href="/">About BrokerBin.com</a>
+                <a href="/">About BrokerCell.com</a>
             </footer>
-            <p className={css.p}>© 2024 Privacy</p>
+            <p className={css.p}>© {year} Privacy</p>
         </>
 
     )

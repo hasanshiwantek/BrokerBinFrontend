@@ -18,9 +18,9 @@ const SearchResults = () => {
         <main className='mainSec'>
             <nav className='menu-bar'>
                 <ul>
-                    <li><Link to={'/advance'}>Inventory</Link></li>
-                    <li><Link to={'/searchcompany'}>Company</Link></li>
-                    <li><Link to={'/person'}>Person</Link></li>
+                    <li><Link to={'/search/Inventory'}>Inventory</Link></li>
+                    <li><Link to={'/search/Company'}>Company</Link></li>
+                    <li><Link to={'/person'} className='!text-blue-500'>Person</Link></li>
                     
                     {/* <li><Link to={"/"}>TechSpecs</Link></li>
                     <li><Link to={'/'}>NSN</Link></li>

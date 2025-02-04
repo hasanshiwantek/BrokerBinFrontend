@@ -1,4 +1,3 @@
-
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import css from "../../../styles/SearchProducts.module.css";
 import Filter from "../../Filter";
@@ -95,38 +94,78 @@ const SearchProduct = () => {
     });
   }
 
-  useEffect(() => {
+  // useEffect(() => {
 
+  //   const queryParams = new URLSearchParams(location.search);
+  //   const searchString = queryParams.get("query") || ""; // For multi-part search (e.g., "part1 part2")
+  //   const partModel = queryParams.get("partModel") || ""; // For single specific part model search
+  //   if (!isFilterActive) {
+  //     dispatch(clearSearchResponseMatched());
+  //     dispatch(setSearchResponse({}));
+  //   }
+
+    
+
+  //   if (searchString) {
+  //     // Split the search string into parts and dispatch actions for each part
+  //     const parts = searchString.split(" ");
+  //     parts.forEach((part) => {
+  //       dispatch(searchProductQuery({ token, page, search: part })).then((result) =>
+  //         console.log("searchProductQuery result:", result)
+  //       );
+  //     });
+  //   }
+
+  //   if (partModel) {
+  //     // Dispatch action for single specific part model
+  //     dispatch(searchByKeyword({ token, page, partModel })).then((result) =>
+  //       console.log("searchByKeyword result:", result)
+  //     );
+  //   }
+
+  //   // Fetch search history
+  //   dispatch(searchProductHistory({ token })).then((result) =>
+  //     console.log("searchProductHistory result:", result)
+  //   );
+  // }, [location, dispatch, token, page]);
+
+
+
+  useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
-    const searchString = queryParams.get("query") || ""; // For multi-part search (e.g., "part1 part2")
-    const partModel = queryParams.get("partModel") || ""; // For single specific part model search
-    if (!isFilterActive) {
+    const searchString = queryParams.get("query") || ""; // Multi-part search
+    const partModel = queryParams.get("partModel") || ""; // Single part search
+  
+    // ✅ If a new search query or partModel is detected, clear previous filters
+    if (searchString || partModel) {
       dispatch(clearSearchResponseMatched());
       dispatch(setSearchResponse({}));
     }
-
+  
+    // ✅ If a search query exists, dispatch searchProductQuery for each part
     if (searchString) {
-      // Split the search string into parts and dispatch actions for each part
       const parts = searchString.split(" ");
       parts.forEach((part) => {
-        dispatch(searchProductQuery({ token, page, search: part })).then((result) =>
+        dispatch(searchProductQuery({ token, page: 1, search: part })).then((result) =>
           console.log("searchProductQuery result:", result)
         );
       });
     }
-
+  
+    // ✅ If a single part model is searched, dispatch searchByKeyword
     if (partModel) {
-      // Dispatch action for single specific part model
-      dispatch(searchByKeyword({ token, page, partModel })).then((result) =>
+      dispatch(searchByKeyword({ token, page: 1, partModel })).then((result) =>
         console.log("searchByKeyword result:", result)
       );
     }
-
-    // Fetch search history
+  
+    // ✅ Fetch search history
     dispatch(searchProductHistory({ token })).then((result) =>
       console.log("searchProductHistory result:", result)
     );
-  }, [location, dispatch, token, page]);
+  
+  }, [location.search, dispatch, token]); // 🔹 Only trigger when URL params change
+  
 
   const [currentQuery, setCurrentQuery] = useState(searchString || partModel);
 
@@ -363,41 +402,6 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
     return selectedProducts.some((product) => product.id === id);
   };
 
-  const handlePrevPage = () => {
-    const newPage = page - 1;
-
-    // Ensure we don't navigate to a page number less than 1
-    if (newPage < 1) return;
-
-    const queryParams = new URLSearchParams(location.search);
-    const currentQuery = queryParams.get("query");
-    const currentPartModel = queryParams.get("partModel");
-
-    console.log("isFilterActive in handlePrevPage:", isFilterActive); // Add this here
-    console.log("Filters sent to searchProductFilter:", { ...filteredSearchResponse, page: newPage }); // Add this here
-
-    if (isFilterActive) {
-      // Handle pagination for filtered data
-      const filters = {
-        ...appliedFilters, // Include applied filters
-        partModel: partModel,
-        page: newPage,
-        pageSize: 20,
-      };
-
-      dispatch(searchProductFilter({ token, filters }));
-      const url = `/inventory/search?page=${newPage}`; // Update URL for filtered pagination
-      navigate(url, { replace: true });
-    } else {
-      // Navigate normally for search API
-      const url = currentQuery
-        ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(currentQuery)}`
-        : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(currentPartModel)}`;
-
-      navigate(url, { replace: true });
-    }
-  };
-
 
 
 
@@ -447,46 +451,99 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
   console.log("Current Page:", currentPage);
 
 
+  const [visiblePages, setVisiblePages] = useState([1, 10]); // Initially showing pages 1-10
 
-  const handleNextPage = () => {
-    const newPage = page + 1;
+  const handlePrevPage = () => {
+    const newPage = page - 1;
+    if (newPage < 1) return;
 
-    // Determine query parameters for current search
     const queryParams = new URLSearchParams(location.search);
     const currentQuery = queryParams.get("query");
     const currentPartModel = queryParams.get("partModel");
 
-    console.log("isFilterActive in handleNextPage:", isFilterActive); // Add this here
-    console.log("Filters sent to searchProductFilter:", { ...filteredSearchResponse, page: newPage }); // Add this here
-
     if (isFilterActive) {
-      // Handle pagination for filtered data
       const filters = {
-        // ...filteredSearchResponse, // Include the filtered data
         ...appliedFilters,
         partModel: partModel,
         page: newPage,
         pageSize: 20,
       };
-
       dispatch(searchProductFilter({ token, filters }));
-      const url = `/inventory/search?page=${newPage}`;
-      navigate(url, { replace: true });
+    }
 
-    } else {
-      // Navigate normally for search API
-      const url = currentQuery
-        ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(
-          currentQuery
-        )}`
-        : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(
-          currentPartModel
-        )}`;
+    const url = currentQuery
+      ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(currentQuery)}`
+      : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(currentPartModel)}`;
 
-      navigate(url, { replace: true });
+    navigate(url, { replace: true });
+
+    // ✅ Ensure pagination range updates when moving to the previous range
+    if (newPage < visiblePages[0]) {
+      setVisiblePages([Math.max(visiblePages[0] - 10, 1), visiblePages[0] - 1]);
     }
   };
 
+  const handleNextPage = () => {
+    const newPage = page + 1;
+    if (newPage > totalPagess) return;
+
+    const queryParams = new URLSearchParams(location.search);
+    const currentQuery = queryParams.get("query");
+    const currentPartModel = queryParams.get("partModel");
+
+    if (isFilterActive) {
+      const filters = {
+        ...appliedFilters,
+        partModel: partModel,
+        page: newPage,
+        pageSize: 20,
+      };
+      dispatch(searchProductFilter({ token, filters }));
+    }
+
+    const url = currentQuery
+      ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(currentQuery)}`
+      : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(currentPartModel)}`;
+
+    navigate(url, { replace: true });
+
+    // ✅ Ensure pagination range updates when reaching the last page in the current range
+    if (newPage > visiblePages[1] && newPage <= totalPagess) {
+      setVisiblePages([visiblePages[1] + 1, Math.min(visiblePages[1] + 10, totalPagess)]);
+    }
+  };
+
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPagess) {
+      const queryParams = new URLSearchParams(location.search);
+      const currentQuery = queryParams.get("query");
+      const currentPartModel = queryParams.get("partModel");
+
+      const url = currentQuery
+        ? `/inventory/search?page=${page}&query=${encodeURIComponent(currentQuery)}`
+        : `/inventory/search?page=${page}&partModel=${encodeURIComponent(currentPartModel)}`;
+
+      navigate(url, { replace: true });
+
+      // ✅ Ensure visible pagination updates when clicking on a new range
+      if (page > visiblePages[1] && page <= totalPagess) {
+        setVisiblePages([page, Math.min(page + 9, totalPagess)]);
+      } else if (page < visiblePages[0]) {
+        setVisiblePages([Math.max(page - 9, 1), page]);
+      }
+    }
+  };
+
+  console.log("Vsible Pages: ", visiblePages)
+
+  useEffect(() => {
+    // Ensure visible pages update dynamically based on the current page
+    const newStart = Math.floor((page - 1) / 10) * 10 + 1;
+    const newEnd = Math.min(newStart + 9, totalPagess);
+
+    setVisiblePages([newStart, newEnd]);
+  }, [page, totalPagess]); // Runs when page or total pages change
 
   const [sortBy, setSortBy] = useState(null); // Initially no column is sorted
   const [sortOrder, setSortOrder] = useState("desc"); // Default to "desc"
@@ -617,7 +674,7 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
                   </td>
                   <td>{e.partModel}</td>
                   <td>
-                  <img src="https://static.brokerbin.com/version/v8.3.2/images/nohistory_icon.png" alt="Stats"/>
+                    <img src="https://static.brokerbin.com/version/v8.3.2/images/nohistory_icon.png" alt="Stats" />
                   </td>
                   <td>
                     {e.ts ? (
@@ -676,26 +733,51 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
 
 
 
-        <div className={`${css.tablePagination}`}>
-          <button
-            type="button"
-            onClick={handlePrevPage}
-            disabled={currentPage === 1}
-            className="text-gray-600 text-lg font-bold"
-          >
-            Prev
-          </button>
-          <span className="text-white text-lg font-bold ">
-            {currentPage}/{totalPagess}
-          </span>
-          <button
-            className="text-gray-600 text-lg font-bold"
-            type="button"
-            onClick={handleNextPage}
-            disabled={currentPage === totalPagess}
-          >
-            Next
-          </button>
+        <div className="flex justify-between items-center p-1">
+          <div className="flex space-x-2 text-lg font-semibold text-gray-700">
+            <span className="text-orange-700 p-4 text-xl">
+              Page <span className="text-blue-800">{currentPage}</span> of
+              <span className="text-blue-800"> {totalPagess}</span>
+            </span>
+          </div>
+
+          <div className="flex space-x-2">
+            {/* Previous Button */}
+            <button
+              onClick={handlePrevPage}
+              className={`px-4 py-2 border rounded-md bg-blue-500 text-white  hover:bg-blue-600 transition-all duration-200 
+          ${visiblePages[0] === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
+              disabled={visiblePages[0] === 1}
+            >
+              Previous
+            </button>
+
+            {/* Dynamic Page Numbers (1-10 initially, then updates) */}
+            {/* Dynamic Page Numbers (1-10 initially, then updates) */}
+            {Array.from({ length: Math.max(totalPagess, 1) }, (_, i) => i + 1)
+              .filter((page) => page >= visiblePages[0] && page <= visiblePages[1])
+              .map((page) => (
+                <button
+                  key={page}
+                  onClick={() => handlePageChange(page)}
+                  className={`px-4 py-2 border rounded-md transition-all duration-200 
+        ${currentPage === page ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-300"}`}
+                >
+                  {page}
+                </button>
+              ))}
+
+
+            {/* Next Button */}
+            <button
+              onClick={handleNextPage}
+              className={`px-4 py-2 border rounded-md bg-blue-500 text-white  hover:bg-blue-600 transition-all duration-200 
+          ${visiblePages[1] === totalPagess ? "opacity-50 cursor-not-allowed" : ""}`}
+              disabled={visiblePages[1] === totalPagess}
+            >
+              Next
+            </button>
+          </div>
         </div>
 
       </div>
@@ -707,6 +789,9 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
 
 
 export default SearchProduct;
+
+
+
 
 
 

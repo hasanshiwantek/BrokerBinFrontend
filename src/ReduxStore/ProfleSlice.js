@@ -251,6 +251,9 @@ const profileSlice = createSlice({
         state.formData = {
           ...state.formData,
           ...action.payload,
+          currentPassword: "", // Always reset these fields
+          newPassword: "",
+          confirmNewPassword: "",
         };
       })
       .addCase(fetchUserData.rejected, (state, action) => {
@@ -266,6 +269,9 @@ const profileSlice = createSlice({
         state.formData = {
           ...state.formData,
           ...action.payload,
+          currentPassword: "", // Clear passwords after submission
+          newPassword: "",
+          confirmNewPassword: "",
         };
         state.blurWhileLoading = true;
       })
