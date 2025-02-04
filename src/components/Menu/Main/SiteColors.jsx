@@ -4,7 +4,7 @@ import './SiteColors.css';
 
 const SiteColors = () => {
     return (
-        <div style={{ padding: "15px" }}>
+        <div style={{ padding: "15px" }} id='sitecolors'>
             <h5>
                 Site Colors
             </h5>

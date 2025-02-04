@@ -3,7 +3,7 @@ import React from 'react'
 const Reports = () => {
   return (
     <>
-    <div style={{padding:"15px"}}>
+    <div style={{padding:"15px"}} id='reports'>
  <h5>
     Reports
  </h5>

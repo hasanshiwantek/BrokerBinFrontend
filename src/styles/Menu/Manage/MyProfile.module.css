@@ -230,4 +230,16 @@ input{
   font-size: 9pt !important;
   font-weight: 600;
   color: #444;
+  transition: all 0.15s ease-in-out;
+
 }
+
+.profileInfo_form input:focus{
+  outline: none;
+  border: 1px solid var(--primary-color);
+}
+/* 
+.profileInfo_form  select:focus{
+  outline: none;
+  border: 1px solid var(--primary-color);
+} */

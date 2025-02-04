@@ -14,6 +14,9 @@ import FiltersSearchCompanyInventory from "../../Reports/FiltersSearchCompanyInv
 import { setTogglePopUp } from "../../../../ReduxStore/SearchProductSlice";
 import CompanyDetails from "../../../Popups/CompanyDetails/CompanyDetails";
 import { setPopupCompanyDetail } from "../../../../ReduxStore/SearchProductSlice";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const Options = () => {
 
@@ -276,11 +279,19 @@ const Options = () => {
 
       // Dispatch the action
       dispatch(broadCastFilters({ data: transformedData, token }));
-      alert("Broadcast filters submitted successfully!");
+      // alert("Broadcast filters submitted successfully!");
+          // ✅ Show success toast with light blue color
+                       toast.info("Broadcast filters submitted successfully!", {
+                        style: { fontSize:"13px" ,marginTop:"-10px",fontWeight:"bold"} , // 
+                      });
+                  
       console.log("Broadcast filters submitted successfully.");
     } catch (error) {
       console.error("Error during broadcast filter submission: ", error);
-      alert("An error occurred while submitting the broadcast filters. Please try again.");
+      toast.error("Failed Submitting Broadcast Filters!Try Again Later", {
+        style: { fontSize:"13px" ,marginTop:"-10px",fontWeight:"bold"} , // 
+      });
+      // alert("An error occurred while submitting the broadcast filters. Please try again.");
     }
   };
 
@@ -390,28 +401,28 @@ const Options = () => {
                 <div className={css.broadcastFilters_emailSettings_row}>
                   <div className={css.broadcastFilters_item}>
                     <label>Daily Broadcast Summary</label>
-                    <select name="daily_broadcast" value={broadcastFilterState.dailyBroadcast ? "1" : "0"} onChange={handleSelectChange}>
+                    <select name="daily_broadcast" value={broadcastFilterState.dailyBroadcast ? "1" : "0"} onChange={handleSelectChange} className="!w-24">
                       <option value="0">Off</option>
                       <option value="1">On</option>
                     </select>
                   </div>
                   <div className={css.broadcastFilters_item}>
                     <label>Broadcast</label>
-                    <select name="broadcasts" value={broadcastFilterState.broadcasts ? "1" : "0"} onChange={handleSelectChange}>
+                    <select name="broadcasts" value={broadcastFilterState.broadcasts ? "1" : "0"} onChange={handleSelectChange} className="!w-24">
                       <option value="0">Off</option>
                       <option value="1">On</option>
                     </select>
                   </div>
                   <div className={css.broadcastFilters_item}>
                     <label>Multicast</label>
-                    <select name="multicast" value={broadcastFilterState.multicast ? "1" : "0"} onChange={handleSelectChange}>
+                    <select name="multicast" value={broadcastFilterState.multicast ? "1" : "0"} onChange={handleSelectChange} className="!w-24">
                       <option value="0">Off</option>
                       <option value="1">On</option>
                     </select>
                   </div>
                   <div className={css.broadcastFilters_item}>
                     <label>Servicecast</label>
-                    <select name="servicecast" value={broadcastFilterState.servicecast ? "1" : "0"} onChange={handleSelectChange}>
+                    <select name="servicecast" value={broadcastFilterState.servicecast ? "1" : "0"} onChange={handleSelectChange} className="!w-24">
                       <option value="0">Off</option>
                       <option value="1">On</option>
                     </select>
@@ -684,6 +695,7 @@ const Options = () => {
 
 
       {togglePopUp && <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
+            <ToastContainer position="top-center" autoClose={1000} />
 
     </>
   );

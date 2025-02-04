@@ -532,7 +532,7 @@ const RfqTableSent = () => {
             <div className={css.rfqTableBtn_bottom}>
               <div>
                 <NavLink to={"/rfq/create"}>
-                  <button type="button">send</button>
+                  <button type="button" >send</button>
                 </NavLink>
                 <button
                   type="button"

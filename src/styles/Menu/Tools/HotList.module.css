@@ -1,7 +1,7 @@
 /* Container for the whole form */
 .container {
     width: 80%;
-    margin: 20px auto;
+    margin: 60px auto;
     background-color: #f0f0f0;
     padding: 20px;
     border-radius: 5px;
@@ -19,6 +19,12 @@
     color: blue;
     font-weight: bold;
   }
+
+  .activeTab {
+    font-weight: bold;
+    color: #2c83ec;
+}
+
   
   /* Header with telecom and add to hot list */
   .tableHeader {
@@ -92,6 +98,15 @@
     box-sizing: border-box;
   }
   
+input:focus{
+  outline: none;
+  border: 1px solid var(--primary-color);
+}
+  
+
+
+
+
   /* Save button container */
   .saveButtonContainer {
     margin-top: 10px;
@@ -100,7 +115,7 @@
   
   .saveButton {
     padding: 8px 15px;
-    background-color: #f06622ff;;
+    background-color:var(--primary-color);
     border: none;
     color: white;
     /* font-weight: bold; */

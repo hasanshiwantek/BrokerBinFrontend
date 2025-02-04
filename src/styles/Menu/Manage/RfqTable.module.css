@@ -363,3 +363,12 @@ rfqTableBtn_bottom button{
   border-color: #428bca;
 }
 
+
+
+
+@media screen and (max-width: 1110px) {
+  .rfqTableBtn_bottom{
+    flex-wrap: wrap;
+  }
+  
+}

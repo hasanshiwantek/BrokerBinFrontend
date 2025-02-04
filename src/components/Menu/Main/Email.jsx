@@ -7,13 +7,13 @@ const Email = () => {
         <h5>Email</h5>
 
         <div className="email-sec box">
-          <p style={{ color: "rgb(218, 63, 24)" }}>Q: Why am I no longer receiving emails from BrokerBin.com?</p>
-          <p style={{fontSize:"11px"}}> A: Your firewall or ISP may be blocking emails from us due to the large number of emails we send. Check with your network administrator, spam blocker, or ISP and request that emails from BrokerBin.com be white-listed.</p>
+          <p style={{ color: "#2c83ec" }}>Why am I no longer receiving emails from BrokerCell.com?</p>
+          <p style={{fontSize:"11px"}}>A: It's possible that your firewall or internet service provider is filtering out our emails due to the volume we send. Please consult your network administrator, spam filter settings, or ISP to ensure that emails from BrokerCell.com are permitted (whitelisted).</p>
           <div style={{ marginTop: "15px" }}>
 
 
-            <p style={{ color: "rgb(218, 63, 24)" }}>Q:How do I turn my emails on/off from BrokerBin.com?</p>
-            <p  style={{ fontSize:"11px"}}> A: When logged into BrokerBin.com click on Manage/ My Profile/Options. From this page you can manage all of your emails and Broadcasts. You can always contact your BrokerBin Account Manager for additional help.</p>
+            <p style={{ color: "#2c83ec" }}>Q: How can I toggle my email preferences on BrokerCell.com?</p>
+            <p  style={{ fontSize:"11px"}}>A: Once logged into BrokerCell.com, navigate to Manage/ My Profile/Options. Here, you will find options to adjust all your email and broadcast settings. For further assistance, please don't hesitate to reach out to your BrokerCell Account Manager.</p>
           </div>
 
 

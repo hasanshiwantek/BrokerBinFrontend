@@ -123,11 +123,21 @@ const InventorySearchResult = () => {
                 <ul>
                     <li>
                         <NavLink
-                            to="/advance"
+                            to="/search/Inventory"
+                            end
+                            className={`${({ isActive }) => (isActive ? styles.active : "")} !text-blue-500`}
+
+                        >
+                            <span>Inventory</span>
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink
+                            to="/search/Company"
                             end
                             className={({ isActive }) => (isActive ? styles.active : "")}
                         >
-                            <span>Inventory</span>
+                            <span>Company</span>
                         </NavLink>
                     </li>
                     <li>

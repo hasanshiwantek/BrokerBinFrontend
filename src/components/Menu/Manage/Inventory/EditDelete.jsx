@@ -10,6 +10,9 @@ import {
 import Cookies from "js-cookie";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchUserData } from "../../../../ReduxStore/ProfleSlice";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 
 const EditDelete = () => {
@@ -133,7 +136,10 @@ const EditDelete = () => {
     dispatch(updateInventoryData({ token, inventories: dataToSave }))
       .unwrap()
       .then(() => {
-        alert("Inventory updated successfully");
+        toast.info("Inventory Updated successfully", {
+          style: { fontSize: "15px", marginTop: "-10px" }, // 
+        });
+        console.log("Inventory updated successfully");
         // fetchFilteredData();
         fetchInventoryData();
       })
@@ -150,7 +156,10 @@ const EditDelete = () => {
       dispatch(deleteInventoryData({ token, ids: selectedInventories }))
         .unwrap()
         .then(() => {
-          alert("Inventory deleted successfully");
+          // ✅ Show success toast with light blue color
+          toast.info("Inventory deleted successfully", {
+            style: { fontSize: "15px", marginTop: "-10px" }, // 
+          });
           setSelectedInventories([]);
           fetchInventoryData();
         })
@@ -467,6 +476,8 @@ const EditDelete = () => {
           </div>
         </div>
       </div>
+            <ToastContainer position="top-center" autoClose={1000} />
+      
     </div>
   );
 };

@@ -6,6 +6,10 @@ import InventoryButtons from "./InventoryButtons";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { setInventoryAddData } from "../../../../ReduxStore/InventorySlice";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+
 
 const Add = () => {
   const token = Cookies.get("token");
@@ -57,7 +61,12 @@ const Add = () => {
       );
   
       if (response.ok) {
-        alert("Inventory Added Successfully");
+           // ✅ Show success toast with light blue color
+            toast.info("Inventory Added successfully!", {
+          style: { fontSize:"15px" ,marginTop:"-10px"} , // 
+
+           });
+       
         dispatch(
           setInventoryAddData(
             inventoryAddData.map(() => ({
@@ -73,7 +82,8 @@ const Add = () => {
           )
         );
       } else {
-        alert("Failed to add inventory data.");
+        toast.error("Failed to Add Inventory.Please Try Again.", {
+        });
       }
     } catch (error) {
       console.log(error);
@@ -106,6 +116,8 @@ const Add = () => {
           </div>
         </form>
       </div>
+            <ToastContainer position="top-center" autoClose={1000} />
+      
     </div>
   );
 };

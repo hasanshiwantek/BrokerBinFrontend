@@ -17,7 +17,7 @@ const InventorySearch = () => {
   const token = Cookies.get("token");
   const { inventorySearchData } = useSelector((state) => state.inventoryStore);
   console.log(inventorySearchData)
-  
+
   const [formData, setFormData] = useState({
     part: '',
     heci: '',
@@ -57,13 +57,13 @@ const InventorySearch = () => {
     console.log("Form Data Submitted:", formData); // Check the values being sent
     setButtonText("Processing..."); // Set the button text to "Processing..."
     setLoading(true); // Start loading
-  
+
     try {
       // Include page and pageSize in the formData
       const updatedFormData = { ...formData, page: 1, pageSize: 20 };
-  
+
       const result = await dispatch(inventorySearch({ data: updatedFormData, token })).unwrap();
-  
+
       console.log("API Result:", result);
       if (result.length === 0) {
         alert("No matching records found.");
@@ -71,7 +71,7 @@ const InventorySearch = () => {
       } else {
         const pagination = result.pagination;
         console.log("pagination", pagination);
-  
+
         // Pass the updated formData and results to the results page
         navigate("/inventory-searchResult", {
           state: { searchResults: result, pagination, filters: updatedFormData },
@@ -86,7 +86,7 @@ const InventorySearch = () => {
     }
   };
 
-  
+
 
   const resetHandler = () => {
     setFormData({
@@ -144,7 +144,7 @@ const InventorySearch = () => {
               <h2 style={{ margin: "" }}>Inventory Search</h2>
               <div className={'!flex !flex-col '}>
                 <div className={`!flex !flex-col !text-right !px-[5vw] !gap-[.5vw] `}>
-                  <span>
+                  <span className="!flex !justify-end ">
                     <label htmlFor="part">Part#</label>
                     <input
                       type="text"
@@ -155,7 +155,7 @@ const InventorySearch = () => {
                       className="ml-[1vw]"
                     />
                   </span>
-                  <span>
+                  <span  className="!flex !justify-end ">
                     <label htmlFor="heci">HECI</label>
                     <input
                       type="text"
@@ -166,7 +166,7 @@ const InventorySearch = () => {
                       className="ml-[1vw]"
                     />
                   </span>
-                  <span>
+                  <span  className="!flex !justify-end ">
                     <label htmlFor="Description">Description</label>
                     <input
                       type="text"
@@ -178,7 +178,7 @@ const InventorySearch = () => {
 
                     />
                   </span>
-                  <span>
+                  <span  className="!flex !justify-end ">
                     <label htmlFor="manufacturer">Manufacturer</label>
                     <input
                       type="text"
@@ -201,7 +201,7 @@ const InventorySearch = () => {
                       value={formData.partHeci}
                     />
                   </span> */}
-                  <span>
+                  <span  className="!flex !justify-end ">
                     <label htmlFor="keyword">Keyword</label>
                     <input
                       type="text"
@@ -213,7 +213,7 @@ const InventorySearch = () => {
 
                     />
                   </span>
-                  <div className={''}>
+                  <div   className="!flex !justify-end ">
                     <label htmlFor="condition">Condition</label>
                     <select
                       name="condition"
@@ -224,18 +224,18 @@ const InventorySearch = () => {
 
                     >
                       <option value="">All</option>
-                      <option value="NorthAmerica">NEW</option>
-                      <option value="SouthAmerica">ASIS</option>
-                      <option value="Africa">EXC</option>
-                      <option value="MiddleEast">F/S</option>
-                      <option value="Europe">NOB</option>
-                      <option value="Oceania">REF</option>
-                      <option value="Asia">OEMREF</option>
-                      <option value="Asia">REP</option>
-                      <option value="Asia">USED</option>
+                      <option value="NEW">NEW</option>
+                      <option value="ASIS">ASIS</option>
+                      <option value="EXC">EXC</option>
+                      <option value="F/S">F/S</option>
+                      <option value="NOB">NOB</option>
+                      <option value="REF">REF</option>
+                      <option value="OEMREF">OEMREF</option>
+                      <option value="REP">REP</option>
+                      <option value="USED">USED</option>
                     </select>
                   </div>
-                  <span>
+                  <span  className="!flex !justify-end ">
                     <label htmlFor="category">Category</label>
                     <input
                       type="text"
@@ -246,44 +246,44 @@ const InventorySearch = () => {
                       className="ml-[1vw]"
                     />
                   </span>
-                  <span>
+                  <span  className="!flex !justify-end ">
                     <CompanySearch setFormData={setFormData} formData={formData} />
                   </span>
 
                   <div className={"flex flex-col gap-4"}>
                     <div>
-                    <label htmlFor="Country">Country</label>
-                    <select
-                      name="country"
-                      id="region"
-                      value={formData.country}
-                      onChange={handleChange}
-                      className="ml-[1vw] w-72 border-2"
+                      <label htmlFor="Country">Country</label>
+                      <select
+                        name="country"
+                        id="region"
+                        value={formData.country}
+                        onChange={handleChange}
+                        className="ml-[1vw] w-72 border-2"
 
-                    >
-                      {
-                        countriesList.map((country) => <option key={country.value} value={country.value}>{country.label}</option>)
-                      }
+                      >
+                        {
+                          countriesList.map((country) => <option key={country.value} value={country.value}>{country.label}</option>)
+                        }
 
-                    </select>
+                      </select>
                     </div>
-                    <div>
+                    <div  className="!flex !justify-end ">
 
-                    <label htmlFor="Region">Region</label>
-                    <select
-                      name="region"
-                      id="region"
-                      value={formData.region}
-                      onChange={handleChange}
-                      className="ml-[1vw] w-72 border-2"
-                    >
-                      {
-                        regionsList.map((region) => <option  key={region.value} value={region.value}>{region.label}</option>)
-                      }
-                    </select>
+                      <label htmlFor="Region">Region</label>
+                      <select
+                        name="region"
+                        id="region"
+                        value={formData.region}
+                        onChange={handleChange}
+                        className="ml-[1vw] w-72 border-2"
+                      >
+                        {
+                          regionsList.map((region) => <option key={region.value} value={region.value}>{region.label}</option>)
+                        }
+                      </select>
                     </div>
 
-                    <div className="Ship Deadline">
+                    <div   className="!flex !justify-end ">
                       <label htmlFor="ShipDeadline">ShipDeadline</label>
                       <select
                         name="ShipDeadline"
@@ -302,11 +302,11 @@ const InventorySearch = () => {
             </div>
             <div className="flex justify-between">
               <button className="transform active:scale-90 transition-all duration-100 cursor-pointer p-3 text-white border rounded-lg bg-[#2c83ec]"
-               onClick={resetHandler} type="button">Reset</button>
+                onClick={resetHandler} type="button">Reset</button>
               <button
                 type="submit"
                 disabled={loading} // Disable the button while processing
-                className={`transform active:scale-90 transition-all duration-100 cursor-pointer p-3 text-white border rounded-lg ${loading ? "bg-[#2c83ec]" : "bg-[#2c83ec]"
+                className={`transform active:scale-90 transition-all duration-100 cursor-pointer p-3 text-white border rounded-lg ${loading ? "bg-[#2c83ec] opacity-50 " : "bg-[#2c83ec]"
                   }`}
               >
                 {buttonText}

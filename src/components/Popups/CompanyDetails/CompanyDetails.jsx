@@ -174,10 +174,10 @@ const CompanyDetails = ({ closeModal }) => {
         <div className={css.Popup_Info_height}>
           <div className={css.Popup_Info_header}>
             <h1>{companyContactData.data?.company?.name}</h1>
-            <div className="-mt-2 ">
-              <button type="button" className="">
+            <div className="!-mt-2 ">
+              {/* <button type="button" className="">
                 <FaExternalLinkAlt />
-              </button>
+              </button> */}
               <button
                 type="button"
                 onClick={() => closeModal()}
@@ -331,7 +331,7 @@ const CompanyDetails = ({ closeModal }) => {
           </div>
           <div className={css.Popup_Info_Main_bottom}>
             <a
-              href="/myprofile"
+              href="/feedback"
               target="_blank"
               rel="noopener noreferrer"
             >
