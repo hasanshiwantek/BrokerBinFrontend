@@ -4,6 +4,9 @@ import { showHotListItem, editHotListItem } from "../../../ReduxStore/ToolsSlice
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const HotListEdit = () => {
   const token = Cookies.get("token");
@@ -56,10 +59,13 @@ const HotListEdit = () => {
 
     dispatch(editHotListItem({ token, hotlists })).then(()=>{
       console.log("Hotlist Edit Succesfully")
-      alert("Hotlist Updated Succesfully!")
+              toast.info("Hotlists Updated successfully!", {
+                       style: { fontSize:"17px" ,marginTop:"-10px"} , // 
+                     });
     }).catch((error)=>{
       console.log("Error Updating",error)
-      alert(error.message)
+    toast.error("Error Updating Hotlist. Try again.", {
+                       });
 
     })
   };
@@ -76,7 +82,7 @@ const HotListEdit = () => {
               <Link to={"/hotlist/add"}>Add</Link>
             </li>
             <li>
-              <Link to={"/hotlist/edit"}>Edit</Link>
+              <Link to={"/hotlist/edit"} className={css.activeTab}>Edit</Link>
             </li>
           </ul>
         </div>
@@ -160,13 +166,14 @@ const HotListEdit = () => {
             </table>
 
             <div className={css.saveButtonContainer}>
-              <button className={css.saveButton} type="submit">
+              <button className={`${css.saveButton} hover:!bg-blue-600 hover:-translate-y-1 transition-all ease-in-out`} type="submit">
                 Save
               </button>
             </div>
           </form>
         </div>
       </div>
+                  <ToastContainer position="top-center" autoClose={2000} />
 
 
     </>

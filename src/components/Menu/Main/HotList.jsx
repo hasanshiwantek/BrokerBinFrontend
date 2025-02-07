@@ -8,19 +8,20 @@ const HotList = () => {
 <h5>HotList</h5>
 
 <div className="email-sec box " style={{fontSize:"10px"}}>
-    <p style={{ color: "rgb(218, 63, 24)" }}>Q: What is the Hot List?</p>
-    <p>A: The Hot List will display detailed statistics for selected part numbers.</p>
-    <p style={{ color: "rgb(218, 63, 24)" }}>Q: Why use the Hot List?</p>
-    <p> A: Track and view extensive data for any Part Number or Model of interest. We removed all repetitive daily
-    searching with one click. Don't forget you can click on Details to see who has been searching for that item.</p> 
-      <p style={{ color: "rgb(218, 63, 24)" }}>Q: How to use the Hot List?</p>
-    <p> A: 1. Mouse over any part number.<br/>
-2. When menu appears click on the "Add to Hot List" link (Item is now added).<br/>
-3. Click on the Hot List icon next to the MyVen link to view.<br/>
-    Or<br/>
-1. Click on the Hot List icon next to the MyVen link.<br/>
-2. Click "Add" to add Items, click "Edit" to edit items or add notes,<br/>
-click "View" to view items, or check the box next to a part and click "Delete" to delete an item.</p>   
+    <p style={{ color: "#2c83ec" }}>Q: What is the Hot List?</p>
+    <p>A: The Hot List features comprehensive statistics for specific part numbers to help you gauge their market demand.</p>
+    <p style={{ color: "#2c83ec" }}>Q: Why should I use the Hot List?</p>
+    <p>A: The Hot List enables you to follow detailed activity for any part number or model that interests you, eliminating redundant daily searches. You can also view who else has been searching for these items by clicking on 'Details.'</p> 
+      <p style={{ color: "#2c83ec" }}>Q: How do I access the Hot List?
+      </p>
+    <p> A: 1. Hover your cursor over any part number to trigger a menu.<br/>
+2. Click 'Add to Hot List' from this menu to include the item.<br/>
+3.To review your Hot List, click the Hot List icon adjacent to the MyVen link.<br/>
+Alternatively:<br/>
+1. Access via the Hot List icon near the MyVen link.<br/>
+2. Click 'Add' to include new items, 'Edit' to modify existing entries, or 'View' to inspect the listed items.<br/>
+To remove an item, select it and press 'Delete.'
+</p>   
     
 
 

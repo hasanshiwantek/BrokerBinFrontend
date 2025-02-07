@@ -12,7 +12,9 @@ import { submitRfq, clearSearchResults, statusRfq } from "../../../../ReduxStore
 import RfqAddPart from "./RfqAddPart";
 import { fetchUserData } from "../../../../ReduxStore/ProfleSlice";
 import { useLocation } from "react-router-dom"; // Add this import
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const RfqReply = () => {
 
@@ -408,7 +410,11 @@ const RfqReply = () => {
     // Send the data
     try {
       await dispatch(submitRfq({ token, data: formData }));
-      alert("RFQ submitted successfully!");
+      // alert("RFQ submitted successfully!");
+               // ✅ Show success toast with light blue color
+                          toast.info("RFQ submitted successfully!", {
+                           style: { fontSize:"15px" ,marginTop:"-10px",fontWeight:"bold"} , // 
+                         });
       // Check if the RFQ was forwarded and update its status
       if (type === "forward") {
         const payload = {
@@ -421,7 +427,9 @@ const RfqReply = () => {
       clearFields();
     } catch (error) {
       console.error("Error submitting RFQ:", error);
-      alert("Error Submitting RFQ Data");
+      toast.error("Error  submitting RFQ.PLease Try Again!", {
+        style: { fontSize:"15px" ,marginTop:"-10px",fontWeight:"bold"} , // 
+      });
     }
   };
 
@@ -460,7 +468,7 @@ const RfqReply = () => {
     <>
       <div className={`${css.rfqcontainer} `}>
         <form >
-          <div className={`${css.rfqNew}  sm:h-[58vh] lg:h-[68vh]`} ref={modalRef}>
+          <div className={`${css.rfqNew}  sm:h-[58vh] lg:h-[68vh] mt-8`} ref={modalRef}>
 
             <div className={`${css.rfqBody}`}>
               <div className={css.rfqHeaderSec}>
@@ -782,6 +790,8 @@ const RfqReply = () => {
           </div>
         </form>
       </div>
+                  <ToastContainer position="top-center" autoClose={1000} />
+      
     </>
   );
 };

@@ -97,6 +97,7 @@
   /* padding: 5px; */
   background-color: lightgray;
   margin-bottom: 5px;
+  flex-wrap: wrap;
 }
 
 

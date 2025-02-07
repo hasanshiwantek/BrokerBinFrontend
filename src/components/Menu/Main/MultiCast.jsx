@@ -7,12 +7,12 @@ const MultiCast = () => {
         <h5>BroadCast and MultiCast</h5>
 
         <div className="email-sec box" style={{fontSize:'11px'}}>
-                    <p style={{ color: "rgb(218, 63, 24)" }}>Q: Why am I receiving emails about WTB, RFQ, and WTS items?</p>
-                    <p> A: Your default Broadcast setting is set to "On" with no filters. Go to My Profile/Options to filter or turn "Off" the Broadcast.</p>
-                    <p style={{ color: "rgb(218, 63, 24)" }}>Q: When should I use a Multicast?</p>
-                    <p>A: When you have several items in a list you need to buy/sell.</p>  
-                     <p style={{ color: "rgb(218, 63, 24)" }}>Q: Does it help to include the optional field, Manufacturer, when sending a Multicast?</p>
-                    <p> A: Yes, include a manufacturer so we can route it to the proper person.</p>
+                    <p style={{ color: "#2c83ec" }}>Q: Why am I receiving emails about WTB, RFQ, and WTS items?</p>
+                    <p>A: Your default setting for Broadcast is active without any filters. You can modify this by going to My Profile/Options to adjust or disable the Broadcast function.</p>
+                    <p style={{ color: "#2c83ec" }}>Q: When is it appropriate to use a Multicast?</p>
+                    <p>A: Use a Multicast when you need to buy or sell multiple items from your list efficiently.</p>  
+                     <p style={{ color: "#2c83ec" }}>Q: Is it necessary to include the manufacturer's name when sending a Multicast?</p>
+                    <p> A: Yes, adding the manufacturer's name helps ensure your message is directed to the most relevant contact..</p>
                     
                 </div>
     </div>

@@ -289,7 +289,7 @@ const Person = () => {
                             <button
                                 type="submit"
                                 disabled={loading} // Disable the button while processing
-                                className={`transform active:scale-90 transition-all duration-100 cursor-pointer p-4 text-white border rounded-lg ${loading ? "bg-[#2c83ec]" : "bg-[#2c83ec]"
+                                className={`transform active:scale-90 transition-all duration-100 cursor-pointer p-4 text-white border rounded-lg ${loading ? "bg-[#2c83ec] opacity-50 " : "bg-[#2c83ec]"
                                     }`}
                             >
                                 {buttonText}

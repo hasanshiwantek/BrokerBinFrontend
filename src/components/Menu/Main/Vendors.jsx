@@ -8,20 +8,21 @@ const Vendors = () => {
 <h5>My Vendors</h5>
 
 <div className="email-sec box " id='vendors' style={{fontSize:"11px"}}>
-    <p style={{ color: "rgb(218, 63, 24)" }}>Q: What is the MyVendors Page and how do I use it?</p>
-    <p> A: The MyVendors Page is where you can add vendors, edit ratings and add notes for specific vendors.<br/>
-1. To add a vendor, simply search for the vendor and click on MyVendor icon with the appropriate watch level that is desired.<br/>
-2. Once added you can go to you MyVendors page (My Profile/MyVendors) and add notes as well as adjust the display level.<br/>
-    Or<br/>
-1. Go to My Profile/MyVendors section<br/>
-2. Search for companies you would like to add.<br/>
-3. Select companies and click Add To MyVendors icon button.</p>
-    <p style={{ color: "rgb(218, 63, 24)" }}>
-    Q: What are the icons used for?</p>
-    <p>A: The icons are used to add or remove companies to your MyVendors List.</p> 
-      <p style={{ color: "rgb(218, 63, 24)" }}>
+    <p style={{ color: "#2c83ec" }}>Q: What is the MyVendors Page and how do I use it?</p>
+    <p>A: The My Vendors page allows you to add vendors, edit their ratings, and note specific observations about them. Simply search for a vendor, use the MyVendor icon to select them, and manage your list through the My Profile/My Vendors section where you can also adjust display settings.</p>
+    <p style={{ color: "#2c83ec" }}>
+    Q: How do I add vendors to my list?</p>
+    <p>A: To add vendors:<br/>
+1: Navigate to My Profile/My Vendors.<br/>
+2: Search for and select the vendors you wish to add.<br/>
+3: Use the 'Add To MyVendors' button to include them in your list.<br/>
+</p> 
+    <p style={{ color: "#2c83ec" }}>
+    Q: What are the icons on the My Vendors page used for?</p>
+    <p>A: Icons are tools for adding or removing companies from your My Vendors list. They simplify the management of your vendor interactions.</p> 
+      <p style={{ color: "#2c83ec" }}>
       Q: What is the "Lock" function for?</p>
-    <p> A: The Lock function is a tool for administrators to use to "lock" a vendor or contact so that it appears all their users My Vendors or My Contacts page. The notes and rating are also "locked" so that only an administrator can edit them.</p>   
+    <p> A: The 'lock' function is designed for administrators to secure vendor information on the My Vendors or My Contacts pages, ensuring that only authorized edits can be made to the vendor details, notes, and ratings.</p>   
 
 
     <div className="boxes" style={{border:"1px solid black",marginTop:'5px' }}>

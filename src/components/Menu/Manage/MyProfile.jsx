@@ -12,11 +12,14 @@ import {
 } from "../../../ReduxStore/ProfleSlice";
 import ErrorStatus from "../../Error/ErrorStatus";
 import Cookies from "js-cookie";
-import { Link,NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import Footer from "../../Footer/Footer";
 import { setTogglePopUp } from "../../../ReduxStore/SearchProductSlice";
 import CompanyDetails from "../../Popups/CompanyDetails/CompanyDetails";
 import { setPopupCompanyDetail } from "../../../ReduxStore/SearchProductSlice";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 
 
@@ -36,6 +39,14 @@ const MyProfile = () => {
   const id = user?.user?.id || user_id;
   const dispatch = useDispatch();
   const [fileBase64, setFileBase64] = useState("");
+
+
+  const [passwords, setPasswords] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmNewPassword: "",
+  });
+
 
   const textAreaContent = [
     formData.sigcheckName ? `${formData.firstName} ${formData.lastName}` : "",
@@ -68,32 +79,41 @@ const MyProfile = () => {
     };
     fetchData();
   }, [dispatch, id, token]);
-  
+
   // const cleanInput = (input) => input.trimStart().replace(/\s+/g, " ");
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    const [parentKey, childKey] = name.split("."); // Extract parent & child keys
 
-const handleChange = (e) => {
-  const { name, value } = e.target;
-  const [parentKey, childKey] = name.split(".");
-
-  if (childKey) {
-    dispatch(
-      setFormData({
-        ...formData,
-        [parentKey]: {
-          ...(formData[parentKey] || {}), // Ensure initialization
-          [childKey]: value,
-        },
-      })
-    );
-  } else {
-    dispatch(
-      setFormData({
-        ...formData,
+    if (["currentPassword", "newPassword", "confirmNewPassword"].includes(name)) {
+      setPasswords((prevPasswords) => ({
+        ...prevPasswords,
         [name]: value,
-      })
-    );
-  }
-};
+      }));
+    }
+    // ✅ Correctly update nested objects (IM Screen Names & Social Networking)
+    else if (childKey) {
+      dispatch(
+        setFormData({
+          ...formData,
+          [parentKey]: {
+            ...(formData[parentKey] || {}), // Preserve existing data
+            [childKey]: value, // Update only the field being changed
+          },
+        })
+      );
+    }
+    // ✅ Update other fields normally
+    else {
+      dispatch(
+        setFormData({
+          ...formData,
+          [name]: value,
+        })
+      );
+    }
+  };
+
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -118,62 +138,85 @@ const handleChange = (e) => {
       setFileBase64("");
     }
   };
-  
-const handleSubmit = async (event) => {
-  event.preventDefault();
-  dispatch(setBlurWhileLoading(false));
 
-  const formDataApi = new FormData(event.target);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    dispatch(setBlurWhileLoading(false));
 
-  // Build nested objects manually
-  const imScreenNames = {
-    skype: formData?.imScreenNames?.skype || "",
-    whatsapp: formData?.imScreenNames?.whatsapp || "",
-    trillian: formData?.imScreenNames?.trillian || "",
+    const formDataApi = new FormData(event.target);
+
+    // Build nested objects manually
+    const imScreenNames = {
+      skype: formData?.imScreenNames?.skype || "",
+      whatsapp: formData?.imScreenNames?.whatsapp || "",
+      trillian: formData?.imScreenNames?.trillian || "",
+    };
+
+    const socialNetworking = {
+      facebook: formData?.socialNetworking?.facebook || "",
+      twitter: formData?.socialNetworking?.twitter || "",
+      linkedin: formData?.socialNetworking?.linkedin || "",
+    };
+
+    // Set nested objects in FormData
+    formDataApi.set("imScreenNames", JSON.stringify(imScreenNames));
+    formDataApi.set("socialNetworking", JSON.stringify(socialNetworking));
+
+    // Manually append password fields (ensuring they are only included at submission)
+    // Explicitly set password fields to empty
+    formDataApi.set("currentPassword", passwords.currentPassword || "");
+    formDataApi.set("newPassword", passwords.newPassword || "");
+    formDataApi.set("confirmNewPassword", passwords.confirmNewPassword || "");
+
+    // Handle file upload (if user uploaded an image)
+    if (fileBase64) {
+      const byteCharacters = atob(fileBase64);
+      const byteNumbers = Array.from(byteCharacters, (char) => char.charCodeAt(0));
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: "image/jpeg" });
+      const file = new File([blob], "profileImage.jpg", { type: "image/jpeg" });
+      formDataApi.set("profileImage", file);
+    }
+
+    const plainData = Object.fromEntries(formDataApi.entries());
+         // ✅ Show success toast with light blue color
+         toast.info("Profile updated successfully!", {
+          style: { fontSize:"17px" ,marginTop:"-10px"} , // 
+        });
+    
+    try {
+      await dispatch(
+        submitUserData({
+          id,
+          token,
+          data: {
+            formData: formDataApi,
+            plainData,
+          },
+        })
+      );
+
+
+      // ✅ Reset passwords after successful submission
+      setPasswords({
+        currentPassword: "",
+        newPassword: "",
+        confirmNewPassword: "",
+      });
+      console.log("Form submitted successfully!");
+
+    } catch (error) {
+      console.error("Error submitting data:", error);
+      toast.error("Failed to update profile. Try again.", {
+        style: { backgroundColor: "#FFCCCC", color: "#000" }, // Light red error
+      });
+    }
   };
 
-  const socialNetworking = {
-    facebook: formData?.socialNetworking?.facebook || "",
-    twitter: formData?.socialNetworking?.twitter || "",
-    linkedin: formData?.socialNetworking?.linkedin || "",
-  };
-
-  // Set nested objects in FormData
-  formDataApi.set("imScreenNames", JSON.stringify(imScreenNames));
-  formDataApi.set("socialNetworking", JSON.stringify(socialNetworking));
-
-  // Handle file
-  if (fileBase64) {
-    const byteCharacters = atob(fileBase64);
-    const byteNumbers = Array.from(byteCharacters, (char) => char.charCodeAt(0));
-    const byteArray = new Uint8Array(byteNumbers);
-    const blob = new Blob([byteArray], { type: "image/jpeg" });
-    const file = new File([blob], "profileImage.jpg", { type: "image/jpeg" });
-    formDataApi.set("profileImage", file);
-  }
-
-  const plainData = Object.fromEntries(formDataApi.entries());
-
-  try {
-    await dispatch(
-      submitUserData({
-        id,
-        token,
-        data: {
-          formData: formDataApi,
-          plainData,
-        },
-      })
-    );
-  } catch (error) {
-    console.error("Error submitting data:", error);
-  }
-};
-
-useEffect(() => {
-  console.log("MyProfile component mounted");
-  return () => console.log("MyProfile component unmounted");
-}, []);
+  useEffect(() => {
+    console.log("MyProfile component mounted");
+    return () => console.log("MyProfile component unmounted");
+  }, []);
 
 
   const toggleCheckAll = (value) => {
@@ -191,7 +234,7 @@ useEffect(() => {
       })
     );
   };
-  
+
 
   if (error) {
     return (
@@ -202,7 +245,7 @@ useEffect(() => {
   }
 
   const { togglePopUp, popupCompanyDetail } = useSelector((state) => state.searchProductStore)
-  const company =formData?.company;
+  const company = formData?.company;
 
   // Company Modal Logic
   const openCompanyModal = (company) => {
@@ -210,7 +253,7 @@ useEffect(() => {
     dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
     dispatch(setTogglePopUp()); // Show company modal
   };
- 
+
 
   return (
     <>
@@ -222,22 +265,22 @@ useEffect(() => {
               <p>my profile</p>
               <span>
                 <input type="submit" value="submit changes" />
-                <button type="button"  onClick={() => openCompanyModal(company)}>view profile</button>
+                <button type="button" onClick={() => openCompanyModal(company)}>view profile</button>
               </span>
             </div>
             <div className={css.profileInfo}>
               <div className={css.profileInfo_links}>
-              <ul>
-                <li>
-                  <NavLink
-                    to="/myprofile"
-                    end  // This ensures the exact match for /myprofile
-                    className={({ isActive }) => (isActive ? css.active : '')}
-                  >
-                    <span>Personal Info</span>
-                  </NavLink>
-                </li>
-                {/* <li>
+                <ul>
+                  <li>
+                    <NavLink
+                      to="/myprofile"
+                      end  // This ensures the exact match for /myprofile
+                      className={({ isActive }) => (isActive ? css.active : '')}
+                    >
+                      <span>Personal Info</span>
+                    </NavLink>
+                  </li>
+                  {/* <li>
                   <NavLink
                     to="/myprofile/Options"
                     className={({ isActive }) => (isActive ? css.active : '')}
@@ -245,7 +288,7 @@ useEffect(() => {
                     <span>Options</span>
                   </NavLink>
                 </li> */}
-                {/* <li>
+                  {/* <li>
                   <NavLink
                     to="/myprofile/MyVendors"
                     className={({ isActive }) => (isActive ? css.active : '')}
@@ -253,23 +296,23 @@ useEffect(() => {
                     <span>My Vendors</span>
                   </NavLink>
                 </li> */}
-                <li>
-                  <NavLink
-                    to="/myprofile/MyContact"
-                    className={({ isActive }) => (isActive ? css.active : '')}
-                  >
-                    <span>My Vendors</span>
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/myprofile/broadcastfilter"
-                    className={({ isActive }) => (isActive ? css.active : '')}
-                  >
-                    <span>Broadcast Filters</span>
-                  </NavLink>
-                </li>
-              </ul>
+                  <li>
+                    <NavLink
+                      to="/myprofile/MyContact"
+                      className={({ isActive }) => (isActive ? css.active : '')}
+                    >
+                      <span>My Vendors</span>
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to="/myprofile/broadcastfilter"
+                      className={({ isActive }) => (isActive ? css.active : '')}
+                    >
+                      <span>Broadcast Filters</span>
+                    </NavLink>
+                  </li>
+                </ul>
               </div>
               <div className={css.profileInfo_form}>
                 <div className={css.profileInfo_form_personalInfo}>
@@ -348,8 +391,8 @@ useEffect(() => {
                     <div>
                       <img
                         src={
-                         formData?.profileImage
-                            
+                          formData?.profileImage
+
                         }
                         alt="personal photo"
                       />
@@ -369,9 +412,9 @@ useEffect(() => {
                   <h1>IM Screen Names</h1>
                   <div>
                     <span>
-                    <div className="flex items-center justify-center"> 
-                      <label htmlFor="skype">Skype</label>
-                      <img src="https://ben.cachefly.net/images/social_networks/tiny_skype.png" alt="Skype" title="Skype"></img>
+                      <div className="flex items-center justify-center">
+                        <label htmlFor="skype">Skype</label>
+                        <img src="https://ben.cachefly.net/images/social_networks/tiny_skype.png" alt="Skype" title="Skype"></img>
                       </div>
                       <input
                         type="text"
@@ -383,9 +426,9 @@ useEffect(() => {
                       />
                     </span>
                     <span>
-                    <div className="flex items-center justify-center"> 
-                      <label htmlFor="whatsapp">WhatsApp</label>
-                      <img src="https://ben.cachefly.net/images/social_networks/tiny_whatsapp.png" alt="WhatsApp" title="WhatsApp"/>
+                      <div className="flex items-center justify-center">
+                        <label htmlFor="whatsapp">WhatsApp</label>
+                        <img src="https://ben.cachefly.net/images/social_networks/tiny_whatsapp.png" alt="WhatsApp" title="WhatsApp" />
                       </div>
                       <input
                         type="text"
@@ -397,9 +440,9 @@ useEffect(() => {
                       />
                     </span>
                     <span>
-                    <div className="flex items-center justify-center "> 
-                      <label htmlFor="trillian">Trillian</label>
-                      <img src="https://ben.cachefly.net/images/social_networks/tiny_trillian.png" alt="Trillian" title="Trillian"/>
+                      <div className="flex items-center justify-center ">
+                        <label htmlFor="trillian">Trillian</label>
+                        <img src="https://ben.cachefly.net/images/social_networks/tiny_trillian.png" alt="Trillian" title="Trillian" />
                       </div>
                       <input
                         type="text"
@@ -416,9 +459,9 @@ useEffect(() => {
                   <h1>Social Networking</h1>
                   <div>
                     <span>
-                    <div className="flex items-center  justify-center"> 
-                      <label htmlFor="facebook">Facebook</label>
-                      <img src="https://ben.cachefly.net/images/social_networks/tiny_facebook.png" alt="Facebook" title="Facebook"/>
+                      <div className="flex items-center  justify-center">
+                        <label htmlFor="facebook">Facebook</label>
+                        <img src="https://ben.cachefly.net/images/social_networks/tiny_facebook.png" alt="Facebook" title="Facebook" />
                       </div>
 
                       <input
@@ -431,9 +474,9 @@ useEffect(() => {
                       />
                     </span>
                     <span>
-                    <div className="flex items-center justify-center "> 
-                      <label htmlFor="twitter">Twitter</label>
-                      <img src="https://ben.cachefly.net/images/social_networks/tiny_twitter.png" alt="Twitter" title="Twitter"/>
+                      <div className="flex items-center justify-center ">
+                        <label htmlFor="twitter">Twitter</label>
+                        <img src="https://ben.cachefly.net/images/social_networks/tiny_twitter.png" alt="Twitter" title="Twitter" />
                       </div>
                       <input
                         type="text"
@@ -445,9 +488,9 @@ useEffect(() => {
                       />
                     </span>
                     <span>
-                    <div className="flex items-center justify-center "> 
-                      <label htmlFor="linkedin">LinkedIn</label>
-                      <img src="https://ben.cachefly.net/images/social_networks/tiny_linkedin.png" alt="Linked-In" title="Linked-In"/>
+                      <div className="flex items-center justify-center ">
+                        <label htmlFor="linkedin">LinkedIn</label>
+                        <img src="https://ben.cachefly.net/images/social_networks/tiny_linkedin.png" alt="Linked-In" title="Linked-In" />
                       </div>
                       <input
                         type="text"
@@ -478,10 +521,10 @@ useEffect(() => {
                       <label htmlFor="tollFree">Toll Free</label>
                       <input
                         type="text"
-                        name="tollFree"
+                        name="tollFree" // ✅ Correct name
                         id="tollFree"
                         onChange={handleChange}
-                        value={formData.tollFree}
+                        value={formData?.tollFree || ""}
                         placeholder="Enter toll-free number"
                       />
                     </span>
@@ -489,21 +532,22 @@ useEffect(() => {
                       <label htmlFor="cellular">Cellular</label>
                       <input
                         type="text"
-                        name="cellular"
+                        name="cellular" // ✅ Correct name
                         id="cellular"
                         onChange={handleChange}
-                        value={formData.cellular}
+                        value={formData?.cellular || ""}
                         placeholder="Enter cellular number"
                       />
                     </span>
                     <span>
                       <label htmlFor="fax">Fax</label>
+
                       <input
                         type="text"
-                        name="faxNumber"
+                        name="faxNumber" // ✅ Correct name
                         id="faxNumber"
                         onChange={handleChange}
-                        value={formData.faxNumber}
+                        value={formData?.faxNumber || ""}
                         placeholder="Enter fax number"
                       />
                     </span>
@@ -679,16 +723,24 @@ useEffect(() => {
                         name="currentPassword"
                         id="currentPassword"
                         placeholder="Enter current password"
+                        value={passwords.currentPassword}
+                        onChange={handleChange}
+                        autoComplete="new-password"
                       />
                     </div>
                     <div>
                       <label htmlFor="newPassword">New Password</label>
+
                       <input
                         type="password"
                         name="newPassword"
                         id="newPassword"
                         placeholder="Enter new password"
+                        value={passwords.newPassword}
+                        onChange={handleChange}
+                        autoComplete="new-password"
                       />
+
                     </div>
                     <div>
                       <label htmlFor="confirmNewPassword">
@@ -699,6 +751,9 @@ useEffect(() => {
                         name="confirmNewPassword"
                         id="confirmNewPassword"
                         placeholder="Confirm new password"
+                        value={passwords.confirmNewPassword}
+                        onChange={handleChange}
+                        autoComplete="new-password"
                       />
                     </div>
                   </div>
@@ -727,6 +782,8 @@ useEffect(() => {
       )}
 
       {togglePopUp && <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
+      <ToastContainer position="top-center" autoClose={2000} />
+
 
     </>
   );

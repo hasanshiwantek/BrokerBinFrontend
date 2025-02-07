@@ -14,7 +14,7 @@ import icon11 from "../../../assets/search.svg";
 const Icons = () => {
   return (
     <>
-      <div style={{ padding: '15px' }}>
+      <div style={{ padding: '15px' }} id='icons'>
         <h5 className='icons-q-head'>
           QuickLinks
         </h5>

@@ -3,19 +3,18 @@ import React from 'react'
 const FeedBack = () => {
   return (
     <>
-     <div style={{ padding: "15px" }}>
+     <div style={{ padding: "15px" }} id='feedback'>
 
 <h5>Member Feedback System</h5>
 
 <div className="email-sec box " style={{fontSize:"10px"}}>
-    <p style={{ color: "rgb(218, 63, 24)" }}>Q: How do I check the feedback for my company?</p>
-    <p> A: On the members' main page, you'll see a box on the left featuring data about your company. Click on the stars under your company name to check the remarks left about your company.
-    A: You can also click through to this page wherever you see the star icon appear on the site. The icon also appears at the top of your company's profile page.</p>
-    <p style={{ color: "rgb(218, 63, 24)" }}>
-    Q: How do I leave feedback for another company?</p>
-    <p> A: Within search results, click on the number under the star icon for the company you'd like to comment on. This takes you to the company's feedback page. Click on the Leave Feedback box at the bottom of your screen.</p> 
-      <p style={{ color: "rgb(218, 63, 24)" }}>Q: How is my star rating determined?</p>
-    <p> A: The amount of stars awarded to your company is determined by how many positive and negative remarks are left about your company.</p>   
+    <p style={{ color: "#2c83ec" }}>Q: How can I view feedback for my company?</p>
+    <p>A: On the main page for members, look for the feedback section on the left side displaying comments about your company. Click on the stars beneath your company’s name to access a detailed feedback page. This star icon is also visible at the top of your company's profile page for quick reference.</p>
+    <p style={{ color: "#2c83ec" }}>
+    Q: How do I provide feedback on another company?</p>
+    <p> A: In the search results, click the number below the star icon next to the company you want to review. This will direct you to that company's specific feedback page. To leave feedback, select the 'Leave Feedback' option located at the bottom of your screen.</p> 
+      <p style={{ color: "#2c83ec" }}>Q: How is the star rating for my company calculated?</p>
+    <p>A: Your company's star rating is based on the cumulative positive and negative feedback left by other members.</p>   
 
 </div>
 

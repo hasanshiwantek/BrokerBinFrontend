@@ -4,7 +4,9 @@ import InventoryButtons from "./InventoryButtons";
 import css from "../../../../styles/Menu/Manage/Inventory/Inventory.module.css";
 import { exportRemoveInventory } from "../../../../ReduxStore/InventorySlice";
 import Cookies from "js-cookie";
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 const ExportRemove = () => {
   const [loading, setLoading] = useState(false); // To track API call status
 
@@ -53,10 +55,13 @@ const ExportRemove = () => {
     try {
       setLoading(true); // Start loading
       await dispatch(exportRemoveInventory({ token, ...payload })).unwrap();
-      alert(`Your ${actionType} request for ${exportType} has been submitted to your admin.`);
+                toast.info(`Your ${actionType} request for ${exportType} has been submitted to your admin.`, {
+                style: { fontSize:"14px" ,marginTop:"-10px" ,fontWeight:"bold",padding:"5px"} , // 
+      
+                 });
     } catch (error) {
       console.error("Error during export/remove request:", error);
-      alert(error.message);
+         toast.error(error.message)
     } finally {
       setLoading(false); // End loading
     }
@@ -129,6 +134,8 @@ const ExportRemove = () => {
 
         </div>
       </form>
+                  <ToastContainer position="top-center" autoClose={3000} />
+      
     </div>
   );
 };

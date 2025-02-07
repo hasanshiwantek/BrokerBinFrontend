@@ -1,12 +1,32 @@
-
-
 import React from 'react';
 import './SiteMap.css';
 import { Link } from 'react-router-dom';
 import siteIcon from '../../../assets/sitemapdocbullet.gif'; // Import your icon
 import styles from "../../../styles/Menu/Search/Person.module.css"
-
+import { useDispatch } from 'react-redux';
+import { clearUserDetails } from '../../../ReduxStore/UserSlice';
+import { resetProfileState } from '../../../ReduxStore/ProfleSlice';
+import { useNavigate } from "react-router-dom";
+import Cookies from 'js-cookie';
 const SiteMap = () => {
+
+    const year=new Date().getFullYear();
+    console.log(year);
+
+    const dispatch=useDispatch()
+    const navigate = useNavigate();
+     const token = Cookies.get("token");
+    
+
+      const handleLogout = () => {
+        dispatch(clearUserDetails());
+        dispatch(resetProfileState());
+        localStorage.removeItem("user");
+        Cookies.remove("token");
+        Cookies.remove("user_id");
+        navigate("/login", { replace: true });
+      };
+
     return (
         <>
             <main className='main-sec'>
@@ -16,7 +36,7 @@ const SiteMap = () => {
                         <li><Link to={'/feedback'}>Contact</Link></li>
                         <li><Link to={'/ethics'}>Ethics</Link></li>
                         <li><Link to={"/sitemap"}>SiteMap</Link></li>
-                        <li><Link to={'/badges'}>Badges</Link></li>
+                        {/* <li><Link to={'/badges'}>Badges</Link></li> */}
                     </ul>
                 </nav>
                 <div className="container">
@@ -42,7 +62,7 @@ const SiteMap = () => {
                         <div id="box2">
                             <ul>
                                <Link to={"/tools"}> <li><img src={siteIcon} alt="icon" /> Tools</li></Link>
-                               <Link to={"/myprofile/MyContacts"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> My Vendors</li></Link>
+                               <Link to={"/myprofile/MyContact"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> My Vendors</li></Link>
                                <Link to={"/hotlist/view"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Hot List</li></Link>
                                {/* <Link to={"/tools"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Track Shipment</li></Link> */}
                                {/* <Link to={"/cartpart"}> <li style={{ marginLeft: "14px" }}><img src={siteIcon} alt="icon" /> Part Cart</li></Link> */}
@@ -127,15 +147,15 @@ const SiteMap = () => {
                             </ul>
                         </div>
                         <div id="box7">
-                            <ul>
-                                <li><img src={siteIcon} alt="icon"  /> Logout</li>
+                            <ul   onClick={handleLogout}>
+                                <li><img src={siteIcon} alt="icon"/> Logout</li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 <div className="footer">
                     <div className="footer-content">
-                        <p>Copyright 2024 BrokerBin.com</p>
+                        <p>Copyright {year} Brokercell.com</p>
                         <Link to={"/feedback"}><p>Questions / Comments</p></Link>
                     </div>
                 </div>

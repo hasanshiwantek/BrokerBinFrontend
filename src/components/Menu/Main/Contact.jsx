@@ -96,7 +96,9 @@ const Contact = () => {
                 </Link>
               </li>
               <li>
+                <Link to={"/sitemap"}>
                 <span>Site Map</span>
+                </Link>
               </li>
               <li>
                 <Link to={"/badges"}>
@@ -201,7 +203,7 @@ const Contact = () => {
             <button type="button" onClick={handleReset}>
               reset
             </button>
-            <input type="submit" value="sumbit" />
+            <input type="submit" value="sumbit" className="cursor-pointer hover:bg-blue-600" />
           </div>
         </div>
       </form>

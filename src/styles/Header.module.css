@@ -39,10 +39,11 @@ button {
 
   .search_container {
     display: flex;
+    margin-bottom: -8px;
 
     form {
       display: flex;
-    }
+    } 
 
     .search_btn {
       background-color: var(--primary-color);
@@ -52,6 +53,7 @@ button {
       padding: 0.7rem;
       margin-left: 1rem;
       color: var(--font-color);
+      border-radius: 5px;
     }
 
     #search {

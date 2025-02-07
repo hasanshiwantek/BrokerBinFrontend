@@ -5,6 +5,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import Cookies from "js-cookie";
 import styles from "../../../styles/Menu/Tools/Tools.module.css"
 import { showHotListItem,deleteHotlists } from '../../../ReduxStore/ToolsSlice';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+
 const HotListView = () => {
   // const [selectedItems, setSelectedItems] = useState([]);
   const items = useSelector((state) => state.toolsStore.myHotListItems)
@@ -34,20 +38,28 @@ const HotListView = () => {
   // Handle delete button click
   const handleDelete = () => {
     if (selectedIds.length === 0) {
-      alert("No items selected for deletion.");
+      toast.error("No items selected for Deletion", {
+         // Light red error
+      });
       return;
     }
   
     const payload = selectedIds; // Only send an array of IDs
     console.log("Payload for Backend:", payload);
-  
+         toast.info("Hotlists Deleted successfully!", {
+            style: { fontSize:"17px" ,marginTop:"-10px"} , // 
+          });
     dispatch(deleteHotlists({ token, ids: payload }))
       .then(() => {
         console.log("Deletion successful.");
         dispatch(showHotListItem({ token })); // Refresh the list
       })
       .catch((error) => {
+
         console.error("Error during deletion:", error);
+        alert("Error deleting hotlist,Please try again");
+              toast.error("Failed to Delete Hotlist. Try again.", {
+              });
       });
   };
   
@@ -152,11 +164,11 @@ const HotListView = () => {
 
           </table>
 
-          <div className={css.actionButtons}>
+          {/* <div className={css.actionButtons}> */}
 
             <button className={css.deleteButton} onClick={handleDelete}>Delete</button>
             {/* <button className={css.previewButton}>Preview/Print</button> */}
-          </div>
+          {/* </div> */}
 
 
         </div>
@@ -203,6 +215,9 @@ const HotListView = () => {
           </div>
         </div>
       </div>
+
+            <ToastContainer position="top-center" autoClose={1000} />
+      
     </>
 
 

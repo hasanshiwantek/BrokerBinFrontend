@@ -7,6 +7,10 @@ import Cookies from "js-cookie";
 import { sendBroadcast } from "../../../../ReduxStore/BroadCast";
 import Services from "./Field Components/Services";
 import { clearAllSelections } from "../../../../ReduxStore/BroadCast";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+
 const BroadcastForm = () => {
   const token = Cookies.get("token");
   const { user } = JSON.parse(localStorage.getItem("user"));
@@ -233,7 +237,11 @@ const BroadcastForm = () => {
     // Dispatch the data with token
     dispatch(sendBroadcast({ token, data }))
       .then(() => {
-        alert("Your Broadcast Has Been Sent Successfully");
+                 // ✅ Show success toast with light blue color
+                 toast.info("Your Broadcast Has Been Sent Successfully", {
+                  style: { fontSize:"12px" ,marginTop:"-10px",fontWeight:"bold"} , // 
+                });
+            
            // Clear serviceData after submission
       dispatch(clearAllSelections());
         // Clear the form fields after successful submission
@@ -241,7 +249,9 @@ const BroadcastForm = () => {
       })
       .catch((error) => {
         console.error("Error storing data:", error);
-        alert("Failed to send BroadCast");
+        toast.error("Failed Sending Broadcast.Please Try Again", {
+          style: { fontSize:"15px" ,marginTop:"-10px"} , // 
+        });
       });
   
     // Set email format
@@ -710,6 +720,8 @@ const BroadcastForm = () => {
           )}
         </form>
       </div>
+            <ToastContainer position="top-center" autoClose={2000} />
+      
     </div>
   );
 };
