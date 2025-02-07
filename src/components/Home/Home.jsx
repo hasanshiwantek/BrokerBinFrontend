@@ -19,7 +19,10 @@ import { fetchBroadCastCount } from "../../ReduxStore/BroadCast";
 import { setTogglePopUp } from "../../ReduxStore/SearchProductSlice";
 import CompanyDetails from "../Popups/CompanyDetails/CompanyDetails";
 import { setPopupCompanyDetail } from "../../ReduxStore/SearchProductSlice";
-
+import { styled } from "@mui/material/styles";
+import Tooltip from "@mui/material/Tooltip";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 
 const Home = () => {
   const token = Cookies.get("token");
@@ -100,21 +103,21 @@ const Home = () => {
 
   const searchProduct = (event) => {
     event.preventDefault();
-  
+
     const form = new FormData(event.target);
     const formData = Object.fromEntries(form.entries());
-  
+
     let searchString = formData.searchStrings.trim(); // User's search input
     const searchBy = formData.searchBy; // Selected search type (part, heciClei, keyword)
-  
+
     if (!searchString) {
       alert("Blank search is not allowed");
       return;
     }
-  
+
     // Replace spaces with commas
     searchString = searchString.replace(/\s+/g, ",");
-  
+
     // Build the correct URL based on searchBy
     let url = '/inventory/search?page=1';
     if (searchBy === 'part' || searchBy === 'heciClei') {
@@ -124,16 +127,16 @@ const Home = () => {
       // Use `partModel` for 'Keyword'
       url += `&partModel=${encodeURIComponent(searchString)}`;
     }
-  
+
     // Clear selected products before navigating
     dispatch(setSelectedProducts([]));
-  
+
     // Navigate to the SearchProduct page with the constructed URL
     navigate(url, { replace: true });
-  
+
     console.log("Navigated to URL:", url); // Debug log to verify the URL
   };
-  
+
 
 
 
@@ -159,9 +162,58 @@ const Home = () => {
   console.log("popupCompanyDetail", popupCompanyDetail);
   console.log("togglePopUp", togglePopUp);
 
+  const theme = createTheme({
+    components: {
+      MuiTooltip: {
+        styleOverrides: {
+          tooltip: {
+            fontSize: "1.2rem", // Adjust font size
+            width:"11rem",
+            textAlign:"center",
+            backgroundColor: "var(--primary-color)", 
+          },
+          arrow:{
+            color:"var(--primary-color)"
+          }
+        },
+      },
+    },
+  });
 
 
+  const ratingCount = initialData?.company?.ratingCount;
 
+
+  
+      const companyRatings = initialData?.company?.rating || [];
+      const ratingCounts = initialData?.company?.ratingCount || [];
+  
+      console.log("Company Ratings ", companyRatings);
+  
+      console.log("Rating Counts:", ratingCounts);
+  
+      const renderStars = (rating) => {
+          const stars = [];
+          for (let i = 1; i <= 5; i++) {
+              if (i <= rating) {
+                  stars.push(<FaStar key={i} color="gold" size={20} />); // Full Star
+              } else if (i - 0.5 === rating) {
+                  stars.push(<FaStarHalfAlt key={i} color="gold" size={20} />); // Half Star
+              } else {
+                  stars.push(<FaRegStar key={i} color="gray" size={20} />); // Empty Star
+              }
+          }
+          return stars;
+      };
+  
+  
+
+      const companyRatingsPer = (companyRatings / 5) * 100
+      console.log("Company Ratings in %:", companyRatingsPer);
+  
+  
+  
+ 
   return (
     <>
       {!blurWhileLoading ? (
@@ -192,7 +244,7 @@ const Home = () => {
 
 
               <div className={css.gridHome1_MemberDetail}>
-                <div className={css.gridHome1_MemberDetail_profile}>
+                <div className={`${css.gridHome1_MemberDetail_profile} ${css.mailSection}`}>
                   <img
                     src={
                       initialData?.profileImage
@@ -202,14 +254,22 @@ const Home = () => {
                     alt="person"
                   />
                   <h3>
-                    
+
                     Welcome back,
                     {initialData.firstName}
                   </h3>
                   <div style={{ color: "var(--primary-color)" }}>
                     <BiDotsHorizontalRounded />
                   </div>
+                  <div className={css.manageDropdown}>
+                    <ul>
+                      <Link to={"/myprofile"}> <li>My Profile</li></Link>
+                      <Link to={"/mycompany"}> <li>My Company</li></Link>
+                    
+                    </ul>
+                  </div>
                 </div>
+          
                 <div className={css.gridHome1_MemberDetail_list}>
                   <ul>
                     {/* <li className={css.gridHome1_MemberDetail_list_options}>
@@ -239,17 +299,25 @@ const Home = () => {
                         </li>
                       </ul>
                     </li> */}
+
+
                     <li className={css.gridHome1_MemberDetail_list_options}>
                       <a href="/rfq">RFQ</a>
                       <ul>
                         <li className={css.gridHome1_MemberDetail_list_numbers}>
-                          <a onClick={() => handleNavigation("/rfq", { filter: "unread" })}>
-                            {(broadcastCount?.data?.unRead || 0)
-                              .toLocaleString("en-US")
-                              .toString()
-                              .padStart(2, "0")}
-                            /
-                          </a>
+                          <ThemeProvider theme={theme}>
+                            <Tooltip title="Total Unread" arrow placement="top" >
+                              <a onClick={() => handleNavigation("/rfq", { filter: "unread" })}>
+                                {(broadcastCount?.data?.unRead || 0)
+                                  .toLocaleString("en-US")
+                                  .toString()
+                                  .padStart(2, "0")}
+                                /
+                              </a>
+                            </Tooltip>
+                          </ThemeProvider>
+                          <ThemeProvider theme={theme}>
+                          <Tooltip title="Total Received" arrow placement="top" >
                           <a onClick={() => handleNavigation("/rfq")}>
                             {(broadcastCount?.data?.received || 0)
                               .toLocaleString("en-US")
@@ -257,16 +325,23 @@ const Home = () => {
                               .padStart(2, "0")}
                             /
                           </a>
+                          </Tooltip>
+                          </ThemeProvider>
+                          <ThemeProvider theme={theme}>
+                          <Tooltip title="Total Sent" arrow placement="top" >
                           <a onClick={() => handleNavigation("/rfqSent")}>
                             {(broadcastCount?.data?.sent || 0)
                               .toLocaleString("en-US")
                               .toString()
                               .padStart(2, "0")}
-
                           </a>
+                          </Tooltip>
+                          </ThemeProvider>
                         </li>
                       </ul>
                     </li>
+
+
                     {/* <li className={css.gridHome1_MemberDetail_list_options}>
                       <Link to="/feedback">my contacts</Link>
                       <ul>
@@ -297,6 +372,8 @@ const Home = () => {
                       <Link to="/hotlist/view">hot list</Link>
                       <ul>
                         <li className={css.gridHome1_MemberDetail_list_numbers}>
+                        <ThemeProvider theme={theme}>
+                        <Tooltip title="Total Hotlists" arrow placement="top" >
                           <a onClick={() => handleNavigation("/hotList/view")}>
                             {(broadcastCount?.data?.hotList || 0)
                               .toLocaleString("en-US")
@@ -304,6 +381,8 @@ const Home = () => {
                               .padStart(2, "0")}
 
                           </a>
+                          </Tooltip>
+                          </ThemeProvider>
                         </li>
                       </ul>
                     </li>
@@ -314,69 +393,12 @@ const Home = () => {
                 </div>
                 <div className={css.gridHome1_MemberDetail_reviews}>
                   <div className={css.gridHome1_MemberDetail_reviews_stars}>
-                    <div data-v-217e3916="" className="vue-rate-it-rating">
-                      <div data-v-217e3916="" className="vue-rate-it-rating-item">
-                        <div data-v-217e3916="" step="50" style={{ display: "inline-block", marginRight: "1px" }}>
-                          <svg width="17" height="17" viewBox="0 0 179 179" style={{ overflow: "visible" }}>
-                            <linearGradient id="vgnr2v" x1="-2%" x2="100%" y1="0%" y2="0%">
-                              <stop offset="102%" stopColor="#FFD700"></stop>
-                              <stop offset="102%" stopColor="#CCC"></stop>
-                            </linearGradient>
-                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#vgnr2v)" stroke="#999" strokeWidth="2" vectorEffect="non-scaling-stroke" transform="scale(0.1)"></path>
-                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#vgnr2v)" transform="scale(0.1)"></path>
-                          </svg>
+
+
+                    <div className='flex items-center'>
+                            <span className='flex items-center'>{renderStars(initialData?.company?.rating || 0)}</span>
                         </div>
-                      </div>
-                      <div data-v-217e3916="" className="vue-rate-it-rating-item">
-                        <div data-v-217e3916="" step="50" style={{ display: "inline-block", marginRight: "1px" }}>
-                          <svg width="17" height="17" viewBox="0 0 179 179" style={{ overflow: "visible" }}>
-                            <linearGradient id="sjx8c" x1="-2%" x2="100%" y1="0%" y2="0%">
-                              <stop offset="102%" stopColor="#FFD700"></stop>
-                              <stop offset="102%" stopColor="#CCC"></stop>
-                            </linearGradient>
-                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#sjx8c)" stroke="#999" strokeWidth="2" vectorEffect="non-scaling-stroke" transform="scale(0.1)"></path>
-                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#sjx8c)" transform="scale(0.1)"></path>
-                          </svg>
-                        </div>
-                      </div>
-                      <div data-v-217e3916="" className="vue-rate-it-rating-item">
-                        <div data-v-217e3916="" step="50" style={{ display: "inline-block", marginRight: "1px" }}>
-                          <svg width="17" height="17" viewBox="0 0 179 179" style={{ overflow: "visible" }}>
-                            <linearGradient id="ax5l1m" x1="-2%" x2="100%" y1="0%" y2="0%">
-                              <stop offset="102%" stopColor="#FFD700"></stop>
-                              <stop offset="102%" stopColor="#CCC"></stop>
-                            </linearGradient>
-                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#ax5l1m)" stroke="#999" strokeWidth="2" vectorEffect="non-scaling-stroke" transform="scale(0.1)"></path>
-                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#ax5l1m)" transform="scale(0.1)"></path>
-                          </svg>
-                        </div>
-                      </div>
-                      <div data-v-217e3916="" className="vue-rate-it-rating-item">
-                        <div data-v-217e3916="" step="50" style={{ display: "inline-block", marginRight: "1px" }}>
-                          <svg width="17" height="17" viewBox="0 0 179 179" style={{ overflow: "visible" }}>
-                            <linearGradient id="19xik" x1="-2%" x2="100%" y1="0%" y2="0%">
-                              <stop offset="102%" stopColor="#FFD700"></stop>
-                              <stop offset="102%" stopColor="#CCC"></stop>
-                            </linearGradient>
-                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#19xik)" stroke="#999" strokeWidth="2" vectorEffect="non-scaling-stroke" transform="scale(0.1)"></path>
-                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#19xik)" transform="scale(0.1)"></path>
-                          </svg>
-                        </div>
-                      </div>
-                      <div data-v-217e3916="" className="vue-rate-it-rating-item">
-                        <div data-v-217e3916="" step="50" style={{ display: "inline-block", marginRight: "1px" }}>
-                          <svg width="17" height="17" viewBox="0 0 179 179" style={{ overflow: "visible" }}>
-                            <linearGradient id="wiiipk" x1="-2%" x2="100%" y1="0%" y2="0%">
-                              <stop offset="102%" stopColor="#FFD700"></stop>
-                              <stop offset="102%" stopColor="#CCC"></stop>
-                            </linearGradient>
-                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#wiiipk)" stroke="#999" strokeWidth="2" vectorEffect="non-scaling-stroke" transform="scale(0.1)"></path>
-                            <path d="M1728 647q0 22-26 48l-363 354 86 500q1 7 1 20 0 21-10.5 35.5t-30.5 14.5q-19 0-40-12l-449-236-449 236q-22 12-40 12-21 0-31.5-14.5t-10.5-35.5q0-6 2-20l86-500-364-354q-25-27-25-48 0-37 56-46l502-73 225-455q19-41 49-41t49 41l225 455 502 73q56 9 56 46z" fill="url(#wiiipk)" transform="scale(0.1)"></path>
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
-                    <a href="#">100%</a>
+                    <a href="#">{companyRatingsPer}%</a>
                   </div>
 
                   {/* <div className={css.gridHome1_MemberDetail_reviews_watchList}>
@@ -393,17 +415,14 @@ const Home = () => {
                     </a>
                   </div> */}
                   {/* </div> */}
-                  {/* <div className={css.gridHome1_MemberDetail_comments}>
+                  <div className={css.gridHome1_MemberDetail_comments}>
                     <Link to={"/feedbackprofile"}>
                       Comments{" "}
                       <span>
-                        {(1)
-                          .toLocaleString("en-US")
-                          .toString()
-                          .padStart(2, "0")}
+                      {ratingCount}
                       </span>
                     </Link>
-                    <a href="#" className={css.newW}>
+                    {/* <a href="#" className={css.newW}>
                       New
                       <span>
                         {(0)
@@ -420,8 +439,8 @@ const Home = () => {
                           .toString()
                           .padStart(2, "0")}
                       </span>
-                    </a>
-                  </div> */}
+                    </a> */}
+                  </div>
                 </div>
               </div>
             </div>

@@ -2,7 +2,7 @@
   margin: 5rem auto;
   background: var(--table-outer-color);
   min-width: min-content;
-  width: 50vw;
+  width: 65vw;
   padding: 1rem;
   h1 {
     font-weight: bolder;
@@ -447,4 +447,24 @@
 }
 .footerlinks li a{
   font-size: 11px;
+}
+
+
+  
+.productPriceRating {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.productRating {
+  display: flex;
+  align-items: center;
+}
+
+.starFilled {
+  color: gold; /* Set star color */
+}
+
+.starEmpty {
+  color: #ddd; /* Set empty star color */
 }
