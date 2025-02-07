@@ -2,12 +2,83 @@
     "companies": [
       {
         "id": 1,
-        "companyName": "CTS Point Inc.",
+        "company": "CTS Point Inc.",
         "address": "Covina, CA",
         "latitude": 34.0901,
         "longitude": -117.8903,
         "contactPerson": "Mike B.",
-        "logo": "https://via.placeholder.com/100"
+        "logo": "https://via.placeholder.com/100",
+        "state": "Texas",
+        "country": "USA",
+        "rating": 3,
+        "region": "North America",
+        "city": "Karachi"
+      },
+      {
+        "id": 2,
+        "company": "Faizan",
+        "address": "P.E.C.H.S Block 2",
+        "latitude": 36.778259,
+        "longitude": -119.417931,
+        "contactPerson": "Faizan Shamsi.",
+        "logo": "https://via.placeholder.com/100",
+        "state": "California",
+        "country": "USA",
+        "rating": 4.5,
+        "region": "North America",
+        "city": "Karachi"
+      },
+      {
+        "id": 3,
+        "company": "Hassaan",
+        "address": "P.E.C.H.S Block 2",
+        "latitude": 24.873442,
+        "longitude": 67.0553953,
+        "contactPerson": "Faizan Shamsi.",
+        "logo": "https://via.placeholder.com/100",
+        "state": "Sindh",
+        "country": "Pakistan",
+        "rating": 4.5,
+        "region": "Asia"
+      },
+      {
+        "id": 4,
+        "company": "Ahmed",
+        "address": "P.E.C.H.S Block 2",
+        "latitude": 24.873442,
+        "longitude": 67.0553953,
+        "contactPerson": "Faizan Shamsi.",
+        "logo": "https://via.placeholder.com/100",
+        "state": "Sindh",
+        "country": "Pakistan",
+        "rating": 4.5,
+        "region": "Asia"
+      },
+      {
+        "id": 5,
+        "company": "Ahmed",
+        "address": "P.E.C.H.S Block 2",
+        "latitude": 24.873442,
+        "longitude": 67.0553953,
+        "contactPerson": "Faizan Shamsi.",
+        "logo": "https://via.placeholder.com/100",
+        "state": "Sindh",
+        "country": "Pakistan",
+        "rating": 4.5,
+        "region": "Asia"
+      },
+      {
+        "id": 6,
+        "company": "Ahmed",
+        "address": "P.E.C.H.S Block 2",
+        "latitude": 24.873442,
+        "longitude": 67.0553953,
+        "contactPerson": "Faizan Shamsi.",
+        "logo": "https://via.placeholder.com/100",
+        "state": "Sindh",
+        "country": "Pakistan",
+        "rating": 4.5,
+        "region": "Asia"
       }
     ]
   }

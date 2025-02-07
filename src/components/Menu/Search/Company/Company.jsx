@@ -18,7 +18,7 @@ const SearchCompany = () => {
 
     // State variables to track input values
     const [formData, setFormData] = useState({
-        companyName: '',
+        company: '',
         shieldMembers: 0,
         newMembers: 0,
         city: '',
@@ -115,7 +115,7 @@ const SearchCompany = () => {
         try {
             // Mock API Call - Replace with actual API URL
             const { data: result } = await axios.get(
-                `http://localhost:5000/companies?companyName=${formData.companyName}`,
+                `http://localhost:5000/companies`,
                 formData,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -207,7 +207,7 @@ const SearchCompany = () => {
                                 type="text"
                                 id="city"
                                 name="city"
-                                value={formData.title}
+                                value={formData.city}
                                 onChange={handleInputChange}
                             />
                         </div>
