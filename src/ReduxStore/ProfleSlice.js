@@ -124,6 +124,38 @@ export const submitCompanyLogo = createAsyncThunk(
   }
 );
 
+
+
+
+
+
+export const getCompanyFeedback = createAsyncThunk(
+  "profileStore/getCompanyFeedback",
+  async ({ id, token }) => {
+    try {
+      const response = await axios.get(
+        `${brokerAPI}feedback/company/${id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Company Feedback Data from backend:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error while fetching company feedback data:",
+        error.response?.data || error.message
+      );
+      throw "Error while fetching user data:" || error;
+    }
+  }
+);
+
+
+
 const initialState = {
   user: JSON.parse(localStorage.getItem("user")),
   formData: {
@@ -203,6 +235,7 @@ const initialState = {
   error: null,
   searchUserData:[],
   companyLogo: null,
+  companyFeedbackData:[],
 };
 
 const profileSlice = createSlice({
@@ -324,6 +357,20 @@ const profileSlice = createSlice({
         console.log("Fulfilled....");
       })
       .addCase(submitCompanyLogo.rejected, (state, action) => {
+        console.log(action.error.message);
+        state.error = action.error.message;
+        state.blurWhileLoading = false;
+      })
+      .addCase(getCompanyFeedback.pending, (state) => {
+        state.blurWhileLoading = false;
+        console.log("Pending....");
+      })
+      .addCase(getCompanyFeedback.fulfilled, (state, action) => {
+        state.blurWhileLoading = true;
+        state.companyFeedbackData = action.payload;
+        console.log("Fulfilled Case: ",action.payload);
+      })
+      .addCase(getCompanyFeedback.rejected, (state, action) => {
         console.log(action.error.message);
         state.error = action.error.message;
         state.blurWhileLoading = false;

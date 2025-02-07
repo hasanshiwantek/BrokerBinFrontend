@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import css from "../../../styles/Menu/Manage/BroadcastFilters/BroadCastHistory.module.css";
 import { Link, NavLink } from 'react-router-dom';
@@ -78,10 +77,10 @@ const BroadCastHistory = () => {
         dispatch(fetchBroadCastData({ token }));
       });
       setSelectedBroadcasts([]); // Clear selections after dispatch
-                 // ✅ Show success toast with light blue color
-                    toast.info("Broadcast Deleted Successfully", {
-                     style: { fontSize:"15px" ,marginTop:"-10px",fontWeight:"bold"} , // 
-                   });
+      // ✅ Show success toast with light blue color
+      toast.info("Broadcast Deleted Successfully", {
+        style: { fontSize: "15px", marginTop: "-10px", fontWeight: "bold" }, // 
+      });
     } else {
       alert("Select Broadcast for Deletion");
     }
@@ -304,7 +303,7 @@ const BroadCastHistory = () => {
         broadcast={newselectedBroadcast}
         handleReply={handleReplyClick}
       />
-            <ToastContainer position="top-center" autoClose={1000} />
+      <ToastContainer position="top-center" autoClose={1000} />
 
     </>
   );
