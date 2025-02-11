@@ -12,7 +12,8 @@
         "country": "USA",
         "rating": 3,
         "region": "North America",
-        "city": "Karachi"
+        "city": "Karachi",
+        "contactEmail": "faizan.shamsi@shiwantek.com"
       },
       {
         "id": 2,
@@ -26,7 +27,9 @@
         "country": "USA",
         "rating": 4.5,
         "region": "North America",
-        "city": "Karachi"
+        "city": "Karachi",
+        "contactEmail": "hassan.asif@shiwantek.com"
+        
       },
       {
         "id": 3,
@@ -39,7 +42,9 @@
         "state": "Sindh",
         "country": "Pakistan",
         "rating": 4.5,
-        "region": "Asia"
+        "region": "Asia",
+        "contactEmail": "hassan.asif@shiwantek.com"
+
       },
       {
         "id": 4,
@@ -52,7 +57,9 @@
         "state": "Sindh",
         "country": "Pakistan",
         "rating": 4.5,
-        "region": "Asia"
+        "region": "Asia",
+        "contactEmail": "ahmed.raza@shiwantek.com"
+
       },
       {
         "id": 5,

@@ -5,6 +5,7 @@ import MyPieChart from "./MyPieChart";
 import { FaRegCircle } from "react-icons/fa";
 import zIndex from "@mui/material/styles/zIndex";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const HoverPieChart = ({ data }) => {
   // Transform backend data into the required structure
@@ -25,6 +26,7 @@ const HoverPieChart = ({ data }) => {
     ],
   };
 
+  const navigate = useNavigate();
   const pieColor = transformedData.datasets[0].backgroundColor;
   const [activeIndex, setActiveIndex] = useState(null);
 
@@ -34,6 +36,10 @@ const HoverPieChart = ({ data }) => {
 
   const handleLabelMouseLeave = () => {
     setActiveIndex(null);
+  };
+
+  const handleClick = (type) => {
+    navigate(`/broadcasts?type=${type.toLowerCase()}`);
   };
 
   const totalData = transformedData.datasets[0].data
@@ -55,6 +61,7 @@ const HoverPieChart = ({ data }) => {
             key={label}
             onMouseEnter={() => handleLabelMouseEnter(index)}
             onMouseLeave={handleLabelMouseLeave}
+            onClick={() => handleClick(transformedData.labels[index])} // Navigate on click
             className={
               activeIndex === null
                 ? ""
@@ -65,7 +72,7 @@ const HoverPieChart = ({ data }) => {
           >
             <span>
               <FaRegCircle style={{ color: pieColor[index] }} />
-              <a href="/broadcasts">{label}</a>
+              <a className="cursor-pointer">{label}</a>
             </span>
             <a href="#">
               {transformedData.datasets[0].data[index].toLocaleString("en-US")} total
