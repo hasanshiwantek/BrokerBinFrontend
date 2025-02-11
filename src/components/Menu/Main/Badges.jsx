@@ -3,12 +3,12 @@ import React from 'react'
 import "./MenuBar.css"
 import "./Badges.css"
 import { Link } from 'react-router-dom'
-import inv1 from "../../../assets/inv1.png"
-import inv2 from "../../../assets/inv2.png"
-import inv3 from "../../../assets/inv3.png"
-import inv4 from "../../../assets/inv4.png"
-import inv5 from "../../../assets/inv5.png"
-import inv6 from "../../../assets/inv6.png"
+import inv1 from "../../../assets/BrokerCell.com member with gray background.svg"
+import inv2 from "../../../assets/BrokerCell.com member with white background.svg"
+import inv3 from "../../../assets/BrokerCell.com MyVendors with white background.svg"
+import inv4 from "../../../assets/BrokerCell.com member with dark gray background.svg"
+import inv5 from "../../../assets/BrokerCell.com member with dark gray background.svg"
+import inv6 from "../../../assets/BrokerCell.com MyVendors with dark gray background.svg"
 
 const Badges = () => {
 
@@ -69,7 +69,7 @@ const Badges = () => {
                             {/* 1 */}
                             <div>
                                 <div className='sec1'>
-                                    <h1>See all our inventory on Brokerbin.com:</h1>
+                                    <h1>See all our inventory on Brokercell.com:</h1>
                                     <img src={inv1} alt="inv1" srcset="" />
                                     <p>Copy the code and then paste it into your blog or web page:</p>
                                     <textarea name="text-area" id="" readOnly value='<ahref="https://members.brokerbin.com/?loc=invensearch&company=N-T+Spares+Sourcing"><img src="//members.brokerbin.com/badge.php?cid=vY5XJJ3uM84%3D&pid=1&ptype=default" alt="BrokerBin.com Member" border="0" /></a>' />
@@ -81,7 +81,7 @@ const Badges = () => {
 
                             {/* 2 */}
                             <div className='sec1'>
-                                <h1>Brokerbin.com member with white background:</h1>
+                                <h1>Brokercell.com member with white background:</h1>
                                 <img src={inv2} alt="inv2" srcset="" />
                                 <p>Copy the code and then paste it into your blog or web page:</p>
                                 <textarea name="text-area" id="" readOnly value='<a href="https://members.brokerbin.com/"><img src="//members.brokerbin.com/badge.php?cid=vY5XJJ3uM84%3D&pid=3&ptype=default" alt="BrokerBin.com Member" border="0" /></a>' />
@@ -92,7 +92,7 @@ const Badges = () => {
 
                             {/* 3 */}
                             <div className='sec1'>
-                                <h1>BrokerBin.com MyVendors with white background:</h1>
+                                <h1>Brokercell.com MyVendors with white background:</h1>
                                 <img src={inv3} alt="inv3" srcset="" />
                                 <p>Copy the code and then paste it into your blog or web page:</p>
                                 <textarea name="text-area" id="" readOnly value='<a href="https://members.brokerbin.com/?loc=myprofile&type=My%20Vendors&add=vY5XJJ3uM84%3D&change=1#vY5XJJ3uM84%3D"><img src="//members.brokerbin.com/badge.php?cid=vY5XJJ3uM84%3D&pid=5&ptype=default" alt="BrokerBin.com Member" border="0" /></a>' />
@@ -107,7 +107,7 @@ const Badges = () => {
 
                             {/* 4 */}
                             <div className='sec1'>
-                                <h1>Brokerbin.com member with black background:</h1>
+                                <h1>Brokercell.com member with black background:</h1>
                                 <img src={inv4} alt="inv4" srcset="" />
                                 <p>Copy the code and then paste it into your blog or web page:</p>
                                 <textarea name="text-area" id="" readOnly value='<a href="https://members.brokerbin.com/"><img src="//members.brokerbin.com/badge.php?cid=vY5XJJ3uM84%3D&pid=2&ptype=default" alt="BrokerBin.com Member" border="0" /></a>' />
@@ -118,7 +118,7 @@ const Badges = () => {
 
                             {/* 5 */}
                             <div className='sec1'>
-                                <h1>Brokerbin.com member with white background:</h1>
+                                <h1>Brokercell.com member with gray background:</h1>
                                 <img src={inv5} alt="inv5" srcset="" />
                                 <p>Copy the code and then paste it into your blog or web page:</p>
                                 <textarea name="text-area" id="" readOnly value='<a href="https://members.brokerbin.com/"><img src="//members.brokerbin.com/badge.php?cid=vY5XJJ3uM84%3D&pid=4&ptype=default" alt="BrokerBin.com Member" border="0" /></a>' />
@@ -129,7 +129,7 @@ const Badges = () => {
 
                             {/* 6 */}
                             <div className='sec1'>
-                                <h1>BrokerBin.com MyVendors with white background:</h1>
+                                <h1>Brokercell.com MyVendors with gray background:</h1>
                                 <img src={inv6} alt="inv6" srcset="" />
                                 <p>Copy the code and then paste it into your blog or web page:</p>
                                 <textarea name="text-area" id="" readOnly value='<a href="https://members.brokerbin.com/?loc=myprofile&type=My%20Vendors&add=vY5XJJ3uM84%3D&change=1#vY5XJJ3uM84%3D"><img src="//members.brokerbin.com/badge.php?cid=vY5XJJ3uM84%3D&pid=6&ptype=default" alt="BrokerBin.com Member" border="0" /></a>' />
@@ -145,7 +145,7 @@ const Badges = () => {
 
             </main>
 
-         
+
         </>
     )
 }

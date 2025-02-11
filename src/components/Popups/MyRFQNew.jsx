@@ -11,7 +11,9 @@ import Cookies from "js-cookie";
 import { submitRfq, clearSearchResults } from "../../ReduxStore/RfqSlice";
 import AddParts from "./AddParts";
 import { fetchUserData } from "../../ReduxStore/ProfleSlice";
-
+import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const MyRFQNew = () => {
 
@@ -129,7 +131,7 @@ const MyRFQNew = () => {
         mfg: mfgs[0] || "", // Default to the first MFG
         cond: conds[0] || "", // Default to the first Condition
       };
-      
+
     });
   };
 
@@ -274,7 +276,9 @@ const MyRFQNew = () => {
 
   const submitHandle = async (e) => {
 
+
     const formData = new FormData();
+    console.log("Submit handle triggered"); // Debugging log
 
     // Add Region field
     const region = document.querySelector('[name="send_all_vendors_region"]')?.value;
@@ -340,14 +344,21 @@ const MyRFQNew = () => {
 
     // Send the data
     try {
-      await dispatch(submitRfq({ token, data: formData }));
-      alert("RFQ submitted successfully!");
+      await dispatch(submitRfq({ token, data: formData }))
 
+      console.log("Submission successful! Triggering toast..."); // Debugging log
       // Clear form fields after successful submission
       clearFields();
+      // ✅ Show success toast with light blue color
+      toast.info("RFQ submitted Succesfully!", {
+        style: { fontSize: "12px", marginTop: "-20px", fontWeight: "bold" }, // 
+      })
+
     } catch (error) {
       console.error("Error submitting RFQ:", error);
-      alert("Error Submitting RFQ Data");
+      toast.error("Error submitting RFQ.Please try Again.", {
+        style: { fontSize: "12px", marginTop: "-20px", fontWeight: "bold" }, // 
+      });
     }
   };
 
@@ -704,8 +715,8 @@ const MyRFQNew = () => {
                     dispatch(setPopUpRfq(false));
                   }}
                   className={`${isFormValid
-                      ? "bg-blue-500 hover:bg-blue-700 text-white"
-                      : "bg-blue-500 text-white opacity-50 cursor-not-allowed"
+                    ? "bg-blue-500 hover:bg-blue-700 text-white"
+                    : "bg-blue-500 text-white opacity-50 cursor-not-allowed"
                     } px-4 py-2 rounded shadow`}
                 >
                   Send
@@ -717,7 +728,10 @@ const MyRFQNew = () => {
           </div>
         </form>
       </div>
-      
+
+      <ToastContainer position="top-center" autoClose={2000} />
+
+
     </>
   );
 };

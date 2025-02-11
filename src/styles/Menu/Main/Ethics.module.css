@@ -1,5 +1,5 @@
 .ethics_form {
-  width: 30vw;
+  width: 40vw;
   padding: 2rem;
 
   &_header {
@@ -95,4 +95,35 @@
 }
 .footerlinks li a{
   font-size: 11px;
+}
+
+
+.ethics_form_fields label{
+  font-size: 9pt;
+  font-weight: 500;
+  color: #444;
+}
+
+.ethics_form_fields input{
+  transition: all 0.15s ease-in-out;
+  border: 1px solid #ccc;
+
+}
+
+
+.ethics_form_fields input:focus{
+  outline: none;
+  border: 1px solid var(--primary-color);
+}
+
+.ethics_form_fields textarea{
+  transition: all 0.15s ease-in-out;
+  border: 1px solid #ccc;
+
+}
+
+
+.ethics_form_fields textarea:focus{
+  outline: none;
+  border: 1px solid var(--primary-color);
 }

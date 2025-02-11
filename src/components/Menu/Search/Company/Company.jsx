@@ -115,7 +115,7 @@ const SearchCompany = () => {
         try {
             // Mock API Call - Replace with actual API URL
             const { data: result } = await axios.get(
-                `http://localhost:5000/companies`,
+                `http://localhost:5000/companies?company=${formData.company}`,
                 formData,
                 { headers: { Authorization: `Bearer ${token}` } }
             );

@@ -357,7 +357,7 @@ rfqTableBtn_bottom button{
   background-color: #e0e0e0;
 } */
 
-.pageButton.active {
+.pageButton .active {
   background-color: #428bca;
   color: white;
   border-color: #428bca;

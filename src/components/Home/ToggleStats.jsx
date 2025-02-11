@@ -78,13 +78,13 @@ const ToggleStats = ({ data }) => {
       <div className={css.gridHome2_Details_Bottom_Stats_toggle}>
         <p
           onClick={() => setToggleStats(true)}
-          style={toggleStats ? { borderBottom: "2px solid red" } : {}}
+          style={toggleStats ? { borderBottom: "2px solid lightblue" } : {}}
         >
           My 24hr stats
         </p>
         <p
           onClick={() => setToggleStats(false)}
-          style={!toggleStats ? { borderBottom: "2px solid red" } : {}}
+          style={!toggleStats ? { borderBottom: "2px solid lightblue" } : {}}
         >
           24hr site stats
         </p>
