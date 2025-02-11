@@ -208,7 +208,7 @@ const Home = () => {
   
   
 
-      const companyRatingsPer = (companyRatings / 5) * 100
+      const companyRatingsPer = ((companyRatings / 5) * 100).toFixed(1)
       console.log("Company Ratings in %:", companyRatingsPer);
   
   

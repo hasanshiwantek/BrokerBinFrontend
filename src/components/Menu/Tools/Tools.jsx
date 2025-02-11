@@ -8,9 +8,9 @@ import pracimg from "../../../assets/ToolsIcons/best_practices.jpg"
 import tradeimg from "../../../assets/ToolsIcons/safe_trading.jpg"
 import siteimg from "../../../assets/ToolsIcons/site_protocol.jpg"
 import webimg from "../../../assets/ToolsIcons/webinar.jpg"
-import inv1 from "../../../assets/inv1.png"
-import inv2 from "../../../assets/inv2.png"
-import inv4 from "../../../assets/inv4.png"
+import inv1 from "../../../assets/BrokerCell.com member with gray background.svg"  
+import inv2 from "../../../assets/BrokerCell.com member with white background.svg"
+import inv4 from "../../../assets/BrokerCell.com MyVendors with white background.svg"  
 
 const Tools = () => {
   return (

@@ -15,9 +15,9 @@
     "@headlessui/react": "^1.7.18",
     "@heroicons/react": "^2.1.1",
     "@highcharts/map-collection": "^2.1.0",
-    "@radix-ui/react-accordion": "^1.2.2",
     "@mui/material": "^5.16.14",
     "@mui/styled-engine-sc": "^6.4.3",
+    "@radix-ui/react-accordion": "^1.2.2",
     "@react-google-maps/api": "^2.20.5",
     "@react-jvectormap/core": "^1.0.4",
     "@react-jvectormap/world": "^1.1.2",
@@ -42,6 +42,7 @@
     "localforage": "^1.10.0",
     "lucide-react": "^0.474.0",
     "match-sorter": "^6.3.4",
+    "notistack": "^3.0.2",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-datepicker": "^6.3.0",
@@ -63,9 +64,9 @@
     "recharts": "^2.12.2",
     "redux-thunk": "^3.1.0",
     "sort-by": "^0.0.2",
+    "styled-components": "^6.1.15",
     "tailwind-merge": "^3.0.1",
-    "tailwindcss-animate": "^1.0.7",
-    "styled-components": "^6.1.15"
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@types/react": "^18.2.56",

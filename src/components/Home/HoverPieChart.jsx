@@ -65,7 +65,7 @@ const HoverPieChart = ({ data }) => {
           >
             <span>
               <FaRegCircle style={{ color: pieColor[index] }} />
-              <a href="#">{label}</a>
+              <a href="/broadcasts">{label}</a>
             </span>
             <a href="#">
               {transformedData.datasets[0].data[index].toLocaleString("en-US")} total

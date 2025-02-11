@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import css from "../../styles/LoginRegister/Register.module.css";
 import { useNavigate } from "react-router-dom";
+import brokerLogo from "../../imgs/logo/BrokerCell Logo.svg";
+import { FaFacebookF, FaGooglePlusG, FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -9,8 +11,10 @@ const Register = () => {
     confirmPassword: "",
   });
   const [responseOk, setResponseOk] = useState(false);
-
+  const [showModal, setShowModal] = useState(false); // State for modal
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false); // Toggle for password
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Toggle for confirm password
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,34 +23,37 @@ const Register = () => {
       [name]: value,
     });
   };
+ // Validation function
+ const validate = () => {
+  let tempErrors = {};
+  let isValid = true;
 
-  const validate = () => {
-    let tempErrors = {};
-    let isValid = true;
+  const passwordRegex = /^(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?/~`-]).{6,}$/; // At least 6 chars and 1 special char
 
-    if (formPassword.password.trim() === "") {
-      tempErrors.password = "Password is required";
-      isValid = false;
-    } else if (formPassword.password.length < 6) {
-      tempErrors.password = "Password must be at least 6 characters";
-      isValid = false;
-    }
+  if (formPassword.password.trim() === "") {
+    tempErrors.password = "Password is required";
+    isValid = false;
+  } else if (!passwordRegex.test(formPassword.password)) {
+    tempErrors.password = "Password must be at least 6 characters and include 1 special character";
+    isValid = false;
+  }
 
-    if (formPassword.confirmPassword.trim() === "") {
-      tempErrors.confirmPassword = "Confirm Password is required";
-      isValid = false;
-    } else if (formPassword.confirmPassword !== formPassword.password) {
-      tempErrors.confirmPassword = "Passwords do not match";
-      isValid = false;
-    }
+  if (formPassword.confirmPassword.trim() === "") {
+    tempErrors.confirmPassword = "Confirm Password is required";
+    isValid = false;
+  } else if (formPassword.confirmPassword !== formPassword.password) {
+    tempErrors.confirmPassword = "Passwords do not match";
+    isValid = false;
+  }
 
-    setErrors(tempErrors);
-    return isValid;
-  };
+  setErrors(tempErrors);
+  return isValid;
+};
 
   const handleRegister = async (e) => {
     // 'use server';
     e.preventDefault();
+    setShowModal(true);
     if (validate()) {
       const formData = new FormData(e.currentTarget);
       const formDataObject = Object.fromEntries(formData.entries());
@@ -77,8 +84,9 @@ const Register = () => {
           setResponseOk(true);
           setTimeout(() => {
             setResponseOk(false);
-            navigate("/");
-          }, 5000);
+            setShowModal(false);
+            // navigate("/");
+          }, 9000);
           // Handle successful registration (e.g., redirect to another page, show success message, etc.)
         } else {
           console.error("Registration failed", result);
@@ -97,27 +105,46 @@ const Register = () => {
     }
   };
 
+
+  const closeModal = () => {
+    setShowModal(false);
+  }
+
+
+
+
   return responseOk ? (
+    <>
     <div className={css.responseOk}>
-      <h1>Congratulations 🎉, you are registered successfully</h1>
-      <h3>Now you are redirection to login page!</h3>
+    {/* Modal inside conditional statement */}
+    {showModal && (
+      <div className={css.modalOverlay}>
+        <div className={css.modalContent}>
+          <h2>Application Submitted!</h2>
+          <p>We have received your application. You will be notified soon.</p>
+          <button onClick={closeModal}>OK</button>
+        </div>
+      </div>
+    )}
     </div>
+  </>
   ) : (
     <div className={css.body}>
       <div className={css.layout}>
         <div className={css.layout_head}>
-          <h1>JOIN THE NETWORK</h1>
-          <h3>FREE TRIAL (NEW COMPANY)</h3>
+
+          <div className="flex justify-center flex-col items-center">
+            <img src={brokerLogo} alt="Broker-Logo" srcset="" className="w-[35%] " />
+            <h2 className="font-bold text-[#2c83ec] text-center mt-8 ml-10">JOIN THE NETWORK</h2>            
+          </div>
+
+          <h3 className="font-bold">FREE TRIAL (NEW COMPANY)</h3>
           <p>
-            If you're a broker, reseller, wholesaler or VAR, we invite you to
-            try a BrokerBin.com membership for free. Enjoy unlimited access,
-            searches, uploads, users, listings and reports. See who is viewing
-            your inventory and what they're viewing most. Track items of
-            interest and choose preferred vendors to view.
+            If you're a broker, reseller, wholesaler, or VAR, we invite you to experience a BrokerCell.com membership at no cost. Enjoy unlimited access, including searches, uploads, user management, listings, and analytical reports. Monitor who is viewing your inventory and track the most popular items. Select your preferred vendors easily.
           </p>
-          <ul>
+          <ul className="ml-7 text-[#444]" >
             <li>No Obligation Offer</li>
-            <li>No Credit Card</li>
+            <li>No Credit Card Required</li>
             <li>Completely Risk Free</li>
           </ul>
           <hr />
@@ -125,8 +152,9 @@ const Register = () => {
         <form className={css.contact_form} onSubmit={handleRegister}>
           <div className={css.formLayout}>
             <div className={css.company}>
+              <h2 className="font-bold text-[#2c83ec]">COMPANY</h2>
               <span className={css.contact_form_fields}>
-                <label htmlFor="company name">Company Name</label>
+                <label htmlFor="company name">Company Name <span style={{ color: "red" }}>*</span> </label>
                 <input
                   type="text"
                   name="companyName"
@@ -135,7 +163,7 @@ const Register = () => {
                 />
               </span>
               <span className={css.contact_form_fields}>
-                <label htmlFor="address">Address</label>
+                <label htmlFor="address">Address <span style={{ color: "red" }}>*</span> </label>
                 <input
                   type="text"
                   name="address"
@@ -144,7 +172,7 @@ const Register = () => {
                 />
               </span>
               <span className={css.contact_form_fields}>
-                <label htmlFor="city">City</label>
+                <label htmlFor="city">City <span style={{ color: "red" }}>*</span> </label>
                 <input
                   type="text"
                   name="city"
@@ -156,8 +184,8 @@ const Register = () => {
                 className={`${css.contact_form_fields} ${css.contact_form_fields_row}`}
               >
                 <span>
-                  <label htmlFor="state">State</label>
-                  <select id="state" name="state" required>
+                  <label htmlFor="state">State <span style={{ color: "red" }}>*</span> </label>
+                  <select id="state" name="state" className="w-96" required>
                     <option value="N/A">N/A</option>
                     <option value="AL">Alabama</option>
                     <option value="AK">Alaska</option>
@@ -228,17 +256,18 @@ const Register = () => {
                   </select>
                 </span>
                 <span>
-                  <label htmlFor="zip code">Zip Code</label>
+                  <label htmlFor="zip code">Zip Code <span style={{ color: "red" }}>*</span> </label>
                   <input
                     type="text"
                     name="zipcode"
                     placeholder="Enter your zip code"
                     required
+                    className="w-96"
                   />
                 </span>
               </span>
               <span className={css.contact_form_fields}>
-                <label htmlFor="country">Country</label>
+                <label htmlFor="country">Country <span style={{ color: "red" }}>*</span> </label>
                 <select id="country" name="country" required>
                   <option value="USA">UNITED STATES</option>
                   <option value="ALB">ALBANIA</option>
@@ -478,7 +507,7 @@ const Register = () => {
                 </select>
               </span>
               <span className={css.contact_form_fields}>
-                <label htmlFor="region">Region</label>
+                <label htmlFor="region">Region <span style={{ color: "red" }}>*</span> </label>
                 <select id="region" name="region" required>
                   <option value="North America">North America</option>
                   <option value="South America">South America</option>
@@ -493,22 +522,22 @@ const Register = () => {
                 className={`${css.contact_form_fields} ${css.contact_form_fields_row}`}
               >
                 <span>
-                  <label htmlFor="phone number">Phone Number</label>
-                  <input type="text" name="phoneNumber" required />
+                  <label htmlFor="phone number">Phone Number <span style={{ color: "red" }}>*</span> </label>
+                  <input type="text" name="phoneNumber" required className="w-96" />
                 </span>
                 <span>
                   <label htmlFor="fax number">Fax Number</label>
-                  <input type="text" name="faxNumber" required />
+                  <input type="text" name="faxNumber" className="w-96" />
                 </span>
               </span>
               <span className={css.contact_form_fields}>
                 <label htmlFor="website">Website</label>
-                <input type="text" name="website" required />
+                <input type="text" name="website" />
               </span>
               <span
                 className={`${css.contact_form_fields} ${css.contact_form_fields_question}`}
               >
-                <label>Have you ever been a member of BrokerBin.com?</label>
+                <label>Have you ever been a member of Brokercell.com?<span style={{ color: "red" }}>*</span> </label>
                 <span>
                   <span>
                     <input
@@ -517,7 +546,7 @@ const Register = () => {
                       value="yes"
                       required
                     />
-                    <label htmlFor="yes">Yes</label>
+                    <label htmlFor="yes" className="!font-semibold">Yes</label>
                   </span>
                   <span>
                     <input
@@ -526,14 +555,16 @@ const Register = () => {
                       value="no"
                       required
                     />
-                    <label htmlFor="no">No</label>
+                    <label htmlFor="no" className="!font-semibold">No</label>
                   </span>
                 </span>
               </span>
             </div>
             <div className={css.contact}>
+              <h2 className="font-bold text-[#2c83ec]">CONTACT</h2>
+
               <span className={css.contact_form_fields}>
-                <label htmlFor="first name">First Name</label>
+                <label htmlFor="first name">First Name <span style={{ color: "red" }}>*</span> </label>
                 <input
                   type="text"
                   name="firstName"
@@ -542,7 +573,7 @@ const Register = () => {
                 />
               </span>
               <span className={css.contact_form_fields}>
-                <label htmlFor="last name">Last Name</label>
+                <label htmlFor="last name">Last Name <span style={{ color: "red" }}>*</span> </label>
                 <input
                   type="text"
                   name="lastName"
@@ -552,7 +583,7 @@ const Register = () => {
               </span>
 
               <span className={css.contact_form_fields}>
-                <label htmlFor="email">Email</label>
+                <label htmlFor="email">Email <span style={{ color: "red" }}>*</span> </label>
                 <input
                   type="email"
                   name="email"
@@ -561,7 +592,7 @@ const Register = () => {
                 />
               </span>
               <span className={css.contact_form_fields}>
-                <label htmlFor="Desired User Id">Desired User Id</label>
+                <label htmlFor="Desired User Id">Desired User Id <span style={{ color: "red" }}>*</span> </label>
                 <input
                   type="text"
                   name="userId"
@@ -569,35 +600,62 @@ const Register = () => {
                   required
                 />
               </span>
+
+
+
+              {/* Password Field */}
               <span className={css.contact_form_fields}>
-                <label htmlFor="password">Password</label>
-                <input
-                  type="password"
-                  name="password"
-                  // value={formPassword.password}
-                  onChange={handleChange}
-                  required
-                />
-                {errors.password && (
-                  <p style={{ color: "red" }}>{errors.password}</p>
-                )}
+                <label htmlFor="password">Password <span style={{ color: "red" }}>*</span></label>
+                <div className="flex items-center ">
+                  <input
+                    type={showPassword ? "text" : "password"} // Toggle input type
+                    name="password"
+                    value={formPassword.password}
+                    onChange={handleChange}
+                    required
+                    className={`${css.passwordInput} w-[100%]`}
+
+                  />
+                  <span 
+                    className={css.eyeIcon}
+                    onClick={() => setShowPassword(!showPassword)} // Toggle state
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </span>
+                </div>
+                {errors.password && <p style={{ color: "red" }}>{errors.password}</p>}
               </span>
+
+              {/* Confirm Password Field */}
               <span className={css.contact_form_fields}>
-                <label htmlFor="confirmPassword">Verify Password</label>
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  // value={formPassword.confirmPassword}
-                  onChange={handleChange}
-                  required
-                />
+                <label htmlFor="confirmPassword">Verify Password <span style={{ color: "red" }}>*</span></label>
+                <div  className="flex items-center ">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"} // Toggle input type
+                    name="confirmPassword"
+                    value={formPassword.confirmPassword}
+                    onChange={handleChange}
+                    required
+                    className={`${css.passwordInput} w-[100%]`}
+                  />
+                  <span
+                    className={css.eyeIcon}
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)} // Toggle state
+                  >
+                    {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                  </span>
+                </div>
                 {errors.confirmPassword && (
                   <p style={{ color: "red" }}>{errors.confirmPassword}</p>
                 )}
               </span>
+
+
+
+
               <span className={css.contact_form_fields}>
                 <label htmlFor="promotion">
-                  PLEASE SELECT HOW YOU HEARD ABOUT US
+                  PLEASE SELECT HOW YOU HEARD ABOUT US <span style={{ color: "red" }}>*</span>
                 </label>
                 <select id="promotion" name="heard" required>
                   <option value="">Select One</option>
@@ -606,14 +664,12 @@ const Register = () => {
                   <option value="Other Web Search">
                     Other Web Search (specify below)
                   </option>
-                  <option value="Tradeshow/Roadshow">Tradeshow/Roadshow</option>
                   <option value="Magazine">Magazine (specify below)</option>
                   <option value="Sales Call">Sales Call (specify below)</option>
                   <option value="Direct Mail">
                     Direct Mail (specify below)
                   </option>
                   <option value="Other">Other (specify below)</option>
-                  <option value="ICBin.com">ICBin.com</option>
                 </select>
               </span>
               <span className={css.contact_form_fields}>
@@ -629,7 +685,8 @@ const Register = () => {
           </div>
           <div className={css.contact_companyCategory}>
             <span className={css.contact_form_fields}>
-              <h3>COMPANY CATEGORY(S)</h3>
+              <h2 className="font-bold text-[#2c83ec]">COMPANY CATEGORY(S)</h2>
+
               <span className={css.contact_form_fields_companyCategory}>
                 <input
                   type="checkbox"
@@ -719,16 +776,16 @@ const Register = () => {
                 required
               />
               <label htmlFor="termsOfService">Agree to our</label>
-              <a href="#">Terms of Service</a>
+              <a href="https://brokercell.com/legal/">Terms of Service</a>
             </span>
             {errors.form && <p style={{ color: "red" }}>{errors.form}</p>}
             <button type="submit">Submit Application</button>
-            <p className={css.submitBtn_login}>
+            {/* <p className={css.submitBtn_login}>
               Already have an account?
               <a href="/login">
                 <u>Login</u>
               </a>
-            </p>
+            </p> */}
           </div>
         </form>
       </div>

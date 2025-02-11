@@ -12,9 +12,10 @@
 .loginContainer {
   box-shadow: 1rem 1rem 2rem 2rem rgba(0, 0, 0, 0.2);
   position: absolute;
-  top: 50%;
-  left: 60%;
-  transform: translate(-50%, -50%);
+  top: 5%;
+  left: 42%;
+  right: 20%;
+  /* transform: translate(-50%, -50%); */
   border-radius: 1rem;
   padding: 4rem;
   background: white;
@@ -74,7 +75,7 @@
       gap: 1rem;
     }
     > button {
-      background: #696cf5;
+      background: var(--primary-color);
       padding: 1rem;
       border-radius: 0.4rem;
     }
@@ -208,3 +209,31 @@
 @keyframes l26 {
   100% {transform:rotate(1turn)}
 }
+
+
+
+.logoSec img{
+  position: absolute;
+  top: 40%;
+  right: 60%;
+  padding: 10px 25px;
+  width: 35%;
+}
+
+/* 
+ @media screen and (max-width: 1640px) {
+
+.loginContainer{
+  top: 20%;
+}
+  
+} */
+
+/* @media screen and (max-width: 1326px) {
+
+  .loginContainer{
+    top: 5%;
+
+  }
+    
+  } */

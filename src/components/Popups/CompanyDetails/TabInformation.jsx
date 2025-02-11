@@ -146,7 +146,10 @@ const TabInformation = ({ companyId }) => {
               </span>
               <span>
                 <li>Networks:</li>
-                <li>{companyContactData.data?.company?.primaryContact?.socialNetworking?.facebook || ""}</li>
+                <li>{companyContactData.data?.company?.primaryContact?.socialNetworking?.facebook || ""} </li><br />
+                <li>{companyContactData.data?.company?.primaryContact?.socialNetworking?.linkedin || ""}</li><br />
+                <li>{companyContactData.data?.company?.primaryContact?.socialNetworking?.twitter || ""}</li><br />
+
               </span>
             </ul>
 
