@@ -138,11 +138,13 @@ const Ethics = () => {
     console.log("Form Data: ", formData);
     const data = { ...formData };
 
-    dispatch(sendEthics({ data, token })).then(() => {            // ✅ Show success toast with light blue color
+    dispatch(sendEthics({ data, token })).then(() => {     
+      handleReset();
+      // ✅ Show success toast with light blue color
       toast.info("Your Complaint Has Been Sent Successfully",{
         style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, // 
       });
-    }).catch((err) => {
+    }).catch((error) => {
       toast.error("Failed Sending Complain.Please Try Again", {
         style: { fontSize: "15px", marginTop: "-10px" }, // 
       });
@@ -186,7 +188,7 @@ const Ethics = () => {
             </div>
             <div className={basic.basic_form}>
               <div className={css.ethics_form}>
-                <div className={css.ethics_form_header}>
+                <div className={`${css.ethics_form_header}  mb-12 p-3 text-[#444]`} >
                   <h1>Filing an Ethics Complaint</h1>
                   <div>
                     <p>
@@ -214,6 +216,7 @@ const Ethics = () => {
                         id="name"
                         value={formData.name}
                         onChange={handleInputChange}
+                        placeholder="Contact Name"
                       />
                     </li>
                     <li>
@@ -241,6 +244,7 @@ const Ethics = () => {
                         id="specific_complaint"
                         value={formData.specific_complaint}
                         onChange={handleInputChange}
+                        rows={5}
                         required
                       ></textarea>
                     </li>
@@ -298,6 +302,8 @@ const Ethics = () => {
                         value={formData.company_response}
                         onChange={handleInputChange}
                         required
+                        rows={5}
+
                       ></textarea>
                     </li>
                     <li>
@@ -468,7 +474,7 @@ const Ethics = () => {
               <button type="button" onClick={handleReset}>
                 Reset
               </button>
-              <input type="submit" value="Submit" className="cursor-pointer hover:bg-blue-400" />
+              <input type="submit" value="Submit" className="cursor-pointer hover:bg-blue-400 focus:-translate-y-3 " />
             </div>
           </div>
         </form>

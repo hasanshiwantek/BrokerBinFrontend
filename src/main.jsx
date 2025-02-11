@@ -12,6 +12,9 @@ import LoadingState2 from "./LoadingState2.jsx";
 // Lazy load components
 const Login = lazy(() => import("./components/LoginRegister/Login.jsx"));
 const Register = lazy(() => import("./components/LoginRegister/Register.jsx"));
+const ForgotPassword = lazy(() => import("./components/LoginRegister/ForgotPassword.jsx"));
+const ForgotEmail = lazy(() => import("./components/LoginRegister/ForgotEmail.jsx"));
+const RecoverPassword = lazy(() => import("./components/LoginRegister//Authentication/RecoverPassword.jsx"));
 const Header = lazy(() => import("./components/Header.jsx"));
 const Footer = lazy(() => import("./components/Footer/Footer.jsx"))
 const Home = lazy(() => import("./components/Home/Home.jsx"));
@@ -167,6 +170,30 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingState />}>
             <Register />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/password/forgot",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <ForgotPassword/>
+          </Suspense>
+        ),
+      },
+      {
+        path: "/login/forgot",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <ForgotEmail/>
+          </Suspense>
+        ),
+      },
+      {
+        path: "/recover/password",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <RecoverPassword/>
           </Suspense>
         ),
       },

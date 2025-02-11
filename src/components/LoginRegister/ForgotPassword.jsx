@@ -9,7 +9,7 @@ import brokerLogo from "../../imgs/logo/BrokerCell Logo.svg";
 import { NavLink } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
 
-const Login = () => {
+const ForgotPassword = () => {
   const [passwordShown, setPasswordShown] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [forgotPassword, setForgotPassword] = useState(false);
@@ -65,22 +65,29 @@ const Login = () => {
   const arrow = "<"
 
 
-  const submitHandle = (e) => {
-    console.log(e)
-  }
+
+
+
+
   return (
     <div className={css.bg}>
-      <div className="!flex !items-center !justify-evenly !gap-5 space-x-40 p-10 space-y-40 ">
+
+      <div className="!flex !items-center !justify-evenly !gap-5 space-x-40 p-10 space-y-40">
         <div className={`${css.logoSec} `}>
+
           <img src={brokerLogo} alt="BrokerLogo" srcset="" />
+
+
         </div>
-        <div className={`${css.loginContainer}`}>
+
+
+        <div className={css.loginContainer}>
           <span className={css.loginContainer_head}>
-            <h1 className="!text-center text-blue-700">MEMBER LOGIN</h1>
+            <h1 className="!text-center text-blue-700">RESET PASSWORD</h1>
           </span>
           <form className={css.loginContainer_form} onSubmit={handleSubmit}>
             <span className={css.loginContainer_form_fields}>
-              <label htmlFor="email">USER NAME / EMAIL</label>
+              <label htmlFor="email" className="text-center" >USER NAME / EMAIL</label>
               <input
                 type="text"
                 name="userName"
@@ -88,33 +95,8 @@ const Login = () => {
                 required
               />
             </span>
+            <p className="text-center text-[#444]">Enter a valid email or login and a password reset link will be sent to you</p>
             <span className={css.loginContainer_form_fields}>
-              {/* <span className={css.loginContainer_form_forgotPassword}>
-                <label htmlFor="password">PASSWORD</label>
-                <a onClick={() => setForgotPassword((prev) => !prev)}>
-                  Forgot password?
-                </a>
-              </span> */}
-              <span className={css.loginContainer_form_eyeSlash}>
-                <input
-                  type={passwordShown ? "text" : "password"}
-                  name="password"
-                  placeholder="Enter your password"
-                  required
-                  autoComplete="true"
-                />
-                <button
-                  onClick={togglePasswordVisibility}
-                  type="button"
-                  className={`${css.togglePasswordButton} !bg-transparent`}
-                >
-                  {passwordShown ? <FaEyeSlash /> : <FaEye />}
-                </button>
-              </span>
-            </span>
-            <span className={css.loginContainer_form_rememberMe}>
-              <input type="checkbox" name="rememberMe" id="rememberMe" />
-              <label htmlFor="rememberMe">Remember me</label>
             </span>
             {errorMessage && (
               <p style={{ color: "red" }} className={css.error}>
@@ -125,48 +107,24 @@ const Login = () => {
               {loading ? (
                 <span className={css.loader}></span> // Loader class for styling
               ) : (
-                "Sign in"
+                "RESET PASSWORD"
               )}
             </button>
 
             <div className="text-center">
-              <span>Forgot: <NavLink to={"/login/forgot"} className="text-blue-600">Login</NavLink> / <NavLink className="text-blue-600" to={"/password/forgot"} >Password</NavLink> </span>
               <div className="mt-5 text-[#444]">
                 <NavLink to={"https://brokercell.com"} >
-                  {arrow} Back to BrokerCell
+                 {arrow} Back to BrokerCell
                 </NavLink>
               </div>
             </div>
           </form>
-          {/* <div className={css.loginContainer_bottom}>
-            <span className={css.loginContainer_bottom_creatAnAccount}>
-              <p>New on our platform?</p>
-              <a href="/register">Create an account</a>
-            </span> 
-          </div> */}
         </div>
 
 
       </div>
-
-      {forgotPassword && (
-        <div className={css.forgotPasswordPopup}>
-          <div className={css.forgotPasswordPopup_body} ref={popUpRef}>
-            <form action="" onSubmit={submitHandle}>
-              <h1>enter your mail</h1>
-              <input
-                type="email"
-                name="forgotMail"
-                placeholder="Enter your email"
-                required
-              />
-              <button type="submit">Submit</button>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
 
-export default Login;
+export default ForgotPassword;

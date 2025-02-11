@@ -75,27 +75,27 @@ const FeedBackRating = () => {
     };
 
 
-    const companyRatingsPer = (companyRatings / 5) * 100
+    const companyRatingsPer = ((companyRatings / 5) * 100).toFixed(1);
     console.log("Company Ratings in %:", companyRatingsPer);
 
 
 
-    
-    
-    
-      const { togglePopUp, popupCompanyDetail } = useSelector((state) => state.searchProductStore)
-      const company = initialData?.company;
-      console.log("COMPANY ", company);
-    
-      // Company Modal Logic
-      const openCompanyModal = (company) => {
+
+
+
+    const { togglePopUp, popupCompanyDetail } = useSelector((state) => state.searchProductStore)
+    const company = initialData?.company;
+    console.log("COMPANY ", company);
+
+    // Company Modal Logic
+    const openCompanyModal = (company) => {
         console.log("Opening Company Modal with Company:", company);
         dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
         dispatch(setTogglePopUp()); // Show company modal
-      };
-      console.log("popupCompanyDetail", popupCompanyDetail);
-      console.log("togglePopUp", togglePopUp);
-    
+    };
+    console.log("popupCompanyDetail", popupCompanyDetail);
+    console.log("togglePopUp", togglePopUp);
+
 
     return (
         <div className={styles.feedbackContainer}>
@@ -135,7 +135,7 @@ const FeedBackRating = () => {
                             </div>
                         </div>
 
-                        <div style={{ marginTop: "-28px" }}>
+                        <div >
                             <h4>Past Month</h4>
                             <div className={styles.feedbackpSec} >
                                 <p style={{ color: "green" }}>{positiveCount}</p>
@@ -169,18 +169,18 @@ const FeedBackRating = () => {
 
                 <div className={styles.memberInfo}>
                     <img src={initialData?.company?.image} className='w-52 cursor-pointer' alt="" onClick={() => openCompanyModal(initialData?.company)} />
-                    <h4>{initialData?.company?.name}</h4>
+                    <p>{initialData?.company?.name}</p>
                     <p>Date Established: {initialData?.company?.created_at}</p>
 
                     <div className={styles.feedbackStars}>
-                        <span>Feedback Stars:</span>
+                        <p>Feedback Stars:</p>
                         <div className='flex items-center'>
                             <span className='flex items-center'>{renderStars(initialData?.company?.rating || 0)}</span>
                         </div>
                     </div>
 
 
-                    <p>a {companyRatings}Star Member</p>
+                    <p>A {companyRatings}Star Member</p>
                 </div>
 
             </div>
@@ -191,8 +191,8 @@ const FeedBackRating = () => {
                 </Link>
             </div>
 
-                  {togglePopUp && <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
-            
+            {togglePopUp && <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
+
         </div>
     );
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { FaEllipsisH, FaChevronDown} from "react-icons/fa";
+import { FaEllipsisH, FaChevronDown } from "react-icons/fa";
 import { IoIosArrowUp } from "react-icons/io";
 import FiltersComponent from "./FiltersComponent";
 import axios from "axios";
@@ -22,9 +22,9 @@ const RightSidebar = ({ company }) => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-            setIsDropdownOpen(false);
-        }
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
     };
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
@@ -32,10 +32,10 @@ const RightSidebar = ({ company }) => {
 
   useEffect(() => {
     if (showFilters) {
-      setIsDropdownOpen(false); 
+      setIsDropdownOpen(false);
     }
   }, [showFilters])
-  
+
   const handleFiltersUpdate = (selectedFilters) => {
     setFilters(selectedFilters);
   };
@@ -43,18 +43,18 @@ const RightSidebar = ({ company }) => {
 
   const applyFilters = async () => {
     try {
-        const queryParams = new URLSearchParams();
-        
-        filters.country.forEach(country => queryParams.append("country", country));
-        filters.region.forEach(region => queryParams.append("region", region));
-        filters.state.forEach(state => queryParams.append("state", state));
+      const queryParams = new URLSearchParams();
+
+      filters.country.forEach(country => queryParams.append("country", country));
+      filters.region.forEach(region => queryParams.append("region", region));
+      filters.state.forEach(state => queryParams.append("state", state));
 
 
-        const { data } = await axios.get(`http://localhost:5000/companies?${queryParams}`);
-        setFilteredData(data);
-        setShowFilters(false);
+      const { data } = await axios.get(`http://localhost:5000/companies?${queryParams}`);
+      setFilteredData(data);
+      setShowFilters(false);
     } catch (error) {
-        console.error("Error fetching filtered companies:", error);
+      console.error("Error fetching filtered companies:", error);
     }
   };
 
@@ -64,13 +64,13 @@ const RightSidebar = ({ company }) => {
 
   // const companiesToShow = filteredData ? filteredData : company; // ✅ Use filtered data if available
 
-  const companiesToShow = Array.isArray(filteredData) && filteredData.length > 0  
-  ? filteredData 
-  : company
-    ? Array.isArray(company)
-      ? company
-      : [company] // ✅ Convert single object to array
-    : [];
+  const companiesToShow = Array.isArray(filteredData) && filteredData.length > 0
+    ? filteredData
+    : company
+      ? Array.isArray(company)
+        ? company
+        : [company] // ✅ Convert single object to array
+      : [];
 
   const handleEmail = (email, subject) => {
     console.log("Opening email for:", email);
@@ -126,38 +126,38 @@ const RightSidebar = ({ company }) => {
 
   return (
     <div className="  w-full">
-      <div 
+      <div
         className="flex justify-between items-center text-[1vw] bg-black bg-opacity-50 !text-white p-7 rounded cursor-pointer"
         onMouseEnter={() => setIsDropdownOpen((prev) => prev = !prev)}
         ref={dropdownRef}
       >
-          <h1 onClick={() => { 
-    if (!showFilters) {
-        setIsDropdownOpen(false);  // ✅ Close dropdown
-        setShowFilters(true);      // ✅ Open filters
-    }
-}}>
-        {showFilters 
-          ? "Sorting and Filters" 
-          : "1 results from " 
-        }
-        {!showFilters && <strong className="!text-white !text-[1vw]">0 selected filters</strong>}
-      </h1>
-      {!showFilters ? (
-        <IoIosArrowUp className={`transition-transform ${isDropdownOpen ? "rotate-180" : ""}`} />
-      ) : (
-        <div className="flex gap-2">
-          <button 
-          className="bg-[#2c83ec] text-white px-3 py-1 rounded" 
-          onClick={applyFilters}
-          >
-            Apply
-          </button>
+        <h1 onClick={() => {
+          if (!showFilters) {
+            setIsDropdownOpen(false);  // ✅ Close dropdown
+            setShowFilters(true);      // ✅ Open filters
+          }
+        }}>
+          {showFilters
+            ? "Sorting and Filters"
+            : "1 results from "
+          }
+          {!showFilters && <strong className="!text-white !text-[1vw]">0 selected filters</strong>}
+        </h1>
+        {!showFilters ? (
+          <IoIosArrowUp className={`transition-transform ${isDropdownOpen ? "rotate-180" : ""}`} />
+        ) : (
+          <div className="flex gap-2">
+            <button
+              className="bg-[#2c83ec] text-white px-3 py-1 rounded"
+              onClick={applyFilters}
+            >
+              Apply
+            </button>
 
-          <button className="bg-[#2c83ec] text-white px-3 py-1 rounded">Clear</button>
-          <button className="bg-[#2c83ec] text-white px-3 py-1 rounded" onClick={() => setShowFilters(false)}>X</button>
-        </div>
-      )}
+            <button className="bg-[#2c83ec] text-white px-3 py-1 rounded">Clear</button>
+            <button className="bg-[#2c83ec] text-white px-3 py-1 rounded" onClick={() => setShowFilters(false)}>X</button>
+          </div>
+        )}
       </div>
 
       {isDropdownOpen && (
@@ -170,13 +170,13 @@ const RightSidebar = ({ company }) => {
         </div>
       )}
 
-    {showFilters ? (
-         <FiltersComponent 
-         onFiltersChange={handleFiltersUpdate} 
-         setShowFilters={setShowFilters}
-         setFilteredData={setFilteredData} 
-         />
-    ) : (
+      {showFilters ? (
+        <FiltersComponent
+          onFiltersChange={handleFiltersUpdate}
+          setShowFilters={setShowFilters}
+          setFilteredData={setFilteredData}
+        />
+      ) : (
 
       (companiesToShow.map((comp) => (
         <div className="bg-blue-200 p-4 rounded relative" key={comp.id}>
@@ -187,6 +187,8 @@ const RightSidebar = ({ company }) => {
               <p className="text-sm">{comp.address}</p>
               <p className="text-sm font-semibold">{comp.contactPerson}</p>
             </div>
+
+            <FaEllipsisH className="absolute top-4 right-6 cursor-pointer text-[#2c83ec]" />
           </div>
     
           <FaEllipsisH 

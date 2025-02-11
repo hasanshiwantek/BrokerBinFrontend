@@ -104,7 +104,7 @@ const SearchProduct = () => {
   //     dispatch(setSearchResponse({}));
   //   }
 
-    
+
 
   //   if (searchString) {
   //     // Split the search string into parts and dispatch actions for each part
@@ -135,13 +135,13 @@ const SearchProduct = () => {
     const queryParams = new URLSearchParams(location.search);
     const searchString = queryParams.get("query") || ""; // Multi-part search
     const partModel = queryParams.get("partModel") || ""; // Single part search
-  
+
     // ✅ If a new search query or partModel is detected, clear previous filters
     if (searchString || partModel) {
       dispatch(clearSearchResponseMatched());
       dispatch(setSearchResponse({}));
     }
-  
+
     // ✅ If a search query exists, dispatch searchProductQuery for each part
     if (searchString) {
       const parts = searchString.split(" ");
@@ -151,21 +151,21 @@ const SearchProduct = () => {
         );
       });
     }
-  
+
     // ✅ If a single part model is searched, dispatch searchByKeyword
     if (partModel) {
       dispatch(searchByKeyword({ token, page: 1, partModel })).then((result) =>
         console.log("searchByKeyword result:", result)
       );
     }
-  
+
     // ✅ Fetch search history
     dispatch(searchProductHistory({ token })).then((result) =>
       console.log("searchProductHistory result:", result)
     );
-  
+
   }, [location.search, dispatch, token]); // 🔹 Only trigger when URL params change
-  
+
 
   const [currentQuery, setCurrentQuery] = useState(searchString || partModel);
 
@@ -221,19 +221,24 @@ const SearchProduct = () => {
 
     <div className={css.layout}>
 
-      {filterToggle && <Filter currentQuery={currentQuery} />}
+      {/* ✅ Show Filter only if there are search results */}
+      {filterToggle && Object.keys(searchResponseMatched || {}).length > 0 && (
+        <Filter currentQuery={currentQuery} />
+      )}
 
       <div className={css.layoutTables} style={Object.keys(filteredSearchResponse || searchResponseMatched || {}).length <= 0 ? { margin: "0 auto" } : null}>
-        {Object.keys(filteredSearchResponse || searchResponseMatched || {}).length === 0 || Object.values(filteredSearchResponse || searchResponseMatched).every((part) => Array.isArray(part?.data) && part.data.length === 0
-        ) ? (
+        {Object.keys(filteredSearchResponse || searchResponseMatched || {}).length === 0 ||
+          Object.values(filteredSearchResponse || searchResponseMatched).every((part) =>
+            Array.isArray(part?.data) && part.data.length === 0
+          ) ? (
           <div>
             <h2>No Results Found For Selected Part Model: {searchString || partModel}</h2>
             <AddToHotList item={searchString || partModel} />
           </div>
         ) : (
-          // Render the products if available
+          // ✅ Render products only if available
           Object.entries(filteredSearchResponse || searchResponseMatched || {}).map(([partModel, details], index) =>
-            details?.data?.length > 0 && ( // Check if data is not empty
+            details?.data?.length > 0 && (
               <div className={css.tableArea} key={`${partModel}-${index}`}>
                 {graphToggle && <ProductsPieChart />}
                 <div className={css.productTable}>
@@ -248,17 +253,18 @@ const SearchProduct = () => {
                     sortPage={sortPage}
                     token={token}
                     searchString={searchString}
-                    isFilterActive={isFilterActive} />
+                    isFilterActive={isFilterActive}
+                  />
                 </div>
               </div>
             )
           )
         )}
-
       </div>
 
       {togglePopUp && <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
     </div>
+
   );
 };
 

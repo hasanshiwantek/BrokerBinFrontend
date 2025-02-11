@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react'
 import "../Main/MenuBar.css"
 import { Link, useNavigate,NavLink  } from 'react-router-dom'
@@ -7,6 +6,9 @@ import { submitUserSearch } from '../../../ReduxStore/ProfleSlice'
 import Cookies from "js-cookie"
 import { useDispatch } from 'react-redux'
 import css from "../../../styles/Menu/Manage/MyProfile.module.css";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const Person = () => {
     const [loading, setLoading] = useState(false); // To track API call status
@@ -57,7 +59,11 @@ const Person = () => {
 
             console.log("API Result:", result);
             if (result.length === 0) {
-                alert('No matching records found.');
+       // ✅ Show success toast with light blue color
+                 toast.error("No Matching records found!", {
+                  style: { fontSize:"12px" ,marginTop:"-20px",fontWeight:"bold"} , // 
+                });
+            
                 setFormData({
                     firstName: '',
                     lastName: '',
@@ -299,6 +305,8 @@ const Person = () => {
                     </form>
                 </div>
             </main>
+
+            <ToastContainer position="top-center" autoClose={2000} />
 
 
         </>

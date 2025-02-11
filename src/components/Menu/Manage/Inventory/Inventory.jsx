@@ -59,17 +59,21 @@ const Inventory = () => {
       // Dispatch the API call with token and FormData
       const response = await dispatch(sendInventoryFile({ token, formData })).unwrap();
 
-      // Show success feedback
-      alert(response.message || "Files uploaded successfully!");
-      // Reset the file input fields
+      // ✅ Show success toaster
+      toast.success(response.message || "Files uploaded successfully!", {
+        autoClose: 2000,
+      });
 
-      // Dispatch resetFiles to clear the files
-      dispatch(addAnotherFiles[{ file: null, status: "Stock" }])
+      // Reset the file input fields
+      dispatch(addAnotherFiles[{ file: null, status: "Stock" }]);
 
     } catch (error) {
-      // Handle errors during the API call
+      // ❌ Show error toaster
+      toast.error(error || "Failed to upload files. Please try again.", {
+        autoClose: 2000,
+      });
+
       console.error("Error uploading files:", error);
-      alert(error?.message || "Failed to upload files. Please try again.");
     } finally {
       setLoading(false); // End loading spinner or re-enable button
     }

@@ -3,7 +3,7 @@ import css from "../../../styles/SearchProducts.module.css";
 import { addToHotList } from "../../../ReduxStore/SearchProductSlice";
 import { useDispatch } from "react-redux";
 import Cookies from "js-cookie";
-
+import InventorySearch from "../Search/Inventory/InventorySearch";
 const AddToHotList = ({ item }) => {
   const dispatch = useDispatch();
   const token = Cookies.get("token");
@@ -18,11 +18,13 @@ const AddToHotList = ({ item }) => {
   };
 
   return (
-    <div className={css.searchProductAddToHotList}>
+    <>
+    
+    <div className={`${css.searchProductAddToHotList} ml-80 `}>
       <p style={{fontSize:"9pt",fontWeight:"600"}}>No Match Found</p>
       <div className={css.searchProductAddToHotList_main}>
         <form onSubmit={itemAddToHotList}>
-          <div className={css.searchProductAddToHotList_main_bg}>
+          <div className={`${css.searchProductAddToHotList_main_bg}`}>
             <span>Part # / HECI: {item}</span>
             <div>
               <h4>Update Hotlist Settings</h4>
@@ -52,6 +54,11 @@ const AddToHotList = ({ item }) => {
         </form>
       </div>
     </div>
+<div className="ml-32">
+<InventorySearch/>
+</div>
+    </>
+
   );
 };
 

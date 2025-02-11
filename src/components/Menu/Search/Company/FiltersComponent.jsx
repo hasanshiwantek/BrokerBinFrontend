@@ -34,7 +34,7 @@ const FiltersComponent = ({ onFiltersChange, setFilteredData }) => {
       <Accordion type="multiple" className="mt-4">
         
         <AccordionItem value="sort">
-          <AccordionTrigger className="text-black">Sort</AccordionTrigger>
+          <AccordionTrigger className="text-black text-lg">Sort</AccordionTrigger>
           <AccordionContent>
             <div className="flex gap-2 flex-wrap">
               <button className="bg-gray-200 p-2 rounded">Relevance</button>
@@ -46,8 +46,10 @@ const FiltersComponent = ({ onFiltersChange, setFilteredData }) => {
         </AccordionItem>
 
         <AccordionItem value="region">
-          <AccordionTrigger className="text-black">Region</AccordionTrigger>
+          <AccordionTrigger className="text-black text-lg">Region</AccordionTrigger>
           <AccordionContent>
+            <div  className="grid grid-cols-2 gap-2">
+
             {regions.map((regionOption) => (
               <label key={regionOption} className="flex items-center">
                 <input 
@@ -60,12 +62,15 @@ const FiltersComponent = ({ onFiltersChange, setFilteredData }) => {
                 />
                 {regionOption}
               </label>
+
             ))}
+            </div>
+
           </AccordionContent>
         </AccordionItem>
 
         <AccordionItem value="country">
-          <AccordionTrigger className="text-black">Country</AccordionTrigger>
+          <AccordionTrigger className="text-black text-lg">Country</AccordionTrigger>
           <AccordionContent>
             <div className="grid grid-cols-2 gap-2">
               {["USA", "Pakistan", "Canada",].map((country) => (
@@ -86,8 +91,10 @@ const FiltersComponent = ({ onFiltersChange, setFilteredData }) => {
         </AccordionItem>
 
         <AccordionItem value="state">
-          <AccordionTrigger className="text-black">State</AccordionTrigger>
+          <AccordionTrigger className="text-black text-lg">State</AccordionTrigger>
           <AccordionContent>
+            <div className="grid grid-cols-2 gap-2">
+
             {state.map((stateOptions) => (
               <label key={stateOptions} className="flex items-center">
                 <input 
@@ -101,6 +108,8 @@ const FiltersComponent = ({ onFiltersChange, setFilteredData }) => {
                 {stateOptions}
               </label>
             ))}
+            </div>
+
           </AccordionContent>
         </AccordionItem>
 
