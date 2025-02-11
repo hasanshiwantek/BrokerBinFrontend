@@ -15,12 +15,16 @@ import BroadcastFileModal from './Send/Field Components/BroadcastFileModal'
 import CompanyDetails from '../../Popups/CompanyDetails/CompanyDetails'
 import { setPopupCompanyDetail, setTogglePopUp } from '../../../ReduxStore/SearchProductSlice'
 import { FaFileAlt } from "react-icons/fa";
+import { useLocation } from "react-router-dom";
 
 
 const BroadCast = () => {
   const broadcastItems = useSelector((state) => state.broadcastStore.broadCastData)
   const { togglePopUp, popupCompanyDetail } = useSelector((state) => state.searchProductStore);
   const { pagination = {} } = broadcastItems || {}; // Default to empty object if undefined
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const urlType = searchParams.get("type");
 
   const { filterBroadcastPartModelData } = useSelector((state) => state.broadcastStore)
   const token = Cookies.get("token");
@@ -44,6 +48,12 @@ const BroadCast = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [filteredBroadcast, setFilteredBroadcasts] = useState([]);
 
+useEffect(() => {
+  if (urlType) {
+    setFilterType(urlType);
+  }
+}, [urlType]);
+  
   // Fetch data when currentPage changes
   useEffect(() => {
     console.log("Fetching data for pageNumber:", currentPage);
@@ -52,7 +62,6 @@ const BroadCast = () => {
       .then(() => setLoading(false))
       .catch(() => setLoading(false));
   }, [dispatch, token, currentPage]); // Make sure `currentPage` is in the dependency array
-
 
   // Fetch filtered data when `searchTerm` changes
   useEffect(() => {
@@ -81,9 +90,6 @@ const BroadCast = () => {
     }
   };
   console.log("Current Page State:", currentPage); // Debugging
-
-
-
 
 
   const Regions = [

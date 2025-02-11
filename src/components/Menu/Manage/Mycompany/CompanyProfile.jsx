@@ -168,12 +168,12 @@ const MyCompany = () => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     const extension = String(file.name).split(".").pop().toLowerCase();
-    const allowedExtensions = ["jpeg", "jpg", "png", "webp"];
+    const allowedExtensions = ["jpeg", "jpg", "png", "webp", "svg", "gif"];
     if (allowedExtensions.includes(extension)) {
       dispatch(clearLogo())
       setFileBase64(file); // Store the actual file, not base64 string
     } else {
-      alert("Format should be a jpeg, jpg, png, or webp");
+      alert("Format should be a jpeg, jpg, png, gif or webp");
       event.target.value = "";
     }
   };

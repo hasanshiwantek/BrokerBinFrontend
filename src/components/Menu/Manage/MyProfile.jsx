@@ -118,7 +118,7 @@ const MyProfile = () => {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     const extension = String(file.name).split(".").pop().toLowerCase();
-    const allowedExtensions = ["jpeg", "jpg", "png", "webp"];
+    const allowedExtensions = ["jpeg", "jpg", "png", "webp", "gif"];
     if (allowedExtensions.includes(extension)) {
       if (file) {
         const reader = new FileReader();
@@ -133,7 +133,7 @@ const MyProfile = () => {
         setFileBase64("");
       }
     } else {
-      alert("Format should be a jpeg, jpg, png, or webp");
+      alert("Format should be a jpeg, jpg, png, gif or webp");
       event.target.value = "";
       setFileBase64("");
     }
