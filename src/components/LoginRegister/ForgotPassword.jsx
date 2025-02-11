@@ -117,10 +117,6 @@ const ForgotPassword = () => {
                  {arrow} Back to BrokerCell
                 </NavLink>
               </div>
-              <NavLink to={"/recover/password"} >
-                  Confirm password
-                </NavLink>
-
             </div>
           </form>
         </div>
