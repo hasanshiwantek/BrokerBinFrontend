@@ -8,7 +8,11 @@ import { useDispatch } from "react-redux";
 import brokerLogo from "../../../imgs/logo/BrokerCell Logo.svg";
 import { NavLink } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+import { useSearchParams } from "react-router-dom";
+import { brokerAPI } from "@/components/api/BrokerEndpoint";
 const Login = () => {
 
 
@@ -20,9 +24,8 @@ const Login = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [forgotPassword, setForgotPassword] = useState(false);
     const [loading, setLoading] = useState(false);
-
-
-
+    const [searchParams] = useSearchParams();
+    const token = searchParams.get("token");
     const navigate = useNavigate();
     const popUpRef = useRef();
     const dispatch = useDispatch();
@@ -33,47 +36,46 @@ const Login = () => {
             [field]: !prevState[field]
         }));
     };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true); // Start loading
-
+    
         const formData = new FormData(e.currentTarget);
         const data = Object.fromEntries(formData.entries());
-
+        const token = new URLSearchParams(window.location.search).get("token");
+        
         try {
-            const response = await fetch(
-                "https://backend.brokercell.com/api/user/login",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(data),
-                }
-            );
-
+            console.log("Submitting password change request", { token, ...data });
+            const response = await fetch(`${brokerAPI}user/reset-password`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ token, ...data }),
+            });
+    
             const result = await response.json();
+            console.log("Response received:", result);
+    
             if (response.ok) {
-                const user = result.data;
-                const { access_token } = result.data;
-                const { id } = result.data.user;
-
-                Cookies.set("token", access_token, { expires: 1, secure: true });
-                Cookies.set("user_id", id, { expires: 1, secure: true });
-                localStorage.setItem("user", JSON.stringify(user));
-
-                navigate("/"); // Redirect the user
+                toast.success("Password changed successfully! Please log in.");
+                console.log("Navigating to login page");
+                setTimeout(() => {
+                    navigate("/login"); // Redirect to login page
+                }, 2000);
             } else {
-                setErrorMessage(result.message || "Login failed, please try again.");
+                setErrorMessage(result.message || "Request failed, please try again.");
+                console.log("Error response:", result);
             }
         } catch (error) {
             setErrorMessage("An error occurred, please try again later.");
+            console.log("Error occurred:", error);
         } finally {
             setLoading(false); // Stop loading
+            console.log("Loading state set to false");
         }
     };
-
+    
     const arrow = "<"
     return (
         <div className={css.bg}>
@@ -109,7 +111,7 @@ const Login = () => {
                             <span className={css.loginContainer_form_eyeSlash}>
                                 <input
                                     type={passwordShown.confirmPassword ? "text" : "password"}
-                                    name="confirmPassword"
+                                    name="password_confirmation"
                                     placeholder="Confirm New Password"
                                     required
                                     autoComplete="true"
@@ -144,11 +146,10 @@ const Login = () => {
                             </NavLink>
                         </div>
                     </div>
-
                 </div>
-
-
             </div>
+            <ToastContainer position="top-center" autoClose={3000} />
+
         </div>
     );
 };

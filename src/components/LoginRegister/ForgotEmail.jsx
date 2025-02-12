@@ -11,7 +11,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-
+import { brokerAPI } from "../api/BrokerEndpoint";
 const ForgotPassword = () => {
     const [passwordShown, setPasswordShown] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -22,54 +22,45 @@ const ForgotPassword = () => {
     const popUpRef = useRef();
     const dispatch = useDispatch();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true); // Start loading
-                 // ✅ Show success toast with light blue color
-                 toast.info("The username has been sent to your Email!", {
-                  style: { fontSize:"15px" ,marginTop:"-10px"} , // 
-                });
-            
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true); // Start loading
 
-        // const formData = new FormData(e.currentTarget);
-        // const data = Object.fromEntries(formData.entries());
+    toast.info("The username has been sent to your Email!", {
+        style: { fontSize: "12px", marginTop: "-10px",fontWeight:"bold" },
+    });
 
-        // try {
-        //     const response = await fetch(
-        //         "https://backend.brokercell.com/api/user/login",
-        //         {
-        //             method: "POST",
-        //             headers: {
-        //                 "Content-Type": "application/json",
-        //             },
-        //             body: JSON.stringify(data),
-        //         }
-        //     );
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries());
 
-        //     const result = await response.json();
-        //     if (response.ok) {
-        //         const user = result.data;
-        //         const { access_token } = result.data;
-        //         const { id } = result.data.user;
+    try {
+        console.log("Submitting forgot password request", data);
+        const response = await fetch(`${brokerAPI}user/forgot-username`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        });
 
-        //         Cookies.set("token", access_token, { expires: 1, secure: true });
-        //         Cookies.set("user_id", id, { expires: 1, secure: true });
-        //         localStorage.setItem("user", JSON.stringify(user));
+        const result = await response.json();
+        console.log("Response received:", result);
 
-        //         navigate("/"); // Redirect the user
-        //     } else {
-        //         setErrorMessage(result.message || "Login failed, please try again.");
-        //     }
-        // } catch (error) {
-        //     setErrorMessage("An error occurred, please try again later.");
-        // } finally {
-        //     setLoading(false); // Stop loading
-        // }
-
-
-
-
-    };
+        if (response.ok) {
+            toast.success("Email sent successfully! Check your inbox.");
+            console.log("Forgot password email sent successfully");
+        } else {
+            setErrorMessage(result.message || "Request failed, please try again.");
+            console.log("Error response:", result);
+        }
+    } catch (error) {
+        setErrorMessage("An error occurred, please try again later.");
+        console.log("Error occurred:", error);
+    } finally {
+        setLoading(false); // Stop loading
+        console.log("Loading state set to false");
+    }
+};
 
     const arrow = "<"
 
@@ -99,7 +90,7 @@ const ForgotPassword = () => {
                             <label htmlFor="email" className="text-center" >EMAIL ADDRESS</label>
                             <input
                                 type="text"
-                                name="userName"
+                                name="email"
                                 placeholder="EMAIL ADDRESS"
                                 required
                             />
