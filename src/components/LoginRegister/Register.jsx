@@ -135,7 +135,7 @@ const Register = () => {
 
           <div className="flex justify-center flex-col items-center">
             <img src={brokerLogo} alt="Broker-Logo" srcset="" className="w-[35%] " />
-            <h2 className="font-bold text-[#2c83ec] text-center mt-8 ml-10">JOIN THE NETWORK</h2>            
+            <h2 className="font-bold text-5xl text-[#2c83ec] text-center mt-14 ml-10">JOIN THE NETWORK</h2>            
           </div>
 
           <h3 className="font-bold">FREE TRIAL (NEW COMPANY)</h3>

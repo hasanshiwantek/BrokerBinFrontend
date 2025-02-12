@@ -94,43 +94,6 @@ const SearchProduct = () => {
     });
   }
 
-  // useEffect(() => {
-
-  //   const queryParams = new URLSearchParams(location.search);
-  //   const searchString = queryParams.get("query") || ""; // For multi-part search (e.g., "part1 part2")
-  //   const partModel = queryParams.get("partModel") || ""; // For single specific part model search
-  //   if (!isFilterActive) {
-  //     dispatch(clearSearchResponseMatched());
-  //     dispatch(setSearchResponse({}));
-  //   }
-
-
-
-  //   if (searchString) {
-  //     // Split the search string into parts and dispatch actions for each part
-  //     const parts = searchString.split(" ");
-  //     parts.forEach((part) => {
-  //       dispatch(searchProductQuery({ token, page, search: part })).then((result) =>
-  //         console.log("searchProductQuery result:", result)
-  //       );
-  //     });
-  //   }
-
-  //   if (partModel) {
-  //     // Dispatch action for single specific part model
-  //     dispatch(searchByKeyword({ token, page, partModel })).then((result) =>
-  //       console.log("searchByKeyword result:", result)
-  //     );
-  //   }
-
-  //   // Fetch search history
-  //   dispatch(searchProductHistory({ token })).then((result) =>
-  //     console.log("searchProductHistory result:", result)
-  //   );
-  // }, [location, dispatch, token, page]);
-
-
-
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const searchString = queryParams.get("query") || ""; // Multi-part search
@@ -212,64 +175,128 @@ const SearchProduct = () => {
   const sortPage = 1;
   const sortPageSize = 20;
 
-
-
-
+  const isKeywordSearch = Boolean(partModel);
+  const isQuerySearch = Boolean(searchString);
 
 
   return (
 
+    // <div className={css.layout}>
+
+    //   {/* ✅ Show Filter only if there are search results */}
+    //   {filterToggle && Object.keys(searchResponseMatched || {}).length > 0 && (
+    //     <Filter currentQuery={currentQuery} />
+    //   )}
+
+    //   <div className={css.layoutTables} style={Object.keys(filteredSearchResponse || searchResponseMatched || {}).length <= 0 ? { margin: "0 auto" } : null}>
+    //     {Object.keys(filteredSearchResponse || searchResponseMatched || {}).length === 0 ||
+    //       Object.values(filteredSearchResponse || searchResponseMatched).every((part) =>
+    //         Array.isArray(part?.data) && part.data.length === 0
+    //       ) ? (
+    //       <div>
+    //         <h2>No Results Found For Selected Part Model: {searchString || partModel}</h2>
+    //         <AddToHotList item={searchString || partModel} />
+    //       </div>
+    //     ) : (
+    //       // ✅ Render products only if available
+    //       Object.entries(filteredSearchResponse || searchResponseMatched || {}).map(([partModel, details], index) =>
+    //         details?.data?.length > 0 && (
+    //           <div className={css.tableArea} key={`${partModel}-${index}`}>
+    //             {graphToggle && <ProductsPieChart />}
+    //             <div className={css.productTable}>
+    //               <ProductTableBtn />
+    //               <ProductTableDetail
+    //                 partData={details.data}
+    //                 partModel={partModel}
+    //                 page={details.page}
+    //                 totalCount={details.totalCount}
+    //                 partModels={partModels}
+    //                 sortPageSize={sortPageSize}
+    //                 sortPage={sortPage}
+    //                 token={token}
+    //                 searchString={searchString}
+    //                 isFilterActive={isFilterActive}
+    //               />
+    //             </div>
+    //           </div>
+    //         )
+    //       )
+    //     )}
+    //   </div>
+
+    //   {togglePopUp && <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
+    // </div>
+
     <div className={css.layout}>
 
-      {/* ✅ Show Filter only if there are search results */}
-      {filterToggle && Object.keys(searchResponseMatched || {}).length > 0 && (
-        <Filter currentQuery={currentQuery} />
-      )}
+  {/* ✅ Show Filter only if there are search results */}
+  {filterToggle && Object.keys(searchResponseMatched || {}).length > 0 && (
+    <Filter currentQuery={currentQuery} />
+  )}
 
-      <div className={css.layoutTables} style={Object.keys(filteredSearchResponse || searchResponseMatched || {}).length <= 0 ? { margin: "0 auto" } : null}>
-        {Object.keys(filteredSearchResponse || searchResponseMatched || {}).length === 0 ||
-          Object.values(filteredSearchResponse || searchResponseMatched).every((part) =>
-            Array.isArray(part?.data) && part.data.length === 0
-          ) ? (
-          <div>
-            <h2>No Results Found For Selected Part Model: {searchString || partModel}</h2>
-            <AddToHotList item={searchString || partModel} />
-          </div>
-        ) : (
-          // ✅ Render products only if available
-          Object.entries(filteredSearchResponse || searchResponseMatched || {}).map(([partModel, details], index) =>
-            details?.data?.length > 0 && (
-              <div className={css.tableArea} key={`${partModel}-${index}`}>
-                {graphToggle && <ProductsPieChart />}
-                <div className={css.productTable}>
-                  <ProductTableBtn />
-                  <ProductTableDetail
-                    partData={details.data}
-                    partModel={partModel}
-                    page={details.page}
-                    totalCount={details.totalCount}
-                    partModels={partModels}
-                    sortPageSize={sortPageSize}
-                    sortPage={sortPage}
-                    token={token}
-                    searchString={searchString}
-                    isFilterActive={isFilterActive}
-                  />
-                </div>
-              </div>
-            )
-          )
-        )}
+  <div className={css.layoutTables} style={Object.keys(filteredSearchResponse || searchResponseMatched || {}).length <= 0 ? { margin: "0 auto" } : null}>
+
+    {Object.keys(filteredSearchResponse || searchResponseMatched || {}).length === 0 ||
+      Object.values(filteredSearchResponse || searchResponseMatched).every((part) =>
+        Array.isArray(part?.data) && part.data.length === 0
+      ) ? (
+      // ✅ No results case
+      <div>
+        <h2>No Results Found For Selected Part Model: {searchString || partModel}</h2>
+        <AddToHotList item={searchString || partModel} />
       </div>
+    ) : isKeywordSearch ? (
+      // ✅ Single table for `searchByKeyword`
+      <div className={css.tableArea}>
+        {graphToggle && <ProductsPieChart />}
+        <div className={css.productTable}>
+          <ProductTableBtn />
+          <ProductTableDetail
+            partData={Object.values(searchResponseMatched).flatMap((details) => details.data)} // Merging all partModels
+            partModel={"All Results"} // Displaying a single table
+            totalCount={Object.values(searchResponseMatched)[0]?.totalCount || 0} // Taking totalCount from the first key
+            page={Object.values(searchResponseMatched)[0]?.page || 1} // Using common page value
+            partModels={[]} // Empty since all merged
+            isFilterActive={isFilterActive}
+            searchString={searchString}
+          />
+        </div>
+      </div>
+    ) : (
+      // ✅ Multiple tables for `searchProductQuery`
+      Object.entries(filteredSearchResponse || searchResponseMatched || {}).map(([partModel, details], index) =>
+        details?.data?.length > 0 && (
+          <div className={css.tableArea} key={`${partModel}-${index}`}>
+            {graphToggle && <ProductsPieChart />}
+            <div className={css.productTable}>
+              <ProductTableBtn />
+              <ProductTableDetail
+                partData={details.data}
+                partModel={partModel}
+                totalCount={details.totalCount}
+                page={details.page}
+                partModels={partModels}
+                isFilterActive={isFilterActive}
+                searchString={searchString}
+                sortPageSize={sortPageSize}
+                sortPage={sortPage}
+                token={token}
+              />
+            </div>
+          </div>
+        )
+      )
+    )}
+  </div>
 
-      {togglePopUp && <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
-    </div>
+  {togglePopUp && <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
+</div>
+
 
   );
 };
 
 const ProductTableBtn = React.memo(() => {
-
 
   const { popUpRfq } = useSelector((store) => store.searchProductStore);
   const dispatch = useDispatch();
@@ -352,9 +379,6 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
 
   console.log("Company Names:", companyNames);
 
-
-
-
   const keys = Object.keys(searchResponseMatched);
   console.log(keys); // Output: ["001NFM", "002CR", "003442U"]
 
@@ -380,7 +404,6 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
     }
     dispatch(setTogglePopUp());
   };
-
 
   const selectProduct = (id) => {
     const filteredProducts = selectedProducts.some((product) => product.id === id)
@@ -408,13 +431,7 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
     return selectedProducts.some((product) => product.id === id);
   };
 
-
-
-
-
   const [searchSource, setSearchSource] = useState("search"); // "search" or "keyword"
-
-
   const totalCount = searchResponseMatched[partModel]?.totalCount;
   const pageSize = searchResponseMatched[partModel]?.pageSize;
   console.log("Total Count:", totalCount);
@@ -426,15 +443,12 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
 
   const token = Cookies.get("token")
 
-
-
   const { keywordPage, keywordPageSize, keywordTotalCount } = useSelector((state) => state.searchProductStore)
   const keywordTotalPages = Math.ceil(keywordTotalCount, keywordPageSize)
   console.log("Keyword Page From Frontend: ", keywordPage)
   console.log("Keyword PageSize From Frontend: ", keywordPageSize)
   console.log("Keyword totalCount From Frontend: ", keywordTotalCount)
   console.log("Keyword TotalPages: ", keywordTotalPages)
-
 
   // Check if searchString or partModel is present
   const isSearchPagination = Boolean(searchString);
@@ -455,7 +469,6 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
   console.log("Pagination Source:", isSearchPagination ? "Search" : "Keyword");
   console.log("Total Pages:", totalPagess);
   console.log("Current Page:", currentPage);
-
 
   const [visiblePages, setVisiblePages] = useState([1, 10]); // Initially showing pages 1-10
 
@@ -519,7 +532,6 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
     }
   };
 
-
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPagess) {
       const queryParams = new URLSearchParams(location.search);
@@ -558,7 +570,6 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
   // console.log("Payload from ProductTable Page", payload)
   console.log("token", token)
 
-
   const handleSort = (column) => {
     if (sortBy === column) {
       // If the same column is clicked again, toggle the sortOrder
@@ -582,7 +593,6 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
     console.log("Sorting Payload:", payload);
     dispatch(sortInventory({ token, payload }));
   };
-
 
   return (
 
@@ -700,8 +710,6 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
               ))}
           </tbody>
 
-
-
           <tfoot>
             <tr>
               <th>Cart</th>
@@ -737,8 +745,6 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
           </tfoot>
         </table>
 
-
-
         <div className="flex justify-between items-center p-1">
           <div className="flex space-x-2 text-lg font-semibold text-gray-700">
             <span className="text-orange-700 p-4 text-xl">
@@ -767,7 +773,7 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
                   key={page}
                   onClick={() => handlePageChange(page)}
                   className={`px-4 py-2 border rounded-md transition-all duration-200 
-        ${currentPage === page ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-300"}`}
+                  ${currentPage === page ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-300"}`}
                 >
                   {page}
                 </button>
@@ -793,21 +799,4 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
 });
 
 
-
 export default SearchProduct;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
