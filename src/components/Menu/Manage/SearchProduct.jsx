@@ -215,16 +215,17 @@ const SearchProduct = () => {
 
 
 
-
+  console.log("SEARCH RESPONSE MATCH", searchResponseMatched)
 
   return (
 
     <div className={css.layout}>
 
-      {/* ✅ Show Filter only if there are search results */}
-      {filterToggle && Object.keys(searchResponseMatched || {}).length > 0 && (
-        <Filter currentQuery={currentQuery} />
-      )}
+      {/* ✅ Ensure filter only shows when there are valid search results */}
+      {filterToggle && Object.keys(searchResponseMatched || {}).length > 0 &&
+        Object.values(searchResponseMatched).some(part => Array.isArray(part?.data) && part.data.length > 0) && (
+          <Filter currentQuery={currentQuery} />
+        )}
 
       <div className={css.layoutTables} style={Object.keys(filteredSearchResponse || searchResponseMatched || {}).length <= 0 ? { margin: "0 auto" } : null}>
         {Object.keys(filteredSearchResponse || searchResponseMatched || {}).length === 0 ||
@@ -232,11 +233,10 @@ const SearchProduct = () => {
             Array.isArray(part?.data) && part.data.length === 0
           ) ? (
           <div>
-            <h2>No Results Found For Selected Part Model: {searchString || partModel}</h2>
+            <h2 className="text-center">No Results Found For Selected Part Model: {searchString || partModel}</h2>
             <AddToHotList item={searchString || partModel} />
           </div>
         ) : (
-          // ✅ Render products only if available
           Object.entries(filteredSearchResponse || searchResponseMatched || {}).map(([partModel, details], index) =>
             details?.data?.length > 0 && (
               <div className={css.tableArea} key={`${partModel}-${index}`}>
@@ -264,6 +264,7 @@ const SearchProduct = () => {
 
       {togglePopUp && <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
     </div>
+
 
   );
 };

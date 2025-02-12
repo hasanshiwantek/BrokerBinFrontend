@@ -189,6 +189,7 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
+
       {
         path: "/recover/password",
         element: (
@@ -198,6 +199,7 @@ const router = createBrowserRouter([
         ),
       },
     ],
+    
   },
   {
     element: (
