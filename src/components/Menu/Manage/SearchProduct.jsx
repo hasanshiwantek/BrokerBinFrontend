@@ -230,9 +230,14 @@ const SearchProduct = () => {
     <div className={css.layout}>
 
   {/* ✅ Show Filter only if there are search results */}
-  {filterToggle && Object.keys(searchResponseMatched || {}).length > 0 && (
+
+  {/* {filterToggle && Object.keys(filteredSearchResponse || searchResponseMatched || {}).length > 0 && (
     <Filter currentQuery={currentQuery} />
-  )}
+  )} */}
+
+{filterToggle && (Object.values(filteredSearchResponse || searchResponseMatched).some((part) => part?.data?.length > 0)) && (
+  <Filter currentQuery={currentQuery} />
+)}
 
   <div className={css.layoutTables} style={Object.keys(filteredSearchResponse || searchResponseMatched || {}).length <= 0 ? { margin: "0 auto" } : null}>
 
