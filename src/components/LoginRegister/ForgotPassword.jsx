@@ -8,6 +8,10 @@ import { useDispatch } from "react-redux";
 import brokerLogo from "../../imgs/logo/BrokerCell Logo.svg";
 import { NavLink } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+import { brokerAPI } from "../api/BrokerEndpoint";
 
 const ForgotPassword = () => {
   const [passwordShown, setPasswordShown] = useState(false);
@@ -30,37 +34,33 @@ const ForgotPassword = () => {
     const data = Object.fromEntries(formData.entries());
 
     try {
-      const response = await fetch(
-        "https://backend.brokercell.com/api/user/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
+        console.log("Submitting password reset request", data);
+        const response = await fetch(`${brokerAPI}user/forgot-password`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+        console.log("Response received:", result);
+
+        if (response.ok) {
+            toast.success("Password reset link sent successfully! Check your inbox.");
+            console.log("Reset link sent successfully");
+        } else {
+            setErrorMessage(result.message || "Request failed, please try again.");
+            console.log("Error response:", result);
         }
-      );
-
-      const result = await response.json();
-      if (response.ok) {
-        const user = result.data;
-        const { access_token } = result.data;
-        const { id } = result.data.user;
-
-        Cookies.set("token", access_token, { expires: 1, secure: true });
-        Cookies.set("user_id", id, { expires: 1, secure: true });
-        localStorage.setItem("user", JSON.stringify(user));
-
-        navigate("/"); // Redirect the user
-      } else {
-        setErrorMessage(result.message || "Login failed, please try again.");
-      }
     } catch (error) {
-      setErrorMessage("An error occurred, please try again later.");
+        setErrorMessage("An error occurred, please try again later.");
+        console.log("Error occurred:", error);
     } finally {
-      setLoading(false); // Stop loading
+        setLoading(false); // Stop loading
+        console.log("Loading state set to false");
     }
-  };
+};
 
   const arrow = "<"
 
@@ -71,16 +71,10 @@ const ForgotPassword = () => {
 
   return (
     <div className={css.bg}>
-
       <div className="!flex !items-center !justify-evenly !gap-5 space-x-40 p-10 space-y-40">
         <div className={`${css.logoSec} `}>
-
           <img src={brokerLogo} alt="BrokerLogo" srcset="" />
-
-
         </div>
-
-
         <div className={css.loginContainer}>
           <span className={css.loginContainer_head}>
             <h1 className="!text-center text-blue-700">RESET PASSWORD</h1>
@@ -90,7 +84,7 @@ const ForgotPassword = () => {
               <label htmlFor="email" className="text-center" >USER NAME / EMAIL</label>
               <input
                 type="text"
-                name="userName"
+                name="email"
                 placeholder="Enter your email"
                 required
               />
@@ -120,9 +114,9 @@ const ForgotPassword = () => {
             </div>
           </form>
         </div>
-
-
       </div>
+                  <ToastContainer position="top-center" autoClose={3000} />
+      
     </div>
   );
 };

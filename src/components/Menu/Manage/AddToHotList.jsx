@@ -4,6 +4,10 @@ import { addToHotList } from "../../../ReduxStore/SearchProductSlice";
 import { useDispatch } from "react-redux";
 import Cookies from "js-cookie";
 import InventorySearch from "../Search/Inventory/InventorySearch";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+
 const AddToHotList = ({ item }) => {
   const dispatch = useDispatch();
   const token = Cookies.get("token");
@@ -12,7 +16,10 @@ const AddToHotList = ({ item }) => {
     e.preventDefault();
     // Add item to hotlist here
     console.log("Item added to hotlist:", item);
-    alert("Item Added to Hotlist!")
+            // ✅ Show success toast with light blue color
+            toast.info("Item Added to Hotlist!", {
+             style: { fontSize:"17px" ,marginTop:"-10px"} , // 
+           });
     const hotlists = [{partModel: item}]
     dispatch(addToHotList({ token, hotlists }));
   };
@@ -20,7 +27,7 @@ const AddToHotList = ({ item }) => {
   return (
     <>
     
-    <div className={`${css.searchProductAddToHotList} ml-80 `}>
+    <div className={`${css.searchProductAddToHotList} ml-[47rem] `}>
       <p style={{fontSize:"9pt",fontWeight:"600"}}>No Match Found</p>
       <div className={css.searchProductAddToHotList_main}>
         <form onSubmit={itemAddToHotList}>
@@ -54,9 +61,12 @@ const AddToHotList = ({ item }) => {
         </form>
       </div>
     </div>
-<div className="ml-32">
+<div className="ml-[36rem]">
 <InventorySearch/>
 </div>
+
+      <ToastContainer position="top-center" autoClose={2000} />
+
     </>
 
   );
