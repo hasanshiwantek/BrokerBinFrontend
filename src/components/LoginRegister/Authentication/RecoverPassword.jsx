@@ -13,7 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { useSearchParams } from "react-router-dom";
 import { brokerAPI } from "@/components/api/BrokerEndpoint";
-const Login = () => {
+const RecoverPassword = () => {
 
 
     const [passwordShown, setPasswordShown] = useState({
@@ -25,7 +25,6 @@ const Login = () => {
     const [forgotPassword, setForgotPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [searchParams] = useSearchParams();
-    const token = searchParams.get("token");
     const navigate = useNavigate();
     const popUpRef = useRef();
     const dispatch = useDispatch();
@@ -42,8 +41,14 @@ const Login = () => {
     
         const formData = new FormData(e.currentTarget);
         const data = Object.fromEntries(formData.entries());
-        const token = new URLSearchParams(window.location.search).get("token");
-        
+        const token = searchParams.get("token"); // Extract token from URL
+    
+        if (!token) {
+            setErrorMessage("Invalid or expired password reset link.");
+            setLoading(false);
+            return;
+        }
+    
         try {
             console.log("Submitting password change request", { token, ...data });
             const response = await fetch(`${brokerAPI}user/reset-password`, {
@@ -51,7 +56,11 @@ const Login = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ token, ...data }),
+                body: JSON.stringify({
+                    token: token, 
+                    password: data.password,
+                    password_confirmation: data.password_confirmation
+                }),
             });
     
             const result = await response.json();
@@ -61,7 +70,7 @@ const Login = () => {
                 toast.success("Password changed successfully! Please log in.");
                 console.log("Navigating to login page");
                 setTimeout(() => {
-                    navigate("/login"); // Redirect to login page
+                    navigate("/login"); 
                 }, 2000);
             } else {
                 setErrorMessage(result.message || "Request failed, please try again.");
@@ -71,7 +80,7 @@ const Login = () => {
             setErrorMessage("An error occurred, please try again later.");
             console.log("Error occurred:", error);
         } finally {
-            setLoading(false); // Stop loading
+            setLoading(false);
             console.log("Loading state set to false");
         }
     };
@@ -154,4 +163,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default RecoverPassword;
