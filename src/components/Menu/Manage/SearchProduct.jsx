@@ -227,7 +227,7 @@ const SearchProduct = () => {
           <Filter currentQuery={currentQuery} />
         )}
 
-      <div className={css.layoutTables} style={Object.keys(filteredSearchResponse || searchResponseMatched || {}).length <= 0 ? { margin: "0 auto" } : null}>
+      <div className={css.layoutTables} style={Object.keys(filteredSearchResponse || searchResponseMatched || {}).length <= 0 ? { margin: "0" } : null}>
         {Object.keys(filteredSearchResponse || searchResponseMatched || {}).length === 0 ||
           Object.values(filteredSearchResponse || searchResponseMatched).every((part) =>
             Array.isArray(part?.data) && part.data.length === 0
