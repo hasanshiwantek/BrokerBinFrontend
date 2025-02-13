@@ -417,9 +417,11 @@ const Home = () => {
 
 
                     <div className='flex items-center'>
+                      <a href="/feedbackprofile">
                             <span className='flex items-center'>{renderStars(initialData?.company?.rating || 0)}</span>
+                      </a>
                         </div>
-                    <a href="#">{companyRatingsPer}%</a>
+                    <a href="/feedbackprofile">{companyRatingsPer}%</a>
                   </div>
 
                   {/* <div className={css.gridHome1_MemberDetail_reviews_watchList}>

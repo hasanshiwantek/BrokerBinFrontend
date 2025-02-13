@@ -209,7 +209,7 @@
     &_main {
       display: flex;
       gap: 1rem;
-      border: 1px solid #d6d5d5;
+      border: 2px solid #d6d5d5;
       padding: 1rem;
       &_img {
         display: flex;
@@ -226,7 +226,7 @@
         span {
           display: flex;
           align-items: center;
-          padding: 1rem 2rem;
+          padding: 1.5rem 2rem;
           gap: 0.2rem;
         }
       }
@@ -240,6 +240,8 @@
           display: grid;
           grid-template-columns: 8rem 1fr;
           justify-items: flex-start;
+          margin-top: 4px;
+    
         }
       }
       &_notesRating {
@@ -467,4 +469,11 @@
 
 .starEmpty {
   color: #ddd; /* Set empty star color */
+}
+
+
+.myVendor_company_list_main_info span p{
+  font-weight: 500 !important;
+  font-size: 9pt !important;
+  color: #444 !important;
 }
