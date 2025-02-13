@@ -35,6 +35,7 @@
   &_form {
     display: flex;
     flex-direction: column;
+    width: min-content;
     gap: 2rem;
     &_fields {
       display: flex;
@@ -140,6 +141,8 @@
 .loginContainer_form_fields input:focus{
     outline: none;
     border: 1px solid var(--primary-color);
+  box-shadow: 0 0 3px var(--primary-color);
+
 }
 
 
@@ -239,6 +242,6 @@
 
  @media screen and (max-width: 1597px) {
   .loginContainer{
-    top:5%;
+    top:2%;
   }
   } 

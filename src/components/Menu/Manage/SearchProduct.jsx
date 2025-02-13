@@ -55,8 +55,8 @@ const SearchProduct = () => {
   const page = parseInt(queryParams.get("page")) || 1;
   const searchString = queryParams.get("query") || "";
   const partModel = queryParams.get("partModel") || "";
-  // console.log("Query " + searchString);
-  // console.log("PartModel " + partModel);
+  console.log("SearchString" + searchString);
+  console.log("PartModel keyword " + partModel);
   const {
     searchResponseMatched,
     searchResponseNotMatched,
@@ -229,15 +229,15 @@ const SearchProduct = () => {
 
     <div className={`${css.layout}`}>
 
-  {/* ✅ Show Filter only if there are search results */}
+      {/* ✅ Show Filter only if there are search results */}
 
-  {/* {filterToggle && Object.keys(filteredSearchResponse || searchResponseMatched || {}).length > 0 && (
+      {/* {filterToggle && Object.keys(filteredSearchResponse || searchResponseMatched || {}).length > 0 && (
     <Filter currentQuery={currentQuery} />
   )} */}
 
-{filterToggle && (Object.values(filteredSearchResponse || searchResponseMatched).some((part) => part?.data?.length > 0)) && (
-  <Filter currentQuery={currentQuery} />
-)}
+      {filterToggle && (Object.values(filteredSearchResponse || searchResponseMatched).some((part) => part?.data?.length > 0)) && (
+        <Filter currentQuery={currentQuery} />
+      )}
 
   <div className={`${css.layoutTables} !mx-auto`} style={Object.keys(filteredSearchResponse || searchResponseMatched || {}).length <= 0 ? { margin: "0" } : null}>
 
@@ -259,6 +259,7 @@ const SearchProduct = () => {
           <ProductTableDetail
             partData={Object.values(searchResponseMatched).flatMap((details) => details.data)} // Merging all partModels
             partModel={"All Results"} // Displaying a single table
+            keyWordPartModel={partModel}
             totalCount={Object.values(searchResponseMatched)[0]?.totalCount || 0} // Taking totalCount from the first key
             page={Object.values(searchResponseMatched)[0]?.page || 1} // Using common page value
             partModels={[]} // Empty since all merged
@@ -303,8 +304,8 @@ const SearchProduct = () => {
     
   </div>
 
-  {togglePopUp && <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
-</div>
+      {togglePopUp && <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
+    </div>
 
   );
 };
@@ -350,7 +351,7 @@ const ProductTableBtn = React.memo(() => {
   );
 });
 
-const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilterActive, searchString }) => {
+const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilterActive, searchString, keyWordPartModel }) => {
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -398,6 +399,7 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
 
   const keys = Object.keys(searchResponseMatched);
   console.log(keys); // Output: ["001NFM", "002CR", "003442U"]
+
 
   const handleShowPopupCompanyDetails = (event, companyId) => {
     event.stopPropagation();
@@ -598,9 +600,14 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
       setSortOrder(column === "price" ? "asc" : "desc");
     }
 
+    const searchKey = keyWordPartModel || searchString;
+    console.log("SearchKey: ",searchKey)
+    const searchArray = searchKey ? searchKey.split(",").map(s => s.trim()) : keys; // ✅ Splits into an array
+    console.log("Search Array: ",searchArray)
+
     // Create the payload for dispatch
     const payload = {
-      search: keys, // Ensure search is formatted as an array
+      search: searchArray, // Use searchKey if available
       sortBy: column,
       sortOrder: (column === "price" && sortBy !== "price") ? "asc" : sortOrder,
       page: 1, // Reset to the first page

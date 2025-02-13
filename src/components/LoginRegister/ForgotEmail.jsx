@@ -25,11 +25,6 @@ const ForgotEmail = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true); // Start loading
-
-        toast.info("The username has been sent to your Email!", {
-            style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
-        });
-
         const formData = new FormData(e.currentTarget);
         const data = Object.fromEntries(formData.entries());
 

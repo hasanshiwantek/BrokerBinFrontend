@@ -84,7 +84,7 @@ const Login = () => {
               <input
                 type="text"
                 name="userName"
-                placeholder="Enter your email"
+                placeholder="Enter your username / email"
                 required
               />
             </span>
