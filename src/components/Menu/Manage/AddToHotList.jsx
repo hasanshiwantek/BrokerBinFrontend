@@ -28,7 +28,8 @@ const AddToHotList = ({ item }) => {
   return (
     <>
 
-      <div className={`${css.hotlistContainer} !flex !flex-col !justify-center !items-center ml-[25rem] mt-5`}>
+      <div className={`${css.hotlistContainer} !flex !flex-col !justify-center !items-center mt-5`}>
+
         <div className={`${css.searchProductAddToHotList}  `}>
           <p style={{ fontSize: "12pt", fontWeight: "600" }} className="!text-xl"> <span className="text-red-500 font-extrabold"> No Match Found, Try an </span>Advanced Search or Send a Broadcast!</p>
           <div className={css.searchProductAddToHotList_main}>
