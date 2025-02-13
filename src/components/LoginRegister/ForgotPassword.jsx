@@ -87,9 +87,10 @@ const ForgotPassword = () => {
                 name="email"
                 placeholder="Enter your email"
                 required
+                className="text-center"
               />
             </span>
-            <p className="text-center text-[#444]">Enter a valid email or login and a password reset link will be sent to you</p>
+            <p className="text-center text-[#444] w-[31rem]">Enter a valid email or login and a password reset link will be sent to you</p>
             <span className={css.loginContainer_form_fields}>
             </span>
             {errorMessage && (

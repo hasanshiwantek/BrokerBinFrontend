@@ -233,7 +233,7 @@ const SearchProduct = () => {
             Array.isArray(part?.data) && part.data.length === 0
           ) ? (
           <div>
-            <h2 className="text-center">No Results Found For Selected Part Model: {searchString || partModel}</h2>
+            {/* <h2 className="text-center">No Results Found For Selected Part Model: {searchString || partModel}</h2> */}
             <AddToHotList item={searchString || partModel} />
           </div>
         ) : (

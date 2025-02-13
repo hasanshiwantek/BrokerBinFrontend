@@ -134,9 +134,9 @@ const BroadCastHistory = () => {
 
   return (
     <>
-      <div className={css.container}>
+      <div className={`${css.container}`}>
         {/* Tabs */}
-        <div className={myProfile.profileInfo_links}>
+        <div className={`${myProfile.profileInfo_links}`}>
           <ul>
             <li>
               <NavLink to="/sendbroad" end className={({ isActive }) => (isActive ? myProfile.active : '')}>

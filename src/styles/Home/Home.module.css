@@ -470,3 +470,11 @@ justify-content: space-around;
 .gridHome1_MemberDetail_list_numbers a{
   cursor: pointer;
 }
+
+
+@media screen and (max-width: 1975px) {
+
+  .mgDrop {
+    top: 7%;
+  }
+  } 

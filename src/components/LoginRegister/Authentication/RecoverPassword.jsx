@@ -48,7 +48,6 @@ const RecoverPassword = () => {
             setLoading(false);
             return;
         }
-    
         try {
             console.log("Submitting password change request", { token, ...data });
             const response = await fetch(`${brokerAPI}user/reset-password`, {
@@ -101,7 +100,7 @@ const RecoverPassword = () => {
                     </span>
                     <form className={css.loginContainer_form} onSubmit={handleSubmit}>
                         <span className={css.loginContainer_form_fields}>
-                            <span className={css.loginContainer_form_eyeSlash}>
+                            <span className={`${css.loginContainer_form_eyeSlash} mb-6`}>
                                 <input
                                     type={passwordShown.newPassword ? "text" : "password"}
                                     name="password"

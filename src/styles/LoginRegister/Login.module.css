@@ -220,20 +220,25 @@
   width: 35%;
 }
 
-/* 
- @media screen and (max-width: 1640px) {
 
-.loginContainer{
-  top: 20%;
-}
-  
-} */
+ @media screen and (max-width: 1975px) {
 
-/* @media screen and (max-width: 1326px) {
+  .logoSec img{
+    top: 30%;
+  }
 
   .loginContainer{
-    top: 5%;
-
+    top: 15%;
   }
+
     
-  } */
+  } 
+
+
+  
+
+ @media screen and (max-width: 1597px) {
+  .loginContainer{
+    top:5%;
+  }
+  } 

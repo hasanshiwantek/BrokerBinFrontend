@@ -187,9 +187,9 @@ const MyContact = () => {
               <p>view by</p>
               <select onChange={handleChange}>
                 <option value="company">Company</option>
-                <option value="show">Display</option>
+                {/* <option value="show">Display</option>
                 <option value="country">Country</option>
-                <option value="state">State</option>
+                <option value="state">State</option> */}
               </select>
             </div>
           </div>

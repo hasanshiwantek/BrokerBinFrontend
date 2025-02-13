@@ -310,7 +310,7 @@ useEffect(() => {
       <main className={styles.mainSec}>
         <nav className='menu-bar !text-sm'>
           <div className={`${myProfile.profileInfo_links} !text-sm`}>
-            <ul className='py-0 !h-[3.5vh] !text-sm'>
+            <ul className='py-0 !h-[7vh] !text-sm'>
               <li className='!text-[.7.8vw]'>
                 <button onClick={handleReplyClick} style={{ color: "black" }}>Reply</button>
               </li>
