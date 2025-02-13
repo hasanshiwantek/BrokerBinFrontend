@@ -183,8 +183,8 @@ const MyContact = () => {
                 <SearchMyContact />
               </div>
             </div>
-            <div>
-              <p>view by</p>
+            <div className="!flex !justify-center !items-center !gap-5">
+              <p className="!text-xl">view by</p>
               <select onChange={handleChange}>
                 <option value="company">Company</option>
                 {/* <option value="show">Display</option>

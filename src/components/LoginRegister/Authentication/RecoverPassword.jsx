@@ -95,7 +95,7 @@ const RecoverPassword = () => {
                 </div>
                 <div className={css.loginContainer}>
                     <span className={css.loginContainer_head}>
-                        <h1 className="!text-center text-blue-700">CONFIRM PASSWORD</h1>
+                        <h1 className="!text-center text-blue-700 !text-4xl font-semibold">CONFIRM PASSWORD</h1>
                         <p className="text-center text-[#444]">Enter your new password </p>
                     </span>
                     <form className={css.loginContainer_form} onSubmit={handleSubmit}>

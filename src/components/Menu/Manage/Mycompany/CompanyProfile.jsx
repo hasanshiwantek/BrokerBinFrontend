@@ -506,7 +506,7 @@ const MyCompany = () => {
                         id="image"
                         onChange={handleFileChange}
                       />
-                      <button type="submit">Submit Changes</button>
+                      <button type="submit" >Submit Changes</button>
                     </div>
                   </div>
 
@@ -616,7 +616,7 @@ const MyCompany = () => {
                 </div>
               </div>
               <div className="pt-2">
-                <button className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-5"
+                <button className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-7"
                   type="submit">Submit Changes</button>
               </div>
             </div>
