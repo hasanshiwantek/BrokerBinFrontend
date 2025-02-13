@@ -578,33 +578,33 @@ const RfqTable = () => {
             </div>
             <div className={css.rfqTableBtn_bottom}>
               <div>
-                <button type="button" className="!p-3 ">send</button>
+                <button type="button" className=" ">send</button>
 
                 <button
                   onClick={resetFilters}
-                  className={`${css.resetFiltersBtn} !p-3 `}
+                  className={`${css.resetFiltersBtn}  `}
                   type="button">
                   Reset Filters
                 </button>
 
-                <button type="button" onClick={handleReply} className="!p-3">
+                <button type="button" onClick={handleReply} className="">
                   reply
                 </button>
 
-                <button type="button" onClick={handleForward} className="!p-3">
+                <button type="button" onClick={handleForward} className="">
                   forward
                 </button>
                 <button type="button"
-                  onClick={() => handleAction("archive")} className="!p-3">archive</button>
+                  onClick={() => handleAction("archive")} className="">archive</button>
                 <button type="button"
-                  onClick={() => handleAction("read")} className="!p-3">mark as read</button>
+                  onClick={() => handleAction("read")} className="">mark as read</button>
                 <button type="button"
-                  onClick={() => handleAction("unread")} className="!p-3">mark as unread</button>
+                  onClick={() => handleAction("unread")} className="">mark as unread</button>
 
               </div>
            {/* PAGINATION CONTROLS */}
                    <div className={css.pagination}>
-                     <span className="text-orange-700 p-4 text-xl">
+                     <span className="text-orange-700 p-2 text-xl">
                        Page <span className="text-blue-800">{currPage}</span> of
                        <span className="text-blue-800"> {totalPages}</span>
                      </span>
@@ -612,7 +612,7 @@ const RfqTable = () => {
                      {/* Previous Button */}
                      <button
                        onClick={handlePrevious}
-                       className={`${css.pageButton} ${visiblePages[0] === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
+                       className={`${''} ${visiblePages[0] === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
                        disabled={visiblePages[0] === 1}
                      >
                        Previous
@@ -628,7 +628,7 @@ const RfqTable = () => {
                          <button
                            key={page}
                            onClick={() => handlePageChange(page)}
-                           className={`${css.pageButton} ${currPage === page ? css.active : ""}`}
+                           className={`${''} ${currPage === page ? css.active : ""}`}
                          >
                            {page}
                          </button>
@@ -637,7 +637,7 @@ const RfqTable = () => {
                      {/* Next Button */}
                      <button
                        onClick={handleNext}
-                       className={`${css.pageButton} ${visiblePages[1] === totalPages ? "opacity-50 cursor-not-allowed" : ""}`}
+                       className={`${''} ${visiblePages[1] === totalPages ? "opacity-50 cursor-not-allowed" : ""}`}
                        disabled={visiblePages[1] === totalPages}
                      >
                        Next
