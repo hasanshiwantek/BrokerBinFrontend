@@ -256,7 +256,7 @@ const Register = () => {
                   </select>
                 </span>
                 <span>
-                  <label htmlFor="zip code">Zip Code <span style={{ color: "red" }}>*</span> </label>
+                  <label htmlFor="zip code">Zip / Postal Code <span style={{ color: "red" }}>*</span> </label>
                   <input
                     type="text"
                     name="zipcode"
@@ -537,7 +537,7 @@ const Register = () => {
               <span
                 className={`${css.contact_form_fields} ${css.contact_form_fields_question}`}
               >
-                <label>Have you ever been a member of Brokercell.com?<span style={{ color: "red" }}>*</span> </label>
+                <span style={{fontWeight:"600"}}>Have you ever been a member of Brokercell.com?<span style={{ color: "red" }}>*</span> </span>
                 <span>
                   <span>
                     <input
@@ -776,7 +776,7 @@ const Register = () => {
                 required
               />
               <label htmlFor="termsOfService">Agree to our</label>
-              <a href="https://brokercell.com/legal/">Terms of Service</a>
+              <a href="https://brokercell.com/legal/" target="_blank">Terms of Service</a>
             </span>
             {errors.form && <p style={{ color: "red" }}>{errors.form}</p>}
             <button type="submit">Submit Application</button>
