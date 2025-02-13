@@ -76,7 +76,7 @@ const Login = () => {
         </div>
         <div className={`${css.loginContainer}`}>
           <span className={css.loginContainer_head}>
-            <h1 className="!text-center text-blue-700">MEMBER LOGIN</h1>
+            <h1 className="!text-center text-blue-700 !text-4xl font-semibold">MEMBER LOGIN</h1>
           </span>
           <form className={css.loginContainer_form} onSubmit={handleSubmit}>
             <span className={css.loginContainer_form_fields}>
@@ -84,7 +84,7 @@ const Login = () => {
               <input
                 type="text"
                 name="userName"
-                placeholder="Enter your email"
+                placeholder="Enter your username / email"
                 required
               />
             </span>
@@ -95,6 +95,8 @@ const Login = () => {
                   Forgot password?
                 </a>
               </span> */}
+              <label htmlFor="passsword">Password</label>
+
               <span className={css.loginContainer_form_eyeSlash}>
                 <input
                   type={passwordShown ? "text" : "password"}

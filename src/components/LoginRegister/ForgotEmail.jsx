@@ -25,11 +25,6 @@ const ForgotEmail = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true); // Start loading
-
-        toast.info("The username has been sent to your Email!", {
-            style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
-        });
-
         const formData = new FormData(e.currentTarget);
         const data = Object.fromEntries(formData.entries());
 
@@ -76,7 +71,7 @@ const ForgotEmail = () => {
 
                 <div className={css.loginContainer}>
                     <span className={css.loginContainer_head}>
-                        <h1 className="!text-center text-blue-700">RECOVER LOST LOGIN</h1>
+                        <h1 className="!text-center text-blue-700 !text-4xl font-semibold">RECOVER LOST LOGIN</h1>
                     </span>
                     <form className={css.loginContainer_form} onSubmit={handleSubmit}>
                         <span className={css.loginContainer_form_fields}>

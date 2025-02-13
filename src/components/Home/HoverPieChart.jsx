@@ -6,7 +6,7 @@ import { FaRegCircle } from "react-icons/fa";
 import zIndex from "@mui/material/styles/zIndex";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
+import { NavLink } from "react-router-dom";
 const HoverPieChart = ({ data }) => {
   // Transform backend data into the required structure
   const transformedData = {
@@ -42,6 +42,7 @@ const HoverPieChart = ({ data }) => {
     navigate(`/broadcasts?type=${type.toLowerCase()}`);
   };
 
+  const arrow=">>>"
   const totalData = transformedData.datasets[0].data
     .reduce((sum, acc) => sum + acc, 0)
     .toLocaleString("en-US");
@@ -74,12 +75,22 @@ const HoverPieChart = ({ data }) => {
               <FaRegCircle style={{ color: pieColor[index] }} />
               <a className="cursor-pointer">{label}</a>
             </span>
+
             <a href="#">
               {transformedData.datasets[0].data[index].toLocaleString("en-US")} total
             </a>
+      
           </div>
+       
         ))}
+        <NavLink to={"/sendbroad"}>
+                <button className="bg-blue-500 p-3 text-white mb-20 rounded-md w-96 ">
+                  SEND BROADCAST{arrow}
+                </button>
+        </NavLink>
+
       </div>
+
     </>
   );
 };

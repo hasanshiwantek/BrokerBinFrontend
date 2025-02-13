@@ -140,11 +140,9 @@
   font-size: 8pt;
   font-weight: 500;
   color: #444;
-  /* overflow: hidden;
   white-space: nowrap;
-  text-overflow: ellipsis; */
-
-
+  overflow: hidden;
+  text-overflow: ellipsis; 
 }
 
 
@@ -185,6 +183,10 @@
 .productTableDetail table tr{
   background-color: #ffffff;
   border-bottom: 1px solid rgb(228, 225, 225);
+}
+
+.productTableDetail table tr:hover{
+  background-color: rgb(245, 245, 245);
 }
 
 .searchProductAddToHotList_main_bg {
