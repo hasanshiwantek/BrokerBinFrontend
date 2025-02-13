@@ -247,7 +247,6 @@ const SearchProduct = () => {
       ) ? (
       // ✅ No results case
       <div>
-        <h2>No Results Found For Selected Part Model: {searchString || partModel}</h2>
         <AddToHotList item={searchString || partModel} />
       </div>
     ) : isKeywordSearch ? (
