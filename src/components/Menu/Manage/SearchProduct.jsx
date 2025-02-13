@@ -109,7 +109,7 @@ const SearchProduct = () => {
     if (searchString) {
       const parts = searchString.split(" ");
       parts.forEach((part) => {
-        dispatch(searchProductQuery({ token, page: 1, search: part })).then((result) =>
+        dispatch(searchProductQuery({ token, page: page, search: part })).then((result) =>
           console.log("searchProductQuery result:", result)
         );
       });
@@ -117,7 +117,7 @@ const SearchProduct = () => {
 
     // ✅ If a single part model is searched, dispatch searchByKeyword
     if (partModel) {
-      dispatch(searchByKeyword({ token, page: 1, partModel })).then((result) =>
+      dispatch(searchByKeyword({ token, page: page, partModel })).then((result) =>
         console.log("searchByKeyword result:", result)
       );
     }
@@ -227,7 +227,7 @@ const SearchProduct = () => {
     //   {togglePopUp && <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
     // </div>
 
-    <div className={css.layout}>
+    <div className={`${css.layout}`}>
 
   {/* ✅ Show Filter only if there are search results */}
 
@@ -239,16 +239,17 @@ const SearchProduct = () => {
   <Filter currentQuery={currentQuery} />
 )}
 
-  <div className={css.layoutTables} style={Object.keys(filteredSearchResponse || searchResponseMatched || {}).length <= 0 ? { margin: "0 auto" } : null}>
+  <div className={`${css.layoutTables} !mx-auto`} style={Object.keys(filteredSearchResponse || searchResponseMatched || {}).length <= 0 ? { margin: "0" } : null}>
 
     {Object.keys(filteredSearchResponse || searchResponseMatched || {}).length === 0 ||
       Object.values(filteredSearchResponse || searchResponseMatched).every((part) =>
         Array.isArray(part?.data) && part.data.length === 0
       ) ? (
       // ✅ No results case
-      <div>
+      <div className="">
         <AddToHotList item={searchString || partModel} />
       </div>
+      
     ) : isKeywordSearch ? (
       // ✅ Single table for `searchByKeyword`
       <div className={css.tableArea}>
@@ -268,37 +269,49 @@ const SearchProduct = () => {
       </div>
     ) : (
       // ✅ Multiple tables for `searchProductQuery`
-      Object.entries(filteredSearchResponse || searchResponseMatched || {}).map(([partModel, details], index) =>
-        details?.data?.length > 0 && (
-          <div className={css.tableArea} key={`${partModel}-${index}`}>
-            {graphToggle && <ProductsPieChart />}
-            <div className={css.productTable}>
-              <ProductTableBtn />
-              <ProductTableDetail
-                partData={details.data}
-                partModel={partModel}
-                totalCount={details.totalCount}
-                page={details.page}
-                partModels={partModels}
-                isFilterActive={isFilterActive}
-                searchString={searchString}
-                sortPageSize={sortPageSize}
-                sortPage={sortPage}
-                token={token}
-              />
+      Object.entries(filteredSearchResponse || searchResponseMatched || {}).map(([partModel, details], index) => (
+        <div key={`${partModel}-${index}`}>
+          {details?.data?.length > 0 ? (
+            // ✅ Render table for available parts
+            <div className={css.tableArea}>
+              {graphToggle && <ProductsPieChart />}
+              <div className={css.productTable}>
+                <ProductTableBtn />
+                <ProductTableDetail
+                  partData={details.data}
+                  partModel={partModel}
+                  totalCount={details.totalCount}
+                  page={details.page}
+                  partModels={partModels}
+                  isFilterActive={isFilterActive}
+                  searchString={searchString}
+                  sortPageSize={sortPageSize}
+                  sortPage={sortPage}
+                  token={token}
+                />
+              </div>
             </div>
-          </div>
-        )
-      )
+          ) : (
+            // ✅ Show Hotlist only for unavailable parts
+            <div key={`hotlist-${partModel}`}>
+              <AddToHotList item={partModel} />
+            </div>
+          )}
+        </div>
+      ))
     )}
+    
   </div>
 
   {togglePopUp && <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
 </div>
 
-
   );
 };
+
+
+
+
 
 const ProductTableBtn = React.memo(() => {
 
