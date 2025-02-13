@@ -141,6 +141,8 @@
 .loginContainer_form_fields input:focus{
     outline: none;
     border: 1px solid var(--primary-color);
+  box-shadow: 0 0 3px var(--primary-color);
+
 }
 
 

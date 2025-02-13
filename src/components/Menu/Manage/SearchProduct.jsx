@@ -55,8 +55,8 @@ const SearchProduct = () => {
   const page = parseInt(queryParams.get("page")) || 1;
   const searchString = queryParams.get("query") || "";
   const partModel = queryParams.get("partModel") || "";
-  // console.log("Query " + searchString);
-  // console.log("PartModel " + partModel);
+  console.log("SearchString" + searchString);
+  console.log("PartModel keyword " + partModel);
   const {
     searchResponseMatched,
     searchResponseNotMatched,
@@ -109,7 +109,7 @@ const SearchProduct = () => {
     if (searchString) {
       const parts = searchString.split(" ");
       parts.forEach((part) => {
-        dispatch(searchProductQuery({ token, page: 1, search: part })).then((result) =>
+        dispatch(searchProductQuery({ token, page: page, search: part })).then((result) =>
           console.log("searchProductQuery result:", result)
         );
       });
@@ -117,7 +117,7 @@ const SearchProduct = () => {
 
     // ✅ If a single part model is searched, dispatch searchByKeyword
     if (partModel) {
-      dispatch(searchByKeyword({ token, page: 1, partModel })).then((result) =>
+      dispatch(searchByKeyword({ token, page: page, partModel })).then((result) =>
         console.log("searchByKeyword result:", result)
       );
     }
@@ -229,72 +229,73 @@ const SearchProduct = () => {
 
     <div className={css.layout}>
 
-  {/* ✅ Show Filter only if there are search results */}
+      {/* ✅ Show Filter only if there are search results */}
 
-  {/* {filterToggle && Object.keys(filteredSearchResponse || searchResponseMatched || {}).length > 0 && (
+      {/* {filterToggle && Object.keys(filteredSearchResponse || searchResponseMatched || {}).length > 0 && (
     <Filter currentQuery={currentQuery} />
   )} */}
 
-{filterToggle && (Object.values(filteredSearchResponse || searchResponseMatched).some((part) => part?.data?.length > 0)) && (
-  <Filter currentQuery={currentQuery} />
-)}
+      {filterToggle && (Object.values(filteredSearchResponse || searchResponseMatched).some((part) => part?.data?.length > 0)) && (
+        <Filter currentQuery={currentQuery} />
+      )}
 
-  <div className={css.layoutTables} style={Object.keys(filteredSearchResponse || searchResponseMatched || {}).length <= 0 ? { margin: "0 auto" } : null}>
+      <div className={css.layoutTables} style={Object.keys(filteredSearchResponse || searchResponseMatched || {}).length <= 0 ? { margin: "0" } : null}>
 
-    {Object.keys(filteredSearchResponse || searchResponseMatched || {}).length === 0 ||
-      Object.values(filteredSearchResponse || searchResponseMatched).every((part) =>
-        Array.isArray(part?.data) && part.data.length === 0
-      ) ? (
-      // ✅ No results case
-      <div>
-        <AddToHotList item={searchString || partModel} />
-      </div>
-    ) : isKeywordSearch ? (
-      // ✅ Single table for `searchByKeyword`
-      <div className={css.tableArea}>
-        {graphToggle && <ProductsPieChart />}
-        <div className={css.productTable}>
-          <ProductTableBtn />
-          <ProductTableDetail
-            partData={Object.values(searchResponseMatched).flatMap((details) => details.data)} // Merging all partModels
-            partModel={"All Results"} // Displaying a single table
-            totalCount={Object.values(searchResponseMatched)[0]?.totalCount || 0} // Taking totalCount from the first key
-            page={Object.values(searchResponseMatched)[0]?.page || 1} // Using common page value
-            partModels={[]} // Empty since all merged
-            isFilterActive={isFilterActive}
-            searchString={searchString}
-          />
-        </div>
-      </div>
-    ) : (
-      // ✅ Multiple tables for `searchProductQuery`
-      Object.entries(filteredSearchResponse || searchResponseMatched || {}).map(([partModel, details], index) =>
-        details?.data?.length > 0 && (
-          <div className={css.tableArea} key={`${partModel}-${index}`}>
+        {Object.keys(filteredSearchResponse || searchResponseMatched || {}).length === 0 ||
+          Object.values(filteredSearchResponse || searchResponseMatched).every((part) =>
+            Array.isArray(part?.data) && part.data.length === 0
+          ) ? (
+          // ✅ No results case
+          <div>
+            <AddToHotList item={searchString || partModel} />
+          </div>
+        ) : isKeywordSearch ? (
+          // ✅ Single table for `searchByKeyword`
+          <div className={css.tableArea}>
             {graphToggle && <ProductsPieChart />}
             <div className={css.productTable}>
               <ProductTableBtn />
               <ProductTableDetail
-                partData={details.data}
-                partModel={partModel}
-                totalCount={details.totalCount}
-                page={details.page}
-                partModels={partModels}
+                partData={Object.values(searchResponseMatched).flatMap((details) => details.data)} // Merging all partModels
+                partModel={"All Results"}
+                keyWordPartModel={partModel}
+                totalCount={Object.values(searchResponseMatched)[0]?.totalCount || 0} // Taking totalCount from the first key
+                page={Object.values(searchResponseMatched)[0]?.page || 1} // Using common page value
+                partModels={[]} // Empty since all merged
                 isFilterActive={isFilterActive}
                 searchString={searchString}
-                sortPageSize={sortPageSize}
-                sortPage={sortPage}
-                token={token}
               />
             </div>
           </div>
-        )
-      )
-    )}
-  </div>
+        ) : (
+          // ✅ Multiple tables for `searchProductQuery`
+          Object.entries(filteredSearchResponse || searchResponseMatched || {}).map(([partModel, details], index) =>
+            details?.data?.length > 0 && (
+              <div className={css.tableArea} key={`${partModel}-${index}`}>
+                {graphToggle && <ProductsPieChart />}
+                <div className={css.productTable}>
+                  <ProductTableBtn />
+                  <ProductTableDetail
+                    partData={details.data}
+                    partModel={partModel}
+                    totalCount={details.totalCount}
+                    page={details.page}
+                    partModels={partModels}
+                    isFilterActive={isFilterActive}
+                    searchString={searchString}
+                    sortPageSize={sortPageSize}
+                    sortPage={sortPage}
+                    token={token}
+                  />
+                </div>
+              </div>
+            )
+          )
+        )}
+      </div>
 
-  {togglePopUp && <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
-</div>
+      {togglePopUp && <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
+    </div>
 
 
   );
@@ -337,7 +338,7 @@ const ProductTableBtn = React.memo(() => {
   );
 });
 
-const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilterActive, searchString }) => {
+const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilterActive, searchString, keyWordPartModel }) => {
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -385,6 +386,7 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
 
   const keys = Object.keys(searchResponseMatched);
   console.log(keys); // Output: ["001NFM", "002CR", "003442U"]
+
 
   const handleShowPopupCompanyDetails = (event, companyId) => {
     event.stopPropagation();
@@ -585,9 +587,14 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
       setSortOrder(column === "price" ? "asc" : "desc");
     }
 
+    const searchKey = keyWordPartModel || searchString;
+    console.log("SearchKey: ",searchKey)
+    const searchArray = searchKey ? searchKey.split(",").map(s => s.trim()) : keys; // ✅ Splits into an array
+    console.log("Search Array: ",searchArray)
+
     // Create the payload for dispatch
     const payload = {
-      search: keys, // Ensure search is formatted as an array
+      search: searchArray, // Use searchKey if available
       sortBy: column,
       sortOrder: (column === "price" && sortBy !== "price") ? "asc" : sortOrder,
       page: 1, // Reset to the first page
