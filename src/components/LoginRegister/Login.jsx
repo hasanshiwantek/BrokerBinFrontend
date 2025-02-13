@@ -70,7 +70,7 @@ const Login = () => {
   }
   return (
     <div className={css.bg}>
-      <div className="!flex !items-center !justify-evenly !gap-5 space-x-40 p-10 space-y-40 ">
+      <div className={`${css.loginContainerHead}!flex !items-center !justify-evenly !gap-5 space-x-40 p-10 space-y-40 `}>
         <div className={`${css.logoSec} `}>
           <img src={brokerLogo} alt="BrokerLogo" srcset="" />
         </div>

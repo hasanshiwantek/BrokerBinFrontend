@@ -261,7 +261,7 @@ const Home = () => {
                   <div style={{ color: "var(--primary-color)" }}>
                     <BiDotsHorizontalRounded />
                   </div>
-                  <div className={css.manageDropdown}>
+                  <div className={`${css.manageDropdown}`}>
                     <ul>
                       <Link to={"/myprofile"}> <li>My Profile</li></Link>
                       <Link to={"/mycompany"}> <li>My Company</li></Link>
@@ -341,6 +341,27 @@ const Home = () => {
                       </ul>
                     </li>
 
+
+
+
+                    <li className={css.gridHome1_MemberDetail_list_options}>
+                      <Link to="/myprofile/myContact">My Vendors</Link>
+                      <ul>
+                        <li className={css.gridHome1_MemberDetail_list_numbers}>
+                        <ThemeProvider theme={theme}>
+                        <Tooltip title="Vendors" arrow placement="top" >
+                          <a onClick={() => handleNavigation("/hotList/view")}>
+                            {(broadcastCount?.data?.myVendors || 0)
+                              .toLocaleString("en-US")
+                              .toString()
+                              .padStart(2, "0")}
+
+                          </a>
+                          </Tooltip>
+                          </ThemeProvider>
+                        </li>
+                      </ul>
+                    </li>
 
                     {/* <li className={css.gridHome1_MemberDetail_list_options}>
                       <Link to="/feedback">my contacts</Link>
@@ -458,7 +479,7 @@ const Home = () => {
                   <div style={{ color: "var(--primary-color)" }}>
                     <BiDotsHorizontalRounded />
                   </div>
-                  <div className={css.manageDropdown}>
+                  <div className={`${css.manageDropdown} ${css.mgDrop}`}>
                     <ul>
                       <Link to={"/inventory"}> <li>Inventory</li></Link>
                       <Link to={"/rfq"}> <li>My RFQs</li></Link>
@@ -482,7 +503,7 @@ const Home = () => {
                   <div style={{ color: "var(--primary-color)" }}>
                     <BiDotsHorizontalRounded />
                   </div>
-                  <div className={css.manageDropdown}>
+                  <div className={`${css.manageDropdown} ${css.mgDrop}`}>
                     <ul>
                       {/* <Link to={"/ethics"}> <li>Ethics Complaint</li></Link> */}
                       <Link to={"/feedback"}> <li>Report an Issue</li></Link>

@@ -189,7 +189,7 @@
 
 .searchProductAddToHotList_main_bg {
   padding: 5px;
-  border-radius: 10px;
+  border-radius: 4px;
 }
 .searchProductAddToHotList_main_bg span , label{
   font-size: 9pt;
@@ -201,3 +201,23 @@
 .highlightRow {
   background-color: #ffb !important; /* Add !important to override any other styles */
 }
+
+
+
+
+@media screen and (max-width: 1975px) {
+
+.hotlistContainer{
+  margin-left: 40rem;
+}
+
+    
+  } 
+
+  
+
+@media screen and (max-width: 1597px) {
+  .hotlistContainer{
+    margin-left: 30rem;
+  }
+    } 

@@ -578,11 +578,11 @@ const RfqTable = () => {
             </div>
             <div className={css.rfqTableBtn_bottom}>
               <div>
-                <button type="button" className="!p-3">send</button>
+                <button type="button" className="!p-3 ">send</button>
 
                 <button
                   onClick={resetFilters}
-                  className={`${css.resetFiltersBtn} !p-3`}
+                  className={`${css.resetFiltersBtn} !p-3 `}
                   type="button">
                   Reset Filters
                 </button>

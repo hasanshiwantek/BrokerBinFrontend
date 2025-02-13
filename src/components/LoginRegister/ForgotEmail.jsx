@@ -22,53 +22,46 @@ const ForgotEmail = () => {
     const popUpRef = useRef();
     const dispatch = useDispatch();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true); // Start loading
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true); // Start loading
 
-    toast.info("The username has been sent to your Email!", {
-        style: { fontSize: "12px", marginTop: "-10px",fontWeight:"bold" },
-    });
-
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
-
-    try {
-        console.log("Submitting forgot password request", data);
-        const response = await fetch(`${brokerAPI}user/forgot-username`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
+        toast.info("The username has been sent to your Email!", {
+            style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
         });
 
-        const result = await response.json();
-        console.log("Response received:", result);
+        const formData = new FormData(e.currentTarget);
+        const data = Object.fromEntries(formData.entries());
 
-        if (response.ok) {
-            toast.success("Email sent successfully! Check your inbox.");
-            console.log("Forgot password email sent successfully");
-        } else {
-            setErrorMessage(result.message || "Request failed, please try again.");
-            console.log("Error response:", result);
+        try {
+            console.log("Submitting forgot password request", data);
+            const response = await fetch(`${brokerAPI}user/forgot-username`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
+
+            const result = await response.json();
+            console.log("Response received:", result);
+
+            if (response.ok) {
+                toast.success("Email sent successfully! Check your inbox.");
+                console.log("Forgot password email sent successfully");
+            } else {
+                setErrorMessage(result.message || "Request failed, please try again.");
+                console.log("Error response:", result);
+            }
+        } catch (error) {
+            setErrorMessage("An error occurred, please try again later.");
+            console.log("Error occurred:", error);
+        } finally {
+            setLoading(false); // Stop loading
+            console.log("Loading state set to false");
         }
-    } catch (error) {
-        setErrorMessage("An error occurred, please try again later.");
-        console.log("Error occurred:", error);
-    } finally {
-        setLoading(false); // Stop loading
-        console.log("Loading state set to false");
-    }
-};
-
+    };
     const arrow = "<"
-
-
-
-
-
-
     return (
         <div className={css.bg}>
 
@@ -93,6 +86,8 @@ const ForgotEmail = () => {
                                 name="email"
                                 placeholder="EMAIL ADDRESS"
                                 required
+                                className="text-center"
+
                             />
                         </span>
                         <p className="text-center text-[#444]">Enter a valid email and your login will be sent to you</p>

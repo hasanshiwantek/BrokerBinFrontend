@@ -176,7 +176,7 @@ textarea {
 
 /* Global Scrollbar Styling (for WebKit browsers: Chrome, Edge, Safari) */
 ::-webkit-scrollbar {
-  width: 30px; /* Vertical scrollbar width */
+  width: 10px; /* Vertical scrollbar width */
   height: 10px; /* Horizontal scrollbar height */
 }
 
