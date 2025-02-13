@@ -613,7 +613,7 @@ const RfqTableSent = () => {
 
                             {/* PAGINATION CONTROLS */}
                             <div className={css.pagination}>
-                                <span className="text-orange-700 p-4 text-xl">
+                                <span className="text-orange-700 p-2 text-xl">
                                     Page <span className="text-blue-800">{currPage}</span> of
                                     <span className="text-blue-800"> {totalPages}</span>
                                 </span>

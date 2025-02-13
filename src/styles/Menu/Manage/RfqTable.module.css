@@ -23,7 +23,7 @@
   justify-content: space-between;
   align-items: center;
   background-color: var(--table-bg-color);
-  padding: 0 1rem;
+  /* padding: 0 1rem; */
   > :first-child {
     display: flex;
     gap: 1rem;
@@ -31,7 +31,7 @@
     button {
       color: white;
       background: var(--primary-color);
-      padding: 0.5rem 1rem;
+      /* padding: 0.5rem 1rem; */
     }
   }
 }
@@ -235,7 +235,7 @@ td:hover .companyDropdown {
 
 
 .rfqTableBtn_bottom button{
-  padding: 10px 12px;
+  padding: 4px 4px;
   border-radius: 5px;
   font-size: 9pt;
 }

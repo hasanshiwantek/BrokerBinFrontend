@@ -30,7 +30,6 @@ import {
   clearSearchResponseMatched,
   searchProductFilter,
   // setSearchResponseMatched
-
 } from "../../../ReduxStore/SearchProductSlice";
 import LoadingState from "../../../LoadingState";
 import { FaEye, FaShieldAlt } from "react-icons/fa";
@@ -256,8 +255,6 @@ const SearchProduct = () => {
 
   );
 };
-
-
 
 
 
@@ -768,6 +765,5 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
 
   );
 });
-
 
 export default SearchProduct;

@@ -85,7 +85,7 @@ const ForgotPassword = () => {
               <input
                 type="text"
                 name="email"
-                placeholder="Enter your email"
+                placeholder="Enter your username / email"
                 required
                 className="text-center"
               />
