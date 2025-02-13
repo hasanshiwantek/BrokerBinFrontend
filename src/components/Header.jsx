@@ -154,13 +154,13 @@ const Header = () => {
               >
                 Search
               </button>
-              {/* <button
+              <button
                 type="submit"
                 onClick={() => setSearchType("keyword")}
                 className={css.search_btn} 
               >
                 Keyword
-              </button> */}
+              </button>
 
             </form>
           </div>
