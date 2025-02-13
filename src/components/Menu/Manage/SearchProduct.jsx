@@ -766,5 +766,4 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
   );
 });
 
-
 export default SearchProduct;
