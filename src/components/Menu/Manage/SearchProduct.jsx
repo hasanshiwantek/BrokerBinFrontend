@@ -180,61 +180,8 @@ const SearchProduct = () => {
   console.log("SEARCH RESPONSE MATCH", searchResponseMatched)
 
   return (
-
-    // <div className={css.layout}>
-
-    //   {/* ✅ Show Filter only if there are search results */}
-    //   {filterToggle && Object.keys(searchResponseMatched || {}).length > 0 && (
-    //     <Filter currentQuery={currentQuery} />
-    //   )}
-
-    //   <div className={css.layoutTables} style={Object.keys(filteredSearchResponse || searchResponseMatched || {}).length <= 0 ? { margin: "0 auto" } : null}>
-    //     {Object.keys(filteredSearchResponse || searchResponseMatched || {}).length === 0 ||
-    //       Object.values(filteredSearchResponse || searchResponseMatched).every((part) =>
-    //         Array.isArray(part?.data) && part.data.length === 0
-    //       ) ? (
-    //       <div>
-    //         <h2>No Results Found For Selected Part Model: {searchString || partModel}</h2>
-    //         <AddToHotList item={searchString || partModel} />
-    //       </div>
-    //     ) : (
-    //       // ✅ Render products only if available
-    //       Object.entries(filteredSearchResponse || searchResponseMatched || {}).map(([partModel, details], index) =>
-    //         details?.data?.length > 0 && (
-    //           <div className={css.tableArea} key={`${partModel}-${index}`}>
-    //             {graphToggle && <ProductsPieChart />}
-    //             <div className={css.productTable}>
-    //               <ProductTableBtn />
-    //               <ProductTableDetail
-    //                 partData={details.data}
-    //                 partModel={partModel}
-    //                 page={details.page}
-    //                 totalCount={details.totalCount}
-    //                 partModels={partModels}
-    //                 sortPageSize={sortPageSize}
-    //                 sortPage={sortPage}
-    //                 token={token}
-    //                 searchString={searchString}
-    //                 isFilterActive={isFilterActive}
-    //               />
-    //             </div>
-    //           </div>
-    //         )
-    //       )
-    //     )}
-    //   </div>
-
-    //   {togglePopUp && <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
-    // </div>
-
     <div className={`${css.layout}`}>
-
       {/* ✅ Show Filter only if there are search results */}
-
-      {/* {filterToggle && Object.keys(filteredSearchResponse || searchResponseMatched || {}).length > 0 && (
-    <Filter currentQuery={currentQuery} />
-  )} */}
-
       {filterToggle && (Object.values(filteredSearchResponse || searchResponseMatched).some((part) => part?.data?.length > 0)) && (
         <Filter currentQuery={currentQuery} />
       )}
