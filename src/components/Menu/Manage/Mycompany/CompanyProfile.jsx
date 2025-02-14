@@ -81,65 +81,6 @@ const MyCompany = () => {
     }
   }, [companyId, token]);
 
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-
-  //   setFormData((prevData) => {
-  //     const updatedData = { ...prevData };
-  //     if (!updatedData.data) updatedData.data = {}; // Ensure `data` exists
-  //     if (!updatedData.data.company) updatedData.data.company = {}; // Ensure `company` exists
-  //     if (!updatedData.data.company.primaryContact)
-  //       updatedData.data.company.primaryContact = {}; // Ensure `primaryContact` exists
-
-  //     updatedData.data.company.primaryContact[name] = cleanInput(value);
-  //     return updatedData;
-  //   });
-  // };
-
-  // const cleanInput = (input) => input.trimStart().replace(/\s+/g, " ");
-
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  
-  //   // Update Local State
-  //   setFormData((prevData) => {
-  //     const updatedData = { ...prevData };
-  
-  //     // Ensure nested structure exists in local state
-  //     if (!updatedData.data) updatedData.data = {};
-  //     if (!updatedData.data.company) updatedData.data.company = {};
-  //     if (!updatedData.data.company.primaryContact)
-  //       updatedData.data.company.primaryContact = {};
-  
-  //     updatedData.data.company.primaryContact[name] = value; // Update the local state
-  //     return updatedData;
-  //   });
-  
-  //   // Update Redux State
-  //   dispatch(updateFormData((prevReduxData) => {
-  //     const updatedReduxData = { ...prevReduxData };
-  
-  //     if (["skype", "whatsapp", "trillian"].includes(name)) {
-  //       // For `imScreenNames` update
-  //       updatedReduxData.imScreenNames = {
-  //         ...updatedReduxData.imScreenNames,
-  //         [name]: value,
-  //       };
-  //     } else if (["facebook", "twitter", "linkedin"].includes(name)) {
-  //       // For `socialNetworking` update
-  //       updatedReduxData.socialNetworking = {
-  //         ...updatedReduxData.socialNetworking,
-  //         [name]: value,
-  //       };
-  //     } else {
-  //       // For other fields directly in the Redux state
-  //       updatedReduxData[name] = value;
-  //     }
-  
-  //     return updatedReduxData;
-  //   }));
-  // };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
   
@@ -163,7 +104,6 @@ const MyCompany = () => {
       })
     );
   };
-  
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -177,82 +117,6 @@ const MyCompany = () => {
       event.target.value = "";
     }
   };
-
-  // const handleSubmit = async (event) => {
-  //   event.preventDefault();
-  //   dispatch(setBlurWhileLoading(false));
-  //   const formDataApi = new FormData(event.target);
-
-  //   const data = Object.fromEntries(
-  //     Object.entries(Object.fromEntries(formDataApi.entries())).map(
-  //       ([key, value]) => {
-  //         if (key === "signature" || key === "customSignature") {
-  //           value = value
-  //             .split("\n")
-  //             .filter(Boolean)
-  //             .map((item) => item.replace(/\s+/g, " ").trim());
-  //         } else if (typeof value === "string") {
-  //           value = value.replace(/\s+/g, " ").trim();
-  //         }
-  //         return [key, value];
-  //       }
-  //     )
-  //   );
-
-  //   // Convert Base64 to Binary and append to FormData
-  //   if (fileBase64) {
-  //     // Dispatch the submitCompanyLogo action with the selected file
-  //     dispatch(clearLogo())
-  //     dispatch(submitCompanyLogo({ token, file: fileBase64 }));
-  //   }
-
-  //   // Object.keys(data).forEach((key) => {
-  //   //   if (data[key] === initialData[key]) {
-  //   //     delete data[key];
-  //   //   }
-  //   // });
-
-  //   console.log("ID:", id, "Token:", token, "Data:", data);
-  //   console.log(data);
-  //   dispatch(updateFormData(data));
-  //   dispatch(submitUserData({ id, token, data }));
-  // };
-
-  // const handleSubmit = async (event) => {
-  //   event.preventDefault();
-  //   dispatch(setBlurWhileLoading(false));
-  //   const formDataApi = new FormData(event.target);
-  
-  //   const data = Object.fromEntries(
-  //     Object.entries(Object.fromEntries(formDataApi.entries())).map(
-  //       ([key, value]) => {
-  //         if (key === "signature" || key === "customSignature") {
-  //           value = value
-  //             .split("\n")
-  //             .filter(Boolean)
-  //             .map((item) => item.replace(/\s+/g, " ").trim());
-  //         } else if (typeof value === "string") {
-  //           value = value.replace(/\s+/g, " ").trim();
-  //         }
-  //         return [key, value];
-  //       }
-  //     )
-  //   );
-
-  //   // Handle company logo upload separately
-  //   const logoFile = formDataApi.get("image");
-  //   if (logoFile && logoFile.size > 0) {
-  //     dispatch(clearLogo());
-  //     dispatch(submitCompanyLogo({ token, file: logoFile }));
-  //   }
-    
-  
-  //   // Dispatch updated form data to the backend
-  //   dispatch(updateFormData(data));
-  //   console.log("Payload being sent:", { id, token, data });
-  //   dispatch(submitUserData({ id, token, data }));
-  //   // console.log("Final Payload:", { id, token, data });
-  // };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -391,7 +255,7 @@ const MyCompany = () => {
                         name="firstName"
                         id="firstName"
                         onChange={handleChange}
-                        value={formData.data?.company?.primaryContact.firstName || ""}
+                        value={formData?.data?.company?.primaryContact?.firstName || ""}
                         placeholder="Your first name"
                       />
                     </span>
@@ -402,7 +266,7 @@ const MyCompany = () => {
                         name="lastName"
                         id="lastName"
                         onChange={handleChange}
-                        value={formData.data?.company?.primaryContact.lastName || ""}
+                        value={formData?.data?.company?.primaryContact?.lastName || ""}
                         placeholder="Your last name"
                       />
                     </span>
@@ -413,7 +277,7 @@ const MyCompany = () => {
                         name="specialty"
                         id="specialty"
                         onChange={handleChange}
-                        value={formData.data?.company?.primaryContact.specialty || ""}
+                        value={formData.data?.company?.primaryContact?.specialty || ""}
                         placeholder="title"
                       />
                     </span>
@@ -424,7 +288,7 @@ const MyCompany = () => {
                         name="phoneNumber"
                         id="phoneNumber"
                         onChange={handleChange}
-                        value={formData.data?.company?.primaryContact.phoneNumber || ""}
+                        value={formData.data?.company?.primaryContact?.phoneNumber || ""}
                         placeholder="Your experience"
                       />
                     </span>
@@ -435,7 +299,7 @@ const MyCompany = () => {
                         name="billingEmail"
                         id="email"
                         onChange={handleChange}
-                        value={formData.data?.company?.primaryContact.billingEmail || ""}
+                        value={formData.data?.company?.primaryContact?.billingEmail || ""}
                         placeholder="Billing email"
                       />
                     </span>
@@ -446,7 +310,7 @@ const MyCompany = () => {
                         name="supportEmail"
                         id="email"
                         onChange={handleChange}
-                        value={formData.data?.company?.primaryContact.supportEmail || ""}
+                        value={formData.data?.company?.primaryContact?.supportEmail || ""}
                         placeholder="Support Email"
                       />
                     </span>
@@ -457,7 +321,7 @@ const MyCompany = () => {
                         name="salesEmail"
                         id="email"
                         onChange={handleChange}
-                        value={formData.data?.company?.primaryContact.salesEmail || ""}
+                        value={formData.data?.company?.primaryContact?.salesEmail || ""}
                         placeholder="Sales/RFQ Email"
                       />
                     </span>
@@ -468,26 +332,13 @@ const MyCompany = () => {
                         name="companyInfoEmail"
                         id="email"
                         onChange={handleChange}
-                        value={formData.data?.company?.primaryContact.companyInfoEmail || ""}
+                        value={formData.data?.company?.primaryContact?.companyInfoEmail || ""}
                         placeholder="Company Info Email"
                       />
                     </span>
                   </div>
                 </div>
                 <div>
-                  {/* <h1 className="text-[1vw] font-thin text-black">Payment Gateways</h1>
-                  <span className="space-x-[8.5vw]">
-                    <label htmlFor="paymentGateways">PayPal</label>
-                    <input
-                      type="text"
-                      name="paymentGateway"
-                      id="paymentGateway"
-                      onChange={handleChange}
-                      value={formData.data?.company?.primaryContact.paymentGateway || ""}
-                      placeholder="Identifier (Username, email, etc"
-                    />
-                  </span> */}
-
                   <div className={css.profileInfo_form_personalPhoto}>
                     <div>
                       <h1>Company Logo</h1>
@@ -509,7 +360,6 @@ const MyCompany = () => {
                       <button type="submit" >Submit Changes</button>
                     </div>
                   </div>
-
 
                 </div>
                 <div className={`${css.profileInfo_form_IMScreenNames} pt-5`}>
