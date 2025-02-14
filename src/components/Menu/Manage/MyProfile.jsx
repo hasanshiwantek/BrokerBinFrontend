@@ -179,11 +179,11 @@ const MyProfile = () => {
     }
 
     const plainData = Object.fromEntries(formDataApi.entries());
-         // ✅ Show success toast with light blue color
-         toast.info("Profile updated successfully!", {
-          style: { fontSize:"17px" ,marginTop:"-10px"} , // 
-        });
-    
+    // ✅ Show success toast with light blue color
+    toast.info("Profile updated successfully!", {
+      style: { fontSize: "17px", marginTop: "-10px" }, // 
+    });
+
     try {
       await dispatch(
         submitUserData({

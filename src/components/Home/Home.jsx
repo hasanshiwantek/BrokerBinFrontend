@@ -244,7 +244,7 @@ const Home = () => {
 
 
               <div className={css.gridHome1_MemberDetail}>
-                <div className={`${css.gridHome1_MemberDetail_profile} ${css.mailSection}`}>
+                <div className={`${css.gridHome1_MemberDetail_profile} ${css.mailSection} `}>
                   <img
                     src={
                       initialData?.profileImage
@@ -253,7 +253,7 @@ const Home = () => {
                     }
                     alt="person"
                   />
-                  <h3>
+                  <h3 className="whitespace-nowrap">
 
                     Welcome back,
                     {initialData.firstName}
@@ -501,7 +501,9 @@ const Home = () => {
 
                 <div className={`mailSection ${css.mailSection}`}>
                   <MdHandshake />
+                  <Link to={"/safe_trading"}>
                   <p>Safe Trading Center</p>
+                  </Link>
                   <div style={{ color: "var(--primary-color)" }}>
                     <BiDotsHorizontalRounded />
                   </div>
