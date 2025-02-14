@@ -711,7 +711,7 @@ const BroadcastForm = () => {
                   <input
                     type="button"
                     value="SEND"
-                    className="cursor-pointer px-4 py-5 border border-orange-500 rounded-3xl transform active:scale-90 transition-all duration-100  "
+                    className="cursor-pointer px-4 py-3 border border-blue-500 rounded-3xl transform active:scale-90 transition-all duration-100  "
                     onClick={handleSubmit}  
                   />
                 </span>
