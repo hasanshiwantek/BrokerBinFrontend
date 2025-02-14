@@ -318,6 +318,7 @@
       gap: 1rem;
       p {
         cursor: pointer;
+        white-space: nowrap;
       }
     }
   }

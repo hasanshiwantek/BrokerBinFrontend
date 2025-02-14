@@ -109,7 +109,7 @@ const FeedBackRating = () => {
             </div>
 
             <div className={styles.feedbackDetailsSection}>
-                <div className={styles.feedbackGiven}>
+                <div className={`${styles.feedbackGiven} w-64 `}>
                     <h4>Feedback Given</h4>
                     <p>Positive Feedback: <strong>{positiveCount}</strong></p>
                     <p>Neutral Feedback: <strong>{neutralCount}</strong></p>
@@ -121,7 +121,7 @@ const FeedBackRating = () => {
 
                     <div className={styles.feedBackSec}>
                         <div className={styles.feedbackReceived}>
-                            <h4>Feedback Received</h4>
+                            <h4 >Feedback Received</h4>
                             <div className={styles.feedbackEmojiContainer}>
                                 <p>
                                     <span><img src={positiveEmoji} alt="Positive" /></span> Positive
@@ -136,7 +136,7 @@ const FeedBackRating = () => {
                         </div>
 
                         <div >
-                            <h4>Past Month</h4>
+                            <h4 className='whitespace-nowrap'>Past Month</h4>
                             <div className={styles.feedbackpSec} >
                                 <p style={{ color: "green" }}>{positiveCount}</p>
                                 <p style={{ color: "blue" }}>{neutralCount}</p>
@@ -169,18 +169,18 @@ const FeedBackRating = () => {
 
                 <div className={styles.memberInfo}>
                     <img src={initialData?.company?.image} className='w-52 cursor-pointer' alt="" onClick={() => openCompanyModal(initialData?.company)} />
-                    <p>{initialData?.company?.name}</p>
+                    <p className='!text-2xl'>{initialData?.company?.name}</p>
                     <p>Date Established: {initialData?.company?.created_at}</p>
 
                     <div className={styles.feedbackStars}>
-                        <p>Feedback Stars:</p>
+                        <p className='!text-xl whitespace-nowrap '>Feedback Stars:</p>
                         <div className='flex items-center'>
                             <span className='flex items-center'>{renderStars(initialData?.company?.rating || 0)}</span>
                         </div>
                     </div>
 
 
-                    <p>A {companyRatings}Star Member</p>
+                    <p className='!text-xl'>A {companyRatings}Star Member</p>
                 </div>
 
             </div>
