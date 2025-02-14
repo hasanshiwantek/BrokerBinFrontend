@@ -84,7 +84,7 @@ const HoverPieChart = ({ data }) => {
        
         ))}
         <NavLink to={"/sendbroad"}>
-                <button className="bg-blue-500 p-3 text-white mb-20 rounded-md w-96 ">
+                <button className="bg-blue-500 p-2 text-white mb-20 rounded-md w-[15vw] ">
                   SEND BROADCAST{arrow}
                 </button>
         </NavLink>
