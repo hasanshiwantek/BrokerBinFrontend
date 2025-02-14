@@ -56,6 +56,7 @@ const HoverPieChart = ({ data }) => {
           <p>total</p>
         </span>
       </div>
+      
       <div className={css.gridHome2_Details_Bottom_Chart_data}>
         {transformedData.name.map((label, index) => (
           <div
@@ -83,13 +84,12 @@ const HoverPieChart = ({ data }) => {
           </div>
        
         ))}
-        {/* <NavLink to={"/sendbroad"}>
-                <button className="bg-blue-500 p-2 text-white mb-20 rounded-md w-[15vw] ">
 
-
-                  SEND BROADCAST{arrow}
-                </button>
-        </NavLink> */}
+          <NavLink to={"/sendbroad"}>
+            <button className="bg-blue-500 p-2 text-white w-[100%] rounded-md">
+              SEND BROADCAST{arrow}
+            </button>
+          </NavLink>
 
       </div>
 
