@@ -94,7 +94,7 @@ const ToggleStats = ({ data }) => {
           {backendData.map((item, index) => (
             <div key={index}>
               <a href="#" onClick={() => navigate(item.route)}> {item.name}</a>
-              <a href="#" onClick={() => navigate(item.route)}> {item.value.toLocaleString("en-US")}</a>
+              <a href="#" onClick={() => navigate(item.route)} className="whitespace-nowrap ml-6"> {item.value.toLocaleString("en-US")}</a>
             </div>
           ))}
         </div>
