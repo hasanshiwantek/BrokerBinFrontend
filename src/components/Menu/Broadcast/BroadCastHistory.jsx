@@ -18,7 +18,8 @@ const BroadCastHistory = () => {
   const broadcastItems = useSelector((state) => state.broadcastStore.broadCastData);
   const loggedInUserId = Cookies.get("user_id");
   const dispatch = useDispatch();
-
+  const searchParams = new URLSearchParams(location.search);
+  const urlType = searchParams.get("type");
   const [selectedType, setSelectedType] = useState("all");
   const [inputSearchTerm, setInputSearchTerm] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
@@ -132,6 +133,15 @@ const BroadCastHistory = () => {
     document.body.removeChild(anchor);  // Clean up and remove the anchor
   };
 
+
+useEffect(() => {
+  if (urlType) {
+    setSelectedType(urlType);
+  }
+}, [urlType]);
+
+
+
   return (
     <>
       <div className={`${css.container}`}>
@@ -166,7 +176,7 @@ const BroadCastHistory = () => {
           <div className={css.tableHeader}>
             <div>
               <Link className={css.tabTitle} to={'/broadcasts'}>
-                BroadCast
+                Broadcast
               </Link>
             </div>
 

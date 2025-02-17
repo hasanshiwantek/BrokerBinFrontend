@@ -199,7 +199,7 @@
         border-top: 2px solid var(--primary-color);
         display: flex;
         justify-content: space-between;
-        width: 50%;
+        width: 100%;
         padding: 1rem;
         align-items: center;
       }
@@ -495,6 +495,7 @@
     justify-content: space-around;
 
   }
+  
 
   .manageDropdown {
     display: none;
@@ -502,11 +503,11 @@
     top: 10%;
     background-color: #f9f9f9;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-
     z-index: 1;
     margin-top: 9%;
     margin-left: 17%;
   }
+
 
   .manageDropdown li {
     padding: 10px 12px;
@@ -524,6 +525,17 @@
   .mailSection:hover .manageDropdown {
     display: block;
   }
+ 
+  .profileMgDrop{
+    position: absolute;
+    top: 24% ;
+    left: 10% ;
+  }
+
+
+
+
+
 
 
   .gridHome2_Details_Bottom_Chart_data_btn {
@@ -546,10 +558,42 @@
     cursor: pointer;
   }
 
+  .gridHome1_MemberDetail_profile img {
+    height: 5rem;
+    border-radius: 50%;
+    aspect-ratio: 1;
+    object-fit: cover;
+  }
+
+  .gridHome2_Details_Bottom_Stats_list a {
+    /* text-transform: capitalize; */
+  }
 
   @media screen and (max-width: 1975px) {
 
     .mgDrop {
-      top: 7%;
+      top: 5%;
     }
   }
+
+  @media screen and (max-width: 1366px) {
+
+    .manageDropdown {
+      top: 14%;
+    }
+    .profileMgDrop{
+      top: 24% !important;
+      left: 8% !important;
+    }
+
+  }
+
+  @media screen and (max-width: 1680px) {
+    .profileMgDrop{
+      position: absolute;
+      top: 12% ;
+      left: 10%;
+    }
+  
+  }
+

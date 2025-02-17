@@ -411,6 +411,8 @@ useEffect(() => {
                   ))}
                 </select>
               </div>
+
+              <div className='flex items-center justify-around gap-10'>
               <div>
                 <label htmlFor="bulk">Bulk</label>
                 <input type="checkbox" name="bulk" id="bulk" onChange={handleBuyInChange} />
@@ -427,6 +429,8 @@ useEffect(() => {
                 <label htmlFor="pallet">Pallet</label>
                 <input type="checkbox" name="pallet" id="pallet" onChange={handleBuyInChange} />
               </div>
+              </div>
+
               <div className={styles.searchBroadcastSec}>
                 <input
                   type="text"

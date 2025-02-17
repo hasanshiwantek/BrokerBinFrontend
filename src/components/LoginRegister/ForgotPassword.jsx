@@ -51,6 +51,7 @@ const ForgotPassword = () => {
             console.log("Reset link sent successfully");
         } else {
             setErrorMessage(result.message || "Request failed, please try again.");
+            toast.error(result.message);
             console.log("Error response:", result);
         }
     } catch (error) {
