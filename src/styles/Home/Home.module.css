@@ -186,7 +186,6 @@
     .gridHome2_Bar {
       display: flex;
       gap: 1rem;
-
       /* margin-bottom: 2rem; */
       svg {
         height: 2rem;
@@ -415,7 +414,7 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        gap: 2rem;
+        gap: 1.5rem;
         padding: 0 1rem;
 
         &_btn {
