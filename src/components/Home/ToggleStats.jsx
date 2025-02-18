@@ -63,7 +63,7 @@ const ToggleStats = ({ data }) => {
               <a onClick={() => handleClick(item)} className="cursor-pointer hover:border-b-[1px] border-blue-400">
                 {item.name}
               </a>
-              <a onClick={() => handleClick(item)} className=" ml-6 cursor-pointer">
+              <a onClick={() => handleClick(item)} className=" ml-6 cursor-pointer !whitespace-nowrap">
                 {item.value?.toLocaleString("en-US")}
               </a>
             </div>
@@ -74,8 +74,8 @@ const ToggleStats = ({ data }) => {
         <div className={css.gridHome2_Details_Bottom_Stats_list}>
           {siteStatsData.map((item, index) => (
             <div key={index}>
-              <a href={item.route} className="cursor-pointer hover:border-b-[1px] border-blue-400">{item.name}</a>
-              <a href={item.route} >{item.value.toLocaleString("en-US")}</a>
+              <a href={item.route} className="cursor-pointer hover:border-b-[1px] border-blue-400 ">{item.name}</a>
+              <a href={item.route}  >{item.value.toLocaleString("en-US")}</a>
             </div>
           ))}
           {/* <Link to={"/reports/sitewide"}>more...</Link> */}
