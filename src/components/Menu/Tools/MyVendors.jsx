@@ -15,6 +15,7 @@ import { FaUsers } from "react-icons/fa";
 import { CiSquareRemove } from "react-icons/ci";
 import venIcon from "../../../assets/my-vendors.svg";
 import Footer from "../../Footer/Footer";
+
 const MyVendors = () => {
   const token = Cookies.get("token");
   let [viewAsCompany, setViewAsCompany] = useState(false);

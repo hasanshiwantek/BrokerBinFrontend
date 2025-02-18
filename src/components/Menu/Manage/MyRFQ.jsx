@@ -29,4 +29,4 @@ const MyRFQ = () => {
   )
 }
 
-export default MyRFQ
+export default MyRFQ;

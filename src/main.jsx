@@ -88,6 +88,7 @@ const EditDelete = lazy(() =>
   import("./components/Menu/Manage/Inventory/EditDelete.jsx")
 );
 const Add = lazy(() => import("./components/Menu/Manage/Inventory/Add.jsx"));
+
 const ExportRemove = lazy(() =>
   import("./components/Menu/Manage/Inventory/ExportRemove.jsx")
 );
@@ -243,6 +244,7 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <SearchProduct />
+            <Footer />
           </Suspense>
         ),
       },
@@ -253,7 +255,6 @@ const router = createBrowserRouter([
             <Header />
             <MyProfile />
             <Footer />
-
           </Suspense>
         ),
       },
@@ -294,7 +295,6 @@ const router = createBrowserRouter([
             <Header />
             <BroadcastFilters />
             <Footer />
-
           </Suspense>
         ),
       },
@@ -305,7 +305,6 @@ const router = createBrowserRouter([
             <Header />
             <MyBroadcast />
             <Footer />
-
           </Suspense>
         ),
       },
@@ -335,6 +334,7 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <CompanyDetails />
+            <Footer />
           </Suspense>
         ),
       },
@@ -368,8 +368,6 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
-
-
       {
         path: "/search",
         element: (
@@ -388,7 +386,6 @@ const router = createBrowserRouter([
             <Header />
             <SearchCompany />
             <Footer />
-
           </Suspense>
         ),
       },
@@ -399,7 +396,6 @@ const router = createBrowserRouter([
             <Header />
             <CompanySearchResults />
             <Footer />
-
           </Suspense>
         ),
       },
@@ -410,7 +406,6 @@ const router = createBrowserRouter([
             <Header />
             <InventorySearch />
             <Footer />
-
           </Suspense>
         ),
       },
@@ -461,6 +456,7 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <FeedBackProfile />
+            <Footer />
           </Suspense>
         ),
       },
@@ -471,6 +467,7 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <Manage />
+            <Footer />
           </Suspense>
         ),
       },
@@ -482,7 +479,6 @@ const router = createBrowserRouter([
             <Header />
             <MyServices />
             <Footer />
-
           </Suspense>
         ),
       },
@@ -492,10 +488,9 @@ const router = createBrowserRouter([
         path: "/rfq/create",
         element: (
           <Suspense fallback={<LoadingState />}>
-            <Header />
+            {/* <Header /> */}
             <RfqReply />
             {/* <Footer /> */}
-
           </Suspense>
         ),
       },
@@ -508,7 +503,6 @@ const router = createBrowserRouter([
             <Header />
             <Inventory />
             <Footer />
-
           </Suspense>
         ),
       },
@@ -518,6 +512,7 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <Inventory />
+            <Footer />
           </Suspense>
         ),
       },
@@ -528,7 +523,6 @@ const router = createBrowserRouter([
             <Header />
             <EditDelete />
             <Footer />
-
           </Suspense>
         ),
       },
@@ -539,7 +533,6 @@ const router = createBrowserRouter([
             <Header />
             <Add />
             <Footer />
-
           </Suspense>
         ),
       },
@@ -549,27 +542,28 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <ExportRemove />
+            <Footer />
           </Suspense>
         ),
       },
-      {
-        path: "/venblock",
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Header />
-            <VenBlock />
-          </Suspense>
-        ),
-      },
-      {
-        path: "/venprice",
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Header />
-            <VenPrice />
-          </Suspense>
-        ),
-      },
+      // {
+      //   path: "/venblock",
+      //   element: (
+      //     <Suspense fallback={<LoadingState />}>
+      //       <Header />
+      //       <VenBlock />
+      //     </Suspense>
+      //   ),
+      // },
+      // {
+      //   path: "/venprice",
+      //   element: (
+      //     <Suspense fallback={<LoadingState />}>
+      //       <Header />
+      //       <VenPrice />
+      //     </Suspense>
+      //   ),
+      // },
       // {
       //   path: "/advanced",
       //   element: (
@@ -578,7 +572,7 @@ const router = createBrowserRouter([
       //       <Advanced />
       //     </Suspense>
       //   ),
-      ,
+      
       {
         path: "/map",
         element: (
@@ -716,7 +710,6 @@ const router = createBrowserRouter([
             <Header />
             <Company />
             <Footer />
-
           </Suspense>
         ),
       },
@@ -727,7 +720,6 @@ const router = createBrowserRouter([
             <Header />
             <SiteWide />
             <Footer />
-
           </Suspense>
         ),
       },
@@ -738,7 +730,6 @@ const router = createBrowserRouter([
             <Header />
             <Email />
             <Footer />
-
           </Suspense>
         ),
       },
@@ -749,7 +740,6 @@ const router = createBrowserRouter([
             <Header />
             <ServiceStats />
             <Footer />
-
           </Suspense>
         ),
       },
@@ -759,24 +749,26 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <MatchYourHits />
+            <Footer />
           </Suspense>
         ),
       },
-      {
-        path: "/reports/Detailed",
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Header />
-            <Detailed />
-          </Suspense>
-        ),
-      },
+      // {
+      //   path: "/reports/Detailed",
+      //   element: (
+      //     <Suspense fallback={<LoadingState />}>
+      //       <Header />
+      //       <Detailed />
+      //     </Suspense>
+      //   ),
+      // },
       {
         path: "/reports/SupplyAndDemand",
         element: (
           <Suspense fallback={<LoadingState />}>
             <Header />
             <SupplyAndDemand />
+            <Footer />
           </Suspense>
         ),
       },
@@ -786,6 +778,7 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <Detailed />
+            <Footer />
           </Suspense>
         ),
       },
@@ -795,6 +788,7 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <TopSearches />
+            <Footer />
           </Suspense>
         ),
       },
@@ -804,7 +798,7 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <CompanyInventory />
-
+            <Footer />
           </Suspense>
         ),
       },
@@ -814,6 +808,7 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <TopSearchWithManufacturer />
+            <Footer />
           </Suspense>
         ),
       },
@@ -834,7 +829,6 @@ const router = createBrowserRouter([
             <Header />
             <HotListView />
             <Footer />
-
           </Suspense>
         ),
       },
@@ -845,7 +839,6 @@ const router = createBrowserRouter([
             <Header />
             <HotListEdit />
             <Footer />
-
           </Suspense>
         ),
       },
@@ -860,7 +853,6 @@ const router = createBrowserRouter([
     element: (
       <Suspense fallback={<LoadingState />}>
         <NotFound />
-
       </Suspense>
     ),
   },

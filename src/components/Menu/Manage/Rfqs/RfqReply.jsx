@@ -15,6 +15,7 @@ import { useLocation } from "react-router-dom"; // Add this import
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import Header from "@/components/Header";
 
 const RfqReply = () => {
 
@@ -55,53 +56,6 @@ const RfqReply = () => {
     console.log("Selected Rows in RfqReply:", selectedRfqs);
 }, [selectedRfqs]);
 
-
-  // useEffect(() => {
-  //   if (initialData && selectedRfqs.length === 0) {
-  //     // Format logged-in user information
-  //     const userInfo = `
-  //   <div className={css.paddedContent}>
-  //     <p><strong>Quote Needed Looking for the best price, availability & lead time.</strong></p>
-      
-  //     <p>${initialData.firstName || " "} ${initialData.lastName || ""}</p>
-  //     <p>${initialData?.company?.name || ""}</p>
-  //     <p>${initialData.phoneNumber || ""}</p>
-  //     <p>${initialData.email || ""}</p>
-  //   </div>
-    
-  // `;
-
-
-  //     // Format RFQ sender information and details
-  //     const rfqDetails = selectedRfqs.map((rfq) => `
-  //     <p><strong>RFQ initial Details:</strong></p>
-  //     <p>Name: ${rfq.from?.firstName || ""} ${rfq.from?.lastName || ""}</p>
-  //     <p>Email: ${rfq.from?.email || ""}</p>
-  //     <p>Part Numbers: ${rfq.partNumbers?.join(", ") || "N/A"}</p>
-  //     <p>Heci/CLI: ${rfq.heciCleis?.join(", ") || "N/A"}</p>
-  //     <p>Mfg: ${rfq.mfgs?.join(", ") || "N/A"}</p>
-  //     <p>Cond: ${rfq.conditions?.join(", ") || "N/A"}</p>
-  //     <p>Qty: ${rfq.quantities?.join(", ") || "N/A"}</p>
-  //     <p>Target Price: ${rfq.targetPrices?.join(", ") || "N/A"}</p>
-  //     <p>Terms: ${rfq.terms?.join(", ") || "N/A"}</p>
-
-
-      
-
-  //           <p>--------------</p>
-  //     <p>${initialData.firstName || " "} ${initialData.lastName || ""}</p>
-  //     <p>${initialData?.company?.name || ""}</p>
-  //     <p>${initialData.phoneNumber || ""}</p>
-  //     <p>${initialData.email || ""}</p>
-
-
-
-  //   `).join("<br />");
-
-  //     // Combine logged-in user and RFQ details
-  //     setComment(`${userInfo}<br />${rfqDetails}`);
-  //   }
-  // }, [initialData, selectedRfqs]);
   useEffect(() => {
     if (initialData && !comment) {
       // Always include logged-in user information
@@ -466,6 +420,7 @@ const RfqReply = () => {
 
   return (
     <>
+    <Header/>
       <div className={`${css.rfqcontainer} `}>
         <form >
           <div className={`${css.rfqNew}  sm:h-[58vh] lg:h-[68vh] mt-8`} ref={modalRef}>
@@ -791,6 +746,7 @@ const RfqReply = () => {
         </form>
       </div>
                   <ToastContainer position="top-center" autoClose={1000} />
+                  
       
     </>
   );

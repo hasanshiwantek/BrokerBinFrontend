@@ -1,6 +1,4 @@
-  * {
-  /* text-transform: capitalize; */
-}
+
 .gridHome {
   display: grid;
   grid-template-columns: minmax(15rem, 33%) 1fr;
@@ -304,9 +302,7 @@
         a {
           gap: 1rem;
         }
-        a:nth-child(1) {
-          /* font-weight: 600; */
-        }
+    
         a:nth-child(2) {
           color: var(--popup-bg-color);
         }

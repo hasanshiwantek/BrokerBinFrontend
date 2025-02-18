@@ -610,4 +610,4 @@ useEffect(() => {
   )
 }
 
-export default BroadCast
+export default BroadCast;
