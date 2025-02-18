@@ -400,6 +400,7 @@
       height: 10rem !important;
       width: 10rem !important;
     } */
+
       &_totalData {
         display: flex;
         flex-direction: column;
@@ -409,6 +410,28 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+
+    &_totalData {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    &_data {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1.5rem;
+      padding: 0 1rem;
+      &_btn {
+        color: var(--font-color);
+        text-align: center;
+        background: violet;
+        padding: 1rem;
       }
 
       &_data {
