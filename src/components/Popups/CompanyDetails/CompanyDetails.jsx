@@ -1,5 +1,5 @@
 
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useState ,useRef} from "react";
 import css from "../../../styles/Popup/CompanyDetails.module.css";
 import TabContent from "./TabContent";
 import TabInformation from "./TabInformation";
@@ -116,39 +116,40 @@ const CompanyDetails = ({ closeModal }) => {
   };
 
   // Close modal when clicking outside or pressing Escape
-  // useEffect(() => {
-  //   const handleClickOutside = (event) => {
-  //     const modal = document.querySelector(`.${css.Popup_Info}`);
-  //     if (modal && !modal.contains(event.target)) {
-  //       closeModal(); // Close modal if clicked outside
-  //     }
-  //   };
-
-  //   const handleEscapeKey = (event) => {
-  //     if (event.key === "Escape") {
-  //       closeModal(); // Close modal on Escape key press
-  //     }
-  //   };
-
-  //   // Adding event listeners
-  //   document.addEventListener("click", handleClickOutside);
-  //   document.addEventListener("keydown", handleEscapeKey);
-
-  //   // Cleanup event listeners
-  //   return () => {
-  //     document.removeEventListener("click", handleClickOutside);
-  //     document.removeEventListener("keydown", handleEscapeKey);
-  //   };
-  // }, [closeModal]);
-
 
   const ratings = parseFloat(feedbackData?.rating?.averageRating || 5);
-
-
+  
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const modal = document.querySelector(`.${css.Popup_Info}`);
+      if (modal && !modal.contains(event.target)) {
+        closeModal(); // Close modal if clicked outside
+      }
+    };
+  
+    const handleEscapeKey = (event) => {
+      if (event.key === "Escape") {
+        closeModal(); // Close modal on Escape key press
+      }
+    };
+  
+    if (isModalOpen) {
+      setTimeout(() => {
+        document.addEventListener("click", handleClickOutside);
+        document.addEventListener("keydown", handleEscapeKey);
+      }, 200); // Add delay to avoid detecting the opening click
+    }
+  
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+      document.removeEventListener("keydown", handleEscapeKey);
+    };
+  }, [isModalOpen]); // ✅ Removed `closeModal` from dependencies
+  
   // While loading, show loading indicator
   if (loading) {
     return (
-      <div className={css.Popup}>
+      <div className={css.Popup} >
         <div className={css.Popup_Info}>
           <div className={css.Popup_Info_height}>
             <div className={css.Popup_Info_header}>
@@ -169,7 +170,7 @@ const CompanyDetails = ({ closeModal }) => {
   }
 
   return (
-    <div className={css.Popup}>
+    <div className={css.Popup} >
       <div className={css.Popup_Info}>
         <div className={css.Popup_Info_height}>
           <div className={css.Popup_Info_header}>

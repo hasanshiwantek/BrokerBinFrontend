@@ -23,7 +23,7 @@ function InventoryButtons() {
                   to="/inventory/Edit-Delete"
                   className={({ isActive }) => (isActive ? myProfile.active : '')}
                 >
-                  <span>edit/delete</span>
+                  <span>Edit/Delete</span>
                 </NavLink>
               </li>
               <li>
@@ -39,7 +39,7 @@ function InventoryButtons() {
                   to="/inventory/Export-Remove"
                   className={({ isActive }) => (isActive ? myProfile.active : '')}
                 >
-                  <span>export/remove</span>
+                  <span>Export/Remove</span>
                 </NavLink>
               </li>
               {/* <li>

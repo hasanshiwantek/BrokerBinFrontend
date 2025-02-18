@@ -185,70 +185,70 @@ const SearchProduct = () => {
         <Filter currentQuery={currentQuery} />
       )}
 
-  <div className={`${css.layoutTables} !mx-auto`} style={Object.keys(filteredSearchResponse || searchResponseMatched || {}).length <= 0 ? { margin: "0" } : null}>
+      <div className={`${css.layoutTables} !mx-auto`} style={Object.keys(filteredSearchResponse || searchResponseMatched || {}).length <= 0 ? { margin: "0" } : null}>
 
-    {Object.keys(filteredSearchResponse || searchResponseMatched || {}).length === 0 ||
-      Object.values(filteredSearchResponse || searchResponseMatched).every((part) =>
-        Array.isArray(part?.data) && part.data.length === 0
-      ) ? (
-      // ✅ No results case
-      <div className="">
-        <AddToHotList item={searchString || partModel} />
-      </div>
-      
-    ) : isKeywordSearch ? (
-      // ✅ Single table for `searchByKeyword`
-      <div className={css.tableArea}>
-        {graphToggle && <ProductsPieChart />}
-        <div className={css.productTable}>
-          <ProductTableBtn />
-          <ProductTableDetail
-            partData={Object.values(searchResponseMatched).flatMap((details) => details.data)} // Merging all partModels
-            partModel={"All Results"} // Displaying a single table
-            keyWordPartModel={partModel}
-            totalCount={Object.values(searchResponseMatched)[0]?.totalCount || 0} // Taking totalCount from the first key
-            page={Object.values(searchResponseMatched)[0]?.page || 1} // Using common page value
-            partModels={[]} // Empty since all merged
-            isFilterActive={isFilterActive}
-            searchString={searchString}
-          />
-        </div>
-      </div>
-    ) : (
-      // ✅ Multiple tables for `searchProductQuery`
-      Object.entries(filteredSearchResponse || searchResponseMatched || {}).map(([partModel, details], index) => (
-        <div key={`${partModel}-${index}`}>
-          {details?.data?.length > 0 ? (
-            // ✅ Render table for available parts
-            <div className={css.tableArea}>
-              {graphToggle && <ProductsPieChart />}
-              <div className={css.productTable}>
-                <ProductTableBtn />
-                <ProductTableDetail
-                  partData={details.data}
-                  partModel={partModel}
-                  totalCount={details.totalCount}
-                  page={details.page}
-                  partModels={partModels}
-                  isFilterActive={isFilterActive}
-                  searchString={searchString}
-                  sortPageSize={sortPageSize}
-                  sortPage={sortPage}
-                  token={token}
-                />
-              </div>
+        {Object.keys(filteredSearchResponse || searchResponseMatched || {}).length === 0 ||
+          Object.values(filteredSearchResponse || searchResponseMatched).every((part) =>
+            Array.isArray(part?.data) && part.data.length === 0
+          ) ? (
+          // ✅ No results case
+          <div className="">
+            <AddToHotList item={searchString || partModel} />
+          </div>
+
+        ) : isKeywordSearch ? (
+          // ✅ Single table for `searchByKeyword`
+          <div className={css.tableArea}>
+            {graphToggle && <ProductsPieChart />}
+            <div className={css.productTable}>
+              <ProductTableBtn />
+              <ProductTableDetail
+                partData={Object.values(searchResponseMatched).flatMap((details) => details.data)} // Merging all partModels
+                partModel={"All Results"} // Displaying a single table
+                keyWordPartModel={partModel}
+                totalCount={Object.values(searchResponseMatched)[0]?.totalCount || 0} // Taking totalCount from the first key
+                page={Object.values(searchResponseMatched)[0]?.page || 1} // Using common page value
+                partModels={[]} // Empty since all merged
+                isFilterActive={isFilterActive}
+                searchString={searchString}
+              />
             </div>
-          ) : (
-            // ✅ Show Hotlist only for unavailable parts
-            <div key={`hotlist-${partModel}`}>
-              <AddToHotList item={partModel} />
+          </div>
+        ) : (
+          // ✅ Multiple tables for `searchProductQuery`
+          Object.entries(filteredSearchResponse || searchResponseMatched || {}).map(([partModel, details], index) => (
+            <div key={`${partModel}-${index}`}>
+              {details?.data?.length > 0 ? (
+                // ✅ Render table for available parts
+                <div className={css.tableArea}>
+                  {graphToggle && <ProductsPieChart />}
+                  <div className={css.productTable}>
+                    <ProductTableBtn />
+                    <ProductTableDetail
+                      partData={details.data}
+                      partModel={partModel}
+                      totalCount={details.totalCount}
+                      page={details.page}
+                      partModels={partModels}
+                      isFilterActive={isFilterActive}
+                      searchString={searchString}
+                      sortPageSize={sortPageSize}
+                      sortPage={sortPage}
+                      token={token}
+                    />
+                  </div>
+                </div>
+              ) : (
+                // ✅ Show Hotlist only for unavailable parts
+                <div key={`hotlist-${partModel}`}>
+                  <AddToHotList item={partModel} />
+                </div>
+              )}
             </div>
-          )}
-        </div>
-      ))
-    )}
-    
-  </div>
+          ))
+        )}
+
+      </div>
 
       {togglePopUp && <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
     </div>
@@ -313,6 +313,15 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
   } = useSelector((store) => store.searchProductStore);
 
   console.log("SearchResponse From UI ", searchResponseMatched)
+
+  // const [type,setType]=useState("")
+  // if(partModel){
+  //   setType("keyword")
+  // }else{
+  //   setType("")
+  // }
+
+  // console.log("TYPE: ",type)
 
 
   const user_id = Cookies.get("user_id");
@@ -545,9 +554,9 @@ const ProductTableDetail = React.memo(({ partModel, partData, partModels, isFilt
     }
 
     const searchKey = keyWordPartModel || searchString;
-    console.log("SearchKey: ",searchKey)
+    console.log("SearchKey: ", searchKey)
     const searchArray = searchKey ? searchKey.split(",").map(s => s.trim()) : keys; // ✅ Splits into an array
-    console.log("Search Array: ",searchArray)
+    console.log("Search Array: ", searchArray)
 
     // Create the payload for dispatch
     const payload = {

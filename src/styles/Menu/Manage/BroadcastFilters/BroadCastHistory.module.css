@@ -1,6 +1,6 @@
 .container {
     width: 80%;
-    margin: 20px auto;
+    margin: 50px auto;
     background-color: #f0f0f0;
     padding: 20px;
     border-radius: 5px;
@@ -61,7 +61,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
     background-color: lightgray;
 }
 
@@ -119,7 +118,7 @@
 .actionButtons {
     display: flex;
     gap: 10px;
-    /* margin-top: 20px; */
+    background-color: var(--secondary-bgColor);
 }
 
 /* Footer styling */
@@ -169,18 +168,18 @@
   
 
   .type-wtb {
-    color: blue;
+    color: blue !important;
     text-transform:uppercase;
   }
   
   .type-wts {
-    color: red;
+    color: red !important;
     text-transform:uppercase;
   
   }
   
   .type-rfq {
-    color: green;
+    color: green !important;
     text-transform:uppercase;
   
   }

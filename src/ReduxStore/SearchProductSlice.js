@@ -411,6 +411,7 @@ const searchProductSlice = createSlice({
       // })
       .addCase(searchProductFilter.fulfilled, (state, action) => {
         state.filteredSearchResponse = action.payload;
+        // state.searchResponseMatched=action.payload
         state.page = action.meta.arg.filters.page;
         // state.page = action.payload.page; // Current page
         state.pageSize = action.payload.pageSize; // Items per page

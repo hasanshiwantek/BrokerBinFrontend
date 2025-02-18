@@ -108,7 +108,8 @@ const EditDelete = () => {
   const handleSearch = () => {
     // Check if all filters are empty
     if (!filters.partModel.trim() && !filters.mfg.trim() && !filters.status.trim() && !filters.heciClei.trim()) {
-      alert("Please apply at least one filter before searching.");
+      // alert("Please apply at least one filter before searching.");
+      fetchInventoryData()
       return; // Stop execution if no filters are applied
     }
 

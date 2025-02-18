@@ -261,9 +261,9 @@ Object.values(searchResponseMatched || {}).flatMap(item => item?.data ? item.dat
           </div>
 
           <input type="submit" id={css.applyFilter} value="Apply Filters" className={css.applyFilterBtn} />
-          <button 
+          {/* <button 
           className={`${css.applyFilterBtn}   !bg-[#f06622] !rounded`}
-          onClick={handleClearFilters}>Clear filters</button>
+          onClick={handleClearFilters}>Clear filters</button> */}
         </form>
 
         {/* Search History Section */}

@@ -26,6 +26,12 @@ const HoverPieChart = ({ data }) => {
     ],
   };
 
+  console.log("WTB COUNT: ",data.wtbCount)
+  console.log("WTS COUNT: ",data.wtsCount)
+  console.log("RFQ COUNT: ",data.rfqCount)
+  console.log("Service COUNT: ",data.serviceCount)
+
+
   const navigate = useNavigate();
   const pieColor = transformedData.datasets[0].backgroundColor;
   const [activeIndex, setActiveIndex] = useState(null);
@@ -47,6 +53,8 @@ const HoverPieChart = ({ data }) => {
     .reduce((sum, acc) => sum + acc, 0)
     .toLocaleString("en-US");
 
+
+    
   return (
     <>
       <div className={css.gridHome2_Details_Bottom_Chart}>
@@ -72,7 +80,7 @@ const HoverPieChart = ({ data }) => {
                 : css.inactiveIndexLabel
             }
           >
-            <span>
+            <span className="ml-8">
               <FaRegCircle style={{ color: pieColor[index] }} />
               <a className="cursor-pointer">{label}</a>
             </span>
@@ -98,7 +106,6 @@ const HoverPieChart = ({ data }) => {
 };
 
 export default HoverPieChart;
-
 
 
 

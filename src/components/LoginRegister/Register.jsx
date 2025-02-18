@@ -3,7 +3,7 @@ import css from "../../styles/LoginRegister/Register.module.css";
 import { useNavigate } from "react-router-dom";
 import brokerLogo from "../../imgs/logo/BrokerCell Logo.svg";
 import { FaFacebookF, FaGooglePlusG, FaEye, FaEyeSlash } from "react-icons/fa";
-
+import { Link } from "react-router-dom";
 const Register = () => {
   const navigate = useNavigate();
   const [formPassword, setFormPassword] = useState({
@@ -112,6 +112,7 @@ const Register = () => {
 
 
 
+  const arrow = "<"
 
   return responseOk ? (
     <>
@@ -134,7 +135,9 @@ const Register = () => {
         <div className={css.layout_head}>
 
           <div className="flex justify-center flex-col items-center">
+            <Link to={"https://brokercell.com/"} target="_blank" className="w-[69%] ml-[46%]">
             <img src={brokerLogo} alt="Broker-Logo" srcset="" className="w-[35%] " />
+            </Link>
             <h2 className="font-bold text-5xl text-[#2c83ec] text-center mt-14 ml-10">JOIN THE NETWORK</h2>            
           </div>
 
@@ -780,6 +783,11 @@ const Register = () => {
             </span>
             {errors.form && <p style={{ color: "red" }}>{errors.form}</p>}
             <button type="submit">Submit Application</button>
+                   <div className="mt-5 text-[#444]">
+                            <Link to={"https://brokercell.com"} target="_blank">
+                              {arrow} Back to BrokerCell
+                            </Link>
+                          </div>
             {/* <p className={css.submitBtn_login}>
               Already have an account?
               <a href="/login">

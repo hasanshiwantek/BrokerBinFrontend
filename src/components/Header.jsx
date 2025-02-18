@@ -59,6 +59,7 @@ const Header = () => {
   const navigate = useNavigate();
   const [searchType, setSearchType] = useState();
   const location = useLocation(); // Detect current route
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const { hoverCompanyDetail } = useSelector(
     (store) => store.searchProductStore
@@ -74,6 +75,7 @@ const Header = () => {
     localStorage.removeItem("user");
     Cookies.remove("token");
     Cookies.remove("user_id");
+    setShowLogoutModal(false);
     navigate("/login", { replace: true });
   };
 
@@ -146,7 +148,7 @@ const Header = () => {
                 id={css.search}
                 placeholder="What are you looking for?"
               />
-       
+
               <button
                 type="submit"
                 onClick={() => setSearchType("search")}
@@ -157,7 +159,7 @@ const Header = () => {
               <button
                 type="submit"
                 onClick={() => setSearchType("keyword")}
-                className={css.search_btn} 
+                className={css.search_btn}
               >
                 Keyword
               </button>
@@ -560,10 +562,33 @@ const Header = () => {
                 </ul>
               </div>
             </li>
-            <li onClick={handleLogout} style={{ cursor: "pointer" }}>
+            <li  onClick={() => setShowLogoutModal(true)} style={{ cursor: "pointer" }}>
               <BiLogOut />
               logout
             </li>
+            {/* Logout Confirmation Modal */}
+            {showLogoutModal && (
+              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                <div className="bg-white rounded-xl shadow-lg p-14 w-[35rem]  text-center">
+                  <h2 className="text-2xl font-semibold mb-4">Confirm Logout</h2>
+                  <p className="text-gray-600 !text-xl">Are you sure you want to log out?</p>
+                  <div className="mt-6 flex justify-center gap-4">
+                    <button
+                      onClick={handleLogout}
+                      className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition"
+                    >
+                      Yes, Logout
+                    </button>
+                    <button
+                      onClick={() => setShowLogoutModal(false)}
+                      className="bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded transition"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </ul>
           <ul className={css.nav_tools}>
             <li className="gap-[1vw] cursor-pointer"
