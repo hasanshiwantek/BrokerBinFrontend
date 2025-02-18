@@ -48,12 +48,12 @@ const BroadCast = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [filteredBroadcast, setFilteredBroadcasts] = useState([]);
 
-useEffect(() => {
-  if (urlType) {
-    setFilterType(urlType);
-  }
-}, [urlType]);
-  
+  useEffect(() => {
+    if (urlType) {
+      setFilterType(urlType);
+    }
+  }, [urlType]);
+
   // Fetch data when currentPage changes
   useEffect(() => {
     console.log("Fetching data for pageNumber:", currentPage);
@@ -412,7 +412,6 @@ useEffect(() => {
                 </select>
               </div>
 
-              <div className='!flex !items-center !justify-around !gap-10'>
               <div>
                 <label htmlFor="bulk">Bulk</label>
                 <input type="checkbox" name="bulk" id="bulk" onChange={handleBuyInChange} />
@@ -428,7 +427,6 @@ useEffect(() => {
               <div>
                 <label htmlFor="pallet">Pallet</label>
                 <input type="checkbox" name="pallet" id="pallet" onChange={handleBuyInChange} />
-              </div>
               </div>
 
               <div className={styles.searchBroadcastSec}>
@@ -521,7 +519,7 @@ useEffect(() => {
               ))
             ) : (
               <tr>
-                <td colSpan="14" style={{ textAlign: "center" ,color:"red"}}>
+                <td colSpan="14" style={{ textAlign: "center", color: "red" }}>
                   No broadcasts found for the selected type.
                 </td>
               </tr>
