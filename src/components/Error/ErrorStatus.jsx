@@ -1,6 +1,6 @@
 import React from "react";
 import css from "../../styles/LoginRegister/Authentication/NotFound.module.css";
-
+import errorPage from "../../assets/BrokerCell 404 Page.svg" 
 const ErrorStatus = ({ error }) => {
   return (
     <div className={css.notFound}>
@@ -13,7 +13,7 @@ const ErrorStatus = ({ error }) => {
         </div>
       </div>
       <div className={css.text}>
-        <h1>{error}</h1>
+        {/* <h1>{error}</h1> */}
       </div>
     </div>
   );

@@ -19,6 +19,13 @@ const BroadcastModal = ({ isOpen, onRequestClose, broadcast }) => {
         navigate('/ReplyBroad');
     };
 
+        // Close modal if clicked outside of modal content
+        const handleOverlayClick = (event) => {
+            if (event.target.classList.contains(styles.modalOverlay)) {
+                onRequestClose(); 
+            }
+        };
+
     // Function to handle direct file download
     const handleFileDownload = (event, file) => {
         event.preventDefault(); // Prevent the default link behavior
@@ -37,8 +44,8 @@ const BroadcastModal = ({ isOpen, onRequestClose, broadcast }) => {
     const broadcastServices = broadcast.service.join(", "); // Join services with a comma and space
     console.log(broadcastServices);
     return (
-        <div className={styles.modalOverlay}>
-            <div className={styles.modalContent}>
+        <div className={styles.modalOverlay} onClick={handleOverlayClick}>
+            <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
                 <h2>Broadcast Summary</h2>
                 <hr className={styles.hrSec} />
                 <p><strong>From:</strong> {broadcast.user_id.company.name} [{broadcast.user_id.email}]</p>

@@ -468,7 +468,7 @@ const RfqReply = () => {
                               zIndex: 1000,
                               background: "#fff",
                               border: "1px solid #ccc",
-                              padding: "10px 15px",
+                              // padding: "10px 15px",
                               top: "0%",
                               left: "132px",
                               width: "223%",

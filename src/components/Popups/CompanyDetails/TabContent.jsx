@@ -67,7 +67,7 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
   // Filter contacts dynamically based on the search query
   useEffect(() => {
     if (companyContactData?.data?.contacts) {
-      const contacts = companyContactData.data.contacts;
+      const contacts = companyContactData?.data?.contacts;
       if (!searchQuery) {
         // Show all contacts if the search query is empty
         setFilteredContacts(contacts);

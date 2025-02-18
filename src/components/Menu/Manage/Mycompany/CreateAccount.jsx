@@ -114,9 +114,9 @@ const CreateAccount = () => {
             if (createUser.fulfilled.match(result)) {
                 // alert('Account created successfully!');
                 // ✅ Show success toast with light blue color
-                                          toast.info("Account Created Successfully", {
-                                           style: { fontSize:"12px" ,marginTop:"-10px",fontWeight:"bold"} , // 
-                                         });
+                toast.info("Account Created Successfully", {
+                    style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, // 
+                });
                 // Reset formData to initial values
                 setFormData({
                     userId: '',
@@ -150,15 +150,15 @@ const CreateAccount = () => {
         } catch (error) {
             // alert('Unexpected error occurred!');
             toast.info("Error Creating Account.Please Try Again.", {
-                style: { fontSize:"12px" ,marginTop:"-10px",fontWeight:"bold"} , // 
-              });
+                style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, // 
+            });
 
             console.error(error);
         }
     };
 
     return (
-            <div className={`px-5 ${css.profileLayout} `}>
+        <div className={`px-5 ${css.profileLayout} `}>
             <form onSubmit={(e) => e.preventDefault()}>
                 <div className={`${css.profileInfo} !bg-white border border-2 rounded-2xl`}>
 
@@ -171,6 +171,14 @@ const CreateAccount = () => {
                                     className={({ isActive }) => (isActive ? css.active : '')}
                                 >
                                     <span>Primary Contact</span>
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink
+                                    to="/mycompany/Createaccount"
+                                    className={({ isActive }) => (isActive ? css.active : '')}
+                                >
+                                    <span>Create Account</span>
                                 </NavLink>
                             </li>
                             {/* <li>
@@ -210,9 +218,9 @@ const CreateAccount = () => {
 
                     <h1 className='pt-5'>Create Account</h1>
 
-                    <div className='flex justify-between space-x-[4vw] pt-10'>
+                    <div className='!flex !justify-between !space-x-[4vw] !pt-10'>
 
-                        <div className='flex flex-col text-right gap-5'>
+                        <div className='!flex !flex-col !text-right !gap-5'>
 
                             <span className='space-x-4'>
                                 <label>Login</label>
@@ -342,7 +350,7 @@ const CreateAccount = () => {
                             <h3>Password Requirements</h3>
 
 
-                            <h3>Preferred Brokerbin Use</h3>
+                            <h3>Preferred Brokercell Use</h3>
                             <label><input type="radio" name="preferredUse" value="Telecom" onChange={handleChange} /> Telecom</label>
                             <label><input type="radio" name="preferredUse" value="Computer" onChange={handleChange} /> Computer</label>
                         </div>

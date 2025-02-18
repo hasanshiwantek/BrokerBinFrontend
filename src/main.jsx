@@ -138,6 +138,9 @@ const HotListEdit = lazy(() =>
   import("./components/Menu/Tools/HotListEdit.jsx")
 );
 
+const SafeTrading = lazy(() =>
+  import("./components/ui/SafeTrading.jsx")
+);
 import Crousel from "./Crousel.jsx";
 import { Provider } from "react-redux";
 import store from "./ReduxStore/Store.js";
@@ -839,6 +842,17 @@ const router = createBrowserRouter([
             <Header />
             <HotListEdit />
             <Footer />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/safe_trading",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <SafeTrading/>
+            <Footer />
+
           </Suspense>
         ),
       },

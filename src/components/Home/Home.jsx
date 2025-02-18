@@ -168,12 +168,12 @@ const Home = () => {
         styleOverrides: {
           tooltip: {
             fontSize: "1.2rem", // Adjust font size
-            width:"11rem",
-            textAlign:"center",
-            backgroundColor: "var(--primary-color)", 
+            width: "11rem",
+            textAlign: "center",
+            backgroundColor: "var(--primary-color)",
           },
-          arrow:{
-            color:"var(--primary-color)"
+          arrow: {
+            color: "var(--primary-color)"
           }
         },
       },
@@ -184,36 +184,36 @@ const Home = () => {
   const ratingCount = initialData?.company?.ratingCount;
 
 
-  
-      const companyRatings = initialData?.company?.rating || [];
-      const ratingCounts = initialData?.company?.ratingCount || [];
-  
-      console.log("Company Ratings ", companyRatings);
-  
-      console.log("Rating Counts:", ratingCounts);
-  
-      const renderStars = (rating) => {
-          const stars = [];
-          for (let i = 1; i <= 5; i++) {
-              if (i <= rating) {
-                  stars.push(<FaStar key={i} color="gold" size={20} />); // Full Star
-              } else if (i - 0.5 === rating) {
-                  stars.push(<FaStarHalfAlt key={i} color="gold" size={20} />); // Half Star
-              } else {
-                  stars.push(<FaRegStar key={i} color="gray" size={20} />); // Empty Star
-              }
-          }
-          return stars;
-      };
-  
-  
 
-      const companyRatingsPer = ((companyRatings / 5) * 100).toFixed(1)
-      console.log("Company Ratings in %:", companyRatingsPer);
-  
-  
-  
- 
+  const companyRatings = initialData?.company?.rating || [];
+  const ratingCounts = initialData?.company?.ratingCount || [];
+
+  console.log("Company Ratings ", companyRatings);
+
+  console.log("Rating Counts:", ratingCounts);
+
+  const renderStars = (rating) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      if (i <= rating) {
+        stars.push(<FaStar key={i} color="gold" size={20} />); // Full Star
+      } else if (i - 0.5 === rating) {
+        stars.push(<FaStarHalfAlt key={i} color="gold" size={20} />); // Half Star
+      } else {
+        stars.push(<FaRegStar key={i} color="gray" size={20} />); // Empty Star
+      }
+    }
+    return stars;
+  };
+
+
+
+  const companyRatingsPer = ((companyRatings / 5) * 100).toFixed(1)
+  console.log("Company Ratings in %:", companyRatingsPer);
+
+
+
+
   return (
     <>
       {!blurWhileLoading ? (
@@ -225,51 +225,58 @@ const Home = () => {
 
               <div className={`mailSection ${css.mailSection}`}>
                 <div className={css.gridHome1_Bar}>
-                  <MdContactPage />
-                  <p>Service Directory</p>
+                  <MdManageAccounts />
+                  <p>Manage</p>
                   <div style={{ color: "var(--primary-color)" }}>
                     <BiDotsHorizontalRounded />
                   </div>
-
-                  {/* <div className={css.manageDropdown}>
+                  <div className={`${css.manageDropdown} ${css.mgDrop}`}>
                     <ul>
-                      <Link to={"/search"}> <li>Search</li></Link>
-                      <Link to={"/manage/my-services"}> <li>Manage my Services</li></Link>
+                      <Link to={"/inventory"}> <li>Inventory</li></Link>
+                      <Link to={"/rfq"}> <li>My RFQs</li></Link>
+                      {/* <Link> <li>My BOM</li></Link> */}
+                      <Link to={"/myprofile"}> <li>My Profile</li></Link>
+                      <Link to={"/mycompany"}> <li>My Company</li></Link>
+                      {/* <Link to={"/manage/my-services"}> <li>My Services</li></Link> */}
+                      {/* <Link to={"/venprice"}> <li>Vendor Pricing</li></Link> */}
 
                     </ul>
-                  </div> */}
+                  </div>
                 </div>
               </div>
 
 
 
               <div className={css.gridHome1_MemberDetail}>
-                <div className={`${css.gridHome1_MemberDetail_profile} ${css.mailSection}`}>
-                  <img
-                    src={
-                      initialData?.profileImage
-                        ? initialData.profileImage
-                        : person
-                    }
-                    alt="person"
-                  />
-                  <h3>
-
-                    Welcome back,
-                    {initialData.firstName}
-                  </h3>
+                <div className={`${css.gridHome1_MemberDetail_profile} ${css.mailSection} `}>
+                  <div >
+                    <Link to={"/myprofile"} className="flex items-center justify-center gap-5">
+                      <img
+                        src={
+                          initialData?.profileImage
+                            ? initialData.profileImage
+                            : person
+                        }
+                        alt="person"
+                      />
+                      <h3 className="whitespace-nowrap">
+                        Welcome back,
+                        {initialData.firstName}
+                      </h3>
+                    </Link>
+                  </div>
                   <div style={{ color: "var(--primary-color)" }}>
                     <BiDotsHorizontalRounded />
                   </div>
-                  <div className={`${css.manageDropdown}`}>
-                    <ul>
+                  <div className={`${css.manageDropdown} ${css.profileMgDrop}`}>
+                    <ul >
                       <Link to={"/myprofile"}> <li>My Profile</li></Link>
                       <Link to={"/mycompany"}> <li>My Company</li></Link>
-                    
+
                     </ul>
                   </div>
                 </div>
-          
+
                 <div className={css.gridHome1_MemberDetail_list}>
                   <ul>
                     {/* <li className={css.gridHome1_MemberDetail_list_options}>
@@ -317,25 +324,25 @@ const Home = () => {
                             </Tooltip>
                           </ThemeProvider>
                           <ThemeProvider theme={theme}>
-                          <Tooltip title="Total Received" arrow placement="top" >
-                          <a onClick={() => handleNavigation("/rfq")}>
-                            {(broadcastCount?.data?.received || 0)
-                              .toLocaleString("en-US")
-                              .toString()
-                              .padStart(2, "0")}
-                            /
-                          </a>
-                          </Tooltip>
+                            <Tooltip title="Total Received" arrow placement="top" >
+                              <a onClick={() => handleNavigation("/rfq")}>
+                                {(broadcastCount?.data?.received || 0)
+                                  .toLocaleString("en-US")
+                                  .toString()
+                                  .padStart(2, "0")}
+                                /
+                              </a>
+                            </Tooltip>
                           </ThemeProvider>
                           <ThemeProvider theme={theme}>
-                          <Tooltip title="Total Sent" arrow placement="top" >
-                          <a onClick={() => handleNavigation("/rfqSent")}>
-                            {(broadcastCount?.data?.sent || 0)
-                              .toLocaleString("en-US")
-                              .toString()
-                              .padStart(2, "0")}
-                          </a>
-                          </Tooltip>
+                            <Tooltip title="Total Sent" arrow placement="top" >
+                              <a onClick={() => handleNavigation("/rfqSent")}>
+                                {(broadcastCount?.data?.sent || 0)
+                                  .toLocaleString("en-US")
+                                  .toString()
+                                  .padStart(2, "0")}
+                              </a>
+                            </Tooltip>
                           </ThemeProvider>
                         </li>
                       </ul>
@@ -348,16 +355,16 @@ const Home = () => {
                       <Link to="/myprofile/myContact">My Vendors</Link>
                       <ul>
                         <li className={css.gridHome1_MemberDetail_list_numbers}>
-                        <ThemeProvider theme={theme}>
-                        <Tooltip title="Vendors" arrow placement="top" >
-                          <a onClick={() => handleNavigation("/hotList/view")}>
-                            {(broadcastCount?.data?.myVendors || 0)
-                              .toLocaleString("en-US")
-                              .toString()
-                              .padStart(2, "0")}
+                          <ThemeProvider theme={theme}>
+                            <Tooltip title="Vendors" arrow placement="top" >
+                              <a onClick={() => handleNavigation("/hotList/view")}>
+                                {(broadcastCount?.data?.myVendors || 0)
+                                  .toLocaleString("en-US")
+                                  .toString()
+                                  .padStart(2, "0")}
 
-                          </a>
-                          </Tooltip>
+                              </a>
+                            </Tooltip>
                           </ThemeProvider>
                         </li>
                       </ul>
@@ -390,19 +397,19 @@ const Home = () => {
                       </ul>
                     </li> */}
                     <li className={css.gridHome1_MemberDetail_list_options}>
-                      <Link to="/hotlist/view">hot list</Link>
+                      <Link to="/hotlist/view">Hot List</Link>
                       <ul>
                         <li className={css.gridHome1_MemberDetail_list_numbers}>
-                        <ThemeProvider theme={theme}>
-                        <Tooltip title="Total Hotlists" arrow placement="top" >
-                          <a onClick={() => handleNavigation("/hotList/view")}>
-                            {(broadcastCount?.data?.hotList || 0)
-                              .toLocaleString("en-US")
-                              .toString()
-                              .padStart(2, "0")}
+                          <ThemeProvider theme={theme}>
+                            <Tooltip title="Total Hotlists" arrow placement="top" >
+                              <a onClick={() => handleNavigation("/hotList/view")}>
+                                {(broadcastCount?.data?.hotList || 0)
+                                  .toLocaleString("en-US")
+                                  .toString()
+                                  .padStart(2, "0")}
 
-                          </a>
-                          </Tooltip>
+                              </a>
+                            </Tooltip>
                           </ThemeProvider>
                         </li>
                       </ul>
@@ -418,9 +425,9 @@ const Home = () => {
 
                     <div className='flex items-center'>
                       <a href="/feedbackprofile">
-                            <span className='flex items-center'>{renderStars(initialData?.company?.rating || 0)}</span>
+                        <span className='flex items-center'>{renderStars(initialData?.company?.rating || 0)}</span>
                       </a>
-                        </div>
+                    </div>
                     <a href="/feedbackprofile">{companyRatingsPer}%</a>
                   </div>
 
@@ -442,7 +449,7 @@ const Home = () => {
                     <Link to={"/feedbackprofile"}>
                       Comments{" "}
                       <span>
-                      {ratingCount}
+                        {ratingCount}
                       </span>
                     </Link>
                     {/* <a href="#" className={css.newW}>
@@ -475,7 +482,7 @@ const Home = () => {
                   <BiDotsHorizontalRounded />
                 </div> */}
 
-                <div className={`mailSection ${css.mailSection}`}>
+                {/* <div className={`mailSection ${css.mailSection}`}>
                   <MdManageAccounts />
                   <p>Manage</p>
                   <div style={{ color: "var(--primary-color)" }}>
@@ -485,15 +492,15 @@ const Home = () => {
                     <ul>
                       <Link to={"/inventory"}> <li>Inventory</li></Link>
                       <Link to={"/rfq"}> <li>My RFQs</li></Link>
-                      {/* <Link> <li>My BOM</li></Link> */}
+                       <Link> <li>My BOM</li></Link>
                       <Link to={"/myprofile"}> <li>My Profile</li></Link>
                       <Link to={"/mycompany"}> <li>My Company</li></Link>
-                      {/* <Link to={"/manage/my-services"}> <li>My Services</li></Link> */}
-                      {/* <Link to={"/venprice"}> <li>Vendor Pricing</li></Link> */}
+                       <Link to={"/manage/my-services"}> <li>My Services</li></Link>
+                      <Link to={"/venprice"}> <li>Vendor Pricing</li></Link>
 
                     </ul>
                   </div>
-                </div>
+                </div> */}
 
 
 
@@ -501,13 +508,15 @@ const Home = () => {
 
                 <div className={`mailSection ${css.mailSection}`}>
                   <MdHandshake />
-                  <p>Safe Trading Center</p>
+                  <Link to={"/safe_trading"}>
+                    <p>Safe Trading Center</p>
+                  </Link>
                   <div style={{ color: "var(--primary-color)" }}>
                     <BiDotsHorizontalRounded />
                   </div>
                   <div className={`${css.manageDropdown} ${css.mgDrop}`}>
                     <ul>
-                      {/* <Link to={"/ethics"}> <li>Ethics Complaint</li></Link> */}
+                      <Link to={"/ethics"}> <li>Ethics Complaint</li></Link>
                       <Link to={"/feedback"}> <li>Report an Issue</li></Link>
                       {/* <Link> <li>Watch List Companies</li></Link> */}
 
@@ -590,11 +599,10 @@ const Home = () => {
                   ) : (
                     <HoverPieChart data={broadcastCount.data} />
                   )}
-               
                 </div>
-    
+
               </div>
-          
+
             </div>
           </div>
 
