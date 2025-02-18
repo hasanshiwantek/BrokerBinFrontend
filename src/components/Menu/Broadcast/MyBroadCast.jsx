@@ -412,7 +412,7 @@ useEffect(() => {
                 </select>
               </div>
 
-              <div className='flex items-center justify-around gap-10'>
+              <div className='!flex !items-center !justify-around !gap-10'>
               <div>
                 <label htmlFor="bulk">Bulk</label>
                 <input type="checkbox" name="bulk" id="bulk" onChange={handleBuyInChange} />
