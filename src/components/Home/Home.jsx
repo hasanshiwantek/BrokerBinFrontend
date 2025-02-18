@@ -27,19 +27,14 @@ import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 const Home = () => {
   const token = Cookies.get("token");
   const user_id = Cookies.get("user_id");
-
   const navigate = useNavigate();
-
   const { blurWhileLoading, initialData, user, error } = useSelector(
     (state) => state.profileStore
   );
 
   console.log("Initial Data ", initialData);
-
   const { page, pageSize } = useSelector((store) => store.searchProductStore);
-
   const { broadcastCount, loading } = useSelector((state) => state.broadcastStore)
-
   // console.log("Broadcast Count ",broadcastCount)
   const id = user?.user?.id || user_id;
 
@@ -236,7 +231,7 @@ const Home = () => {
                       <Link to={"/rfq"}> <li>My RFQs</li></Link>
                       {/* <Link> <li>My BOM</li></Link> */}
                       <Link to={"/myprofile"}> <li>My Profile</li></Link>
-                      <Link to={"/mycompany"}> <li>My Company</li></Link>
+                      <Link to={"/mycompany"} > <li>My Company</li></Link>
                       {/* <Link to={"/manage/my-services"}> <li>My Services</li></Link> */}
                       {/* <Link to={"/venprice"}> <li>Vendor Pricing</li></Link> */}
 
@@ -271,7 +266,7 @@ const Home = () => {
                   <div className={`${css.manageDropdown} ${css.profileMgDrop}`}>
                     <ul >
                       <Link to={"/myprofile"}> <li>My Profile</li></Link>
-                      <Link to={"/mycompany"}> <li>My Company</li></Link>
+                      <Link onClick={() => openCompanyModal(company)}> <li>My Company</li></Link>
 
                     </ul>
                   </div>
@@ -357,7 +352,7 @@ const Home = () => {
                         <li className={css.gridHome1_MemberDetail_list_numbers}>
                           <ThemeProvider theme={theme}>
                             <Tooltip title="Vendors" arrow placement="top" >
-                              <a onClick={() => handleNavigation("/hotList/view")}>
+                              <a onClick={() => handleNavigation("/myprofile/myContact")}>
                                 {(broadcastCount?.data?.myVendors || 0)
                                   .toLocaleString("en-US")
                                   .toString()

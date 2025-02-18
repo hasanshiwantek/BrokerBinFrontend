@@ -109,7 +109,7 @@ const Contact = () => {
           </div>
           <div className={basic.basic_form}>
             <div className={css.feedback_heading}>
-              <h1>contact</h1>
+              <h1>Contact</h1>
             </div>
             <div className={css.feedback_form}>
               <span>
@@ -200,7 +200,7 @@ const Contact = () => {
             </div>
           </div>
           <div className={css.feedback_btn}>
-            <button type="button" onClick={handleReset}>
+            <button type="button" onClick={handleReset}  >
               reset
             </button>
             <input type="submit" value="sumbit" className="cursor-pointer hover:bg-blue-600" />
