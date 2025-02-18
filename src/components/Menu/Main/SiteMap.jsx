@@ -18,14 +18,18 @@ const SiteMap = () => {
      const token = Cookies.get("token");
     
 
-      const handleLogout = () => {
-        dispatch(clearUserDetails());
-        dispatch(resetProfileState());
-        localStorage.removeItem("user");
-        Cookies.remove("token");
-        Cookies.remove("user_id");
-        navigate("/login", { replace: true });
+     const handleLogout = () => {
+        const isConfirmed = window.confirm("Confirm Logout?");
+        if (isConfirmed) {
+          dispatch(clearUserDetails());
+          dispatch(resetProfileState());
+          localStorage.removeItem("user");
+          Cookies.remove("token");
+          Cookies.remove("user_id");
+          navigate("/login", { replace: true });
+        }
       };
+      
 
     return (
         <>

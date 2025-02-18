@@ -15,7 +15,8 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       margin-bottom: 1rem;
-      font-size: 1.3rem;
+      font-size: 9pt;
+      font-weight: 500;
       gap: 1rem;
       align-items: baseline;
       width: 100%;
@@ -26,6 +27,7 @@
       }
       > input,
       > select {
+        transition: all 0.5s ease-in-out;
         border: 1px solid #ccc;
       }
     }
@@ -39,7 +41,8 @@
       color: white;
       background: var(--primary-color);
       padding: 0.5rem 1rem;
-      font-size: 1.5rem;
+      font-size: 9pt;
+      font-weight: 500;
     }
   }
 }
@@ -57,4 +60,20 @@
 }
 .footerlinks li a{
   font-size: 11px;
+}
+
+.feedback_form input:focus{
+    outline: none;
+    border: 1px solid var(--primary-color);
+}
+
+
+.feedback_form select:focus{
+  outline: none;
+  border: 1px solid var(--primary-color);
+}
+
+.feedback_form textarea:focus{
+  outline: none;
+  border: 1px solid var(--primary-color);
 }
