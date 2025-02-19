@@ -364,8 +364,6 @@ input {
   margin-right: 20px;
 }
 
-
-
 .file_upload_container label:hover{
   background-color: #cacaca;
   cursor: pointer;
@@ -382,18 +380,12 @@ input {
   border: 1px solid var(--primary-color);
 }
 
-
-
-/* 
-.actions button{
-  background-color: var(--primary-color) !important;
-  color: #fff !important;
-} */
-
-
 .sendTitle{
   font-size: 1.25rem ;
   font-weight: 600;
   color: #4a4a4a !important;
 }
 
+.broadcastUL li p {
+text-transform: capitalize !important;
+}
