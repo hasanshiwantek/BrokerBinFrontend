@@ -628,44 +628,44 @@ const BroadcastForm = () => {
                       <ul key={item.id}>
                         {broadcastType === "wtb" && (
                           <li>
-                            <p>type:</p>
-                            <p>want to buy (WTB)</p>
+                            <p>Type:</p>
+                            <p>Want To Buy (WTB)</p>
                           </li>
                         )}
                         {broadcastType === "rfq" && (
                           <li>
-                            <p>type:</p>
-                            <p>request for quote (RFQ)</p>
+                            <p>Type:</p>
+                            <p>Request For Quote (RFQ)</p>
                           </li>
                         )}
                         {broadcastType === "wts" && (
                           <li>
-                            <p>type:</p>
-                            <p>want to sell (WTS)</p>
+                            <p>Type:</p>
+                            <p>Want To Sell (WTS)</p>
                           </li>
                         )}
                         <li>
-                          <p>part:</p>
+                          <p>Part:</p>
                           <p>{item.partModel}</p>
                         </li>
                         <li>
-                          <p>mfg:</p>
+                          <p>Mfg:</p>
                           <p>{item.mfg}</p>
                         </li>
                         <li>
-                          <p>cond:</p>
+                          <p>Cond:</p>
                           <p>{item.cond}</p>
                         </li>
                         <li>
-                          <p>qty:</p>
+                          <p>Qty:</p>
                           <p>{item.quantity}</p>
                         </li>
                         <li>
-                          <p>price:</p>
+                          <p>Price:</p>
                           <p>{item.price}</p>
                         </li>
                         <li>
-                          <p>description:</p>
+                          <p>Description:</p>
                           <p>{item.description}</p>
                         </li>
                         <li>

@@ -45,14 +45,14 @@ const ToggleStats = ({ data }) => {
           className={`hover:text-blue-700 cursor-pointer ${toggleStats ? "border-b-2 border-blue-600" : ""
             }`}
         >
-          My 24hr stats
+          My 24hr Stats
         </p>
         <p
           onClick={() => setToggleStats(false)}
           className={`hover:text-blue-700 cursor-pointer ${!toggleStats ? "border-b-2 border-blue-600" : ""
             }`}
         >
-          24hr site stats
+          24hr Site Stats
         </p>
       </div>
 
@@ -63,7 +63,7 @@ const ToggleStats = ({ data }) => {
               <a onClick={() => handleClick(item)} className="cursor-pointer hover:border-b-[1px] border-blue-400">
                 {item.name}
               </a>
-              <a onClick={() => handleClick(item)} className=" ml-6 cursor-pointer !whitespace-nowrap">
+              <a onClick={() => handleClick(item)} className=" ml-6 cursor-pointer !whitespace-nowrap !lowercase">
                 {item.value?.toLocaleString("en-US")}
               </a>
             </div>

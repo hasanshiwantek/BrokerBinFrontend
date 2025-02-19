@@ -204,7 +204,7 @@ const SearchProduct = () => {
               <ProductTableBtn />
               <ProductTableDetail
                 partData={Object.values(searchResponseMatched).flatMap((details) => details.data)} // Merging all partModels
-                partModel={"All Results"} // Displaying a single table
+                partModel={partModel || "All Results"} // Displaying a single table
                 keyWordPartModel={partModel}
                 totalCount={Object.values(searchResponseMatched)[0]?.totalCount || 0} // Taking totalCount from the first key
                 page={Object.values(searchResponseMatched)[0]?.page || 1} // Using common page value

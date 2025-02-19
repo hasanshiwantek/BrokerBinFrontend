@@ -152,12 +152,12 @@ Object.values(searchResponseMatched || {}).flatMap(item => item?.data ? item.dat
               <FaWindowClose style={{ color: "#444" }} />
             </button>
           </div>
-          <div>
+          {/* <div>
             <p>Adv</p>
             <button type="button">
               <BsToggleOn />
             </button>
-          </div>
+          </div> */}
         </div>
         <form onSubmit={submitProductFilter}>
           {/* Manufacturer Section */}

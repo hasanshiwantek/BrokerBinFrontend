@@ -67,6 +67,8 @@
     border: 1px solid gray;
     padding: 3px;
     text-align: left;
+    font-size: 8pt;
+    font-weight: 500;
 }
 .table th {
     background-color: #4a575a;
@@ -164,7 +166,7 @@
 .instructions ul, .instructions ol {
     list-style-type: none;
     padding: 0;
-    font-size: 12px;
+    font-size: 8pt;
 }
 
 .instructions li {

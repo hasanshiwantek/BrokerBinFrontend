@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useState ,useRef} from "react";
 import React from "react";
 import css from "../styles/Header.module.css";
 import logo from "../imgs/logo/BrokerCell Logo.svg";
@@ -60,7 +60,6 @@ const Header = () => {
   const [searchType, setSearchType] = useState();
   const location = useLocation(); // Detect current route
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-
   const { hoverCompanyDetail } = useSelector(
     (store) => store.searchProductStore
   );
@@ -118,6 +117,10 @@ const Header = () => {
       )}`;
       navigate(url, { replace: true });
     }
+
+  // ✅ Empty the input field after submitting
+  event.target.searchStrings.value = "";
+
   }
 
 
