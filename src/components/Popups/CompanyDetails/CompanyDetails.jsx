@@ -1,5 +1,5 @@
 
-import React, { memo, useEffect, useState ,useRef} from "react";
+import React, { memo, useEffect, useState, useRef } from "react";
 import css from "../../../styles/Popup/CompanyDetails.module.css";
 import TabContent from "./TabContent";
 import TabInformation from "./TabInformation";
@@ -94,7 +94,7 @@ const CompanyDetails = ({ closeModal }) => {
         console.log("RATINGDATA", feedbackData);
       } catch (error) {
         console.log("ERRORRATIMG", error)
-      } 
+      }
     }
     fetchData();
   }, [companyId])
@@ -118,7 +118,7 @@ const CompanyDetails = ({ closeModal }) => {
   // Close modal when clicking outside or pressing Escape
 
   const ratings = parseFloat(feedbackData?.rating?.averageRating || 5);
-  
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       const modal = document.querySelector(`.${css.Popup_Info}`);
@@ -126,26 +126,26 @@ const CompanyDetails = ({ closeModal }) => {
         closeModal(); // Close modal if clicked outside
       }
     };
-  
+
     const handleEscapeKey = (event) => {
       if (event.key === "Escape") {
         closeModal(); // Close modal on Escape key press
       }
     };
-  
+
     if (isModalOpen) {
       setTimeout(() => {
         document.addEventListener("click", handleClickOutside);
         document.addEventListener("keydown", handleEscapeKey);
       }, 200); // Add delay to avoid detecting the opening click
     }
-  
+
     return () => {
       document.removeEventListener("click", handleClickOutside);
       document.removeEventListener("keydown", handleEscapeKey);
     };
   }, [isModalOpen]); // ✅ Removed `closeModal` from dependencies
-  
+
   // While loading, show loading indicator
   if (loading) {
     return (
@@ -228,8 +228,8 @@ const CompanyDetails = ({ closeModal }) => {
                     <div data-v-217e3916="" class="vue-rate-it-rating" style={{
                       display: "flex", justifyContent: "space-between", alignItems: "center"
                     }}>
-                       <div style={{ display: "flex", alignItems: "center" }}
-                       onClick={() => setToggleTabs(5)}>
+                      <div style={{ display: "flex", alignItems: "center" }}
+                        onClick={() => setToggleTabs(5)}>
                         {[...Array(5)].map((_, index) => {
                           const isFilled = index + 1 <= Math.floor(ratings); // Full yellow stars
                           const isPartial = index < ratings && index + 1 > Math.floor(ratings); // Partial yellow star
@@ -324,7 +324,7 @@ const CompanyDetails = ({ closeModal }) => {
               </div>
 
               <div className={css.Popup_Info_Main_right_tabs_layout}>
-                <TabContent companyId={companyId} toggleTabs={toggleTabs} setToggleTabs={setToggleTabs}/>
+                <TabContent companyId={companyId} toggleTabs={toggleTabs} setToggleTabs={setToggleTabs} />
 
               </div>
 
