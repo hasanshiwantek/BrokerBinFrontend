@@ -130,8 +130,14 @@ const Home = () => {
     // Replace spaces with commas
     formattedSearch = formattedSearch.replace(/\s+/g, ",");
 
-    // Construct the query parameter
-    let queryParam = searchBy === "keyword" ? "partModel" : "query";
+    // Determine the correct query parameter based on searchBy selection
+    let queryParam;
+    if (searchBy === "keyword" || searchBy === "heciClei") {
+        queryParam = "partModel"; // Use 'partModel' for both 'keyword' and 'heciClei'
+    } else {
+        queryParam = "query"; // Default for 'part'
+    }
+
     let url = `/inventory/search?page=1&${queryParam}=${encodeURIComponent(formattedSearch)}`;
 
     // Clear selected products before navigating
@@ -141,7 +147,8 @@ const Home = () => {
     navigate(url, { replace: true });
 
     console.log("Navigated to URL:", url); // Debugging log
-  };
+};
+
 
 
 
