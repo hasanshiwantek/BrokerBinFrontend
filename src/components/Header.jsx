@@ -118,9 +118,6 @@ const Header = () => {
       )}`;
       navigate(url, { replace: true });
     }
-
-
-
   }
 
 
