@@ -600,21 +600,21 @@ const BroadcastForm = () => {
           )}
           {formTypes.emailFormat && (
             <div className={css.broadcastEmail}>
-              {broadcastType === "wtb" && <h3>want to buy (WTB)</h3>}
-              {broadcastType === "rfq" && <h3>request for quote (RFQ)</h3>}
-              {broadcastType === "wts" && <h3>want to sell (WTS)</h3>}
+              {broadcastType === "wtb" && <h3>Want to Buy (WTB)</h3>}
+              {broadcastType === "rfq" && <h3>Request for Quote (RFQ)</h3>}
+              {broadcastType === "wts" && <h3>Want to Sell (WTS)</h3>}
               <div className={css.broadcastEmailFormat}>
                 <div>
                   {[user].map((item) => {
                     return (
                       <ul>
                         <li>
-                          <p>from:</p>
+                          <p>From:</p>
                           <p>{user.firstName}</p>
                           <p>{`[${user.email}]`}</p>
                         </li>
                         <li>
-                          <p>sent:</p>
+                          <p>Sent:</p>
                           <p>{emailFormat.time}</p>
                           <p>{emailFormat.date}</p>
                         </li>
@@ -625,17 +625,17 @@ const BroadcastForm = () => {
                 <div>
                   {[formData].map((item) => {
                     return (
-                      <ul key={item.id}>
+                      <ul key={item.id} className={`${css.broadcastUL}`} >
                         {broadcastType === "wtb" && (
                           <li>
                             <p>Type:</p>
-                            <p>Want To Buy (WTB)</p>
+                            <p className="uppercase">Want To Buy (WTB)</p>
                           </li>
                         )}
                         {broadcastType === "rfq" && (
                           <li>
                             <p>Type:</p>
-                            <p>Request For Quote (RFQ)</p>
+                            <p className="uppercase">Request For Quote (RFQ)</p>
                           </li>
                         )}
                         {broadcastType === "wts" && (
