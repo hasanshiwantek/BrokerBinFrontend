@@ -133,9 +133,9 @@ const Home = () => {
     // Determine the correct query parameter based on searchBy selection
     let queryParam;
     if (searchBy === "keyword" || searchBy === "heciClei") {
-        queryParam = "partModel"; // Use 'partModel' for both 'keyword' and 'heciClei'
+      queryParam = "partModel"; // Use 'partModel' for both 'keyword' and 'heciClei'
     } else {
-        queryParam = "query"; // Default for 'part'
+      queryParam = "query"; // Default for 'part'
     }
 
     let url = `/inventory/search?page=1&${queryParam}=${encodeURIComponent(formattedSearch)}`;
@@ -147,7 +147,7 @@ const Home = () => {
     navigate(url, { replace: true });
 
     console.log("Navigated to URL:", url); // Debugging log
-};
+  };
 
 
 
