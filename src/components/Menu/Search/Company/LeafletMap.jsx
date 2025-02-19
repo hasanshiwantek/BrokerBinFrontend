@@ -6,6 +6,8 @@ import L from "leaflet";
 const LeafletMap = ({ company }) => {
 
   const companiesArray = Array.isArray(company) ? company : [company];
+  console.log("Companies Array: ",companiesArray)
+
 
   if (companiesArray.length === 0 || !companiesArray[0]?.latitude) {
     return <p>Loading map...</p>;
@@ -80,3 +82,7 @@ const LeafletMap = ({ company }) => {
 };
 
 export default LeafletMap;
+
+
+
+

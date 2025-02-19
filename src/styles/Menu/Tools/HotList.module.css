@@ -85,6 +85,8 @@
     border: 1px solid #ccc;
     padding: 3px;
     text-align: left;
+    font-size: 8pt;
+    font-weight: 500;
   }
   
   .table th {

@@ -341,7 +341,7 @@ const Options = () => {
       <div className={myProfile.profileLayout}>
         <form onSubmit={submitBroadcastFilters}>
           <div className={myProfile.profileBtn}>
-            <p>my profile</p>
+            <h1>My Profile</h1>
             <span>
               <input type="submit" value="submit changes" className={css.sumbitBtn} />
 

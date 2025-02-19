@@ -520,11 +520,11 @@ const MyRFQNew = () => {
                     <div>
                       <div className={css.rfqBody_Main_left_addParts_label}>
                         <div>
-                          <label htmlFor="text">part</label>
+                          <label htmlFor="text">Part#</label>
                           <label htmlFor="text">HECI / CLEI</label>
-                          <label htmlFor="select">Mfg *</label>
-                          <label htmlFor="select">Cond *</label>
-                          <label htmlFor="number">Qty *</label>
+                          <label htmlFor="select">Mfg </label>
+                          <label htmlFor="select">Cond </label>
+                          <label htmlFor="number">Qty <span className="text-red-600 -mt-8 ml-9">*</span></label>
                           <label htmlFor="number">Target Price </label>
                           <label htmlFor="text">Terms</label>
                         </div>

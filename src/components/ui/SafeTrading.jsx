@@ -18,30 +18,30 @@ const SafeTrading = () => {
                 <div className={`${css.safeTradingContainer} grid md:grid-cols-3 gap-5 mt-16 `}>
                     {/* Application Process */}
                     <div>
-                        <h2 className="text-2xl font-semibold mb-3">Application Process</h2>
+                        <h2 className="text-2xl font-semibold mb-3">Application Procedure</h2>
                         <ol className="list-decimal list-inside ml-4  space-y-1 font-normal">
-                            <li>Business qualification
+                            <li>Business Verification
                                 <ul className="list-disc list-inside ml-5">
                                     <li>Certifications</li>
-                                    <li>Tax ID, VAT</li>
-                                    <li>Business registration documents</li>
+                                    <li>Tax Identification, VAT</li>
+                                    <li>Company Registration Documents</li>
                                 </ul>
                             </li>
-                            <li>Require and verify 3 references</li>
-                            <li>Bank & Trade References</li>
+                            <li>Request and Confirm 3 References</li>
+                            <li>Financial & Commercial References</li>
                         </ol>
 
                         <div className="grid md:grid-cols-2 gap-8 mt-8">
                             {/* Safe Trading Process */}
                             <div >
-                                <h2 className="text-2xl font-semibold mb-3 whitespace-nowrap">Safe Trading Process</h2>
+                                <h2 className="text-2xl font-semibold mb-3 whitespace-nowrap">Secure Transaction Procedure</h2>
                                 <ol className="list-decimal list-inside  space-y-1 whitespace-nowrap  ml-4 ">
-                                    <li>Broker Deal via BrokerBin.com</li>
-                                    <li>Get Bank and Trades</li>
-                                    <li>Escrow Deal</li>
-                                    <li>Test Equipment</li>
-                                    <li>Provide Feedback on Deal</li>
-                                    <li>Add Vendor to My Vendors List</li>
+                                    <li>Facilitate Deal through BrokerCell.com</li>
+                                    <li>Acquire Financial and Trade References</li>
+                                    <li>Engage in Escrow Transaction</li>
+                                    <li>Conduct Equipment Verification</li>
+                                    <li>Submit Transaction Feedback</li>
+                                    <li>Incorporate Vendor into Preferred Vendor List</li>
                                 </ol>
 
                             </div>
@@ -56,33 +56,34 @@ const SafeTrading = () => {
                     </div>
                     {/* Safe Trading Resources */}
                     <div>
-                        <h2 className="text-2xl font-semibold mb-3 ">Safe Trading Resources</h2>
+                        <h2 className="text-2xl font-semibold mb-3 ">Reliable Trading Support</h2>
                         <ul className="list-disc list-inside text-[8pt] space-y-1  ml-4 ">
-                            <li><a href="#" >Ethics Complaint</a></li>
-                            <li><a href="#" >Report an Issue</a></li>
-                            <li><a href="#" >Testing Houses & Services</a></li>
-                            <li>Company Ratings</li>
-                            <li>Transparent Company Profiles
+                            <li><a href="#" >Ethical Concerns Reporting</a></li>
+                            <li><a href="#" >Issue Documentation</a></li>
+                            <li><a href="#" >Evaluation Services & Testing</a></li>
+                            <li>Business Ratings</li>
+                            <li>Detailed Business Profiles
                                 <ul className="list-disc list-inside ml-5 !text-gray-500">
-                                    <li>Full Company Profile with Pictures</li>
-                                    <li>References</li>
-                                    <li>Bank and Trades</li>
-                                    <li>Sales and Purchasing Terms</li>
-                                    <li>Associations</li>
+                                    <li>Complete Profiles with Images</li>
+                                    <li>Reference Checks</li>
+                                    <li>Financial and Trade Background</li>
+                                    <li>Terms of Sales and Purchases</li>
+                                    <li>Professional Affiliations</li>
                                 </ul>
                             </li>
-                            <li>Dedicated Account Managers</li>
-                            <li>Network established April 1, 2002</li>
+                            <li>Personal Account Management</li>
+                            <li>Network Founded April 1, 2002</li>
                             <li>My Vendors (AVL) List</li>
-                            <li>Vetted Members</li>
-                            <li>Tech Specs and Advanced Data</li>
-                            <li>Watch List Companies</li>
-                            <li>Feedback Rating System</li>
-                            <li>RoadShows
+                            <li>Preferred Vendors List</li>
+                            <li>Certified Members                            </li>
+                            <li>Technical Details and Comprehensive Data</li>
+                            <li>Monitoring List for Businesses</li>
+                            <li>Feedback and Evaluation System</li>
+                            <li>Industry Events
                                 <ul className="list-disc list-inside ml-5 !text-gray-500">
-                                    <li>Meet Vendors in Person</li>
-                                    <li>Seminars</li>
-                                    <li>Fraud Advisory Panel Discussion</li>
+                                    <li>In-Person Vendor Meetings</li>
+                                    <li>Educational Seminars</li>
+                                    <li>Panel Discussions on Fraud Prevention</li>
                                 </ul>
                             </li>
                         </ul>
