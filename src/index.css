@@ -91,9 +91,9 @@ button {
   color: var(--font-color);
   text-transform: capitalize;
 }
-/* a {
+a {
   text-transform: capitalize;
-} */
+}
 input {
   text-transform: none;
   border: 1px solid var(--table-bg-color);

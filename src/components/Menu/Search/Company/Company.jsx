@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux'
 import css from "../../../../styles/Menu/Manage/MyProfile.module.css";
 import CompanySearch from "../Inventory/CompanySearch";
 import axios from "axios";
-
+import { brokerAPI } from '@/components/api/BrokerEndpoint'
 
 const SearchCompany = () => {
     const [loading, setLoading] = useState(false); // To track API call status
@@ -111,12 +111,13 @@ const SearchCompany = () => {
         console.log("Form Data Submitted:", formData);
         setButtonText("Processing...");
         setLoading(true);
+        // const data=formData
 
         try {
             // Mock API Call - Replace with actual API URL
-            const { data: result } = await axios.get(
-                `http://localhost:5000/companies?company=${formData.company}`,
-                formData,
+            const { data: result } = await axios.post(
+                `${brokerAPI}company/company-search`,
+                {data:formData},
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 

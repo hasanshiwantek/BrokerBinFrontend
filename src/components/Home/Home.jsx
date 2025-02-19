@@ -64,74 +64,84 @@ const Home = () => {
     return <ErrorStatus error={error} />;
   }
 
+
+
+
+
   // const searchProduct = (event) => {
   //   event.preventDefault();
 
   //   const form = new FormData(event.target);
   //   const formData = Object.fromEntries(form.entries());
 
-  //   const searchString = formData.searchStrings.trim();
-  //   const searchBy = formData.searchBy; // Get selected radio button value (part, heciClei, keyword)
+  //   let searchString = formData.searchStrings.trim(); // User's search input
+  //   const searchBy = formData.searchBy; // Selected search type (part, heciClei, keyword)
 
-  //   if (searchString === "") {
+  //   if (!searchString) {
   //     alert("Blank search is not allowed");
   //     return;
   //   }
-  //   let url = '';
-  //   if (searchBy === "part") {
-  //     // If 'Part#' is selected
-  //     url = `/inventory/search?page=1&query=${encodeURIComponent(searchString)}`;
-  //   } else if (searchBy === "heciClei") {
-  //     // If 'HECI / CLEI' is selected
-  //     url = `/inventory/search?page=1&query=${encodeURIComponent(searchString)}`;
-  //   } else if (searchBy === "keyword") {
-  //     // If 'Keyword' is selected
-  //     url = `/inventory/search?page=1&partModel=${encodeURIComponent(searchString)}`;
+
+  //   // Replace spaces with commas
+  //   searchString = searchString.replace(/\s+/g, ",");
+
+  //   // Build the correct URL based on searchBy
+  //   let url = '/inventory/search?page=1';
+  //   if (searchBy === 'part' || searchBy === 'heciClei') {
+  //     // Use `query` for 'Part#' and 'HECI / CLEI'
+  //     url += `&query=${encodeURIComponent(searchString)}`;
+  //   } else if (searchBy === 'keyword') {
+  //     // Use `partModel` for 'Keyword'
+  //     url += `&partModel=${encodeURIComponent(searchString)}`;
   //   }
 
-  //   // Clear selected products
+  //   // Clear selected products before navigating
   //   dispatch(setSelectedProducts([]));
 
-  //   // Navigate to the URL with appropriate parameters
+  //   // Navigate to the SearchProduct page with the constructed URL
   //   navigate(url, { replace: true });
+
+  //   console.log("Navigated to URL:", url); // Debug log to verify the URL
   // };
+
+
+
+  // State for search input and selected searchBy option
+  const [searchString, setSearchString] = useState("");
+  const [searchBy, setSearchBy] = useState("part"); // Default: "Part#"
+
+  const handleSearchInputChange = (event) => {
+    setSearchString(event.target.value);
+  };
+
+  const handleSearchTypeChange = (event) => {
+    setSearchBy(event.target.value);
+  };
 
   const searchProduct = (event) => {
     event.preventDefault();
 
-    const form = new FormData(event.target);
-    const formData = Object.fromEntries(form.entries());
-
-    let searchString = formData.searchStrings.trim(); // User's search input
-    const searchBy = formData.searchBy; // Selected search type (part, heciClei, keyword)
-
-    if (!searchString) {
+    let formattedSearch = searchString.trim();
+    if (!formattedSearch) {
       alert("Blank search is not allowed");
       return;
     }
 
     // Replace spaces with commas
-    searchString = searchString.replace(/\s+/g, ",");
+    formattedSearch = formattedSearch.replace(/\s+/g, ",");
 
-    // Build the correct URL based on searchBy
-    let url = '/inventory/search?page=1';
-    if (searchBy === 'part' || searchBy === 'heciClei') {
-      // Use `query` for 'Part#' and 'HECI / CLEI'
-      url += `&query=${encodeURIComponent(searchString)}`;
-    } else if (searchBy === 'keyword') {
-      // Use `partModel` for 'Keyword'
-      url += `&partModel=${encodeURIComponent(searchString)}`;
-    }
+    // Construct the query parameter
+    let queryParam = searchBy === "keyword" ? "partModel" : "query";
+    let url = `/inventory/search?page=1&${queryParam}=${encodeURIComponent(formattedSearch)}`;
 
     // Clear selected products before navigating
     dispatch(setSelectedProducts([]));
 
-    // Navigate to the SearchProduct page with the constructed URL
+    // Navigate to search results page
     navigate(url, { replace: true });
 
-    console.log("Navigated to URL:", url); // Debug log to verify the URL
+    console.log("Navigated to URL:", url); // Debugging log
   };
-
 
 
 
@@ -532,13 +542,12 @@ const Home = () => {
                         <h1>Parts Search</h1>
                         <textarea
                           name="searchStrings"
-                          id="dashboard-searchbox"
-                          cols="30"
-                          rows="10"
+                          value={searchString}
+                          onChange={handleSearchInputChange}
                           placeholder="(List multiple search strings separated by returns for the same search category)"
-                          style={{ height: "10rem" }}
+                          rows="5"
+                          required
                         ></textarea>
-
                         <div>
                           <input
                             id={css.gridHome2_Details_Upper_Right_PartSearch_btn}
@@ -549,15 +558,33 @@ const Home = () => {
                           <div>
                             <label>
                               Part#
-                              <input type="radio" name="searchBy" value="part" />
+                              <input
+                                type="radio"
+                                name="searchBy"
+                                value="part"
+                                checked={searchBy === "part"}
+                                onChange={handleSearchTypeChange}
+                              />
                             </label>
                             <label>
                               HECI / CLEI
-                              <input type="radio" name="searchBy" value="heciClei" />
+                              <input
+                                type="radio"
+                                name="searchBy"
+                                value="heciClei"
+                                checked={searchBy === "heciClei"}
+                                onChange={handleSearchTypeChange}
+                              />
                             </label>
                             <label>
                               Keyword
-                              <input type="radio" name="searchBy" value="keyword" />
+                              <input
+                                type="radio"
+                                name="searchBy"
+                                value="keyword"
+                                checked={searchBy === "keyword"}
+                                onChange={handleSearchTypeChange}
+                              />
                             </label>
                           </div>
                         </div>

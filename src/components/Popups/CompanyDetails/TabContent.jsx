@@ -36,12 +36,12 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
   const { companyContactData } = useSelector((store) => store.searchProductStore);
   const [visibleFeedbacks, setVisibleFeedbacks] = useState(10);
   const token = Cookies.get("token");
-  
+
   console.log("CompanyId From Tab Content Page", companyId);
-  
+
   const companyUserId = companyContactData.data.contacts.map((item) => item.id)
   console.log("User Id from Comapny Modal", companyUserId)
-  
+
   const compId = companyContactData.data.company.id
   const companyName = companyContactData.data.company.name
   console.log("COMPANYNAME", companyName)
@@ -130,7 +130,7 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
       handleFetchData(); // API call function
     }
   }, [toggleTabs]);
-  
+
   const handleFetchData = async () => {
     try {
       const response = await axios.get(`${brokerAPI}feedback/company/${compId}`, {
@@ -146,7 +146,7 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
       console.log("Error", error);
     }
   };
-  
+
   const loadMore = () => {
     setVisibleFeedbacks(prev => prev + 10);
   };
@@ -202,7 +202,7 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
             Terms / Conditions
           </li>
           <li
-            onClick={() => {setToggleTabs(5); handleFetchData();}}
+            onClick={() => { setToggleTabs(5); handleFetchData(); }}
             className={toggleTabs === 5 ? css.activeTab : ""}
           >
             Feedback
@@ -303,14 +303,16 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
                               <strong>Email:</strong>
                               <strong
                               >
-                                {user.email}
+                                <a href={`mailto:${user.email}`} className="!lowercase">
+                                  {user.email}
+                                </a>
                               </strong>
                             </span>
                           </div>
 
                         </div>
                         {/* <button> */}
-                          {/* <span
+                        {/* <span
                             className="cursor-pointer hover:text-orange-500 transition-colors"
                             onClick={() => userDeleteHandler(user.id)}
                           >
@@ -500,21 +502,21 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
             </div>
           </div>
         </div>
-        
+
         <div className={toggleTabs === 5 ? css.showContent : css.content}>
           <div className={css.Popup_Info_Main_right_tabs_photos}>
             <div className={`flex justify-between border-b`}>
               <h1 className="font-bold">Feedback Received</h1>
               <span className={`flex space-x-4 cursor-pointer`}>
-              <span 
-                onClick={() => { console.log("Icon clicked!"); setIsOpen(true); }}
-                className="hover:text-[#2c83ec] cursor-pointer"
-              >
-                {/* <VscFeedback size={20}/> */}
-                <BiSolidMessageRoundedDots size={20}/>
-                {/* <BiMessageRoundedMinus size={20}/> */}
-              </span>
-                {isOpen && <FeedbackModal company={{id: compId, name: companyName}} isOpen={isOpen} onClose={() => setIsOpen(false)} onSucces={handleFetchData} />}
+                <span
+                  onClick={() => { console.log("Icon clicked!"); setIsOpen(true); }}
+                  className="hover:text-[#2c83ec] cursor-pointer"
+                >
+                  {/* <VscFeedback size={20}/> */}
+                  <BiSolidMessageRoundedDots size={20} />
+                  {/* <BiMessageRoundedMinus size={20}/> */}
+                </span>
+                {isOpen && <FeedbackModal company={{ id: compId, name: companyName }} isOpen={isOpen} onClose={() => setIsOpen(false)} onSucces={handleFetchData} />}
                 {/* <span><LiaWindowClose /></span> */}
               </span>
             </div>
@@ -530,7 +532,7 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
                   <h1>Date</h1>
                 </div>
               </div>
-  
+
               {feedbacks.slice(0, visibleFeedbacks).map((feedback, index) => (
                 <div key={index} className={`flex justify-between px-4 border-b py-2 text-balance`}>
                   <div className="w-[5.1vw] text-balance">
@@ -555,7 +557,7 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
                   <button onClick={loadMore} className="mt-4 p-2 bg-blue-500 text-white rounded w-[10vw] ">Load More</button>
                 )}
               </div>
-          </div>
+            </div>
           </div>
         </div>
       </div>
