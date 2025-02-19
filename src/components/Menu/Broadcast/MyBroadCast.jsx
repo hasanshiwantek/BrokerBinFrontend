@@ -612,4 +612,4 @@ const BroadCast = () => {
   )
 }
 
-export default BroadCast
+export default BroadCast;

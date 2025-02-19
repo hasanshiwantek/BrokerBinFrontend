@@ -13,4 +13,4 @@ const FeedBackProfile = () => {
   )
 }
 
-export default FeedBackProfile
+export default FeedBackProfile;

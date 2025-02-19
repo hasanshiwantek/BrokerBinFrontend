@@ -2,6 +2,7 @@ import React from 'react'
 import "../../Menu/Main/MenuBar.css"
 import { Link } from 'react-router-dom'
 import styles from "../../../styles/Menu/Reports/ServiceStats.module.css"
+
 const ServiceStats = () => {
     return (
         <>
@@ -58,4 +59,4 @@ const ServiceStats = () => {
     )
 }
 
-export default ServiceStats
+export default ServiceStats;

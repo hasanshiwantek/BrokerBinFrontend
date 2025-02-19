@@ -257,7 +257,6 @@ const SearchProduct = () => {
 };
 
 
-
 const ProductTableBtn = React.memo(() => {
 
   const { popUpRfq } = useSelector((store) => store.searchProductStore);

@@ -3,6 +3,7 @@ import SearchBarWithCalendar from "./SearchBarWithCalendar ";
 import css from "../styles/Menu/Manage/RfqTable.module.css";
 import Search from "../svgs/Search";
 import { FaSearch } from "react-icons/fa";
+
 const SearchComponent = ({ onSearch, resetTrigger, isSent }) => {
   const [toggleRfqSearch, setToggleRfqSearch] = useState(false);
   const [formValues, setFormValues] = useState({
@@ -10,7 +11,6 @@ const SearchComponent = ({ onSearch, resetTrigger, isSent }) => {
     new: false,
     forward: false,
     reply: false,
-    unread: false,
     unread: false,
     archive: false,
     partNumbers: "",

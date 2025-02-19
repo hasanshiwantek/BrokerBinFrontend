@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { brokerAPI } from "../api/BrokerEndpoint";
+
 const ForgotEmail = () => {
     const [passwordShown, setPasswordShown] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");

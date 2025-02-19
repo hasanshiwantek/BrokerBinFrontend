@@ -21,3 +21,16 @@ const ProtectedRoute = () => {
 };
 
 export default ProtectedRoute;
+
+
+// const useAuth = () => {
+//   const [isAuth, setIsAuth] = React.useState(!!Cookies.get("token"));
+
+//   useEffect(() => {
+//     const checkAuth = () => setIsAuth(!!Cookies.get("token"));
+//     window.addEventListener("storage", checkAuth);
+//     return () => window.removeEventListener("storage", checkAuth);
+//   }, []);
+
+//   return isAuth;
+// };
