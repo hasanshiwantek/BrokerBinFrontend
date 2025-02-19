@@ -9,8 +9,8 @@ import { setPopupCompanyDetail, setTogglePopUp } from "../../../../ReduxStore/Se
 import CompanyDetails from "../../../Popups/CompanyDetails/CompanyDetails";
 import { inventorySearch } from "../../../../ReduxStore/InventorySlice";
 import inventory from "../../../../styles/Menu/Manage/Inventory/Inventory.module.css";
-
 import Cookies from "js-cookie";
+
 const InventorySearchResult = () => {
     const { togglePopUp } = useSelector((store) => store.searchProductStore);
     const dispatch = useDispatch();

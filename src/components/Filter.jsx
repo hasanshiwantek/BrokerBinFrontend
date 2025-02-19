@@ -32,9 +32,9 @@ const Filter = ({ currentQuery }) => {
     (store) => store.searchProductStore
   );
 
-  useEffect(() => {
-    // console.log("Updated searchResponseMatched in Filter:", searchResponseMatched);
-  }, [searchResponseMatched]);
+  // useEffect(() => {
+  //   console.log("Updated searchResponseMatched in Filter:", searchResponseMatched);
+  // }, [searchResponseMatched]);
   
 
   const dispatch = useDispatch();

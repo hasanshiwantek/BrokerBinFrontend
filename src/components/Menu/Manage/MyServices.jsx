@@ -14,4 +14,4 @@ const MyServices = () => {
   )
 }
 
-export default MyServices
+export default MyServices;

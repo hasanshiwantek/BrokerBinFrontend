@@ -225,9 +225,6 @@ const RfqTablePopUp = ({ type }) => {
   );
 };
 
-// export default RfqTablePopUp;
-
-
 export default RfqTablePopUp;
 
 
