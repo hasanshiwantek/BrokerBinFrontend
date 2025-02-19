@@ -10,7 +10,7 @@ import { NavLink } from "react-router-dom";
 const HoverPieChart = ({ data }) => {
   // Transform backend data into the required structure
   const transformedData = {
-    labels: ["WTB", "WTS", "RFQ", "SVC"],
+    labels: ["WTB", "WTS", "RFQ", "SB"],
     name: ["Want To Buy", "Want To Sell", "Request For Quote", "Service Broadcasts"],
     datasets: [
       {
