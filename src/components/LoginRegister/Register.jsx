@@ -9,19 +9,19 @@ import { countriesList, statesList } from "@/data/services";
 
 const Register = () => {
 
-  const {register, handleSubmit, watch, setValue, getValues, } = useForm({
+  const { register, handleSubmit, watch, setValue, getValues } = useForm({
     defaultValues: {
       country: "USA", // Default to United States
       state: "", // Default state selection
     },
   });
   const navigate = useNavigate();
-
+  const [isLoading, setIsLoading] = useState(false); // 🔹 Loading state for button
   const [formPassword, setFormPassword] = useState({
     password: "",
     confirmPassword: "",
   });
-  
+
   const selectedCountry = watch("country");
   const selectedState = watch("state");
   const [availableStates, setAvailableStates] = useState([]);
@@ -56,32 +56,32 @@ const Register = () => {
     });
   };
 
-const validate = () => {
-  let tempErrors = {};
-  let isValid = true;
-  const { password, confirmPassword } = getValues(); // Get values from React Hook Form
+  const validate = () => {
+    let tempErrors = {};
+    let isValid = true;
+    const { password, confirmPassword } = getValues(); // Get values from React Hook Form
 
-  const passwordRegex = /^(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?/~`-]).{6,}$/;
+    const passwordRegex = /^(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?/~`-]).{6,}$/;
 
-  if (!password?.trim()) {
-    tempErrors.password = "Password is required";
-    isValid = false;
-  } else if (!passwordRegex.test(password)) {
-    tempErrors.password = "Password must be at least 6 characters and include 1 special character";
-    isValid = false;
-  }
+    if (!password?.trim()) {
+      tempErrors.password = "Password is required";
+      isValid = false;
+    } else if (!passwordRegex.test(password)) {
+      tempErrors.password = "Password must be at least 6 characters and include 1 special character";
+      isValid = false;
+    }
 
-  if (!confirmPassword?.trim()) {
-    tempErrors.confirmPassword = "Confirm Password is required";
-    isValid = false;
-  } else if (confirmPassword !== password) {
-    tempErrors.confirmPassword = "Passwords do not match";
-    isValid = false;
-  }
+    if (!confirmPassword?.trim()) {
+      tempErrors.confirmPassword = "Confirm Password is required";
+      isValid = false;
+    } else if (confirmPassword !== password) {
+      tempErrors.confirmPassword = "Passwords do not match";
+      isValid = false;
+    }
 
-  setErrors(tempErrors);
-  return isValid;
-};
+    setErrors(tempErrors);
+    return isValid;
+  };
 
 
   const handleRegister = async (e) => {
@@ -89,11 +89,12 @@ const validate = () => {
     if (validate()) {
       const formDataObject = getValues();
       formDataObject.companyCategory = Array.isArray(formDataObject.companyCategory)
-      ? formDataObject.companyCategory
-      : [formDataObject.companyCategory];
+        ? formDataObject.companyCategory
+        : [formDataObject.companyCategory];
       formDataObject.memberCheck = formDataObject.memberCheck === "yes" ? 1 : 0;
       formDataObject.termsOfService =
         formDataObject.termsOfService === "on" ? 1 : 0;
+      setIsLoading(true); // 🔹 Disable button and show loading
       try {
         const response = await fetch(
           "https://backend.brokercell.com/api/user/register",
@@ -112,8 +113,8 @@ const validate = () => {
           setTimeout(() => {
             setResponseOk(false);
             setShowModal(false);
-            // navigate("/");
-          }, 9000);
+            //  navigate("/");
+          }, 3000);
           // Handle successful registration (e.g., redirect to another page, show success message, etc.)
         } else {
           console.error("Registration failed", result);
@@ -129,6 +130,9 @@ const validate = () => {
           form: "An error occurred, please try again later.",
         });
       }
+      finally {
+        setIsLoading(false); // 🔹 Re-enable button after API response
+      }
     }
   };
 
@@ -142,24 +146,24 @@ const validate = () => {
     setAvailableStates(statesList[countryCode] || []);
     setValue("state", ""); // Reset state when country changes
   };
-  
+
   const arrow = "<"
 
   return responseOk ? (
     <>
-    <div className={css.responseOk}>
-    {/* Modal inside conditional statement */}
-    {showModal && (
-      <div className={css.modalOverlay}>
-        <div className={css.modalContent}>
-          <h2>Application Submitted!</h2>
-          <p>We have received your application. You will be notified soon.</p>
-          <button onClick={closeModal}>OK</button>
-        </div>
+      <div className={css.responseOk}>
+        {/* Modal inside conditional statement */}
+        {showModal && (
+          <div className={css.modalOverlay}>
+            <div className={css.modalContent}>
+              <h2>Application Submitted!</h2>
+              <p>We have received your application. You will be notified soon.</p>
+              <button onClick={closeModal}>OK</button>
+            </div>
+          </div>
+        )}
       </div>
-    )}
-    </div>
-  </>
+    </>
   ) : (
     <div className={css.body}>
       <div className={css.layout}>
@@ -167,9 +171,9 @@ const validate = () => {
 
           <div className="flex justify-center flex-col items-center">
             <Link to={"https://brokercell.com/"} target="_blank" className="w-[69%] ml-[46%]">
-            <img src={brokerLogo} alt="Broker-Logo" srcSet="" className="w-[35%] " />
+              <img src={brokerLogo} alt="Broker-Logo" srcSet="" className="w-[35%] " />
             </Link>
-            <h2 className="font-bold text-5xl text-[#2c83ec] text-center mt-14 ml-10">JOIN THE NETWORK</h2>            
+            <h2 className="font-bold text-5xl text-[#2c83ec] text-center mt-14 ml-10">JOIN THE NETWORK</h2>
           </div>
 
           <h3 className="font-bold">FREE TRIAL (NEW COMPANY)</h3>
@@ -222,7 +226,7 @@ const validate = () => {
               >
                 <span>
                   <label htmlFor="state">State <span style={{ color: "red" }}>*</span> </label>
-                   <select id="state" name="state" {...register("state")} required >
+                  <select id="state" name="state" {...register("state")} required >
                     <option value="">Select a state</option>
                     {availableStates.map((state) => (
                       <option key={state.value} value={state.value}>
@@ -246,12 +250,12 @@ const validate = () => {
               </span>
               <span className={css.contact_form_fields}>
                 <label htmlFor="country">Country <span style={{ color: "red" }}>*</span> </label>
-                <select 
-                id="country" 
-                name="country" 
-                {...register("country")} 
-                onChange={handleCountryChange} 
-                required
+                <select
+                  id="country"
+                  name="country"
+                  {...register("country")}
+                  onChange={handleCountryChange}
+                  required
                 >
                   {countriesList.map((country) => (
                     <option key={country.value} value={country.value}>
@@ -259,7 +263,7 @@ const validate = () => {
                     </option>
                   ))}
                 </select>
-                
+
               </span>
               <span className={css.contact_form_fields}>
                 <label htmlFor="region">Region <span style={{ color: "red" }}>*</span> </label>
@@ -292,7 +296,7 @@ const validate = () => {
               <span
                 className={`${css.contact_form_fields} ${css.contact_form_fields_question}`}
               >
-                <span style={{fontWeight:"600"}}>Have you ever been a member of Brokercell.com?<span style={{ color: "red" }}>*</span> </span>
+                <span style={{ fontWeight: "600" }}>Have you ever been a member of Brokercell.com?<span style={{ color: "red" }}>*</span> </span>
                 <span>
                   <span>
                     <input
@@ -374,7 +378,7 @@ const validate = () => {
                     {...register("password", { required: "Password is required" })}
                     className={`${css.passwordInput} w-[100%]`}
                   />
-                  <span 
+                  <span
                     className={css.eyeIcon}
                     onClick={() => setShowPassword(!showPassword)} // Toggle state
                   >
@@ -386,7 +390,7 @@ const validate = () => {
               {/* Confirm Password Field */}
               <span className={css.contact_form_fields}>
                 <label htmlFor="confirmPassword">Verify Password <span style={{ color: "red" }}>*</span></label>
-                <div  className="flex items-center ">
+                <div className="flex items-center ">
                   <input
                     type={showConfirmPassword ? "text" : "password"} // Toggle input type
                     name="confirmPassword"
@@ -544,19 +548,21 @@ const validate = () => {
               <label htmlFor="termsOfService">Agree to our</label>
               <a href="https://brokercell.com/legal/" target="_blank">Terms of Service</a>
             </span>
-            {errors.form && <p style={{ color: "red" }}>{errors.form}</p>}
-            <button type="submit">Submit Application</button>
-                   <div className="mt-5 text-[#444]">
-                            <Link to={"https://brokercell.com"} target="_blank">
-                              {arrow} Back to BrokerCell
-                            </Link>
-                          </div>
-            {/* <p className={css.submitBtn_login}>
-              Already have an account?
-              <a href="/login">
-                <u>Login</u>
-              </a>
-            </p> */}
+            {errors.form && <p style={{ color: "red" ,fontWeight:"bold",fontSize:"12px",marginTop:"8px"}}>{errors.form}</p>}
+            <button
+              type="submit"
+              disabled={isLoading}
+              className={`py-3 px-6 text-white font-semibold rounded-lg transition duration-300 
+    ${isLoading ? "bg-gray-400 cursor-not-allowed opacity-60" : "bg-blue-600 hover:bg-blue-700"}`}
+            >
+              {isLoading ? "Submitting..." : "Submit Application"}
+            </button>
+
+            <div className="mt-5 text-[#444]">
+              <Link to={"https://brokercell.com"} target="_blank">
+                {arrow} Back to BrokerCell
+              </Link>
+            </div>
           </div>
         </form>
       </div>
