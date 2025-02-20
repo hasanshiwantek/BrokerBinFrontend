@@ -3,7 +3,7 @@ import React from 'react'
 const MultiCast = () => {
   return (
     <>
-    <div style={{padding:"15px"}}>
+    <div style={{padding:"15px"}} id='multicast'>
         <h5>BroadCast and MultiCast</h5>
 
         <div className="email-sec box" style={{fontSize:'11px'}}>
