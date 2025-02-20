@@ -44,7 +44,6 @@ import { sortInventory } from "../../../ReduxStore/SearchProductSlice";
 
 const SearchProduct = () => {
 
-
   const token = Cookies.get("token");
   const location = useLocation();
   const dispatch = useDispatch();

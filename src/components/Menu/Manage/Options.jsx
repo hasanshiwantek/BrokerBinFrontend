@@ -382,7 +382,7 @@ const Options = () => {
 
               {/* Section: Preferred Brokerbin Use */}
               <div className={css.preferredBrokerbinUse}>
-                <h1>Preferred Brokerbin Use</h1>
+                <h1>Preferred Brokercell Use</h1>
                 <div className={css.preferredBrokerbinUse_fields}>
                   <ul className="checkbox">
                     <li>
@@ -551,7 +551,7 @@ const Options = () => {
 
                     <li>
                       <label htmlFor="receiveUpdates">
-                        Receive BrokerBin Updates
+                        Receive Brokercell Updates
                       </label>
                       <select
                         name="receiveUpdates"

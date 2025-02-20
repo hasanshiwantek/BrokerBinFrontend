@@ -717,7 +717,7 @@ const SiteWide = () => {
               <p>0</p>
             </span>
             <span>
-              <p>Total BrokerBin Items Listed:</p>
+              <p>Total Brokercell Items Listed:</p>
               <p>0</p>
             </span>
             <span>

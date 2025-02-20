@@ -135,10 +135,10 @@ const FeedbackModal = ({ isOpen, onClose, company, onSucces }) => {
                         </label>
                         <div className={styles.termsNotes}>
                             <p>* Feedback must be related to the transaction only.</p>
-                            <p>* BrokerBin is not responsible for posted content.</p>
+                            <p>* Brokercell is not responsible for posted content.</p>
                             <p>* Please note: your name and company name will be displayed on ALL feedback comments.</p>
                             <p>* Please note: from the original posting, you have 5 days to resolve negative/neutral feedback before the feedback is published to members. You have 30 days to edit feedback.</p>
-                            <p>* If Feedback System is not applicable, forward complaint to ethics@brokerbin.com.</p>
+                            <p>* If Feedback System is not applicable, forward complaint to ethics@brokercell.com.</p>
                         </div>
 
 

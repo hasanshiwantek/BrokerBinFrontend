@@ -43,7 +43,7 @@ const Tools = () => {
             <img src={eventimg} alt="Events" />
             <h3>Events</h3>
             <ul>
-              <li>BrokerBin Roadshow</li>
+              <li>Brokercell Roadshow</li>
               <li>Roadshow Checklist</li>
             </ul>
           </div>
@@ -71,7 +71,7 @@ const Tools = () => {
             <ul>
               <li>How To Videos</li>
               <li>Webinars</li>
-              <li>BrokerBin YouTube</li>
+              <li>Brokercell YouTube</li>
             </ul>
           </div>
 

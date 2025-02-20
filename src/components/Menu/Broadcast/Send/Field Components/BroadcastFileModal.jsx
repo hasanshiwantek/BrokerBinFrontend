@@ -52,7 +52,7 @@ const BroadcastModal = ({ isOpen, onRequestClose, broadcast }) => {
                 <p><strong>Sent:</strong> {new Date(broadcast.created_at).toLocaleString()}</p>
                 {
                     broadcast.type && (
-                        <p><strong>Subject:</strong> BrokerBin Multiple-Part Broadcast {broadcast.type.toUpperCase()}: {broadcast.mfg}</p>
+                        <p><strong>Subject:</strong> Brokercell Multiple-Part Broadcast {broadcast.type.toUpperCase()}: {broadcast.mfg}</p>
                     )
                 }
                 {broadcast.file && (
