@@ -1,6 +1,3 @@
-
-
-
   .container {
     width: 100%;
 }
@@ -13,15 +10,17 @@
     justify-content: space-between; /* Space between sections */
     align-items: flex-start; /* Align items to the top */
     border: 10px solid lightgray; /* Border for the sections */
-    background-color: #f9f9f9; /* Light background for the sections */
-    padding: 20px; /* Padding inside the sections */
-    width: 90vw;
+    /* background-color: #f9f9f9;  */
+    /* padding: 20px;  */
+    width: 100vw;
 }
 
 #box1, #box2, #box3, #box4, #box5, #box6, #box7 {
     flex: 1; /* Equal space for each box */
-    margin: 0 10px; /* Margin between boxes */
-    border-right: 2px solid lightgray; /* Divider line */
+    /* margin: 0 10px;  */
+    border-right: 15px solid lightgray; /* Divider line */
+    height: 53vh;
+    padding: 8px 15px;
 }
 
 #box1:last-child, #box2:last-child, #box3:last-child, #box4:last-child, #box5:last-child, #box6:last-child {
@@ -35,8 +34,6 @@
 }
 
 .sections li {
-    font-size: 13px; /* Font size for list items */
-    font-weight: 500; /* Font weight */
     color: #989898;
     margin: 2px 0; /* Space between list items */
     display: flex; /* Use flexbox for icon and text */
@@ -49,21 +46,32 @@
 }
 
 .sections li img {
-    margin-right: 8px; /* Space between icon and text */
+    margin-right: 5px; /* Space between icon and text */
     width: 16px; /* Set icon width */
     height: 16px; /* Set icon height */
 }
 
 .footer {
-    width: 100%; /* Full width */
-    background-color: lightgray; /* Footer background color */
-    border: 2px solid black; /* Footer border */
+    width: 100vw; /* Full width */
+    background-color: #f9f9f9; /* Footer background color */
+    border: 1px solid #444; /* Footer border */
     text-align: center; /* Centered text in footer */
     margin-top: -20px;
 }
 
 .footer-content {
-    color: black; /* Footer text color */
-    font-size: 14px; /* Footer text size */
-    font-weight: 700; /* Footer text weight */
+    color: #444; /* Footer text color */
+    font-size: 9pt; /* Footer text size */
+    font-weight: 500; /* Footer text weight */
+}
+
+
+.sections ul li{
+    font-size: 9pt;
+    font-weight: 600;
+    white-space: nowrap;
+}
+.sections ul li img{
+    height: 14px;
+    width: 10px;
 }

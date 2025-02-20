@@ -10,6 +10,8 @@ import { fetchUserData } from "../../../ReduxStore/ProfleSlice";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import styles from "../../../styles/Menu/Manage/MyProfile.module.css";
+import { NavLink } from "react-router-dom";
 
 const Ethics = () => {
   const token = Cookies.get("token");
@@ -138,10 +140,10 @@ const Ethics = () => {
     console.log("Form Data: ", formData);
     const data = { ...formData };
 
-    dispatch(sendEthics({ data, token })).then(() => {     
+    dispatch(sendEthics({ data, token })).then(() => {
       handleReset();
       // ✅ Show success toast with light blue color
-      toast.info("Your Complaint Has Been Sent Successfully",{
+      toast.info("Your Complaint Has Been Sent Successfully", {
         style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, // 
       });
     }).catch((error) => {
@@ -155,34 +157,49 @@ const Ethics = () => {
     <>
       <div className={basic.basicFormLayout}>
         <form onSubmit={handleSubmit}>
-          <div className={basic.basic}>
-            <div className={basic.basic_links}>
+            <div className={`${basic.basic} !bg-[#e8e8e8]`}>
+            <div className={styles.profileInfo_links}>
               <ul>
                 <li>
-                  <Link to={"/help"}>
+                  <NavLink
+                    to="/help"
+                    end  // This ensures the exact match for /myprofile
+                    className={({ isActive }) => (isActive ? styles.active : '')}
+                  >
                     <span>Help</span>
-                  </Link>
+                  </NavLink>
                 </li>
                 <li>
-                  <Link to={"/feedback"}>
-                    <span>Contacts</span>
-                  </Link>
+                  <NavLink
+                    to="/feedback"
+                    className={({ isActive }) => (isActive ? styles.active : '')}
+                  >
+                    <span>Contact</span>
+                  </NavLink>
                 </li>
                 <li>
-                  <Link to={"/ethics"}>
+                  <NavLink
+                    to="/ethics"
+                    className={({ isActive }) => (isActive ? styles.active : '')}
+                  >
                     <span>Ethics</span>
-                  </Link>
+                  </NavLink>
                 </li>
-                <li >
-                  <Link to={"/sitemap"}>
-                    <span>Site Map</span>
-                  </Link>
-                </li>
-
                 <li>
-                  <Link to={"/badges"}>
+                  <NavLink
+                    to="/sitemap"
+                    className={({ isActive }) => (isActive ? styles.active : '')}
+                  >
+                    <span>Site Map</span>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/badges"
+                    className={({ isActive }) => (isActive ? css.active : '')}
+                  >
                     <span>Badges</span>
-                  </Link>
+                  </NavLink>
                 </li>
               </ul>
             </div>
@@ -221,7 +238,7 @@ const Ethics = () => {
                     </li>
                     <li>
                       <label htmlFor="date_of_transaction">
-                        What was the date of transaction? *
+                        What was the date of transaction?<span className="text-red-500">*</span>
                       </label>
                       <br />
                       <input
@@ -236,7 +253,7 @@ const Ethics = () => {
                     </li>
                     <li>
                       <label htmlFor="specific_complaint">
-                        What is your specific complaint? *
+                        What is your specific complaint?<span className="text-red-500">*</span>
                       </label>
                       <br />
                       <textarea
@@ -251,7 +268,7 @@ const Ethics = () => {
                     <li>
                       <label>
                         Have you requested an RMA (Return Merchandise
-                        Authorization)? *
+                        Authorization)?<span className="text-red-500">*</span>
                       </label>
                       <br />
                       <div>
@@ -293,7 +310,7 @@ const Ethics = () => {
                     <li>
                       <label>
                         What was the above company's response when you contacted
-                        them? *
+                        them?<span className="text-red-500">*</span>
                       </label>
                       <br />
                       <textarea
@@ -308,7 +325,7 @@ const Ethics = () => {
                     </li>
                     <li>
                       <label>
-                        Have you or do you plan on contacting the authorities? *
+                        Have you or do you plan on contacting the authorities?<span className="text-red-500">*</span>
                       </label>
                       <br />
                       <div>
@@ -338,7 +355,7 @@ const Ethics = () => {
                     </li>
                     <li>
                       <label>
-                        Do you or will you have an attorney representing you? *
+                        Do you or will you have an attorney representing you?<span className="text-red-500">*</span>
                       </label>
                       <br />
                       <div>
@@ -368,7 +385,7 @@ const Ethics = () => {
                     </li>
                     <li>
                       <label>
-                        Please provide relevant documentation: * (At least one)
+                        Please provide relevant documentation:<span className="text-red-500">*(At least one)</span>
                       </label>
                       <br />
                       <ul className={css.ethics_form_fields_files}>

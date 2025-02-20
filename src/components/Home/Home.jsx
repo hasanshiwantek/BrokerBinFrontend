@@ -149,17 +149,10 @@ const Home = () => {
     console.log("Navigated to URL:", url); // Debugging log
   };
 
-
-
-
-
-
   const handleNavigation = (path, params = {}) => {
     const query = new URLSearchParams(params).toString();
     navigate(`${path}${query ? `?${query}` : ""}`);
   };
-
-
 
   const { togglePopUp, popupCompanyDetail } = useSelector((state) => state.searchProductStore)
   const company = initialData?.company;
@@ -256,9 +249,6 @@ const Home = () => {
                   </div>
                 </div>
               </div>
-
-
-
               <div className={css.gridHome1_MemberDetail}>
                 <div className={`${css.gridHome1_MemberDetail_profile} ${css.mailSection} `}>
                   <div >
