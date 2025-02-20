@@ -85,7 +85,7 @@ const SearchCompany = ({ setFormData }) => {
   return (
     <>
       <span>
-        <label htmlFor="company">"Which company is this about? *</label>
+        <label htmlFor="company">"Which company is this about?<span className="text-red-500">*</span></label>
       </span>
       <br />
       <span ref={inputRef}>

@@ -3,7 +3,7 @@ import "./SiteColors.css"
 const Vendors = () => {
   return (
     <>
-    <div style={{ padding: "15px" }}>
+    <div style={{ padding: "15px" }} id='vendors'>
 
 <h5>My Vendors</h5>
 

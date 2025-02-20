@@ -403,9 +403,9 @@ const Header = () => {
                   <Link to={"/sitemap"}>
                     <li>site map</li>
                   </Link>
-                  {/* <Link to={"/badges"}>
+                  <Link to={"/badges"}>
                     <li>badges</li>
-                  </Link> */}
+                  </Link>
                 </ul>
               </div>
             </li>

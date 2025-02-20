@@ -20,7 +20,7 @@ import icon16 from "../../../assets/upload.svg";
 const QuickLinks = () => {
   return (
     <>
-      <div style={{ padding: '15px' }}>
+      <div style={{ padding: '15px' }} id='quicklinks'>
         <h5 className='q-head'>
           QuickLinks
         </h5>

@@ -104,12 +104,12 @@ const SafeTrading = () => {
                         <p className="text-gray-600">14.9 years experience</p>
                     </div>
                     <div>
-                        <p><strong>Company:</strong> BrokerBin.com</p>
+                        <p><strong>Company:</strong> Brokercell.com</p>
                         <p><strong>Title:</strong> Senior Account Manager</p>
                         <p><strong>Phone:</strong> 507-535-7563 x1113</p>
                         <p><strong>Toll:</strong> 888-241-0639</p>
                         <p><strong>Fax:</strong> 507-292-5747</p>
-                        <p><strong>Email:</strong> <a href="mailto:Rikk@BrokerBin.com" className="text-blue-600 hover:underline">Rikk@BrokerBin.com</a></p>
+                        <p><strong>Email:</strong> <a href="mailto:hassan.asif@shiwantek.com" className="text-blue-600 hover:underline">Rikk@BrokerBin.com</a></p>
                     </div>
                 </div>
             </div>

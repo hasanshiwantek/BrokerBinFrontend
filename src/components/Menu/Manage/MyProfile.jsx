@@ -262,7 +262,7 @@ const MyProfile = () => {
         <div className={css.profileLayout}>
           <form onSubmit={handleSubmit}>
             <div className={css.profileBtn}>
-              <p>my profile</p>
+              <h1>My Profile</h1>
               <span>
                 <input type="submit" value="submit changes" />
                 <button type="button" onClick={() => openCompanyModal(company)}>view profile</button>
