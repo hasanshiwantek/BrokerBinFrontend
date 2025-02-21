@@ -465,7 +465,7 @@ const BroadcastForm = () => {
                   </div>
                   <div className={css.mainFields_2}>
                     <div>
-                      <label htmlFor="cond">condition</label>
+                      <label htmlFor="cond">Condition</label>
                       <select
                         name="cond"
                         value={formData.cond}
@@ -686,7 +686,7 @@ const BroadcastForm = () => {
                   {[user].map((item) => {
                     return (
                       <ul>
-                        <li>{user.firstName}</li>
+                        <li>{user.firstName} {user.lastName}</li>
                         <li>
                           <p>P:</p>
                           <p>{user.phoneNumber}</p>

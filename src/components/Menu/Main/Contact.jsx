@@ -230,7 +230,7 @@ const Contact = () => {
               <button type="button" onClick={handleReset}  >
                 Reset
               </button>
-              <input type="submit" value="Sumbit" className="cursor-pointer hover:bg-blue-600" />
+              <input type="submit" value="Submit" className="cursor-pointer hover:bg-blue-600" />
             </div>
           </div>
         </form>
