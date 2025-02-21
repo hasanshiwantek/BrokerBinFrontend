@@ -72,8 +72,6 @@ export const regionsList = [
 
 
 
-
-
 export const countriesList = [
   { value: "", label: "N/A" },
   { value: "USA", label: "UNITED STATES" },
@@ -485,7 +483,29 @@ export const computers = [
   { id: "other", label: "Other", value: "Other" },
 ];
 
-
+export const mapThemes = {
+  default: [],
+  retro: [
+      { elementType: "geometry", stylers: [{ color: "#ebe3cd" }] },
+      { elementType: "labels.text.fill", stylers: [{ color: "#523735" }] },
+      { elementType: "labels.text.stroke", stylers: [{ color: "#f5f1e6" }] }
+  ],
+  dark: [
+      { elementType: "geometry", stylers: [{ color: "#212121" }] },
+      { elementType: "labels.text.fill", stylers: [{ color: "#757575" }] },
+      { elementType: "labels.text.stroke", stylers: [{ color: "#212121" }] }
+  ],
+  silver: [
+      { elementType: "geometry", stylers: [{ color: "#f5f5f5" }] },
+      { elementType: "labels.text.fill", stylers: [{ color: "#616161" }] },
+      { elementType: "labels.text.stroke", stylers: [{ color: "#f5f5f5" }] }
+  ],
+  night: [
+      { elementType: "geometry", stylers: [{ color: "#2b2b2b" }] },
+      { elementType: "labels.text.fill", stylers: [{ color: "#8d8d8d" }] },
+      { elementType: "labels.text.stroke", stylers: [{ color: "#2b2b2b" }] }
+  ]
+};
 
 
 export const initialMFGs = ["3COM", "3DLABS", "3M", "3RD PARTY", "3WARE", "A-POWER", "AAEON", "ABBOT", "ABIT", "ABLECOM"];

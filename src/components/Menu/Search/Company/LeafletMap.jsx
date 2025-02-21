@@ -5,7 +5,7 @@ import L from "leaflet";
 
 const LeafletMap = ({ company }) => {
 
-  const companiesArray = Array.isArray(company) ? company : [company];
+  const companiesArray = Array.isArray(company?.companies) ? company.companies : [company];
   console.log("Companies Array: ",companiesArray)
 
 

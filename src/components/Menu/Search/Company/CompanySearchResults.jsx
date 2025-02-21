@@ -16,6 +16,8 @@ import { FaSearch } from "react-icons/fa";
 import { error } from "jquery";
 import { CiSearch } from "react-icons/ci";
 import RightSidebar from "./RightSidebar";
+// import { GoogleMap } from "@react-google-maps/api";
+import GoogleMap from "./GoogleMap"
 
 const CompanySearchResults = () => {
 
@@ -100,7 +102,8 @@ const CompanySearchResults = () => {
                         </div>
 
                         {/* Leaflet Map */}
-                        {companyData ? <LeafletMap company={filteredData || companyData} /> : <p>No company data found</p>}
+                        {/* {companyData ? <LeafletMap company={filteredData || companyData} /> : <p>No company data found</p>} */}
+                        {companyData ? <GoogleMap company={filteredData || companyData} /> : <p>No company data found</p>}
                     </div>
 
                     {/* <div className="bg-gray-200 ">
