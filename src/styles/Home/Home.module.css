@@ -26,9 +26,9 @@
   flex-direction: column;
   gap: 1rem;
 
-  >* {
+  > * {
     /* box-shadow: 0 0 1px rgba(51, 51, 51, 0.5); */
-    box-shadow: 0 .15em .25em #b5b5b5;
+    box-shadow: 0 0.15em 0.25em #b5b5b5;
   }
 
   .gridHome1_Bar {
@@ -60,7 +60,7 @@
     }
 
     > :nth-child(1) {
-      >img {
+      > img {
         height: 5rem;
         border-radius: 50%;
         aspect-ratio: 1;
@@ -76,7 +76,7 @@
     }
 
     > :nth-child(5) {
-      >div {
+      > div {
         display: flex;
       }
     }
@@ -137,7 +137,7 @@
         display: flex;
         justify-content: space-between;
 
-        >div {
+        > div {
           display: flex;
           align-items: center;
         }
@@ -149,7 +149,7 @@
       }
 
       &_watchList {
-        >a {
+        > a {
           display: flex;
           justify-content: space-between;
         }
@@ -161,7 +161,7 @@
       flex-direction: column;
       gap: 2rem;
 
-      >a {
+      > a {
         display: flex;
         justify-content: space-between;
       }
@@ -189,9 +189,9 @@
       width: 2rem;
     }
 
-    >div {
+    > div {
       /* box-shadow: 0 0 1px rgba(51, 51, 51, 0.5); */
-      box-shadow: 0 .15em .25em #b5b5b5;
+      box-shadow: 0 0.15em 0.25em #b5b5b5;
       border-top: 2px solid var(--primary-color);
       display: flex;
       justify-content: space-between;
@@ -203,7 +203,7 @@
 
   .gridHome2_Details {
     /* box-shadow: 0 0 1px rgba(51, 51, 51, 0.5); */
-    box-shadow: 0 .15em .25em #b5b5b5;
+    box-shadow: 0 0.15em 0.25em #b5b5b5;
     height: 100%;
     height: -webkit-fill-available;
   }
@@ -241,7 +241,7 @@
           border: 2px solid var(--primary-color);
         }
 
-        >div {
+        > div {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
           align-items: center;
@@ -263,7 +263,7 @@
             padding: 0.5rem;
           }
 
-          >div {
+          > div {
             display: flex;
             justify-content: space-evenly;
             width: 100%;
@@ -282,7 +282,7 @@
           /* justify-content: space-around; */
         }
 
-        >* {
+        > * {
           padding: 1rem;
         }
       }
@@ -296,7 +296,7 @@
       margin-top: 2rem;
 
       > :nth-child(1) {
-        >h3 {
+        > h3 {
           font-size: 2rem;
           font-weight: bold;
         }
@@ -307,21 +307,20 @@
         flex-direction: column;
         text-align: center;
 
-        >button {
+        > button {
           background: var(--primary-color);
           padding: 1rem;
           border-radius: 0.5rem;
           margin-bottom: 1rem;
         }
 
-        >a {
+        > a {
           border-bottom: 2px solid transparent;
           margin: 0 auto;
         }
 
-        >a:hover {
+        > a:hover {
           border-bottom: 2px solid var(--primary-color);
-
         }
       }
     }
@@ -357,8 +356,6 @@
           gap: 1rem;
         }
 
-
-
         a:nth-child(2) {
           color: var(--popup-bg-color);
         }
@@ -387,7 +384,7 @@
     justify-content: center;
     align-items: center;
 
-    >canvas {
+    > canvas {
       height: 18rem !important;
       width: 18rem !important;
     }
@@ -462,7 +459,6 @@
   opacity: 0.3;
 }
 
-
 .footerlinks {
   display: flex;
   justify-content: center;
@@ -473,25 +469,17 @@
 
 .footerlinks li {
   list-style: none;
-  color: #3A57AB;
-  ;
+  color: #3a57ab;
 }
 
 .footerlinks li a {
   font-size: 11px;
 }
 
-
-
-
-
-
 .serviceDirSec {
   display: flex;
   justify-content: space-around;
-
 }
-
 
 .manageDropdown {
   display: none;
@@ -504,13 +492,11 @@
   margin-left: 17%;
 }
 
-
 .manageDropdown li {
   padding: 10px 12px;
   font-size: 12px;
   color: #4a4a4a;
   font-weight: 500;
-
 }
 
 .manageDropdown li:hover {
@@ -522,33 +508,23 @@
   display: block;
 }
 
+.mailSection {
+  position: relative;
+}
 .profileMgDrop {
   position: fixed;
   top: 24%;
   left: 10%;
 }
 
-
-
-
-
-
-
 .gridHome2_Details_Bottom_Chart_data_btn {
   background-color: #68c !important;
 }
 
-
-
-
-
 .gridHome2_Details_Upper_Right_PartSearch textarea:focus {
   outline: 1px solid var(--primary-color);
   box-shadow: 1px 1px 0.5px 0.5px var(--primary-color);
-
 }
-
-
 
 .gridHome1_MemberDetail_list_numbers a {
   cursor: pointer;
@@ -561,17 +537,17 @@
   object-fit: cover;
 }
 
-
+.gridHome1_MemberDetail_profile {
+  position: relative;
+}
 
 @media screen and (max-width: 1975px) {
-
   .mgDrop {
     top: 5%;
   }
 }
 
 @media screen and (max-width: 1366px) {
-
   .manageDropdown {
     top: 14%;
   }
@@ -580,7 +556,6 @@
     top: 24% !important;
     left: 8% !important;
   }
-
 }
 
 @media screen and (max-width: 1680px) {
@@ -589,5 +564,4 @@
     top: 12%;
     left: 10%;
   }
-
 }

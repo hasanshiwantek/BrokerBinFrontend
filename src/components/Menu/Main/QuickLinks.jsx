@@ -1,5 +1,5 @@
-import React from 'react';
-import './QuickLinks.css';
+import React from "react";
+import "./QuickLinks.css";
 import icon1 from "../../../assets/broadcast.svg";
 import icon2 from "../../../assets/cart.svg";
 import icon3 from "../../../assets/condition-icon.svg";
@@ -20,58 +20,54 @@ import icon16 from "../../../assets/upload.svg";
 const QuickLinks = () => {
   return (
     <>
-      <div style={{ padding: '15px' }} id='quicklinks'>
-        <h5 className='q-head'>
-          QuickLinks
-        </h5>
+      <div style={{ padding: "15px" }} id="quicklinks">
+        <h5 className="q-head">QuickLinks</h5>
 
         <div className="links-sec box">
           <div className="link-sec1">
-            <div className='link-sec1-sec'>
+            <div className="link-sec1-sec">
               <img src={icon12} alt="Site Color" />
               <span>
-              <a href="#sitecolors">
-                Site Color
-                </a>
-                </span>
+                <a href="#broadcast">Site Color</a>
+              </span>
             </div>
 
-            <div className='link-sec1-sec'>
+            <div className="link-sec1-sec">
               <img src={icon1} alt="Broadcast Terms" />
-              <a href="#broadcast">
-              <span>BroadCast Terms</span>
-            </a>
-            </div>
-            <div className='link-sec1-sec'>
-              <img src={icon15} alt="Site Allowances" />
-              <a href="#sitecolors">
-              <span>Site Allowances</span>
+              <a href="#quicklinks">
+                <span>BroadCast Terms</span>
               </a>
             </div>
-{/* 
+            <div className="link-sec1-sec">
+              <img src={icon15} alt="Site Allowances" />
+              <a href="#sitecolors">
+                <span>Site Allowances</span>
+              </a>
+            </div>
+            {/* 
             <div className='link-sec1-sec'>
               <img src={icon3} alt="Product Conditions" />
               <span>Product Conditions</span>
             </div> */}
 
-            <div className='link-sec1-sec'>
+            {/* <div className='link-sec1-sec'>
               <img src={icon14} alt="Tools" />
               <a href="#icons">
               <span>Tools</span>
               </a>
-            </div>
+            </div> */}
 
-            <div className='link-sec1-sec'>
+            <div className="link-sec1-sec">
               <img src={icon10} alt="Reports" />
-              <a href="#reports">
-              <span>Reports</span>
+              <a href="#icons">
+                <span>Reports</span>
               </a>
             </div>
 
-            <div className='link-sec1-sec'>
+            <div className="link-sec1-sec">
               <img src={icon5} alt="Email" />
-              <a href="#email">
-              <span>Email</span>
+              <a href="#reports">
+                <span>Email</span>
               </a>
             </div>
 
@@ -84,38 +80,38 @@ const QuickLinks = () => {
           </div>
 
           <div className="link-sec2">
-            <div className='link-sec2-sec'>
+            <div className="link-sec2-sec">
               <img src={icon11} alt="Searching" />
-              <a href="#searching">
-              <span>Searching</span>
+              <a href="#email">
+                <span>Searching</span>
               </a>
             </div>
 
-            <div className='link-sec2-sec'>
+            <div className="link-sec2-sec">
               <img src={icon7} alt="Hot List" />
               <a href="#hotlist">
-              <span>Hot List</span>
+                <span>Hot List</span>
               </a>
             </div>
 
-            <div className='link-sec2-sec'>
+            <div className="link-sec2-sec">
               <img src={icon16} alt="Uploading Parts" />
               <a href="#uploading">
-              <span>Uploading Parts</span>
+                <span>Uploading Parts</span>
               </a>
             </div>
 
-            <div className='link-sec2-sec'>
+            <div className="link-sec2-sec">
               <img src={icon9} alt="My Profile" />
-              <a href="#profile">
-              <span>My Profile</span>
+              <a href="#multicast">
+                <span>My Profile</span>
               </a>
             </div>
 
-            <div className='link-sec2-sec'>
+            <div className="link-sec2-sec">
               <img src={icon8} alt="My Vendors" />
               <a href="#vendors">
-              <span>My Vendors</span>
+                <span>My Vendors</span>
               </a>
             </div>
 
@@ -129,10 +125,10 @@ const QuickLinks = () => {
               <span>Part Cart</span>
             </div> */}
 
-            <div className='link-sec2-sec'>
+            <div className="link-sec2-sec">
               <img src={icon13} alt="Member Feedback" />
               <a href="#feedback">
-              <span>Member Feedback</span>
+                <span>Member Feedback</span>
               </a>
             </div>
           </div>
@@ -140,6 +136,6 @@ const QuickLinks = () => {
       </div>
     </>
   );
-}
+};
 
 export default QuickLinks;

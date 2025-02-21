@@ -14,7 +14,7 @@ import { ToastContainer } from "react-toastify";
 const BroadcastForm = () => {
   const token = Cookies.get("token");
   const { user } = JSON.parse(localStorage.getItem("user"));
-  const service = useSelector((state) => state.broadcastStore.serviceData)
+  const service = useSelector((state) => state.broadcastStore.serviceData);
 
   // console.log(service);
 
@@ -58,7 +58,7 @@ const BroadcastForm = () => {
     mobileDevicesSelection,
     companiesSelection,
     regionSelection,
-    serviceData
+    serviceData,
   } = useSelector((state) => state.broadcastStore);
 
   const handleContinue = () => {
@@ -127,13 +127,13 @@ const BroadcastForm = () => {
     const selectedFiles = event.target.files[0];
     if (selectedFiles) {
       setFiles(selectedFiles);
-      setFileName(selectedFiles.name);  // Store the file name
+      setFileName(selectedFiles.name); // Store the file name
     } else {
       setFiles("");
-      setFileName("");  // Clear file name if no file is selected
+      setFileName(""); // Clear file name if no file is selected
     }
   };
-  
+
   const cancelAllActions = () => {
     setBroadcastType("");
     setCategory("");
@@ -198,26 +198,26 @@ const BroadcastForm = () => {
   //   console.log(token)
   // };
 
-
-
-
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+
     // Prepare data for submission
     let data;
     if (files) {
       data = new FormData();
       data.append("uploadFile", files);
-  
+
       data.append("type", broadcastType);
       data.append("selectedCompanies", JSON.stringify(computerSelection));
       data.append("selectedTelecom", JSON.stringify(telecomSelection));
-      data.append("selectedMobileDevices", JSON.stringify(mobileDevicesSelection));
+      data.append(
+        "selectedMobileDevices",
+        JSON.stringify(mobileDevicesSelection)
+      );
       data.append("selectedRegion", JSON.stringify(regionSelection));
       data.append("companiesSelection", JSON.stringify(companiesSelection));
       data.append("service", JSON.stringify(serviceData));
-  
+
       for (const [key, value] of Object.entries(formData)) {
         data.append(key, value);
       }
@@ -233,40 +233,36 @@ const BroadcastForm = () => {
         service: serviceData,
       };
     }
-  
+
     // Dispatch the data with token
     dispatch(sendBroadcast({ token, data }))
       .then(() => {
-                 // ✅ Show success toast with light blue color
-                 toast.info("Your Broadcast Has Been Sent Successfully", {
-                  style: { fontSize:"12px" ,marginTop:"-10px",fontWeight:"bold"} , // 
-                });
-            
-           // Clear serviceData after submission
-      dispatch(clearAllSelections());
+        // ✅ Show success toast with light blue color
+        toast.info("Your Broadcast Has Been Sent Successfully", {
+          style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
+        });
+
+        // Clear serviceData after submission
+        dispatch(clearAllSelections());
         // Clear the form fields after successful submission
         cancelAllActions();
       })
       .catch((error) => {
         console.error("Error storing data:", error);
         toast.error("Failed Sending Broadcast.Please Try Again", {
-          style: { fontSize:"15px" ,marginTop:"-10px"} , // 
+          style: { fontSize: "15px", marginTop: "-10px" }, //
         });
       });
-  
+
     // Set email format
     setEmailFormat((prev) => ({
       ...prev,
       time: new Date().toLocaleTimeString("en-US", { hour12: true }),
       date: new Date().toLocaleDateString("en-US"),
     }));
-  
+
     console.log("Token:", token);
   };
-  
-  
-
-
 
   return (
     <div className={css.outerPadding}>
@@ -282,21 +278,45 @@ const BroadcastForm = () => {
                     className={broadcastType === "wtb" ? css.selected : ""}
                     onClick={() => setBroadcastType("wtb")}
                   >
-                    <span style={{ color: "blue", fontSize: "2rem", fontWeight: "600" }}>WTB</span>
+                    <span
+                      style={{
+                        color: "blue",
+                        fontSize: "2rem",
+                        fontWeight: "600",
+                      }}
+                    >
+                      WTB
+                    </span>
                     <span>Want to Buy</span>
                   </button>
                   <button
                     className={broadcastType === "rfq" ? css.selected : ""}
                     onClick={() => setBroadcastType("rfq")}
                   >
-                    <span style={{ color: "green", fontSize: "2rem", fontWeight: "600" }}>RFQ</span>
+                    <span
+                      style={{
+                        color: "green",
+                        fontSize: "2rem",
+                        fontWeight: "600",
+                      }}
+                    >
+                      RFQ
+                    </span>
                     <span>Request for Quote</span>
                   </button>
                   <button
                     className={broadcastType === "wts" ? css.selected : ""}
                     onClick={() => setBroadcastType("wts")}
                   >
-                    <span style={{ color: "red", fontSize: "2rem", fontWeight: "600" }}>WTS</span>
+                    <span
+                      style={{
+                        color: "red",
+                        fontSize: "2rem",
+                        fontWeight: "600",
+                      }}
+                    >
+                      WTS
+                    </span>
                     <span>Want to Sell</span>
                   </button>
                 </div>
@@ -328,7 +348,9 @@ const BroadcastForm = () => {
                     }
                     onClick={() => setCategory("multiple parts / items")}
                   >
-                    <span className={css.sendTitle}>Multiple Parts / Items</span>
+                    <span className={css.sendTitle}>
+                      Multiple Parts / Items
+                    </span>
                     <span>attach files or paste text</span>
                     <small>(pdf, csv, xlsx, txt, photos, datasheets)</small>
                   </button>
@@ -336,7 +358,9 @@ const BroadcastForm = () => {
               </div>
             </div>
             <div className={css.actions}>
-              <button onClick={cancelAllActions} className={css.cancelBtn}>Cancel</button>
+              <button onClick={cancelAllActions} className={css.cancelBtn}>
+                Cancel
+              </button>
               <button
                 onClick={handleContinue}
                 disabled={!broadcastType || !category}
@@ -366,8 +390,7 @@ const BroadcastForm = () => {
                   </h1>
                 )}
 
-                {
-                  category === "service" &&
+                {category === "service" && (
                   <div className={css.toggleServices}>
                     <div className={css.headings}>
                       <h3>Services</h3>
@@ -377,13 +400,9 @@ const BroadcastForm = () => {
                       <Services />
                     </div>
                   </div>
-                }
+                )}
 
-
-
-                {
-
-                  category != "service" &&
+                {category != "service" && (
                   <div className={css.toggleCategories}>
                     <div className={css.headings}>
                       <h3>Categories</h3>
@@ -391,7 +410,7 @@ const BroadcastForm = () => {
                     </div>
                     <ToggleCategories />
                   </div>
-                }
+                )}
 
                 <div className={css.toggleFilters}>
                   <div className={css.headings}>
@@ -434,9 +453,15 @@ const BroadcastForm = () => {
                         </small>
                       </div>
                     </label>
-                  </div>  
-                  {fileName && <p className="text-lg 
-                   text-orange-500 ">Selected file: {fileName}</p>}
+                  </div>
+                  {fileName && (
+                    <p
+                      className="text-lg 
+                   text-orange-500 "
+                    >
+                      Selected file: {fileName}
+                    </p>
+                  )}
                 </div>
                 <div className={css.mainFields}>
                   <div className={css.mainFields_1}>
@@ -487,7 +512,6 @@ const BroadcastForm = () => {
                         onChange={handleInputChange}
                         placeholder="HECI / CLEI"
                         required
-
                       />
                     </div>
                     <div>
@@ -625,7 +649,7 @@ const BroadcastForm = () => {
                 <div>
                   {[formData].map((item) => {
                     return (
-                      <ul key={item.id} className={`${css.broadcastUL}`} >
+                      <ul key={item.id} className={`${css.broadcastUL}`}>
                         {broadcastType === "wtb" && (
                           <li>
                             <p>Type:</p>
@@ -670,13 +694,9 @@ const BroadcastForm = () => {
                         </li>
                         <li>
                           <p>Services</p>
-                          {
-                            service.map((val, index) => {
-                              return (
-                                <li>{val}</li>
-                              )
-                            })
-                          }
+                          {service.map((val, index) => {
+                            return <li>{val}</li>;
+                          })}
                         </li>
                       </ul>
                     );
@@ -686,7 +706,9 @@ const BroadcastForm = () => {
                   {[user].map((item) => {
                     return (
                       <ul>
-                        <li>{user.firstName} {user.lastName}</li>
+                        <li>
+                          {user.firstName} {user.lastName}
+                        </li>
                         <li>
                           <p>P:</p>
                           <p>{user.phoneNumber}</p>
@@ -704,7 +726,7 @@ const BroadcastForm = () => {
                   Previous
                 </button>
                 <span>
-                  <button type="button" onClick={cancelAllActions} >
+                  <button type="button" onClick={cancelAllActions}>
                     Cancel
                   </button>
                   {/* <input type="submit" value="SEND" style={{ cursor: "pointer" }} /> */}
@@ -712,7 +734,7 @@ const BroadcastForm = () => {
                     type="button"
                     value="SEND"
                     className="cursor-pointer px-5 py-4 border border-blue-500 rounded-lg transform active:scale-90 transition-all duration-100  "
-                    onClick={handleSubmit}  
+                    onClick={handleSubmit}
                   />
                 </span>
               </div>
@@ -720,8 +742,7 @@ const BroadcastForm = () => {
           )}
         </form>
       </div>
-            <ToastContainer position="top-center" autoClose={2000} />
-      
+      <ToastContainer position="top-center" autoClose={2000} />
     </div>
   );
 };

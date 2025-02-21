@@ -149,7 +149,7 @@ const CreateAccount = () => {
             }
         } catch (error) {
             // alert('Unexpected error occurred!');
-            toast.info("Error Creating Account.Please Try Again.", {
+            toast.error(error || "Error Creating Account.Please Try Again.", {
                 style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, // 
             });
 
@@ -160,7 +160,7 @@ const CreateAccount = () => {
     return (
         <div className={`px-5 ${css.profileLayout} `}>
             <form onSubmit={(e) => e.preventDefault()}>
-                <div className={`${css.profileInfo} !bg-white border border-2 rounded-2xl`}>
+                <div className={`${css.profileInfo} !bg-white  border-2 rounded-2xl`}>
 
                     <div className={css.profileInfo_links}>
                         <ul className='bg-gray-200'>
