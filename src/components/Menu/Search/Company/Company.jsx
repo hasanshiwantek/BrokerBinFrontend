@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react'
 import "../../Main/MenuBar.css"
-import { Link, useNavigate,NavLink  } from 'react-router-dom'
+import { Link, useNavigate, NavLink } from 'react-router-dom'
 import styles from "../../../../styles/Menu/Search/Person.module.css"
 import { submitUserSearch } from '../../../../ReduxStore/ProfleSlice'
 import Cookies from "js-cookie"
@@ -38,7 +37,7 @@ const SearchCompany = () => {
     const token = Cookies.get("token");
     const navigate = useNavigate(); // Initialize useNavigate
     // Handle change in input/select fields
-    
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -47,63 +46,22 @@ const SearchCompany = () => {
         });
     };
 
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-
-    //     console.log("Form Data Submitted:", formData); // Check the values being sent
-    //     setButtonText("Processing..."); // Set the button text to "Processing..."
-    //     setLoading(true); // Start loading
-
-    //     try {
-    //         const result = await dispatch(submitUserSearch({ data: formData, token })).unwrap();
-
-    //         console.log("API Result:", result);
-    //         if (result.length === 0) {
-    //             alert('No matching records found.');
-    //             setFormData({
-    //               companyName: '',
-    //               shieldMembers: 0,
-    //               newMembers: 0,
-    //               city: '',
-    //               zip: '',
-    //               country: '',
-    //               region: '',
-    //               areaCode: '',
-    //               association: '',
-    //               certification: '',
-    //               manufacturer: '',
-    //               products: '',
-    //               categories: '',
-    //               keywords: '',
-    //             });
-    //         } else {
-    //             navigate('/search/company-searchresults', { state: { searchResults: result } });
-    //         }
-    //     } catch (error) {
-    //         console.error('Error fetching user search data:', error);
-    //         alert('An error occurred while fetching data.');
-    //     } finally {
-    //         setLoading(false); // End loading
-    //         setButtonText("Submit"); // Reset the button text
-    //     }
-    // };
-
     const resetHandler = () => {
         setFormData({
-          part: '',
-          heci: '',
-          description: '',
-          manufacturer: '',
-          keyword: '',
-          condition: '',
-          category: '',
-          company: '',
-          state: '',
-          country: '',
-          region: '',
-          shipDeadline: '',
+            part: '',
+            heci: '',
+            description: '',
+            manufacturer: '',
+            keywords: '',
+            condition: '',
+            category: '',
+            company: '',
+            state: '',
+            country: '',
+            region: '',
+            shipDeadline: '',
         });
-      }
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -117,7 +75,7 @@ const SearchCompany = () => {
             // Mock API Call - Replace with actual API URL
             const { data: result } = await axios.post(
                 `${brokerAPI}company/company-search`,
-                {data:formData},
+                { data: formData },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
@@ -136,59 +94,48 @@ const SearchCompany = () => {
             setLoading(false);
             setButtonText("Submit");
         }
-    };    
+    };
 
     return (
         <>
             <main className={styles.main}>
-                       <div className={css.profileInfo_links}>
-                           <ul className='!bg-[#e5e7eb]'>
-                             <li>
-                               <NavLink
-                                 to="/search/Inventory"
-                                 end  // This ensures the exact match for /myprofile
-                                 className={({ isActive }) => (isActive ? css.active : '')}
-                               >
-                                 <span>Inventory</span>
-                               </NavLink>
-                             </li>
-                             <li>
-                               <NavLink
-                                 to="/search/Company"
-                                 className={({ isActive }) => (isActive ? css.active : '')}
-                               >
-                                 <span>Company</span>
-                               </NavLink>
-                             </li>
-                             <li>
-                               <NavLink
-                                 to="/person"
-                                 className={({ isActive }) => (isActive ? css.active : '')}
-                               >
-                                 <span>Person</span>
-                               </NavLink>
-                             </li>
-                           </ul>
-                         </div>
+                <div className={css.profileInfo_links}>
+                    <ul className='!bg-[#e5e7eb]'>
+                        <li>
+                            <NavLink
+                                to="/search/Inventory"
+                                end  // This ensures the exact match for /myprofile
+                                className={({ isActive }) => (isActive ? css.active : '')}
+                            >
+                                <span>Inventory</span>
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink
+                                to="/search/Company"
+                                className={({ isActive }) => (isActive ? css.active : '')}
+                            >
+                                <span>Company</span>
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink
+                                to="/person"
+                                className={({ isActive }) => (isActive ? css.active : '')}
+                            >
+                                <span>Person</span>
+                            </NavLink>
+                        </li>
+                    </ul>
+                </div>
 
                 <h2 style={{ margin: "15px" }}>Company Search</h2>
                 <div className={styles.formContainer}>
                     <form className={`${styles.personForm} !gap-[.4vw]`} onSubmit={handleSubmit}>
                         <div className={`${styles.formRow}`}>
-                        <span>
-                          <CompanySearch className="flex" setFormData={setFormData} formData={formData} />
-                        </span>
-                        </div>
-
-                        <div className={styles.formRow}>
-                            <label htmlFor="shieldMembers">Shield Members</label>
-                            <input
-                                type="checkbox"
-                                id="shieldMembers"
-                                name="sheildMembers"
-                                value={formData.shieldMembers}
-                                onChange={handleInputChange}
-                            />
+                            <span>
+                                <CompanySearch className="flex" setFormData={setFormData} formData={formData} />
+                            </span>
                         </div>
 
                         <div className={styles.formRow}>
@@ -247,7 +194,6 @@ const SearchCompany = () => {
                                 <option value="">All</option>
 
                             </select>
-
                         </div>
 
                         <div className={styles.formRow}>
@@ -278,30 +224,6 @@ const SearchCompany = () => {
                                 value={formData.areaCode}
                                 onChange={handleInputChange}
                             />
-                        </div>
-
-                        <div className={styles.formRow}>
-                            <label htmlFor="association">Association</label>
-                            <select
-                                name="association"
-                                id="association"
-                                value={formData.association}
-                                onChange={handleInputChange}
-                            >
-                                <option value="">All</option>
-                            </select>
-                        </div>
-
-                        <div className={styles.formRow}>
-                            <label htmlFor="certification">Certification</label>
-                            <select
-                                name="certification"
-                                id="certification"
-                                value={formData.certification}
-                                onChange={handleInputChange}
-                            >
-                                <option value="">All</option>
-                            </select>
                         </div>
 
                         <div className={styles.formRow}>

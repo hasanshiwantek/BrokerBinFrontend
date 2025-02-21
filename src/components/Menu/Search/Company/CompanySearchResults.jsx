@@ -16,6 +16,9 @@ import { FaSearch } from "react-icons/fa";
 import { error } from "jquery";
 import { CiSearch } from "react-icons/ci";
 import RightSidebar from "./RightSidebar";
+import MapComponent from "./MapComponent";
+import { brokerAPI } from "@/components/api/BrokerEndpoint";
+
 
 const CompanySearchResults = () => {
 
@@ -23,6 +26,7 @@ const CompanySearchResults = () => {
     const [companyData, setCompanyData] = useState(location.state?.searchResults || null);
     const [searchQuery, setSearchQuery] = useState("");
     const [filteredData, setFilteredData] = useState(null);
+    const token = Cookies.get("token");
 
     console.log("COMPANY DATA", companyData)
 
@@ -33,11 +37,17 @@ const CompanySearchResults = () => {
     const handleSearch = async () => {
         if (searchQuery.length > 2) {
             try {
-                const { data: result } = await axios.get(
-                    `http://localhost:5000/companies?company=${searchQuery}`
+                const { data: result } = await axios.post(
+                    `${brokerAPI}company/company-search`,
+                    { data: { 
+                        company: searchQuery,
+                        keywords: searchQuery,
+                        location: searchQuery,
+                    }},
+                    {headers: {Authorization: `Bearer ${token}`}}
                 );
-
                 if (result.length > 0) {
+                    
                     setCompanyData(result[0]); // ✅ Update Map with new location
                 }
             } catch (error) {
@@ -75,14 +85,8 @@ const CompanySearchResults = () => {
                 </ul>
             </div>
 
-            {/* <div>
-                <h2>Company Location</h2>
-                {companyData ? <LeafletMap company={companyData} /> : <p>No company data found</p>}
-            </div> */}
             <div className="">
-
                 <div className="grid grid-cols-[3fr_1fr] ">
-                    {/* Left: Map Section */}
                     <div className="relative">
                         {/* Dark Overlay with Centered Search Bar */}
                         <div className=" w-full bg-black gap-2 items-center bg-opacity-50 p-6 flex justify-center">
@@ -99,16 +103,9 @@ const CompanySearchResults = () => {
                                 className="text-white cursor-pointer" />
                         </div>
 
-                        {/* Leaflet Map */}
-                        {companyData ? <LeafletMap company={filteredData || companyData} /> : <p>No company data found</p>}
+                        {/* {companyData ? <LeafletMap company={filteredData || companyData} /> : <p>No company data found</p>} */}
+                        {companyData ? <MapComponent company={filteredData || companyData} /> : <p>No company data found</p>}
                     </div>
-
-                    {/* <div className="bg-gray-200 ">
-                    <div className=" w-full bg-black bg-opacity-50 p-7 text-white flex text-[1vw]">
-                    <h1>{companyData?.company} Result from </h1>
-                    </div>
-                </div> */}
-
                     <RightSidebar
                         company={companyData}
                         filteredData={filteredData}

@@ -551,7 +551,7 @@ const Options = () => {
 
                     <li>
                       <label htmlFor="receiveUpdates">
-                        Receive BrokerBin Updates
+                        Receive Brokercell Updates
                       </label>
                       <select
                         name="receiveUpdates"

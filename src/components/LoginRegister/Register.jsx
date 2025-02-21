@@ -15,8 +15,10 @@ const Register = () => {
       state: "", // Default state selection
     },
   });
+
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false); // 🔹 Loading state for button
+  const [isPlainInput, setIsPlainInput] = useState(false);
   const [formPassword, setFormPassword] = useState({
     password: "",
     confirmPassword: "",
@@ -26,12 +28,25 @@ const Register = () => {
   const selectedState = watch("state");
   const [availableStates, setAvailableStates] = useState([]);
 
+  // useEffect(() => {
+  //   if (selectedCountry) {
+  //     setAvailableStates(statesList[selectedCountry] || []);
+  //     setValue("state", ""); // Reset state when country changes
+  //   }
+  // }, [selectedCountry, setValue]);
+
   useEffect(() => {
-    if (selectedCountry) {
+    if (selectedCountry === "USA") {
       setAvailableStates(statesList[selectedCountry] || []);
-      setValue("state", ""); // Reset state when country changes
+      setIsPlainInput(false);
+      setValue("state", ""); // Reset state
+    } else {
+      setAvailableStates([]);
+      setIsPlainInput(true);
+      setValue("state", ""); // Reset state for input field
     }
   }, [selectedCountry, setValue]);
+
 
   useEffect(() => {
     if (selectedState) {
@@ -226,15 +241,24 @@ const Register = () => {
               >
                 <span>
                   <label htmlFor="state">State <span style={{ color: "red" }}>*</span> </label>
-                  <select id="state" name="state" {...register("state")} required >
-                    <option value="">Select a state</option>
-                    {availableStates.map((state) => (
-                      <option key={state.value} value={state.value}>
-                        {state.label}
-                      </option>
-                    ))}
-                  </select>
-
+                  {isPlainInput ? (
+                    <input
+                      type="text"
+                      name="state"
+                      {...register("state")}
+                      placeholder="Enter your state"
+                      required
+                    />
+                  ) : (
+                    <select id="state" name="state" {...register("state")} required >
+                      <option value="">Select a state</option>
+                      {availableStates.map((state) => (
+                        <option key={state.value} value={state.value}>
+                          {state.label}
+                        </option>
+                      ))}
+                    </select>
+                  )}
                 </span>
                 <span>
                   <label htmlFor="zip code">Zip / Postal Code <span style={{ color: "red" }}>*</span> </label>
@@ -548,12 +572,12 @@ const Register = () => {
               <label htmlFor="termsOfService">Agree to our</label>
               <a href="https://brokercell.com/legal/" target="_blank">Terms of Service</a>
             </span>
-            {errors.form && <p style={{ color: "red" ,fontWeight:"bold",fontSize:"12px",marginTop:"8px"}}>{errors.form}</p>}
+            {errors.form && <p style={{ color: "red", fontWeight: "bold", fontSize: "12px", marginTop: "8px" }}>{errors.form}</p>}
             <button
               type="submit"
               disabled={isLoading}
               className={`py-3 px-6 text-white font-semibold rounded-lg transition duration-300 
-    ${isLoading ? "bg-gray-400 cursor-not-allowed opacity-60" : "bg-blue-600 hover:bg-blue-700"}`}
+                          ${isLoading ? "bg-gray-400 cursor-not-allowed opacity-60" : "bg-blue-600 hover:bg-blue-700"}`}
             >
               {isLoading ? "Submitting..." : "Submit Application"}
             </button>
