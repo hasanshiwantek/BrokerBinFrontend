@@ -160,7 +160,7 @@ const CreateAccount = () => {
     return (
         <div className={`px-5 ${css.profileLayout} `}>
             <form onSubmit={(e) => e.preventDefault()}>
-                <div className={`${css.profileInfo} !bg-white border border-2 rounded-2xl`}>
+                <div className={`${css.profileInfo} !bg-white  border-2 rounded-2xl`}>
 
                     <div className={css.profileInfo_links}>
                         <ul className='bg-gray-200'>
