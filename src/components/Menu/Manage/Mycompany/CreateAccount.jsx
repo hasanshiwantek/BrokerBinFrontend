@@ -149,7 +149,7 @@ const CreateAccount = () => {
             }
         } catch (error) {
             // alert('Unexpected error occurred!');
-            toast.info("Error Creating Account.Please Try Again.", {
+            toast.error(error || "Error Creating Account.Please Try Again.", {
                 style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, // 
             });
 

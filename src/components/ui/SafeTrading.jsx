@@ -4,7 +4,7 @@ import whatWeDo from "../../assets/what-we-do2.png"
 import whatYouDo from "../../assets/what-you-do2.png"
 import yourDedicated from "../../assets/your-dedicated.png"
 import css from "../../styles/SafeTrading.module.css"
-
+import accountManager from "../../assets/Account Manager.png"  
 const SafeTrading = () => {
     return (
         <>
@@ -97,11 +97,11 @@ const SafeTrading = () => {
                 {/* Dedicated Account Manager */}
                 <div className="border  max-w-6xl w-full mx-auto border-gray-300 rounded-lg p-4  flex items-center justify-around  mt-4  gap-5  ">
                     <div className='flex items-center justify-around gap-12'>
-                        <img src="/path-to-image.jpg" alt="Account Manager" className="w-24 h-24 rounded-lg" />
+                        <img src={accountManager} alt="Account Manager" className="w-56 h-56 object-cover rounded-lg" />
                     </div>
                     <div>
-                        <h3 className="text-lg font-semibold">Rikk Wassmer</h3>
-                        <p className="text-gray-600">14.9 years experience</p>
+                        <h3 className="text-lg font-semibold">Ahmed Raza</h3>
+                        <p className="text-gray-600">0 years experience</p>
                     </div>
                     <div>
                         <p><strong>Company:</strong> Brokercell.com</p>
@@ -109,7 +109,7 @@ const SafeTrading = () => {
                         <p><strong>Phone:</strong> 507-535-7563 x1113</p>
                         <p><strong>Toll:</strong> 888-241-0639</p>
                         <p><strong>Fax:</strong> 507-292-5747</p>
-                        <p><strong>Email:</strong> <a href="mailto:hassan.asif@shiwantek.com" className="text-blue-600 hover:underline">Rikk@BrokerBin.com</a></p>
+                        <p><strong>Email:</strong> <a href="mailto:ahmed.raza@shiwantek.com" className="text-blue-600 hover:underline">Ahmed.Raza@shiwantek.com</a></p>
                     </div>
                 </div>
             </div>

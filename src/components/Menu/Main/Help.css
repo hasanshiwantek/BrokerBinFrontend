@@ -15,6 +15,8 @@ h5{
     color: white;
     width: 40%;
     padding: 5px;
+    font-size: 9pt;
+    font-weight: 600;
 
 }
 
@@ -38,7 +40,8 @@ h5{
   justify-content: center;
   align-items: start;
 
-  width: 720px; /* Limit the width of the main container */
+  /* width: 720px; */
+  width: 50%;
   margin-left: auto; 
   margin-right: auto; 
   
