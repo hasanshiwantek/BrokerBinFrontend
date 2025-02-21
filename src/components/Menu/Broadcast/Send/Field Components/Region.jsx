@@ -30,7 +30,7 @@ const Region = () => {
     <div className={css.toggleFieldsLayout}>
       {regions.map((item) => {
         return (
-          <span>
+          <span key={item} >
             <label htmlFor={item}>{item}</label>
             <input
               type="checkbox"
@@ -39,6 +39,7 @@ const Region = () => {
               value={item}
               onChange={() => handleCheckboxChange(item)}
               checked={regionSelection.includes(item)}
+                className="w-12 h-6"
             />
           </span>
         );

@@ -43,6 +43,7 @@ const MobileDevices = () => {
               value={item}
               onChange={() => handleCheckboxChange(item)}
               checked={mobileDevicesSelection.includes(item)}
+               className="w-12 h-6"
             />
           </span>
         );

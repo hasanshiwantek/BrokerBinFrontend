@@ -40,6 +40,7 @@ const Telecom = () => {
               value={item}
               onChange={() => handleCheckboxChanges(item)}
               checked={telecomSelection.includes(item)}
+               className="w-12 h-6"
             />
           </span>
         );

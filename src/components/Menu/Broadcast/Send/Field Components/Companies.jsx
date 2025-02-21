@@ -93,6 +93,7 @@ const Companies = () => {
           <span key={item}>
             <label htmlFor={item}>{item}</label>
             <input
+              className="w-10 h-6"
               type="checkbox"
               name={item}
               id={item}

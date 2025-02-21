@@ -286,7 +286,7 @@ const initialState = {
   ],
 
   // another file button
-  addAnotherFiles: [{ file: null, status: "Stock" }],
+  addAnotherFiles: [{ fileName: "", fileSize: 0, fileType: "", status: "Stock" }],
   error: null,
 };
 
@@ -299,12 +299,19 @@ const InventorySlice = createSlice({
     },
 
     setAddAnotherFiles: (state, action) => {
-      // state.addAnotherFiles.push(action.payload);
-      state.addAnotherFiles = action.payload;
+      state.addAnotherFiles = action.payload.map(fileObj => ({
+        fileName: fileObj.fileName || "",  // Ensure fileName exists
+        fileSize: fileObj.fileSize || 0,   // Ensure fileSize exists
+        fileType: fileObj.fileType || "",  // Ensure fileType exists
+        status: fileObj.status || "Stock"  // Default status
+      }));
     },
+    
     resetFiles: (state) => {
-      state.addAnotherFiles = [{ file: null, status: "Stock" }]; // Reset to initial state
+      console.log("Resetting files state...");
+      state.addAnotherFiles = [{ fileName: "", fileSize: 0, fileType: "", status: "Stock" }];
     },
+    
   },
   extraReducers: (builder) => {
     builder

@@ -56,6 +56,8 @@ const Computer = () => {
               value={item}
               onChange={() => handleCheckboxChange(item)}
               checked={computerSelection.includes(item)}
+              className="w-12 h-6"
+            
             />
           </span>
         );

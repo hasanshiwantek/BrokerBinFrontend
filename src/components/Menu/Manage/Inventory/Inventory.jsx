@@ -1,105 +1,126 @@
-import { React, useState } from "react";
+import React, { useState, useRef } from "react";
 import css from "../../../../styles/Menu/Manage/Inventory/Inventory.module.css";
 import AddAnotherFile from "./AddAnotherFile";
-import ScheduleNewUpload from "./ScheduleNewUpload";
 import InventoryButtons from "./InventoryButtons";
 import { useDispatch, useSelector } from "react-redux";
-import { sendInventoryFile } from "../../../../ReduxStore/InventorySlice";
-import ErrorStatus from "../../../Error/ErrorStatus";
+import {
+  sendInventoryFile,
+  setAddAnotherFiles,
+  resetFiles,
+} from "../../../../ReduxStore/InventorySlice";
 import Cookies from "js-cookie";
-import { resetFiles } from "../../../../ReduxStore/InventorySlice";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
-
 
 const Inventory = () => {
   const token = Cookies.get("token");
+  const dispatch = useDispatch();
+
+  // Redux state for file metadata
   const { addAnotherFiles, error } = useSelector(
     (state) => state.inventoryStore
   );
-  // const { token } = useSelector((state) => state.profileStore);
-  const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false); // State to track loading status
 
+  // Component state for actual files
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // ✅ Create a reference to multiple file inputs
+  const fileInputRefs = useRef([]);
+
+  // ✅ Handle file selection and update both Redux & Local State
+  const handleFileChange = (file, index) => {
+    if (!file) return;
+
+    console.log(`📂 File selected: ${file.name} at index ${index}`);
+
+    // Update local state (actual files)
+    const updatedFiles = [...selectedFiles];
+    updatedFiles[index] = file;
+    setSelectedFiles(updatedFiles);
+
+    // Update Redux state (only metadata)
+    const updatedMetadata = [...addAnotherFiles];
+    updatedMetadata[index] = {
+      fileName: file.name,
+      fileSize: file.size,
+      fileType: file.type,
+      status: addAnotherFiles[index]?.status || "Stock",
+    };
+
+    dispatch(setAddAnotherFiles(updatedMetadata));
+  };
+
+  // ✅ Handle file submission
   const submitInventoryBtn = async (e) => {
-    e.preventDefault(); // Prevent default form submission
-    setLoading(true); // Start loading spinner or disable button
+    e.preventDefault();
+    setLoading(true);
+
+    console.log("🚀 Submitting files:", selectedFiles);
+
+    if (selectedFiles.length === 0 || selectedFiles.every((file) => !file)) {
+      toast.error("❌ Please select at least one file to upload.");
+      setLoading(false);
+      return;
+    }
 
     const formData = new FormData();
-
-    // Convert form inputs to a FormData object
-    const formDataObject = Object.fromEntries(new FormData(e.target).entries());
-    for (const [key, value] of Object.entries(formDataObject)) {
-      formData.append(key, value);
-    }
-
-    // Filter files from the state
-    const filteredInventoryFiles = addAnotherFiles.filter((fileObj) => fileObj.file);
-
-    // Validate file selection
-    if (filteredInventoryFiles.length === 0) {
-      alert("Please select at least one file to upload.");
-      setLoading(false); // Stop loading spinner
-      return; // Exit early if no files are selected
-    }
-
-    // Append files and their statuses to FormData
-    filteredInventoryFiles.forEach((fileObj, index) => {
-      formData.append("uploadFile[]", fileObj.file, fileObj.file.name); // Add file
-      formData.append(`status[${index}]`, fileObj.status || "Stock"); // Add status
+    selectedFiles.forEach((file, index) => {
+      if (file) {
+        console.log(`📩 Adding file: ${file.name}`);
+        formData.append("uploadFile[]", file, file.name);
+        formData.append(`status[${index}]`, "Stock");
+      }
     });
 
     try {
-      // Log FormData for debugging purposes
-      for (let [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
-      }
+      const response = await dispatch(
+        sendInventoryFile({ token, formData })
+      ).unwrap();
 
-      // Dispatch the API call with token and FormData
-      const response = await dispatch(sendInventoryFile({ token, formData })).unwrap();
+      console.log("✅ Upload success:", response);
+      toast.success(response.message || "✔ Files uploaded successfully!");
 
-      // ✅ Show success toaster
-      toast.success(response.message || "Files uploaded successfully!", {
-        autoClose: 2000,
-      });
-
-      // Reset the file input fields
-      dispatch(addAnotherFiles[{ file: null, status: "Stock" }]);
-
+      // ✅ Clear both Redux and local state
+      setSelectedFiles([]);
+      dispatch(resetFiles());
     } catch (error) {
-      // ❌ Show error toaster
-      toast.error(error || "Failed to upload files. Please try again.", {
-        autoClose: 2000,
-      });
-
-      console.error("Error uploading files:", error);
+      console.error("❌ Upload failed:", error);
+      toast.error(error.message || "Failed to upload files. Please try again.");
     } finally {
-      setLoading(false); // End loading spinner or re-enable button
+      setLoading(false);
+      // ✅ Reset all file input fields dynamically
+      fileInputRefs.current.forEach((input) => {
+        if (input) {
+          input.value = "";
+        }
+      });
     }
   };
-
-  if (error) {
-    return <ErrorStatus error={error} />;
-  }
-
   return (
     <div className={css.inventory}>
       <InventoryButtons />
       <div className={css.inventory_main}>
         <form onSubmit={submitInventoryBtn}>
-          <h1>upload inventory</h1>
-          <AddAnotherFile />
+          <h1>Upload Inventory</h1>
+
+          {/* ✅ File input & metadata handled by AddAnotherFile */}
+          <AddAnotherFile
+            onFileChange={handleFileChange}
+            fileInputRefs={fileInputRefs}
+          />
+
           <p className={css.inventory_main_desc}>
             or
             <span>
               <a href="mailto:kaif.rizvi@shiwantek.com">
                 <u>
-                  <i> email parts list</i>
+                  <i> Email Parts List</i>
                 </u>
               </a>
             </span>
           </p>
+
           <div className={css.inventory_main_ExampleFile}>
             <p>Example Files</p>
             <div>
@@ -117,24 +138,22 @@ const Inventory = () => {
               </a>
             </div>
           </div>
+
           <button
             type="submit"
-            disabled={loading} // Disable button while loading
-            className={`${css.inventory_main_submitBtn} !p-3 border rounded-lg transform active:scale-90 transition-all duration-100 ${loading ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+            disabled={loading}
+            className={`${
+              css.inventory_main_submitBtn
+            } !p-3 border rounded-lg transform active:scale-90 transition-all duration-100 ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
           >
             {loading ? "Sending..." : "Send File"}
           </button>
-          {/* <h1 className={css.inventory_main_AutoUploadh1}>Auto Uploads</h1> */}
         </form>
-        {/* <ScheduleNewUpload /> */}
-        {/* <div className={css.inventory_main_footer}>
-          <h1>Current Uploads</h1>
-          <p>No Auto Uploads are currently scheduled for your company</p>
-        </div> */}
       </div>
-      <ToastContainer position="top-center" autoClose={1000} />
 
+      <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
 };

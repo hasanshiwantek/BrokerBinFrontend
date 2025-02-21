@@ -13,7 +13,7 @@ const ErrorStatus = ({ error }) => {
         </div>
       </div>
       <div className={css.text}>
-        {/* <h1>{error}</h1> */}
+        <h1>{error}</h1>
       </div>
     </div>
   );
