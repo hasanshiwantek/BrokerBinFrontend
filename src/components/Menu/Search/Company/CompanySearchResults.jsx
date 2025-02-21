@@ -46,10 +46,13 @@ const CompanySearchResults = () => {
                     }},
                     {headers: {Authorization: `Bearer ${token}`}}
                 );
-                if (result.length > 0) {
-                    
-                    setCompanyData(result[0]); // ✅ Update Map with new location
+                if (result.companies.length > 0) {
+                    console.log("API Response:", result);
+                    console.log("Before update:", companyData);
+                    setCompanyData(result); // ✅ Update Map with new location
+                    console.log("Updated companyData:", result.companies[0]);
                 }
+                console.log("COMPANY RESULTS", companyData)
             } catch (error) {
                 console.log("ERROR while searching", error)
             }
@@ -96,6 +99,7 @@ const CompanySearchResults = () => {
                                 className="w-1/3 p-2 rounded bg-white"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
+                                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                             />
                             <CiSearch
                                 onClick={handleSearch}

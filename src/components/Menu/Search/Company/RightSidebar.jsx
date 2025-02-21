@@ -59,19 +59,19 @@ const RightSidebar = ({ company }) => {
     }
   };
 
-  useEffect(() => {
-    console.log("Company Prop Received:", company); // ✅ Debugging
-  }, [company]);
+  const totalResults =  company?.total ?? filteredData?.total;
 
-  // const companiesToShow = filteredData ? filteredData : company; // ✅ Use filtered data if available
-
-  const companiesToShow = Array.isArray(filteredData) && filteredData.length > 0
-    ? filteredData
+  const companiesToShow = Array.isArray(filteredData?.companies) && filteredData.companies.length > 0
+    ? filteredData.companies
     : company
-      ? Array.isArray(company)
-        ? company
-        : [company] // ✅ Convert single object to array
+      ? Array.isArray(company.companies)
+        ? company.companies
+        : [company] 
       : [];
+
+      // useEffect(() => {
+      //   console.log("Company Prop Received:", company); 
+      // }, [company, companiesToShow]);
 
   const handleEmail = (email, subject) => {
     console.log("Opening email for:", email);
@@ -115,7 +115,7 @@ const RightSidebar = ({ company }) => {
         }}>
           {showFilters
             ? "Sorting and Filters"
-            : "1 results from "
+            : `${totalResults} results from`
           }
           {!showFilters && <strong className="!text-white !text-[1vw]">0 selected filters</strong>}
         </h1>
