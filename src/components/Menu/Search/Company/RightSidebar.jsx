@@ -6,6 +6,7 @@ import axios from "axios";
 import {addMyVendors} from "../../../../ReduxStore/ToolsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
+import { brokerAPI } from '@/components/api/BrokerEndpoint'
 import CompanyDetails from "@/components/Popups/CompanyDetails/CompanyDetails";
 
 const RightSidebar = ({ company }) => {
@@ -50,7 +51,7 @@ const RightSidebar = ({ company }) => {
       filters.state.forEach(state => queryParams.append("state", state));
 
 
-      const { data } = await axios.get(`http://localhost:5000/companies?${queryParams}`);
+      const { data } = await axios.post(`${brokerAPI}company/company-search${queryParams}`);
       setFilteredData(data);
       setShowFilters(false);
     } catch (error) {
@@ -86,14 +87,6 @@ const RightSidebar = ({ company }) => {
     }
   };
 
-//   const handleAddVendor = async (companyId) => {
-//     try {
-//        dispatch(addMyVendors({ company_id: companyId, token })); // ✅ Correct key
-//     } catch (error) {
-//        console.log("ERROR while adding vendor please try again later", error);
-//     }
-//  };  
-
   const handleViewProfile = (company) => {
     setSelectedCompany(company);
     setShowModal(true);
@@ -106,23 +99,6 @@ const RightSidebar = ({ company }) => {
       alert("Website not available.");
     }
   };
-
-   // const applyFilters = async () => {
-  //   try {
-  //     const queryParams = new URLSearchParams();
-      
-  //     Object.keys(filters).forEach((key) => {
-  //       if (filters[key].length > 0) {
-  //         queryParams.append(key, filters[key].join(",")); // ✅ Convert array to string
-  //       }
-  //     });
-
-  //     const { data } = await axios.get(`http://localhost:5000/companies?${queryParams}`);
-  //     setFilteredData(data); // ✅ Store filtered results
-  //   } catch (error) {
-  //     console.error("Error fetching filtered companies:", error);
-  //   }
-  // };
 
   return (
     <div className="  w-full">

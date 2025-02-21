@@ -45,19 +45,6 @@ const LeafletMap = ({ company }) => {
     >
       <MapUpdater position={position} />
       <TileLayer url={mapTheme} />
-      {/* <Marker position={position}  eventHandlers={{
-        click: () => {
-          const nextTheme = themes[(themes.indexOf(mapTheme) + 1) % themes.length];
-          setMapTheme(nextTheme);
-        }
-      }}>
-        <Popup>
-          <img src={company.logo} alt="Company Logo" width="100" />
-          <h3>{company.company}</h3>
-          <p>{company.address}</p>
-          <p><strong>Contact:</strong> {company.contactPerson}</p>
-        </Popup>
-      </Marker> */}
       {companiesArray.map((comp, index) => (
         <Marker
           key={index}
