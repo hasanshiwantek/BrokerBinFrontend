@@ -85,7 +85,7 @@ const Tools = () => {
             <ul>
               <li>How To Videos</li>
               <li>Webinars</li>
-              <li>BrokerBin YouTube</li>
+              <li>Brokercell YouTube</li>
             </ul>
           </div>
 
