@@ -101,16 +101,9 @@ const CompanySearchResults = () => {
                                 className="text-white cursor-pointer" />
                         </div>
 
-                        {/* Leaflet Map */}
                         {/* {companyData ? <LeafletMap company={filteredData || companyData} /> : <p>No company data found</p>} */}
                         {companyData ? <GoogleMap company={filteredData || companyData} /> : <p>No company data found</p>}
                     </div>
-
-                    {/* <div className="bg-gray-200 ">
-                    <div className=" w-full bg-black bg-opacity-50 p-7 text-white flex text-[1vw]">
-                    <h1>{companyData?.company} Result from </h1>
-                    </div>
-                </div> */}
 
                     <RightSidebar
                         company={companyData}
