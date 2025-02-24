@@ -93,7 +93,11 @@ const Tools = () => {
             <img src={siteimg} alt="Site Protocols" />
             <h3>Site Protocols</h3>
             <ul>
-              <li>Help</li>
+              <NavLink to={"/help"}>
+              <li>
+                Help
+              </li>
+              </NavLink>
               <li>Inventory Protocol</li>
             </ul>
           </div>
@@ -102,11 +106,17 @@ const Tools = () => {
             <img src={tradeimg} alt="Safe Trading Center" />
             <h3>Safe Trading Center</h3>
             <ul>
-              <li>Ethics</li>
+              <NavLink  to={"/ethics"}>
+              <li >Ethics</li>
+              </NavLink>
               <li>Ethics Committee Review</li>
               <li>Qualifications</li>
+              <NavLink to={"https://brokercell.com/legal/"} target='_blank'>
               <li>Terms of Service</li>
+              </NavLink>
+              <NavLink to={"/safe_trading"}>
               <li>Safe Trading</li>
+              </NavLink>
             </ul>
           </div>
         </div>

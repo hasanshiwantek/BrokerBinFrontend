@@ -252,7 +252,7 @@ const Reports = createSlice({
   },
 });
 
-export const { setSupplyAndDemandQuery, setSearchCompanyData } =
+export const { setSupplyAndDemandQuery, setSearchCompanyData} =
   Reports.actions;
 
 export default Reports.reducer;

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import css from "../Send.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { setCompaniesSelection } from "../../../../../ReduxStore/BroadCast";
+import CompanySearch from "@/components/Menu/Search/Inventory/CompanySearch";
+import FiltersSearchCompanyInventory from "@/components/Menu/Reports/FiltersSearchCompanyInventory";
 
 const Companies = () => {
   const itCompanies = [
@@ -87,8 +89,9 @@ const Companies = () => {
   };
 
   return (
-    <div className={css.toggleFieldsLayout}>
-      {itCompanies.map((item) => {
+    <>
+     {/* <div className={css.toggleFieldsLayout}> */}
+      {/* {itCompanies.map((item) => {
         return (
           <span key={item}>
             <label htmlFor={item}>{item}</label>
@@ -103,8 +106,14 @@ const Companies = () => {
             />
           </span>
         );
-      })}
-    </div>
+      })} */}
+
+      <span>
+      <FiltersSearchCompanyInventory />
+      </span>
+    {/*  </div> */}
+    </>
+
   );
 };
 

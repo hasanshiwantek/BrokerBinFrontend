@@ -225,7 +225,7 @@ const Ethics = () => {
                     </li>
                     <li>
                       <label htmlFor="name">Who did you work with?</label>
-                      <br />
+                  
                       <input
                         type="search"
                         name="name"
@@ -239,7 +239,7 @@ const Ethics = () => {
                       <label htmlFor="date_of_transaction">
                         What was the date of transaction?<span className="text-red-500">*</span>
                       </label>
-                      <br />
+                
                       <input
                         type="date"
                         name="date_of_transaction"
@@ -254,7 +254,7 @@ const Ethics = () => {
                       <label htmlFor="specific_complaint">
                         What is your specific complaint?<span className="text-red-500">*</span>
                       </label>
-                      <br />
+       
                       <textarea
                         name="specific_complaint"
                         id="specific_complaint"
@@ -269,7 +269,7 @@ const Ethics = () => {
                         Have you requested an RMA (Return Merchandise
                         Authorization)?<span className="text-red-500">*</span>
                       </label>
-                      <br />
+    
                       <div>
                         <span>
                           <label htmlFor="yes">Yes</label>
@@ -311,7 +311,7 @@ const Ethics = () => {
                         What was the above company's response when you contacted
                         them?<span className="text-red-500">*</span>
                       </label>
-                      <br />
+  
                       <textarea
                         name="company_response"
                         id="company_response"
@@ -326,7 +326,7 @@ const Ethics = () => {
                       <label>
                         Have you or do you plan on contacting the authorities?<span className="text-red-500">*</span>
                       </label>
-                      <br />
+         
                       <div>
                         <span>
                           <label htmlFor="contacting_authorities_yes">Yes</label>
@@ -356,7 +356,7 @@ const Ethics = () => {
                       <label>
                         Do you or will you have an attorney representing you?<span className="text-red-500">*</span>
                       </label>
-                      <br />
+                
                       <div>
                         <span>
                           <label htmlFor="attorney_yes">Yes</label>
@@ -386,7 +386,7 @@ const Ethics = () => {
                       <label>
                         Please provide relevant documentation:<span className="text-red-500">*(At least one)</span>
                       </label>
-                      <br />
+          
                       <ul className={css.ethics_form_fields_files}>
                         <li>
                           <label htmlFor="purchase_order[]">
@@ -472,7 +472,7 @@ const Ethics = () => {
                     </li>
                     <li>
                       <label>Enter Additional Information:</label>
-                      <br />
+         
                       <textarea
                         name="additional_information"
                         id="additional_information"

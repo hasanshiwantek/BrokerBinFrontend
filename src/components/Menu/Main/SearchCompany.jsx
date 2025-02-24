@@ -99,7 +99,7 @@ const SearchCompany = ({ setFormData }) => {
           onBlur={handleBlur}
           required
         />
-        <div className={css.compnaySearch} ref={listRef}>
+        <div className={css.companySearch} ref={listRef}>
           {showList && (
             <ul>
               {searchCompanies.length > 0 ? (

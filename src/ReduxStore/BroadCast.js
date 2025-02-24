@@ -247,6 +247,7 @@ const initialState = {
   filters: [],
   broadCastData: [],
   serviceData: [],
+  selectedCompanyNames:[],
   broadcastCount:{},
   filterBroadcastPartModelData:{},
   togglePopUp: false,
@@ -285,6 +286,9 @@ const broadcastSlice = createSlice({
         state.serviceData.push(action.payload);
       }
     },
+    setSelectedCompanyNames: (state, action) => {
+      state.selectedCompanyNames = action.payload;
+    },
 
     setTogglePopUp: (state) => {
       state.togglePopUp = !state.togglePopUp;
@@ -300,6 +304,7 @@ const broadcastSlice = createSlice({
       state.companiesSelection = [];
       state.regionSelection = [];
       state.serviceData = [];
+      state.selectedCompanyNames=[];
     },
   },
   extraReducers: (builder) => {
@@ -423,7 +428,8 @@ export const {
   setFormData,
   setTogglePopUp,
   clearAllSelections,
-  setPopupCompanyDetail
+  setPopupCompanyDetail,
+  setSelectedCompanyNames,
 } = broadcastSlice.actions;
 
 export default broadcastSlice.reducer;

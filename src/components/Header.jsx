@@ -1,4 +1,4 @@
-import { memo, useEffect, useState ,useRef} from "react";
+import { memo, useEffect, useState, useRef } from "react";
 import React from "react";
 import css from "../styles/Header.module.css";
 import logo from "../imgs/logo/BrokerCell Logo.svg";
@@ -33,7 +33,7 @@ import {
   setToolToggle,
 } from "../ReduxStore/HomeSlice";
 import { clearUserDetails } from "../ReduxStore/UserSlice";
-import { resetProfileState } from "../ReduxStore/ProfleSlice"
+import { resetProfileState } from "../ReduxStore/ProfleSlice";
 import {
   searchProductHistory,
   searchProductQuery,
@@ -41,19 +41,18 @@ import {
 } from "../ReduxStore/SearchProductSlice";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import dp1 from "../assets/drop-down1.svg"
-import dp2 from "../assets/drop-down-2.svg"
-import dp3 from "../assets/drop-down3.svg"
-import dp4 from "../assets/drop-down4.svg"
-import dp5 from "../assets/drop-down5.svg"
-import dp6 from "../assets/drop-down6.svg"
-import SiteMap from "./Menu/Main/SiteMap";
+import dp1 from "../assets/drop-down1.svg";
+import dp2 from "../assets/drop-down-2.svg";
+import dp3 from "../assets/drop-down3.svg";
+import dp4 from "../assets/drop-down4.svg";
+import dp5 from "../assets/drop-down5.svg";
+import dp6 from "../assets/drop-down6.svg";
+import { Tooltip } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
 // import vendorIcon from "../assets/vendor-pricing.svg"
 
-
-
 const Header = () => {
-
   const token = Cookies.get("token");
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -118,11 +117,9 @@ const Header = () => {
       navigate(url, { replace: true });
     }
 
-  // ✅ Empty the input field after submitting
-  event.target.searchStrings.value = "";
-
-  }
-
+    // ✅ Empty the input field after submitting
+    event.target.searchStrings.value = "";
+  };
 
   // Clear hoverCompanyDetail when navigating to a new page
   useEffect(() => {
@@ -132,6 +129,23 @@ const Header = () => {
     };
   }, [location, dispatch]); // Trigger effect on location changes
 
+  const theme = createTheme({
+    components: {
+      MuiTooltip: {
+        styleOverrides: {
+          tooltip: {
+            fontSize: "1.1rem", // Adjust font size
+            width: "11rem",
+            textAlign: "center",
+            backgroundColor: "var(--primary-color)",
+          },
+          arrow: {
+            color: "var(--primary-color)",
+          },
+        },
+      },
+    },
+  });
 
   return (
     <>
@@ -163,11 +177,13 @@ const Header = () => {
               >
                 Keyword
               </button>
-
             </form>
           </div>
           {hoverCompanyDetail && hoverCompanyDetail[0] && (
-            <div key={hoverCompanyDetail[0].id} className={css.hoverCompanyDetail}>
+            <div
+              key={hoverCompanyDetail[0].id}
+              className={css.hoverCompanyDetail}
+            >
               <div className={css.hoverCompanyDetail_details}>
                 <span>
                   <span>
@@ -184,7 +200,8 @@ const Header = () => {
                 </span>
                 <span>
                   <p>
-                    {hoverCompanyDetail[0].open_timing}-{hoverCompanyDetail[0].close}
+                    {hoverCompanyDetail[0].open_timing}-
+                    {hoverCompanyDetail[0].close}
                   </p>
                   <p>
                     ship:
@@ -199,7 +216,6 @@ const Header = () => {
               </div>
             </div>
           )}
-
         </header>
         <nav className={css.nav}>
           <ul className={css.nav_links}>
@@ -226,9 +242,9 @@ const Header = () => {
                         <div onClick={() => handleDropdownToggle("main")}>
                           <Link>main</Link>
                           {dropdownOpen.main ? (
-                            < IoIosArrowUp />
+                            <IoIosArrowUp />
                           ) : (
-                            < IoIosArrowDown />
+                            <IoIosArrowDown />
                           )}
                         </div>
                         {dropdownOpen.main && (
@@ -260,9 +276,9 @@ const Header = () => {
                         <div onClick={() => handleDropdownToggle("search")}>
                           <Link>search</Link>
                           {dropdownOpen.main ? (
-                            < IoIosArrowUp />
+                            <IoIosArrowUp />
                           ) : (
-                            < IoIosArrowDown />
+                            <IoIosArrowDown />
                           )}
                         </div>
                         {dropdownOpen.search && (
@@ -302,9 +318,9 @@ const Header = () => {
                         <div onClick={() => handleDropdownToggle("manage")}>
                           <Link>manage</Link>
                           {dropdownOpen.main ? (
-                            < IoIosArrowUp />
+                            <IoIosArrowUp />
                           ) : (
-                            < IoIosArrowDown />
+                            <IoIosArrowDown />
                           )}
                         </div>
                         {dropdownOpen.manage && (
@@ -348,44 +364,82 @@ const Header = () => {
               )}
             </li>
 
-
             <li>
               <BsTools />
-              < IoIosArrowDown className={`${css.onHoverMenuIconDown}  `} />
-              < IoIosArrowUp className={css.onHoverMenuIconUp} />
+              <IoIosArrowDown className={`${css.onHoverMenuIconDown}  `} />
+              <IoIosArrowUp className={css.onHoverMenuIconUp} />
 
               <div className={css.dropdownMenu} style={{ marginLeft: "10px" }}>
                 <ul style={{ minWidth: "30px" }}>
-                  <Link to={"/myprofile/MyContact"}>
+                  <ThemeProvider theme={theme}>
+                    <Tooltip title="My Contact" arrow placement="left">
+                      <Link to={"/myprofile/MyContact"}>
+                        <li>
+                          <img src={dp1} alt="" srcSet="" />
+                          ........
+                        </li>
+                      </Link>
+                    </Tooltip>
+                  </ThemeProvider>
+
+                  <ThemeProvider theme={theme}>
+                    <Tooltip title="Feedback" arrow placement="left">
+                      <Link to={"/feedback"}>
+                        <li>
+                          <img
+                            src={dp2}
+                            alt=""
+                            srcSet=""
+                            style={{ color: "black" }}
+                          />
+                          ........
+                        </li>
+                      </Link>
+                    </Tooltip>
+                  </ThemeProvider>
+
+                  <ThemeProvider theme={theme}>
+                    <Tooltip title="View Hotlist" arrow placement="left">
+                      <Link to={"/hotlist/view"}>
+                        <li>
+                          <img
+                            src={dp3}
+                            alt="dsd"
+                            srcSet=""
+                            style={{ color: "black" }}
+                          />
+                          ........
+                        </li>
+                      </Link>
+                    </Tooltip>
+                  </ThemeProvider>
+                  <ThemeProvider theme={theme}>
+                  <Tooltip title="Inventory" arrow placement="left">
+                  <Link to={"/inventory"}>
                     <li>
-                      <img src={dp1} alt="" srcSet="" />........
+                      <img
+                        src={dp6}
+                        alt=""
+                        srcSet=""
+                        style={{ color: "black" }}
+                      />
+                      ........
                     </li>
                   </Link>
-                  <Link to={"/feedback"}>
-                    <li><img src={dp2} alt="" srcSet="" style={{ color: "black" }} />........</li>
-                  </Link>
-                  <Link to={"/hotlist/view"}>
-                    <li><img src={dp3} alt="dsd" srcSet="" style={{ color: "black" }} />........</li>
-                  </Link>
-                  <Link to={"/inventory"}>
-                    <li><img src={dp6} alt="" srcSet="" style={{ color: "black" }} />........</li>
-                  </Link>
+                  </Tooltip>
+                  </ThemeProvider>
                   {/* <Link to={"/reports/Company"}>
                     <li><img src={dp5} alt="" srcset="" style={{ color: "black" }} />........</li>
                   </Link> */}
-
                 </ul>
               </div>
             </li>
 
-
-
-
             {/* Toggle Menus */}
             <li>
               <Link to={"/"}>main</Link>
-              < IoIosArrowDown className={css.onHoverMenuIconDown} />
-              < IoIosArrowUp className={css.onHoverMenuIconUp} />
+              <IoIosArrowDown className={css.onHoverMenuIconDown} />
+              <IoIosArrowUp className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
                 <ul>
                   <Link to={"/"}>
@@ -411,14 +465,12 @@ const Header = () => {
             </li>
             <li>
               <a href="/tools">tools</a>
-              < IoIosArrowDown className={css.onHoverMenuIconDown} />
-              < IoIosArrowUp className={css.onHoverMenuIconUp} />
+              <IoIosArrowDown className={css.onHoverMenuIconDown} />
+              <IoIosArrowUp className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
                 <ul>
                   <Link to={"/tools"}>
-                    <li>
-                      Tools
-                    </li>
+                    <li>Tools</li>
                   </Link>
                   {/* <Link to={"/myprofile/MyVendors"}>
                     <li>
@@ -426,14 +478,10 @@ const Header = () => {
                     </li>
                   </Link> */}
                   <Link to={"/myprofile/MyContact"}>
-                    <li>
-                      My Vendors
-                    </li>
+                    <li>My Vendors</li>
                   </Link>
                   <Link to={"/hotList/view"}>
-                    <li>
-                      Hot List
-                    </li>
+                    <li>Hot List</li>
                   </Link>
                   {/* <Link to={"https://brokerbin.com/partners"}  target="blank">
                   <li>
@@ -449,7 +497,7 @@ const Header = () => {
               </div>
             </li>
             <li>
-              <Link to={"/search/Inventory"}>search</Link>
+              <Link to={"/search/Company"}>search</Link>
               <IoIosArrowDown className={css.onHoverMenuIconDown} />
               <IoIosArrowUp className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
@@ -479,8 +527,8 @@ const Header = () => {
               </div>
             </li>
             <li>
-              <Link to={'/inventory'}>manage</Link>
-              < IoIosArrowDown className={css.onHoverMenuIconDown} />
+              <Link to={"/inventory"}>manage</Link>
+              <IoIosArrowDown className={css.onHoverMenuIconDown} />
               <IoIosArrowUp className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
                 <ul>
@@ -489,7 +537,7 @@ const Header = () => {
                   </Link>
                   <Link to={"/rfq"}>
                     <li>My RFQs</li>
-                  </Link >
+                  </Link>
                   {/* <Link>
                     <li>My BOM</li>
                   </Link> */}
@@ -537,32 +585,29 @@ const Header = () => {
             </li> */}
             <li>
               <Link to={"/broadcasts"}>broadcast</Link>
-              < IoIosArrowDown className={css.onHoverMenuIconDown} />
+              <IoIosArrowDown className={css.onHoverMenuIconDown} />
               <IoIosArrowUp className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
                 <ul>
                   <Link to={"/sendbroad"}>
                     <li>send</li>
-                  </Link >
+                  </Link>
                   <Link to={"/broadcasts"}>
-                    <li>
-                      view
-                    </li>
+                    <li>view</li>
                   </Link>
                   <Link to={"/myprofile/broadcastfilter"}>
-                    <li>
-                      set filters
-                    </li>
+                    <li>set filters</li>
                   </Link>
                   <Link to={"/broadcasthistory"}>
-                    <li>
-                      history
-                    </li>
+                    <li>history</li>
                   </Link>
                 </ul>
               </div>
             </li>
-            <li  onClick={() => setShowLogoutModal(true)} style={{ cursor: "pointer" }}>
+            <li
+              onClick={() => setShowLogoutModal(true)}
+              style={{ cursor: "pointer" }}
+            >
               <BiLogOut />
               logout
             </li>
@@ -570,8 +615,12 @@ const Header = () => {
             {showLogoutModal && (
               <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                 <div className="bg-white rounded-xl shadow-lg p-14 w-[35rem]  text-center">
-                  <h2 className="text-2xl font-semibold mb-4">Confirm Logout</h2>
-                  <p className="text-gray-600 !text-xl">Are you sure you want to log out?</p>
+                  <h2 className="text-2xl font-semibold mb-4">
+                    Confirm Logout
+                  </h2>
+                  <p className="text-gray-600 !text-xl">
+                    Are you sure you want to log out?
+                  </p>
                   <div className="mt-6 flex justify-center gap-4">
                     <button
                       onClick={handleLogout}
@@ -591,7 +640,8 @@ const Header = () => {
             )}
           </ul>
           <ul className={css.nav_tools}>
-            <li className="gap-[1vw] cursor-pointer"
+            <li
+              className="gap-[1vw] cursor-pointer"
               onClick={() => dispatch(setToolToggle())}
             >
               tools
@@ -615,11 +665,15 @@ const Header = () => {
             </li>
             {toolToggle && (
               <>
-                <li >
-                  <Link to={"/rfq"}>
-                    <AiOutlineMail />
-                  </Link>
-                </li>
+                <ThemeProvider theme={theme}>
+                  <Tooltip title="Manage My RFQs" arrow placement="bottom">
+                    <li>
+                      <Link to={"/rfq"}>
+                        <AiOutlineMail />
+                      </Link>
+                    </li>
+                  </Tooltip>
+                </ThemeProvider>
 
                 {/* <li>
                   <BsFillTelephonePlusFill />
@@ -634,11 +688,15 @@ const Header = () => {
                     <BsDatabaseFill />
                   </Link>
                 </li> */}
-                <li>
-                  <Link to={"/broadcasthistory"}>
-                    <BsClockFill />
-                  </Link>
-                </li>
+                <ThemeProvider theme={theme}>
+                  <Tooltip title="Broadcast History" arrow placement="bottom">
+                    <li>
+                      <Link to={"/broadcasthistory"}>
+                        <BsClockFill />
+                      </Link>
+                    </li>
+                  </Tooltip>
+                </ThemeProvider>
                 {/* <li>
                   <BsStarFill />
                 </li> */}
@@ -647,21 +705,34 @@ const Header = () => {
                     <BsPeopleFill />
                   </Link>
                 </li> */}
-                <li>
-                  <Link to={"/myprofile/MyContact"}>
-                    <BsPersonFill />
-                  </Link>
-                </li>
-                <li>
-                  <Link to={"/hotList/view"}>
-                    <AiFillFile />
-                  </Link>
-                </li>
-                <li>
-                  <Link to={"/inventory"}>
-                    <MdFileUpload />
-                  </Link>
-                </li>
+                <ThemeProvider theme={theme}>
+                  <Tooltip title="My Contact" arrow placement="bottom">
+                    <li>
+                      <Link to={"/myprofile/MyContact"}>
+                        <BsPersonFill />
+                      </Link>
+                    </li>
+                  </Tooltip>
+                </ThemeProvider>
+
+                <ThemeProvider theme={theme}>
+                  <Tooltip title="View Hotlist" arrow placement="bottom">
+                    <li>
+                      <Link to={"/hotList/view"}>
+                        <AiFillFile />
+                      </Link>
+                    </li>
+                  </Tooltip>
+                </ThemeProvider>
+                <ThemeProvider theme={theme}>
+                  <Tooltip title="Upload Inventory" arrow placement="bottom">
+                    <li>
+                      <Link to={"/inventory"}>
+                        <MdFileUpload />
+                      </Link>
+                    </li>
+                  </Tooltip>
+                </ThemeProvider>
                 {/* <li>
                   <Link to={"/reports/Company"}>
                     <FiTarget />
@@ -700,14 +771,8 @@ const Header = () => {
           </ul>
         </nav>
       </div>
-
-
-
-
     </>
   );
-
-
 };
 
 export default memo(Header);

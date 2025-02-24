@@ -9,6 +9,7 @@ import { submitUserSearch } from "../../../../ReduxStore/ProfleSlice";
 import { inventorySearch } from "../../../../ReduxStore/InventorySlice";
 import Cookies from "js-cookie";
 import { countriesList, regionsList } from "../../../../data/services";
+import CompanySearchInventory from "./CompanySearchInventory";
 
 const InventorySearch = () => {
 
@@ -247,7 +248,7 @@ const InventorySearch = () => {
                     />
                   </span>
                   <span  className="!flex !justify-end ">
-                    <CompanySearch setFormData={setFormData} formData={formData} />
+                    <CompanySearchInventory setFormData={setFormData} formData={formData} />
                   </span>
 
                   <div className={"flex flex-col gap-4"}>

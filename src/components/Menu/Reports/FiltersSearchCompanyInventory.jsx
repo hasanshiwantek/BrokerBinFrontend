@@ -5,8 +5,9 @@ import Cookies from "js-cookie";
 import {
   searchCompany,
   setSearchCompanyData,
-} from "../../../ReduxStore/Reports";
 
+} from "../../../ReduxStore/Reports";
+import { setSelectedCompanyNames } from "@/ReduxStore/BroadCast";
 const FiltersSearchCompanyInventory = () => {
   const token = Cookies.get("token");
   const [searchTerm, setSearchTerm] = useState("");
@@ -19,8 +20,15 @@ const FiltersSearchCompanyInventory = () => {
   const listRef = useRef();
 
   const dispatch = useDispatch();
-  const { searchCompanyData } = useSelector((store) => store.reports);
+  const { searchCompanyData} = useSelector(
+    (store) => store.reports
+  );
+  const {selectedCompanyNames} = useSelector((store) => store.broadcastStore);
+  console.log("Search Company Data Names", searchCompanyData);
+  console.log("Selected Company Name from Redux,", selectedCompanyNames);
 
+  const companyNames = selectedCompanies.map((company) => company.name);
+  console.log("Selected Companies", companyNames);
   // Debounce function for optimized search
   function debounce(func, delay) {
     let timer;
@@ -29,6 +37,18 @@ const FiltersSearchCompanyInventory = () => {
       timer = setTimeout(() => func(...args), delay);
     };
   }
+
+  useEffect(() => {
+    if (JSON.stringify(selectedCompanyNames) !== JSON.stringify(companyNames)) {
+      dispatch(setSelectedCompanyNames(companyNames));
+    }
+  }, [companyNames, dispatch, selectedCompanyNames]);
+
+  useEffect(() => {
+    if (selectedCompanyNames.length > 0) {
+      setSelectedCompanies(selectedCompanyNames.map((name) => ({ name })));
+    }
+  }, [selectedCompanyNames]);
 
   const handleFocus = () => setShowList(true);
 
@@ -68,7 +88,10 @@ const FiltersSearchCompanyInventory = () => {
 
   // Add selected company to display list
   const handleAddCompany = () => {
-    if (companyToAdd && !selectedCompanies.some((c) => c.id === companyToAdd.id)) {
+    if (
+      companyToAdd &&
+      !selectedCompanies.some((c) => c.id === companyToAdd.id)
+    ) {
       setSelectedCompanies([...selectedCompanies, companyToAdd]);
       setCompanyToAdd(null); // Clear the selected company
       setSearchTerm(""); // Clear the input field
@@ -76,38 +99,42 @@ const FiltersSearchCompanyInventory = () => {
   };
 
   // Handle dropdown selection for each company
-  const handleCompanyOption = (companyId, option) => {
+  const handleCompanyOption = (index, option) => {
+    setDropdownSelections((prev) => ({
+      ...prev, // Keep previous selections
+      [index]: option, // Update only the selected company
+    }));
+
+    // If the option is "remove", remove the company from the selected list
     if (option === "remove") {
-      setSelectedCompanies(selectedCompanies.filter((company) => company.id !== companyId));
+      setSelectedCompanies((prevCompanies) =>
+        prevCompanies.filter((company,ind) => ind !== index)
+      );
+
+      // Also remove from dropdownSelections to prevent stale state
       setDropdownSelections((prev) => {
         const updated = { ...prev };
-        delete updated[companyId];
+        delete updated[index];
         return updated;
       });
-    } else {
-      setDropdownSelections((prev) => ({
-        ...prev,
-        [companyId]: option,
-      }));
     }
   };
 
   return (
     <div className={css.searchCompanyInventory}>
-
-
-    {/* Display selected companies with dropdown options */}
-    <div className={css.selectedCompanies}>
-        {selectedCompanies.map((company) => (
-          <div key={company.id} className={css.selectedCompany}>
+      {/* Display selected companies with dropdown options */}
+      <div className={css.selectedCompanies}>
+        {selectedCompanies.map((company,index) => (
+          <div key={index} className={css.selectedCompany}>
             <span>{company.name}</span>
             <select
-              onChange={(e) => handleCompanyOption(company.id, e.target.value)}
-              value={dropdownSelections[company.id] || ""}
+              className="border border-gray-300 rounded-md"
+              onChange={(e) => handleCompanyOption(index, e.target.value)}
+              value={dropdownSelections[index] || ""}
             >
               <option value="send">Send</option>
               <option value="remove">Remove</option>
-              <option value="omit">Omit</option>
+              {/* <option value="omit">Omit</option> */}
             </select>
           </div>
         ))}
@@ -128,9 +155,13 @@ const FiltersSearchCompanyInventory = () => {
             onFocus={handleFocus}
             onBlur={handleBlur}
           />
-            <span className={css.addBtn} onClick={handleAddCompany} style={{ marginLeft: "10px" }}>
-        Add
-      </span>
+          <span
+            className={css.addBtn}
+            onClick={handleAddCompany}
+            style={{ marginLeft: "10px" }}
+          >
+            Add
+          </span>
           <div className={css.compnaySearch} ref={listRef}>
             {showList && (
               <ul>
@@ -158,9 +189,6 @@ const FiltersSearchCompanyInventory = () => {
           </div>
         </span>
       </div>
-   
-
-  
     </div>
   );
 };
