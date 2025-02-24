@@ -473,9 +473,11 @@
 .compnaySearch {
   position: absolute;
   z-index: 2;
+  /* top: 64%; */
+ 
   ul {
     background: white;
-    width: 15rem;
+    width: 20rem;
     /* min-height: min-content; */
     max-height: 20rem;
     overflow-y: scroll;
@@ -487,8 +489,9 @@
       background-color: rgb(207, 207, 207);
     }
     > li:hover {
-      background-color: rgb(102, 142, 252);
+      background-color: var(--primary-color);
       color: white;
+      cursor: pointer;
     }
   }
 }

@@ -4,7 +4,7 @@ import ToggleCategories from "./Field Components/ToggleCategories";
 import ToggleFilters from "./Field Components/ToggleFilters";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
-import { sendBroadcast } from "../../../../ReduxStore/BroadCast";
+import { sendBroadcast,setSelectedCompanyNames } from "../../../../ReduxStore/BroadCast";
 import Services from "./Field Components/Services";
 import { clearAllSelections } from "../../../../ReduxStore/BroadCast";
 import { toast } from "react-toastify";
@@ -15,7 +15,6 @@ const BroadcastForm = () => {
   const token = Cookies.get("token");
   const { user } = JSON.parse(localStorage.getItem("user"));
   const service = useSelector((state) => state.broadcastStore.serviceData);
-
   // console.log(service);
 
   // console.log(user);
@@ -59,7 +58,9 @@ const BroadcastForm = () => {
     companiesSelection,
     regionSelection,
     serviceData,
+    selectedCompanyNames
   } = useSelector((state) => state.broadcastStore);
+  console.log("Selected Company Name from Send Broadcast Page,", selectedCompanyNames);
 
   const handleContinue = () => {
     if (broadcastType && category) {
@@ -160,6 +161,8 @@ const BroadcastForm = () => {
       date: "",
     });
     setFiles("");
+    setFileName("");
+    setSelectedCompanyNames([]);
   };
 
   // const handleSubmit = (e) => {
@@ -208,14 +211,14 @@ const BroadcastForm = () => {
       data.append("uploadFile", files);
 
       data.append("type", broadcastType);
-      data.append("selectedCompanies", JSON.stringify(computerSelection));
+      data.append("selectedComputer", JSON.stringify(computerSelection));
       data.append("selectedTelecom", JSON.stringify(telecomSelection));
       data.append(
         "selectedMobileDevices",
         JSON.stringify(mobileDevicesSelection)
       );
       data.append("selectedRegion", JSON.stringify(regionSelection));
-      data.append("companiesSelection", JSON.stringify(companiesSelection));
+      data.append("companiesSelection", JSON.stringify(selectedCompanyNames));
       data.append("service", JSON.stringify(serviceData));
 
       for (const [key, value] of Object.entries(formData)) {
@@ -225,11 +228,11 @@ const BroadcastForm = () => {
       data = {
         ...formData,
         type: broadcastType,
-        selectedCompanies: computerSelection,
+        selectedComputer: computerSelection,
         selectedTelecom: telecomSelection,
         selectedMobileDevices: mobileDevicesSelection,
         selectedRegion: regionSelection,
-        companiesSelection: companiesSelection,
+        companiesSelection: selectedCompanyNames,
         service: serviceData,
       };
     }
@@ -246,6 +249,7 @@ const BroadcastForm = () => {
         dispatch(clearAllSelections());
         // Clear the form fields after successful submission
         cancelAllActions();
+        setFileName("");
       })
       .catch((error) => {
         console.error("Error storing data:", error);
@@ -394,7 +398,7 @@ const BroadcastForm = () => {
                   <div className={css.toggleServices}>
                     <div className={css.headings}>
                       <h3>Services</h3>
-                      <p>(Click to expand further)</p>
+                      <p>(Click to Expand Further)</p>
                     </div>
                     <div>
                       <Services />
@@ -406,7 +410,7 @@ const BroadcastForm = () => {
                   <div className={css.toggleCategories}>
                     <div className={css.headings}>
                       <h3>Categories</h3>
-                      <p>(Click to expand further)</p>
+                      <p>(Click to Expand Further)</p>
                     </div>
                     <ToggleCategories />
                   </div>

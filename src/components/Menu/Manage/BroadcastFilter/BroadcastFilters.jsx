@@ -3,9 +3,22 @@ import myProfile from "../../../../styles/Menu/Manage/MyProfile.module.css";
 import css from "../../../../styles/Menu/Manage/BroadcastFilters/BroadcastFilters.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
-import { broadCastFilters, fetchBroadCastFilters } from "../../../../ReduxStore/BroadCast";
+import {
+  broadCastFilters,
+  fetchBroadCastFilters,
+  setSelectedCompanyNames,
+} from "../../../../ReduxStore/BroadCast";
 import Cookies from "js-cookie";
-import { servicesList, regionsList, countriesList, groupingsList, telecom, mobileDevice, computers, initialMFGs } from "../../../../data/services";
+import {
+  servicesList,
+  regionsList,
+  countriesList,
+  groupingsList,
+  telecom,
+  mobileDevice,
+  computers,
+  initialMFGs,
+} from "../../../../data/services";
 import CheckboxList from "./CheckboxList";
 import UniversalSelector from "./UniversalSelector";
 import MFGFilter from "./MFGFilter";
@@ -19,9 +32,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 
 const Options = () => {
-
-  const { filters } = useSelector((state) => state.broadcastStore)
-  console.log("bfilters ", filters)
+  const { filters } = useSelector((state) => state.broadcastStore);
+  console.log("bfilters ", filters);
   // Existing states and handlers...
   const [mfg, setIncludedMFGs] = useState([]);
 
@@ -29,7 +41,7 @@ const Options = () => {
   const handleIncludedMFGsChange = (newIncludedMFGs) => {
     setIncludedMFGs(newIncludedMFGs);
   };
-  const filteredIncludedMFGs = mfg.filter(mfg => mfg !== "-ALL MFG's-");
+  const filteredIncludedMFGs = mfg.filter((mfg) => mfg !== "-ALL MFG's-");
 
   const [broadcastFilterState, setBroadcastFilterState] = useState({
     selectedCategories: [],
@@ -64,15 +76,17 @@ const Options = () => {
     });
   };
 
-
-
   // Function to handle checkbox individually.
   const handleCheckboxChange = (name, value) => {
     setBroadcastFilterState((prevState) => {
       let updatedItems;
 
       // Handle 'selectedCategories' (this includes computers, telecom, mobileDevice)
-      if (name === "selectedCategories" || name === "telecom" || name === "mobileDevice") {
+      if (
+        name === "selectedCategories" ||
+        name === "telecom" ||
+        name === "mobileDevice"
+      ) {
         updatedItems = prevState.selectedCategories.includes(value)
           ? prevState.selectedCategories.filter((item) => item !== value)
           : [...prevState.selectedCategories, value];
@@ -112,7 +126,6 @@ const Options = () => {
           ? prevState.selectedBroadcastTypes.filter((item) => item !== value)
           : [...prevState.selectedBroadcastTypes, value];
         return { ...prevState, selectedBroadcastTypes: updatedItems };
-
       }
 
       return prevState; // Return the previous state if no matches
@@ -136,7 +149,9 @@ const Options = () => {
   const toggleAllCheckboxes = (name, items, checkAll) => {
     setBroadcastFilterState((prevState) => {
       // Ensure items is an array of strings or objects
-      const itemValues = items.map((item) => (typeof item === "object" ? item.value : item));
+      const itemValues = items.map((item) =>
+        typeof item === "object" ? item.value : item
+      );
 
       const currentSelection = prevState[name] || [];
 
@@ -150,7 +165,9 @@ const Options = () => {
         updatedItems = [...new Set([...currentSelection, ...itemValues])];
       } else {
         // Remove all items
-        updatedItems = currentSelection.filter((item) => !itemValues.includes(item));
+        updatedItems = currentSelection.filter(
+          (item) => !itemValues.includes(item)
+        );
       }
 
       console.log("Updated selection:", updatedItems);
@@ -164,7 +181,6 @@ const Options = () => {
 
   const dispatch = useDispatch();
   const token = Cookies.get("token");
-
 
   useEffect(() => {
     const savedFilters = JSON.parse(localStorage.getItem("broadcastFilters"));
@@ -204,14 +220,12 @@ const Options = () => {
         ...prevState,
         broadcasts: booleanValue,
       }));
-    }
-    else if (name === "multicast") {
+    } else if (name === "multicast") {
       setBroadcastFilterState((prevState) => ({
         ...prevState,
         multicast: booleanValue,
       }));
-    }
-    else if (name === "servicecast") {
+    } else if (name === "servicecast") {
       setBroadcastFilterState((prevState) => ({
         ...prevState,
         servicecast: booleanValue,
@@ -266,36 +280,45 @@ const Options = () => {
             multicast: broadcastFilterState.multicast,
             servicecast: broadcastFilterState.servicecast,
             selectedRegions: broadcastFilterState.selectedRegions,
-            selectedOutgoingRegions: broadcastFilterState.selectedOutgoingRegions,
+            selectedOutgoingRegions:
+              broadcastFilterState.selectedOutgoingRegions,
             selectedCountry: broadcastFilterState.selectedCountry,
-            selectedOutgoingCountry: broadcastFilterState.selectedOutgoingCountry,
+            selectedOutgoingCountry:
+              broadcastFilterState.selectedOutgoingCountry,
           })
         );
         console.log("Broadcast filters saved to local storage.");
       } catch (storageError) {
-        console.error("Error saving broadcast filters to local storage: ", storageError);
-        alert("An error occurred while saving filters locally. Please try again.");
+        console.error(
+          "Error saving broadcast filters to local storage: ",
+          storageError
+        );
+        alert(
+          "An error occurred while saving filters locally. Please try again."
+        );
       }
 
       // Dispatch the action
       dispatch(broadCastFilters({ data: transformedData, token }));
       // alert("Broadcast filters submitted successfully!");
-          // ✅ Show success toast with light blue color
-                       toast.info("Broadcast filters submitted successfully!", {
-                        style: { fontSize:"13px" ,marginTop:"-10px",fontWeight:"bold"} , // 
-                      });
-                  
+      // ✅ Show success toast with light blue color
+      toast.info("Broadcast filters submitted successfully!", {
+        style: { fontSize: "13px", marginTop: "-10px", fontWeight: "bold" }, //
+      });
+
       console.log("Broadcast filters submitted successfully.");
+      setSelectedCompanyNames([]);
     } catch (error) {
       console.error("Error during broadcast filter submission: ", error);
       toast.error("Failed Submitting Broadcast Filters!Try Again Later", {
-        style: { fontSize:"13px" ,marginTop:"-10px",fontWeight:"bold"} , // 
+        style: { fontSize: "13px", marginTop: "-10px", fontWeight: "bold" }, //
       });
       // alert("An error occurred while submitting the broadcast filters. Please try again.");
     }
   };
 
-  const isBroadcastSelected = broadcastFilterState.selectedBroadcastTypes.length > 0;
+  const isBroadcastSelected =
+    broadcastFilterState.selectedBroadcastTypes.length > 0;
 
   // Handler for clearing all the fields
   const clearBroadCastFields = () => {
@@ -312,13 +335,14 @@ const Options = () => {
       broadcasts: false,
       multicast: false,
       servicecast: false,
-
-    })
+    });
     setIncludedMFGs([]);
     alert("All fields have been reset!");
-  }
+  };
 
-  const { togglePopUp, popupCompanyDetail } = useSelector((state) => state.searchProductStore)
+  const { togglePopUp, popupCompanyDetail } = useSelector(
+    (state) => state.searchProductStore
+  );
   const company = filters?.data?.[0]?.user_id?.company;
   console.log("COMPANY ", company);
 
@@ -331,11 +355,6 @@ const Options = () => {
   console.log("popupCompanyDetail", popupCompanyDetail);
   console.log("togglePopUp", togglePopUp);
 
-
-
-
-
-
   return (
     <>
       <div className={myProfile.profileLayout}>
@@ -343,10 +362,15 @@ const Options = () => {
           <div className={myProfile.profileBtn}>
             <h1>My Profile</h1>
             <span>
-              <input type="submit" value="submit changes" className={css.sumbitBtn} />
+              <input
+                type="submit"
+                value="submit changes"
+                className={css.sumbitBtn}
+              />
 
-              <button type="button" onClick={() => openCompanyModal(company)}>view profile</button>
-
+              <button type="button" onClick={() => openCompanyModal(company)}>
+                view profile
+              </button>
             </span>
           </div>
           <div className={myProfile.profileInfo}>
@@ -355,8 +379,10 @@ const Options = () => {
                 <li>
                   <NavLink
                     to="/myprofile"
-                    end  // This ensures the exact match for /myprofile
-                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                    end // This ensures the exact match for /myprofile
+                    className={({ isActive }) =>
+                      isActive ? myProfile.active : ""
+                    }
                   >
                     <span>Personal Info</span>
                   </NavLink>
@@ -380,7 +406,9 @@ const Options = () => {
                 <li>
                   <NavLink
                     to="/myprofile/MyContact"
-                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                    className={({ isActive }) =>
+                      isActive ? myProfile.active : ""
+                    }
                   >
                     <span>My Vendors</span>
                   </NavLink>
@@ -388,10 +416,13 @@ const Options = () => {
                 <li>
                   <NavLink
                     to="/myprofile/broadcastfilter"
-                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                    className={({ isActive }) =>
+                      isActive ? myProfile.active : ""
+                    }
                   >
                     <span>Broadcast Filters</span>
-                  </NavLink>                </li>
+                  </NavLink>{" "}
+                </li>
               </ul>
             </div>
             <div className={css.broadcastFilters}>
@@ -401,28 +432,48 @@ const Options = () => {
                 <div className={css.broadcastFilters_emailSettings_row}>
                   <div className={css.broadcastFilters_item}>
                     <label>Daily Broadcast Summary</label>
-                    <select name="daily_broadcast" value={broadcastFilterState.dailyBroadcast ? "1" : "0"} onChange={handleSelectChange} className="!w-24">
+                    <select
+                      name="daily_broadcast"
+                      value={broadcastFilterState.dailyBroadcast ? "1" : "0"}
+                      onChange={handleSelectChange}
+                      className="!w-24"
+                    >
                       <option value="0">Off</option>
                       <option value="1">On</option>
                     </select>
                   </div>
                   <div className={css.broadcastFilters_item}>
                     <label>Broadcast</label>
-                    <select name="broadcasts" value={broadcastFilterState.broadcasts ? "1" : "0"} onChange={handleSelectChange} className="!w-24">
+                    <select
+                      name="broadcasts"
+                      value={broadcastFilterState.broadcasts ? "1" : "0"}
+                      onChange={handleSelectChange}
+                      className="!w-24"
+                    >
                       <option value="0">Off</option>
                       <option value="1">On</option>
                     </select>
                   </div>
                   <div className={css.broadcastFilters_item}>
                     <label>Multicast</label>
-                    <select name="multicast" value={broadcastFilterState.multicast ? "1" : "0"} onChange={handleSelectChange} className="!w-24">
+                    <select
+                      name="multicast"
+                      value={broadcastFilterState.multicast ? "1" : "0"}
+                      onChange={handleSelectChange}
+                      className="!w-24"
+                    >
                       <option value="0">Off</option>
                       <option value="1">On</option>
                     </select>
                   </div>
                   <div className={css.broadcastFilters_item}>
                     <label>Servicecast</label>
-                    <select name="servicecast" value={broadcastFilterState.servicecast ? "1" : "0"} onChange={handleSelectChange} className="!w-24">
+                    <select
+                      name="servicecast"
+                      value={broadcastFilterState.servicecast ? "1" : "0"}
+                      onChange={handleSelectChange}
+                      className="!w-24"
+                    >
                       <option value="0">Off</option>
                       <option value="1">On</option>
                     </select>
@@ -436,8 +487,12 @@ const Options = () => {
                     <label htmlFor="wtb">Want To Buy (WTB)</label>
                     <input
                       type="checkbox"
-                      checked={broadcastFilterState.selectedBroadcastTypes.includes("wtb")}
-                      onChange={() => handleCheckboxChange("type_of_broadcast", "wtb")}
+                      checked={broadcastFilterState.selectedBroadcastTypes.includes(
+                        "wtb"
+                      )}
+                      onChange={() =>
+                        handleCheckboxChange("type_of_broadcast", "wtb")
+                      }
                       name="selectedBroadcastTypes"
                     />
                   </span>
@@ -445,8 +500,12 @@ const Options = () => {
                     <label htmlFor="rfq">Request For Quote (RFQ)</label>
                     <input
                       type="checkbox"
-                      checked={broadcastFilterState.selectedBroadcastTypes.includes("rfq")}
-                      onChange={() => handleCheckboxChange("type_of_broadcast", "rfq")}
+                      checked={broadcastFilterState.selectedBroadcastTypes.includes(
+                        "rfq"
+                      )}
+                      onChange={() =>
+                        handleCheckboxChange("type_of_broadcast", "rfq")
+                      }
                       name="selectedBroadcastTypes"
                     />
                   </span>
@@ -454,14 +513,18 @@ const Options = () => {
                     <label htmlFor="wts">Want To Sell (WTS)</label>
                     <input
                       type="checkbox"
-                      checked={broadcastFilterState.selectedBroadcastTypes.includes("wts")}
-                      onChange={() => handleCheckboxChange("type_of_broadcast", "wts")}
+                      checked={broadcastFilterState.selectedBroadcastTypes.includes(
+                        "wts"
+                      )}
+                      onChange={() =>
+                        handleCheckboxChange("type_of_broadcast", "wts")
+                      }
                       name="selectedBroadcastTypes"
                     />
                   </span>
                 </div>
               </div>
-              <div >
+              <div>
                 <MFGFilter onIncludedMFGsChange={handleIncludedMFGsChange} />
               </div>
 
@@ -469,16 +532,33 @@ const Options = () => {
                 <h1>In The Following Categories</h1>
                 <div className={css.onlyReceiveMatch}>
                   <div className={css.categoriesToggleButton}>
-                    <button type="button" onClick={() => toggleOnlyReceiveMatch("computers")}>Computers</button>
-                    <button type="button" onClick={() => toggleOnlyReceiveMatch("telecom")}>Telecom</button>
-                    <button type="button" onClick={() => toggleOnlyReceiveMatch("mobileDevice")}>Mobile Devices</button>
+                    <button
+                      type="button"
+                      onClick={() => toggleOnlyReceiveMatch("computers")}
+                    >
+                      Computers
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => toggleOnlyReceiveMatch("telecom")}
+                    >
+                      Telecom
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => toggleOnlyReceiveMatch("mobileDevice")}
+                    >
+                      Mobile Devices
+                    </button>
                   </div>
                   {onlyReceiveMatch.computers && (
                     <div>
                       <ul className={css.checkbox}>
                         <CheckboxList
                           items={computers}
-                          selectedItems={broadcastFilterState.selectedCategories}
+                          selectedItems={
+                            broadcastFilterState.selectedCategories
+                          }
                           handleCheckboxChange={handleCheckboxChange}
                           toggleAllCheckboxes={toggleAllCheckboxes}
                           disabled={!isBroadcastSelected}
@@ -493,7 +573,9 @@ const Options = () => {
                       <ul className={css.checkbox}>
                         <CheckboxList
                           items={telecom}
-                          selectedItems={broadcastFilterState.selectedCategories}
+                          selectedItems={
+                            broadcastFilterState.selectedCategories
+                          }
                           handleCheckboxChange={handleCheckboxChange}
                           toggleAllCheckboxes={toggleAllCheckboxes}
                           disabled={!isBroadcastSelected}
@@ -504,11 +586,13 @@ const Options = () => {
                     </div>
                   )}
                   {onlyReceiveMatch.mobileDevice && (
-                    <div >
+                    <div>
                       <ul className={css.checkbox}>
                         <CheckboxList
                           items={mobileDevice}
-                          selectedItems={broadcastFilterState.selectedCategories}
+                          selectedItems={
+                            broadcastFilterState.selectedCategories
+                          }
                           handleCheckboxChange={handleCheckboxChange}
                           toggleAllCheckboxes={toggleAllCheckboxes}
                           disabled={!isBroadcastSelected}
@@ -521,10 +605,8 @@ const Options = () => {
                 </div>
               </div>
 
-
               <div className={css.broadcastFilters_services}>
                 <ul className={css.checkbox}>
-
                   <CheckboxList
                     items={servicesList}
                     selectedItems={broadcastFilterState.selectedServices}
@@ -539,7 +621,6 @@ const Options = () => {
 
               <div className={css.broadcastFilters_grouping}>
                 <ul className={css.groupCheckbox}>
-
                   <CheckboxList
                     items={groupingsList}
                     selectedItems={broadcastFilterState.selectedGroupings}
@@ -556,8 +637,7 @@ const Options = () => {
                 <h1>Advanced Filters</h1>
 
                 <div className={css.broadcastFilters_regionCountry}>
-                  <ul className={css.groupCheckbox} >
-
+                  <ul className={css.groupCheckbox}>
                     <UniversalSelector
                       title="From The Following Regions"
                       items={regionsList}
@@ -570,12 +650,19 @@ const Options = () => {
                       name="selectedRegions"
                     />
                   </ul>
-                  <div style={{ marginLeft: "15px", marginTop: "-24px", marginBottom: "20px" }}>
-
+                  <div
+                    style={{
+                      marginLeft: "15px",
+                      marginTop: "-24px",
+                      marginBottom: "20px",
+                    }}
+                  >
                     <UniversalSelector
                       title="Or Select a Country"
                       dropdownOptions={countriesList}
-                      selectedDropdownValue={broadcastFilterState.selectedCountry}
+                      selectedDropdownValue={
+                        broadcastFilterState.selectedCountry
+                      }
                       handleDropdownChange={handleDropdownChange}
                       disabled={!isBroadcastSelected}
                       selectType="dropdown"
@@ -585,12 +672,13 @@ const Options = () => {
                 </div>
 
                 <div className={css.broadcastFilters_outgoing}>
-                  <ul className={css.groupCheckbox} >
-
+                  <ul className={css.groupCheckbox}>
                     <UniversalSelector
                       title="Default Outgoing Settings"
                       items={regionsList}
-                      selectedItems={broadcastFilterState.selectedOutgoingRegions}
+                      selectedItems={
+                        broadcastFilterState.selectedOutgoingRegions
+                      }
                       handleCheckboxChange={handleCheckboxChange}
                       toggleAllCheckboxes={toggleAllCheckboxes}
                       disabled={!isBroadcastSelected}
@@ -599,19 +687,25 @@ const Options = () => {
                       name="selectedOutgoingRegions"
                     />
                   </ul>
-                  <div style={{ marginLeft: "15px", marginTop: "-24px", marginBottom: "20px" }}>
-
+                  <div
+                    style={{
+                      marginLeft: "15px",
+                      marginTop: "-24px",
+                      marginBottom: "20px",
+                    }}
+                  >
                     <UniversalSelector
                       title="Or Select a Country"
                       dropdownOptions={countriesList}
-                      selectedDropdownValue={broadcastFilterState.selectedOutgoingCountry}
+                      selectedDropdownValue={
+                        broadcastFilterState.selectedOutgoingCountry
+                      }
                       handleDropdownChange={handleOutgoingCountry}
                       disabled={!isBroadcastSelected}
                       selectType="dropdown"
                       showCheckAll={false}
                     />
                   </div>
-
                 </div>
 
                 <div className={css.broadcastFilters_outgoingVendor}>
@@ -651,8 +745,6 @@ const Options = () => {
                     </li>
                   </ul> */}
 
-
-
                   {/* View A Company's Inventory */}
                   <div className={css.section} style={{ margin: "10px" }}>
                     <div className={css.display}>
@@ -662,44 +754,54 @@ const Options = () => {
                 </div>
               </div>
 
-
               <div className={css.lastSec}>
                 <div>
-                  <p>Click On The  <Link to={"/myprofile/MyVendors"}><span >My Vendors  </span></Link> Link to manage or stop receiving Broadcasts from a vendor.</p>
                   <p>
-                    <span style={{ color: "red" }}>1</span>Must be selected to receive Multicast (multiple part broadcast) emails that don't have a specific mfg.
+                    Click On The{" "}
+                    <Link to={"/myprofile/MyVendors"}>
+                      <span>My Vendors </span>
+                    </Link>{" "}
+                    Link to manage or stop receiving Broadcasts from a vendor.
                   </p>
                   <p>
-                    <span style={{ color: "red" }}>2</span>Must be selected to receive Servicecast (service related broadcast) emails.
+                    <span style={{ color: "red" }}>1</span>Must be selected to
+                    receive Multicast (multiple part broadcast) emails that
+                    don't have a specific mfg.
+                  </p>
+                  <p>
+                    <span style={{ color: "red" }}>2</span>Must be selected to
+                    receive Servicecast (service related broadcast) emails.
                   </p>
                 </div>
               </div>
-
 
               <div className={css.btnGroup}>
                 <div className={css.btnGroupSec}>
-                  <button onClick={clearBroadCastFields} className="transform active:scale-90 transition-all duration-100" >Reset</button>
-                  <button onClick={submitBroadcastFilters} className="transform active:scale-90 transition-all duration-100" >Submit Changes</button>
+                  <button
+                    onClick={clearBroadCastFields}
+                    className="transform active:scale-90 transition-all duration-100"
+                  >
+                    Reset
+                  </button>
+                  <button
+                    onClick={submitBroadcastFilters}
+                    className="transform active:scale-90 transition-all duration-100"
+                  >
+                    Submit Changes
+                  </button>
                 </div>
               </div>
-
-
-
-
-
             </div>
           </div>
         </form>
       </div>
 
-
-
-      {togglePopUp && <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
-            <ToastContainer position="top-center" autoClose={1000} />
-
+      {togglePopUp && (
+        <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
+      )}
+      <ToastContainer position="top-center" autoClose={1000} />
     </>
   );
 };
-
 
 export default Options;

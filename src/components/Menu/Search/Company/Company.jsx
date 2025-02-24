@@ -134,7 +134,7 @@ const SearchCompany = () => {
                     <form className={`${styles.personForm} !gap-[.4vw]`} onSubmit={handleSubmit}>
                         <div className={`${styles.formRow}`}>
                             <span>
-                                <CompanySearch className="flex" setFormData={setFormData} formData={formData} />
+                                <CompanySearch  setFormData={setFormData} formData={formData} />
                             </span>
                         </div>
 

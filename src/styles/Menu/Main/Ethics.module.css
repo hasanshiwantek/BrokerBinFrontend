@@ -107,6 +107,7 @@
 .ethics_form_fields input{
   transition: all 0.15s ease-in-out;
   border: 1px solid #ccc;
+  display: block;
 
 }
 
@@ -126,4 +127,23 @@
 .ethics_form_fields textarea:focus{
   outline: none;
   border: 1px solid var(--primary-color);
+}
+
+
+.companySearch ul{
+  border: 1px solid lightgray;
+  width: 60%;
+  max-height: 150px;
+  overflow-y: scroll;
+}
+.companySearch ul li{
+  border-bottom: 1px solid lightgray;
+  cursor: pointer;
+  padding: 8px;
+
+}
+.companySearch ul li:hover{
+  background-color: var(--primary-color);
+  color: white;
+
 }
