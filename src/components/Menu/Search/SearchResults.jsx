@@ -4,9 +4,13 @@ import "./SearchResults.css";
 import profileImg from "../../../assets/shadow.png";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
-import { setPopupCompanyDetail, setTogglePopUp } from "../../../ReduxStore/SearchProductSlice";
+import {
+  setPopupCompanyDetail,
+  setTogglePopUp,
+} from "../../../ReduxStore/SearchProductSlice";
 import CompanyDetails from "@/components/Popups/CompanyDetails/CompanyDetails";
-
+import css from "../../../styles/Menu/Tools/MyContact.module.css";
+import { alphabets } from "@/data/services";
 
 const SearchResults = () => {
   const results = useSelector((state) => state.profileStore);
@@ -20,18 +24,21 @@ const SearchResults = () => {
 
   const dispatch = useDispatch();
 
-  const { togglePopUp, popupCompanyDetail } = useSelector((state) => state.searchProductStore)
+  const { togglePopUp, popupCompanyDetail } = useSelector(
+    (state) => state.searchProductStore
+  );
 
   const openCompanyModal = (company) => {
-      console.log("Opening Company Modal with Company:", company);
-      dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
-      dispatch(setTogglePopUp()); // Show company modal
-    };
-  
-  const company = searchResults.map(results => results?.company).filter(Boolean);
-  console.log("COMPANY", company)
+    console.log("Opening Company Modal with Company:", company);
+    dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
+    dispatch(setTogglePopUp()); // Show company modal
+  };
 
-  
+  const company = searchResults
+    .map((results) => results?.company)
+    .filter(Boolean);
+  console.log("COMPANY", company);
+
   return (
     <main className="mainSec">
       <nav className="menu-bar">
@@ -47,9 +54,16 @@ const SearchResults = () => {
               Person
             </Link>
           </li>
-
         </ul>
       </nav>
+
+      {/* Render the Alphabet List ONCE */}
+      {/* <div className="flex flex-col absolute left-960 top-72 p-4 opacity-65">
+        {alphabets.map((letter, index) => (
+          <Link key={index}>{letter}</Link>
+        ))}
+      </div> */}
+
       {searchResults && searchResults.length > 0 ? (
         searchResults.map((val, index) => {
           // Use profileImg as a fallback if val.profileImage is null
@@ -64,42 +78,33 @@ const SearchResults = () => {
                     alt="profile-image"
                     onError={(e) => (e.target.src = profileImg)} // If image fails to load, use fallback
                   />
-                  <p 
-                  style={{ textAlign: "center" }} 
-                  className="font-semibold cursor-pointer"
-                  onClick={() => openCompanyModal(val.company)}
+                  <p
+                    style={{ textAlign: "center" }}
+                    className="font-semibold cursor-pointer"
+                    onClick={() => openCompanyModal(val.company)}
                   >
-                      {val.firstName || ""} 
+                    {val.firstName || ""}
                   </p>
                 </div>
 
                 <div className="profile-details font-medium">
-                  <p 
-                  >
-                    Company: <button className="text-black"
-                    onClick={() => openCompanyModal(val.company)}> {val.company?.name || ""}</button>
-                  </p>
                   <p>
-                    Title: {val.specialty || ""}
+                    Company:{" "}
+                    <button
+                      className="text-black"
+                      onClick={() => openCompanyModal(val.company)}
+                    >
+                      {" "}
+                      {val.company?.name || ""}
+                    </button>
                   </p>
-                  <p>
-                    Phone: {val.phoneNumber || ""}
-                  </p>
-                  <p>
-                    Toll: {val.tollFree || ""}
-                  </p>
-                  <p>
-                    Email: {val.email || ""}
-                  </p>
-                  <p>
-                    City: {val.city || ""}
-                  </p>
-                  <p>
-                    State: {val.state || ""}
-                  </p>
-                  <p>
-                    Country: {val.country || ""}
-                  </p>
+                  <p>Title: {val.specialty || ""}</p>
+                  <p>Phone: {val.phoneNumber || ""}</p>
+                  <p>Toll: {val.tollFree || ""}</p>
+                  <p>Email: {val.email || ""}</p>
+                  <p>City: {val.city || ""}</p>
+                  <p>State: {val.state || ""}</p>
+                  <p>Country: {val.country || ""}</p>
                 </div>
 
                 <div className="notes-rating">
@@ -129,7 +134,9 @@ const SearchResults = () => {
           No search results found.
         </p>
       )}
-      {togglePopUp && <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
+      {togglePopUp && (
+        <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
+      )}
     </main>
   );
 };
