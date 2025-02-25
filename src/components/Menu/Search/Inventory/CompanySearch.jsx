@@ -74,10 +74,18 @@ const CompanySearch = ({ formData, setFormData }) => {
                 cursor: "pointer",
                 borderBottom: "1px solid #f0f0f0",
                 textAlign: "left"
+                
               }}
               className="hover:text-white hover:bg-[#2c83ec]"
             >
               {company.name}
+              {company.region && company.country && (
+                        <p
+>
+                          <span>{company.region},</span>
+                          <span>{company.country}</span>
+                        </p>
+                      )}
             </div>
           ))}
         </div>

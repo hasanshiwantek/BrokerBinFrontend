@@ -43,6 +43,7 @@ const CompanySearchInventory = ({ formData, setFormData }) => {
         id="specialty"
         onChange={(e) => setFormData({ ...formData, company: e.target.value })}
         value={formData.company || ""}
+        className="ml-5"
       />
       {dropdownVisible && (
         <div
@@ -75,6 +76,12 @@ const CompanySearchInventory = ({ formData, setFormData }) => {
               className="hover:text-white hover:bg-[#2c83ec]"
             >
               {company.name}
+              {company.region && company.country && (
+                        <p>
+                          <span>{company.region},</span>
+                          <span>{company.country}</span>
+                        </p>
+                      )}
             </div>
           ))}
         </div>
