@@ -194,6 +194,7 @@ const MyContact = () => {
             </div>
           </div>
           <div className={css.myVendor}>
+            
             {viewAsCompany && (
               <>
                 <div className={css.myVendor_link}>
