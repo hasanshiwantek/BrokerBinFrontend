@@ -428,7 +428,6 @@
     label {
       font-size: 9pt !important;
       font-weight: 500;
-      white-space: nowrap;
     }
   }
   &_step1 {
