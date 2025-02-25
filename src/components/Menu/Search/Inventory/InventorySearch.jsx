@@ -27,18 +27,13 @@ const InventorySearch = () => {
     partHeci: '',
     keyword: '',
     condition: '',
-    category: '',
     company: '',
     state: '',
     country: '',
     region: '',
     shipDeadline: '',
+    multiplePartSearch: '',
   });
-
-
-
-
-
 
   const dispatch = useDispatch();
   const navigate = useNavigate(); // Initialize useNavigate
@@ -50,8 +45,6 @@ const InventorySearch = () => {
       [name]: value // Update current field
     });
   };
-
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -97,12 +90,13 @@ const InventorySearch = () => {
       manufacturer: '',
       keyword: '',
       condition: '',
-      category: '',
+      partHeci: '',
       company: '',
       state: '',
       country: '',
       region: '',
       shipDeadline: '',
+      multiplePartSearch: '',
     });
   }
 
@@ -156,6 +150,17 @@ const InventorySearch = () => {
                       className="ml-[1vw]"
                     />
                   </span>
+                  <span className="!flex !justify-end ">
+                    <label htmlFor="part">Multiple Part Search</label>
+                    <input
+                      type="text"
+                      name="multiplePartSearch"
+                      id="multiplePartSearch"
+                      onChange={handleChange}
+                      value={formData.part}
+                      className="ml-[1vw]"
+                    />
+                  </span>
                   <span  className="!flex !justify-end ">
                     <label htmlFor="heci">HECI</label>
                     <input
@@ -192,7 +197,7 @@ const InventorySearch = () => {
                     />
                   </span>
                   <h2>Keyword Searches</h2>
-                  {/* <span>
+                  <span className="!flex !justify-end ">
                     <label htmlFor="partHeci">Part #/HECI</label>
                     <input
                       type="text"
@@ -201,7 +206,7 @@ const InventorySearch = () => {
                       onChange={handleChange}
                       value={formData.partHeci}
                     />
-                  </span> */}
+                  </span>
                   <span  className="!flex !justify-end ">
                     <label htmlFor="keyword">Keyword</label>
                     <input
@@ -236,17 +241,7 @@ const InventorySearch = () => {
                       <option value="USED">USED</option>
                     </select>
                   </div>
-                  <span  className="!flex !justify-end ">
-                    <label htmlFor="category">Category</label>
-                    <input
-                      type="text"
-                      name="category"
-                      id="specialty"
-                      onChange={handleChange}
-                      value={formData.category}
-                      className="ml-[1vw]"
-                    />
-                  </span>
+                
                   <span  className="!flex !justify-end ">
                     <CompanySearchInventory setFormData={setFormData} formData={formData} />
                   </span>
