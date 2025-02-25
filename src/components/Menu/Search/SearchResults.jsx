@@ -11,6 +11,9 @@ import {
 import CompanyDetails from "@/components/Popups/CompanyDetails/CompanyDetails";
 import css from "../../../styles/Menu/Tools/MyContact.module.css";
 import { alphabets } from "@/data/services";
+import { FaUserPlus } from "react-icons/fa";
+import { Tooltip } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const SearchResults = () => {
   const results = useSelector((state) => state.profileStore);
@@ -39,8 +42,26 @@ const SearchResults = () => {
     .filter(Boolean);
   console.log("COMPANY", company);
 
+  const theme = createTheme({
+    components: {
+      MuiTooltip: {
+        styleOverrides: {
+          tooltip: {
+            fontSize: "1.2rem", // Adjust font size
+            width: "11rem",
+            textAlign: "center",
+            backgroundColor: "var(--primary-color)",
+          },
+          arrow: {
+            color: "var(--primary-color)",
+          },
+        },
+      },
+    },
+  });
+
   return (
-    <main className="mainSec">
+    <main className="mainSec w-[50%]">
       <nav className="menu-bar">
         <ul>
           <li>
@@ -57,83 +78,125 @@ const SearchResults = () => {
         </ul>
       </nav>
 
-      {/* Render the Alphabet List ONCE */}
-      {/* <div className="flex flex-col absolute left-960 top-72 p-4 opacity-65">
-        {alphabets.map((letter, index) => (
-          <Link key={index}>{letter}</Link>
-        ))}
-      </div> */}
+      <div className="flex flex-row  justify-center  ">
+        {/* Render the Alphabet List ONCE */}
+        <div>
+          <div className="flex flex-col p-4 opacity-50">
+            {alphabets.map((letter, index) => (
+              <Link
+                to={`#letter-${letter.toUpperCase()}`}
+                key={index}
+                onClick={(e) => {
+                  console.log("Clicked on letter: ", letter);
+                  e.preventDefault();
+                  const element = document.getElementById(
+                    `letter-${letter.toUpperCase()}`
+                  );
+                  if (element) {
+                    element.scrollIntoView({
+                      behavior: "smooth",
+                      block: "center",
+                    });
+                  }
+                }}
+                className="cursor-pointer text-black font-semibold px-2 py-1
+                "
+              >
+                {letter}
+              </Link>
+            ))}
+          </div>
+        </div>
 
-      {searchResults && searchResults.length > 0 ? (
-        searchResults.map((val, index) => {
-          // Use profileImg as a fallback if val.profileImage is null
-          const profileImage = val.profileImage || profileImg;
+        <div>
+          {searchResults && searchResults.length > 0 ? (
+            searchResults.map((val, index) => {
+              // Use profileImg as a fallback if val.profileImage is null
+              const profileImage = val.profileImage || profileImg;
+              const firstLetter = val.firstName
+                ? val.firstName.charAt(0).toUpperCase()
+                : "";
 
-          return (
-            <div className="search-results-container" key={index}>
-              <div className="contact-info">
-                <div className="profile-image">
-                  <img
-                    src={profileImage}
-                    alt="profile-image"
-                    onError={(e) => (e.target.src = profileImg)} // If image fails to load, use fallback
-                  />
-                  <p
-                    style={{ textAlign: "center" }}
-                    className="font-semibold cursor-pointer"
-                    onClick={() => openCompanyModal(val.company)}
-                  >
-                    {val.firstName || ""}
-                  </p>
-                </div>
+              return (
+                <div
+                  className="search-results-container"
+                  key={index}
+                  id={`letter-${firstLetter}`}
+                >
+                  <div className="contact-info">
+                    <div className="profile-image">
+                      <img
+                        src={profileImage}
+                        alt="profile-image"
+                        onError={(e) => (e.target.src = profileImg)} // If image fails to load, use fallback
+                      />
+                      <p
+                        className="font-semibold cursor-pointer text-center "
+                        onClick={() => openCompanyModal(val.company)}
+                      >
+                        {val.firstName || ""} {val.lastName || ""}
+                      </p>
+                    </div>
 
-                <div className="profile-details font-medium">
-                  <p>
-                    Company:{" "}
-                    <button
-                      className="text-black"
-                      onClick={() => openCompanyModal(val.company)}
-                    >
-                      {" "}
-                      {val.company?.name || ""}
-                    </button>
-                  </p>
-                  <p>Title: {val.specialty || ""}</p>
-                  <p>Phone: {val.phoneNumber || ""}</p>
-                  <p>Toll: {val.tollFree || ""}</p>
-                  <p>Email: {val.email || ""}</p>
-                  <p>City: {val.city || ""}</p>
-                  <p>State: {val.state || ""}</p>
-                  <p>Country: {val.country || ""}</p>
-                </div>
+                    <div className="profile-details font-medium">
+                      <p>
+                        Company:
+                        <button
+                          className="text-black"
+                          onClick={() => openCompanyModal(val.company)}
+                        >
+                          {val.company?.name || ""}
+                        </button>
+                      </p>
+                      <p>Title: {val.specialty || ""}</p>
+                      <p>Phone: {val.phoneNumber || ""}</p>
+                      <p>Toll: {val.tollFree || ""}</p>
+                      <p>
+                        Fax: {val?.company?.primaryContact?.faxNumber || ""}
+                      </p>
+                      <p>Email: {val.email || ""}</p>
+                      <p>City: {val.city || ""}</p>
+                      <p>State: {val.state || ""}</p>
+                      <p>Country: {val.country || ""}</p>
+                    </div>
 
-                <div className="notes-rating">
-                  <div className="notes">
-                    <h3>My Notes:</h3>
+                    <div className="notes-rating">
+                      <div className="notes">
+                        <h3>My Notes:</h3>
+                      </div>
+                      <div className="rating">
+                        <h3>My Rating:</h3>
+                        <select>
+                          <option value="N/R">N/R</option>
+                        </select>
+                      </div>
+                      <ThemeProvider theme={theme}>
+                        <Tooltip title="Add to Contacts">
+                          <div className="cursor-pointer">
+                            <FaUserPlus />
+                          </div>
+                        </Tooltip>
+                      </ThemeProvider>
+                    </div>
                   </div>
-                  <div className="rating">
-                    <h3>My Rating:</h3>
-                    <select>
-                      <option value="N/R">N/R</option>
-                    </select>
-                  </div>
                 </div>
-              </div>
-            </div>
-          );
-        })
-      ) : (
-        <p
-          style={{
-            textAlign: "center",
-            fontSize: "18px",
-            fontWeight: "bold",
-            marginTop: "20px",
-          }}
-        >
-          No search results found.
-        </p>
-      )}
+              );
+            })
+          ) : (
+            <p
+              style={{
+                textAlign: "center",
+                fontSize: "18px",
+                fontWeight: "bold",
+                marginTop: "20px",
+              }}
+            >
+              No search results found.
+            </p>
+          )}
+        </div>
+      </div>
+
       {togglePopUp && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}

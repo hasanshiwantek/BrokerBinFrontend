@@ -522,9 +522,9 @@ input[type="file"] {
 }
 
 
-.tableInputData input{
-  /* border:none; */
-}
+/* .tableInputData input{
+  border:none;
+} */
 
 .tableInputData select{
   padding: 6px;
