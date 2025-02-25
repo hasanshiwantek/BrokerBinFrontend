@@ -2,8 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./SearchResults.css";
 import profileImg from "../../../assets/shadow.png";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
+import { setPopupCompanyDetail, setTogglePopUp } from "../../../ReduxStore/SearchProductSlice";
+import CompanyDetails from "@/components/Popups/CompanyDetails/CompanyDetails";
+
 
 const SearchResults = () => {
   const results = useSelector((state) => state.profileStore);
@@ -15,6 +18,20 @@ const SearchResults = () => {
   const profileImage = searchResults?.map((val) => val?.profileImage);
   console.log("Profile Image: ", profileImage);
 
+  const dispatch = useDispatch();
+
+  const { togglePopUp, popupCompanyDetail } = useSelector((state) => state.searchProductStore)
+
+  const openCompanyModal = (company) => {
+      console.log("Opening Company Modal with Company:", company);
+      dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
+      dispatch(setTogglePopUp()); // Show company modal
+    };
+  
+  const company = searchResults.map(results => results?.company).filter(Boolean);
+  console.log("COMPANY", company)
+
+  
   return (
     <main className="mainSec">
       <nav className="menu-bar">
@@ -31,9 +48,6 @@ const SearchResults = () => {
             </Link>
           </li>
 
-          {/* <li><Link to={"/"}>TechSpecs</Link></li>
-                    <li><Link to={'/'}>NSN</Link></li>
-                    <li><Link to={'/'}>Alt#</Link></li> */}
         </ul>
       </nav>
       {searchResults && searchResults.length > 0 ? (
@@ -50,34 +64,41 @@ const SearchResults = () => {
                     alt="profile-image"
                     onError={(e) => (e.target.src = profileImg)} // If image fails to load, use fallback
                   />
-                  <p style={{ textAlign: "center" }}>
-                    <strong>
-                      {val.firstName || "Unknown"} {val.lastName || ""}
-                    </strong>
+                  <p 
+                  style={{ textAlign: "center" }} 
+                  className="font-semibold cursor-pointer"
+                  onClick={() => openCompanyModal(val.company)}
+                  >
+                      {val.firstName || ""} 
                   </p>
                 </div>
 
-                <div className="profile-details">
-                  <p>
-                    <strong>Company:</strong> {val.company?.name || "N/A"}
+                <div className="profile-details font-medium">
+                  <p 
+                  >
+                    Company: <button className="text-black"
+                    onClick={() => openCompanyModal(val.company)}> {val.company?.name || ""}</button>
                   </p>
                   <p>
-                    <strong>Title:</strong> {val.specialty || "N/A"}
+                    Title: {val.specialty || ""}
                   </p>
                   <p>
-                    <strong>Phone:</strong> {val.phoneNumber || "N/A"}
+                    Phone: {val.phoneNumber || ""}
                   </p>
                   <p>
-                    <strong>Email:</strong> {val.email || "N/A"}
+                    Toll: {val.tollFree || ""}
                   </p>
                   <p>
-                    <strong>City:</strong> {val.company?.region || "N/A"}
+                    Email: {val.email || ""}
                   </p>
                   <p>
-                    <strong>State:</strong> {val.state || "N/A"}
+                    City: {val.city || ""}
                   </p>
                   <p>
-                    <strong>Country:</strong> {val.company?.country || "N/A"}
+                    State: {val.state || ""}
+                  </p>
+                  <p>
+                    Country: {val.country || ""}
                   </p>
                 </div>
 
@@ -108,6 +129,7 @@ const SearchResults = () => {
           No search results found.
         </p>
       )}
+      {togglePopUp && <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
     </main>
   );
 };
