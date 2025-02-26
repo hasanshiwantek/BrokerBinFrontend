@@ -78,10 +78,10 @@ const SearchResults = () => {
         </ul>
       </nav>
 
-      <div className="flex flex-row  justify-center  ">
+      <div className="flex flex-row  justify-center relative ">
         {/* Render the Alphabet List ONCE */}
-        <div>
-          <div className="flex flex-col p-4 opacity-50">
+        <div >
+          <div className="flex flex-col p-4 opacity-50 ">
             {alphabets.map((letter, index) => (
               <Link
                 to={`#letter-${letter.toUpperCase()}`}

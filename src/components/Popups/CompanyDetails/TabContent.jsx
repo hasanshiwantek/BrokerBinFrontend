@@ -18,7 +18,9 @@ import { brokerAPI } from "../../api/BrokerEndpoint";
 import axios from "axios";
 import { BiSolidMessageRoundedDots } from "react-icons/bi";
 import { BiMessageRoundedMinus } from "react-icons/bi";
-
+import { Tooltip } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import shadowImage from "../../../imgs/logo/shadow.png";
 const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
   // const [toggleTabs, setToggleTabs] = useState(1);
   // Loading state
@@ -154,6 +156,23 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
   const loadMore = () => {
     setVisibleFeedbacks((prev) => prev + 10);
   };
+  const theme = createTheme({
+    components: {
+      MuiTooltip: {
+        styleOverrides: {
+          tooltip: {
+            fontSize: "1.2rem", // Adjust font size
+            width: "11rem",
+            textAlign: "center",
+            backgroundColor: "var(--primary-color)",
+          },
+          arrow: {
+            color: "var(--primary-color)",
+          },
+        },
+      },
+    },
+  });
 
   if (loading) {
     return (
@@ -260,7 +279,7 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
                   className="focus:ring-1 focus:ring-blue-500 focus:border-blue-500 border border-gray-300 rounded-lg p-2 w-full focus:outline-none transition text-lg"
                 />
               </div>
-              <h1>Contact: O</h1>
+              {/* <h1>Contact: O</h1> */}
 
               {filteredContacts.map((user, id) => {
                 return (
@@ -275,7 +294,7 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
                           css.Popup_Info_Main_right_tabs_contact_right_companies_list
                         }
                       >
-                        <img src={user.profileImage} alt="User Profile" />
+                        <img src={user.profileImage ? user.profileImage : shadowImage} alt="User Profile" />
                         <div
                           className={
                             css.Popup_Info_Main_right_tabs_contact_right_companies_list_details
@@ -291,7 +310,9 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
                             </span>
                             <span>
                               <strong>Phone:</strong>
-                              <strong>{user.phoneNumber}</strong>
+                              <strong className="hover:border-b-2 hover:border-blue-600 outline-none ">
+                                {user.phoneNumber}
+                              </strong>
                             </span>
                             <span>
                               <strong>Fax:</strong>
@@ -299,14 +320,22 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
                             </span>
                             <span>
                               <strong>Email:</strong>
-                              <strong>
-                                <a
-                                  href={`mailto:${user.email}`}
-                                  className="!lowercase"
+                              <ThemeProvider theme={theme}>
+                                <Tooltip
+                                  title={`Contact ${user.firstName}`}
+                                  arrow
+                                  placement="top"
                                 >
-                                  {user.email}
-                                </a>
-                              </strong>
+                                  <strong>
+                                    <a
+                                      href={`mailto:${user.email}`}
+                                      className="!lowercase text-[9pt]  hover:border-b-2 hover:border-blue-600 outline-none "
+                                    >
+                                      {user.email}
+                                    </a>
+                                  </strong>
+                                </Tooltip>
+                              </ThemeProvider>
                             </span>
                           </div>
                         </div>
@@ -590,10 +619,11 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
               {Array.isArray(contactProfileImgs) &&
               contactProfileImgs.length > 0 ? (
                 contactProfileImgs.map((img, ind) => (
-                  <div key={ind} className="border rounded-lg p-2">
+                  <div key={ind} >
                     <img
-                      src={img} // Fallback if the image is empty/null
+                      src={img || shadow } // Fallback if the image is empty/null
                       alt="Company Photos"
+                      className="border rounded-xl p-2 w-44 h-44 object-cover"
                       // className="!w-20 !h-20 !object-cover !rounded-md !border"
                     />
                   </div>
