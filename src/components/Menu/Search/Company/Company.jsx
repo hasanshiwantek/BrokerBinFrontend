@@ -9,6 +9,7 @@ import css from "../../../../styles/Menu/Manage/MyProfile.module.css";
 import CompanySearch from "../Inventory/CompanySearch";
 import axios from "axios";
 import { brokerAPI } from '@/components/api/BrokerEndpoint'
+import { countriesList, regionsList, statesList } from '@/data/services'
 
 const SearchCompany = () => {
     const [loading, setLoading] = useState(false); // To track API call status
@@ -96,6 +97,10 @@ const SearchCompany = () => {
         }
     };
 
+    const selectedCountries = ["USA", "CAN"];
+
+    const combineStates = selectedCountries.flatMap((country) => statesList[country] || []);
+
     return (
         <>
             <main className={styles.main}>
@@ -167,8 +172,13 @@ const SearchCompany = () => {
                                 id="state"
                                 value={formData.state}
                                 onChange={handleInputChange}
-                            >
+                                >
                                 <option value="">All</option>
+                                {combineStates.map((state) => (
+                                <option key={state.value} value={state.value}>
+                                    {state.label}
+                                </option>
+                            ))}
                             </select>
                         </div>
 
@@ -192,6 +202,12 @@ const SearchCompany = () => {
                                 onChange={handleInputChange}
                             >
                                 <option value="">All</option>
+                                {countriesList.filter((country) => country.label !== "N/A")
+                                .map((country) => (
+                                    <option key={country.value} value={country.value}>
+                                        {country.label}
+                                    </option>
+                                ))}
 
                             </select>
                         </div>
@@ -205,13 +221,12 @@ const SearchCompany = () => {
                                 onChange={handleInputChange}
                             >
                                 <option value="">All</option>
-                                <option value="NorthAmerica">North America</option>
-                                <option value="SouthAmerica">South America</option>
-                                <option value="Africa">Africa</option>
-                                <option value="MiddleEast">Middle East</option>
-                                <option value="Europe">Europe</option>
-                                <option value="Oceania">Oceania</option>
-                                <option value="Asia">Asia</option>
+                               {regionsList.filter((region) => region.label !== "N/A")
+                               .map((region) => (
+                                <option key={region.value} value={region.value}>
+                                    {region.label}
+                                </option>
+                               ))}
                             </select>
                         </div>
 
