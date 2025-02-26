@@ -25,7 +25,7 @@ const MyContact = () => {
   let [viewAsCountry, setViewAsCountry] = useState(false);
   let [viewAsState, setViewAsState] = useState(false);
   const { myVendor, loading } = useSelector((store) => store.toolsStore);
-  console.log("MY Vendors", myVendor)
+  console.log("MY Vendors", myVendor);
 
   const dispatch = useDispatch();
 
@@ -43,11 +43,10 @@ const MyContact = () => {
     dispatch(fetchUserData({ id, token }));
   }, []);
 
-  const companyId = initialData?.company?.id
-  console.log("Company ID", companyId)
+  const companyId = initialData?.company?.id;
+  console.log("Company ID", companyId);
 
   const [feedbackData, setFeedbackData] = useState(null);
-
 
   // useEffect(() => {
   //   const fetchData = async () => {
@@ -62,17 +61,22 @@ const MyContact = () => {
   //       console.log("RATINGDATA", feedbackData);
   //     } catch (error) {
   //       console.log("ERRORRATIMG", error)
-  //     } 
+  //     }
   //   }
   //   fetchData();
   // }, [companyId])
 
   // Extract ratings and counts for each company
 
-  const companyRatings = myVendor?.map((vendor) => vendor?.company?.rating) || [];
-  const ratingCounts = myVendor?.map((vendor) => vendor?.company?.ratingCount) || [];
+  const companyRatings =
+    myVendor?.map((vendor) => vendor?.company?.rating) || [];
+  const ratingCounts =
+    myVendor?.map((vendor) => vendor?.company?.ratingCount) || [];
 
-  console.log("Company Ratings in %:", companyRatings.map(rating => (rating / 5) * 100));
+  console.log(
+    "Company Ratings in %:",
+    companyRatings.map((rating) => (rating / 5) * 100)
+  );
 
   console.log("Rating Counts:", ratingCounts);
   const handleHover = (index) => {
@@ -117,11 +121,13 @@ const MyContact = () => {
     // }
   }, []);
 
+
+
+
+
   if (loading) {
     return <p>Loading...</p>;
   }
-
-
 
   return (
     <>
@@ -132,8 +138,10 @@ const MyContact = () => {
               <li>
                 <NavLink
                   to="/myprofile"
-                  end  // This ensures the exact match for /myprofile
-                  className={({ isActive }) => (isActive ? myProfile.active : '')}
+                  end // This ensures the exact match for /myprofile
+                  className={({ isActive }) =>
+                    isActive ? myProfile.active : ""
+                  }
                 >
                   <span>Personal Info</span>
                 </NavLink>
@@ -157,7 +165,9 @@ const MyContact = () => {
               <li>
                 <NavLink
                   to="/myprofile/MyContact"
-                  className={({ isActive }) => (isActive ? myProfile.active : '')}
+                  className={({ isActive }) =>
+                    isActive ? myProfile.active : ""
+                  }
                 >
                   <span>My Vendors</span>
                 </NavLink>
@@ -165,7 +175,9 @@ const MyContact = () => {
               <li>
                 <NavLink
                   to="/myprofile/broadcastfilter"
-                  className={({ isActive }) => (isActive ? myProfile.active : '')}
+                  className={({ isActive }) =>
+                    isActive ? myProfile.active : ""
+                  }
                 >
                   <span>Broadcast Filters</span>
                 </NavLink>
@@ -194,7 +206,6 @@ const MyContact = () => {
             </div>
           </div>
           <div className={css.myVendor}>
-            
             {viewAsCompany && (
               <>
                 <div className={css.myVendor_link}>
@@ -244,21 +255,42 @@ const MyContact = () => {
                           </div>
                           <div className={css.myVendor_company_list_main_info}>
                             <span>
-                              <p >{vendor.company.name}</p>
+                              <p>{vendor.company.name}</p>
                               {/* Ratings Display */}
-                              <div className={css.gridHome1_MemberDetail_reviews_stars}>
-                                <div style={{ display: "flex", alignItems: "center" }}>
+                              <div
+                                className={
+                                  css.gridHome1_MemberDetail_reviews_stars
+                                }
+                              >
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                  }}
+                                >
                                   {[...Array(5)].map((_, starIndex) => {
                                     const rating = companyRatings?.[index] || 0; // Get company-specific rating
-                                    const isFilled = starIndex + 1 <= Math.floor(rating);
-                                    const isPartial = starIndex < rating && starIndex + 1 > Math.floor(rating);
+                                    const isFilled =
+                                      starIndex + 1 <= Math.floor(rating);
+                                    const isPartial =
+                                      starIndex < rating &&
+                                      starIndex + 1 > Math.floor(rating);
 
                                     return (
                                       <FaStar
                                         key={starIndex}
                                         size={24}
-                                        color={isFilled ? "#FFD700" : isPartial ? "rgba(255, 215, 0, 0.5)" : "#CCC"}
-                                        style={{ cursor: "pointer", marginRight: 4 }}
+                                        color={
+                                          isFilled
+                                            ? "#FFD700"
+                                            : isPartial
+                                            ? "rgba(255, 215, 0, 0.5)"
+                                            : "#CCC"
+                                        }
+                                        style={{
+                                          cursor: "pointer",
+                                          marginRight: 4,
+                                        }}
                                       />
                                     );
                                   })}
@@ -267,13 +299,23 @@ const MyContact = () => {
                                 {/* Display Rating Value & Count */}
                                 <p>
                                   Average Rating: (
-                                  {companyRatings[index] == null || isNaN(companyRatings[index])
+                                  {companyRatings[index] == null ||
+                                  isNaN(companyRatings[index])
                                     ? "N/A"
-                                    : ((Math.min(Math.max(companyRatings[index], 0), 5) / 5) * 100).toFixed(1) + "%"}
+                                    : (
+                                        (Math.min(
+                                          Math.max(companyRatings[index], 0),
+                                          5
+                                        ) /
+                                          5) *
+                                        100
+                                      ).toFixed(1) + "%"}
                                   )
                                 </p>
 
-                                <p>Total Reviews: {ratingCounts?.[index] || "0"}</p>
+                                <p>
+                                  Total Reviews: {ratingCounts?.[index] || "0"}
+                                </p>
                               </div>
                             </span>
                             <span>
