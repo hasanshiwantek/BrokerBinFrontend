@@ -23,15 +23,14 @@ const SearchResults = () => {
   const { togglePopUp, popupCompanyDetail } = useSelector((state) => state.searchProductStore)
 
   const openCompanyModal = (company) => {
-      console.log("Opening Company Modal with Company:", company);
-      dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
-      dispatch(setTogglePopUp()); // Show company modal
-    };
-  
+    console.log("Opening Company Modal with Company:", company);
+    dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
+    dispatch(setTogglePopUp()); // Show company modal
+  };
+
   const company = searchResults.map(results => results?.company).filter(Boolean);
   console.log("COMPANY", company)
 
-  
   return (
     <main className="mainSec">
       <nav className="menu-bar">
@@ -64,20 +63,20 @@ const SearchResults = () => {
                     alt="profile-image"
                     onError={(e) => (e.target.src = profileImg)} // If image fails to load, use fallback
                   />
-                  <p 
-                  style={{ textAlign: "center" }} 
-                  className="font-semibold cursor-pointer"
-                  onClick={() => openCompanyModal(val.company)}
+                  <p
+                    style={{ textAlign: "center" }}
+                    className="font-semibold cursor-pointer"
+                    onClick={() => openCompanyModal(val.company)}
                   >
-                      {val.firstName || ""} 
+                    {val.firstName || ""}
                   </p>
                 </div>
 
                 <div className="profile-details font-medium">
-                  <p 
+                  <p
                   >
                     Company: <button className="text-black"
-                    onClick={() => openCompanyModal(val.company)}> {val.company?.name || ""}</button>
+                      onClick={() => openCompanyModal(val.company)}> {val.company?.name || ""}</button>
                   </p>
                   <p>
                     Title: {val.specialty || ""}
