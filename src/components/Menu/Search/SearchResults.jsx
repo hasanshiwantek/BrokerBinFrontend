@@ -37,10 +37,8 @@ const SearchResults = () => {
     dispatch(setTogglePopUp()); // Show company modal
   };
 
-  const company = searchResults
-    .map((results) => results?.company)
-    .filter(Boolean);
-  console.log("COMPANY", company);
+  const company = searchResults.map(results => results?.company).filter(Boolean);
+  console.log("COMPANY", company)
 
   const theme = createTheme({
     components: {
@@ -99,8 +97,7 @@ const SearchResults = () => {
                     });
                   }
                 }}
-                className="cursor-pointer text-black font-semibold px-2 py-1
-                "
+                className="cursor-pointer text-black font-semibold px-2 py-1"
               >
                 {letter}
               </Link>
@@ -134,7 +131,7 @@ const SearchResults = () => {
                         className="font-semibold cursor-pointer text-center "
                         onClick={() => openCompanyModal(val.company)}
                       >
-                        {val.firstName || ""} {val.lastName || ""}
+                        {val.firstName || ""} 
                       </p>
                     </div>
 
