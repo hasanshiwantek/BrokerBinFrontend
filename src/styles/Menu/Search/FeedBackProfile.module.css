@@ -305,12 +305,12 @@
     /* overflow: scroll; */
   }
      
-  label {
+  .formSection label {
     display: flex; /* Flex for label and input alignment */
     flex-direction: column; /* Stack label above input */
   }
   
-  input, select, textarea {
+  .formSection input, select, textarea {
     padding: 3px; 
     margin-top: 3px; 
     border: 1px solid #ccc; /* Border for input fields */

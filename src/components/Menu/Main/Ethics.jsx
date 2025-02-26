@@ -12,6 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import styles from "../../../styles/Menu/Manage/MyProfile.module.css";
 import { NavLink } from "react-router-dom";
+
 const Ethics = () => {
   const token = Cookies.get("token");
   const dispatch = useDispatch();

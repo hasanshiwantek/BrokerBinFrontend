@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import css from "../../../../styles/Menu/Manage/MyProfile.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import styles from "../../../../styles/Menu/Search/Person.module.css"
+import styles from "../../../../styles/Menu/Search/Person.module.css";
 import FiltersSearchCompanyInventory from "../../Reports/FiltersSearchCompanyInventory";
 import CompanySearch from "./CompanySearch";
 import { submitUserSearch } from "../../../../ReduxStore/ProfleSlice";
@@ -12,27 +12,26 @@ import { countriesList, regionsList } from "../../../../data/services";
 import CompanySearchInventory from "./CompanySearchInventory";
 
 const InventorySearch = () => {
-
   const [loading, setLoading] = useState(false); // To track API call status
   const [buttonText, setButtonText] = useState("Submit");
   const token = Cookies.get("token");
   const { inventorySearchData } = useSelector((state) => state.inventoryStore);
-  console.log(inventorySearchData)
-
+  console.log(inventorySearchData);
   const [formData, setFormData] = useState({
-    part: '',
-    heci: '',
-    description: '',
-    manufacturer: '',
-    partHeci: '',
-    keyword: '',
-    condition: '',
-    company: '',
-    state: '',
-    country: '',
-    region: '',
-    shipDeadline: '',
-    multiplePartSearch: '',
+    part: "",
+    heci: "",
+    description: "",
+    manufacturer: "",
+    partHeci: "",
+    keyword: "",
+    condition: "",
+    company: "",
+    state: "",
+    country: "",
+    region: "",
+    shipDeadline: "", // Ensure this key exists
+    deadlinePeriod: "PM", // New key for AM/PM selection
+    multiplePartSearch: "",
   });
 
   const dispatch = useDispatch();
@@ -42,7 +41,7 @@ const InventorySearch = () => {
     const { name, value } = e.target;
     setFormData({
       ...formData, // Preserve other field values
-      [name]: value // Update current field
+      [name]: value, // Update current field
     });
   };
 
@@ -56,7 +55,9 @@ const InventorySearch = () => {
       // Include page and pageSize in the formData
       const updatedFormData = { ...formData, page: 1, pageSize: 20 };
 
-      const result = await dispatch(inventorySearch({ data: updatedFormData, token })).unwrap();
+      const result = await dispatch(
+        inventorySearch({ data: updatedFormData, token })
+      ).unwrap();
 
       console.log("API Result:", result);
       if (result.length === 0) {
@@ -68,7 +69,11 @@ const InventorySearch = () => {
 
         // Pass the updated formData and results to the results page
         navigate("/inventory-searchResult", {
-          state: { searchResults: result, pagination, filters: updatedFormData },
+          state: {
+            searchResults: result,
+            pagination,
+            filters: updatedFormData,
+          },
         });
       }
     } catch (error) {
@@ -80,25 +85,23 @@ const InventorySearch = () => {
     }
   };
 
-
-
   const resetHandler = () => {
     setFormData({
-      part: '',
-      heci: '',
-      description: '',
-      manufacturer: '',
-      keyword: '',
-      condition: '',
-      partHeci: '',
-      company: '',
-      state: '',
-      country: '',
-      region: '',
-      shipDeadline: '',
-      multiplePartSearch: '',
+      part: "",
+      heci: "",
+      description: "",
+      manufacturer: "",
+      keyword: "",
+      condition: "",
+      partHeci: "",
+      company: "",
+      state: "",
+      country: "",
+      region: "",
+      shipDeadline: "",
+      multiplePartSearch: "",
     });
-  }
+  };
 
   return (
     <>
@@ -110,8 +113,8 @@ const InventorySearch = () => {
                 <li>
                   <NavLink
                     to="/search/Inventory"
-                    end  // This ensures the exact match for /myprofile
-                    className={({ isActive }) => (isActive ? css.active : '')}
+                    end // This ensures the exact match for /myprofile
+                    className={({ isActive }) => (isActive ? css.active : "")}
                   >
                     <span>Inventory</span>
                   </NavLink>
@@ -119,7 +122,7 @@ const InventorySearch = () => {
                 <li>
                   <NavLink
                     to="/search/Company"
-                    className={({ isActive }) => (isActive ? css.active : '')}
+                    className={({ isActive }) => (isActive ? css.active : "")}
                   >
                     <span>Company</span>
                   </NavLink>
@@ -127,7 +130,7 @@ const InventorySearch = () => {
                 <li>
                   <NavLink
                     to="/person"
-                    className={({ isActive }) => (isActive ? css.active : '')}
+                    className={({ isActive }) => (isActive ? css.active : "")}
                   >
                     <span>Person</span>
                   </NavLink>
@@ -137,8 +140,10 @@ const InventorySearch = () => {
 
             <div className={`${css.profileInfo_form} !flex !flex-col`}>
               <h2 style={{ margin: "" }}>Inventory Search</h2>
-              <div className={'!flex !flex-col '}>
-                <div className={`!flex !flex-col !text-right !px-[5vw] !gap-[.5vw] `}>
+              <div className={"!flex !flex-col "}>
+                <div
+                  className={`!flex !flex-col !text-right !px-[5vw] !gap-[.5vw] `}
+                >
                   <span className="!flex !justify-end ">
                     <label htmlFor="part">Part#</label>
                     <input
@@ -157,11 +162,11 @@ const InventorySearch = () => {
                       name="multiplePartSearch"
                       id="multiplePartSearch"
                       onChange={handleChange}
-                      value={formData.part}
+                      value={formData.multiplePartSearch}
                       className="ml-[1vw]"
                     />
                   </span>
-                  <span  className="!flex !justify-end ">
+                  <span className="!flex !justify-end ">
                     <label htmlFor="heci">HECI</label>
                     <input
                       type="text"
@@ -172,7 +177,7 @@ const InventorySearch = () => {
                       className="ml-[1vw]"
                     />
                   </span>
-                  <span  className="!flex !justify-end ">
+                  <span className="!flex !justify-end ">
                     <label htmlFor="Description">Description</label>
                     <input
                       type="text"
@@ -181,10 +186,9 @@ const InventorySearch = () => {
                       onChange={handleChange}
                       value={formData.description}
                       className="ml-[1vw]"
-
                     />
                   </span>
-                  <span  className="!flex !justify-end ">
+                  <span className="!flex !justify-end ">
                     <label htmlFor="manufacturer">Manufacturer</label>
                     <input
                       type="text"
@@ -193,7 +197,6 @@ const InventorySearch = () => {
                       onChange={handleChange}
                       value={formData.manufacturer}
                       className="ml-[1vw]"
-
                     />
                   </span>
                   <h2>Keyword Searches</h2>
@@ -207,7 +210,7 @@ const InventorySearch = () => {
                       value={formData.partHeci}
                     />
                   </span>
-                  <span  className="!flex !justify-end ">
+                  <span className="!flex !justify-end ">
                     <label htmlFor="keyword">Keyword</label>
                     <input
                       type="text"
@@ -216,10 +219,9 @@ const InventorySearch = () => {
                       onChange={handleChange}
                       value={formData.keyword}
                       className="ml-[1vw]"
-
                     />
                   </span>
-                  <div   className="!flex !justify-end ">
+                  <div className="!flex !justify-end ">
                     <label htmlFor="condition">Condition</label>
                     <select
                       name="condition"
@@ -227,7 +229,6 @@ const InventorySearch = () => {
                       value={formData.condition}
                       onChange={handleChange}
                       className="ml-[1vw] border-2"
-
                     >
                       <option value="">All</option>
                       <option value="NEW">NEW</option>
@@ -241,9 +242,12 @@ const InventorySearch = () => {
                       <option value="USED">USED</option>
                     </select>
                   </div>
-                
-                  <span  className="!flex !justify-end ">
-                    <CompanySearchInventory setFormData={setFormData} formData={formData} />
+
+                  <span className="!flex !justify-end ">
+                    <CompanySearchInventory
+                      setFormData={setFormData}
+                      formData={formData}
+                    />
                   </span>
 
                   <div className={"flex flex-col gap-4"}>
@@ -255,16 +259,15 @@ const InventorySearch = () => {
                         value={formData.country}
                         onChange={handleChange}
                         className="ml-[1vw] w-72 border-2"
-
                       >
-                        {
-                          countriesList.map((country) => <option key={country.value} value={country.value}>{country.label}</option>)
-                        }
-
+                        {countriesList.map((country) => (
+                          <option key={country.value} value={country.value}>
+                            {country.label}
+                          </option>
+                        ))}
                       </select>
                     </div>
-                    <div  className="!flex !justify-end ">
-
+                    <div className="!flex !justify-end ">
                       <label htmlFor="Region">Region</label>
                       <select
                         name="region"
@@ -273,37 +276,66 @@ const InventorySearch = () => {
                         onChange={handleChange}
                         className="ml-[1vw] w-72 border-2"
                       >
-                        {
-                          regionsList.map((region) => <option key={region.value} value={region.value}>{region.label}</option>)
-                        }
+                        {regionsList.map((region) => (
+                          <option key={region.value} value={region.value}>
+                            {region.label}
+                          </option>
+                        ))}
                       </select>
                     </div>
 
-                    <div   className="!flex !justify-end ">
-                      <label htmlFor="ShipDeadline">ShipDeadline</label>
+                    <div className="!flex !justify-end gap-4 !items-center">
+                      <label htmlFor="shipDeadline">ShipDeadline</label>
                       <select
-                        name="ShipDeadline"
+                        name="shipDeadline" // Corrected name
                         className="border-2"
-                        id="region"
-                        value={formData.region}
-                        onChange={handleChange}
+                        id="shipDeadline"
+                        value={formData.shipDeadline} // Corrected value binding
+                        onChange={handleChange} // Ensure state updates
                       >
-                        <option value="">All</option>
+                        <option value="">Open</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
                       </select>
 
+                      <select
+                        name="deadlinePeriod" // New name for AM/PM selection
+                        className="border-2"
+                        value={formData.deadlinePeriod || "PM"} // Default to "PM"
+                        onChange={handleChange} // Ensure it updates state
+                      >
+                        <option value="PM">PM</option>
+                        <option value="AM">AM</option>
+                      </select>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             <div className="flex justify-between">
-              <button className="transform active:scale-90 transition-all duration-100 cursor-pointer p-3 text-white border rounded-lg bg-[#2c83ec]"
-                onClick={resetHandler} type="button">Reset</button>
+              <button
+                className="transform active:scale-90 transition-all duration-100 cursor-pointer p-3 text-white border rounded-lg bg-[#2c83ec]"
+                onClick={resetHandler}
+                type="button"
+              >
+                Reset
+              </button>
               <button
                 type="submit"
                 disabled={loading} // Disable the button while processing
-                className={`transform active:scale-90 transition-all duration-100 cursor-pointer p-3 text-white border rounded-lg ${loading ? "bg-[#2c83ec] opacity-50 " : "bg-[#2c83ec]"
-                  }`}
+                className={`transform active:scale-90 transition-all duration-100 cursor-pointer p-3 text-white border rounded-lg ${
+                  loading ? "bg-[#2c83ec] opacity-50 " : "bg-[#2c83ec]"
+                }`}
               >
                 {buttonText}
               </button>

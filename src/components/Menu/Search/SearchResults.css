@@ -1,52 +1,51 @@
-
 .search-results-container {
-    display: flex;
-    flex-direction: column; 
-    gap: 20px;
-    border: 1px solid gray;
-    /* padding: 15px;  */
-    margin: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border: 1px solid gray;
+  /* padding: 15px;  */
+  margin: 8px 37px;
+  position: relative;
 }
 
 .contact-info {
-    display: flex; 
-    align-items: flex-start; 
-    gap: 20px; 
-    border-bottom: 1px solid gray; 
-    background-color: #f1eded;
-    padding: 15px 25px; 
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  border-bottom: 1px solid gray;
+  background-color: #f1eded;
+  padding: 10px 15px;
 }
 
 .profile-image img {
-    border: 1px solid gray; 
-    height: 100px;
-    width: 100px; 
+  border: 1px solid gray;
+  height: 100px;
+  width: 100px;
 }
 
 .profile-details {
-    flex: 1; 
+  flex: 1;
 }
-.profile-details p{
-    margin-top: 2px;
+.profile-details p {
+  margin-top: 2px;
 }
 .notes-rating {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .notes textarea {
-    width: 200px; 
-    height: 80px;
+  width: 200px;
+  height: 80px;
 }
 
 .rating select {
-    width: 100px; 
+  width: 100px;
 }
 
-
-.mainSec nav ul li a{
-    font-size: 14px;
-    font-weight: 400;
-    color: #444;
-  }
+.mainSec nav ul li a {
+  font-size: 14px;
+  font-weight: 400;
+  color: #444;
+}
