@@ -170,7 +170,7 @@ const FiltersSearchCompanyInventory = () => {
                     <li
                       key={company.id}
                       onClick={() => handleCompanySelect(company)}
-                      className={css.companyItem}
+                      className={`${css.companyItem} `}
                     >
                       <p>{company.name}</p>
                       {company.region && company.country && (

@@ -294,7 +294,12 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
                           css.Popup_Info_Main_right_tabs_contact_right_companies_list
                         }
                       >
-                        <img src={user.profileImage ? user.profileImage : shadowImage} alt="User Profile" />
+                        <img
+                          src={
+                            user.profileImage ? user.profileImage : shadowImage
+                          }
+                          alt="User Profile"
+                        />
                         <div
                           className={
                             css.Popup_Info_Main_right_tabs_contact_right_companies_list_details
@@ -619,9 +624,9 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
               {Array.isArray(contactProfileImgs) &&
               contactProfileImgs.length > 0 ? (
                 contactProfileImgs.map((img, ind) => (
-                  <div key={ind} >
+                  <div key={ind}>
                     <img
-                      src={img || shadow } // Fallback if the image is empty/null
+                      src={img || shadow} // Fallback if the image is empty/null
                       alt="Company Photos"
                       className="border rounded-xl p-2 w-44 h-44 object-cover"
                       // className="!w-20 !h-20 !object-cover !rounded-md !border"

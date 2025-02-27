@@ -196,6 +196,8 @@ const CompanyDetails = ({ closeModal }) => {
               {/* <button type="button" className="">
                 <FaExternalLinkAlt />
               </button> */}
+               <ThemeProvider theme={theme}>
+               <Tooltip title="Close Profile" arrow placement="top">
               <button
                 type="button"
                 onClick={() => closeModal()}
@@ -203,6 +205,8 @@ const CompanyDetails = ({ closeModal }) => {
               >
                 <FaRegWindowClose />
               </button>
+              </Tooltip>
+              </ThemeProvider>
             </div>
           </div>
           <div className={css.Popup_Info_Main}>
@@ -213,7 +217,7 @@ const CompanyDetails = ({ closeModal }) => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                <img src={companyContactData.data?.company?.image} />
+                  <img src={companyContactData.data?.company?.image} />
                 </a>
               </div>
               {/* <div className={css.Popup_Info_Main_left_actions}>
@@ -239,63 +243,65 @@ const CompanyDetails = ({ closeModal }) => {
                 </div>
               </div> */}
               <div className={css.Popup_Info_Main_left_comments}>
-              <ThemeProvider theme={theme}>
-              <Tooltip title="View Comments" arrow placement="top" >
-                <div>
-                  <div className={css.gridHome1_MemberDetail_reviews_stars}>
-                    <div
-                      data-v-217e3916=""
-                      class="vue-rate-it-rating"
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
-                    >
-                      <div
-                        style={{ display: "flex", alignItems: "center" }}
-                        onClick={() => setToggleTabs(5)}
-                      >
-                        {[...Array(5)].map((_, index) => {
-                          const isFilled = index + 1 <= Math.floor(ratings); // Full yellow stars
-                          const isPartial =
-                            index < ratings && index + 1 > Math.floor(ratings); // Partial yellow star
+                <ThemeProvider theme={theme}>
+                  <Tooltip title="View Comments" arrow placement="top">
+                    <div>
+                      <div className={css.gridHome1_MemberDetail_reviews_stars}>
+                        <div
+                          data-v-217e3916=""
+                          class="vue-rate-it-rating"
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                          }}
+                        >
+                          <div
+                            style={{ display: "flex", alignItems: "center" }}
+                            onClick={() => setToggleTabs(5)}
+                          >
+                            {[...Array(5)].map((_, index) => {
+                              const isFilled = index + 1 <= Math.floor(ratings); // Full yellow stars
+                              const isPartial =
+                                index < ratings &&
+                                index + 1 > Math.floor(ratings); // Partial yellow star
 
-                          return (
-                            <FaStar
-                              key={index}
-                              size={24}
-                              color={
-                                isFilled
-                                  ? "#FFD700"
-                                  : isPartial
-                                  ? "rgba(255, 215, 0, 0.5)"
-                                  : "#CCC"
-                              } // Partial star is dim yellow
-                              style={{ cursor: "pointer", marginRight: 4 }}
-                              onMouseEnter={() => setRating(index + 1)}
-                              // onClick={handleClick}
-                              title={handleHover(index + 1)} // Tooltip text
-                            />
-                          );
-                        })}
+                              return (
+                                <FaStar
+                                  key={index}
+                                  size={24}
+                                  color={
+                                    isFilled
+                                      ? "#FFD700"
+                                      : isPartial
+                                      ? "rgba(255, 215, 0, 0.5)"
+                                      : "#CCC"
+                                  } // Partial star is dim yellow
+                                  style={{ cursor: "pointer", marginRight: 4 }}
+                                  onMouseEnter={() => setRating(index + 1)}
+                                  // onClick={handleClick}
+                                  title={handleHover(index + 1)} // Tooltip text
+                                />
+                              );
+                            })}
+                          </div>
+                          <a href="#">
+                            {feedbackData?.rating?.averageRating
+                              ? `${(
+                                  (feedbackData.rating.averageRating / 5) *
+                                  100
+                                ).toFixed(1)}%`
+                              : "100%"}
+                          </a>
+                        </div>
+                        <h1 className="text-center pt-2">
+                          {" "}
+                          ({feedbackData?.rating?.totalFeedbacks || 0})
+                          Feedbacks
+                        </h1>
                       </div>
-                      <a href="#">
-                        {feedbackData?.rating?.averageRating
-                          ? `${(
-                              (feedbackData.rating.averageRating / 5) *
-                              100
-                            ).toFixed(1)}%`
-                          : "100%"}
-                      </a>
                     </div>
-                    <h1 className="text-center pt-2">
-                      {" "}
-                      ({feedbackData?.rating?.totalFeedbacks || 0}) Feedbacks
-                    </h1>
-                  </div>
-                </div>
-                </Tooltip>
+                  </Tooltip>
                 </ThemeProvider>
                 {/* <div>
                   <span>(3) comments</span>
@@ -313,33 +319,33 @@ const CompanyDetails = ({ closeModal }) => {
               </p>
               <div className={css.Popup_Info_Main_right_productInfo}>
                 <div>
-                  <strong>Product Categories:</strong>
+                  <strong className="font-semibold">Product Categories:</strong>
                   <p>{companyContactData.data?.company?.categories}</p>
                 </div>
                 <div>
-                  <strong>Mfg(s) We Carry:</strong>
+                  <strong className="font-semibold">Mfg(s) We Carry:</strong>
                   <p>{companyContactData.data?.company?.brands}</p>
                 </div>
               </div>
               <div className={css.Popup_Info_Main_right_contact}>
                 <div>
                   <span>
-                    <strong>Address:</strong>
+                    <strong className="font-semibold">Address:</strong>
                     <p>{companyContactData.data?.company?.address}</p>
                   </span>
                   <span>
-                    <strong>Phone:</strong>
+                    <strong className="font-semibold">Phone:</strong>
                     <a
-                      className="text-[8pt] hover:border-b-2 hover:border-blue-600 outline-none "
+                      className="text-[8pt]  "
                       href={`tel:${companyContactData.data?.company?.phone_num}`}
                     >
                       {companyContactData.data?.company?.phone_num}
                     </a>
                   </span>
                   <span>
-                    <strong>Website:</strong>
+                    <strong className="font-semibold">Website:</strong>
                     <ThemeProvider theme={theme}>
-                      <Tooltip title="View Website"  arrow placement="top" >
+                      <Tooltip title="View Website" arrow placement="top">
                         <a
                           className="text-[8pt] hover:border-b-2 hover:border-blue-600 outline-none "
                           href={companyContactData.data?.company?.website}
@@ -358,7 +364,7 @@ const CompanyDetails = ({ closeModal }) => {
                     map
                   </span> */}
                   <ThemeProvider theme={theme}>
-                    <Tooltip title="Show Inventory" arrow placement="top" >
+                    <Tooltip title="Show Inventory" arrow placement="top">
                       <span>
                         <FaRegListAlt />
                         <NavLink to={"/inventory"} className="cursor-pointer">
@@ -371,13 +377,16 @@ const CompanyDetails = ({ closeModal }) => {
                     <FaEnvelope />
                     email
                   </span> */}
-                    <ThemeProvider theme={theme}>
-                    <Tooltip title="Print Profile" arrow placement="top" >
-                  <span className="cursor-pointer" onClick={printCompanyModal}>
-                    <FaPrint />
-                    Print
-                  </span>
-                  </Tooltip>
+                  <ThemeProvider theme={theme}>
+                    <Tooltip title="Print Profile" arrow placement="top">
+                      <span
+                        className="cursor-pointer"
+                        onClick={printCompanyModal}
+                      >
+                        <FaPrint />
+                        Print
+                      </span>
+                    </Tooltip>
                   </ThemeProvider>
                 </div>
               </div>
