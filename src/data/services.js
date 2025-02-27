@@ -70,8 +70,6 @@ export const regionsList = [
   { label: 'Asia', value: 'Asia', id: 'Asia' },
 ];
 
-
-
 export const countriesList = [
   { value: "", label: "N/A" },
   { value: "USA", label: "UNITED STATES" },
@@ -482,8 +480,6 @@ export const computers = [
   { id: "tape_media_medical", label: "Tape Media Medical", value: "Tape Media Medical" },
   { id: "other", label: "Other", value: "Other" },
 ];
-
-
 
 export const initialMFGs = ["3COM", "3DLABS", "3M", "3RD PARTY", "3WARE", "A-POWER", "AAEON", "ABBOT", "ABIT", "ABLECOM"];
 

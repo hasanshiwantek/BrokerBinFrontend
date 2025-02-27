@@ -19,15 +19,12 @@ const SearchCompany = () => {
     // State variables to track input values
     const [formData, setFormData] = useState({
         company: '',
-        shieldMembers: 0,
-        newMembers: 0,
+        newMembers: null,
         city: '',
         zip: '',
         country: '',
         region: '',
         areaCode: '',
-        association: '',
-        certification: '',
         manufacturer: '',
         products: '',
         categories: '',
@@ -39,28 +36,35 @@ const SearchCompany = () => {
     const navigate = useNavigate(); // Initialize useNavigate
     // Handle change in input/select fields
 
+    // const handleInputChange = (e) => {
+    //     const { name, value } = e.target;
+    //     setFormData({
+    //         ...formData, // Preserve other field values
+    //         [name]: value // Update current field
+    //     });
+    // };
+
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData, // Preserve other field values
-            [name]: value // Update current field
-        });
+        const { name, type, checked, value } = e.target;
+        setFormData((prev) => ({
+            ...prev, // Preserve other field values
+            [name]: type === "checkbox" ? checked : value, // Update current field
+        }));
     };
 
     const resetHandler = () => {
         setFormData({
-            part: '',
-            heci: '',
-            description: '',
-            manufacturer: '',
-            keywords: '',
-            condition: '',
-            category: '',
             company: '',
-            state: '',
+            newMembers: null,
+            city: '',
+            zip: '',
             country: '',
             region: '',
-            shipDeadline: '',
+            areaCode: '',
+            manufacturer: '',
+            products: '',
+            categories: '',
+            keywords: '',
         });
     }
 
@@ -91,6 +95,7 @@ const SearchCompany = () => {
         } catch (error) {
             console.error('Error fetching user search data:', error);
             alert('An error occurred while fetching data.');
+            resetHandler();
         } finally {
             setLoading(false);
             setButtonText("Submit");
