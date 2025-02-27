@@ -42,22 +42,44 @@ const RightSidebar = ({ company }) => {
   };
 
 
+  // const applyFilters = async () => {
+  //   try {
+  //     const queryParams = new URLSearchParams();
+
+  //     filters.country.forEach(country => queryParams.append("country", country));
+  //     filters.region.forEach(region => queryParams.append("region", region));
+  //     filters.state.forEach(state => queryParams.append("state", state));
+
+
+  //     const { data } = await axios.post(`${brokerAPI}company/company-search${queryParams}`);
+  //     setFilteredData(data);
+  //     setShowFilters(false);
+  //   } catch (error) {
+  //     console.error("Error fetching filtered companies:", error);
+  //   }
+  // };
+
   const applyFilters = async () => {
     try {
-      const queryParams = new URLSearchParams();
-
-      filters.country.forEach(country => queryParams.append("country", country));
-      filters.region.forEach(region => queryParams.append("region", region));
-      filters.state.forEach(state => queryParams.append("state", state));
-
-
-      const { data } = await axios.post(`${brokerAPI}company/company-search${queryParams}`);
+      const payload ={
+        data : {
+        country: filters.country,
+        region: filters.region,
+        state: filters.state,
+        // state: filters.state.length ? filters.state.join(",") : "",
+        // country: filters.country.length ? filters.country.join(",") : "",
+        }
+      }
+      const {data} = await axios.post(`${brokerAPI}company/company-search`, payload,
+        {headers: {Authorization: `Bearer ${token}`}},
+        // console.log("TOKEN", token)
+      )
       setFilteredData(data);
       setShowFilters(false);
     } catch (error) {
-      console.error("Error fetching filtered companies:", error);
+      console.log("Error fetching filtered companies", error)
     }
-  };
+  }
 
   const totalResults =  company?.total ?? filteredData?.total;
 
