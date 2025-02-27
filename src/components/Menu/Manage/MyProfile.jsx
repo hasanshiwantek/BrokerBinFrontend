@@ -262,7 +262,7 @@ const MyProfile = () => {
         <div className={css.profileLayout}>
           <form onSubmit={handleSubmit}>
             <div className={css.profileBtn}>
-              <h1>My Profile</h1>
+              <h4 className="font-semibold">My Profile</h4>
               <span>
                 <input type="submit" value="submit changes" />
                 <button type="button" onClick={() => openCompanyModal(company)}>view profile</button>
@@ -554,7 +554,7 @@ const MyProfile = () => {
                   </div>
                 </div>
                 <div className={css.profileInfo_form_signature}>
-                  <h1>signature</h1>
+                  <h1>Signature</h1>
                   <div className={css.profileInfo_form_signature_group}>
                     <ul className={css.profileInfo_form_signature_checkbox}>
                       <div>

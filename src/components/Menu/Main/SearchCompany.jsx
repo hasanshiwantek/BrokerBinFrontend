@@ -112,8 +112,8 @@ const SearchCompany = ({ setFormData }) => {
                     <p>{company.name}</p>
                     {company.region && company.region && (
                       <p>
-                        <span>{company.region},</span>
-                        <span>{company.country}</span>
+                        <small>{company.region},</small>
+                        <small>{company.country}</small>
                       </p>
                     )}
                   </li>

@@ -39,7 +39,7 @@ const MapComponent = ({ company }) => {
                                 position={{ lat: company.latitude + 0.0500, lng: company.longitude }}
                                 onCloseClick={() => setSelectedCompany(null)}
                             >
-                                <div>
+                                <div className="!overflow-hidden ">
                                     <img src={company.logo} alt="Company Logo" width="100" />
                                     <h3>{company.company}</h3>
                                     <p>{company.address}</p>
