@@ -42,6 +42,9 @@ import {
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import dp1 from "../assets/drop-down1.svg";
+import vendorIcon from "../assets/My-Vendors Icon.svg";
+import vendorIcon2 from "../assets/Untitled-3.svg"; 
+
 import dp2 from "../assets/drop-down-2.svg";
 import dp3 from "../assets/drop-down3.svg";
 import dp4 from "../assets/drop-down4.svg";
@@ -169,6 +172,7 @@ const Header = () => {
                 className={css.search_btn}
               >
                 Search
+
               </button>
               <button
                 type="submit"
@@ -375,8 +379,7 @@ const Header = () => {
                     <Tooltip title="My Contact" arrow placement="left">
                       <Link to={"/myprofile/MyContact"}>
                         <li>
-                          <img src={dp1} alt="" srcSet="" />
-                          ........
+                          <img src={vendorIcon } alt="" srcSet="" />
                         </li>
                       </Link>
                     </Tooltip>
@@ -392,7 +395,6 @@ const Header = () => {
                             srcSet=""
                             style={{ color: "black" }}
                           />
-                          ........
                         </li>
                       </Link>
                     </Tooltip>
@@ -408,7 +410,6 @@ const Header = () => {
                             srcSet=""
                             style={{ color: "black" }}
                           />
-                          ........
                         </li>
                       </Link>
                     </Tooltip>
@@ -423,7 +424,6 @@ const Header = () => {
                         srcSet=""
                         style={{ color: "black" }}
                       />
-                      ........
                     </li>
                   </Link>
                   </Tooltip>
@@ -641,7 +641,7 @@ const Header = () => {
           </ul>
           <ul className={css.nav_tools}>
             <li
-              className="gap-[1vw] cursor-pointer"
+              className="gap-1 cursor-pointer"
               onClick={() => dispatch(setToolToggle())}
             >
               tools
@@ -708,8 +708,10 @@ const Header = () => {
                 <ThemeProvider theme={theme}>
                   <Tooltip title="My Contact" arrow placement="bottom">
                     <li>
-                      <Link to={"/myprofile/MyContact"}>
-                        <BsPersonFill />
+                      <Link to={"/myprofile/MyContact"} className="w-8">
+              
+                      <img src={vendorIcon} alt="Vendor logo" />
+                      {/* <BsPeopleFill /> */}
                       </Link>
                     </li>
                   </Tooltip>

@@ -12,7 +12,11 @@ import { fetchUserData } from "../../ReduxStore/ProfleSlice";
 import LoadingState from "../../LoadingState";
 import ErrorStatus from "../Error/ErrorStatus";
 import Cookies from "js-cookie";
-import { searchProductHistory, searchProductQuery, setSelectedProducts } from "../../ReduxStore/SearchProductSlice";
+import {
+  searchProductHistory,
+  searchProductQuery,
+  setSelectedProducts,
+} from "../../ReduxStore/SearchProductSlice";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { fetchBroadCastCount } from "../../ReduxStore/BroadCast";
@@ -34,7 +38,9 @@ const Home = () => {
 
   console.log("Initial Data ", initialData);
   const { page, pageSize } = useSelector((store) => store.searchProductStore);
-  const { broadcastCount, loading } = useSelector((state) => state.broadcastStore)
+  const { broadcastCount, loading } = useSelector(
+    (state) => state.broadcastStore
+  );
   // console.log("Broadcast Count ",broadcastCount)
   const id = user?.user?.id || user_id;
 
@@ -46,9 +52,8 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(fetchBroadCastCount({ token }))
-  }, [])
-
+    dispatch(fetchBroadCastCount({ token }));
+  }, []);
 
   const bomFileRef = useRef(null);
   // <----------------------------------------------------- Access uploaded file name ------------------------------------------------------->
@@ -63,10 +68,6 @@ const Home = () => {
   if (error) {
     return <ErrorStatus error={error} />;
   }
-
-
-
-
 
   // const searchProduct = (event) => {
   //   event.preventDefault();
@@ -104,8 +105,6 @@ const Home = () => {
   //   console.log("Navigated to URL:", url); // Debug log to verify the URL
   // };
 
-
-
   // State for search input and selected searchBy option
   const [searchString, setSearchString] = useState("");
   const [searchBy, setSearchBy] = useState("part"); // Default: "Part#"
@@ -138,7 +137,9 @@ const Home = () => {
       queryParam = "query"; // Default for 'part'
     }
 
-    let url = `/inventory/search?page=1&${queryParam}=${encodeURIComponent(formattedSearch)}`;
+    let url = `/inventory/search?page=1&${queryParam}=${encodeURIComponent(
+      formattedSearch
+    )}`;
 
     // Clear selected products before navigating
     dispatch(setSelectedProducts([]));
@@ -154,7 +155,9 @@ const Home = () => {
     navigate(`${path}${query ? `?${query}` : ""}`);
   };
 
-  const { togglePopUp, popupCompanyDetail } = useSelector((state) => state.searchProductStore)
+  const { togglePopUp, popupCompanyDetail } = useSelector(
+    (state) => state.searchProductStore
+  );
   const company = initialData?.company;
   console.log("COMPANY ", company);
 
@@ -178,17 +181,14 @@ const Home = () => {
             backgroundColor: "var(--primary-color)",
           },
           arrow: {
-            color: "var(--primary-color)"
-          }
+            color: "var(--primary-color)",
+          },
         },
       },
     },
   });
 
-
   const ratingCount = initialData?.company?.ratingCount;
-
-
 
   const companyRatings = initialData?.company?.rating || [];
   const ratingCounts = initialData?.company?.ratingCount || [];
@@ -211,13 +211,8 @@ const Home = () => {
     return stars;
   };
 
-
-
-  const companyRatingsPer = ((companyRatings / 5) * 100).toFixed(1)
+  const companyRatingsPer = ((companyRatings / 5) * 100).toFixed(1);
   console.log("Company Ratings in %:", companyRatingsPer);
-
-
-
 
   return (
     <>
@@ -227,7 +222,6 @@ const Home = () => {
         <>
           <div className={css.gridHome}>
             <div className={css.gridHome1}>
-
               <div className={`mailSection ${css.mailSection}`}>
                 <div className={css.gridHome1_Bar}>
                   <MdManageAccounts />
@@ -237,22 +231,38 @@ const Home = () => {
                   </div>
                   <div className={`${css.manageDropdown} ${css.mgDrop}`}>
                     <ul>
-                      <Link to={"/inventory"}> <li>Inventory</li></Link>
-                      <Link to={"/rfq"}> <li>My RFQs</li></Link>
+                      <Link to={"/inventory"}>
+                        {" "}
+                        <li>Inventory</li>
+                      </Link>
+                      <Link to={"/rfq"}>
+                        {" "}
+                        <li>My RFQs</li>
+                      </Link>
                       {/* <Link> <li>My BOM</li></Link> */}
-                      <Link to={"/myprofile"}> <li>My Profile</li></Link>
-                      <Link to={"/mycompany"} > <li>My Company</li></Link>
+                      <Link to={"/myprofile"}>
+                        {" "}
+                        <li>My Profile</li>
+                      </Link>
+                      <Link to={"/mycompany"}>
+                        {" "}
+                        <li>My Company</li>
+                      </Link>
                       {/* <Link to={"/manage/my-services"}> <li>My Services</li></Link> */}
                       {/* <Link to={"/venprice"}> <li>Vendor Pricing</li></Link> */}
-
                     </ul>
                   </div>
                 </div>
               </div>
               <div className={css.gridHome1_MemberDetail}>
-                <div className={`${css.gridHome1_MemberDetail_profile} ${css.mailSection} `}>
-                  <div >
-                    <Link to={"/myprofile"} className="flex items-center justify-center gap-5">
+                <div
+                  className={`${css.gridHome1_MemberDetail_profile} ${css.mailSection} `}
+                >
+                  <div>
+                    <Link
+                      to={"/myprofile"}
+                      className="flex items-center justify-center gap-5"
+                    >
                       <img
                         src={
                           initialData?.profileImage
@@ -271,10 +281,15 @@ const Home = () => {
                     <BiDotsHorizontalRounded />
                   </div>
                   <div className={`${css.manageDropdown} ${css.profileMgDrop}`}>
-                    <ul >
-                      <Link to={"/myprofile"}> <li>My Profile</li></Link>
-                      <Link onClick={() => openCompanyModal(company)}> <li>My Company</li></Link>
-
+                    <ul>
+                      <Link to={"/myprofile"}>
+                        {" "}
+                        <li>My Profile</li>
+                      </Link>
+                      <Link onClick={() => openCompanyModal(company)}>
+                        {" "}
+                        <li>My Company</li>
+                      </Link>
                     </ul>
                   </div>
                 </div>
@@ -309,14 +324,17 @@ const Home = () => {
                       </ul>
                     </li> */}
 
-
                     <li className={css.gridHome1_MemberDetail_list_options}>
                       <a href="/rfq">RFQ</a>
                       <ul>
                         <li className={css.gridHome1_MemberDetail_list_numbers}>
                           <ThemeProvider theme={theme}>
-                            <Tooltip title="Total Unread" arrow placement="top" >
-                              <a onClick={() => handleNavigation("/rfq", { filter: "unread" })}>
+                            <Tooltip title="Total Unread" arrow placement="top">
+                              <a
+                                onClick={() =>
+                                  handleNavigation("/rfq", { filter: "unread" })
+                                }
+                              >
                                 {(broadcastCount?.data?.unRead || 0)
                                   .toLocaleString("en-US")
                                   .toString()
@@ -326,7 +344,11 @@ const Home = () => {
                             </Tooltip>
                           </ThemeProvider>
                           <ThemeProvider theme={theme}>
-                            <Tooltip title="Total Received" arrow placement="top" >
+                            <Tooltip
+                              title="Total Received"
+                              arrow
+                              placement="top"
+                            >
                               <a onClick={() => handleNavigation("/rfq")}>
                                 {(broadcastCount?.data?.received || 0)
                                   .toLocaleString("en-US")
@@ -337,7 +359,7 @@ const Home = () => {
                             </Tooltip>
                           </ThemeProvider>
                           <ThemeProvider theme={theme}>
-                            <Tooltip title="Total Sent" arrow placement="top" >
+                            <Tooltip title="Total Sent" arrow placement="top">
                               <a onClick={() => handleNavigation("/rfqSent")}>
                                 {(broadcastCount?.data?.sent || 0)
                                   .toLocaleString("en-US")
@@ -350,21 +372,21 @@ const Home = () => {
                       </ul>
                     </li>
 
-
-
-
                     <li className={css.gridHome1_MemberDetail_list_options}>
                       <Link to="/myprofile/myContact">My Vendors</Link>
                       <ul>
                         <li className={css.gridHome1_MemberDetail_list_numbers}>
                           <ThemeProvider theme={theme}>
-                            <Tooltip title="Vendors" arrow placement="top" >
-                              <a onClick={() => handleNavigation("/myprofile/myContact")}>
+                            <Tooltip title="Vendors" arrow placement="top">
+                              <a
+                                onClick={() =>
+                                  handleNavigation("/myprofile/myContact")
+                                }
+                              >
                                 {(broadcastCount?.data?.myVendors || 0)
                                   .toLocaleString("en-US")
                                   .toString()
                                   .padStart(2, "0")}
-
                               </a>
                             </Tooltip>
                           </ThemeProvider>
@@ -403,13 +425,20 @@ const Home = () => {
                       <ul>
                         <li className={css.gridHome1_MemberDetail_list_numbers}>
                           <ThemeProvider theme={theme}>
-                            <Tooltip title="Total Hotlists" arrow placement="top" >
-                              <a onClick={() => handleNavigation("/hotList/view")}>
+                            <Tooltip
+                              title="Total Hotlists"
+                              arrow
+                              placement="top"
+                            >
+                              <a
+                                onClick={() =>
+                                  handleNavigation("/hotList/view")
+                                }
+                              >
                                 {(broadcastCount?.data?.hotList || 0)
                                   .toLocaleString("en-US")
                                   .toString()
                                   .padStart(2, "0")}
-
                               </a>
                             </Tooltip>
                           </ThemeProvider>
@@ -418,16 +447,23 @@ const Home = () => {
                     </li>
                   </ul>
                 </div>
-                <div className={css.gridHome1_MemberDetail_logo} >
-                  <img src={initialData?.company?.image} alt="Company Logo" onClick={() => openCompanyModal(company)} className="cursor-pointer !mt-28" width={"60%"} height={"60%"} />
+                <div className={css.gridHome1_MemberDetail_logo}>
+                  <img
+                    src={initialData?.company?.image}
+                    alt="Company Logo"
+                    onClick={() => openCompanyModal(company)}
+                    className="cursor-pointer !mt-28"
+                    width={"60%"}
+                    height={"60%"}
+                  />
                 </div>
                 <div className={css.gridHome1_MemberDetail_reviews}>
                   <div className={css.gridHome1_MemberDetail_reviews_stars}>
-
-
-                    <div className='flex items-center'>
+                    <div className="flex items-center">
                       <a href="/feedbackprofile">
-                        <span className='flex items-center'>{renderStars(initialData?.company?.rating || 0)}</span>
+                        <span className="flex items-center">
+                          {renderStars(initialData?.company?.rating || 0)}
+                        </span>
                       </a>
                     </div>
                     <a href="/feedbackprofile">{companyRatingsPer}%</a>
@@ -449,10 +485,7 @@ const Home = () => {
                   {/* </div> */}
                   <div className={css.gridHome1_MemberDetail_comments}>
                     <Link to={"/feedbackprofile"}>
-                      Comments{" "}
-                      <span>
-                        {ratingCount}
-                      </span>
+                      Comments <span>{ratingCount}</span>
                     </Link>
                     {/* <a href="#" className={css.newW}>
                       New
@@ -504,10 +537,6 @@ const Home = () => {
                   </div>
                 </div> */}
 
-
-
-
-
                 <div className={`mailSection ${css.mailSection}`}>
                   <MdHandshake />
                   <Link to={"/safe_trading"}>
@@ -518,15 +547,18 @@ const Home = () => {
                   </div>
                   <div className={`${css.manageDropdown} ${css.mgDrop}`}>
                     <ul>
-                      <Link to={"/ethics"}> <li>Ethics Complaint</li></Link>
-                      <Link to={"/feedback"}> <li>Report an Issue</li></Link>
+                      <Link to={"/ethics"}>
+                        {" "}
+                        <li>Ethics Complaint</li>
+                      </Link>
+                      <Link to={"/feedback"}>
+                        {" "}
+                        <li>Report an Issue</li>
+                      </Link>
                       {/* <Link> <li>Watch List Companies</li></Link> */}
-
                     </ul>
                   </div>
                 </div>
-
-
               </div>
               <div className={css.gridHome2_Details}>
                 <div className={css.gridHome2_Details_Upper}>
@@ -547,7 +579,9 @@ const Home = () => {
                         ></textarea>
                         <div>
                           <input
-                            id={css.gridHome2_Details_Upper_Right_PartSearch_btn}
+                            id={
+                              css.gridHome2_Details_Upper_Right_PartSearch_btn
+                            }
                             type="submit"
                             value="SUBMIT"
                             className="cursor-pointer"
@@ -612,24 +646,20 @@ const Home = () => {
                 <div className={css.gridHome2_Details_Bottom}>
                   <ToggleStats data={broadcastCount.data} />
 
-
                   {loading || !broadcastCount?.data ? (
                     <p>Loading...</p>
                   ) : (
                     <HoverPieChart data={broadcastCount.data} />
                   )}
                 </div>
-
               </div>
-
             </div>
           </div>
-
-
         </>
       )}
-      {togglePopUp && <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
-
+      {togglePopUp && (
+        <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
+      )}
     </>
   );
 };

@@ -1,4 +1,3 @@
-
 import React, { memo, useEffect, useState, useRef } from "react";
 import css from "../../../styles/Popup/CompanyDetails.module.css";
 import TabContent from "./TabContent";
@@ -22,12 +21,15 @@ import Cookies from "js-cookie";
 import { NavLink } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 import { brokerAPI } from "../../api/BrokerEndpoint";
-import axios from 'axios';
-
+import axios from "axios";
+import { Tooltip } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const CompanyDetails = ({ closeModal }) => {
   const dispatch = useDispatch();
-  const { popupCompanyDetail } = useSelector((store) => store.searchProductStore);
+  const { popupCompanyDetail } = useSelector(
+    (store) => store.searchProductStore
+  );
   // Loading state
   const [isModalOpen, setIsModalOpen] = useState(true); // Modal initially open
   const [loading, setLoading] = useState(true);
@@ -35,15 +37,11 @@ const CompanyDetails = ({ closeModal }) => {
   const [feedbackData, setFeedbackData] = useState(null);
   const [toggleTabs, setToggleTabs] = useState(1);
 
-
   if (!popupCompanyDetail || !popupCompanyDetail[0]) {
     return <p>Loading company details...</p>;
   }
 
-
-
   // const company = popupCompanyDetail[0];
-
 
   // Get the first company object passed to the modal
   const company = popupCompanyDetail ? popupCompanyDetail[0] : null;
@@ -51,7 +49,9 @@ const CompanyDetails = ({ closeModal }) => {
   // Log the company to check the details
   console.log("Company Data in Modal:", company);
   const companyId = company?.id;
-  const { companyContactData } = useSelector((store) => store.searchProductStore);
+  const { companyContactData } = useSelector(
+    (store) => store.searchProductStore
+  );
   const token = Cookies.get("token");
 
   console.log("CompanyId ", companyId);
@@ -80,28 +80,30 @@ const CompanyDetails = ({ closeModal }) => {
     }
   }, [dispatch, companyId, token]);
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${brokerAPI}feedback/ratings/${companyId}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+        const response = await axios.get(
+          `${brokerAPI}feedback/ratings/${companyId}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
           }
-        })
+        );
         setFeedbackData(response.data);
         console.log("RATINGDATA", feedbackData);
       } catch (error) {
-        console.log("ERRORRATIMG", error)
+        console.log("ERRORRATIMG", error);
       }
-    }
+    };
     fetchData();
-  }, [companyId])
+  }, [companyId]);
 
   const printCompanyModal = () => {
     window.print();
-  }
+  };
 
   const [rating, setRating] = useState(0);
 
@@ -146,10 +148,28 @@ const CompanyDetails = ({ closeModal }) => {
     };
   }, [isModalOpen]); // ✅ Removed `closeModal` from dependencies
 
+  const theme = createTheme({
+    components: {
+      MuiTooltip: {
+        styleOverrides: {
+          tooltip: {
+            fontSize: "1.2rem", // Adjust font size
+            width: "11rem",
+            textAlign: "center",
+            backgroundColor: "var(--primary-color)",
+          },
+          arrow: {
+            color: "var(--primary-color)",
+          },
+        },
+      },
+    },
+  });
+
   // While loading, show loading indicator
   if (loading) {
     return (
-      <div className={css.Popup} >
+      <div className={css.Popup}>
         <div className={css.Popup_Info}>
           <div className={css.Popup_Info_height}>
             <div className={css.Popup_Info_header}>
@@ -163,14 +183,11 @@ const CompanyDetails = ({ closeModal }) => {
           </div>
         </div>
       </div>
-
-
-
     );
   }
 
   return (
-    <div className={css.Popup} >
+    <div className={css.Popup}>
       <div className={css.Popup_Info}>
         <div className={css.Popup_Info_height}>
           <div className={css.Popup_Info_header}>
@@ -179,13 +196,17 @@ const CompanyDetails = ({ closeModal }) => {
               {/* <button type="button" className="">
                 <FaExternalLinkAlt />
               </button> */}
+               <ThemeProvider theme={theme}>
+               <Tooltip title="Close Profile" arrow placement="top">
               <button
                 type="button"
                 onClick={() => closeModal()}
                 className="transform active:scale-95 transition-all duration-100  "
               >
-                < FaRegWindowClose />
+                <FaRegWindowClose />
               </button>
+              </Tooltip>
+              </ThemeProvider>
             </div>
           </div>
           <div className={css.Popup_Info_Main}>
@@ -196,8 +217,8 @@ const CompanyDetails = ({ closeModal }) => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
+                  <img src={companyContactData.data?.company?.image} />
                 </a>
-                <img src={companyContactData.data?.company?.image} />
               </div>
               {/* <div className={css.Popup_Info_Main_left_actions}>
                 <div>
@@ -222,40 +243,66 @@ const CompanyDetails = ({ closeModal }) => {
                 </div>
               </div> */}
               <div className={css.Popup_Info_Main_left_comments}>
-                <div>
+                <ThemeProvider theme={theme}>
+                  <Tooltip title="View Comments" arrow placement="top">
+                    <div>
+                      <div className={css.gridHome1_MemberDetail_reviews_stars}>
+                        <div
+                          data-v-217e3916=""
+                          class="vue-rate-it-rating"
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                          }}
+                        >
+                          <div
+                            style={{ display: "flex", alignItems: "center" }}
+                            onClick={() => setToggleTabs(5)}
+                          >
+                            {[...Array(5)].map((_, index) => {
+                              const isFilled = index + 1 <= Math.floor(ratings); // Full yellow stars
+                              const isPartial =
+                                index < ratings &&
+                                index + 1 > Math.floor(ratings); // Partial yellow star
 
-                  <div className={css.gridHome1_MemberDetail_reviews_stars}>
-                    <div data-v-217e3916="" class="vue-rate-it-rating" style={{
-                      display: "flex", justifyContent: "space-between", alignItems: "center"
-                    }}>
-                      <div style={{ display: "flex", alignItems: "center" }}
-                        onClick={() => setToggleTabs(5)}>
-                        {[...Array(5)].map((_, index) => {
-                          const isFilled = index + 1 <= Math.floor(ratings); // Full yellow stars
-                          const isPartial = index < ratings && index + 1 > Math.floor(ratings); // Partial yellow star
-
-                          return (
-                            <FaStar
-                              key={index}
-                              size={24}
-                              color={isFilled ? "#FFD700" : isPartial ? "rgba(255, 215, 0, 0.5)" : "#CCC"} // Partial star is dim yellow
-                              style={{ cursor: "pointer", marginRight: 4 }}
-                              onMouseEnter={() => setRating(index + 1)}
-                              // onClick={handleClick}
-                              title={handleHover(index + 1)} // Tooltip text
-                            />
-                          );
-                        })}
+                              return (
+                                <FaStar
+                                  key={index}
+                                  size={24}
+                                  color={
+                                    isFilled
+                                      ? "#FFD700"
+                                      : isPartial
+                                      ? "rgba(255, 215, 0, 0.5)"
+                                      : "#CCC"
+                                  } // Partial star is dim yellow
+                                  style={{ cursor: "pointer", marginRight: 4 }}
+                                  onMouseEnter={() => setRating(index + 1)}
+                                  // onClick={handleClick}
+                                  title={handleHover(index + 1)} // Tooltip text
+                                />
+                              );
+                            })}
+                          </div>
+                          <a href="#">
+                            {feedbackData?.rating?.averageRating
+                              ? `${(
+                                  (feedbackData.rating.averageRating / 5) *
+                                  100
+                                ).toFixed(1)}%`
+                              : "100%"}
+                          </a>
+                        </div>
+                        <h1 className="text-center pt-2">
+                          {" "}
+                          ({feedbackData?.rating?.totalFeedbacks || 0})
+                          Feedbacks
+                        </h1>
                       </div>
-                      <a href="#">
-                        {feedbackData?.rating?.averageRating
-                          ? `${((feedbackData.rating.averageRating / 5) * 100).toFixed(1)}%`
-                          : "100%"}
-                      </a>
                     </div>
-                    <h1 className="text-center pt-2"> ({feedbackData?.rating?.totalFeedbacks || 0}) Feedbacks</h1>
-                  </div>
-                </div>
+                  </Tooltip>
+                </ThemeProvider>
                 {/* <div>
                   <span>(3) comments</span>
                   <span>(0) new</span>
@@ -267,33 +314,48 @@ const CompanyDetails = ({ closeModal }) => {
             </div>
             <div className={css.Popup_Info_Main_right}>
               <p className={css.Popup_Info_Main_right_description}>
-                {companyContactData.data?.company?.description || "No company description available."}
+                {companyContactData.data?.company?.description ||
+                  "No company description available."}
               </p>
               <div className={css.Popup_Info_Main_right_productInfo}>
                 <div>
-                  <strong>Product Categories:</strong>
+                  <strong className="font-semibold">Product Categories:</strong>
                   <p>{companyContactData.data?.company?.categories}</p>
                 </div>
                 <div>
-                  <strong>Mfg(s) We Carry:</strong>
+                  <strong className="font-semibold">Mfg(s) We Carry:</strong>
                   <p>{companyContactData.data?.company?.brands}</p>
                 </div>
               </div>
               <div className={css.Popup_Info_Main_right_contact}>
                 <div>
                   <span>
-                    <strong>Address:</strong>
+                    <strong className="font-semibold">Address:</strong>
                     <p>{companyContactData.data?.company?.address}</p>
                   </span>
                   <span>
-                    <strong>Phone:</strong>
-                    <strong href={`tel:${companyContactData.data?.company?.phone_num}`}>{companyContactData.data?.company?.phone_num}</strong>
+                    <strong className="font-semibold">Phone:</strong>
+                    <a
+                      className="text-[8pt]  "
+                      href={`tel:${companyContactData.data?.company?.phone_num}`}
+                    >
+                      {companyContactData.data?.company?.phone_num}
+                    </a>
                   </span>
                   <span>
-                    <strong>Website:</strong>
-                    <strong href={companyContactData.data?.company?.website} target="_blank" rel="noopener noreferrer">
-                      {companyContactData.data?.company?.website}
-                    </strong>
+                    <strong className="font-semibold">Website:</strong>
+                    <ThemeProvider theme={theme}>
+                      <Tooltip title="View Website" arrow placement="top">
+                        <a
+                          className="text-[8pt] hover:border-b-2 hover:border-blue-600 outline-none "
+                          href={companyContactData.data?.company?.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {companyContactData.data?.company?.website}
+                        </a>
+                      </Tooltip>
+                    </ThemeProvider>
                   </span>
                 </div>
                 <div className={css.inventorySecSvgs}>
@@ -301,44 +363,47 @@ const CompanyDetails = ({ closeModal }) => {
                     <FaMapMarkerAlt />
                     map
                   </span> */}
-
-
-                  <span>
-                    <FaRegListAlt />
-                    <NavLink to={"/inventory"} className="cursor-pointer">
-                      inventory
-                    </NavLink>
-                  </span>
-
-
+                  <ThemeProvider theme={theme}>
+                    <Tooltip title="Show Inventory" arrow placement="top">
+                      <span>
+                        <FaRegListAlt />
+                        <NavLink to={"/inventory"} className="cursor-pointer">
+                          inventory
+                        </NavLink>
+                      </span>
+                    </Tooltip>
+                  </ThemeProvider>
                   {/* <span>
                     <FaEnvelope />
                     email
                   </span> */}
-                  <span className="cursor-pointer" onClick={printCompanyModal}>
-                    <FaPrint />
-                    Print
-                  </span>
-
+                  <ThemeProvider theme={theme}>
+                    <Tooltip title="Print Profile" arrow placement="top">
+                      <span
+                        className="cursor-pointer"
+                        onClick={printCompanyModal}
+                      >
+                        <FaPrint />
+                        Print
+                      </span>
+                    </Tooltip>
+                  </ThemeProvider>
                 </div>
               </div>
 
               <div className={css.Popup_Info_Main_right_tabs_layout}>
-                <TabContent companyId={companyId} toggleTabs={toggleTabs} setToggleTabs={setToggleTabs} />
-
+                <TabContent
+                  companyId={companyId}
+                  toggleTabs={toggleTabs}
+                  setToggleTabs={setToggleTabs}
+                />
               </div>
-
             </div>
           </div>
           <div className={css.Popup_Info_Main_bottom}>
-            <a
-              href="/feedback"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href="/feedback" target="_blank" rel="noopener noreferrer">
               Questions, Comments, or Concerns?
             </a>
-
           </div>
         </div>
       </div>
@@ -347,8 +412,3 @@ const CompanyDetails = ({ closeModal }) => {
 };
 
 export default memo(CompanyDetails);
-
-
-
-
-

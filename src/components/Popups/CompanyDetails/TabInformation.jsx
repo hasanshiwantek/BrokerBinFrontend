@@ -89,28 +89,28 @@ const TabInformation = ({ companyId }) => {
 
             <ul >
               <span>
-                <li>Employees:</li>
+                <li className="!font-semibold">Employees:</li>
                 <li>{companyContactData.data?.company?.total_employees
                 }</li>
               </span>
               <span>
-                <li>Member Since:</li>
+                <li className="!font-semibold">Member Since:</li>
                 <li>{companyContactData.data?.company?.member_since}</li>
               </span>
               <span>
-                <li>Open:</li>
+                <li className="!font-semibold">Open:</li>
                 <li>{companyContactData.data?.company?.open_timing}</li>
               </span>
               <span>
-                <li>Close:</li>
+                <li className="!font-semibold">Close:</li>
                 <li>{companyContactData.data?.company?.close}</li>
               </span>
               <span>
-                <li>Inventory Listed:</li>
+                <li className="!font-semibold"> Inventory Listed:</li>
                 <li>Not Available</li>
               </span>
               <span>
-                <li>Broadcasts:</li>
+                <li className="!font-semibold">Broadcasts:</li>
                 <li>Not Available</li>
               </span>
             </ul>
@@ -132,20 +132,20 @@ const TabInformation = ({ companyId }) => {
 
             <ul >
               <span>
-                <li>Contact:</li>
+                <li className="!font-semibold">Contact:</li>
                 <li>{companyContactData.data?.company?.primaryContact?.firstName} {companyContactData.data?.company?.primaryContact?.lastName}
                 </li>
               </span>
               <span>
-                <li>Position:</li>
+                <li className="!font-semibold">Position:</li>
                 <li>{companyContactData.data?.company?.primaryContact?.position}</li>
               </span>
               <span>
-                <li>Phone:</li>
+                <li className="!font-semibold">Phone:</li>
                 <li>{companyContactData.data?.company?.primaryContact?.phoneNumber}</li>
               </span>
               <span>
-                <li>Networks:</li>
+                <li className="!font-semibold">Networks:</li>
                 <li>{companyContactData.data?.company?.primaryContact?.socialNetworking?.facebook || ""} </li><br />
                 <li>{companyContactData.data?.company?.primaryContact?.socialNetworking?.linkedin || ""}</li><br />
                 <li>{companyContactData.data?.company?.primaryContact?.socialNetworking?.twitter || ""}</li><br />
@@ -169,29 +169,29 @@ const TabInformation = ({ companyId }) => {
 
             <ul>
               <span>
-                <li>Trading Region:</li>
+                <li className="!font-semibold"> Trading Region:</li>
                 <li>{companyContactData.data?.company?.trading_region || "N/A"}</li>
               </span>
               <span>
-                <li>Trade Program:</li>
+                <li className="!font-semibold">Trade Program:</li>
                 <li>
                   {companyContactData.data?.company?.trade_program === "1" ? "Yes" : "No"}
                 </li>
               </span>
               <span>
-                <li>Rental Programs:</li>
+                <li className="!font-semibold">Rental Programs:</li>
                 <li>
                   {companyContactData.data?.company?.rental_program === "1" ? "Yes" : "No"}
                 </li>
               </span>
               <span>
-                <li>Blind Shipping:</li>
+                <li className="!font-semibold">Blind Shipping:</li>
                 <li>
                   {companyContactData.data?.company?.blind_shipping === "1" ? "Yes" : "No"}
                 </li>
               </span>
               <span>
-                <li>Shipping Deadline:</li>
+                <li className="!font-semibold">Shipping Deadline:</li>
                 <li>{companyContactData.data?.company?.shipping_deadline || "N/A"}</li>
               </span>
             </ul>

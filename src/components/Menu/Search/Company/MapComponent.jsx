@@ -62,7 +62,7 @@ const MapComponent = ({ company }) => {
                                 onCloseClick={() => setSelectedCompany(null)}
                                 options={{ pixelOffset: new window.google.maps.Size(0, -40) }}
                             >
-                                <div>
+                                <div className="!overflow-hidden ">
                                     <img src={company.logo} alt="Company Logo" width="100" />
                                     <h3>{company.company}</h3>
                                     <p>{company.address}</p>
