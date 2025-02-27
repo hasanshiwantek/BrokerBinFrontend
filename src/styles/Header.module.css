@@ -323,7 +323,8 @@ nav > ul > li:hover {
 
 .dropdownMenu ul li img {
   width: 25px;
-  height: 25px;
+  height: 25
+  px;
   margin-top: 10px;
 }
 
