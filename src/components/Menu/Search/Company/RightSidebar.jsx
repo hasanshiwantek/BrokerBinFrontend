@@ -72,7 +72,7 @@ const RightSidebar = ({ company }) => {
       }
       const {data} = await axios.post(`${brokerAPI}company/company-search`, payload,
         {headers: {Authorization: `Bearer ${token}`}},
-        // console.log("TOKEN", token)
+        // console.log("TOKEN", token) 
       )
       setFilteredData(data);
       setShowFilters(false);
