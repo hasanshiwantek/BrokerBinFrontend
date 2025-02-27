@@ -257,6 +257,7 @@ const MyContact = () => {
                             <span>
                               <p>{vendor.company.name}</p>
                               {/* Ratings Display */}
+
                               <div
                                 className={
                                   css.gridHome1_MemberDetail_reviews_stars
@@ -317,6 +318,7 @@ const MyContact = () => {
                                   Total Reviews: {ratingCounts?.[index] || "0"}
                                 </p>
                               </div>
+                              
                             </span>
                             <span>
                               <p>company:</p>
