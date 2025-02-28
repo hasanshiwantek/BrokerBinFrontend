@@ -100,21 +100,21 @@ const CompanySearchResults = () => {
         </ul>
       </div>
 
-      <div className="">
+      <div >
         <div className="grid grid-cols-[3fr_1fr] ">
           <div className="relative">
             {/* Dark Overlay with Centered Search Bar */}
-            <div className=" w-full bg-black gap-2 items-center bg-opacity-50 p-6 flex justify-center">
+            <div className=" w-full bg-black gap-2 items-center bg-opacity-50 p-4 flex justify-center">
               <input
                 type="text"
                 placeholder="Search Company / Location / Keywords"
-                className="w-full p-4 rounded bg-white text-2xl focus:ring-1 focus:ring-blue-500 focus:border-blue-500 border focus:outline-none"
+                className="w-full p-2 rounded bg-white text-2xl focus:ring-1 focus:ring-blue-500 focus:border-blue-500 border focus:outline-none"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
               />
               <div
-                className={`p-3 rounded-sm cursor-pointer transition duration-300 
+                className={`p-2 rounded-sm cursor-pointer transition duration-300 
         ${
           isClicked
             ? "bg-blue-700 outline outline-blue-300"

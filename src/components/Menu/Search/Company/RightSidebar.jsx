@@ -11,7 +11,8 @@ import CompanyDetails from "@/components/Popups/CompanyDetails/CompanyDetails";
 import { FaStar } from "react-icons/fa";
 import { Tooltip } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
+import { setTogglePopUp } from "@/ReduxStore/SearchProductSlice";
+import { setPopupCompanyDetail } from "@/ReduxStore/SearchProductSlice";
 const RightSidebar = ({ company }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
@@ -23,7 +24,9 @@ const RightSidebar = ({ company }) => {
   const dropdownRef = useRef(null);
   const token = Cookies.get("token");
   const dispatch = useDispatch();
-
+  const { togglePopUp, popupCompanyDetail } = useSelector(
+    (state) => state.searchProductStore
+  );
   // ✅ Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -159,8 +162,9 @@ const RightSidebar = ({ company }) => {
         styleOverrides: {
           tooltip: {
             fontSize: "1.2rem", // Adjust font size
-            width: "11rem",
+            width: "fitContent",
             textAlign: "center",
+            whiteSpace: "nowrap",
             backgroundColor: "var(--primary-color)",
           },
           arrow: {
@@ -171,10 +175,17 @@ const RightSidebar = ({ company }) => {
     },
   });
 
+  // Company Modal Logic
+  const openCompanyModal = (company) => {
+    console.log("Opening Company Modal with Company:", company);
+    dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
+    dispatch(setTogglePopUp()); // Show company modal
+  };
+
   return (
     <div className="w-full !w-[50rem] border-[1px] border-l-gray-500 ">
       <div
-        className="flex justify-center gap-3 items-center text-[1vw] -mt-[1px] bg-black bg-opacity-50 !text-white p-7 rounded cursor-pointer relative "
+        className="flex justify-center gap-3 items-center text-[1vw] -mt-[1px] bg-black bg-opacity-50 !text-white p-5 rounded cursor-pointer relative "
         onMouseEnter={() => setIsDropdownOpen((prev) => (prev = !prev))}
         ref={dropdownRef}
       >
@@ -211,30 +222,42 @@ const RightSidebar = ({ company }) => {
           />
         ) : (
           <div className="flex gap-2">
-            <button
-              className="bg-[#2c83ec] text-white px-5 py-2 rounded-md font-semibold 
+            <ThemeProvider theme={theme}>
+              <Tooltip title="Apply Selected Filters" arrow placement="top">
+                <button
+                  className="bg-[#2c83ec] text-white px-5 py-2 rounded-md font-semibold 
                hover:bg-[#1e6fd6] focus:ring-2 focus:ring-blue-300 
                transition duration-300 outline-none"
-              onClick={applyFilters}
-            >
-              Apply
-            </button>
+                  onClick={applyFilters}
+                >
+                  Apply
+                </button>
+              </Tooltip>
+            </ThemeProvider>
 
-            <button
-              className="bg-[#2c83ec] text-white px-5 py-2 rounded-md font-semibold 
+            <ThemeProvider theme={theme}>
+              <Tooltip title="Clear Active Filters" arrow placement="top">
+                <button
+                  className="bg-[#2c83ec] text-white px-5 py-2 rounded-md font-semibold 
                hover:bg-[#1e6fd6] focus:ring-2 focus:ring-blue-300 
                transition duration-300 outline-none"
-            >
-              Clear
-            </button>
-            <button
-              className="bg-[#2c83ec] text-white px-5 py-2 rounded-md font-semibold 
+                >
+                  Clear
+                </button>
+              </Tooltip>
+            </ThemeProvider>
+            <ThemeProvider theme={theme}>
+              <Tooltip title="Hide Filters" arrow placement="top">
+                <button
+                  className="bg-[#2c83ec] text-white px-5 py-2 rounded-md font-semibold 
                    hover:bg-[#1e6fd6] focus:ring-2 focus:ring-blue-300 
                    transition duration-300 outline-none"
-              onClick={() => setShowFilters(false)}
-            >
-              X
-            </button>
+                  onClick={() => setShowFilters(false)}
+                >
+                  X
+                </button>
+              </Tooltip>
+            </ThemeProvider>
           </div>
         )}
         {isDropdownOpen && (
@@ -274,8 +297,11 @@ const RightSidebar = ({ company }) => {
             key={comp.id}
             className="bg-white px-2 rounded relative hover:bg-blue-200 transition w-[50rem] border border-b-[1px] "
           >
-            <div className="flex gap-5 items-center ">
-              <div className="flex flex-col">
+            <div
+              className="flex gap-5 items-center"
+            
+            >
+              <div className="flex flex-col  cursor-pointer"   onClick={() => openCompanyModal(comp)}>
                 <ThemeProvider theme={theme}>
                   <Tooltip
                     title="View Company Profile"
@@ -389,7 +415,7 @@ const RightSidebar = ({ company }) => {
                 </button>
                 <button
                   className="block w-full text-[#444] text-left px-4 py-4 hover:bg-blue-400 hover:text-white"
-                  onClick={() => handleViewProfile(comp)}
+                  onClick={() => openCompanyModal(comp)}
                 >
                   View Profile
                 </button>
@@ -424,6 +450,9 @@ const RightSidebar = ({ company }) => {
             </button>
           </div>
         </div>
+      )}
+      {togglePopUp && (
+        <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
     </div>
   );
