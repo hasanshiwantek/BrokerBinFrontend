@@ -453,7 +453,6 @@ export const mobileDevice = [
   { id: "tablet", label: "Tablet", value: "Tablet" },
 ];
 
-
 export const computers = [
   { id: "barcode_rfid", label: "Barcode/ RFID", value: "Barcode/ RFID" },
   { id: "consumer_electronics", label: "Consumer Electronics", value: "Consumer Electronics" },

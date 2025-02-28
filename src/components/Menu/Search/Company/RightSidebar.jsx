@@ -172,7 +172,7 @@ const RightSidebar = ({ company }) => {
   });
 
   return (
-    <div className="w-full w-[50rem] border-[1px] border-l-gray-500 ">
+    <div className="w-full !w-[50rem] border-[1px] border-l-gray-500 ">
       <div
         className="flex justify-center gap-3 items-center text-[1vw] -mt-[1px] bg-black bg-opacity-50 !text-white p-7 rounded cursor-pointer relative "
         onMouseEnter={() => setIsDropdownOpen((prev) => (prev = !prev))}
