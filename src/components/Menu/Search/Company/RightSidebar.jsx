@@ -13,6 +13,15 @@ import { Tooltip } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { setTogglePopUp } from "@/ReduxStore/SearchProductSlice";
 import { setPopupCompanyDetail } from "@/ReduxStore/SearchProductSlice";
+import addVendorIcon from "@/assets/add-friend.svg";
+import dollarSymbolIcon from "@/assets/dollar-symbol.svg";
+import editIcon from "@/assets/edit.svg";
+import emailIcon from "@/assets/email-icon.svg";
+import listIcon from "@/assets/add-friend.svg";
+import removeVendorIcon from "@/assets/remove-icon.svg";
+import webIcon from "@/assets/web.svg";
+import profileIcon from "@/assets/list.svg";
+
 const RightSidebar = ({ company }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
@@ -184,10 +193,11 @@ const RightSidebar = ({ company }) => {
     dispatch(setTogglePopUp()); // Show company modal
   };
 
+  // max-h-[85vh]
   return (
-    <div className="w-full !w-[50rem] border-[1px] border-l-gray-500 ">
+    <div className=" !w-[50rem] border-[1px] border-l-gray-500 2xl:h-[60vh] md:max-h-[87vh]  overflow-y-scroll  overflow-x-hidden ">
       <div
-        className="flex justify-center gap-3 items-center text-[1vw] -mt-[1px] bg-black bg-opacity-50 !text-white p-5 rounded cursor-pointer relative "
+        className="flex justify-center gap-3 items-center text-[1vw] -mt-[1px] bg-black bg-opacity-50  !text-white p-5 rounded cursor-pointer relative "
         onMouseEnter={() => setIsDropdownOpen((prev) => (prev = !prev))}
         ref={dropdownRef}
       >
@@ -263,7 +273,7 @@ const RightSidebar = ({ company }) => {
           </div>
         )}
         {isDropdownOpen && (
-          <div className="absolute bg-white shadow-lg rounded z-10 top-24 left-56 !text-[#444] ">
+          <div className="absolute bg-white shadow-lg rounded z-10 top-[5rem] left-56 !text-[#444] ">
             {[
               "Region",
               "Country",
@@ -297,13 +307,13 @@ const RightSidebar = ({ company }) => {
         companiesToShow.map((comp, index) => (
           <div
             key={comp.id}
-            className="bg-white px-2 rounded relative hover:bg-blue-200 transition w-[50rem] border border-b-[1px] "
+            className="bg-white px-8 rounded relative hover:bg-blue-200 transition w-[50rem] border border-b-[1px] "
           >
-            <div
-              className="flex gap-5 items-center"
-            
-            >
-              <div className="flex flex-col  cursor-pointer"   onClick={() => openCompanyModal(comp)}>
+            <div className="flex gap-5 items-center ">
+              <div
+                className="flex flex-col  cursor-pointer"
+                onClick={() => openCompanyModal(comp)}
+              >
                 <ThemeProvider theme={theme}>
                   <Tooltip
                     title="View Company Profile"
@@ -402,35 +412,67 @@ const RightSidebar = ({ company }) => {
                 className="absolute top-16 right-2 text-black w-70 bg-white shadow-xl rounded border w-[25rem] z-50 transition  "
               >
                 <button
-                  className="block w-full text-[#444] text-left px-4 py-4 hover:bg-blue-400 hover:text-white"
+                  className="flex items-center gap-3 block w-full text-[#444] text-left px-4 py-4 hover:bg-gray-100"
                   onClick={() => {
                     handleEmail(comp.contactEmail, "Inquiry");
                   }}
                 >
+                  <span>
+                    {" "}
+                    <img
+                      className="w-7 h-7 "
+                      src={emailIcon}
+                      alt="Email"
+                    />{" "}
+                  </span>{" "}
                   Email
                 </button>
                 <button
-                  className="block w-full text-[#444] text-left px-4 py-4 hover:bg-blue-400 hover:text-white "
+                  className="flex items-center gap-3 block w-full text-[#444] text-left px-4 py-4 hover:bg-gray-100"
                   onClick={() => handleAddVendor(comp.id)}
                 >
+                  <span>
+                    {" "}
+                    <img
+                      className="w-7 h-7 "
+                      src={addVendorIcon}
+                      alt="Email"
+                    />{" "}
+                  </span>{" "}
                   Add Vendor
                 </button>
                 <button
-                  className="block w-full text-[#444] text-left px-4 py-4 hover:bg-blue-400 hover:text-white"
+                  className="flex items-center gap-3 block w-full text-[#444] text-left px-4 py-4 hover:bg-gray-100 "
                   onClick={() => openCompanyModal(comp)}
                 >
+                  <span>
+                    {" "}
+                    <img
+                      className="w-7 h-7 "
+                      src={profileIcon}
+                      alt="Email"
+                    />{" "}
+                  </span>{" "}
                   View Profile
                 </button>
                 <button
-                  className="block w-full text-[#444] text-left px-4 py-4 hover:bg-blue-400 hover:text-white"
+                  className="flex items-center gap-3 block w-full text-[#444] text-left px-4 py-4 hover:bg-gray-100 "
                   onClick={() => handleVisitWebsite(comp.website)}
                 >
+                  <span>
+                    {" "}
+                    <img className="w-7 h-7 " src={webIcon} alt="Email" />{" "}
+                  </span>{" "}
                   Visit Website
                 </button>
                 <button
-                  className="block w-full text-[#444] text-left px-4 py-4 hover:bg-blue-400 hover:text-white"
+                  className="flex items-center gap-3 block w-full text-[#444] text-left px-4 py-4  hover:bg-gray-100"
                   onClick={() => handleEmail(comp.contactEmail, "Suggestion")}
                 >
+                  <span>
+                    {" "}
+                    <img className="w-7 h-7" src={editIcon} alt="Email" />{" "}
+                  </span>{" "}
                   Suggest an Edit
                 </button>
               </div>

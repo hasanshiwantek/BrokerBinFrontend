@@ -373,7 +373,7 @@ const Header = () => {
               <IoIosArrowDown className={`${css.onHoverMenuIconDown}  `} />
               <IoIosArrowUp className={css.onHoverMenuIconUp} />
 
-              <div className={css.dropdownMenu} style={{ marginLeft: "10px" }}>
+              <div className={css.dropdownMenu} >
                 <ul style={{ minWidth: "30px" }}>
                   <ThemeProvider theme={theme}>
                     <Tooltip title="My Contact" arrow placement="left">
