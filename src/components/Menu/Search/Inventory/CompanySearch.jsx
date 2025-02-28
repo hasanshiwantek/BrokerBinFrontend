@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import {searchCompany} from "../../../../ReduxStore/Reports";
+import { searchCompany } from "../../../../ReduxStore/Reports";
 import Cookies from "js-cookie";
-
 
 const CompanySearch = ({ formData, setFormData }) => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [companies, setCompanies] = useState([]); // Local state for companies
   const dispatch = useDispatch();
   const token = Cookies.get("token");
-  
+
   useEffect(() => {
     const debounce = setTimeout(() => {
       if (formData.company && !dropdownVisible) {
@@ -26,10 +25,9 @@ const CompanySearch = ({ formData, setFormData }) => {
         setDropdownVisible(false);
       }
     }, 300); // Debounce for API calls
-  
+
     return () => clearTimeout(debounce);
   }, [formData.company, dispatch, token]);
-  
 
   const handleSelect = (company) => {
     setFormData({ ...formData, company });
@@ -37,7 +35,10 @@ const CompanySearch = ({ formData, setFormData }) => {
   };
 
   return (
-    <span style={{ position: "relative" }} className="flex items-center justify-between space-x-5">
+    <span
+      style={{ position: "relative" }}
+      className="flex items-center justify-between space-x-5"
+    >
       <label htmlFor="Company">Company</label>
       <input
         type="text"
@@ -60,7 +61,6 @@ const CompanySearch = ({ formData, setFormData }) => {
             top: "100%",
             width: "65%",
             boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
-           
           }}
         >
           {companies.map((company, index) => (
@@ -68,16 +68,24 @@ const CompanySearch = ({ formData, setFormData }) => {
               key={index}
               onClick={() => handleSelect(company.name)}
               onMouseEnter={(e) => (e.target.style.backgroundColor = "#2c83ec")}
-              onMouseLeave={(e) => (e.target.style.backgroundColor = "transparent")}
+              onMouseLeave={(e) =>
+                (e.target.style.backgroundColor = "transparent")
+              }
               style={{
                 padding: "10px",
                 cursor: "pointer",
                 borderBottom: "1px solid #f0f0f0",
-                textAlign: "left"
+                textAlign: "left",
               }}
               className="hover:text-white hover:bg-[#2c83ec]"
             >
               {company.name}
+              {company.region && company.country && (
+                <p>
+                  <span>{company.region},</span>
+                  <span>{company.country}</span>
+                </p>
+              )}
             </div>
           ))}
         </div>

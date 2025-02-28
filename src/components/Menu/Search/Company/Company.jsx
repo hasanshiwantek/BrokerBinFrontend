@@ -10,6 +10,7 @@ import CompanySearch from "../Inventory/CompanySearch";
 import axios from "axios";
 import { brokerAPI } from "@/components/api/BrokerEndpoint";
 import { countriesList, regionsList, statesList } from "@/data/services";
+import "./CompanySearchResults.css"
 
 const SearchCompany = () => {
   const [loading, setLoading] = useState(false); // To track API call status
