@@ -5,11 +5,18 @@ import {
   Marker,
   InfoWindow,
 } from "@react-google-maps/api";
+import { setTogglePopUp } from "@/ReduxStore/SearchProductSlice";
+import { setPopupCompanyDetail } from "@/ReduxStore/SearchProductSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { Tooltip } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import "./CompanySearchResults.css"
 const MapComponent = ({ company }) => {
   const companiesArray = Array.isArray(company?.companies)
     ? company.companies
     : [company];
   console.log("CompaniesArray", companiesArray);
+  const dispatch = useDispatch();
 
   if (companiesArray.length === 0) {
     return <p>No Data Found</p>;
@@ -38,6 +45,35 @@ const MapComponent = ({ company }) => {
       mapRef.current.fitBounds(bounds); // ✅ Automatically adjust zoom & position
     }
   }, [companiesArray]);
+
+  const { togglePopUp, popupCompanyDetail } = useSelector(
+    (state) => state.searchProductStore
+  );
+  // Company Modal Logic
+  const openCompanyModal = (company) => {
+    console.log("Opening Company Modal with Company:", company);
+    dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
+    dispatch(setTogglePopUp()); // Show company modal
+  };
+
+  const theme = createTheme({
+    components: {
+      MuiTooltip: {
+        styleOverrides: {
+          tooltip: {
+            fontSize: "1.2rem", // Adjust font size
+            width: "fitContent",
+            textAlign: "center",
+            whiteSpace: "nowrap",
+            backgroundColor: "var(--primary-color)",
+          },
+          arrow: {
+            color: "var(--primary-color)",
+          },
+        },
+      },
+    },
+  });
 
   return (
     <LoadScript googleMapsApiKey="AIzaSyBxPohwrm4YVcvGHwJLE2hoQ_ATCfodbzc">
@@ -68,24 +104,35 @@ const MapComponent = ({ company }) => {
                 position={{ lat: company.latitude, lng: company.longitude }}
                 onCloseClick={() => setSelectedCompany(null)}
                 options={{ pixelOffset: new window.google.maps.Size(0, -40) }}
+                className="!overflow-hidden"
               >
-                <div className="p-2 max-w-[250px] font-sans text-gray-800 rounded-lg shadow-lg overflow-hidden bg-white">
-                  <img
-                    src={company.logo}
-                    alt="Company Logo"
-                    className="w-24 rounded-md mb-2"
-                  />
-                  <h3 className="text-lg font-semibold text-blue-600 mb-1">
-                    {company.company}
-                  </h3>
-                  <p className="text-sm mb-1">{company.address}</p>
-                  <p className="text-sm mb-1">
-                    <strong>Contact:</strong> {company.contactPerson}
-                  </p>
-                  <p className="text-sm mb-1">
-                    <strong>Rating:</strong> {company.rating} ⭐⭐⭐⭐⭐
-                  </p>
-                </div>
+                <ThemeProvider theme={theme}>
+                  <Tooltip title="View Company Profile" arrow placement="top">
+                    <div
+                      className="p-4 max-w-[270px] font-sans text-gray-800 rounded-lg shadow-lg overflow-hidden bg-white text-center cursor-pointer"
+                      onClick={() => openCompanyModal(company)}
+                    >
+                      <img
+                        src={company.logo}
+                        alt="Company Logo"
+                        className="w-40 rounded-md mb-2 m-auto"
+                      />
+                      <h3 className="text-2xl font-semibold text-black mb-1">
+                        {company.company}
+                      </h3>
+                      <p className="!text-xl mb-1">{company.address}</p>
+                      <p className="!text-xl mb-1">
+                        <strong>Contact:</strong> {company.contactPerson}
+                      </p>
+                      <p className="!text-xl mb-1">
+                        <strong className="!text-lg">Rating:</strong>{" "}
+                        {company.rating} ⭐⭐⭐⭐⭐
+                        <p className="!text-xl mb-1"></p>Comments:{" "}
+                        {company.ratingCount}
+                      </p>
+                    </div>
+                  </Tooltip>
+                </ThemeProvider>
               </InfoWindow>
             )}
           </div>

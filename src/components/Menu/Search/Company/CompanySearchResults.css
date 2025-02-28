@@ -1,0 +1,53 @@
+/* Remove scrollbar inside Google Maps InfoWindow */
+.gm-style-iw-d {
+    overflow: hidden !important; /* Prevent scroll */
+    max-height: none !important; /* Allow full height */
+  }
+  
+  .gm-style-iw-chr button {
+    background: none;
+    display: block;
+    border: 0px;
+    margin: 0px;
+    padding: 0px;
+    text-transform: none;
+    appearance: none;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    width: 40px;
+    height: 13px !important;
+  }
+  
+  .gm-style-iw-t > div {
+    padding-inline-end: none !important;
+    padding-bottom: 35px !important;
+    padding-top: 2px;
+    max-width: 397px;
+    max-height: 382px;
+    min-width: 0px;
+  }
+  
+  .gm-style .gm-style-iw-c {
+    position: absolute;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    -webkit-transform: translate3d(-50%, -100%, 0);
+    transform: translate3d(-50%, -100%, 0);
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px !important;
+    -webkit-box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.3);
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+  }
+  

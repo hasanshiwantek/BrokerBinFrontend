@@ -101,7 +101,7 @@ const CompanySearchResults = () => {
       </div>
 
       <div >
-        <div className="grid grid-cols-[3fr_1fr] ">
+        <div className="grid grid-cols-[3fr_1fr] border-4 border-gray-300 ">
           <div className="relative">
             {/* Dark Overlay with Centered Search Bar */}
             <div className=" w-full bg-black gap-2 items-center bg-opacity-50 p-4 flex justify-center">

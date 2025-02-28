@@ -7,7 +7,7 @@
   --primary-color: #2c83ec;
   --font-color: white;
   --secondary-bgColor: #e8e8e8ff;
-  --table-bg-color: #bfbfbf;  ;
+  --table-bg-color: #bfbfbf;
   --table-th-color: #45575cff;
   --table-outer-color: #e8e8e8ff;
   --box-shadow: #bfbfbfff;
@@ -30,6 +30,7 @@
   margin: 0;
   font-size: 1.3rem;
 }
+
 
 html {
   font-size: 62.5%;
@@ -84,7 +85,6 @@ body {
   font-weight: 400;
   font-style: normal;
   /* text-transform: capitalize; */
-  
 }
 button {
   background: var(--primary-color);
@@ -171,8 +171,6 @@ textarea {
     @apply bg-background text-foreground;
   }
 }
-
-
 
 /* Global Scrollbar Styling (for WebKit browsers: Chrome, Edge, Safari) */
 ::-webkit-scrollbar {
