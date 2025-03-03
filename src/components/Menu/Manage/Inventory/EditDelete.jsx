@@ -225,7 +225,7 @@ const EditDelete = () => {
   };
 
   return (
-    <div className={`${inventory.inventory} !w-[50vw]`}>
+    <div className={`${inventory.inventory} !min-w-fit`}>
       <InventoryButtons />
       <div className={inventory.editDeleteTable}>
         <div className={inventory.editDeleteTable_top}>

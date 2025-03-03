@@ -10,7 +10,7 @@ import { setPopupCompanyDetail } from "@/ReduxStore/SearchProductSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { Tooltip } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import "./CompanySearchResults.css"
+import "./CompanySearchResults.css";
 const MapComponent = ({ company }) => {
   const companiesArray = Array.isArray(company?.companies)
     ? company.companies
@@ -19,7 +19,14 @@ const MapComponent = ({ company }) => {
   const dispatch = useDispatch();
 
   if (companiesArray.length === 0) {
-    return <p>No Data Found</p>;
+    return (
+      <div className="bg-blue-400 p-4">
+        <p className="text-white !text-2xl m-4 font-semibold">
+          No companies found
+          <span className="text-black text-2xl ml-4 font-semibold">Try another search</span>
+        </p>
+      </div>
+    );
   }
 
   const [selectedCompany, setSelectedCompany] = useState(null);
@@ -33,7 +40,7 @@ const MapComponent = ({ company }) => {
 
   const containerStyle = {
     width: "100%",
-    height: "500px",
+    height: "600px",
   };
 
   useEffect(() => {

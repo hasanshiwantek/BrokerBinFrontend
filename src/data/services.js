@@ -485,3 +485,16 @@ export const initialMFGs = ["3COM", "3DLABS", "3M", "3RD PARTY", "3WARE", "A-POW
 export const alphabets=[
   "#","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"
 ]
+
+export const filterDropdown = [
+  { id: "region", value: "Region", label: "Region" },
+  { id: "country", value: "Country", label: "Country" },
+  { id: "state", value: "State", label: "State" },
+  { id: "manufacturer", value: "Manufacturer", label: "Manufacturer" },
+  { id: "myVendors", value: "My Vendors", label: "My Vendors" },
+  { id: "products", value: "Products", label: "Products" },
+  { id: "feedbackRating", value: "Feedback Rating", label: "Feedback Rating" },
+  { id: "shieldMembers", value: "Shield Members", label: "Shield Members" },
+  { id: "listingInventory", value: "Listing Inventory", label: "Listing Inventory" },
+  { id: "membershipLevel", value: "Membership Level", label: "Membership Level" },
+];

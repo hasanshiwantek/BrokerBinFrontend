@@ -21,6 +21,10 @@ import listIcon from "@/assets/add-friend.svg";
 import removeVendorIcon from "@/assets/remove-icon.svg";
 import webIcon from "@/assets/web.svg";
 import profileIcon from "@/assets/list.svg";
+import { filterDropdown } from "@/data/services";
+import buildingIcon from "@/assets/building.svg";
+import userIcon from "@/assets/user.svg";
+import locationIcon from "@/assets/pin.svg";
 
 const RightSidebar = ({ company }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -30,6 +34,8 @@ const RightSidebar = ({ company }) => {
   const [dropdownOpen, setDropdownOpen] = useState(null);
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [scrollToSection, setScrollToSection] = useState(null);
+
   const dropdownRef = useRef(null);
   const token = Cookies.get("token");
   const dispatch = useDispatch();
@@ -193,7 +199,7 @@ const RightSidebar = ({ company }) => {
 
   // max-h-[85vh]
   return (
-    <div className=" !w-[50rem] border-[1px] border-l-gray-500 2xl:h-[60vh] md:max-h-[87vh]  overflow-y-scroll  overflow-x-hidden ">
+    <div className=" !w-[50rem] border-[1px] border-l-gray-500 2xl:h-[70vh] md:max-h-[102vh]  overflow-y-scroll  overflow-x-hidden ">
       <div
         className="flex justify-center gap-3 items-center text-[1vw] -mt-[1px] bg-black bg-opacity-50  !text-white p-5 rounded cursor-pointer relative "
         onMouseEnter={() => setIsDropdownOpen((prev) => (prev = !prev))}
@@ -270,25 +276,27 @@ const RightSidebar = ({ company }) => {
             </ThemeProvider>
           </div>
         )}
+
         {isDropdownOpen && (
-          <div className="absolute bg-white shadow-lg rounded z-10 top-[5rem] left-56 !text-[#444] ">
-            {[
-              "Region",
-              "Country",
-              "State",
-              "Manufacturer",
-              "My Vendors",
-              "Products",
-              "Feedback Rating",
-              "Shield Members",
-              "Listing Inventory",
-              "Membership Level",
-            ].map((filter, index) => (
+          <div
+            className="absolute bg-white shadow-lg rounded z-10 top-[5rem] left-56 !text-[#444] "
+            ref={dropdownRef}
+          >
+            {filterDropdown.map((filter) => (
               <div
-                key={index}
+                key={filter.id}
                 className="px-5 py-3 hover:bg-blue-500 hover:text-white cursor-pointer text-2xl"
               >
-                {filter}
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShowFilters(true); // Open filters if not open
+                    setScrollToSection(filter.id); // Set target for scrolling and opening
+                  }}
+                >
+                  {filter.label}
+                </a>
               </div>
             ))}
           </div>
@@ -300,6 +308,7 @@ const RightSidebar = ({ company }) => {
           onFiltersChange={handleFiltersUpdate}
           setShowFilters={setShowFilters}
           setFilteredData={setFilteredData}
+          scrollToSection={scrollToSection}
         />
       ) : (
         companiesToShow.map((comp, index) => (
@@ -329,7 +338,14 @@ const RightSidebar = ({ company }) => {
                 </ThemeProvider>
                 <div>
                   {/* ⭐ Display Star Ratings */}
-                  <div style={{ display: "flex", alignItems: "center" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      margin: "auto",
+                      width: "10rem",
+                    }}
+                  >
                     {[...Array(5)].map((_, starIndex) => {
                       const rating = companyRatings?.[index] || 0; // ✅ index is now defined
                       const isFilled = starIndex + 1 <= Math.floor(rating);
@@ -373,12 +389,26 @@ const RightSidebar = ({ company }) => {
               <div className="flex flex-col gap-3">
                 <ThemeProvider theme={theme}>
                   <Tooltip title={`${comp.company}`} arrow placement="top">
-                    <h3 className="font-semibold text-2xl">{comp.company}</h3>
+                    <div className="flex items-start  gap-3 ">
+                      <img
+                        src={locationIcon}
+                        className="w-5 h-5"
+                        alt="companyIcon"
+                      />
+                      <h3 className="font-semibold text-2xl">{comp.company}</h3>
+                    </div>
                   </Tooltip>
                 </ThemeProvider>
                 <ThemeProvider theme={theme}>
                   <Tooltip title={`${comp.address}`} arrow placement="top">
-                    <p className="text-sm font-semibold">{comp.address}</p>
+                    <div className="flex items-start gap-3">
+                      <img
+                        src={buildingIcon}
+                        className="w-5 h-5"
+                        alt="companyAddressIcon"
+                      />
+                      <p className="text-sm capitalize">{comp.address}</p>
+                    </div>
                   </Tooltip>
                 </ThemeProvider>
                 <ThemeProvider theme={theme}>
@@ -387,9 +417,12 @@ const RightSidebar = ({ company }) => {
                     arrow
                     placement="bottom"
                   >
-                    <p className="text-sm font-semibold">
-                      {comp.contactPerson}
-                    </p>
+                    <div className="flex items-start  gap-3">
+                      <img src={userIcon} className="w-5 h-5" alt="userIcon" />
+                      <p className="text-sm ">
+                        {comp.contactPerson}
+                      </p>
+                    </div>
                   </Tooltip>
                 </ThemeProvider>
               </div>
@@ -397,7 +430,7 @@ const RightSidebar = ({ company }) => {
             </div>
 
             <FaEllipsisH
-              className="absolute top-10 right-6 cursor-pointer text-[#2c83ec]"
+              className="absolute top-10 right-10 cursor-pointer text-[#2c83ec]"
               onClick={() => {
                 setDropdownOpen(dropdownOpen === comp.id ? null : comp.id);
                 console.log(("COMPANYID", comp.id));

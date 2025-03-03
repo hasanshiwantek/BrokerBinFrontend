@@ -17,7 +17,9 @@ import { fetchUserData } from "../../../ReduxStore/ProfleSlice";
 import { brokerAPI } from "../../api/BrokerEndpoint";
 import axios from "axios";
 import { FaStar } from "react-icons/fa";
-
+import { setTogglePopUp } from "@/ReduxStore/SearchProductSlice";
+import CompanyDetails from "../../Popups/CompanyDetails/CompanyDetails";
+import { setPopupCompanyDetail } from "@/ReduxStore/SearchProductSlice";
 const MyContact = () => {
   const token = Cookies.get("token");
   let [viewAsCompany, setViewAsCompany] = useState(true);
@@ -121,9 +123,15 @@ const MyContact = () => {
     // }
   }, []);
 
-
-
-
+  const { togglePopUp, popupCompanyDetail } = useSelector(
+    (state) => state.searchProductStore
+  );
+  // Company Modal Logic
+  const openCompanyModal = (company) => {
+    console.log("Opening Company Modal with Company:", company);
+    dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
+    dispatch(setTogglePopUp()); // Show company modal
+  };
 
   if (loading) {
     return <p>Loading...</p>;
@@ -248,7 +256,12 @@ const MyContact = () => {
                       >
                         <div className={css.myVendor_company_list_main}>
                           <div className={css.myVendor_company_list_main_img}>
-                            <img src={vendor.company.image} alt="vendor logo" />
+                            <img
+                              src={vendor.company.image}
+                              alt="vendor logo"
+                              className="cursor-pointer"
+                              onClick={() => openCompanyModal(vendor.company)}
+                            />
                             <span>
                               <p>{vendor.company.name}</p>
                             </span>
@@ -291,39 +304,44 @@ const MyContact = () => {
                                         style={{
                                           cursor: "pointer",
                                           marginRight: 4,
+                                          width: "15px",
                                         }}
                                       />
                                     );
                                   })}
                                 </div>
-
-                                {/* Display Rating Value & Count */}
-                                <p>
-                                  Average Rating: (
-                                  {companyRatings[index] == null ||
-                                  isNaN(companyRatings[index])
-                                    ? "N/A"
-                                    : (
-                                        (Math.min(
-                                          Math.max(companyRatings[index], 0),
-                                          5
-                                        ) /
-                                          5) *
-                                        100
-                                      ).toFixed(1) + "%"}
-                                  )
-                                </p>
-
-                                <p>
-                                  Total Reviews: {ratingCounts?.[index] || "0"}
-                                </p>
                               </div>
-                              
                             </span>
+
+                            {/* Display Rating Value & Count */}
                             <span>
+                              <p
+                                className="cursor-pointer"
+                                onClick={() => openCompanyModal(vendor.company)}
+                              >
+                                {vendor.company.name}
+                              </p>
+                              <p>
+                                (
+                                {companyRatings[index] == null ||
+                                isNaN(companyRatings[index])
+                                  ? "N/A"
+                                  : (
+                                      (Math.min(
+                                        Math.max(companyRatings[index], 0),
+                                        5
+                                      ) /
+                                        5) *
+                                      100
+                                    ).toFixed(1) + "%"}
+                                )
+                              </p>
+                            </span>
+                            {/* <span>
                               <p>company:</p>
                               <p>{vendor.company.name}</p>
-                            </span>
+                            </span> */}
+
                             <span>
                               <p>fax:</p>
                               <p>{vendor.company.phone_num}</p>
@@ -494,6 +512,9 @@ const MyContact = () => {
           </div>
         </div>
       </div>
+      {togglePopUp && (
+        <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
+      )}
     </>
   );
 };

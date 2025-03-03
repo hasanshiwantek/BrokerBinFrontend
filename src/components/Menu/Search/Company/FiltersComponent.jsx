@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import {
   Accordion,
   AccordionItem,
@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/accordion";
 import { regionsList, countriesList, statesList } from "@/data/services";
 
-const FiltersComponent = ({ onFiltersChange, setFilteredData }) => {
+const FiltersComponent = ({ onFiltersChange, setFilteredData,scrollToSection }) => {
   const [filters, setFilters] = useState({
     region: [],
     country: [],
@@ -37,9 +37,41 @@ const FiltersComponent = ({ onFiltersChange, setFilteredData }) => {
   }));
   console.log("......", combineStates);
 
+
+
+
+  const [openAccordion, setOpenAccordion] = useState([]); // 🟢 Stores expanded sections
+
+  // 🟢 Create refs for scrolling
+  const regionRef = useRef(null);
+  const countryRef = useRef(null);
+  const stateRef = useRef(null);
+
+  // 🟢 Function to scroll to a specific section
+  const scrollToFilter = (id) => {
+    const refs = {
+      region: regionRef,
+      country: countryRef,
+      state: stateRef,
+    };
+
+    if (refs[id]?.current) {
+      refs[id].current.scrollIntoView({ behavior: "smooth", block: "start" });
+      setOpenAccordion((prev) => [...new Set([...prev, id])]); // ✅ Expand section
+    }
+  };
+
+
+  useEffect(() => {
+    if (scrollToSection) {
+      scrollToFilter(scrollToSection); // Scroll when requested
+    }
+  }, [scrollToSection]);
+
+
   return (
     <div className="bg-white shadow-lg p-4 rounded">
-      <Accordion type="multiple" className="mt-4">
+      <Accordion type="multiple" className="mt-4"  value={openAccordion} onValueChange={setOpenAccordion}>
         <AccordionItem value="sort">
           <AccordionTrigger className="text-black text-2xl font-semibold">
             Sort
@@ -87,12 +119,12 @@ const FiltersComponent = ({ onFiltersChange, setFilteredData }) => {
           </AccordionContent>
         </AccordionItem>
 
-        <AccordionItem value="region">
+        <AccordionItem value="region" id="region" ref={regionRef}>
           <AccordionTrigger className="text-black  text-2xl font-semibold">
             Region
           </AccordionTrigger>
-          <AccordionContent>
-            <div className="grid grid-cols-2 gap-5">
+          <AccordionContent >
+            <div className="grid grid-cols-2 gap-5" >
               {regionsList.map((regionOption) => (
                 <label
                   key={regionOption.label}
@@ -115,7 +147,7 @@ const FiltersComponent = ({ onFiltersChange, setFilteredData }) => {
           </AccordionContent>
         </AccordionItem>
 
-        <AccordionItem value="country">
+        <AccordionItem value="country" id="country"  ref={countryRef} >
           <AccordionTrigger className="text-black  text-2xl font-semibold">
             Country
           </AccordionTrigger>
@@ -141,7 +173,7 @@ const FiltersComponent = ({ onFiltersChange, setFilteredData }) => {
           </AccordionContent>
         </AccordionItem>
 
-        <AccordionItem value="state">
+        <AccordionItem value="state"  id="state" ref={stateRef}>
           <AccordionTrigger className="text-black  text-2xl font-semibold">
             State
           </AccordionTrigger>
