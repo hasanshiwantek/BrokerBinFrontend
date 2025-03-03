@@ -93,7 +93,7 @@ const Add = () => {
   };
   
   return (
-    <div className={css.inventory}>
+    <div className={`${css.inventory} !min-w-fit`}>
       <InventoryButtons />
       <div className={css.inventory_add_main}>
         <form onSubmit={handleSubmit}>
