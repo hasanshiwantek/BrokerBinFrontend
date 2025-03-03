@@ -67,7 +67,7 @@ const CompanySearchResults = () => {
   const [isClicked, setIsClicked] = useState(false);
   return (
     <div
-      className={`${styles.main} mr-[auto] ml-[auto] mt-20  !bg-[#e8e8e8] w-[100rem]`}
+      className={`${styles.main} mr-[auto] ml-[auto] mt-20  !bg-[#e8e8e8] w-[100rem] 2xl:w-[120rem]  `}
     >
       <div className={styles.profileInfo_links}>
         <ul>
@@ -100,7 +100,7 @@ const CompanySearchResults = () => {
         </ul>
       </div>
 
-      <div >
+      <div>
         <div className="grid grid-cols-[3fr_1fr] border-4 border-gray-300 ">
           <div className="relative">
             {/* Dark Overlay with Centered Search Bar */}
@@ -108,7 +108,7 @@ const CompanySearchResults = () => {
               <input
                 type="text"
                 placeholder="Search Company / Location / Keywords"
-                className="w-full p-2 rounded bg-white text-2xl focus:ring-1 focus:ring-blue-500 focus:border-blue-500 border focus:outline-none"
+                className="w-full p-2 rounded bg-white text-xl focus:ring-1 focus:ring-blue-500 focus:border-blue-500 border focus:outline-none"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
