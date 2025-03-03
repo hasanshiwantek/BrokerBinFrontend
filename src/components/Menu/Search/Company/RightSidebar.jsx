@@ -435,7 +435,7 @@ const RightSidebar = ({ company }) => {
                       className="w-7 h-7 "
                       src={addVendorIcon}
                       alt="Email"
-                    />{" "}
+                    />{" "}  
                   </span>{" "}
                   Add Vendor
                 </button>
