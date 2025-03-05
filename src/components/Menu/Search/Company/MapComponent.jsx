@@ -11,6 +11,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Tooltip } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "./CompanySearchResults.css";
+import { FaInfoCircle } from "react-icons/fa";
 const MapComponent = ({ company }) => {
   const companiesArray = Array.isArray(company?.companies)
     ? company.companies
@@ -21,9 +22,12 @@ const MapComponent = ({ company }) => {
   if (companiesArray.length === 0) {
     return (
       <div className="bg-blue-400 p-4">
-        <p className="text-white !text-2xl m-4 font-semibold">
+        <p className="text-white !text-2xl m-4 font-semibold flex items-center justify-start gap-1">
+          <FaInfoCircle className="text-3xl" />
           No companies found
-          <span className="text-black text-2xl ml-4 font-semibold">Try another search</span>
+          <span className="text-black text-2xl ml-4 font-semibold">
+            Try another search
+          </span>
         </p>
       </div>
     );

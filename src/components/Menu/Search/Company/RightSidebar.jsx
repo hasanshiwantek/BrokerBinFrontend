@@ -25,6 +25,9 @@ import { filterDropdown } from "@/data/services";
 import buildingIcon from "@/assets/building.svg";
 import userIcon from "@/assets/user.svg";
 import locationIcon from "@/assets/pin.svg";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const RightSidebar = ({ company }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -144,8 +147,14 @@ const RightSidebar = ({ company }) => {
     try {
       const companyId = { company_id: compId };
       dispatch(addMyVendors({ companyId, token }));
+      toast.info(`Vendor Added Succesfully!`, {
+        style: { fontSize: "17px", marginTop: "-10px" }, //
+      });
     } catch (error) {
       console.log("ERROR while adding vendor, please try again later", error);
+      toast.error("Error while adding vendor, please try again later", {
+        style: { fontSize: "17px", marginTop: "-10px" }, //
+      });
     }
   };
 
@@ -166,10 +175,6 @@ const RightSidebar = ({ company }) => {
   const ratingCounts =
     companiesToShow?.map((vendor) => vendor?.ratingCount) || [];
 
-  console.log(
-    "Company Ratings in %:",
-    companiesToShow.map((rating) => (rating / 5) * 100)
-  );
 
   console.log("Rating Counts:", ratingCounts);
 
@@ -201,7 +206,7 @@ const RightSidebar = ({ company }) => {
 
   // max-h-[85vh]
   return (
-    <div className=" !w-[50rem] border-[1px] border-l-gray-500 2xl:h-[70vh] md:max-h-[102vh]  overflow-y-scroll  overflow-x-hidden ">
+    <div className=" !w-[50rem] border-[1px] border-l-gray-500 2xl:h-[70vh] md:max-h-[102vh]  overflow-y-scroll  overflow-x-hidden relative ">
       <div
         className="flex justify-center gap-3 items-center text-[1vw] -mt-[1px] bg-black bg-opacity-50  !text-white p-5 rounded cursor-pointer relative "
         onMouseEnter={() => setIsDropdownOpen((prev) => (prev = !prev))}
@@ -333,7 +338,7 @@ const RightSidebar = ({ company }) => {
                       <img
                         src={comp.logo}
                         alt="Company Logo"
-                        className="w-40 h-20  rounded-lg object-contain p-1"
+                        className="w-44 h-24 rounded-lg object-contain p-1 "
                       />
                     </div>
                   </Tooltip>
@@ -346,6 +351,7 @@ const RightSidebar = ({ company }) => {
                       alignItems: "center",
                       margin: "auto",
                       width: "10rem",
+                      marginTop: "-10px",
                     }}
                   >
                     {[...Array(5)].map((_, starIndex) => {
@@ -421,9 +427,7 @@ const RightSidebar = ({ company }) => {
                   >
                     <div className="flex items-start  gap-3">
                       <img src={userIcon} className="w-5 h-5" alt="userIcon" />
-                      <p className="text-sm ">
-                        {comp.contactPerson}
-                      </p>
+                      <p className="text-sm ">{comp.contactPerson}</p>
                     </div>
                   </Tooltip>
                 </ThemeProvider>
@@ -531,6 +535,7 @@ const RightSidebar = ({ company }) => {
       {togglePopUp && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
+      <ToastContainer position="top-center" autoClose={2000} />
     </div>
   );
 };

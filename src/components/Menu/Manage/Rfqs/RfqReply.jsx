@@ -423,7 +423,7 @@ const RfqReply = () => {
     <Header/>
       <div className={`${css.rfqcontainer} `}>
         <form >
-          <div className={`${css.rfqNew}  sm:h-[58vh] lg:h-[68vh] mt-8`} ref={modalRef}>
+          <div className={`${css.rfqNew}  sm:h-[58vh] lg:h-[68vh] mt-8 !overflow-hidden`} ref={modalRef}>
 
             <div className={`${css.rfqBody}`}>
               <div className={css.rfqHeaderSec}>
