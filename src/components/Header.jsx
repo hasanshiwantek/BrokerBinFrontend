@@ -43,8 +43,7 @@ import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import dp1 from "../assets/drop-down1.svg";
 import vendorIcon from "../assets/My-Vendors Icon.svg";
-import vendorIcon2 from "../assets/Untitled-3.svg"; 
-
+import vendorIcon2 from "../assets/Untitled-3.svg";
 import dp2 from "../assets/drop-down-2.svg";
 import dp3 from "../assets/drop-down3.svg";
 import dp4 from "../assets/drop-down4.svg";
@@ -52,6 +51,10 @@ import dp5 from "../assets/drop-down5.svg";
 import dp6 from "../assets/drop-down6.svg";
 import { Tooltip } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import feedbackIcon from "../assets/icon 2.svg";
+import hotlistIcon from "../assets/icon 3.svg";
+import inventoryIcon from "../assets/icon 4.svg";
+import broadcastHistoryIcon from "../assets/ICON 6.svg";
 
 // import vendorIcon from "../assets/vendor-pricing.svg"
 
@@ -172,7 +175,6 @@ const Header = () => {
                 className={css.search_btn}
               >
                 Search
-
               </button>
               <button
                 type="submit"
@@ -373,13 +375,13 @@ const Header = () => {
               <IoIosArrowDown className={`${css.onHoverMenuIconDown}  `} />
               <IoIosArrowUp className={css.onHoverMenuIconUp} />
 
-              <div className={css.dropdownMenu} >
+              <div className={css.dropdownMenu}>
                 <ul style={{ minWidth: "30px" }}>
                   <ThemeProvider theme={theme}>
                     <Tooltip title="My Contact" arrow placement="left">
                       <Link to={"/myprofile/MyContact"}>
                         <li>
-                          <img src={vendorIcon } alt="" srcSet="" />
+                          <img src={vendorIcon} alt="" srcSet="" />
                         </li>
                       </Link>
                     </Tooltip>
@@ -390,7 +392,7 @@ const Header = () => {
                       <Link to={"/feedback"}>
                         <li>
                           <img
-                            src={dp2}
+                            src={feedbackIcon}
                             alt=""
                             srcSet=""
                             style={{ color: "black" }}
@@ -405,7 +407,7 @@ const Header = () => {
                       <Link to={"/hotlist/view"}>
                         <li>
                           <img
-                            src={dp3}
+                            src={hotlistIcon}
                             alt="dsd"
                             srcSet=""
                             style={{ color: "black" }}
@@ -415,18 +417,18 @@ const Header = () => {
                     </Tooltip>
                   </ThemeProvider>
                   <ThemeProvider theme={theme}>
-                  <Tooltip title="Inventory" arrow placement="left">
-                  <Link to={"/inventory"}>
-                    <li>
-                      <img
-                        src={dp6}
-                        alt=""
-                        srcSet=""
-                        style={{ color: "black" }}
-                      />
-                    </li>
-                  </Link>
-                  </Tooltip>
+                    <Tooltip title="Inventory" arrow placement="left">
+                      <Link to={"/inventory"}>
+                        <li>
+                          <img
+                            src={inventoryIcon}
+                            alt=""
+                            srcSet=""
+                            style={{ color: "black" }}
+                          />
+                        </li>
+                      </Link>
+                    </Tooltip>
                   </ThemeProvider>
                   {/* <Link to={"/reports/Company"}>
                     <li><img src={dp5} alt="" srcset="" style={{ color: "black" }} />........</li>
@@ -691,8 +693,12 @@ const Header = () => {
                 <ThemeProvider theme={theme}>
                   <Tooltip title="Broadcast History" arrow placement="bottom">
                     <li>
-                      <Link to={"/broadcasthistory"}>
-                        <BsClockFill />
+                      <Link to={"/broadcasthistory"} className="w-8">
+                        <img
+                          src={broadcastHistoryIcon}
+                          alt="Broadcast History"
+                          srcset=""
+                        />
                       </Link>
                     </li>
                   </Tooltip>
@@ -709,9 +715,8 @@ const Header = () => {
                   <Tooltip title="My Contact" arrow placement="bottom">
                     <li>
                       <Link to={"/myprofile/MyContact"} className="w-8">
-              
-                      <img src={vendorIcon} alt="Vendor logo" />
-                      {/* <BsPeopleFill /> */}
+                        <img src={vendorIcon} alt="Vendor logo" />
+                        {/* <BsPeopleFill /> */}
                       </Link>
                     </li>
                   </Tooltip>
@@ -720,8 +725,8 @@ const Header = () => {
                 <ThemeProvider theme={theme}>
                   <Tooltip title="View Hotlist" arrow placement="bottom">
                     <li>
-                      <Link to={"/hotList/view"}>
-                        <AiFillFile />
+                      <Link to={"/hotList/view"} className="w-8">
+                        <img src={hotlistIcon} alt="Vendor logo" />
                       </Link>
                     </li>
                   </Tooltip>
@@ -729,8 +734,8 @@ const Header = () => {
                 <ThemeProvider theme={theme}>
                   <Tooltip title="Upload Inventory" arrow placement="bottom">
                     <li>
-                      <Link to={"/inventory"}>
-                        <MdFileUpload />
+                      <Link to={"/inventory"} className="w-8">
+                        <img src={inventoryIcon} alt="Vendor logo" />
                       </Link>
                     </li>
                   </Tooltip>
