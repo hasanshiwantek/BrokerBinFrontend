@@ -60,7 +60,7 @@ const CompanySearchResults = () => {
         console.log("COMPANY RESULTS", companyData);
       } catch (error) {
         console.log("ERROR while searching", error);
-      }
+      }  
     }
   };
 
@@ -71,7 +71,7 @@ const CompanySearchResults = () => {
     >
       <div className={styles.profileInfo_links}>
         <ul>
-          <li>
+          <li>  
             <NavLink
               to="/search/Inventory"
               end
