@@ -17,7 +17,7 @@ import {
 import LoadingState from "@/LoadingState";
 import ErrorStatus from "../Error/ErrorStatus";
 
-import AddToHotlist from "./AddToHotlist";
+import AddToHotList from "./AddToHotlist";
 import ProductTableBtn from "./ProductTableBtn";
 import ProductTableDetail from "./ProductTableDetail";
 
@@ -180,7 +180,7 @@ const SearchProduct = () => {
         ) ? (
           // ✅ No results case
           <div className="">
-            <AddToHotlist item={searchString || partModel} />
+            <AddToHotList item={searchString || partModel} />
           </div>
         ) : isKeywordSearch ? (
           // ✅ Single table for `searchByKeyword`
