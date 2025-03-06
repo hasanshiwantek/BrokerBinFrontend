@@ -6,7 +6,6 @@ import CompanyDetails from "../Popups/CompanyDetails/CompanyDetails";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { useLocation, useNavigate } from "react-router-dom";
-
 import {
   searchProductQuery,
   setTogglePopUp,
@@ -18,7 +17,7 @@ import {
 import LoadingState from "@/LoadingState";
 import ErrorStatus from "../Error/ErrorStatus";
 
-import AddToHotList from "./AddToHotList";
+import AddToHotlist from "./AddToHotlist";
 import ProductTableBtn from "./ProductTableBtn";
 import ProductTableDetail from "./ProductTableDetail";
 
@@ -181,7 +180,7 @@ const SearchProduct = () => {
         ) ? (
           // ✅ No results case
           <div className="">
-            <AddToHotList item={searchString || partModel} />
+            <AddToHotlist item={searchString || partModel} />
           </div>
         ) : isKeywordSearch ? (
           // ✅ Single table for `searchByKeyword`
