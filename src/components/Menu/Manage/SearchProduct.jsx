@@ -43,6 +43,7 @@ import { sortInventory } from "../../../ReduxStore/SearchProductSlice";
 
 
 const SearchProduct = () => {
+  console.log("SearchProduct component re-rendered");
 
   const token = Cookies.get("token");
   const location = useLocation();
