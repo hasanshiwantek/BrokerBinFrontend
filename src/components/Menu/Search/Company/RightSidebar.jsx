@@ -415,7 +415,7 @@ const RightSidebar = ({ company }) => {
                         className="w-5 h-5"
                         alt="companyAddressIcon"
                       />
-                      <p className="text-sm capitalize">{comp.address}</p>
+                      <p className="!text-base capitalize">{comp.address}</p>
                     </div>
                   </Tooltip>
                 </ThemeProvider>
@@ -427,7 +427,7 @@ const RightSidebar = ({ company }) => {
                   >
                     <div className="flex items-start  gap-3">
                       <img src={userIcon} className="w-5 h-5" alt="userIcon" />
-                      <p className="text-sm ">{comp.contactPerson}</p>
+                      <p className="!text-base ">{comp.contactPerson}</p>
                     </div>
                   </Tooltip>
                 </ThemeProvider>
