@@ -23,7 +23,6 @@ import ProductTableBtn from "./ProductTableBtn";
 import ProductTableDetail from "./ProductTableDetail";
 
 const SearchProduct = () => {
-    // console.log("Rendered...");
     
   const token = Cookies.get("token");
   const location = useLocation();

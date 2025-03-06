@@ -9,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import Footer from "@/components/Footer/Footer";
 
-const AddToHotList = ({ item }) => {
+const HotList = ({ item }) => {
   const dispatch = useDispatch();
   const token = Cookies.get("token");
 
@@ -89,4 +89,4 @@ const AddToHotList = ({ item }) => {
   );
 };
 
-export default AddToHotList;
+export default HotList;

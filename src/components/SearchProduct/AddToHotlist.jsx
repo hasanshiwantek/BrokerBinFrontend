@@ -9,6 +9,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 
 const AddToHotList = ({ item }) => {
+  console.log("Rendered... Hotlist");
+
   const dispatch = useDispatch();
   const token = Cookies.get("token");
 
