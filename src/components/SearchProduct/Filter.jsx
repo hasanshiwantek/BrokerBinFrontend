@@ -1,7 +1,6 @@
-import React, { useState, memo,useEffect } from "react";
-import css from "../styles/Filter.module.css";
-import { partVariance } from "../data/tableData";
-import { BsToggleOn } from "react-icons/bs";
+import React, { useState, memo } from "react";
+import css from "@/styles/Filter.module.css";
+import { partVariance } from "@/data/tableData";
 import { FaWindowClose } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
@@ -12,7 +11,7 @@ import {
   clearSearchResponseMatched,
   searchProductQuery
   // applyFilters
-} from "../ReduxStore/SearchProductSlice";
+} from "@/ReduxStore/SearchProductSlice";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
 const Filter = ({ currentQuery }) => {
