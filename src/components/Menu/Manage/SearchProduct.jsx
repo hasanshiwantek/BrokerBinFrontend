@@ -38,7 +38,7 @@ import { BiBlock } from "react-icons/bi";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import MyRFQNew from "../../Popups/MyRFQNew";
 import ErrorStatus from "../../Error/ErrorStatus";
-import AddToHotList from "./AddToHotList";
+import AddToHotList from "./AddtoHotList";
 import { sortInventory } from "../../../ReduxStore/SearchProductSlice";
 
 

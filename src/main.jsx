@@ -12,25 +12,44 @@ import LoadingState2 from "./LoadingState2.jsx";
 // Lazy load components
 const Login = lazy(() => import("./components/LoginRegister/Login.jsx"));
 const Register = lazy(() => import("./components/LoginRegister/Register.jsx"));
-const ForgotPassword = lazy(() => import("./components/LoginRegister/ForgotPassword.jsx"));
-const ForgotEmail = lazy(() => import("./components/LoginRegister/ForgotEmail.jsx"));
-const RecoverPassword = lazy(() => import("./components/LoginRegister//Authentication/RecoverPassword.jsx"));
+const ForgotPassword = lazy(() =>
+  import("./components/LoginRegister/ForgotPassword.jsx")
+);
+const ForgotEmail = lazy(() =>
+  import("./components/LoginRegister/ForgotEmail.jsx")
+);
+const RecoverPassword = lazy(() =>
+  import("./components/LoginRegister//Authentication/RecoverPassword.jsx")
+);
 const Header = lazy(() => import("./components/Header.jsx"));
-const Footer = lazy(() => import("./components/Footer/Footer.jsx"))
+const Footer = lazy(() => import("./components/Footer/Footer.jsx"));
 const Home = lazy(() => import("./components/Home/Home.jsx"));
 const Cart = lazy(() => import("./components/Tools/Cart.jsx"));
 // const SearchProduct = lazy(() => import("./components/Menu/Manage/SearchProduct.jsx"));
-const SearchProduct = lazy(() => import("./components/SearchProduct/SearchProduct.jsx"));
+const SearchProduct = lazy(() =>
+  import("./components/SearchProduct/SearchProduct.jsx")
+);
 
 const MyProfile = lazy(() => import("./components/Menu/Manage/MyProfile.jsx"));
-const CompanyProfile = lazy(() => import("./components/Menu/Manage/Mycompany/CompanyProfile.jsx"))
-const CreateAccount = lazy(() => import("./components/Menu/Manage/Mycompany/CreateAccount.jsx"))
+const CompanyProfile = lazy(() =>
+  import("./components/Menu/Manage/Mycompany/CompanyProfile.jsx")
+);
+const CreateAccount = lazy(() =>
+  import("./components/Menu/Manage/Mycompany/CreateAccount.jsx")
+);
 const Options = lazy(() => import("./components/Menu/Manage/Options.jsx"));
-const BroadcastFilters = lazy(() => import("./components/Menu/Manage/BroadcastFilter/BroadcastFilters.jsx"));
-const MyBroadcast = lazy(() => import("./components/Menu/Broadcast/MyBroadCast.jsx"));
-const BroadCastHistory = lazy(() => import("./components/Menu/Broadcast/BroadCastHistory.jsx"));
-const ReplyBroadcast = lazy(() => import("./components/Menu/Broadcast/ReplyBroadcast.jsx"));
-
+const BroadcastFilters = lazy(() =>
+  import("./components/Menu/Manage/BroadcastFilter/BroadcastFilters.jsx")
+);
+const MyBroadcast = lazy(() =>
+  import("./components/Menu/Broadcast/MyBroadCast.jsx")
+);
+const BroadCastHistory = lazy(() =>
+  import("./components/Menu/Broadcast/BroadCastHistory.jsx")
+);
+const ReplyBroadcast = lazy(() =>
+  import("./components/Menu/Broadcast/ReplyBroadcast.jsx")
+);
 
 const CompanyDetails = lazy(() =>
   import("./components/Popups/CompanyDetails/CompanyDetails.jsx")
@@ -39,16 +58,18 @@ const MyRFQ = lazy(() => import("./components/Menu/Manage/MyRFQ.jsx"));
 
 const RfqSent = lazy(() => import("./components/Menu/Manage/RfqSent.jsx"));
 
-const RfqReply = lazy(() => import("./components/Menu/Manage/Rfqs/RfqReply.jsx"))
+const RfqReply = lazy(() =>
+  import("./components/Menu/Manage/Rfqs/RfqReply.jsx")
+);
 
-const RfqArcheived = lazy(() => import("./components/Menu/Manage/Rfqs/RfqArchived.jsx"))
+const RfqArcheived = lazy(() =>
+  import("./components/Menu/Manage/Rfqs/RfqArchived.jsx")
+);
 
 const Inventory = lazy(() =>
   import("./components/Menu/Manage/Inventory/Inventory.jsx")
 );
-const Search = lazy(() =>
-  import("./components/Menu/Search/Search.jsx")
-);
+const Search = lazy(() => import("./components/Menu/Search/Search.jsx"));
 const SearchCompany = lazy(() =>
   import("./components/Menu/Search/Company/Company.jsx")
 );
@@ -59,33 +80,25 @@ const InventorySearch = lazy(() =>
   import("./components/Menu/Search/Inventory/InventorySearch.jsx")
 );
 
-const InventorySearchResult = lazy(() => import("./components/Menu/Search/Inventory/InventorySearchResult.jsx"));
+const InventorySearchResult = lazy(() =>
+  import("./components/Menu/Search/Inventory/InventorySearchResult.jsx")
+);
 
 const SearchResult = lazy(() =>
   import("./components/Menu/Search/SearchResults.jsx")
 );
-const Services = lazy(() =>
-  import("./components/Menu/Search/Services.jsx")
-);
-
+const Services = lazy(() => import("./components/Menu/Search/Services.jsx"));
 
 const FeedBackProfile = lazy(() =>
   import("./components/Menu/Search/FeedBackProfile.jsx")
 );
 
-
-
-const Manage = lazy(() =>
-  import("./components/Menu/Manage/Manage.jsx")
-);
+const Manage = lazy(() => import("./components/Menu/Manage/Manage.jsx"));
 const MyServices = lazy(() =>
   import("./components/Menu/Manage/MyServices.jsx")
 );
 
-
-const Person = lazy(() =>
-  import("./components/Menu/Search/Person.jsx")
-);
+const Person = lazy(() => import("./components/Menu/Search/Person.jsx"));
 const EditDelete = lazy(() =>
   import("./components/Menu/Manage/Inventory/EditDelete.jsx")
 );
@@ -106,13 +119,17 @@ const Map = lazy(() => import("./components/Map/Map.jsx"));
 const MyWorldMap = lazy(() => import("./components/Map/MyWorldMap.jsx"));
 const Form = lazy(() => import("./Form.jsx"));
 const TextEditor = lazy(() => import("./components/TextEditor.jsx"));
-const Tools = lazy(() => import("./components/Menu/Tools/Tools.jsx"))
+const Tools = lazy(() => import("./components/Menu/Tools/Tools.jsx"));
 const MyVendors = lazy(() => import("./components/Menu/Tools/MyVendors.jsx"));
 const MyContact = lazy(() => import("./components/Menu/Tools/MyContact.jsx"));
-const Company = lazy(() => import("./components/Menu/Reports/Company/Company.jsx"));
+const Company = lazy(() =>
+  import("./components/Menu/Reports/Company/Company.jsx")
+);
 const SiteWide = lazy(() => import("./components/Menu/Reports/SiteWide.jsx"));
 const Email = lazy(() => import("./components/Menu/Reports/Email.jsx"));
-const ServiceStats = lazy(() => import("./components/Menu/Reports/ServiceStats.jsx"));
+const ServiceStats = lazy(() =>
+  import("./components/Menu/Reports/ServiceStats.jsx")
+);
 const MatchYourHits = lazy(() =>
   import("./components/Menu/Reports/Company/MatchYourHits.jsx")
 );
@@ -140,9 +157,7 @@ const HotListEdit = lazy(() =>
   import("./components/Menu/Tools/HotListEdit.jsx")
 );
 
-const SafeTrading = lazy(() =>
-  import("./components/ui/SafeTrading.jsx")
-);
+const SafeTrading = lazy(() => import("./components/ui/SafeTrading.jsx"));
 import Crousel from "./Crousel.jsx";
 import { Provider } from "react-redux";
 import store from "./ReduxStore/Store.js";
@@ -152,8 +167,6 @@ import Help from "./components/Menu/Main/Help.jsx";
 import SvgMap from "./components/SvgMap.jsx";
 import Badges from "./components/Menu/Main/Badges.jsx";
 import SiteMap from "./components/Menu/Main/SiteMap.jsx";
-
-
 
 const router = createBrowserRouter([
   {
@@ -183,7 +196,7 @@ const router = createBrowserRouter([
         path: "/password/forgot",
         element: (
           <Suspense fallback={<LoadingState />}>
-            <ForgotPassword/>
+            <ForgotPassword />
           </Suspense>
         ),
       },
@@ -191,7 +204,7 @@ const router = createBrowserRouter([
         path: "/login/forgot",
         element: (
           <Suspense fallback={<LoadingState />}>
-            <ForgotEmail/>
+            <ForgotEmail />
           </Suspense>
         ),
       },
@@ -200,12 +213,11 @@ const router = createBrowserRouter([
         path: "/recover/password",
         element: (
           <Suspense fallback={<LoadingState />}>
-            <RecoverPassword/>
+            <RecoverPassword />
           </Suspense>
         ),
       },
     ],
-    
   },
   {
     element: (
@@ -239,7 +251,6 @@ const router = createBrowserRouter([
             <Header />
             <Cart />
             <Footer />
-
           </Suspense>
         ),
       },
@@ -380,7 +391,6 @@ const router = createBrowserRouter([
             <Header />
             <Search />
             <Footer />
-
           </Suspense>
         ),
       },
@@ -434,15 +444,15 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
-        {
-          path: "/inventory-searchResult",
-          element: (
-            <Suspense fallback={<LoadingState />}>
-              <Header />
-              <InventorySearchResult/>
-              <Footer />
-            </Suspense>
-          ),
+      {
+        path: "/inventory-searchResult",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <InventorySearchResult />
+            <Footer />
+          </Suspense>
+        ),
       },
       {
         path: "/services",
@@ -451,7 +461,6 @@ const router = createBrowserRouter([
             <Header />
             <Services />
             <Footer />
-
           </Suspense>
         ),
       },
@@ -488,7 +497,6 @@ const router = createBrowserRouter([
         ),
       },
 
-
       {
         path: "/rfq/create",
         element: (
@@ -499,7 +507,6 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
-
 
       {
         path: "/inventory",
@@ -577,7 +584,7 @@ const router = createBrowserRouter([
       //       <Advanced />
       //     </Suspense>
       //   ),
-      
+
       {
         path: "/map",
         element: (
@@ -852,9 +859,8 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingState />}>
             <Header />
-            <SafeTrading/>
+            <SafeTrading />
             <Footer />
-
           </Suspense>
         ),
       },
