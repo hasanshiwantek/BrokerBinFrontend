@@ -38,7 +38,7 @@ import { BiBlock } from "react-icons/bi";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import MyRFQNew from "../../Popups/MyRFQNew";
 import ErrorStatus from "../../Error/ErrorStatus";
-import AddToHotList from "./AddToHotList";
+import HotList from "./HotList";
 import { sortInventory } from "../../../ReduxStore/SearchProductSlice";
 
 
@@ -192,7 +192,7 @@ const SearchProduct = () => {
           ) ? (
           // ✅ No results case
           <div className="">
-            <AddToHotList item={searchString || partModel} />
+            <HotList item={searchString || partModel} />
           </div>
 
         ) : isKeywordSearch ? (
@@ -240,7 +240,7 @@ const SearchProduct = () => {
               ) : (
                 // ✅ Show Hotlist only for unavailable parts
                 <div key={`hotlist-${partModel}`}>
-                  <AddToHotList item={partModel} />
+                  <HotList item={partModel} />
                 </div>
               )}
             </div>

@@ -1,15 +1,16 @@
 import React from "react";
-import css from "../../../styles/SearchProducts.module.css";
-import { addToHotList } from "../../../ReduxStore/SearchProductSlice";
+import css from "@/styles/SearchProducts.module.css";
+import { addToHotList } from "../../ReduxStore/SearchProductSlice";
 import { useDispatch } from "react-redux";
 import Cookies from "js-cookie";
-import InventorySearch from "../Search/Inventory/InventorySearch";
+import InventorySearch from "../Menu/Search/Inventory/InventorySearch";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-import Footer from "@/components/Footer/Footer";
 
 const AddToHotList = ({ item }) => {
+  console.log("Rendered... Hotlist");
+
   const dispatch = useDispatch();
   const token = Cookies.get("token");
 
