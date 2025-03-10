@@ -35,7 +35,6 @@ const Filter = ({ currentQuery }) => {
   //   console.log("Updated searchResponseMatched in Filter:", searchResponseMatched);
   // }, [searchResponseMatched]);
   
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -66,8 +65,6 @@ const Filter = ({ currentQuery }) => {
     });
   });
   
-  // console.log("Manufacturer Count:", manufacturerCount);
-  
 // Condition Count
 const conditionCount = {};
 Object.values(searchResponseMatched || {}).flatMap(item => item?.data ? item.data : [item]).forEach((item) => {
@@ -94,9 +91,6 @@ Object.values(searchResponseMatched || {}).flatMap(item => item?.data ? item.dat
   countryCount[country] = (countryCount[country] || 0) + 1;
   // console.log("Country in Filter:", country + " CountryCount: " + countryCount[country]);
 });
-
-// const { searchString, partModel } = useSelector((store) => store.searchProductStore);
-// console.log("partModel from Props:", partModel);
 
   const submitProductFilter = (event) => {
     event.preventDefault();
@@ -136,8 +130,6 @@ Object.values(searchResponseMatched || {}).flatMap(item => item?.data ? item.dat
     dispatch(searchProductQuery({ token, page: 1, search: currentQuery })); // Fetch initial query data
   };
   
-  
-
   return (
       <div className={css.filterSection}>
         <div id={css.advancedFilters}>

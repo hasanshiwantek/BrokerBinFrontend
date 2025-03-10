@@ -29,6 +29,8 @@ const ProductTableDetail = React.memo(
     searchString,
     keyWordPartModel,
   }) => {
+  console.log("RENDERED PRODUCTTABLEDETAIL")
+  
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -65,10 +67,10 @@ const ProductTableDetail = React.memo(
     const loggedInUserCompany = initialData?.company?.name;
     console.log("LoggedIn User Company ", loggedInUserCompany);
 
-    useEffect(() => {
-      console.log(id);
-      dispatch(fetchUserData({ id, token }));
-    }, []);
+    // useEffect(() => {
+    //   console.log(id);
+    //   dispatch(fetchUserData({ id, token }));
+    // }, []);
 
     // Extract all company names
     const companyNames = Object.values(searchResponseMatched)
@@ -278,13 +280,13 @@ const ProductTableDetail = React.memo(
 
     console.log("Vsible Pages: ", visiblePages);
 
-    useEffect(() => {
+   /* useEffect(() => {
       // Ensure visible pages update dynamically based on the current page
       const newStart = Math.floor((page - 1) / 10) * 10 + 1;
       const newEnd = Math.min(newStart + 9, totalPagess);
 
       setVisiblePages([newStart, newEnd]);
-    }, [page, totalPagess]); // Runs when page or total pages change
+    }, [page, totalPagess]); */
 
     const [sortBy, setSortBy] = useState(null); // Initially no column is sorted
     const [sortOrder, setSortOrder] = useState("desc"); // Default to "desc"

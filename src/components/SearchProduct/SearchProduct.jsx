@@ -22,7 +22,7 @@ import ProductTableBtn from "./ProductTableBtn";
 import ProductTableDetail from "./ProductTableDetail";
 
 const SearchProduct = () => {
-    
+  console.log("Component RENDERED")
   const token = Cookies.get("token");
   const location = useLocation();
   const dispatch = useDispatch();
@@ -66,9 +66,6 @@ const SearchProduct = () => {
   if (searchResponseMatched) {
     Object.entries(searchResponseMatched || {}).forEach(
       ([partModel, details]) => {
-        // console.log("Part Model:", partModel, details);
-        // console.log("Data:", details.data);
-        // console.log("searchResponseMatched:", searchResponseMatched);
       }
     );
   }
@@ -105,6 +102,7 @@ const SearchProduct = () => {
     dispatch(searchProductHistory({ token })).then((result) =>
       console.log("searchProductHistory result:", result)
     );
+    console.log("Effect triggered:", { searchString, partModel, token });
   }, [location.search, dispatch, token]); // 🔹 Only trigger when URL params change
 
   const [currentQuery, setCurrentQuery] = useState(searchString || partModel);
@@ -113,7 +111,6 @@ const SearchProduct = () => {
     if (searchString || partModel) {
       setCurrentQuery(searchString || partModel); // Update with latest search or partModel
     }
-    
   }, [searchString, partModel]);
   // const initialQuery = useRef(searchString); // Save the initial query
 
