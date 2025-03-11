@@ -26,7 +26,7 @@ import { setPopupCompanyDetail } from "../../ReduxStore/SearchProductSlice";
 import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
+import { FaStar, FaStarHalfAlt, FaRegStar,FaAddressBook,FaHandshake } from "react-icons/fa";
 
 const Home = () => {
   const token = Cookies.get("token");
@@ -224,7 +224,7 @@ const Home = () => {
             <div className={css.gridHome1}>
               <div className={`mailSection ${css.mailSection}`}>
                 <div className={css.gridHome1_Bar}>
-                  <MdManageAccounts />
+                  <FaAddressBook />
                   <p>Manage</p>
                   <div style={{ color: "var(--primary-color)" }}>
                     <BiDotsHorizontalRounded />
@@ -538,7 +538,7 @@ const Home = () => {
                 </div> */}
 
                 <div className={`mailSection ${css.mailSection}`}>
-                  <MdHandshake />
+                  <FaHandshake />
                   <Link to={"/safe_trading"}>
                     <p>Safe Trading Center</p>
                   </Link>

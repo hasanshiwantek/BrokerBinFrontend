@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import css from "@/styles/SearchProducts.module.css";
-import Filter from "./Filter";
 import ProductsPieChart from "../ProductsPieChart";
 import CompanyDetails from "../Popups/CompanyDetails/CompanyDetails";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,13 +15,12 @@ import {
 } from "@/ReduxStore/SearchProductSlice";
 import LoadingState from "@/LoadingState";
 import ErrorStatus from "../Error/ErrorStatus";
-
 import AddToHotList from "./AddToHotlist";
 import ProductTableBtn from "./ProductTableBtn";
 import ProductTableDetail from "./ProductTableDetail";
+import Filter from "./Filter";
 
 const SearchProduct = () => {
-    
   const token = Cookies.get("token");
   const location = useLocation();
   const dispatch = useDispatch();
@@ -58,9 +56,9 @@ const SearchProduct = () => {
       JSON.stringify(searchResponseMatched)
   );
 
-//   useEffect(() => {
-//     console.log("filterToggle:", filterToggle);
-//   }, []);
+  //   useEffect(() => {
+  //     console.log("filterToggle:", filterToggle);
+  //   }, []);
 
   // searchResponseMatched.map((item) => { console.log("Part Model " + item.partModel) })
   if (searchResponseMatched) {
@@ -113,13 +111,11 @@ const SearchProduct = () => {
     if (searchString || partModel) {
       setCurrentQuery(searchString || partModel); // Update with latest search or partModel
     }
-    
   }, [searchString, partModel]);
   // const initialQuery = useRef(searchString); // Save the initial query
 
   useEffect(() => {
     console.log("Filtered Search Response:", filteredSearchResponse);
-
   }, [filteredSearchResponse]);
 
   if (gettingProducts) {
@@ -189,9 +185,13 @@ const SearchProduct = () => {
             <div className={css.productTable}>
               <ProductTableBtn />
               <ProductTableDetail
-                partData={Object.values(searchResponseMatched).flatMap(
-                  (details) => details.data
-                )} // Merging all partModels
+                partData={
+                  searchResponseMatched?.foundItems
+                    ? searchResponseMatched.foundItems // After sorting
+                    : Object.values(searchResponseMatched).flatMap(
+                        (details) => details.data || []
+                      )
+                } // Merging all partModels
                 partModel={partModel || "All Results"} // Displaying a single table
                 keyWordPartModel={partModel}
                 totalCount={
