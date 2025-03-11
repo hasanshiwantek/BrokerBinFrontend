@@ -84,11 +84,18 @@ const ProductTableDetail = React.memo(
     const keys = Object.keys(searchResponseMatched);
     console.log(keys); // Output: ["001NFM", "002CR", "003442U"]
 
+    const data = Object.values(searchResponseMatched).flatMap((item) =>
+      console.log("ITEM: ",item )
+    );
+    console.log("DATA........",data);
+
     const handleShowPopupCompanyDetails = (event, companyId) => {
-      event.stopPropagation();
+      event.stopPropagation();   
 
       const companyDetail = Object.values(searchResponseMatched || {}).flatMap(
-        (item) => item.data.find((e) => e.addedBy?.company?.id === companyId)
+        (item) =>
+          item?.data?.find((e) => e.addedBy?.company?.id === companyId) ||
+          item.map((e) => e.addedBy?.company?.id === companyId)
       )[0];
 
       console.log("COMPANYID:", companyId, "COMPANYDETAIL:", companyDetail);
@@ -116,8 +123,10 @@ const ProductTableDetail = React.memo(
     };
 
     const handleHoverCompanyDetail = (event, id) => {
-      const companyDetail = Object.values(searchResponseMatched).flatMap(
-        (item) => item?.data?.find((e) => e?.id === id)
+      const companyDetail = Object.values(searchResponseMatched || {}).flatMap(
+        (item) =>
+          item?.data?.find((e) => e?.id === id) ||
+          item?.foundItems.map((e) => e?.id === id) // Check in foundItems as well
       )[0]; // Get the first matching result
 
       console.log("HOVERED COMPANY DETAIL:", companyDetail);
