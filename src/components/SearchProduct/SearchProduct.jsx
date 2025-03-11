@@ -75,7 +75,10 @@ const SearchProduct = () => {
     const queryParams = new URLSearchParams(location.search);
     const searchString = queryParams.get("query") || ""; // Multi-part search
     const partModel = queryParams.get("partModel") || ""; // Single part search
-
+    const partModelArr=[]
+    partModelArr.push(partModel)
+    console.log("PARTMODEL ARRAY:",partModelArr);
+    
     // ✅ If a new search query or partModel is detected, clear previous filters
     if (searchString || partModel) {
       dispatch(clearSearchResponseMatched());
@@ -114,6 +117,8 @@ const SearchProduct = () => {
   }, [searchString, partModel]);
   // const initialQuery = useRef(searchString); // Save the initial query
 
+  console.log("Current Query: ",currentQuery);
+  
   useEffect(() => {
     console.log("Filtered Search Response:", filteredSearchResponse);
   }, [filteredSearchResponse]);
@@ -157,7 +162,7 @@ const SearchProduct = () => {
       {/* ✅ Show Filter only if there are search results */}
       {filterToggle &&
         Object.values(filteredSearchResponse || searchResponseMatched).some(
-          (part) => part?.data?.length > 0
+          (part) => part?.data?.length || part?.length > 0
         ) && <Filter currentQuery={currentQuery} />}
 
       <div
