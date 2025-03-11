@@ -11,7 +11,12 @@ const HoverPieChart = ({ data }) => {
   // Transform backend data into the required structure
   const transformedData = {
     labels: ["WTB", "WTS", "RFQ", "SB"],
-    name: ["Want To Buy", "Want To Sell", "Request For Quote", "Service Broadcasts"],
+    name: [
+      "Want To Buy",
+      "Want To Sell",
+      "Request For Quote",
+      "Service Broadcasts",
+    ],
     datasets: [
       {
         data: [
@@ -20,17 +25,21 @@ const HoverPieChart = ({ data }) => {
           parseInt(data.rfqCount || 0),
           parseInt(data.serviceCount || 0),
         ],
-        backgroundColor: ["rgb(64, 120, 190)", "rgb(210, 64, 64)", "rgb(64, 160, 64)", "rgb(255, 140, 40)"],
+        backgroundColor: [
+          "rgb(64, 120, 190)",
+          "rgb(210, 64, 64)",
+          "rgb(64, 160, 64)",
+          "rgb(255, 140, 40)",
+        ],
         hoverOffset: 5,
       },
     ],
   };
 
-  console.log("WTB COUNT: ",data.wtbCount)
-  console.log("WTS COUNT: ",data.wtsCount)
-  console.log("RFQ COUNT: ",data.rfqCount)
-  console.log("Service COUNT: ",data.serviceCount)
-
+  console.log("WTB COUNT: ", data.wtbCount);
+  console.log("WTS COUNT: ", data.wtsCount);
+  console.log("RFQ COUNT: ", data.rfqCount);
+  console.log("Service COUNT: ", data.serviceCount);
 
   const navigate = useNavigate();
   const pieColor = transformedData.datasets[0].backgroundColor;
@@ -48,13 +57,11 @@ const HoverPieChart = ({ data }) => {
     navigate(`/broadcasts?type=${type.toLowerCase()}`);
   };
 
-  const arrow=">>>"
+  const arrow = ">>>";
   const totalData = transformedData.datasets[0].data
     .reduce((sum, acc) => sum + acc, 0)
     .toLocaleString("en-US");
 
-
-    
   return (
     <>
       <div className={css.gridHome2_Details_Bottom_Chart}>
@@ -64,7 +71,7 @@ const HoverPieChart = ({ data }) => {
           <p>total</p>
         </span>
       </div>
-      
+
       <div className={css.gridHome2_Details_Bottom_Chart_data}>
         {transformedData.name.map((label, index) => (
           <div
@@ -86,26 +93,20 @@ const HoverPieChart = ({ data }) => {
             </span>
 
             <a href="#">
-              {transformedData.datasets[0].data[index].toLocaleString("en-US")} total
+              {transformedData.datasets[0].data[index].toLocaleString("en-US")}{" "}
+              total
             </a>
-      
           </div>
-       
         ))}
 
-          <NavLink to={"/sendbroad"}>
-            <button className="bg-blue-500 p-2 text-white w-[100%] rounded-md">
-              SEND BROADCAST{arrow}
-            </button>
-          </NavLink>
-
+        <NavLink to={"/sendbroad"}>
+          <button className="bg-blue-500 p-2 text-white w-[100%] rounded-md">
+            SEND BROADCAST{arrow}
+          </button>
+        </NavLink>
       </div>
-
     </>
   );
 };
 
 export default HoverPieChart;
-
-
-

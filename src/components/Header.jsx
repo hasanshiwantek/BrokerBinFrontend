@@ -16,7 +16,10 @@ import {
   BsPeopleFill,
   // FaCoins,
 } from "react-icons/bs";
-import { setHoverCompanyDetail } from "../ReduxStore/SearchProductSlice";
+import {
+  setHoverCompanyDetail,
+  setSearchPartType,
+} from "../ReduxStore/SearchProductSlice";
 import { MdFileUpload } from "react-icons/md";
 import { FiTarget } from "react-icons/fi";
 import { BiLogOut, BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
@@ -55,7 +58,8 @@ import feedbackIcon from "../assets/icon 2.svg";
 import hotlistIcon from "../assets/icon 3.svg";
 import inventoryIcon from "../assets/icon 4.svg";
 import broadcastHistoryIcon from "../assets/ICON 6.svg";
-
+import EmailIcon from "../assets/Email Icon.svg";
+import { FaTools, FaSignOutAlt } from "react-icons/fa";
 // import vendorIcon from "../assets/vendor-pricing.svg"
 
 const Header = () => {
@@ -106,7 +110,7 @@ const Header = () => {
     console.log("Search Type from Home Page ", searchType);
     // Clear selected products
     dispatch(setSelectedProducts([]));
-
+    dispatch(setSearchPartType(searchType));
     // Search products history.
     // dispatch(searchProductHistory({ token }));
 
@@ -361,7 +365,7 @@ const Header = () => {
                         )}
                       </li>
                       <li onClick={handleLogout}>
-                        <BiLogOut />
+                        <FaSignOutAlt />
                         logout
                       </li>
                     </ul>
@@ -371,7 +375,7 @@ const Header = () => {
             </li>
 
             <li>
-              <BsTools />
+              <FaTools />
               <IoIosArrowDown className={`${css.onHoverMenuIconDown}  `} />
               <IoIosArrowUp className={css.onHoverMenuIconUp} />
 
@@ -610,7 +614,7 @@ const Header = () => {
               onClick={() => setShowLogoutModal(true)}
               style={{ cursor: "pointer" }}
             >
-              <BiLogOut />
+              <FaSignOutAlt />
               logout
             </li>
             {/* Logout Confirmation Modal */}
@@ -670,8 +674,8 @@ const Header = () => {
                 <ThemeProvider theme={theme}>
                   <Tooltip title="Manage My RFQs" arrow placement="bottom">
                     <li>
-                      <Link to={"/rfq"}>
-                        <AiOutlineMail />
+                      <Link to={"/rfq"} className="w-7">
+                        <img src={EmailIcon} alt="RFQ" />
                       </Link>
                     </li>
                   </Tooltip>
@@ -693,11 +697,10 @@ const Header = () => {
                 <ThemeProvider theme={theme}>
                   <Tooltip title="Broadcast History" arrow placement="bottom">
                     <li>
-                      <Link to={"/broadcasthistory"} className="w-8">
+                      <Link to={"/broadcasthistory"} className="w-7">
                         <img
                           src={broadcastHistoryIcon}
                           alt="Broadcast History"
-                          srcset=""
                         />
                       </Link>
                     </li>
@@ -714,7 +717,7 @@ const Header = () => {
                 <ThemeProvider theme={theme}>
                   <Tooltip title="My Contact" arrow placement="bottom">
                     <li>
-                      <Link to={"/myprofile/MyContact"} className="w-8">
+                      <Link to={"/myprofile/MyContact"} className="w-7">
                         <img src={vendorIcon} alt="Vendor logo" />
                         {/* <BsPeopleFill /> */}
                       </Link>
@@ -725,7 +728,7 @@ const Header = () => {
                 <ThemeProvider theme={theme}>
                   <Tooltip title="View Hotlist" arrow placement="bottom">
                     <li>
-                      <Link to={"/hotList/view"} className="w-8">
+                      <Link to={"/hotList/view"} className="w-7">
                         <img src={hotlistIcon} alt="Vendor logo" />
                       </Link>
                     </li>
@@ -734,7 +737,7 @@ const Header = () => {
                 <ThemeProvider theme={theme}>
                   <Tooltip title="Upload Inventory" arrow placement="bottom">
                     <li>
-                      <Link to={"/inventory"} className="w-8">
+                      <Link to={"/inventory"} className="w-7">
                         <img src={inventoryIcon} alt="Vendor logo" />
                       </Link>
                     </li>

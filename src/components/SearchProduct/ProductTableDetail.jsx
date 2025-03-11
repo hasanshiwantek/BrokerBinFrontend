@@ -42,9 +42,12 @@ const ProductTableDetail = React.memo(
       filteredSearchResponse,
       hoverCompanyDetail,
       appliedFilters,
+      searchType,
     } = useSelector((store) => store.searchProductStore);
 
     console.log("SearchResponse From UI ", searchResponseMatched);
+    console.log("SearchType From Redux", searchType);
+    console.log("PartData", partData);
 
     // const [type,setType]=useState("")
     // if(partModel){
@@ -70,10 +73,10 @@ const ProductTableDetail = React.memo(
       dispatch(fetchUserData({ id, token }));
     }, []);
 
-    // Extract all company names
+    // Extract all company names safely
     const companyNames = Object.values(searchResponseMatched)
-      .flatMap((response) => response.data) // Extract all `data` arrays
-      .map((item) => item.addedBy?.company?.name) // Extract `company.name`
+      .flatMap((response) => response?.data || []) // Ensure response.data exists
+      .map((item) => item?.addedBy?.company?.name) // Safely access `addedBy.company.name`
       .filter(Boolean); // Remove undefined or null names
 
     console.log("Company Names:", companyNames);
@@ -114,7 +117,7 @@ const ProductTableDetail = React.memo(
 
     const handleHoverCompanyDetail = (event, id) => {
       const companyDetail = Object.values(searchResponseMatched).flatMap(
-        (item) => item.data.find((e) => e.id === id)
+        (item) => item?.data?.find((e) => e?.id === id)
       )[0]; // Get the first matching result
 
       console.log("HOVERED COMPANY DETAIL:", companyDetail);
@@ -317,6 +320,7 @@ const ProductTableDetail = React.memo(
         sortOrder: column === "price" && sortBy !== "price" ? "asc" : sortOrder,
         page: 1, // Reset to the first page
         pageSize: 20, // Adjust page size if needed
+        type: searchType === "keyword" ? "keyword" : "",
       };
 
       console.log("Sorting Payload:", payload);
@@ -401,11 +405,11 @@ const ProductTableDetail = React.memo(
                   if (!isAUserCompany && isBUserCompany) return 1; // b comes before a
                   return 0; // Keep the same order for others
                 })
-                .map((e, i) => (
+                ?.map((e, i) => (
                   <tr
                     key={i}
                     style={
-                      e.addedBy?.company?.name?.toLowerCase() ===
+                      e?.addedBy?.company?.name?.toLowerCase() ===
                       loggedInUserCompany?.toLowerCase()
                         ? { backgroundColor: "#ffb" } // Highlight if the company matches
                         : null
@@ -414,8 +418,8 @@ const ProductTableDetail = React.memo(
                     <td>
                       <input
                         type="checkbox"
-                        checked={isSelected(e.id)}
-                        onChange={() => selectProduct(e.id)}
+                        checked={isSelected(e?.id)}
+                        onChange={() => selectProduct(e?.id)}
                         style={{ cursor: "pointer" }}
                       />
                     </td>
@@ -426,14 +430,14 @@ const ProductTableDetail = React.memo(
                         onClick={(event) =>
                           handleShowPopupCompanyDetails(
                             event,
-                            e.addedBy.company.id
+                            e?.addedBy?.company?.id
                           )
                         }
                         onMouseEnter={(event) =>
                           handleHoverCompanyDetail(event, e.id)
                         }
                       >
-                        {e.addedBy.company.name}
+                        {e?.addedBy?.company?.name}
                       </a>
                     </td>
                     <td>
@@ -443,12 +447,12 @@ const ProductTableDetail = React.memo(
                       {countriesList.find(
                         (country) =>
                           country.label.toLowerCase().trim() ===
-                          e.addedBy?.company?.country?.toLowerCase().trim()
+                          e?.addedBy?.company?.country?.toLowerCase().trim()
                       )?.value ||
-                        e.addedBy?.company?.country ||
+                        e?.addedBy?.company?.country ||
                         "N/A"}
                     </td>
-                    <td>{e.partModel}</td>
+                    <td>{e?.partModel}</td>
                     <td>
                       <img
                         src="https://static.brokerbin.com/version/v8.3.2/images/nohistory_icon.png"
@@ -456,19 +460,19 @@ const ProductTableDetail = React.memo(
                       />
                     </td>
                     <td>
-                      {e.ts ? (
+                      {e?.ts ? (
                         <IoCheckmarkCircle style={{ color: "red" }} />
                       ) : (
                         <BiBlock style={{ color: "red" }} />
                       )}
                     </td>
-                    <td>{e.heciClei}</td>
-                    <td>{e.mfg}</td>
-                    <td>{e.cond}</td>
-                    <td>{e.price}</td>
-                    <td>{e.quantity}</td>
-                    <td>{e.age}</td>
-                    <td>{e.productDescription}</td>
+                    <td>{e?.heciClei}</td>
+                    <td>{e?.mfg}</td>
+                    <td>{e?.cond}</td>
+                    <td>{e?.price}</td>
+                    <td>{e?.quantity}</td>
+                    <td>{e?.age}</td>
+                    <td>{e?.productDescription}</td>
                   </tr>
                 ))}
             </tbody>
