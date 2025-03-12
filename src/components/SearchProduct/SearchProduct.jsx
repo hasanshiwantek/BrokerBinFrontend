@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import css from "@/styles/SearchProducts.module.css";
-import Filter from "./Filter";
 import ProductsPieChart from "../ProductsPieChart";
 import CompanyDetails from "../Popups/CompanyDetails/CompanyDetails";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,13 +15,12 @@ import {
 } from "@/ReduxStore/SearchProductSlice";
 import LoadingState from "@/LoadingState";
 import ErrorStatus from "../Error/ErrorStatus";
-
 import AddToHotList from "./AddToHotlist";
 import ProductTableBtn from "./ProductTableBtn";
 import ProductTableDetail from "./ProductTableDetail";
+import Filter from "./Filter";
 
 const SearchProduct = () => {
-  console.log("Component RENDERED")
   const token = Cookies.get("token");
   const location = useLocation();
   const dispatch = useDispatch();
@@ -58,9 +56,9 @@ const SearchProduct = () => {
       JSON.stringify(searchResponseMatched)
   );
 
-//   useEffect(() => {
-//     console.log("filterToggle:", filterToggle);
-//   }, []);
+  //   useEffect(() => {
+  //     console.log("filterToggle:", filterToggle);
+  //   }, []);
 
   // searchResponseMatched.map((item) => { console.log("Part Model " + item.partModel) })
   if (searchResponseMatched) {
@@ -74,7 +72,10 @@ const SearchProduct = () => {
     const queryParams = new URLSearchParams(location.search);
     const searchString = queryParams.get("query") || ""; // Multi-part search
     const partModel = queryParams.get("partModel") || ""; // Single part search
-
+    const partModelArr=[]
+    partModelArr.push(partModel)
+    console.log("PARTMODEL ARRAY:",partModelArr);
+    
     // ✅ If a new search query or partModel is detected, clear previous filters
     if (searchString || partModel) {
       dispatch(clearSearchResponseMatched());
@@ -114,9 +115,10 @@ const SearchProduct = () => {
   }, [searchString, partModel]);
   // const initialQuery = useRef(searchString); // Save the initial query
 
+  console.log("Current Query: ",currentQuery);
+  
   useEffect(() => {
     console.log("Filtered Search Response:", filteredSearchResponse);
-
   }, [filteredSearchResponse]);
 
   if (gettingProducts) {
@@ -158,7 +160,7 @@ const SearchProduct = () => {
       {/* ✅ Show Filter only if there are search results */}
       {filterToggle &&
         Object.values(filteredSearchResponse || searchResponseMatched).some(
-          (part) => part?.data?.length > 0
+          (part) => part?.data?.length || part?.length > 0
         ) && <Filter currentQuery={currentQuery} />}
 
       <div

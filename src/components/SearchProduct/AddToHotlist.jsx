@@ -52,10 +52,10 @@ const AddToHotList = ({ item }) => {
                   <span className="mb-2">
                     <input
                       type="checkbox"
-                      name="whenAvailable"
-                      id="whenAvailable"
+                      name="addToHotlist"
+                      id="addToHotlist"
                     />
-                    <label htmlFor="whenAvailable">
+                    <label htmlFor="addToHotlist">
                       Add item to Hot List!
                     </label>
                   </span>

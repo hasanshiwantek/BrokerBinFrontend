@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { brokerAPI } from "../components/api/BrokerEndpoint";
 
-
 export const searchProductQuery = createAsyncThunk(
   "searchProductStore/searchProductQuery",
   async ({ token, page, search }) => {
@@ -82,7 +81,7 @@ export const searchProductFilter = createAsyncThunk(
       );
 
       // console.log("RESPONSE.DATA",response.data.data);
-      console.log("RESPONSE.Data", response.data)
+      console.log("RESPONSE.Data", response.data);
       return response.data;
     } catch (error) {
       console.log(error);
@@ -99,15 +98,12 @@ export const searchProductHistory = createAsyncThunk(
   "searchProductStore/searchProductHistory",
   async ({ token }) => {
     try {
-      const response = await axios.get(
-        `${brokerAPI}inventory/search/history`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await axios.get(`${brokerAPI}inventory/search/history`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       return response.data.history;
     } catch (error) {
@@ -147,26 +143,20 @@ export const addToHotList = createAsyncThunk(
   }
 );
 
-
-
-
 // COMPANY CONTACT THUNK
 
 export const getCompanyContact = createAsyncThunk(
   "searchProductStore/getCompanyContact ",
-  async ({id,token}) => {
+  async ({ id, token }) => {
     try {
-      const response = await axios.get(
-        `${brokerAPI}company/show/${id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${brokerAPI}company/show/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-      console.log("Company Contact FROM bACKEND",response.data)
+      console.log("Company Contact FROM bACKEND", response.data);
       return response.data;
     } catch (error) {
       console.error(
@@ -202,23 +192,17 @@ export const getCompanyContact = createAsyncThunk(
 //   console.log("Filtered Data:", filteredData);
 // };
 
-
-
 export const sortInventory = createAsyncThunk(
   "inventoryStore/sortInventory",
-  async ({token, payload}) => {
+  async ({ token, payload }) => {
     try {
-      const response = await axios.post(
-        `${brokerAPI}inventory/sort`,
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log("Response From AsyncThunk: " + response.data)
+      const response = await axios.post(`${brokerAPI}inventory/sort`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      console.log("Response From AsyncThunk: " + response.data);
       return response.data;
     } catch (error) {
       console.error(
@@ -229,9 +213,6 @@ export const sortInventory = createAsyncThunk(
     }
   }
 );
-
-
-
 
 const initialState = {
   companiesListingParts: true,
@@ -245,7 +226,7 @@ const initialState = {
   hoverCompanyDetail: [],
   selectedProducts: [],
   searchHistory: [],
-  companyContactData:[],
+  companyContactData: [],
   filteredSearchResponse: {},
   appliedFilters: {},
   error: null,
@@ -254,10 +235,10 @@ const initialState = {
   totalCount: 0,
   gettingProducts: false,
   gettingHistory: false,
-  keywordPage:null,
-  keywordPageSize:null,
-  keywordTotalCount:null,
-
+  keywordPage: null,
+  keywordPageSize: null,
+  keywordTotalCount: null,
+  searchType: null,
 };
 
 const searchProductSlice = createSlice({
@@ -286,7 +267,8 @@ const searchProductSlice = createSlice({
 
     setTogglePopUp: (state, action) => {
       // If a payload is provided, use it to set the state, otherwise toggle
-      state.togglePopUp = action.payload !== undefined ? action.payload : !state.togglePopUp;
+      state.togglePopUp =
+        action.payload !== undefined ? action.payload : !state.togglePopUp;
       console.log("Popup Toggle:", state.togglePopUp);
     },
     setSearchResponse: (state, action) => {
@@ -295,16 +277,15 @@ const searchProductSlice = createSlice({
         state.filteredSearchResponse = action.payload.data; // Default filtered data
       }
     },
-  //   setSearchResponse: (state, action) => {
-  //     state.searchResponseMatched = action.payload.data;
-  //     if (!state.filteredSearchResponse || Object.keys(state.filteredSearchResponse).length === 0) {
-  //         state.filteredSearchResponse = action.payload.data; // Set only if it's initially empty
-  //     }
-  // },  
+    //   setSearchResponse: (state, action) => {
+    //     state.searchResponseMatched = action.payload.data;
+    //     if (!state.filteredSearchResponse || Object.keys(state.filteredSearchResponse).length === 0) {
+    //         state.filteredSearchResponse = action.payload.data; // Set only if it's initially empty
+    //     }
+    // },
     setPopupCompanyDetail: (state, action) => {
       state.popupCompanyDetail = action.payload;
-      console.log("CompanyDetails",action.payload)
-
+      console.log("CompanyDetails", action.payload);
     },
     setSelectedProducts: (state, action) => {
       state.selectedProducts = action.payload;
@@ -334,6 +315,9 @@ const searchProductSlice = createSlice({
     setAppliedFilters: (state, action) => {
       state.appliedFilters = action.payload; // Save filters
     },
+    setSearchPartType: (state, action) => {
+      state.searchType = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -345,9 +329,12 @@ const searchProductSlice = createSlice({
         console.log("Payload from searchProductQuery:", action.payload);
         state.searchResponseMatched = {
           ...state.searchResponseMatched, // Keep existing matched data
-          ...action.payload,              // Merge new response payload
+          ...action.payload, // Merge new response payload
         };
-        console.log("Updated searchResponseMatched:", state.searchResponseMatched);
+        console.log(
+          "Updated searchResponseMatched:",
+          state.searchResponseMatched
+        );
         state.searchResponseNotMatched = action.payload.notFoundKeywords || [];
         state.totalCount += Object.values(action.payload || {}).reduce(
           (acc, part) => acc + (part.totalCount || 0),
@@ -366,30 +353,44 @@ const searchProductSlice = createSlice({
       })
       .addCase(searchByKeyword.fulfilled, (state, action) => {
         console.log("Payload from searchByKeyword:", action.payload);
-        state.keywordPage=action.payload.page;
-        state.keywordPageSize=action.payload.pageSize;
-        state.keywordTotalCount=action.payload.totalCount
-        console.log("Page from Keyword: ", state.keywordPage + " " + "Page Size from Keyword: " + state.keywordPageSize + " " + "keyword TotalCount: " + state.keywordTotalCount )
+        state.keywordPage = action.payload.page;
+        state.keywordPageSize = action.payload.pageSize;
+        state.keywordTotalCount = action.payload.totalCount;
+        console.log(
+          "Page from Keyword: ",
+          state.keywordPage +
+            " " +
+            "Page Size from Keyword: " +
+            state.keywordPageSize +
+            " " +
+            "keyword TotalCount: " +
+            state.keywordTotalCount
+        );
         const foundItems = action.payload.foundItems;
         const structuredResponse = foundItems.reduce((acc, item) => {
-            const { partModel } = item;
-            if (!acc[partModel]) {
-                acc[partModel] = { data: [] };
-            }
-            acc[partModel].data.push(item);
-            return acc;
+          const { partModel } = item;
+          if (!acc[partModel]) {
+            acc[partModel] = { data: [] };
+          }
+          acc[partModel].data.push(item);
+          return acc;
         }, {});
-    
+
         state.searchResponseMatched = structuredResponse;
-        console.log("Updated searchResponseMatched:", state.searchResponseMatched);
-    
-        state.searchResponseNotMatched = action.payload.notFoundPartModels || [];
+
+        state.searchResponseNotMatched =
+          action.payload.notFoundPartModels || [];
         state.totalCount = Object.values(structuredResponse).reduce(
-            (acc, part) => acc + part.data.length,
-            0
+          (acc, part) => acc + part.data.length,
+          0
+        );
+
+        console.log(
+          "Updated searchResponseMatched From Redux:",
+          state.searchResponseMatched
         );
         state.gettingProducts = false;
-    })
+      })
       .addCase(searchByKeyword.rejected, (state, action) => {
         state.error = action.error.message;
         console.error(
@@ -417,7 +418,7 @@ const searchProductSlice = createSlice({
         state.pageSize = action.payload.pageSize; // Items per page
         state.totalCount = action.payload.totalCount; // Total items
         state.gettingProducts = false;
-    })
+      })
       .addCase(searchProductFilter.rejected, (state, action) => {
         state.error = action.error.message;
         console.error("Error while filtering:", action.error.message);
@@ -453,7 +454,7 @@ const searchProductSlice = createSlice({
       .addCase(getCompanyContact.pending, (state) => {
         // state.gettingHistory = true; // Set to true when starting the fetch
         // state.error = null;
-        console.log("PENDING....")
+        console.log("PENDING....");
       })
       .addCase(getCompanyContact.fulfilled, (state, action) => {
         state.companyContactData = action.payload;
@@ -467,14 +468,13 @@ const searchProductSlice = createSlice({
         console.log("PENDING!!!!!");
       })
       .addCase(sortInventory.fulfilled, (state, action) => {
-        state.searchResponseMatched=action.payload
-        console.log("SORTED INVENTORY PAYLOAD FROM REDUX",action.payload)
+        state.searchResponseMatched = action.payload;
 
+        console.log("Payload of Sorting from Redux", action.payload);
       })
       .addCase(sortInventory.rejected, (state, action) => {
         console.error("ERROR FETCHING SORTED INVENTORY DATA", action.error);
       });
-
   },
 });
 
@@ -493,34 +493,8 @@ export const {
   setHoverCompanyDetail,
   setFilteredSearchResponse,
   clearSearchResponseMatched,
-  setAppliedFilters
+  setAppliedFilters,
+  setSearchPartType,
 } = searchProductSlice.actions;
 
 export default searchProductSlice.reducer;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
