@@ -186,9 +186,13 @@ const SearchProduct = () => {
             <div className={css.productTable}>
               <ProductTableBtn />
               <ProductTableDetail
-                partData={Object.values(searchResponseMatched).flatMap(
-                  (details) => details.data
-                )} // Merging all partModels
+                partData={
+                  searchResponseMatched?.foundItems
+                    ? searchResponseMatched.foundItems // After sorting
+                    : Object.values(searchResponseMatched).flatMap(
+                        (details) => details.data || []
+                      )
+                } // Merging all partModels
                 partModel={partModel || "All Results"} // Displaying a single table
                 keyWordPartModel={partModel}
                 totalCount={
