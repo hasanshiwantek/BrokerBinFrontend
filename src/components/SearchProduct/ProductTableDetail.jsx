@@ -133,10 +133,10 @@ const ProductTableDetail = React.memo(
 
       if (!companyDetail) {
         companyDetail = searchResponseMatched?.foundItems?.find(
-          (e) => e?.addedBy?.company?.id === id
+          (e) => e?.id === id
         );
       }
-      console.log("HOVERED COMPANY DETAIL:", companyDetail);
+      console.log("HOVERED COMPANY DETAIL:", companyDetail || "NOT FOUND");
 
       if (companyDetail?.addedBy?.company) {
         dispatch(setHoverCompanyDetail(companyDetail.addedBy.company));
