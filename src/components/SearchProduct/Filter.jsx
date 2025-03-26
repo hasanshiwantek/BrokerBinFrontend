@@ -45,18 +45,29 @@ const Filter = ({ currentQuery }) => {
     }));
   };
 
+
+    // ✅ Merge `data` and `foundItems` to handle both cases correctly
+  const allItems = [
+    ...(searchResponseMatched?.test?.data || []),
+    ...(searchResponseMatched?.foundItems || []),
+  ];
+  console.log("ALL ITEMS: ",allItems);
+  
+
   const manufacturerCount = {};
 
   Object.values(searchResponseMatched || []).forEach((item) => {
     // console.log("item", item);
 
     // Check if item contains an array under 'data'
+    // const dataItems = Array.isArray(item?.data) ? item?.data : [item]; // If it's not an array, treat the item as a single object
     const dataItems = Array.isArray(item?.data) ? item?.data : [item]; // If it's not an array, treat the item as a single object
+    console.log("DATA-ITEMS: ", dataItems);
 
-    dataItems.forEach((subItem) => {
+    dataItems?.forEach((subItem) => {
       const manufacturer = subItem?.mfg;
-      // console.log("Item in Filter:", subItem);
-      // console.log("Manufacturer in Filter:", manufacturer);
+      console.log("Item in Filter:", subItem);
+      console.log("Manufacturer in Filter:", manufacturer);
 
       if (manufacturer) {
         manufacturerCount[manufacturer] =
@@ -71,9 +82,9 @@ const Filter = ({ currentQuery }) => {
     .flatMap((item) => (item?.data ? item.data : [item]))
     .forEach((item) => {
       const condition = item?.cond;
-      // console.log("Condition in Filter:", condition);
+      console.log("Condition in Filter:", condition);
       conditionCount[condition] = (conditionCount[condition] || 0) + 1;
-      // console.log("conditionCount", conditionCount);
+      console.log("conditionCount", conditionCount);
     });
 
   // Region Count
@@ -93,9 +104,12 @@ const Filter = ({ currentQuery }) => {
     .flatMap((item) => (item?.data ? item.data : [item]))
     .forEach((item) => {
       const country = item?.company_country;
-      // console.log("country ",country)
+      console.log("country ", country);
       countryCount[country] = (countryCount[country] || 0) + 1;
-      // console.log("Country in Filter:", country + " CountryCount: " + countryCount[country]);
+      console.log(
+        "Country in Filter:",
+        country + " CountryCount: " + countryCount[country]
+      );
     });
 
   // const { searchString, partModel } = useSelector((store) => store.searchProductStore);
@@ -323,4 +337,24 @@ const Filter = ({ currentQuery }) => {
   );
 };
 
+<<<<<<< HEAD
 export default memo(Filter);
+=======
+export default memo(Filter);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+>>>>>>> 6537f1c6c9f0e00765958119c150f07dd4e41ca6

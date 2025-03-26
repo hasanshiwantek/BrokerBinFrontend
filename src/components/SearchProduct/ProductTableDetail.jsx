@@ -92,31 +92,46 @@ const ProductTableDetail = React.memo(
       .map((item) => item?.addedBy?.company?.name) // Safely access `addedBy.company.name`
       .filter(Boolean); // Remove undefined or null names
 
-    console.log("Company Names:", companyNames);
-
     const keys = Object.keys(searchResponseMatched);
     console.log(keys); // Output: ["001NFM", "002CR", "003442U"]
 
     const data = Object.values(searchResponseMatched).flatMap((item) =>
       console.log("ITEM: ", item)
     );
-    console.log("DATA........", data);
+    console.log("DATA........", data)
+
+
 
     const handleShowPopupCompanyDetails = (event, companyId) => {
       event.stopPropagation();
-      const companyDetail = Object.values(searchResponseMatched || {}).flatMap(
-        (item) =>
-          item?.data?.find((e) => e.addedBy?.company?.id === companyId) ||
-          item.map((e) => e.addedBy?.company?.id === companyId)
-      )[0];
-      console.log("COMPANYID:", companyId, "COMPANYDETAIL:", companyDetail);
 
+      // 1️⃣ First, search for the company in the 'data' object
+      let companyDetail = Object.values(searchResponseMatched || {}).flatMap(
+        (item) => item?.data?.find((e) => e.addedBy?.company?.id === companyId)
+      )[0];
+
+      // 2️⃣ If not found in 'data', search in 'foundItems'
+      if (!companyDetail) {
+        companyDetail = searchResponseMatched?.foundItems?.find(
+          (e) => e?.addedBy?.company?.id === companyId
+        );
+      }
+
+      console.log(
+        "COMPANYID:",
+        companyId,
+        "COMPANYDETAIL:",
+        companyDetail || "Not Found in Both Sources"
+      );
+
+      // 3️⃣ If company is found, dispatch the correct company data
       if (companyDetail?.addedBy?.company) {
         dispatch(setPopupCompanyDetail([companyDetail.addedBy.company]));
-        console.log("SETPOPUPCOMPANYDETAIL:", setPopupCompanyDetail);
+        console.log("SETPOPUPCOMPANYDETAIL:", companyDetail.addedBy.company);
       } else {
-        console.error("Company not found!");
+        console.error("Company not found in data or foundItems!");
       }
+
       dispatch(setTogglePopUp());
     };
 
@@ -130,13 +145,16 @@ const ProductTableDetail = React.memo(
     };
 
     const handleHoverCompanyDetail = (event, id) => {
-      const companyDetail = Object.values(searchResponseMatched || {}).flatMap(
-        (item) =>
-          item?.data?.find((e) => e?.id === id) ||
-          item?.foundItems.map((e) => e?.id === id) // Check in foundItems as well
+      let companyDetail = Object.values(searchResponseMatched || {}).flatMap(
+        (item) => item?.data?.find((e) => e?.id === id)
       )[0]; // Get the first matching result
 
-      console.log("HOVERED COMPANY DETAIL:", companyDetail);
+      if (!companyDetail) {
+        companyDetail = searchResponseMatched?.foundItems?.find(
+          (e) => e?.id === id
+        );
+      }
+      console.log("HOVERED COMPANY DETAIL:", companyDetail || "NOT FOUND");
 
       if (companyDetail?.addedBy?.company) {
         dispatch(setHoverCompanyDetail(companyDetail.addedBy.company));
