@@ -27,6 +27,8 @@ const SearchProduct = () => {
 
   // Extract 'page' and 'searchString' from URL
   const queryParams = new URLSearchParams(location.search);
+  const sortBy = queryParams.get("sortBy") || null;
+  const sortOrder = queryParams.get("sortOrder") || null;
   const page = parseInt(queryParams.get("page")) || 1;
   const searchString = queryParams.get("query") || "";
   const partModel = queryParams.get("partModel") || "";
@@ -68,13 +70,24 @@ const SearchProduct = () => {
     );
   }
 
+  // const [sortBy, setSortBy] = useState(null);
+  // const [sortOrder, setSortOrder] = useState("desc");
+  // const sortByRef = useRef(null);
+  // const sortOrderRef = useRef("desc");
+
+  // const queryParams = new URLSearchParams(location.search);
+  
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const searchString = queryParams.get("query") || ""; // Multi-part search
-    const partModel = queryParams.get("partModel") || ""; // Single part search
+    const partModel = queryParams.get("partModel") || ""; // Single part 
+    // const sortBy = queryParams.get("sortBy") || null;
+    // const sortOrder = queryParams.get("sortOrder") || "desc";
     const partModelArr=[]
     partModelArr.push(partModel)
     console.log("PARTMODEL ARRAY:",partModelArr);
+
+    if (!sortBy || page > 1) {
     
     // ✅ If a new search query or partModel is detected, clear previous filters
     if (searchString || partModel) {
@@ -86,7 +99,9 @@ const SearchProduct = () => {
     if (searchString) {
       const parts = searchString.split(" ");
       parts.forEach((part) => {
-        dispatch(searchProductQuery({ token, page: page, search: part })).then(
+        console.log("sortBy:", sortBy);
+        console.log("sortOrder:", sortOrder);
+        dispatch(searchProductQuery({ token, page: page, sortBy, sortOrder, search: part })).then(
           (result) => console.log("searchProductQuery result:", result)
         );
       });
@@ -94,17 +109,18 @@ const SearchProduct = () => {
 
     // ✅ If a single part model is searched, dispatch searchByKeyword
     if (partModel) {
-      dispatch(searchByKeyword({ token, page: page, partModel })).then(
+      dispatch(searchByKeyword({ token, page: page, sortBy, sortOrder, partModel })).then(
         (result) => console.log("searchByKeyword result:", result)
       );
     }
+  }
 
     // ✅ Fetch search history
     dispatch(searchProductHistory({ token })).then((result) =>
       console.log("searchProductHistory result:", result)
     );
     console.log("Effect triggered:", { searchString, partModel, token });
-  }, [location.search, dispatch, token]); // 🔹 Only trigger when URL params change
+  }, [location.search, dispatch, token, ]); // 🔹 Only trigger when URL params change
 
   const [currentQuery, setCurrentQuery] = useState(searchString || partModel);
 
@@ -204,6 +220,10 @@ const SearchProduct = () => {
                 partModels={[]} // Empty since all merged
                 isFilterActive={isFilterActive}
                 searchString={searchString}
+                sortBy={sortBy}
+                // setSortBy={setSortBy}
+                sortOrder={sortOrder}
+                // setSortOrder={setSortOrder}
               />
             </div>
           </div>
@@ -230,6 +250,10 @@ const SearchProduct = () => {
                       sortPageSize={sortPageSize}
                       sortPage={sortPage}
                       token={token}
+                      sortBy={sortBy}
+                      // setSortBy={setSortBy}
+                      sortOrder={sortOrder}
+                      // setSortOrder={setSortOrder}
                     />
                   </div>
                 </div>

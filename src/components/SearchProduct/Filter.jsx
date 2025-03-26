@@ -65,8 +65,6 @@ const Filter = ({ currentQuery }) => {
     });
   });
 
-  // console.log("Manufacturer Count:", manufacturerCount);
-
   // Condition Count
   const conditionCount = {};
   Object.values(searchResponseMatched || {})
