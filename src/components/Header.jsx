@@ -478,27 +478,27 @@ const Header = () => {
                   <Link to={"/tools"}>
                     <li>Tools</li>
                   </Link>
-                  {/* <Link to={"/myprofile/MyVendors"}>
+                  <Link to={"/myprofile/MyVendors"}>
                     <li>
                       My Vendors
                     </li>
-                  </Link> */}
+                  </Link>
                   <Link to={"/myprofile/MyContact"}>
-                    <li>My Vendors</li>
+                    <li>My Contacts</li>
                   </Link>
                   <Link to={"/hotList/view"}>
                     <li>Hot List</li>
                   </Link>
-                  {/* <Link to={"https://brokerbin.com/partners"}  target="blank">
+                  <Link to={"https://brokercell.com"}  target="blank">
                   <li>
                    Partners
                   </li>
-                  </Link> */}
-                  {/* <Link to={"https://www.brokerbinroadshow.com/"} target="blank">
+                  </Link>
+                  <Link to={"https://brokercell.com"} target="blank">
                   <li>
                     Events
                   </li>
-                  </Link> */}
+                  </Link>
                 </ul>
               </div>
             </li>

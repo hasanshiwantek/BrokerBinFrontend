@@ -31,10 +31,18 @@ const Tools = () => {
               </li>
               <li>
                 <NavLink
-                  to={'/myprofile/MyContact'}
+                  to={'/myprofile/MyVendors'}
                   className={({ isActive }) => (isActive ? css.active : '')}
                 >
                   <span>My Vendors</span>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to={'/myprofile/MyContact'}
+                  className={({ isActive }) => (isActive ? css.active : '')}
+                >
+                  <span>My Contacts</span>
                 </NavLink>
               </li>
               <li>
@@ -43,6 +51,24 @@ const Tools = () => {
                   className={({ isActive }) => (isActive ? css.active : '')}
                 >
                   <span>Hotlist</span>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to={"https://brokercell.com/"}
+                  target="_blank"
+                  className={({ isActive }) => (isActive ? css.active : '')}
+                >
+                  <span>Partners</span>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to={"https://brokercell.com/"}
+                  target="_blank"
+                  className={({ isActive }) => (isActive ? css.active : '')}
+                >
+                  <span>Events</span>
                 </NavLink>
               </li>
             </ul>

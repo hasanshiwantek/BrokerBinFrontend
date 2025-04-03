@@ -34,7 +34,6 @@ const Filter = ({ currentQuery }) => {
   // useEffect(() => {
   //   console.log("Updated searchResponseMatched in Filter:", searchResponseMatched);
   // }, [searchResponseMatched]);
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -58,10 +57,7 @@ const Filter = ({ currentQuery }) => {
   const manufacturerCount = {};
 
   Object.values(searchResponseMatched || []).forEach((item) => {
-    // console.log("item", item);
-
     // Check if item contains an array under 'data'
-    // const dataItems = Array.isArray(item?.data) ? item?.data : [item]; // If it's not an array, treat the item as a single object
     const dataItems = Array.isArray(item?.data) ? item?.data : [item]; // If it's not an array, treat the item as a single object
     console.log("DATA-ITEMS: ", dataItems);
 
@@ -76,8 +72,6 @@ const Filter = ({ currentQuery }) => {
       }
     });
   });
-
-  // console.log("Manufacturer Count:", manufacturerCount);
 
   // Condition Count
   const conditionCount = {};
@@ -157,7 +151,6 @@ const Filter = ({ currentQuery }) => {
     ); // Reset to initial query
     dispatch(searchProductQuery({ token, page: 1, search: currentQuery })); // Fetch initial query data
   };
-
   return (
     <div className={css.filterSection}>
       <div id={css.advancedFilters}>
@@ -342,19 +335,3 @@ const Filter = ({ currentQuery }) => {
 };
 
 export default memo(Filter);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

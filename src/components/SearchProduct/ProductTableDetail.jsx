@@ -28,12 +28,21 @@ const ProductTableDetail = React.memo(
     isFilterActive,
     searchString,
     keyWordPartModel,
+    // sortBy,
+    // sortOrder,
   }) => {
+    console.log("RENDERED PRODUCTTABLEDETAIL")
+
+    
+    
+
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const queryParams = new URLSearchParams(location.search);
+    const sortBy = queryParams.get("sortBy");
+    const sortOrder = queryParams.get("sortOrder") || "desc";
     const page = parseInt(queryParams.get("page")) || 1;
 
     const {
@@ -44,6 +53,10 @@ const ProductTableDetail = React.memo(
       appliedFilters,
       searchType,
     } = useSelector((store) => store.searchProductStore);
+
+    useEffect(() => {
+      console.log("Updated searchResponseMatched:", searchResponseMatched);
+    }, [searchResponseMatched]);
 
     console.log("SearchResponse From UI ", searchResponseMatched);
     console.log("SearchType From Redux", searchType);
@@ -68,10 +81,10 @@ const ProductTableDetail = React.memo(
     const loggedInUserCompany = initialData?.company?.name;
     console.log("LoggedIn User Company ", loggedInUserCompany);
 
-    useEffect(() => {
-      console.log(id);
-      dispatch(fetchUserData({ id, token }));
-    }, []);
+    // useEffect(() => {
+    //   console.log(id);
+    //   dispatch(fetchUserData({ id, token }));
+    // }, []);
 
     // Extract all company names safely
     const companyNames = Object.values(searchResponseMatched)
@@ -81,6 +94,11 @@ const ProductTableDetail = React.memo(
 
     const keys = Object.keys(searchResponseMatched);
     console.log(keys); // Output: ["001NFM", "002CR", "003442U"]
+
+    const data = Object.values(searchResponseMatched).flatMap((item) =>
+      console.log("ITEM: ", item)
+    );
+    console.log("DATA........", data)
 
 
 
@@ -182,8 +200,8 @@ const ProductTableDetail = React.memo(
     const totalPagess = isSearchPagination
       ? Math.ceil(totalCount / pageSize) // Use search pagination
       : isKeywordPagination
-      ? Math.ceil(keywordTotalCount / keywordPageSize) // Use keyword pagination
-      : 1; // Default to 1 if no condition is met
+        ? Math.ceil(keywordTotalCount / keywordPageSize) // Use keyword pagination
+        : 1; // Default to 1 if no condition is met
 
     const currentPage = isSearchPagination ? page : keywordPage;
 
@@ -199,11 +217,11 @@ const ProductTableDetail = React.memo(
     const handlePrevPage = () => {
       const newPage = page - 1;
       if (newPage < 1) return;
-
       const queryParams = new URLSearchParams(location.search);
       const currentQuery = queryParams.get("query");
       const currentPartModel = queryParams.get("partModel");
-
+      const sortBy = queryParams.get("sortBy");
+      const sortOrder = queryParams.get("sortOrder");
       if (isFilterActive) {
         const filters = {
           ...appliedFilters,
@@ -213,17 +231,10 @@ const ProductTableDetail = React.memo(
         };
         dispatch(searchProductFilter({ token, filters }));
       }
-
       const url = currentQuery
-        ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(
-            currentQuery
-          )}`
-        : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(
-            currentPartModel
-          )}`;
-
+        ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(currentQuery)}&sortBy=${sortBy}&sortOrder=${sortOrder}`
+        : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(currentPartModel)}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
       navigate(url, { replace: true });
-
       // ✅ Ensure pagination range updates when moving to the previous range
       if (newPage < visiblePages[0]) {
         setVisiblePages([
@@ -236,11 +247,11 @@ const ProductTableDetail = React.memo(
     const handleNextPage = () => {
       const newPage = page + 1;
       if (newPage > totalPagess) return;
-
       const queryParams = new URLSearchParams(location.search);
       const currentQuery = queryParams.get("query");
       const currentPartModel = queryParams.get("partModel");
-
+      const sortBy = queryParams.get("sortBy");
+      const sortOrder = queryParams.get("sortOrder");
       if (isFilterActive) {
         const filters = {
           ...appliedFilters,
@@ -250,17 +261,10 @@ const ProductTableDetail = React.memo(
         };
         dispatch(searchProductFilter({ token, filters }));
       }
-
       const url = currentQuery
-        ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(
-            currentQuery
-          )}`
-        : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(
-            currentPartModel
-          )}`;
-
+        ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(currentQuery)}&sortBy=${sortBy}&sortOrder=${sortOrder}`
+        : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(currentPartModel)}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
       navigate(url, { replace: true });
-
       // ✅ Ensure pagination range updates when reaching the last page in the current range
       if (newPage > visiblePages[1] && newPage <= totalPagess) {
         setVisiblePages([
@@ -275,17 +279,12 @@ const ProductTableDetail = React.memo(
         const queryParams = new URLSearchParams(location.search);
         const currentQuery = queryParams.get("query");
         const currentPartModel = queryParams.get("partModel");
-
+        const sortBy = queryParams.get("sortBy");
+        const sortOrder = queryParams.get("sortOrder");
         const url = currentQuery
-          ? `/inventory/search?page=${page}&query=${encodeURIComponent(
-              currentQuery
-            )}`
-          : `/inventory/search?page=${page}&partModel=${encodeURIComponent(
-              currentPartModel
-            )}`;
-
+          ? `/inventory/search?page=${page}&query=${encodeURIComponent(currentQuery)}&sortBy=${sortBy}&sortOrder=${sortOrder}`
+          : `/inventory/search?page=${page}&partModel=${encodeURIComponent(currentPartModel)}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
         navigate(url, { replace: true });
-
         // ✅ Ensure visible pagination updates when clicking on a new range
         if (page > visiblePages[1] && page <= totalPagess) {
           setVisiblePages([page, Math.min(page + 9, totalPagess)]);
@@ -297,51 +296,88 @@ const ProductTableDetail = React.memo(
 
     console.log("Vsible Pages: ", visiblePages);
 
-    useEffect(() => {
-      // Ensure visible pages update dynamically based on the current page
-      const newStart = Math.floor((page - 1) / 10) * 10 + 1;
-      const newEnd = Math.min(newStart + 9, totalPagess);
-
-      setVisiblePages([newStart, newEnd]);
-    }, [page, totalPagess]); // Runs when page or total pages change
-
-    const [sortBy, setSortBy] = useState(null); // Initially no column is sorted
-    const [sortOrder, setSortOrder] = useState("desc"); // Default to "desc"
+    // const [sortBy, setSortBy] = useState(null); // Initially no column is sorted
+    // const [sortOrder, setSortOrder] = useState("desc"); // Default to "desc"
 
     // console.log("Payload from ProductTable Page", payload)
     console.log("token", token);
 
-    const handleSort = (column) => {
-      if (sortBy === column) {
-        // If the same column is clicked again, toggle the sortOrder
-        setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
-      } else {
-        // For a new column, reset sortBy to the column and adjust the sortOrder:
-        // Start in ascending order only for the 'price' column, otherwise start in descending
-        setSortBy(column);
-        setSortOrder(column === "price" ? "asc" : "desc");
-      }
+    // const handleSort = (column) => {
+    //   if (sortBy === column) {
+    //     // If the same column is clicked again, toggle the sortOrder
+    //     setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
+    //   } else {
+    //     // For a new column, reset sortBy to the column and adjust the sortOrder:
+    //     // Start in ascending order only for the 'price' column, otherwise start in descending
+    //     setSortBy(column);
+    //     setSortOrder(column === "price" ? "asc" : "desc");
+    //   }
 
+    //   const searchKey = keyWordPartModel || searchString;
+    //   console.log("SearchKey: ", searchKey);
+    //   const searchArray = searchKey
+    //     ? searchKey.split(",").map((s) => s.trim())
+    //     : keys; // ✅ Splits into an array
+    //   console.log("Search Array: ", searchArray);
+
+    //   // Create the payload for dispatch
+    //   const payload = {
+    //     search: searchArray, // Use searchKey if available
+    //     sortBy: column,
+    //     sortOrder: column === "price" && sortBy !== "price" ? "asc" : sortOrder,
+    //     page: 1, // Reset to the first page
+    //     pageSize: 20, // Adjust page size if needed
+    //     type: searchType === "keyword" ? "keyword" : "",
+    //   };
+
+    //   console.log("Sorting Payload:", payload);
+    //   dispatch(sortInventory({ token, payload }));
+    // };
+
+    const handleSort = (column) => {
+      const queryParams = new URLSearchParams(location.search);
+      const currentQuery = queryParams.get("query");
+      const currentPartModel = queryParams.get("partModel");
+      const currentSortBy = queryParams.get("sortBy");
+      const currentSortOrder = queryParams.get("sortOrder") || "desc";
+    
+      // 🔁 Toggle or set sortOrder
+      const newSortOrder =
+        currentSortBy === column
+          ? currentSortOrder === "asc"
+            ? "desc"
+            : "asc"
+          : column === "price"
+          ? "asc"
+          : "desc";
+    
+      // 🔍 Determine what to search
       const searchKey = keyWordPartModel || searchString;
-      console.log("SearchKey: ", searchKey);
       const searchArray = searchKey
         ? searchKey.split(",").map((s) => s.trim())
-        : keys; // ✅ Splits into an array
-      console.log("Search Array: ", searchArray);
-
-      // Create the payload for dispatch
+        : keys;
+    
+      // 🔀 Build payload for sorting API
       const payload = {
-        search: searchArray, // Use searchKey if available
+        search: searchArray,
         sortBy: column,
-        sortOrder: column === "price" && sortBy !== "price" ? "asc" : sortOrder,
-        page: 1, // Reset to the first page
-        pageSize: 20, // Adjust page size if needed
+        sortOrder: newSortOrder,
+        page: 1,
+        pageSize: 20,
         type: searchType === "keyword" ? "keyword" : "",
       };
-
-      console.log("Sorting Payload:", payload);
+    
+      // 🚀 Dispatch sorting API
       dispatch(sortInventory({ token, payload }));
+    
+      // 🌐 Update URL to reflect sort state (needed for parent & pagination)
+      const url = currentQuery
+        ? `/inventory/search?page=1&query=${encodeURIComponent(currentQuery)}&sortBy=${column}&sortOrder=${newSortOrder}`
+        : `/inventory/search?page=1&partModel=${encodeURIComponent(currentPartModel)}&sortBy=${column}&sortOrder=${newSortOrder}`;
+    
+      navigate(url, { replace: true });
     };
+    
 
     return (
       <div className={css.productTableDetail}>
@@ -405,7 +441,7 @@ const ProductTableDetail = React.memo(
               </tr>
             </thead>
             <tbody>
-              {partData
+              {(partData || searchResponseMatched?.data || []) 
                 ?.slice() // Create a shallow copy of partData to avoid mutating the original array
                 .sort((a, b) => {
                   // Check if the company matches the logged-in user's company
@@ -426,7 +462,7 @@ const ProductTableDetail = React.memo(
                     key={i}
                     style={
                       e?.addedBy?.company?.name?.toLowerCase() ===
-                      loggedInUserCompany?.toLowerCase()
+                        loggedInUserCompany?.toLowerCase()
                         ? { backgroundColor: "#ffb" } // Highlight if the company matches
                         : null
                     }
@@ -582,11 +618,10 @@ const ProductTableDetail = React.memo(
                     key={page}
                     onClick={() => handlePageChange(page)}
                     className={`px-4 py-2 border rounded-md transition-all duration-200 
-                    ${
-                      currentPage === page
+                    ${currentPage === page
                         ? "bg-blue-500 text-white"
                         : "bg-gray-100 text-gray-700 hover:bg-gray-300"
-                    }`}
+                      }`}
                   >
                     {page}
                   </button>
@@ -596,11 +631,10 @@ const ProductTableDetail = React.memo(
               <button
                 onClick={handleNextPage}
                 className={`px-4 py-2 border rounded-md bg-blue-500 text-white  hover:bg-blue-600 transition-all duration-200 
-            ${
-              visiblePages[1] === totalPagess
-                ? "opacity-50 cursor-not-allowed"
-                : ""
-            }`}
+            ${visiblePages[1] === totalPagess
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                  }`}
                 disabled={visiblePages[1] === totalPagess}
               >
                 Next

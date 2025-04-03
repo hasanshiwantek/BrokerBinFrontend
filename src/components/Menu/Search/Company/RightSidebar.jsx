@@ -100,21 +100,19 @@ const RightSidebar = ({ company }) => {
 
   const applyFilters = async () => {
     try {
-      const payload = {
-        data: {
-          country: filters.country,
-          region: filters.region,
-          state: filters.state,
-          // state: filters.state.length ? filters.state.join(",") : "",
-          // country: filters.country.length ? filters.country.join(",") : "",
-        },
-      };
-      const { data } = await axios.post(
-        `${brokerAPI}company/company-search`,
-        payload,
-        { headers: { Authorization: `Bearer ${token}` } }
-        // console.log("TOKEN", token)
-      );
+      const payload ={
+        data : {
+        country: filters.country,
+        region: filters.region,
+        state: filters.state,
+        // state: filters.state.length ? filters.state.join(",") : "",
+        // country: filters.country.length ? filters.country.join(",") : "",
+        }
+      }
+      const {data} = await axios.post(`${brokerAPI}company/company-search`, payload,
+        {headers: {Authorization: `Bearer ${token}`}},
+        // console.log("TOKEN", token) 
+      )
       setFilteredData(data);
       setShowFilters(false);
     } catch (error) {
@@ -474,7 +472,7 @@ const RightSidebar = ({ company }) => {
                       className="w-7 h-7 "
                       src={addVendorIcon}
                       alt="Email"
-                    />{" "}
+                    />{" "}  
                   </span>{" "}
                   Add Vendor
                 </button>

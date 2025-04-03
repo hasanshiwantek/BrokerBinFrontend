@@ -60,7 +60,7 @@ const CompanySearchResults = () => {
         console.log("COMPANY RESULTS", companyData);
       } catch (error) {
         console.log("ERROR while searching", error);
-      }
+      }  
     }
   };
 
@@ -71,7 +71,7 @@ const CompanySearchResults = () => {
     >
       <div className={styles.profileInfo_links}>
         <ul>
-          <li>
+          <li>  
             <NavLink
               to="/search/Inventory"
               end
@@ -104,7 +104,7 @@ const CompanySearchResults = () => {
         <div className="grid grid-cols-[3fr_1fr] border-4 border-gray-300 ">
           <div className="relative">
             {/* Dark Overlay with Centered Search Bar */}
-            <div className=" w-full bg-black gap-2 items-center bg-opacity-50 p-4 flex justify-center">
+            <div className=" w-full bg-black gap-2 items-center bg-opacity-50 p-6 flex justify-center">
               <input
                 type="text"
                 placeholder="Search Company / Location / Keywords"
@@ -114,7 +114,7 @@ const CompanySearchResults = () => {
                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
               />
               <div
-                className={`p-2 rounded-sm cursor-pointer transition duration-300 
+                className={`p-3 rounded-sm cursor-pointer transition duration-300 
         ${
           isClicked
             ? "bg-blue-700 outline outline-blue-300"

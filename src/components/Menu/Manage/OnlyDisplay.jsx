@@ -27,8 +27,6 @@ const OnlyDisplay = () => {
   //   }));
   // };
 
-
-
   const toggleOnlyReceiveMatch = (type) => {
     setOnlyReceiveMatch({
       region: type === "region",
@@ -36,8 +34,6 @@ const OnlyDisplay = () => {
       state: type === "state",
     });
   };
-
-
 
   const handleCheckboxChange = (category, value) => {
     // Get the current array of selected items for the category

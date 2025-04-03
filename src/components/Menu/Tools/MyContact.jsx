@@ -162,14 +162,14 @@ const MyContact = () => {
                     <span>Options</span>
                   </NavLink>
                 </li> */}
-              {/* <li>
+              <li>
                   <NavLink
                     to="/myprofile/MyVendors"
                     className={({ isActive }) => (isActive ? myProfile.active : '')}
                   >
                     <span>My Vendors</span>
                   </NavLink>
-                </li> */}
+                </li>
               <li>
                 <NavLink
                   to="/myprofile/MyContact"
@@ -177,7 +177,7 @@ const MyContact = () => {
                     isActive ? myProfile.active : ""
                   }
                 >
-                  <span>My Vendors</span>
+                  <span>My Contacts</span>
                 </NavLink>
               </li>
               <li>

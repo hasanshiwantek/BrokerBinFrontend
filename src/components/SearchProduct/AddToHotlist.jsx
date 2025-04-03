@@ -80,13 +80,9 @@ const AddToHotList = ({ item }) => {
         <div className="">
           <InventorySearch />
         </div>
-
       </div>
-
       <ToastContainer position="top-center" autoClose={2000} />
-
     </>
-
   );
 };
 

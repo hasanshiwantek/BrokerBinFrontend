@@ -4,7 +4,7 @@ import { brokerAPI } from "../components/api/BrokerEndpoint";
 
 export const searchProductQuery = createAsyncThunk(
   "searchProductStore/searchProductQuery",
-  async ({ token, page, search }) => {
+  async ({ token, page, search, sortBy, sortOrder }) => {
     console.log(search);
     try {
       const response = await axios.post(
@@ -12,6 +12,8 @@ export const searchProductQuery = createAsyncThunk(
         {
           page, // Send 'page' in the request body
           search, // Send 'search' in the request body
+          sortBy,
+          sortOrder,
         },
         {
           headers: {
@@ -34,7 +36,7 @@ export const searchProductQuery = createAsyncThunk(
 
 export const searchByKeyword = createAsyncThunk(
   "searchProductStore/searchByKeyword",
-  async ({ token, page, partModel }) => {
+  async ({ token, page, partModel, sortBy, sortOrder }) => {
     console.log(partModel);
     try {
       const response = await axios.post(
@@ -42,6 +44,8 @@ export const searchByKeyword = createAsyncThunk(
         {
           page, // Send 'page' in the request body
           partModel, // Send 'partModel' in the request body
+          sortOrder,
+          sortBy,
         },
         {
           headers: {
