@@ -57,10 +57,7 @@ const Filter = ({ currentQuery }) => {
   const manufacturerCount = {};
 
   Object.values(searchResponseMatched || []).forEach((item) => {
-    // console.log("item", item);
-
     // Check if item contains an array under 'data'
-    // const dataItems = Array.isArray(item?.data) ? item?.data : [item]; // If it's not an array, treat the item as a single object
     const dataItems = Array.isArray(item?.data) ? item?.data : [item]; // If it's not an array, treat the item as a single object
     console.log("DATA-ITEMS: ", dataItems);
 
@@ -337,24 +334,4 @@ const Filter = ({ currentQuery }) => {
   );
 };
 
-<<<<<<< HEAD
 export default memo(Filter);
-=======
-export default memo(Filter);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
->>>>>>> 6537f1c6c9f0e00765958119c150f07dd4e41ca6
