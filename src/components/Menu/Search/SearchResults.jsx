@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { Link } from "react-router-dom";
 import "./SearchResults.css";
 import profileImg from "../../../assets/shadow.png";
@@ -36,6 +36,8 @@ const SearchResults = () => {
     dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
     dispatch(setTogglePopUp()); // Show company modal
   };
+
+  const [viewBy, setViewBy] = useState("Last");
 
   const company = searchResults.map(results => results?.company).filter(Boolean);
   console.log("COMPANY", company)
@@ -76,10 +78,22 @@ const SearchResults = () => {
         </ul>
       </nav>
 
-      <div className="flex flex-row  justify-center relative ">
+      <div className="!flex !justify-end !items-center !gap-5">
+        <p className="!text-xl">view by</p>
+        <select onChange={(e) => setViewBy(e.target.value.split(":")[1]?.trim().toLowerCase() || e.target.value)}>
+          <option value="Last">Contact: Last</option>
+          <option value="First">Contact: First</option>
+          <option value="Company">Company</option>
+          <option value="Rating">My Rating</option>
+          <option value="country">Country</option>
+          <option value="State">State</option>
+        </select>
+      </div>
+      <h1 className="pl-[2.3vw] font-bold">Contact {`(${viewBy})`}</h1>
+      <div className="flex flex-row w-auto ">
         {/* Render the Alphabet List ONCE */}
         <div >
-          <div className="flex flex-col p-4 opacity-50 ">
+          <div className="flex flex-col opacity-50 ">
             {alphabets.map((letter, index) => (
               <Link
                 to={`#letter-${letter.toUpperCase()}`}
@@ -97,13 +111,15 @@ const SearchResults = () => {
                     });
                   }
                 }}
-                className="cursor-pointer text-black font-semibold px-2 py-1"
+                className="cursor-pointer text-black font-medium pl-3 leading-none"
               >
                 {letter}
               </Link>
             ))}
           </div>
         </div>
+
+        
 
         <div>
           {searchResults && searchResults.length > 0 ? (
@@ -116,7 +132,7 @@ const SearchResults = () => {
 
               return (
                 <div
-                  className="search-results-container"
+                  className="search-results-container !w-auto"
                   key={index}
                   id={`letter-${firstLetter}`}
                 >
@@ -136,7 +152,7 @@ const SearchResults = () => {
                     </div>
 
                     <div className="profile-details font-medium">
-                      <p>
+                      {/* <p>
                         Company:
                         <button
                           className="text-black"
@@ -145,7 +161,7 @@ const SearchResults = () => {
                           {val.company?.name || ""}
                         </button>
                       </p>
-                      <p>Title: {val.specialty || ""}</p>
+                      <p className="">Title: {val.specialty || ""}</p>
                       <p>Phone: {val.phoneNumber || ""}</p>
                       <p>Toll: {val.tollFree || ""}</p>
                       <p>
@@ -154,14 +170,31 @@ const SearchResults = () => {
                       <p>Email: {val.email || ""}</p>
                       <p>City: {val.city || ""}</p>
                       <p>State: {val.state || ""}</p>
-                      <p>Country: {val.country || ""}</p>
+                      <p>Country: {val.country || ""}</p> */}
+                      <p className="flex justify-between">
+                        Company:
+                        <button
+                          className="text-black"
+                          onClick={() => openCompanyModal(val.company)}
+                        >
+                          <p>{val.company?.name || ""}</p>
+                        </button>
+                      </p>
+                      <p className="flex justify-between ">Title: <p >{val.specialty || ""} </p></p>
+                      <p className="flex justify-between">Phone: <p>{val.phoneNumber || ""} </p></p>
+                      <p className="flex justify-between">Toll: <p>{val.tollFree || ""} </p></p>
+                      <p className="flex justify-between">Fax: <p>{val?.company?.primaryContact?.faxNumber || ""} </p></p>
+                      <p className="flex justify-between">Email: <p>{val.email || ""} </p></p>
+                      <p className="flex justify-between">City: <p>{val.city || ""} </p></p>
+                      <p className="flex justify-between">State: <p>{val.state || ""} </p></p>
+                      <p className="flex justify-between">Country: <p>{val.country || ""} </p></p>
                     </div>
 
                     <div className="notes-rating">
                       <div className="notes">
                         <h3>My Notes:</h3>
                       </div>
-                      <div className="rating">
+                      <div className="rating flex items-center gap-4">
                         <h3>My Rating:</h3>
                         <select>
                           <option value="N/R">N/R</option>
@@ -177,6 +210,7 @@ const SearchResults = () => {
                     </div>
                   </div>
                 </div>
+                
               );
             })
           ) : (

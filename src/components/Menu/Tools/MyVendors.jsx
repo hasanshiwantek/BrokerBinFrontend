@@ -374,6 +374,11 @@ import { FaStar } from "react-icons/fa";
 import { setTogglePopUp } from "@/ReduxStore/SearchProductSlice";
 import CompanyDetails from "../../Popups/CompanyDetails/CompanyDetails";
 import { setPopupCompanyDetail } from "@/ReduxStore/SearchProductSlice";
+import { AiOutlineUserDelete } from "react-icons/ai";
+import { Tooltip } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+
 const MyVendors = () => {
   const token = Cookies.get("token");
   let [viewAsCompany, setViewAsCompany] = useState(true);
@@ -470,6 +475,24 @@ const MyVendors = () => {
     dispatch(removeMyVendors({ companyId, token }));
   };
 
+   const theme = createTheme({
+      components: {
+        MuiTooltip: {
+          styleOverrides: {
+            tooltip: {
+              fontSize: "1.2rem", // Adjust font size
+              width: "11rem",
+              textAlign: "center",
+              backgroundColor: "var(--primary-color)",
+            },
+            arrow: {
+              color: "var(--primary-color)",
+            },
+          },
+        },
+      },
+    });
+
   useEffect(() => {
     dispatch(getMyVendors({ token }));
     // if (myVendor.length === 0) {
@@ -490,6 +513,8 @@ const MyVendors = () => {
   if (loading) {
     return <p>Loading...</p>;
   }
+
+
 
   return (
     <>
@@ -561,9 +586,9 @@ const MyVendors = () => {
               <p className="!text-xl">view by</p>
               <select onChange={handleChange}>
                 <option value="company">Company</option>
-                {/* <option value="show">Display</option>
+                <option value="show">Display</option>
                 <option value="country">Country</option>
-                <option value="state">State</option> */}
+                <option value="state">State</option>
               </select>
             </div>
           </div>
@@ -621,7 +646,7 @@ const MyVendors = () => {
                             </span>
                           </div>
                           <div className={css.myVendor_company_list_main_info}>
-                            <span>
+                            <span onClick={() => openCompanyModal(vendor.company)} className="cursor-pointer">
                               <p>{vendor.company.name}</p>
                               {/* Ratings Display */}
 
@@ -673,7 +698,8 @@ const MyVendors = () => {
                                 className="cursor-pointer"
                                 onClick={() => openCompanyModal(vendor.company)}
                               >
-                                {vendor.company.name}
+                                {/* {vendor.company.name} */}
+                                Rating:
                               </p>
                               <p>
                                 (
@@ -692,33 +718,33 @@ const MyVendors = () => {
                               </p>
                             </span>
                             {/* <span>
-                              <p>company:</p>
+                              <p>Rating:</p>
                               <p>{vendor.company.name}</p>
                             </span> */}
-
                             <span>
-                              <p>fax:</p>
+                              <p>Location:</p>
+                              <p>{vendor.company.city} {vendor.company.state} {vendor.company.country}</p>
+                            </span>
+                            <span>
+                              <p>Phone:</p>
                               <p>{vendor.company.phone_num}</p>
                             </span>
                             <span>
-                              <p>phone:</p>
-                              <p>{vendor.company.phone_num}</p>
+                              <p>Fax:</p>
+                              <p>{vendor.company.fax}</p>
                             </span>
                             <span>
-                              <p>hours:</p>
+                              <p>Hours:</p>
                               <p>
                                 {vendor.company.open_timing} to{" "}
                                 {vendor.company.close}
                               </p>
                             </span>
                             <span>
-                              <p>ship by:</p>
-                              <p>4pm</p>
+                              <p>Ship by:</p>
+                              <p>{vendor.company.shipBy}</p>
                             </span>
-                            <span>
-                              <p>location:</p>
-                              <p>{vendor.company.address}</p>
-                            </span>
+                        
                           </div>
                           <div
                             className={
@@ -767,14 +793,25 @@ const MyVendors = () => {
                           <div
                             className={css.myVendor_company_list_main_actions}
                           >
-                            <button
-                              type="button"
-                              onClick={() =>
-                                removeFromMyVendors(vendor.company.id)
-                              }
-                            >
-                              X
-                            </button>
+                            <ThemeProvider theme={theme}>
+                              <Tooltip title="Remove from my vendors" arrow placement="right">
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    removeFromMyVendors(vendor.company.id)
+                                  }
+                                >
+                                  X
+                                </button>
+                              </Tooltip>
+                            </ThemeProvider>
+                          </div>
+                          <div className="cursor-pointer">
+                          <ThemeProvider theme={theme}>
+                            <Tooltip title="Block this vendor from vewing my inventory" arrow placement="right">
+                              <span><AiOutlineUserDelete /></span>
+                            </Tooltip>
+                          </ThemeProvider>
                           </div>
                         </div>
                       </div>
