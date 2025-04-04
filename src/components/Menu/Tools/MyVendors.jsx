@@ -408,6 +408,7 @@ const MyVendors = () => {
   console.log("Company ID", companyId);
 
   const [feedbackData, setFeedbackData] = useState(null);
+  const [headingWord, setHeadingWord] = useState("Company:");
 
   // useEffect(() => {
   //   const fetchData = async () => {
@@ -445,30 +446,59 @@ const MyVendors = () => {
     return index <= rating ? "View Comments" : "";
   };
 
+  // const handleChange = (e) => {
+  //   if (e.target.value === "company") {
+  //     setViewAsCompany(true);
+  //     setViewAsShow(false);
+  //     setViewAsCountry(false);
+  //     setViewAsState(false);
+  //   } else if (e.target.value === "show") {
+  //     setViewAsCompany(false);
+  //     setViewAsShow(true);
+  //     setViewAsCountry(false);
+  //     setViewAsState(false);
+  //   } else if (e.target.value === "country") {
+  //     setViewAsCompany(false);
+  //     setViewAsShow(false);
+  //     setViewAsCountry(true);
+  //     setViewAsState(false);
+  //   } else if (e.target.value === "state") {
+  //     setViewAsCompany(false);
+  //     setViewAsShow(false);
+  //     setViewAsCountry(false);
+  //     setViewAsState(true);
+  //   }
+  // };
+
+
   const handleChange = (e) => {
-    if (e.target.value === "company") {
+    setHeadingWord(e.target.selectedOptions[0].dataset.label);
+
+    const value = e.target.value;
+  
+    if (value.startsWith("company")) {
       setViewAsCompany(true);
       setViewAsShow(false);
       setViewAsCountry(false);
       setViewAsState(false);
-    } else if (e.target.value === "show") {
+    } else if (value.startsWith("show")) {
       setViewAsCompany(false);
       setViewAsShow(true);
       setViewAsCountry(false);
       setViewAsState(false);
-    } else if (e.target.value === "country") {
+    } else if (value === "country") {
       setViewAsCompany(false);
       setViewAsShow(false);
       setViewAsCountry(true);
       setViewAsState(false);
-    } else if (e.target.value === "state") {
+    } else if (value === "state") {
       setViewAsCompany(false);
       setViewAsShow(false);
       setViewAsCountry(false);
       setViewAsState(true);
     }
   };
-
+  
   const removeFromMyVendors = (id) => {
     const companyId = { company_id: id };
     console.log(companyId);
@@ -586,12 +616,14 @@ const MyVendors = () => {
               <p className="!text-xl">view by</p>
               <select onChange={handleChange}>
                 <option value="company">Company</option>
-                <option value="show">Display</option>
+                <option value="show: First ">Display</option>
                 <option value="country">Country</option>
                 <option value="state">State</option>
               </select>
             </div>
           </div>
+          <h1 className="ml-[2vw]">{headingWord}</h1>
+          
           <div className={css.myVendor}>
             {viewAsCompany && (
               <>
@@ -820,7 +852,7 @@ const MyVendors = () => {
                 </div>
               </>
             )}
-            {viewAsShow && (
+            {/* {viewAsShow && (
               <div className={css.myVendor_company_display}>
                 <h1>Display: Normal</h1>
                 {companyList.map((group, index) => {
@@ -899,7 +931,7 @@ const MyVendors = () => {
                   );
                 })}
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </div>
