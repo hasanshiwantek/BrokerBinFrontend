@@ -32,7 +32,7 @@ const ProductTableBtn = React.memo(() => {
         </NavLink>
       </button>
       <button>
-        {/* <a href="/cartpart" style={{ fontSize: "1em", color: "#444" }}>Cart</a> */}
+        <a href="/cartpart" style={{ fontSize: "1em", color: "#444" }}>Cart</a>
       </button>
       <button type="button" onClick={() => dispatch(setFilterToggle())}>
         Filters

@@ -20,6 +20,7 @@ import { FaStar } from "react-icons/fa";
 import { setTogglePopUp } from "@/ReduxStore/SearchProductSlice";
 import CompanyDetails from "../../Popups/CompanyDetails/CompanyDetails";
 import { setPopupCompanyDetail } from "@/ReduxStore/SearchProductSlice";
+
 const MyContact = () => {
   const token = Cookies.get("token");
   let [viewAsCompany, setViewAsCompany] = useState(true);

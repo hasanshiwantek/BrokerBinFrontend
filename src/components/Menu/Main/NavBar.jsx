@@ -15,7 +15,7 @@ const NavBar=()=>{
         <li><a href="#multicast">My Profile</a></li>
         <li><a href="#profile">My Vendors</a></li>
         {/* <li><a href="#contacts">My Contacts</a></li> */}
-        {/* <li><a href="#partcart">Part Cart</a></li> */}
+        <li><a href="#partcart">Part Cart</a></li>
         <li><a href="#hotlist">HotList</a></li>
     </ul>
 </nav>

@@ -10,7 +10,7 @@ import MenuBar from './MenuBar';
 // import Miscalleneous from './Miscalleneous';
 import MultiCast from './MultiCast';
 import NavBar from './NavBar';
-// import PartCart from './PartCart';
+import PartCart from './PartCart';
 import Profile from './Profile';
 import QuickLinks from './QuickLinks';
 import Reports from './Reports';
@@ -44,7 +44,7 @@ function Help() {
         <Profile />
         <Vendors />
         {/* <Contacts /> */}
-        {/* <PartCart /> */}
+        <PartCart />
         <HotList />
         <FeedBack />
       </main>
