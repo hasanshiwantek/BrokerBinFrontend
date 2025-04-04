@@ -623,6 +623,7 @@ const MyVendors = () => {
             </div>
           </div>
           <h1 className="ml-[2vw]">{headingWord}</h1>
+          
           <div className={css.myVendor}>
             {viewAsCompany && (
               <>
@@ -851,7 +852,7 @@ const MyVendors = () => {
                 </div>
               </>
             )}
-            {viewAsShow && (
+            {/* {viewAsShow && (
               <div className={css.myVendor_company_display}>
                 <h1>Display: Normal</h1>
                 {companyList.map((group, index) => {
@@ -930,7 +931,7 @@ const MyVendors = () => {
                   );
                 })}
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </div>
