@@ -52,7 +52,7 @@ const CompanySearch = ({ formData, setFormData }) => {
         <div
           style={{
             border: "1px solid #ccc",
-            maxHeight: "150px",
+            maxHeight: "50px",
             overflowY: "auto",
             position: "absolute",
             left: "7vw",
@@ -72,20 +72,20 @@ const CompanySearch = ({ formData, setFormData }) => {
                 (e.target.style.backgroundColor = "transparent")
               }
               style={{
-                padding: "10px",
+                padding: "3px 5px",
                 cursor: "pointer",
                 borderBottom: "1px solid #f0f0f0",
                 textAlign: "left",
               }}
-              className="hover:text-white hover:bg-[#2c83ec]"
+              className="hover:text-white hover:bg-[#2c83ec] leading-[1vw]"
             >
-              {company.name}
-              {company.region && company.country && (
+              {company.name},
+              {/* {company.state || company.country && ( */}
                 <p>
-                  <span>{company.region},</span>
+                  <span>{company.state},</span>
                   <span>{company.country}</span>
                 </p>
-              )}
+              {/* )} */}
             </div>
           ))}
         </div>

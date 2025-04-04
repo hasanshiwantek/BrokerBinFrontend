@@ -110,12 +110,12 @@ const SearchMyContact = () => {
                     className={css.companyItem}
                   >
                     <p>{company.name}</p>
-                    {company.region && company.region && (
+                    {/* {company.state && company.country && ( */}
                       <p>
-                        <span>{company.region},</span>
+                        <span>{company.state},</span>
                         <span>{company.country}</span>
                       </p>
-                    )}
+                    {/* )} */}
                   </li>
                 ))
               ) : (
