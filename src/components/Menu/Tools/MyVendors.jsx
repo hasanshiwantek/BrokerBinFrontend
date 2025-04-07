@@ -352,7 +352,7 @@
 
 // export default MyVendors;
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useLayoutEffect } from "react";
 import myProfile from "../../../styles/Menu/Manage/MyProfile.module.css";
 import css from "../../../styles/Menu/Tools/MyContact.module.css";
 import { companyList } from "../../../data/tableData";
@@ -377,6 +377,10 @@ import { setPopupCompanyDetail } from "@/ReduxStore/SearchProductSlice";
 import { AiOutlineUserDelete } from "react-icons/ai";
 import { Tooltip } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { alphabets } from "@/data/services";
+import { setHoverCompanyDetail } from "../../../ReduxStore/SearchProductSlice";
+
+
 
 
 const MyVendors = () => {
@@ -409,6 +413,7 @@ const MyVendors = () => {
 
   const [feedbackData, setFeedbackData] = useState(null);
   const [headingWord, setHeadingWord] = useState("Company:");
+  const [clicked, setClicked] = useState(false);
 
   // useEffect(() => {
   //   const fetchData = async () => {
@@ -533,12 +538,21 @@ const MyVendors = () => {
   const { togglePopUp, popupCompanyDetail } = useSelector(
     (state) => state.searchProductStore
   );
+
+  useLayoutEffect(() => {
+    if (!clicked) window.scrollTo(0, 0);
+  }, [clicked]);
+
   // Company Modal Logic
   const openCompanyModal = (company) => {
     console.log("Opening Company Modal with Company:", company);
     dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
     dispatch(setTogglePopUp()); // Show company modal
   };
+
+  const handleHoverCompanyDetail = (company) => {
+    dispatch(setHoverCompanyDetail(company)); // Dispatch company details to Redux store}
+  }
 
   if (loading) {
     return <p>Loading...</p>;
@@ -627,8 +641,8 @@ const MyVendors = () => {
           <div className={css.myVendor}>
             {viewAsCompany && (
               <>
-                <div className={css.myVendor_link}>
-                  <div>
+                <div className={''}>
+                  {/* <div>
                     <Link to={"##"}>#</Link>
                     <Link to={"#A"}>A</Link>
                     <Link to={"#B"}>B</Link>
@@ -656,14 +670,39 @@ const MyVendors = () => {
                     <Link to={"#X"}>X</Link>
                     <Link to={"#Y"}>Y</Link>
                     <Link to={"#Z"}>Z</Link>
+                  </div> */}
+                  <div className="flex flex-col sticky top-[31vh]">
+                    {alphabets.map((letter, index) => {
+                      const isActive = myVendor.some(
+                        (item) => item.company?.name?.charAt(0).toUpperCase() === letter
+                      );
+                      return (
+                        <Link
+                          to={`#letter-${letter}`}
+                          key={index}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            const element = document.getElementById(`letter-${letter}`);
+                            if (element) {
+                              element.scrollIntoView({ behavior: "smooth", block: "center" });
+                            }
+                          }}
+                          className={`cursor-pointer font-medium pl-3 leading-none ${isActive ? "text-black font-bold" : "opacity-50 text-black"
+                            }`}
+                        >
+                          {letter}
+                        </Link>
+                      );
+                    })}
                   </div>
                 </div>
                 <div className={css.myVendor_company}>
-                  {myVendor?.map((vendor, index) => {
+                  {myVendor.map((vendor, index) => {
                     return (
                       <div
                         className={css.myVendor_company_list}
                         key={vendor.company.id}
+                        id={`letter-${vendor.company.name.charAt(0).toUpperCase()}`}
                       >
                         <div className={css.myVendor_company_list_main}>
                           <div className={css.myVendor_company_list_main_img}>
@@ -674,11 +713,21 @@ const MyVendors = () => {
                               onClick={() => openCompanyModal(vendor.company)}
                             />
                             <span>
-                              <p>{vendor.company.name}</p>
+                              <p 
+                              className="cursor-pointer"
+                              onClick={() => openCompanyModal(vendor.company)}
+                              onMouseEnter={() => handleHoverCompanyDetail(vendor.company)}
+                              >
+                                {vendor.company.name}
+                              </p>
                             </span>
                           </div>
                           <div className={css.myVendor_company_list_main_info}>
-                            <span onClick={() => openCompanyModal(vendor.company)} className="cursor-pointer">
+                            <span 
+                              className="cursor-pointer"
+                              onClick={() => openCompanyModal(vendor.company)} 
+                              onMouseEnter={() => handleHoverCompanyDetail(vendor.company)}
+                            >
                               <p>{vendor.company.name}</p>
                               {/* Ratings Display */}
 
