@@ -371,14 +371,13 @@ import { fetchUserData } from "../../../ReduxStore/ProfleSlice";
 import { brokerAPI } from "../../api/BrokerEndpoint";
 import axios from "axios";
 import { FaStar } from "react-icons/fa";
-import { setTogglePopUp } from "@/ReduxStore/SearchProductSlice";
+import { setTogglePopUp, setHoverCompanyDetail } from "@/ReduxStore/SearchProductSlice";
 import CompanyDetails from "../../Popups/CompanyDetails/CompanyDetails";
 import { setPopupCompanyDetail } from "@/ReduxStore/SearchProductSlice";
 import { AiOutlineUserDelete } from "react-icons/ai";
 import { Tooltip } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { alphabets } from "@/data/services";
-import { setHoverCompanyDetail } from "../../../ReduxStore/SearchProductSlice";
 
 
 
