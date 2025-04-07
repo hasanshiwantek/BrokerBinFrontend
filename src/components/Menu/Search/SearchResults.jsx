@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect, useLayoutEffect} from "react";
 import { Link } from "react-router-dom";
 import "./SearchResults.css";
 import profileImg from "../../../assets/shadow.png";
@@ -14,6 +14,7 @@ import { alphabets } from "@/data/services";
 import { FaUserPlus } from "react-icons/fa";
 import { Tooltip } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { setHoverCompanyDetail } from "../../../ReduxStore/SearchProductSlice";
 
 const SearchResults = () => {
   const results = useSelector((state) => state.profileStore);
@@ -26,6 +27,8 @@ const SearchResults = () => {
   console.log("Profile Image: ", profileImage);
 
   const dispatch = useDispatch();
+  const [clicked, setClicked] = useState(false);
+
 
   const { togglePopUp, popupCompanyDetail } = useSelector(
     (state) => state.searchProductStore
@@ -60,6 +63,14 @@ const SearchResults = () => {
     },
   });
 
+  useLayoutEffect(() => {
+  if (!clicked) window.scrollTo(0, 0);
+}, [clicked]);
+
+const handleHoverCompanyDetail = (company) => {
+  dispatch(setHoverCompanyDetail(company)); // Dispatch company details to Redux store}
+}
+
   return (
     <main className="mainSec w-[50%]">
       <nav className="menu-bar">
@@ -93,37 +104,37 @@ const SearchResults = () => {
       <div className="flex flex-row w-auto ">
         {/* Render the Alphabet List ONCE */}
         <div >
-          <div className="flex flex-col opacity-50 ">
-            {alphabets.map((letter, index) => (
-              <Link
-                to={`#letter-${letter.toUpperCase()}`}
-                key={index}
-                onClick={(e) => {
-                  console.log("Clicked on letter: ", letter);
-                  e.preventDefault();
-                  const element = document.getElementById(
-                    `letter-${letter.toUpperCase()}`
-                  );
-                  if (element) {
-                    element.scrollIntoView({
-                      behavior: "smooth",
-                      block: "center",
-                    });
-                  }
-                }}
-                className="cursor-pointer text-black font-medium pl-3 leading-none"
-              >
-                {letter}
-              </Link>
-            ))}
+          <div className="flex flex-col sticky top-[35vh]">
+            {alphabets.map((letter, index) => {
+              const isActive = searchResults.some(
+                (item) => item.firstName?.charAt(0).toUpperCase() === letter
+              );
+              return (
+                <Link
+                  to={`#letter-${letter}`}
+                  key={index}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const element = document.getElementById(`letter-${letter}`);
+                    if (element) {
+                      element.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }
+                  }}
+                  className={`cursor-pointer font-medium pl-3 leading-none ${isActive ? "text-black font-bold" : "opacity-50 text-black"
+                    }`}
+                >
+                  {letter}
+                </Link>
+              );
+            })}
           </div>
         </div>
 
-        
-
         <div>
           {searchResults && searchResults.length > 0 ? (
-            searchResults.map((val, index) => {
+            [...searchResults]
+              .sort((a, b) => a.firstName?.localeCompare(b.firstName || '') || 0)
+              .map((val, index) => {
               // Use profileImg as a fallback if val.profileImage is null
               const profileImage = val.profileImage || profileImg;
               const firstLetter = val.firstName
@@ -146,6 +157,7 @@ const SearchResults = () => {
                       <p
                         className="font-semibold cursor-pointer text-center "
                         onClick={() => openCompanyModal(val.company)}
+                        onMouseEnter={() => handleHoverCompanyDetail(val.company)}
                       >
                         {val.firstName || ""} 
                       </p>
@@ -175,13 +187,15 @@ const SearchResults = () => {
                         Company:
                         <button
                           className="text-black"
-                          onClick={() => openCompanyModal(val.company)}
+                          onClick={() => {openCompanyModal(val.company)}}
+                          onMouseEnter={() => handleHoverCompanyDetail(val.company)}
                         >
                           <p>{val.company?.name || ""}</p>
                         </button>
                       </p>
-                      <p className="flex justify-between ">Title: <p >{val.specialty || ""} </p></p>
+                      <p className="flex justify-between ">Title: <p >{val.position || ""} </p></p>
                       <p className="flex justify-between">Phone: <p>{val.phoneNumber || ""} </p></p>
+                      <p className="flex justify-between">Specialty: <p>{val.specialty || ""} </p></p>
                       <p className="flex justify-between">Toll: <p>{val.tollFree || ""} </p></p>
                       <p className="flex justify-between">Fax: <p>{val?.company?.primaryContact?.faxNumber || ""} </p></p>
                       <p className="flex justify-between">Email: <p>{val.email || ""} </p></p>
