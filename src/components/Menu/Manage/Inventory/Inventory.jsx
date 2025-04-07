@@ -128,13 +128,13 @@ const Inventory = () => {
                 target="_blank"
                 href="https://members.brokerbin.com/help/example.xls"
               >
-                <p>example.xls</p>
+                <p className="!lowercase underline">example.xls</p>
               </a>
               <a
                 target="_blank"
                 href="https://members.brokerbin.com/help/example.csv"
               >
-                <label style={{ color: "#444" }}>example.csv</label>
+                <p className="!lowercase underline">example.csv</p>
               </a>
             </div>
           </div>

@@ -60,6 +60,8 @@ import inventoryIcon from "../assets/icon 4.svg";
 import broadcastHistoryIcon from "../assets/ICON 6.svg";
 import EmailIcon from "../assets/Email Icon.svg";
 import { FaTools, FaSignOutAlt } from "react-icons/fa";
+import { setPopupCompanyDetail, setTogglePopUp } from "../ReduxStore/SearchProductSlice";
+import { FaRegAddressCard } from "react-icons/fa";
 // import vendorIcon from "../assets/vendor-pricing.svg"
 
 const Header = () => {
@@ -157,6 +159,12 @@ const Header = () => {
     },
   });
 
+  const openCompanyModal = (company) => {
+      console.log("Opening Company Modal with Company:", company);
+      dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
+      dispatch(setTogglePopUp()); // Show company modal
+    };
+
   return (
     <>
       <div className={`${css.headerFixed} ${css.noPrint}`}>
@@ -196,8 +204,11 @@ const Header = () => {
             >
               <div className={css.hoverCompanyDetail_details}>
                 <span>
-                  <span>
-                    <strong>{hoverCompanyDetail[0].name}</strong>
+                  <span
+                  className="cursor-pointer flex gap-2" 
+                  onClick={() => openCompanyModal(hoverCompanyDetail[0])}>
+                    <strong>{hoverCompanyDetail[0].name} </strong>
+                    <FaRegAddressCard />
                   </span>
                 </span>
                 <span>
@@ -222,7 +233,12 @@ const Header = () => {
                 </span>
               </div>
               <div className={css.hoverCompanyDetail_img}>
-                <img src={hoverCompanyDetail[0].image} alt="companyLogo" />
+                <img 
+                alt="companyLogo"
+                className="cursor-pointer"
+                src={hoverCompanyDetail[0].image}
+                onClick={() => openCompanyModal(hoverCompanyDetail[0])}
+                /> 
               </div>
             </div>
           )}
