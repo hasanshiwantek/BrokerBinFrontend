@@ -297,12 +297,15 @@ nav > ul > li:hover {
   background: #f0f0f0;
   gap: 3rem;
   margin-left: 5rem;
-  padding: 0.8rem;
+  /* padding: 0.1rem .6rem; */
   border-radius: 0.5rem;
 
   &_details {
     display: flex;
     flex-direction: column;
+    line-height: 2vh;
+    padding-right: 7px;
+    padding-left: 7px;
 
     > span {
       display: flex;
@@ -311,7 +314,8 @@ nav > ul > li:hover {
   }
 
   &_img {
-    height: 7rem;
+    height: 5.59rem;
+    padding-right: 7px;
 
     > img {
       height: 100%;
