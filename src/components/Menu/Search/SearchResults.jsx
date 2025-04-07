@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useLayoutEffect} from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import { Link } from "react-router-dom";
 import "./SearchResults.css";
 import profileImg from "../../../assets/shadow.png";
@@ -29,7 +29,6 @@ const SearchResults = () => {
   const dispatch = useDispatch();
   const [clicked, setClicked] = useState(false);
 
-
   const { togglePopUp, popupCompanyDetail } = useSelector(
     (state) => state.searchProductStore
   );
@@ -42,8 +41,10 @@ const SearchResults = () => {
 
   const [viewBy, setViewBy] = useState("Last");
 
-  const company = searchResults.map(results => results?.company).filter(Boolean);
-  console.log("COMPANY", company)
+  const company = searchResults
+    .map((results) => results?.company)
+    .filter(Boolean);
+  console.log("COMPANY", company);
 
   const theme = createTheme({
     components: {
@@ -64,12 +65,12 @@ const SearchResults = () => {
   });
 
   useLayoutEffect(() => {
-  if (!clicked) window.scrollTo(0, 0);
-}, [clicked]);
+    if (!clicked) window.scrollTo(0, 0);
+  }, [clicked]);
 
-const handleHoverCompanyDetail = (company) => {
-  dispatch(setHoverCompanyDetail(company)); // Dispatch company details to Redux store}
-}
+  const handleHoverCompanyDetail = (company) => {
+    dispatch(setHoverCompanyDetail(company)); // Dispatch company details to Redux store}
+  };
 
   return (
     <main className="mainSec w-[50%]">
@@ -91,7 +92,14 @@ const handleHoverCompanyDetail = (company) => {
 
       <div className="!flex !justify-end !items-center !gap-5">
         <p className="!text-xl">view by</p>
-        <select onChange={(e) => setViewBy(e.target.value.split(":")[1]?.trim().toLowerCase() || e.target.value)}>
+        <select
+          onChange={(e) =>
+            setViewBy(
+              e.target.value.split(":")[1]?.trim().toLowerCase() ||
+                e.target.value
+            )
+          }
+        >
           <option value="Last">Contact: Last</option>
           <option value="First">Contact: First</option>
           <option value="Company">Company</option>
@@ -103,7 +111,7 @@ const handleHoverCompanyDetail = (company) => {
       <h1 className="pl-[2.3vw] font-bold">Contact {`(${viewBy})`}</h1>
       <div className="flex flex-row w-auto ">
         {/* Render the Alphabet List ONCE */}
-        <div >
+        <div>
           <div className="flex flex-col sticky top-[35vh]">
             {alphabets.map((letter, index) => {
               const isActive = searchResults.some(
@@ -117,11 +125,15 @@ const handleHoverCompanyDetail = (company) => {
                     e.preventDefault();
                     const element = document.getElementById(`letter-${letter}`);
                     if (element) {
-                      element.scrollIntoView({ behavior: "smooth", block: "center" });
+                      element.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                      });
                     }
                   }}
-                  className={`cursor-pointer font-medium pl-3 leading-none ${isActive ? "text-black font-bold" : "opacity-50 text-black"
-                    }`}
+                  className={`cursor-pointer font-medium pl-3 leading-none ${
+                    isActive ? "text-black font-bold" : "opacity-50 text-black"
+                  }`}
                 >
                   {letter}
                 </Link>
@@ -133,38 +145,42 @@ const handleHoverCompanyDetail = (company) => {
         <div>
           {searchResults && searchResults.length > 0 ? (
             [...searchResults]
-              .sort((a, b) => a.firstName?.localeCompare(b.firstName || '') || 0)
+              .sort(
+                (a, b) => a.firstName?.localeCompare(b.firstName || "") || 0
+              )
               .map((val, index) => {
-              // Use profileImg as a fallback if val.profileImage is null
-              const profileImage = val.profileImage || profileImg;
-              const firstLetter = val.firstName
-                ? val.firstName.charAt(0).toUpperCase()
-                : "";
+                // Use profileImg as a fallback if val.profileImage is null
+                const profileImage = val.profileImage || profileImg;
+                const firstLetter = val.firstName
+                  ? val.firstName.charAt(0).toUpperCase()
+                  : "";
 
-              return (
-                <div
-                  className="search-results-container !w-auto"
-                  key={index}
-                  id={`letter-${firstLetter}`}
-                >
-                  <div className="contact-info">
-                    <div className="profile-image">
-                      <img
-                        src={profileImage}
-                        alt="profile-image"
-                        onError={(e) => (e.target.src = profileImg)} // If image fails to load, use fallback
-                      />
-                      <p
-                        className="font-semibold cursor-pointer text-center "
-                        onClick={() => openCompanyModal(val.company)}
-                        onMouseEnter={() => handleHoverCompanyDetail(val.company)}
-                      >
-                        {val.firstName || ""} 
-                      </p>
-                    </div>
+                return (
+                  <div
+                    className="search-results-container !w-auto"
+                    key={index}
+                    id={`letter-${firstLetter}`}
+                  >
+                    <div className="contact-info">
+                      <div className="profile-image">
+                        <img
+                          src={profileImage}
+                          alt="profile-image"
+                          onError={(e) => (e.target.src = profileImg)} // If image fails to load, use fallback
+                        />
+                        <p
+                          className="font-semibold cursor-pointer text-center "
+                          onClick={() => openCompanyModal(val.company)}
+                          onMouseEnter={() =>
+                            handleHoverCompanyDetail(val.company)
+                          }
+                        >
+                          {val.firstName || ""}
+                        </p>
+                      </div>
 
-                    <div className="profile-details font-medium">
-                      {/* <p>
+                      <div className="profile-details font-medium">
+                        {/* <p>
                         Company:
                         <button
                           className="text-black"
@@ -183,50 +199,74 @@ const handleHoverCompanyDetail = (company) => {
                       <p>City: {val.city || ""}</p>
                       <p>State: {val.state || ""}</p>
                       <p>Country: {val.country || ""}</p> */}
-                      <p className="flex justify-between">
-                        Company:
-                        <button
-                          className="text-black"
-                          onClick={() => {openCompanyModal(val.company)}}
-                          onMouseEnter={() => handleHoverCompanyDetail(val.company)}
-                        >
-                          <p>{val.company?.name || ""}</p>
-                        </button>
-                      </p>
-                      <p className="flex justify-between ">Title: <p >{val.position || ""} </p></p>
-                      <p className="flex justify-between">Phone: <p>{val.phoneNumber || ""} </p></p>
-                      <p className="flex justify-between">Specialty: <p>{val.specialty || ""} </p></p>
-                      <p className="flex justify-between">Toll: <p>{val.tollFree || ""} </p></p>
-                      <p className="flex justify-between">Fax: <p>{val?.company?.primaryContact?.faxNumber || ""} </p></p>
-                      <p className="flex justify-between">Email: <p>{val.email || ""} </p></p>
-                      <p className="flex justify-between">City: <p>{val.city || ""} </p></p>
-                      <p className="flex justify-between">State: <p>{val.state || ""} </p></p>
-                      <p className="flex justify-between">Country: <p>{val.country || ""} </p></p>
-                    </div>
+                        <p className="flex justify-between">
+                          Company:
+                          <button
+                            className="text-black"
+                            onClick={() => {
+                              openCompanyModal(val.company);
+                            }}
+                            onMouseEnter={() =>
+                              handleHoverCompanyDetail(val.company)
+                            }
+                          >
+                            <p>{val.company?.name || ""}</p>
+                          </button>
+                        </p>
+                        <p className="flex justify-between ">
+                          Title: <p>{val.position || ""} </p>
+                        </p>
+                        <p className="flex justify-between">
+                          Phone: <p>{val.phoneNumber || ""} </p>
+                        </p>
+                        <p className="flex justify-between">
+                          Specialty: <p>{val.specialty || ""} </p>
+                        </p>
+                        <p className="flex justify-between">
+                          Toll: <p>{val.tollFree || ""} </p>
+                        </p>
+                        <p className="flex justify-between">
+                          Fax:{" "}
+                          <p>
+                            {val?.company?.primaryContact?.faxNumber || ""}{" "}
+                          </p>
+                        </p>
+                        <p className="flex justify-between">
+                          Email: <p>{val.email || ""} </p>
+                        </p>
+                        <p className="flex justify-between">
+                          City: <p>{val.city || ""} </p>
+                        </p>
+                        <p className="flex justify-between">
+                          State: <p>{val.state || ""} </p>
+                        </p>
+                        <p className="flex justify-between">
+                          Country: <p>{val.country || ""} </p>
+                        </p>
+                      </div>
 
-                    <div className="notes-rating">
-                      <div className="notes">
-                        <h3>My Notes:</h3>
+                      <div className="notes-rating">
+                        <div className="notes">
+                          <h3>My Notes:</h3>
+                        </div>
+                        <div className="rating flex items-center gap-4">
+                          <h3>My Rating:</h3>
+                          <select>
+                            <option value="N/R">N/R</option>
+                          </select>
+                        </div>
+                        <ThemeProvider theme={theme}>
+                          <Tooltip title="Add to Contacts">
+                            <div className="cursor-pointer">
+                              <FaUserPlus />
+                            </div>
+                          </Tooltip>
+                        </ThemeProvider>
                       </div>
-                      <div className="rating flex items-center gap-4">
-                        <h3>My Rating:</h3>
-                        <select>
-                          <option value="N/R">N/R</option>
-                        </select>
-                      </div>
-                      <ThemeProvider theme={theme}>
-                        <Tooltip title="Add to Contacts">
-                          <div className="cursor-pointer">
-                            <FaUserPlus />
-                          </div>
-                        </Tooltip>
-                      </ThemeProvider>
                     </div>
                   </div>
-                </div>
-                
-              );
-            })
+                );
+              })
           ) : (
             <p
               style={{
