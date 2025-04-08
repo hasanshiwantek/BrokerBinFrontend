@@ -67,7 +67,7 @@ const TableAdd = () => {
                 <input
                   type="text"
                   name="price"
-                  value={`$${item.price || ""}`} // Add the $ sign for display
+                  value={item.price || ""} // Add the $ sign for display
                   onChange={(e) => handleChange(e, i)} // Strip the $ when updating state
                 />
               </td>
