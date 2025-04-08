@@ -405,13 +405,6 @@ const RfqTable = () => {
     }
   };
 
-
-
-
-
-
-
-
   return (
     <>
       <div className={css.layout}>

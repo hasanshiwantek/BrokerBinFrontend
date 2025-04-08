@@ -428,6 +428,15 @@ const EditDelete = () => {
             >
               {loading ? "Processing..." : "Save Modifications"}
             </button>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault() 
+                window.location.reload()}}
+              className="transform active:scale-90 transition-all duration-100"
+            >
+              Refresh
+            </button>
           </div>
 
           {/* Pagination Controls */}

@@ -237,7 +237,7 @@
   width: 10rem ;
 }
 .tableBodyInputs td input[type="checkbox"] {
-  width: 5rem;
+  width: 2rem;
 }
 .editDeleteTable table tbody td{
   font-size: 8pt !important;
