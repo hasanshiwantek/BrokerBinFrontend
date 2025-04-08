@@ -229,14 +229,26 @@ const EditDelete = () => {
       <InventoryButtons />
       <div className={inventory.editDeleteTable}>
         <div className={inventory.editDeleteTable_top}>
-          <span>
-            <label>Heci/Clei</label>
-            <input
-              type="text"
-              value={filters.heciClei}
-              onChange={(e) => handleFilterChange("heciClei", e.target.value)}
-            />
+
+
+        <span>
+            <label>View</label>
+            <select
+            >
+              <option value="inventory">Inventory</option>
+              <option value="wtb">WTB</option>
+              <option value="wts">WTS</option>
+              <option value="rfq">RFQ</option>
+            </select>
           </span>
+
+          <button
+              type="button"
+              className={`${inventory.editDeleteTable_bottom} cursor-pointer transform active:scale-90 transition-all duration-100 rounded-md !-mt-[1px]`}
+            >
+              HECI/CLEI
+            </button>
+
 
           <span>
             <label>MFG</label>
