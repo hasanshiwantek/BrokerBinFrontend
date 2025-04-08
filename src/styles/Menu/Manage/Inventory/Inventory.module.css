@@ -233,6 +233,12 @@
   }
 }
 
+.tableBodyInputs td input{
+  width: 10rem ;
+}
+.tableBodyInputs td input[type="checkbox"] {
+  width: 5rem;
+}
 .editDeleteTable table tbody td{
   font-size: 8pt !important;
   font-weight: 500 !important;

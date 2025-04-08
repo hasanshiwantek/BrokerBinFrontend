@@ -295,7 +295,7 @@ const EditDelete = () => {
                 <th>Age</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className={inventory.tableBodyInputs}>
               {loading ? (
                 <tr>
                   <td colSpan="10" style={{ textAlign: "center" }}>
