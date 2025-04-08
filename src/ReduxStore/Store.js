@@ -8,6 +8,7 @@ import broadcastReducer from "./BroadCast";
 import ToolsReducer from "./ToolsSlice";
 import ReportsReducer from "./Reports";
 import userReducer from "./UserSlice";
+import focusReducer from "./focusSlice";
 
 const store = configureStore({
   reducer: {
@@ -20,6 +21,7 @@ const store = configureStore({
     toolsStore: ToolsReducer,
     reports: ReportsReducer,
     userStore: userReducer,
+    focus: focusReducer,
   },
 });
 

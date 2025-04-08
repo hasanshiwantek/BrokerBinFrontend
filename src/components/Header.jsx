@@ -62,6 +62,7 @@ import EmailIcon from "../assets/Email Icon.svg";
 import { FaTools, FaSignOutAlt } from "react-icons/fa";
 import { setPopupCompanyDetail, setTogglePopUp } from "../ReduxStore/SearchProductSlice";
 import { FaRegAddressCard } from "react-icons/fa";
+import { resetSearchFocus } from "@/ReduxStore/focusSlice";
 // import vendorIcon from "../assets/vendor-pricing.svg"
 
 const Header = () => {
@@ -159,6 +160,16 @@ const Header = () => {
     },
   });
 
+  const searchInputRef = useRef();
+  const shouldFocus = useSelector((state) => state.focus.shouldFocusSearch);
+
+  useEffect(() => {
+    if (shouldFocus) {
+      searchInputRef.current?.focus();
+      dispatch(resetSearchFocus());
+    }
+  }, [shouldFocus]);
+
   const openCompanyModal = (company) => {
       console.log("Opening Company Modal with Company:", company);
       dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
@@ -179,6 +190,7 @@ const Header = () => {
                 name="searchStrings"
                 id={css.search}
                 placeholder="What are you looking for?"
+                ref={searchInputRef}
               />
 
               <button

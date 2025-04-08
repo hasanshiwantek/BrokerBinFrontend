@@ -13,6 +13,7 @@ import { fetchUserData } from "../../../../ReduxStore/ProfleSlice";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import { triggerSearchFocus } from "@/ReduxStore/focusSlice";
 
 
 const EditDelete = () => {
@@ -223,6 +224,7 @@ const EditDelete = () => {
     };
     setEditedItems(updatedItems);
   };
+  
 
   return (
     <div className={`${inventory.inventory} !min-w-fit`}>
@@ -245,6 +247,7 @@ const EditDelete = () => {
           <button
               type="button"
               className={`${inventory.editDeleteTable_bottom} cursor-pointer transform active:scale-90 transition-all duration-100 rounded-md !-mt-[1px]`}
+              onClick={() => dispatch(triggerSearchFocus())}
             >
               HECI/CLEI
             </button>
