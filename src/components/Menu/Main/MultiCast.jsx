@@ -1,4 +1,5 @@
 import React from 'react'
+import "./BroadcastTerm.css"
 
 const MultiCast = () => {
   return (
