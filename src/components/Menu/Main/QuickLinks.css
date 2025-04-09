@@ -15,9 +15,13 @@
     border: 1px solid black;
     width: 90%;
     padding: 25px 12px;
-    font-size: 12px;
-    font-weight: 500;
+   
 
+}
+
+.links-sec span{
+    font-size: 8pt;
+    font-weight: 500;
 }
 
 .links-sec img{

@@ -7,6 +7,7 @@
 .box-sec {
     display: flex;
     flex-direction: column;
+    height: 6rem;
     /* Stack the boxes vertically */
 }
 
@@ -16,6 +17,10 @@
     /* Stack the text vertically */
     margin-left: 4px;
     /* Add space between boxes and text */
+}
+.box-content span{
+    font-size: 8pt;
+    font-weight: 500;
 }
 
 .box1,
@@ -53,4 +58,14 @@
     /* Red color for text */
     margin-bottom: -5px;
     /* Reduce margin between the text */
+}
+
+.site-allowances p{
+    font-size: 8pt;
+    font-weight: 500;
+}
+
+#vendors p{
+    font-size: 8pt;
+    font-weight: 500;
 }

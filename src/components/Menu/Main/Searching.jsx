@@ -1,5 +1,5 @@
 import React from 'react'
-
+import "./BroadcastTerm.css"
 const Searching = () => {
   return (
     <>
@@ -7,7 +7,7 @@ const Searching = () => {
 
         <h5>Searching</h5>
 
-        <div className="email-sec box" style={{ fontSize: "11px" }}>
+        <div className="email-sec box" >
           <p style={{ color: "#2c83ec" }}>Q: Do you charge per Search</p>
           <p> A: No! The more searches and activity on the site the better BrokerCell becomes.</p>
           <div style={{ marginTop: "15px" }}>

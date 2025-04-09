@@ -27,9 +27,9 @@ const QuickLinks = () => {
           <div className="link-sec1">
             <div className="link-sec1-sec">
               <img src={icon12} alt="Site Color" />
-              <span>
-                <a href="#broadcast">Site Color</a>
-              </span>
+              <a href="#broadcast">
+                <span>Site Color</span>
+              </a>
             </div>
 
             <div className="link-sec1-sec">
