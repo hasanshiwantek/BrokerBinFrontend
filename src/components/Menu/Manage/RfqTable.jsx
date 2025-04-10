@@ -14,49 +14,55 @@ import {
   setCurrentPagePrev,
 } from "../../../ReduxStore/RfqSlice.js";
 import { IoMail, IoMailOpen } from "react-icons/io5";
-import { receivedRfq, sentRfq, statusRfq } from "../../../ReduxStore/RfqSlice.js";
+import {
+  receivedRfq,
+  sentRfq,
+  statusRfq,
+} from "../../../ReduxStore/RfqSlice.js";
 import Cookies from "js-cookie";
 import myProfile from "../../../styles/Menu/Manage/MyProfile.module.css";
 import { NavLink, useNavigate } from "react-router-dom";
 import { setPopupCompanyDetail } from "../../../ReduxStore/SearchProductSlice.js";
 import CompanyDetails from "../../Popups/CompanyDetails/CompanyDetails.jsx";
-
-import {
-  setTogglePopUp as setTogglePopUpCompany
-} from "../../../ReduxStore/SearchProductSlice";
+import { setTogglePopUp as setTogglePopUpCompany } from "../../../ReduxStore/SearchProductSlice";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const RfqTable = () => {
+  const {
+    togglePopUp: togglePopUpRfq,
+    rfqMail,
+    rfqMailCheckAll,
+    currentPage,
+  } = useSelector((state) => state.rfqStore);
 
-
-  const { togglePopUp: togglePopUpRfq, rfqMail, rfqMailCheckAll, currentPage } = useSelector(
-    (state) => state.rfqStore
+  const { togglePopUp: togglePopUpCompany } = useSelector(
+    (state) => state.searchProductStore
   );
 
-  const { togglePopUp: togglePopUpCompany } = useSelector((state) => state.searchProductStore)
-
-  const { popupCompanyDetail } = useSelector((state) => state.searchProductStore)
-
+  const { popupCompanyDetail } = useSelector(
+    (state) => state.searchProductStore
+  );
+  const [readRfqs, setReadRfqs] = useState(new Set());
   const dispatch = useDispatch();
   const token = Cookies.get("token");
   const navigate = useNavigate();
 
-
-  const { receiveRfqData } = useSelector((state) => state.rfqStore)
+  const { receiveRfqData } = useSelector((state) => state.rfqStore);
 
   // Extract pagination details
   const pagination = receiveRfqData?.pagination || {}; // Assuming pagination is present in sentRfqData
-  console.log("Pagination ", pagination)
+  console.log("Pagination ", pagination);
   const totalPages = pagination.totalPages || 1;
-  console.log("TOTAL PAGES ", totalPages)
+  console.log("TOTAL PAGES ", totalPages);
   const currPage = pagination.currentPage || 1;
-  console.log("current page  ", currPage)
-
+  console.log("current page  ", currPage);
 
   const sentRfqData = useSelector((state) => state.rfqStore.sentRfqData);
 
-
   const receivedData = receiveRfqData.data || [];
-  console.log("ReceivedData from Frontend", receivedData)
+  console.log("ReceivedData from Frontend", receivedData);
   const itemsPerPage = 20;
   const sliceTo = currentPage * itemsPerPage;
   const sliceFrom = sliceTo - itemsPerPage;
@@ -72,9 +78,17 @@ const RfqTable = () => {
     console.log("Filters Applied:", filters);
     console.log("Original Data:", receivedData);
     if (filters.fromDate || filters.toDate) {
-      console.log("Date Filter Condition Satisfied:", filters.fromDate, filters.toDate);
-      const fromDate = filters.fromDate ? new Date(filters.fromDate + "T00:00:00") : null;
-      const toDate = filters.toDate ? new Date(filters.toDate + "T23:59:59") : null;
+      console.log(
+        "Date Filter Condition Satisfied:",
+        filters.fromDate,
+        filters.toDate
+      );
+      const fromDate = filters.fromDate
+        ? new Date(filters.fromDate + "T00:00:00")
+        : null;
+      const toDate = filters.toDate
+        ? new Date(filters.toDate + "T23:59:59")
+        : null;
       console.log("From Date:", fromDate, "To Date:", toDate);
       filtered = filtered.filter((item) => {
         const itemDate = new Date(item.updated_at.replace(" ", "T")); // Parse `updated_at`
@@ -96,7 +110,8 @@ const RfqTable = () => {
 
       filtered = filtered.filter((item) => {
         const subject = item.subject || ""; // Handle null values
-        const isPoInHand = lowerCaseSubject.includes("po") && item.po_in_hand === "1"; // Check for "po in hand"
+        const isPoInHand =
+          lowerCaseSubject.includes("po") && item.po_in_hand === "1"; // Check for "po in hand"
         const isMatch =
           isPoInHand || subject.toLowerCase().includes(lowerCaseSubject);
 
@@ -109,14 +124,20 @@ const RfqTable = () => {
       console.log("After Subject Filter:", filtered);
     }
 
-
     // Status filter
     // Status filter
     //   if (filters.forward) {
     //     filtered = filtered.filter((item) => item.isForwarded === 1); // Filter where isForwarded is 1
     //  }
 
-    if (filters.new || filters.forward || filters.reply || filters.unread || filters.read || filters.archive) {
+    if (
+      filters.new ||
+      filters.forward ||
+      filters.reply ||
+      filters.unread ||
+      filters.read ||
+      filters.archive
+    ) {
       filtered = filtered.filter((item) => {
         if (filters.new && !item.isNew) return false; // Filter for "New"
         if (filters.forward && String(item.isForwarded) !== "1") return false;
@@ -137,7 +158,11 @@ const RfqTable = () => {
         const isMatch = partNumbers.some((part) =>
           (part || "").toLowerCase().includes(filters.partNumbers.toLowerCase())
         );
-        console.log(`Part Numbers: ${JSON.stringify(partNumbers)}, Filter: "${filters.partNumbers}", Match: ${isMatch}`);
+        console.log(
+          `Part Numbers: ${JSON.stringify(partNumbers)}, Filter: "${
+            filters.partNumbers
+          }", Match: ${isMatch}`
+        );
         return isMatch;
       });
       console.log("After Part Numbers Filter:", filtered);
@@ -146,9 +171,15 @@ const RfqTable = () => {
     // Sender Information filter
     if (filters.firstName) {
       filtered = filtered.filter((item) => {
-        const senderInfo = `${item.from?.firstName || ""} ${item.from?.lastName || ""} ${item.from?.email || ""} ${item.from?.company?.name || ""}`; // Use `from` for sender details
-        const isMatch = senderInfo.toLowerCase().includes(filters.firstName.toLowerCase());
-        console.log(`Sender Info: "${senderInfo}", Filter: "${filters.firstName}", Match: ${isMatch}`);
+        const senderInfo = `${item.from?.firstName || ""} ${
+          item.from?.lastName || ""
+        } ${item.from?.email || ""} ${item.from?.company?.name || ""}`; // Use `from` for sender details
+        const isMatch = senderInfo
+          .toLowerCase()
+          .includes(filters.firstName.toLowerCase());
+        console.log(
+          `Sender Info: "${senderInfo}", Filter: "${filters.firstName}", Match: ${isMatch}`
+        );
         return isMatch;
       });
       console.log("After Sender Information Filter:", filtered);
@@ -159,13 +190,12 @@ const RfqTable = () => {
 
   const resetFilters = () => {
     console.log("Reset button clicked");
-    setFilteredData(receivedData); // Reset table to original 
+    setFilteredData(receivedData); // Reset table to original
     setResetTrigger((prev) => !prev);
     console.log("Filters Reset. Data Reset to Original:", receivedData);
   };
 
   useEffect(() => {
-
     // Fetch data and ensure pagination details are retrieved
     dispatch(receivedRfq({ token, page: currPage }))
       .unwrap()
@@ -186,17 +216,12 @@ const RfqTable = () => {
     }
   }, [dispatch, token]); // Adding token and dispatch as dependencies
 
-
-
-
-
   useEffect(() => {
     if (receivedData.length > 0) {
       setFilteredData(receivedData);
       console.log("Filtered data updated from receivedData:", receivedData);
     }
   }, [receivedData]);
-
 
   const prevPage = () => {
     if (currentPage === 1) {
@@ -212,13 +237,11 @@ const RfqTable = () => {
     dispatch(setCurrentPageNext());
   };
 
-  const handleShowPopupRfq = (event, rfq) => {
+  const handleShowPopupRfq = async (event, rfq) => {
     event.stopPropagation();
-
     // Use added_by_id and partId to uniquely identify the RFQ
     const id = rfq?.added_by_id;
     const partNumbers = rfq?.partNumbers; // Or any other unique field
-
     console.log("Clicked RFQ ID:", id);
     console.log("Clicked RFQ Part Numbers:", partNumbers);
     console.log("Current Items:", currentItems);
@@ -230,7 +253,9 @@ const RfqTable = () => {
 
     // Match the RFQ using added_by_id and partNumbers
     const selectedRfq = currentItems.find(
-      (item) => item.added_by_id === id && JSON.stringify(item.partNumbers) === JSON.stringify(partNumbers)
+      (item) =>
+        item.added_by_id === id &&
+        JSON.stringify(item.partNumbers) === JSON.stringify(partNumbers)
     );
 
     console.log("Selected RFQ:", selectedRfq);
@@ -240,6 +265,23 @@ const RfqTable = () => {
       dispatch(setRfqPopBoxInfo([selectedRfq])); // Pass the selected RFQ as an array
     } else {
       console.error("Selected RFQ not found in current items.");
+    }
+
+    // 💾 Update local read status
+    if (rfq?.rfqId) {
+      setReadRfqs((prev) => new Set(prev).add(rfq.rfqId));
+    }
+
+    // 📡 Mark it as read via API
+    try {
+      const payload = {
+        items: [{ id: rfq.rfqId, isRead: 1 }],
+      };
+      const token = Cookies.get("token");
+      await dispatch(statusRfq({ token, data: payload })).unwrap();
+      console.log("Marked as read via API");
+    } catch (error) {
+      console.error("Failed to mark RFQ as read:", error);
     }
   };
 
@@ -287,7 +329,7 @@ const RfqTable = () => {
 
   const handleReply = () => {
     if (rfqMail.length === 0) {
-      alert("Please select at least one RFQ to reply.");
+      toast.error("Please select at least one RFQ to reply.");
       return;
     }
 
@@ -296,11 +338,13 @@ const RfqTable = () => {
 
   const handleForward = () => {
     if (rfqMail.length === 0) {
-      alert("Please select at least one RFQ to forward.");
+      toast.error("Please select at least one RFQ to forward.");
       return;
     }
 
-    navigate("/rfq/create", { state: { selectedRfqs: rfqMail, type: "forward" } });
+    navigate("/rfq/create", {
+      state: { selectedRfqs: rfqMail, type: "forward" },
+    });
   };
 
   // const handleAction = async (action) => {
@@ -335,7 +379,7 @@ const RfqTable = () => {
 
   const handleAction = async (action) => {
     if (rfqMail.length === 0) {
-      alert("Please select at least one RFQ.");
+      toast.error("Please select at least one RFQ.");
       return;
     }
 
@@ -357,25 +401,24 @@ const RfqTable = () => {
 
     try {
       const token = Cookies.get("token");
-      const response = await dispatch(statusRfq({ token, data: payload })).unwrap();
-      alert(response.message || `RFQ(s) ${action} successfully!`);
+      const response = await dispatch(
+        statusRfq({ token, data: payload })
+      ).unwrap();
+      toast.success(`RFQ(s) ${action} successfully!`);
     } catch (error) {
       console.error("Error handling action:", error);
-      alert(error?.response?.data?.message || `Failed to ${action} RFQ(s).`);
+      toast.error(`Failed to ${action} RFQ(s).`);
     }
-    dispatch(receivedRfq({ token,page:currPage })); // Re-fetch received RFQs
-
+    dispatch(receivedRfq({ token, page: currPage })); // Re-fetch received RFQs
   };
-
-
-
-
-
 
   // PAGINATION LOGIC
 
   // Dynamic pagination range
-  const [visiblePages, setVisiblePages] = useState([1, Math.min(10, totalPages)]);
+  const [visiblePages, setVisiblePages] = useState([
+    1,
+    Math.min(10, totalPages),
+  ]);
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
@@ -400,7 +443,10 @@ const RfqTable = () => {
 
   const handleNext = () => {
     if (visiblePages[1] < totalPages) {
-      setVisiblePages([visiblePages[1] + 1, Math.min(visiblePages[1] + 10, totalPages)]);
+      setVisiblePages([
+        visiblePages[1] + 1,
+        Math.min(visiblePages[1] + 10, totalPages),
+      ]);
       dispatch(receivedRfq({ token, page: visiblePages[1] + 1 }));
     }
   };
@@ -415,15 +461,22 @@ const RfqTable = () => {
                 <li>
                   <NavLink
                     to="/rfq"
-                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                    className={({ isActive }) =>
+                      isActive ? myProfile.active : ""
+                    }
                   >
-                    <span>Received({receiveRfqData.totalCount}/{receiveRfqData.unreadCount})</span>
+                    <span>
+                      Received({receiveRfqData.totalCount}/
+                      {receiveRfqData.unreadCount})
+                    </span>
                   </NavLink>
                 </li>
                 <li>
                   <NavLink
                     to="/rfqSent"
-                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                    className={({ isActive }) =>
+                      isActive ? myProfile.active : ""
+                    }
                   >
                     <span>Sent ({sentRfqData?.totalCount || 0})</span>
                   </NavLink>
@@ -431,7 +484,9 @@ const RfqTable = () => {
                 <li>
                   <NavLink
                     to="/rfq/create"
-                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                    className={({ isActive }) =>
+                      isActive ? myProfile.active : ""
+                    }
                   >
                     <span>New</span>
                   </NavLink>
@@ -439,7 +494,9 @@ const RfqTable = () => {
                 <li>
                   <NavLink
                     to="/rfqArchived"
-                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                    className={({ isActive }) =>
+                      isActive ? myProfile.active : ""
+                    }
                   >
                     <span>Archive</span>
                   </NavLink>
@@ -451,7 +508,8 @@ const RfqTable = () => {
               <SearchComponent
                 onSearch={applyFilters}
                 resetTrigger={resetTrigger}
-                isSent={false} />
+                isSent={false}
+              />
               <table>
                 <thead>
                   <tr>
@@ -476,10 +534,19 @@ const RfqTable = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {console.log("Filtered Data:", filteredData) /* Add this here */}
+                  {
+                    console.log(
+                      "Filtered Data:",
+                      filteredData
+                    ) /* Add this here */
+                  }
                   {(filteredData || []).map((e) => (
                     <tr
-                      className={css.tableData}
+                      className={`${css.tableData} ${
+                        e.isRead === 1 || readRfqs.has(e.rfqId)
+                          ? ""
+                          : css.unread
+                      }`}
                       key={e.rfqId}
                       onClick={(event) => {
                         console.log("Passed RFQ Object:", e);
@@ -496,12 +563,14 @@ const RfqTable = () => {
                             console.log("Checkbox Clicked for ID:", e.rfqId); // Log the id
                             handleCheckboxClick(event, e.rfqId);
                           }}
-                          checked={rfqMail.some((mail) => mail.rfqId === e.rfqId)}
+                          checked={rfqMail.some(
+                            (mail) => mail.rfqId === e.rfqId
+                          )}
                         />
                         <span>(0|1)</span>
 
                         {/* Dynamic image based on isRead */}
-                        {e.isRead === 1 ? (
+                        {e.isRead === 1 || readRfqs.has(e.rfqId) ? (
                           <img
                             src="https://static.brokerbin.com/version/v8.2.9/images/Open.png"
                             alt="Read"
@@ -516,7 +585,10 @@ const RfqTable = () => {
                         )}
                       </td>
                       <td>
-                        {e.quantities?.reduce((total, quantity) => total + Number(quantity), 0)}
+                        {e.quantities?.reduce(
+                          (total, quantity) => total + Number(quantity),
+                          0
+                        )}
                       </td>
                       <td>
                         {e.partNumbers?.length > 1 ? (
@@ -524,8 +596,11 @@ const RfqTable = () => {
                             <span>{e.partNumbers.length} Parts</span>
                             <div className={css.companyDropdown}>
                               {e.partNumbers.map((part, index) => (
-                                <div key={index} className={css.companyItem}>
-                                  {part}
+                                <div
+                                  key={index}
+                                  className={`${css.companyItem}`}
+                                >
+                                  <span>{part}</span>
                                 </div>
                               ))}
                             </div>
@@ -534,18 +609,18 @@ const RfqTable = () => {
                           <span>{e.partNumbers[0]}</span>
                         )}
                       </td>
+                      <td>{e.subject}</td>
                       <td>
-                        {e.subject}
+                        {e.from.firstName} {e.from.lastName}
                       </td>
-                      <td>{e.from.firstName}  {e.from.lastName}</td>
-                      <td>
-                        <a onClick={() => openCompanyModal(e.from.company)}>{e.from.company.name}</a>
+                      <td onClick={() => openCompanyModal(e.from.company)}>
+                        {e.from.company.name}
                       </td>
                       <td>{e.updated_at}</td>
                     </tr>
                   ))}
                 </tbody>
-                <tfoot className={css.rfqTableDetailBottom} >
+                <tfoot className={css.rfqTableDetailBottom}>
                   <tr>
                     <th>
                       <span>
@@ -571,12 +646,15 @@ const RfqTable = () => {
             </div>
             <div className={css.rfqTableBtn_bottom}>
               <div>
-                <button type="button" className=" ">send</button>
+                <button type="button" className=" ">
+                  send
+                </button>
 
                 <button
                   onClick={resetFilters}
                   className={`${css.resetFiltersBtn}  `}
-                  type="button">
+                  type="button"
+                >
                   Reset Filters
                 </button>
 
@@ -587,64 +665,85 @@ const RfqTable = () => {
                 <button type="button" onClick={handleForward} className="">
                   forward
                 </button>
-                <button type="button"
-                  onClick={() => handleAction("archive")} className="">archive</button>
-                <button type="button"
-                  onClick={() => handleAction("read")} className="">mark as read</button>
-                <button type="button"
-                  onClick={() => handleAction("unread")} className="">mark as unread</button>
-
+                <button
+                  type="button"
+                  onClick={() => handleAction("archive")}
+                  className=""
+                >
+                  archive
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleAction("read")}
+                  className=""
+                >
+                  mark as read
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleAction("unread")}
+                  className=""
+                >
+                  mark as unread
+                </button>
               </div>
-           {/* PAGINATION CONTROLS */}
-                   <div className={css.pagination}>
-                     <span className="text-orange-700 p-2 text-xl">
-                       Page <span className="text-blue-800">{currPage}</span> of
-                       <span className="text-blue-800"> {totalPages}</span>
-                     </span>
-     
-                     {/* Previous Button */}
-                     <button
-                       onClick={handlePrevious}
-                       className={`${''} ${visiblePages[0] === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
-                       disabled={visiblePages[0] === 1}
-                     >
-                       Previous
-                     </button>
-     
-                     {/* Dynamic Page Buttons */}
-                     {Array.from(
-                       { length: visiblePages[1] - visiblePages[0] + 1 },
-                       (_, i) => visiblePages[0] + i
-                     )
-                       .filter((page) => page >= 1 && page <= totalPages)
-                       .map((page) => (
-                         <button
-                           key={page}
-                           onClick={() => handlePageChange(page)}
-                           className={`${''} ${currPage === page ? css.active : ""}`}
-                         >
-                           {page}
-                         </button>
-                       ))}
-     
-                     {/* Next Button */}
-                     <button
-                       onClick={handleNext}
-                       className={`${''} ${visiblePages[1] === totalPages ? "opacity-50 cursor-not-allowed" : ""}`}
-                       disabled={visiblePages[1] === totalPages}
-                     >
-                       Next
-                     </button>
-                   </div>
-     
+              {/* PAGINATION CONTROLS */}
+              <div className={css.pagination}>
+                <span className="text-orange-700 p-2 text-xl">
+                  Page <span className="text-blue-800">{currPage}</span> of
+                  <span className="text-blue-800"> {totalPages}</span>
+                </span>
+
+                {/* Previous Button */}
+                <button
+                  onClick={handlePrevious}
+                  className={`${""} ${
+                    visiblePages[0] === 1 ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                  disabled={visiblePages[0] === 1}
+                >
+                  Previous
+                </button>
+
+                {/* Dynamic Page Buttons */}
+                {Array.from(
+                  { length: visiblePages[1] - visiblePages[0] + 1 },
+                  (_, i) => visiblePages[0] + i
+                )
+                  .filter((page) => page >= 1 && page <= totalPages)
+                  .map((page) => (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`${""} ${currPage === page ? css.active : ""}`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+
+                {/* Next Button */}
+                <button
+                  onClick={handleNext}
+                  className={`${""} ${
+                    visiblePages[1] === totalPages
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
+                  }`}
+                  disabled={visiblePages[1] === totalPages}
+                >
+                  Next
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
       {togglePopUpRfq && <RfqTablePopUp type="received" />}
 
-
-      {togglePopUpCompany && <CompanyDetails closeModal={() => dispatch(setTogglePopUpCompany())} />}
+      {togglePopUpCompany && (
+        <CompanyDetails closeModal={() => dispatch(setTogglePopUpCompany())} />
+      )}
+      <ToastContainer position="top-center" autoClose={1000} />
     </>
   );
 };
