@@ -7,6 +7,11 @@ import { fetchUserData } from "../../ReduxStore/ProfleSlice";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { useReactToPrint } from "react-to-print";
+import { statusRfq} from "../../ReduxStore/RfqSlice";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+
 const RfqTablePopUp = ({ type }) => {
   const { rfqPopBoxInfo } = useSelector((state) => state.rfqStore);
   console.log("RFQ Pop Box Info", rfqPopBoxInfo);
@@ -78,6 +83,24 @@ const RfqTablePopUp = ({ type }) => {
       state: { selectedRfqs: [rfq] }, // Pass the RFQ data via state
     });
   };
+
+  const archiveRfq = async (rfq) => {
+    const token = Cookies.get("token");
+    const payload = {
+      items: [{ id: rfq.rfqId, isArchive: 1 }],
+    };
+  
+    try {
+      await dispatch(statusRfq({ token, data: payload }));
+      toast.success("RFQ archived successfully!");
+      closeModal(); // optional
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to archive RFQ.");
+    }
+  };
+  
+  
 
   return (
     <div className={css.RfqTablePopUp}>
@@ -159,11 +182,11 @@ const RfqTablePopUp = ({ type }) => {
                           <td>{partNumber}</td>
                         </td>
                         <td></td>
-                        <td>{item.mfgs[index] || "N/A"}</td>
-                        <td>{item.conditions[index] || "N/A"}</td>
-                        <td>{item.quantities[index] || "N/A"}</td>
-                        <td>{item.targetPrices[index] || "N/A"}</td>
-                        <td>{item.terms[index] || "N/A"}</td>
+                        <td>{item.mfgs[index] || ""}</td>
+                        <td>{item.conditions[index] || ""}</td>
+                        <td>{item.quantities[index] || ""}</td>
+                        <td>{item.targetPrices[index] || ""}</td>
+                        <td>{item.terms[index] || ""}</td>
                       </tr>
                     ))}
                   </React.Fragment>
@@ -223,13 +246,15 @@ const RfqTablePopUp = ({ type }) => {
           </button>
           <button
             type="button"
-            onClick={() => handleAction("archive")}
+            onClick={() => archiveRfq(rfqPopBoxInfo[0])}
             className=""
           >
             archive
           </button>
         </div>
       </div>
+            <ToastContainer position="top-center" autoClose={1000} />
+      
     </div>
   );
 };
