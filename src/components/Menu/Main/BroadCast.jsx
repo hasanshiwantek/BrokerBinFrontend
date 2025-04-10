@@ -1,5 +1,5 @@
 import React from 'react';
-
+import "./BroadcastTerm.css"
 const BroadCast = () => {
     return (
         <>
@@ -22,11 +22,11 @@ const BroadCast = () => {
                         <span> Request for Quote indicates a desire to receive a quote for an item</span>
                     </div>
 
-                    <div style={{ marginTop: "2px" }}>
-                        <p>Bulk = Product which is grouped together by a container or a pallet.</p>
-                        <p>Container = Product which is grouped together in a large container.</p>
-                        <p>Pallet = Product which is grouped together on a pallet.</p>
-                        <p>Whole Unit = Product which is grouped together as a complete system.</p>
+                    <div style={{ marginTop: "2px" }} >
+                        <span>Bulk = Product which is grouped together by a container or a pallet.</span><br/>
+                        <span>Container = Product which is grouped together in a large container.</span><br/>
+                        <span>Pallet = Product which is grouped together on a pallet.</span><br/>
+                        <span>Whole Unit = Product which is grouped together as a complete system.</span><br/>
                     </div>
                 </div>
             </div>

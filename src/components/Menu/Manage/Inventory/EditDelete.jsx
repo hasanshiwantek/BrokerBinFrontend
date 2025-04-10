@@ -15,7 +15,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { triggerSearchFocus } from "@/ReduxStore/focusSlice";
 
-
 const EditDelete = () => {
   const token = Cookies.get("token");
   const dispatch = useDispatch();
@@ -23,11 +22,14 @@ const EditDelete = () => {
     (state) => state.inventoryStore
   );
   console.log("Inventory Data from Frontend", inventoryData);
-  console.log("Filtered Inventory Data from Frontend", filteredInventoryData)
-  const companyFromInventory = inventoryData?.data?.map((item) => item.addedBy.company.name)
-  console.log("Companies from Inventory ", companyFromInventory)
+  console.log("Filtered Inventory Data from Frontend", filteredInventoryData);
+  const companyFromInventory = inventoryData?.data?.map(
+    (item) => item.addedBy.company.name
+  );
+  console.log("Companies from Inventory ", companyFromInventory);
 
-  const pagination = filteredInventoryData?.pagination || inventoryData?.pagination || {};
+  const pagination =
+    filteredInventoryData?.pagination || inventoryData?.pagination || {};
 
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -67,7 +69,6 @@ const EditDelete = () => {
     return payload;
   };
 
-
   const fetchFilteredData = () => {
     setLoading(true);
     const payload = buildFilterPayload();
@@ -85,7 +86,6 @@ const EditDelete = () => {
   };
   console.log("Payload sent to API:", buildFilterPayload());
 
-
   useEffect(() => {
     if (
       filters.partModel ||
@@ -101,16 +101,20 @@ const EditDelete = () => {
     }
   }, [currentPage]);
 
-
   const handleFilterChange = (field, value) => {
     setFilters((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSearch = () => {
     // Check if all filters are empty
-    if (!filters.partModel.trim() && !filters.mfg.trim() && !filters.status.trim() && !filters.heciClei.trim()) {
+    if (
+      !filters.partModel.trim() &&
+      !filters.mfg.trim() &&
+      !filters.status.trim() &&
+      !filters.heciClei.trim()
+    ) {
       // alert("Please apply at least one filter before searching.");
-      fetchInventoryData()
+      fetchInventoryData();
       return; // Stop execution if no filters are applied
     }
 
@@ -139,7 +143,7 @@ const EditDelete = () => {
       .unwrap()
       .then(() => {
         toast.info("Inventory Updated successfully", {
-          style: { fontSize: "15px", marginTop: "-10px" }, // 
+          style: { fontSize: "15px", marginTop: "-10px" }, //
         });
         console.log("Inventory updated successfully");
         // fetchFilteredData();
@@ -160,7 +164,7 @@ const EditDelete = () => {
         .then(() => {
           // ✅ Show success toast with light blue color
           toast.info("Inventory deleted successfully", {
-            style: { fontSize: "15px", marginTop: "-10px" }, // 
+            style: { fontSize: "15px", marginTop: "-10px" }, //
           });
           setSelectedInventories([]);
           fetchInventoryData();
@@ -175,7 +179,6 @@ const EditDelete = () => {
     }
   };
 
-
   // Function to update visible pages when reaching the last button in the range
   const handlePageChange = (page) => {
     if (page >= 1 && page <= pagination.totalPages) {
@@ -183,16 +186,21 @@ const EditDelete = () => {
 
       // Extend pagination when the user clicks the last button in the current range
       if (page === visiblePages[1] && page !== pagination.totalPages) {
-        setVisiblePages([visiblePages[1] + 1, Math.min(visiblePages[1] + 10, pagination.totalPages)]);
+        setVisiblePages([
+          visiblePages[1] + 1,
+          Math.min(visiblePages[1] + 10, pagination.totalPages),
+        ]);
       }
 
       // Shrink pagination when clicking the first page of the current range
       if (page === visiblePages[0] && page > 1) {
-        setVisiblePages([Math.max(visiblePages[0] - 10, 1), visiblePages[0] - 1]);
+        setVisiblePages([
+          Math.max(visiblePages[0] - 10, 1),
+          visiblePages[0] - 1,
+        ]);
       }
     }
   };
-
 
   const handlePrevious = () => {
     if (visiblePages[0] > 1) {
@@ -201,14 +209,15 @@ const EditDelete = () => {
     }
   };
 
-
   const handleNext = () => {
     if (visiblePages[1] < pagination.totalPages) {
-      setVisiblePages([visiblePages[1] + 1, Math.min(visiblePages[1] + 10, pagination.totalPages)]);
+      setVisiblePages([
+        visiblePages[1] + 1,
+        Math.min(visiblePages[1] + 10, pagination.totalPages),
+      ]);
       setCurrentPage(visiblePages[1] + 1);
     }
   };
-
 
   const handleCheckboxChange = (id) => {
     setSelectedInventories((prev) =>
@@ -232,12 +241,9 @@ const EditDelete = () => {
       <InventoryButtons />
       <div className={inventory.editDeleteTable}>
         <div className={inventory.editDeleteTable_top}>
-
-
-        <span>
+          <span>
             <label>View</label>
-            <select
-            >
+            <select>
               <option value="inventory">Inventory</option>
               <option value="wtb">WTB</option>
               <option value="wts">WTS</option>
@@ -284,7 +290,9 @@ const EditDelete = () => {
               <input
                 type="text"
                 value={filters.partModel}
-                onChange={(e) => handleFilterChange("partModel", e.target.value)}
+                onChange={(e) =>
+                  handleFilterChange("partModel", e.target.value)
+                }
               />
             </span>
             <button
@@ -324,7 +332,11 @@ const EditDelete = () => {
                 <tr>
                   <td
                     colSpan="10"
-                    style={{ textAlign: "center", fontSize: "9pt", color: "red" }}
+                    style={{
+                      textAlign: "center",
+                      fontSize: "9pt",
+                      color: "red",
+                    }}
                   >
                     No results found.
                   </td>
@@ -449,8 +461,9 @@ const EditDelete = () => {
             <button
               type="button"
               onClick={(e) => {
-                e.preventDefault() 
-                window.location.reload()}}
+                e.preventDefault();
+                window.location.reload();
+              }}
               className="transform active:scale-90 transition-all duration-100"
             >
               Refresh
@@ -468,8 +481,9 @@ const EditDelete = () => {
               {/* Previous Button */}
               <button
                 onClick={handlePrevious}
-                className={`${inventory.pageButton} ${visiblePages[0] === 1 ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
+                className={`${inventory.pageButton} ${
+                  visiblePages[0] === 1 ? "opacity-50 cursor-not-allowed" : ""
+                }`}
                 disabled={visiblePages[0] === 1 || loading}
               >
                 Previous
@@ -478,13 +492,16 @@ const EditDelete = () => {
               {/* Dynamic Page Buttons */}
               {[...Array(pagination.totalPages || 1).keys()]
                 .map((page) => page + 1)
-                .filter((page) => page >= visiblePages[0] && page <= visiblePages[1])
+                .filter(
+                  (page) => page >= visiblePages[0] && page <= visiblePages[1]
+                )
                 .map((page) => (
                   <button
                     key={page}
                     onClick={() => handlePageChange(page)}
-                    className={`${inventory.pageButton} ${currentPage === page ? inventory.active : ""
-                      }`}
+                    className={`${inventory.pageButton} ${
+                      currentPage === page ? inventory.active : ""
+                    }`}
                     disabled={loading}
                   >
                     {page}
@@ -494,8 +511,11 @@ const EditDelete = () => {
               {/* Next Button */}
               <button
                 onClick={handleNext}
-                className={`${inventory.pageButton} ${visiblePages[1] === pagination.totalPages ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
+                className={`${inventory.pageButton} ${
+                  visiblePages[1] === pagination.totalPages
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
                 disabled={visiblePages[1] === pagination.totalPages || loading}
               >
                 Next
@@ -504,8 +524,7 @@ const EditDelete = () => {
           </div>
         </div>
       </div>
-            <ToastContainer position="top-center" autoClose={1000} />
-      
+      <ToastContainer position="top-center" autoClose={1000} />
     </div>
   );
 };

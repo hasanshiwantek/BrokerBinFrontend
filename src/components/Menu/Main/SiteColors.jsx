@@ -19,10 +19,10 @@ const SiteColors = () => {
                         </div>
 
                         <div className="box-content">
-                            <p>=My Vendors Show First</p>
-                            <p>=My Vendors Caution</p>
-                            <p>=My Vendors Show Never</p>
-                            <p>= "Supply & Demand" Product In Stock</p>
+                            <span>=My Vendors Show First</span>
+                            <span>=My Vendors Caution</span>
+                            <span>=My Vendors Show Never</span>
+                            <span>= "Supply & Demand" Product In Stock</span>
                         </div>
 
                     </div>
