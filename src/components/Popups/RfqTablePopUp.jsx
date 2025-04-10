@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import css from "../../styles/Popup/RfqTablePopUp.module.css";
 import { setTogglePopUp } from "../../ReduxStore/RfqSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,12 +6,13 @@ import Cookies from "js-cookie";
 import { fetchUserData } from "../../ReduxStore/ProfleSlice";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-
-
+import { useReactToPrint } from "react-to-print";
 const RfqTablePopUp = ({ type }) => {
   const { rfqPopBoxInfo } = useSelector((state) => state.rfqStore);
+  console.log("RFQ Pop Box Info", rfqPopBoxInfo);
+
   const dispatch = useDispatch();
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -36,16 +37,19 @@ const RfqTablePopUp = ({ type }) => {
     };
   }, []);
 
+  // PRINTING LOGIC
 
-  const printRfq = () => {
+  const handlePrint = () => {
     window.print();
   };
 
   const { blurWhileLoading, initialData, user, error } = useSelector(
     (state) => state.profileStore
   );
-  console.log("User Data", initialData)
+  console.log("User Data", initialData);
   const user_id = Cookies.get("user_id");
+  const recieveName = initialData?.firstName;
+  const receiveCompanyName = initialData?.company?.name;
 
   const id = user?.user?.id || user_id;
   useEffect(() => {
@@ -53,12 +57,10 @@ const RfqTablePopUp = ({ type }) => {
     dispatch(fetchUserData({ id, token }));
   }, []);
 
-  const token = Cookies.get("token")
-
+  const token = Cookies.get("token");
 
   const loggedInEmail = Cookies.get("email");
   console.log("Logged-in User's Email:", loggedInEmail);
-
 
   const closeModal = () => {
     const modal = document.querySelector(`.${css.RfqTablePopUp_body}`);
@@ -77,57 +79,57 @@ const RfqTablePopUp = ({ type }) => {
     });
   };
 
-
-
   return (
     <div className={css.RfqTablePopUp}>
       <div className={css.RfqTablePopUp_body}>
         <div className={css.RfqTablePopUp_body_closeBtn}>
-          <button type="button" onClick={closeModal} className="text-black text-lg">
+          <button
+            type="button"
+            onClick={closeModal}
+            className="text-black text-lg"
+          >
             <AiFillCloseCircle />
           </button>
-
         </div>
 
         {rfqPopBoxInfo.map((item, index) => {
           return (
             <div key={item.id} className={css.RfqTablePopUp_body_mail}>
-              <label>{type === "sent" ? "to:" : "from:"}</label>
-              <p>
-                {type === "sent" && Array.isArray(item.to)
-                  ? item.to.map((user, idx) => (
-                    <span key={idx}>
-                      {user.firstName} - {user.company.name}
-                      {idx < item.to.length - 1 && ", "}
-                    </span>
-                  ))
-                  : item.from
-                    ? `${item.from.firstName} - ${item.from.company.name}`
-                    : "N/A"}
-              </p>
               <label>{type === "sent" ? "from:" : "to:"}</label>
               <p>
                 {type === "sent"
                   ? "Me"
                   : (() => {
-                    const loggedInEmail = Cookies.get("email"); // Fetch logged-in user's email
-                    const userSpecificBcc = Array.isArray(item.bcc)
-                      ? item.bcc.filter((email) => email === loggedInEmail)
-                      : [];
-                    return userSpecificBcc.length > 0 ? (
-                      userSpecificBcc.map((email, idx) => (
-                        <span key={idx}>{email}</span>
-                      ))
-                    ) : (
-                      "Me"
-                    );
-                  })()}
+                      const loggedInEmail = Cookies.get("email");
+                      const userSpecificBcc = Array.isArray(item.bcc)
+                        ? item.bcc.filter((email) => email === loggedInEmail)
+                        : [];
+                      return userSpecificBcc.length > 0
+                        ? userSpecificBcc.map((email, idx) => (
+                            <span key={idx}>{email}</span>
+                          ))
+                        : recieveName && receiveCompanyName
+                        ? `${recieveName} - ${receiveCompanyName}`
+                        : "N/A";
+                    })()}
+              </p>
 
+              <label>{type === "sent" ? "to:" : "from:"}</label>
+              <p>
+                {type === "sent" && Array.isArray(item.to)
+                  ? item.to.map((user, idx) => (
+                      <span key={idx}>
+                        {user.firstName} - {user.company.name}
+                        {idx < item.to.length - 1 && ", "}
+                      </span>
+                    ))
+                  : item.from
+                  ? `${item.from.firstName} - ${item.from.company.name}`
+                  : "N/A"}
               </p>
             </div>
           );
         })}
-
 
         <div className={css.RfqTablePopUp_body_content}>
           <strong>
@@ -148,7 +150,6 @@ const RfqTablePopUp = ({ type }) => {
               </tr>
             </thead>
             <tbody>
-
               {rfqPopBoxInfo.map((item) => {
                 return (
                   <React.Fragment key={item.id}>
@@ -168,22 +169,21 @@ const RfqTablePopUp = ({ type }) => {
                   </React.Fragment>
                 );
               })}
-
             </tbody>
             <tfoot>
-              <tr>
-                <td className="pt-2">notes</td>
+              <tr className="whitespace-nowrap">
+                <td className="pt-2">Notes</td>
                 <td className={css.emailSec}>
                   <span>
-
                     {rfqPopBoxInfo.map((item) => (
                       <React.Fragment key={item.id}>
                         {item.comment && (
-                          <div dangerouslySetInnerHTML={{ __html: item.comment }}></div>
+                          <div
+                            dangerouslySetInnerHTML={{ __html: item.comment }}
+                          ></div>
                         )}
                       </React.Fragment>
                     ))}
-
                   </span>
                   <span> --------------- </span>
                   {type === "sent" ? (
@@ -196,29 +196,38 @@ const RfqTablePopUp = ({ type }) => {
                   ) : (
                     rfqPopBoxInfo.map((item, index) => (
                       <div key={index}>
-                        <span>{item.from?.firstName || "NA"}</span> {/* Sender's Name */}
-                        <span>{item.from?.company.name || "NA"}</span> {/* Sender's Company */}
-                        <span>{item.from?.email || "NA"}</span> {/* Sender's Email */}
+                        <span>{item.from?.firstName || "NA"}</span>{" "}
+                        {/* Sender's Name */}
+                        <span>{item.from?.company.name || "NA"}</span>{" "}
+                        {/* Sender's Company */}
+                        <span>{item.from?.email || "NA"}</span>{" "}
+                        {/* Sender's Email */}
                       </div>
-
-                      
                     ))
                   )}
-
                 </td>
               </tr>
             </tfoot>
           </table>
         </div>
         <div className={css.RfqTablePopUp_body_btn}>
-          <button type="button" onClick={printRfq}>
+          <button className="no-print" type="button" onClick={handlePrint}>
             print
           </button>
-          <button type="button" onClick={() => handleReply(rfqPopBoxInfo[0])}> {/* Pass the first RFQ */}
+          <button type="button" onClick={() => handleReply(rfqPopBoxInfo[0])}>
+            {/* Pass the first RFQ */}
             reply
           </button>
-          <button type="button" onClick={() => handleReply(rfqPopBoxInfo[0])} >forward</button>
-          {/* <button type="button">archive</button> */}
+          <button type="button" onClick={() => handleReply(rfqPopBoxInfo[0])}>
+            forward
+          </button>
+          <button
+            type="button"
+            onClick={() => handleAction("archive")}
+            className=""
+          >
+            archive
+          </button>
         </div>
       </div>
     </div>
@@ -226,14 +235,3 @@ const RfqTablePopUp = ({ type }) => {
 };
 
 export default RfqTablePopUp;
-
-
-
-
-
-
-
-
-
-
-

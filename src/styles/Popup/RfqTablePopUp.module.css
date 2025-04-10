@@ -7,8 +7,6 @@
   background: var(--popup-bg-color);
   z-index: 5;
   animation: fadeIn 0.3s ease-in-out;
-
-  
 }
 .RfqTablePopUp_body {
   position: absolute;
@@ -26,7 +24,6 @@
   flex-direction: column;
   transform: scale(0.8);
   animation: scaleUp 0.3s ease-in-out forwards;
-
 
   &_closeBtn {
     /* padding: 1rem; */
@@ -72,8 +69,7 @@
           td {
             padding: 0 1rem;
             font-size: 9pt !important;
-            font-weight: 500 ;
-
+            font-weight: 500;
           }
           th {
             padding: 0 1rem;
@@ -104,45 +100,41 @@
   }
 }
 
+.emailSec span {
+  font-size: 8pt !important;
+  font-weight: 500;
+}
 
-  .emailSec span{
-    font-size: 8pt !important;
-    font-weight: 500;
-  }
+.RfqTablePopUp_body_closeBtn button svg {
+  font-size: 25px;
+  margin-bottom: 5px;
+}
 
-  .RfqTablePopUp_body_closeBtn button svg{
-    font-size: 25px;
-    margin-bottom : 5px;
-   
-  }
+.RfqTablePopUp_body_btn button {
+  padding: 8px 9px;
+  border-radius: 10px;
+  font-size: 9pt !important;
+}
 
-  .RfqTablePopUp_body_btn button{
-    padding: 8px 9px;
-    border-radius: 10px;
-    font-size: 9pt !important;
+@keyframes fadeIn {
+  from {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  to {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+}
 
+@keyframes scaleUp {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
   }
-  
-  @keyframes fadeIn {
-    from {
-      background-color: rgba(0, 0, 0, 0);
-    }
-    to {
-      background-color: rgba(0, 0, 0, 0.5);
-    }
+  to {
+    transform: scale(1);
+    opacity: 1;
   }
-  
-  @keyframes scaleUp {
-    from {
-      transform: scale(0.8);
-      opacity: 0;
-    }
-    to {
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-
+}
 
 @keyframes scaleOut {
   from {
@@ -158,4 +150,50 @@
 .RfqTablePopUp_body.closing {
   animation: scaleOut 0.3s ease-in-out forwards;
 }
-  
+
+@media print {
+  /* Hide the popup background overlay and buttons */
+  .RfqTablePopUp {
+    background: transparent !important;
+    position: static !important;
+    height: auto !important;
+    width: auto !important;
+    animation: none !important;
+  }
+
+  .RfqTablePopUp_body {
+    position: static !important;
+    transform: none !important;
+    box-shadow: none !important;
+    height: auto !important;
+    width: 100% !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    animation: none !important;
+  }
+
+  .RfqTablePopUp_body_btn,
+  .RfqTablePopUp_body_closeBtn {
+    display: none !important;
+  }
+
+  .RfqTablePopUp_body table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 15pt;
+  }
+
+  .RfqTablePopUp_body table th,
+  .RfqTablePopUp_body table td {
+    padding: 4px;
+    text-align: left;
+  }
+  .RfqTablePopUp_body table th {
+    border: 1px solid #000;
+  }
+
+  .emailSec span {
+    font-size: 10pt !important;
+    font-weight: 500;
+  }
+}
