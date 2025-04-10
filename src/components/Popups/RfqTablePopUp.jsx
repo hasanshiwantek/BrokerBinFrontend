@@ -155,11 +155,14 @@ const RfqTablePopUp = ({ type }) => {
         })}
 
         <div className={css.RfqTablePopUp_body_content}>
+          {rfqPopBoxInfo.map((item) => (
           <strong>
-            {type === "sent"
+            {/* {type === "sent"
               ? "their_request - Still looking for these parts? (Sent)"
-              : "their_request - Received these parts? (Received)"}
+              : "their_request - Received these parts? (Received)"} */}
+              their_request - {item.subject}
           </strong>
+          ))}
           <table>
             <thead>
               <tr>
@@ -233,6 +236,7 @@ const RfqTablePopUp = ({ type }) => {
             </tfoot>
           </table>
         </div>
+
         <div className={css.RfqTablePopUp_body_btn}>
           <button className="no-print" type="button" onClick={handlePrint}>
             print

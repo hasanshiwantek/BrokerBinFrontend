@@ -360,7 +360,6 @@ const RfqReply = () => {
         formData.append(`uploadFile[${index}]`, file);
       });
     }
-     
     else {
       console.error("No file selected.");
     }
@@ -594,7 +593,7 @@ const RfqReply = () => {
                         {/* {uploadFile.length > 0 && uploadFile.map((file, i) => (
                               <span key={i} className="text-sm">{file.name}</span>
                             ))} */}
-                        {uploadFile.map((file, i) => (
+                        {uploadFile?.map((file, i) => (
                           <div key={i}>
                             <span>{file.name}</span>
                             <button className="text-xs" onClick={(e) => {
@@ -724,7 +723,7 @@ const RfqReply = () => {
                                 style={{ cursor: "pointer" }}
                               />
 
-                              <strong> {item.addedBy.company.name} ({item.addedBy.firstName} {item.addedBy.lastName})</strong>
+                              <strong> {item?.addedBy?.company?.name} ({item?.addedBy?.firstName} {item?.addedBy?.lastName})</strong>
                             </div>
 
                           </span>

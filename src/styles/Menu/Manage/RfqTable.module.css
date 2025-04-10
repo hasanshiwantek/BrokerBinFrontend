@@ -145,11 +145,11 @@
 
 
 .unread td {
-  font-weight: 700 !important;
+  font-weight: 600 !important;
 }
 
 .unread td span {
-  font-weight: 700 !important;
+  font-weight: 600 !important;
 }
 
 .rfqTableSearchToggle {
