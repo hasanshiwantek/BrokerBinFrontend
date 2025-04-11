@@ -233,6 +233,8 @@ const EditDelete = () => {
     };
     setEditedItems(updatedItems);
   };
+  
+  const [showHeciClei, setShowHeciClei] = useState(true);
 
   return (
     <div className={`${inventory.inventory} !min-w-fit`}>
@@ -250,12 +252,15 @@ const EditDelete = () => {
           </span>
 
           <button
-            type="button"
-            className={`${inventory.editDeleteTable_bottom} cursor-pointer transform active:scale-90 transition-all duration-100 rounded-md !-mt-[1px]`}
-            onClick={() => dispatch(triggerSearchFocus())}
-          >
-            HECI/CLEI
-          </button>
+              type="button"
+              className={`${inventory.editDeleteTable_bottom} cursor-pointer transform active:scale-90 transition-all duration-100 rounded-md !-mt-[1px]`}
+              onClick={() => {dispatch(triggerSearchFocus())
+                setShowHeciClei(!showHeciClei)
+              }}
+            >
+              HECI/CLEI
+            </button>
+
 
           <span>
             <label>MFG</label>
@@ -306,7 +311,7 @@ const EditDelete = () => {
               <tr>
                 <th>Cart</th>
                 <th>Part#</th>
-                <th>HECI/CLEI</th>
+                {showHeciClei && <th>HECI/CLEI</th>}
                 <th>Price</th>
                 <th>Qty</th>
                 <th>Status</th>
@@ -356,7 +361,7 @@ const EditDelete = () => {
                         }
                       />
                     </td>
-                    <td>
+                    {showHeciClei && <td>
                       <input
                         type="text"
                         value={item.heciClei || ""}
@@ -364,7 +369,7 @@ const EditDelete = () => {
                           handleFieldChange(index, "heciClei", e.target.value)
                         }
                       />
-                    </td>
+                    </td> }
                     <td>
                       <input
                         type="text"

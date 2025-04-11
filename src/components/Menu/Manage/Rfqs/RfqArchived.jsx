@@ -536,15 +536,21 @@ const RfqTableSent = () => {
                 </NavLink>
                 <button
                   type="button"
-                  onClick={resetFilters}>reset</button>
+                  onClick={resetFilters}>
+                    reset
+                </button>
 
                 <button type="button" onClick={handleReply}>
                   reply
                 </button>
                 <button type="button" onClick={handleForward}>forward</button>
+                <button type="button" onClick={''}>
+                  Restore
+                </button>
                 <button type="button" onClick={handleDelete}>
                   Delete
                 </button>
+                
 
 
 
