@@ -16,9 +16,9 @@ const ScheduleNewUpload = () => {
     console.log(formData);
   };
   return (
-    <div>
-      <div className={css.inventory_main_scheduleUpload_toggle}>
-        <p>Schedule New Upload</p>
+    <div className="shadow">
+      <div className={`${css.inventory_main_scheduleUpload_toggle}`}>
+        <p className="font-semibold text-base">Schedule New Upload</p>
         <button type="button" onClick={() => setShowSchedule((prev) => !prev)}>
           {showSchedule ? <BiMinus /> : <BiPlus />}
         </button>
@@ -33,40 +33,40 @@ const ScheduleNewUpload = () => {
                 <input type="time" name="scheduleTime" id="scheduleTime" />
               </span>
               <span>
-                <label>status</label>
+                <label>Status</label>
                 <select name="status">
-                  <option value="stock">stock</option>
-                  <option value="distribution">distribution</option>
+                  <option value="stock">Stock</option>
+                  <option value="distribution">Distribution</option>
                 </select>
               </span>
               <span>
-                <label>uploader</label>
-                <input type="text" name="uploader"  style={{padding:"3px"}}/>
+                <label>Uploader</label>
+                <input type="text" name="uploader" style={{ padding: "3px" }} />
               </span>
             </div>
             <div className={css.inventory_main_scheduleUpload_addFile}>
               {toggleAddFile ? (
-                <div className={css.inventory_main_scheduleUpload_addFile_btn}>
-                  <label>add a file</label>
-                  <button
-                    type="button"
-                    onClick={() => setToggleAddFile((prev) => !prev)}
-                  >
-                    <BiPlus />
+                <div
+                  className={css.inventory_main_scheduleUpload_addFile_btn}
+                  onClick={() => setToggleAddFile((prev) => !prev)}
+                >
+                  <button type="button">
+                    <BiPlus size={15} />
                   </button>
+                  <label>Add file</label>
                 </div>
               ) : (
                 <div
                   className={css.inventory_main_scheduleUpload_addFile_toggle}
                 >
-                  <h1>Add a File</h1>
+                  <h3>Add a File</h3>
                   <div
                     className={
                       css.inventory_main_scheduleUpload_addFile_toggle_fields
                     }
                   >
                     <span>
-                      <label>protocol</label>
+                      <label>Protocol</label>
                       <select name="protocol">
                         <option value="ftp">ftp</option>
                         <option value="http">http</option>
@@ -83,7 +83,7 @@ const ScheduleNewUpload = () => {
                       />
                     </span>
                     <span>
-                      <label>port</label>
+                      <label>Port</label>
                       <input type="text" name="port" />
                     </span>
                     <span>
@@ -122,8 +122,7 @@ const ScheduleNewUpload = () => {
               type="button"
               className={css.inventory_main_scheduleUpload_footer}
             >
-              create
-              {/* <input type="submit" value="create" /> */}
+              Create
             </button>
           </form>
         </>

@@ -11,7 +11,8 @@ import {
 import Cookies from "js-cookie";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import ScheduleNewUpload from "./ScheduleNewUpload";
+import UploadInventoryContent from "./UploadInventoryContent";
 const Inventory = () => {
   const token = Cookies.get("token");
   const dispatch = useDispatch();
@@ -98,6 +99,7 @@ const Inventory = () => {
     }
   };
   return (
+    <>
     <div className={css.inventory}>
       <InventoryButtons />
       <div className={css.inventory_main}>
@@ -150,11 +152,34 @@ const Inventory = () => {
           >
             {loading ? "Sending..." : "Send File"}
           </button>
+          <div className="mt-10">
+            <h1 className="my-5">Auto Uploads</h1>
+            <ScheduleNewUpload />
+          </div>
         </form>
+
+        <div className="mt-10">
+          <h1>Current Uploads</h1>
+          <div className="p-10  shadow rounded-sm">
+            <p className="text-[8pt]">No Auto Uploads are currently scheduled for your company</p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+
       </div>
 
       <ToastContainer position="top-center" autoClose={3000} />
     </div>
+
+
+<div className="flex  justify-center -mt-10 items-center ">
+  <UploadInventoryContent />
+</div>
+
+    </>
+
   );
 };
 
