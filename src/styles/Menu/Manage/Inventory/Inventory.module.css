@@ -86,13 +86,14 @@
         display: grid;
         grid-template-columns: repeat(2, 10rem);
         align-items: center;
+        gap: 2rem;
         select {
-          padding: 1rem;
+          /* padding: 1rem; */
         }
       }
       > :last-child {
         input {
-          width: 20rem;
+          /* width: 20rem; */
         }
       }
       &_toggle {
@@ -120,15 +121,17 @@
         &_btn {
           display: flex;
           align-items: center;
-          gap: 1rem;
+          /* gap: 1rem; */
         }
         &_toggle {
           width: 100%;
           box-shadow: 0 0.5em 1em -0.125em hsla(0, 0%, 4%, 0.1),
             0 0 0 1px hsla(0, 0%, 4%, 0.02);
 
-          h1 {
-            padding-left: 1rem;
+          h3 {
+            padding: 1rem;
+            font-size: 9pt;
+            font-weight: 600;
             background: #d4d4d4;
           }
           &_fields {
@@ -138,17 +141,14 @@
             padding: 5rem;
             span {
               display: grid;
-              grid-template-columns: repeat(2, 15rem);
+              grid-template-columns: repeat(2, 10rem);
               align-items: center;
-              justify-items: flex-start;
-              select {
-                padding: 1rem;
-              }
             }
           }
           &_btn {
             > button {
               padding: 2rem;
+              
             }
             > :nth-child(1) {
               width: 50%;
@@ -206,13 +206,11 @@
       padding: 0 4px;
       font-size: 8.5pt;
       font-weight: 600;
-  
     }
     tbody {
       background: white;
       padding: 4px 7px;
     }
-
   }
   &_top {
     display: flex;
@@ -233,17 +231,16 @@
   }
 }
 
-.tableBodyInputs td input{
-  width: 10rem ;
+.tableBodyInputs td input {
+  width: 10rem;
 }
 .tableBodyInputs td input[type="checkbox"] {
   width: 2rem;
 }
-.editDeleteTable table tbody td{
+.editDeleteTable table tbody td {
   font-size: 8pt !important;
   font-weight: 500 !important;
 }
-
 
 .inventory_add {
   &_main {
@@ -264,7 +261,6 @@
         }
       }
     }
-
 
     &_top {
       display: flex;
@@ -468,43 +464,75 @@
   }
 }
 
-
-.vanBlock{
-display: flex;
-justify-content: space-evenly;
-align-items: center;
-gap:80px;
+.vanBlock {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 80px;
 }
 
-.vanBlock_view img{
+.vanBlock_view img {
   height: 35vh;
   width: 90vw;
   margin-top: 20px;
 }
 
-.vendorContent p{
+.vendorContent p {
   font-size: 1.6rem;
   color: rgb(48, 45, 45);
 }
 
-.vendorContent h2{
+.vendorContent h2 {
   font-weight: bold;
   font-size: 1.8rem;
 }
 
-
-.inventory_main_scheduleUpload_toggle{
-  box-shadow: 0 .125em .25em hsla(0, 0%, 4) 
+.inventory_main_scheduleUpload_toggle {
+  box-shadow: 0 0.125em 0.25em hsla(0, 0%, 4);
 }
 
-.editDeleteTable_top{
+.editDeleteTable_top {
   padding: 4px 8px;
   gap: 8px;
+}
+
+.inventory_main_scheduleUpload label {
+  white-space: nowrap;
+}
+.inventory_main_scheduleUpload input{
+  padding: 4px 10px;
+  color: #444;
+  border-radius: 5px;
+  border: 1px solid #444;
+  /* margin-left: 2rem; */
+  width: 15rem;
+}
+
+.inventory_main_scheduleUpload_addFile_toggle_fields input {
+  width: 20rem;
+  padding: 1px 6px;
+  font-size: 9pt;
+  border: 1px solid;
+  border-radius: 5px;
 
 
 }
 
-.inventory button{
+.inventory_main_scheduleUpload_addFile_btn {
+  background-color: var(--primary-color);
+  padding: 5px 6px;
+  border-radius: 12px;
+}
+
+.inventory_main_scheduleUpload_footer{
+  border: 2px solid ;
+}
+
+.inventory_main_scheduleUpload_addFile_btn label {
+  color: white !important;
+}
+
+.inventory button {
   padding: 3px 6px;
 }
 
@@ -513,86 +541,72 @@ input[type="file"] {
   color: #444;
 }
 
-
-
-
-
-
-.inventory_main_ExampleFile p{
+.inventory_main_ExampleFile p {
   font-size: 9pt !important;
   color: #444;
 }
-.inventory_exportRemove label{
+.inventory_exportRemove label {
   font-size: 9pt !important;
   color: #444;
 }
-
 
 /* .tableInputData input{
   border:none;
 } */
 
-.tableInputData select{
+.tableInputData select {
   padding: 6px;
 }
 
-.tableInputData input:focus{
+.tableInputData input:focus {
   outline: none;
   border: 1px solid var(--primary-color);
 }
 
-.editDeleteTable_top select{
+.editDeleteTable_top select {
   padding: 3px;
   cursor: pointer;
-
-
 }
 
-.editDeleteTable_top input:focus{
+.editDeleteTable_top input:focus {
   outline: none;
   border: 1px solid var(--primary-color);
 }
 
-.editDeleteTable_top label{
+.editDeleteTable_top label {
   font-weight: normal;
 }
 
-
-.editDeleteTable_top input{
+.editDeleteTable_top input {
   padding: 1px 2px;
   width: 120px;
   border: 1px solid #444;
-
 }
 
-.addInvenInputs input:focus{
+.addInvenInputs input:focus {
   outline: none;
   border: 1px solid var(--primary-color);
 }
 
-.editDeleteTable_bottom button{
-  font-size: 9pt  !important;
+.editDeleteTable_bottom button {
+  font-size: 9pt !important;
   padding: 4px 7px;
   border-radius: 5px;
-  border: 1px solid #6eb3ef;;
-
+  border: 1px solid #6eb3ef;
 }
 
-.editDeleteTable_bottom{
+.editDeleteTable_bottom {
   background-color: transparent;
   margin-top: 4px;
 }
 
-
-.inventory_add_main button{
+.inventory_add_main button {
   padding: 10px 15px;
   color: #fff;
   font-size: 9pt !important;
 }
 
-
-
-.pagination button{
+.pagination button {
   color: white;
   background-color: var(--primary-color);
   border-radius: 5px;
@@ -600,17 +614,14 @@ input[type="file"] {
   font-size: 8.5pt;
 }
 
-.paginationSec{
+.paginationSec {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.pagination{
+.pagination {
   text-align: end;
 }
-
-
-
 
 .pageButton {
   /* Add default styling for all page buttons here */
@@ -629,4 +640,3 @@ input[type="file"] {
   color: white;
   border-color: #428bca;
 }
-
