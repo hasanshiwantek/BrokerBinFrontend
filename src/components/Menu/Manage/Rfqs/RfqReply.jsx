@@ -249,7 +249,7 @@ const RfqReply = () => {
 
   //   const [recipients, setRecipients] = useState([]);
   const [inputValue, setInputValue] = useState("");
-  const [uploadFile, setFile] = useState(null);
+  const [uploadFile, setFile] = useState([]);
 
   const handleRecipientClick = (e, selectedRecipient) => {
     e.preventDefault();
@@ -382,9 +382,15 @@ const RfqReply = () => {
       );
     });
     // Add file to FormData
-    if (uploadFile) {
-      formData.append("uploadFile", uploadFile); // Use 'uploadFile' as the key name
-    } else {
+    // if (uploadFile) {
+    //   formData.append("uploadFile", uploadFile); // Use 'uploadFile' as the key name
+    // }
+    if (uploadFile.length) {
+      uploadFile.forEach((file, index) => {
+        formData.append(`uploadFile[${index}]`, file);
+      });
+    }
+    else {
       console.error("No file selected.");
     }
     console.log("FormData contents:");
@@ -649,12 +655,27 @@ const RfqReply = () => {
                         <input
                           id="uploadFile"
                           type="file"
+                          multiple
                           style={{ display: "none" }}
-                          onChange={(e) => setFile(e.target.files[0]) || null} // Update state with the selected file
+                          // onChange={(e) => setFile(e.target.files[0]) || null}
+                          onChange={(e) => setFile(prev => [...prev, ...e.target.files])}
                         />
-                        {uploadFile && (
-                          <span className="text-sm">{uploadFile.name}</span>
-                        )}
+                        {/* {uploadFile && <span className="text-sm">{uploadFile.name}</span>}    */}
+                        {/* {uploadFile.length > 0 && uploadFile.map((file, i) => (
+                              <span key={i} className="text-sm">{file.name}</span>
+                            ))} */}
+                        {uploadFile?.map((file, i) => (
+                          <div key={i}>
+                            <span>{file.name}</span>
+                            <button className="text-xs" onClick={(e) => {
+                              e.preventDefault();
+                              setFile(prev => prev.filter((_, index) => index !== i))
+                            }}>
+                              ❌
+                            </button>
+                          </div>
+                        ))
+                        }
                       </div>
                     </div>
                   </div>
@@ -775,12 +796,7 @@ const RfqReply = () => {
                                 style={{ cursor: "pointer" }}
                               />
 
-                              <strong>
-                                {" "}
-                                {item.addedBy.company.name} (
-                                {item.addedBy.firstName} {item.addedBy.lastName}
-                                )
-                              </strong>
+                              <strong> {item?.addedBy?.company?.name} ({item?.addedBy?.firstName} {item?.addedBy?.lastName})</strong>
                             </div>
                           </span>
                         );

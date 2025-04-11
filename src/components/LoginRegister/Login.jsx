@@ -52,6 +52,7 @@ const Login = () => {
         localStorage.setItem("user", JSON.stringify(user));
 
         navigate("/"); // Redirect the user
+        // window.location.href = 'http://localhost:5173/';
       } else {
         setErrorMessage(result.message || "Login failed, please try again.");
       }
