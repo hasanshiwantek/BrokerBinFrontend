@@ -14,18 +14,19 @@ import {
   setCurrentPagePrev,
 } from "../../../../ReduxStore/RfqSlice.js";
 import { IoMail, IoMailOpen } from "react-icons/io5";
-import { getRfqArchived, deleteArchiveRfq, receivedRfq, sentRfq } from "../../../../ReduxStore/RfqSlice.js";
+import { getRfqArchived, deleteArchiveRfq, receivedRfq, sentRfq, rfqArchive } from "../../../../ReduxStore/RfqSlice.js";
 import Cookies from "js-cookie";
 import myProfile from "../../../../styles/Menu/Manage/MyProfile.module.css";
 import { NavLink } from "react-router-dom";
 import { setPopupCompanyDetail } from "../../../../ReduxStore/SearchProductSlice.js";
 import CompanyDetails from "../../../Popups/CompanyDetails/CompanyDetails.jsx";
-
 import {
   setTogglePopUp as setTogglePopUpCompany
 } from "../../../../ReduxStore/SearchProductSlice";
 import { useNavigate } from "react-router-dom";
-
+import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 const RfqTableSent = () => {
@@ -358,7 +359,26 @@ const RfqTableSent = () => {
 
   console.log("rfqMail ",rfqMail)
 
+  const userId = Cookies.get("user_id");
+  console.log("rfqMail ", userId)
 
+  const restoreRfq = async (rfq) => {
+    const token = Cookies.get("token");
+    const payload = rfqMail.map((rfq) => ({
+      rfq_id: rfq.rfqId,
+      status: 0,
+      user_id: userId,
+    }));    
+    console.log("Payload", payload);
+  
+    try {
+      await dispatch(rfqArchive({ token, data: payload }));
+      toast.success("RFQ restored successfully!");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to restore RFQ.");
+    }
+  };
 
 
   return (
@@ -544,16 +564,13 @@ const RfqTableSent = () => {
                   reply
                 </button>
                 <button type="button" onClick={handleForward}>forward</button>
-                <button type="button" onClick={''}>
+                <button type="button" onClick={restoreRfq}>
                   Restore
                 </button>
                 <button type="button" onClick={handleDelete}>
                   Delete
                 </button>
                 
-
-
-
               </div>
 
               {/* PAGINATION CONTROLS */}
@@ -601,6 +618,8 @@ const RfqTableSent = () => {
             </div>
           </div>
         </div>
+                    <ToastContainer position="top-center" autoClose={1000} />
+        
       </div>
       {togglePopUpRfq && <RfqTablePopUp type="sent" />}
       {togglePopUpCompany && <CompanyDetails closeModal={() => dispatch(setTogglePopUpCompany())} />}

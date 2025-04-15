@@ -1,13 +1,12 @@
 import React, { useEffect, useRef } from "react";
 import css from "../../styles/Popup/RfqTablePopUp.module.css";
-import { setTogglePopUp } from "../../ReduxStore/RfqSlice";
+import { rfqArchive, setTogglePopUp } from "../../ReduxStore/RfqSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { fetchUserData } from "../../ReduxStore/ProfleSlice";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { useReactToPrint } from "react-to-print";
-import { statusRfq} from "../../ReduxStore/RfqSlice";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
@@ -87,15 +86,15 @@ const RfqTablePopUp = ({ type }) => {
 
   const archiveRfq = async (rfq) => {
     const token = Cookies.get("token");
-    const payload = {
+    const payload = [{
       rfq_id: rfq.rfqId, 
       status: 1, 
       user_id: id
-    };
+    }];
     console.log("Payload", payload);
   
     try {
-      await dispatch(statusRfq({ token, data: payload }));
+      await dispatch(rfqArchive({ token, data: payload }));
       toast.success("RFQ archived successfully!");
       closeModal(); // optional
     } catch (err) {
@@ -104,8 +103,6 @@ const RfqTablePopUp = ({ type }) => {
     }
   };
   
-  
-
   return (
     <div className={css.RfqTablePopUp}>
       <div className={css.RfqTablePopUp_body}>
