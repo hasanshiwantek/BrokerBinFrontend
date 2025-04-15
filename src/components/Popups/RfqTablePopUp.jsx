@@ -57,6 +57,7 @@ const RfqTablePopUp = ({ type }) => {
   const receiveCompanyName = initialData?.company?.name;
 
   const id = user?.user?.id || user_id;
+  console.log("User ID", id);
   useEffect(() => {
     console.log("Logged in userid", id);
     dispatch(fetchUserData({ id, token }));
@@ -87,8 +88,11 @@ const RfqTablePopUp = ({ type }) => {
   const archiveRfq = async (rfq) => {
     const token = Cookies.get("token");
     const payload = {
-      items: [{ id: rfq.rfqId, isArchive: 1 }],
+      rfq_id: rfq.rfqId, 
+      status: 1, 
+      user_id: id
     };
+    console.log("Payload", payload);
   
     try {
       await dispatch(statusRfq({ token, data: payload }));

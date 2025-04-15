@@ -171,8 +171,6 @@ export const getRfqArchived = createAsyncThunk(
 
 
 
-
-
 export const deleteArchiveRfq = createAsyncThunk(
   "inventoryStore/deleteArchiveRfq ",
   async ({ token, ids }) => {
@@ -236,7 +234,7 @@ export const statusRfq = createAsyncThunk(
       console.log("Sending status RFQ data:", data);
 
       const response = await axios.post(
-        `${brokerAPI}rfq/status`,
+        `${brokerAPI}rfq/is-archived`,
         data, 
         {
           headers: {
@@ -247,7 +245,6 @@ export const statusRfq = createAsyncThunk(
       );
 
       console.log("Response from backend:", response.data);
-
       // Return the response data
       return response.data;
     } catch (error) {
@@ -265,14 +262,6 @@ export const statusRfq = createAsyncThunk(
     }
   }
 );
-
-
-
-
-
-
-
-
 
 
 const initialState = {
