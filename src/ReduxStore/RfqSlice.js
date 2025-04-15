@@ -170,7 +170,6 @@ export const getRfqArchived = createAsyncThunk(
 );
 
 
-
 export const deleteArchiveRfq = createAsyncThunk(
   "inventoryStore/deleteArchiveRfq ",
   async ({ token, ids }) => {
@@ -193,12 +192,6 @@ export const deleteArchiveRfq = createAsyncThunk(
     }
   }
 );
-
-
-
-
-
-
 
 export const deleteCompanyUser = createAsyncThunk(
   "deleteCompanyUser/submitRfq",
@@ -234,6 +227,43 @@ export const statusRfq = createAsyncThunk(
       console.log("Sending status RFQ data:", data);
 
       const response = await axios.post(
+        `${brokerAPI}rfq/status`,
+        data, 
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, 
+          },
+        }
+      );
+
+      console.log("Response from backend:", response.data);
+
+      // Return the response data
+      return response.data;
+    } catch (error) {
+      // Log any errors for debugging
+      console.error(
+        "Error submitting RFQ status:",
+        error.response?.data || error.message
+      );
+
+      // Throw an error for Redux to handle
+      throw new Error(
+        "Error while updating RFQ status: " +
+          (error.response?.data?.message || error.message)
+      );
+    }
+  }
+);
+
+export const rfqArchive = createAsyncThunk(
+  "rfqStore/rfqArchive",
+  async ({ token, data }) => {
+    try {
+      console.log("Sending status RFQ data:", data);
+
+      const response = await axios.post(
         `${brokerAPI}rfq/is-archived`,
         data, 
         {
@@ -245,6 +275,7 @@ export const statusRfq = createAsyncThunk(
       );
 
       console.log("Response from backend:", response.data);
+
       // Return the response data
       return response.data;
     } catch (error) {
@@ -374,6 +405,17 @@ const RfqSlice = createSlice({
         // Optionally update state based on action.payload
       })
       .addCase(statusRfq.rejected, (state, action) => {
+        console.error("Failed to update RFQ status:", action.error.message);
+        // Handle error if necessary
+      })
+      .addCase(rfqArchive.pending, (state) => {
+        console.log("Updating RFQ status..."); // Log for debugging
+      })
+      .addCase(rfqArchive.fulfilled, (state, action) => {
+        console.log("RFQ status updated:", action.payload); // Log the response
+        // Optionally update state based on action.payload
+      })
+      .addCase(rfqArchive.rejected, (state, action) => {
         console.error("Failed to update RFQ status:", action.error.message);
         // Handle error if necessary
       })

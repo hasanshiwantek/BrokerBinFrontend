@@ -18,6 +18,7 @@ import {
   receivedRfq,
   sentRfq,
   statusRfq,
+  rfqArchive
 } from "../../../ReduxStore/RfqSlice.js";
 import Cookies from "js-cookie";
 import myProfile from "../../../styles/Menu/Manage/MyProfile.module.css";
@@ -377,6 +378,49 @@ const RfqTable = () => {
   //   }
   // };
 
+  const userId = Cookies.get("user_id");
+  console.log("USERID", userId);
+
+  const handleArchive = async (action) => {
+    if (rfqMail.length === 0) {
+      toast.error("Please select at least one RFQ.");
+      return;
+    }
+
+    // Mapping actions to payload fields
+    const actionMap = {
+      archive: { key: "status", value: 1 },
+      unarchive: { key: "status", value: 0 },
+    };
+
+    const { key, value } = actionMap[action];
+
+    const payload = rfqMail.map((rfq) => ({
+      rfq_id: rfq.rfqId,
+      [key]: value,
+      user_id: userId,
+    }));
+
+    // const payload = {
+    //   rfq_id: rfqMail[0].rfqId,
+    //   status: value,
+    //   user_id: userId,
+    // };
+
+    console.log("Payload being sent:", payload);
+    try {
+      const token = Cookies.get("token");
+      const response = await dispatch(
+        rfqArchive({ token, data: payload })
+      ).unwrap();
+      toast.success(`RFQ(s) ${action} successfully!`);
+    } catch (error) {
+      console.error("Error handling action:", error);
+      toast.error(`Failed to ${action} RFQ(s).`);
+    }
+    dispatch(receivedRfq({ token, page: currPage })); // Re-fetch received RFQs
+  };
+
   const handleAction = async (action) => {
     if (rfqMail.length === 0) {
       toast.error("Please select at least one RFQ.");
@@ -387,8 +431,6 @@ const RfqTable = () => {
     const actionMap = {
       read: { key: "isRead", value: 1 },
       unread: { key: "isRead", value: 0 },
-      archive: { key: "isArchive", value: 1 },
-      unarchive: { key: "isArchive", value: 0 },
     };
 
     const { key, value } = actionMap[action];
@@ -667,7 +709,7 @@ const RfqTable = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleAction("archive")}
+                  onClick={() => handleArchive("archive")}
                   className=""
                 >
                   archive
