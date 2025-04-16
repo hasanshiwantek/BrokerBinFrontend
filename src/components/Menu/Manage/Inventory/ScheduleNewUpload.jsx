@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import css from "../../../../styles/Menu/Manage/Inventory/Inventory.module.css";
 import { BiMinus, BiPlus } from "react-icons/bi";
+import Tooltip from "@mui/material/Tooltip";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const ScheduleNewUpload = () => {
   const [showSchedule, setShowSchedule] = useState(false);
+  const [showClipboard, setShowClipboard] = useState(false);
+
   const [toggleAddFile, setToggleAddFile] = useState(true);
   // const handeStauts = ()=>{
   //   setShowSchedule((prev) =>!prev)
@@ -15,13 +19,47 @@ const ScheduleNewUpload = () => {
     formData.useSSHKey = formData.useSSHKey === "on" ? 1 : 0;
     console.log(formData);
   };
+
+  const theme = createTheme({
+    components: {
+      MuiTooltip: {
+        styleOverrides: {
+          tooltip: {
+            fontSize: "1.05rem", // Adjust font size
+            width: "11rem",
+            textAlign: "center",
+            backgroundColor: "var(--primary-color)",
+          },
+          arrow: {
+            color: "var(--primary-color)",
+          },
+        },
+      },
+    },
+  });
+
   return (
     <div className="shadow">
       <div className={`${css.inventory_main_scheduleUpload_toggle}`}>
         <p className="font-semibold text-base">Schedule New Upload</p>
-        <button type="button" onClick={() => setShowSchedule((prev) => !prev)}>
-          {showSchedule ? <BiMinus /> : <BiPlus />}
-        </button>
+        <ThemeProvider theme={theme}>
+          <Tooltip
+            title={`${
+              showSchedule
+                ? " Cancel new Upload"
+                : " Start a new scheduled upload"
+            }`}
+            arrow
+            placement="top"
+          >
+            <button
+              type="button"
+              onClick={() => setShowSchedule((prev) => !prev)}
+            >
+              {showSchedule ? <BiMinus /> : <BiPlus />}
+            </button>
+          </Tooltip>
+        </ThemeProvider>
       </div>
 
       {showSchedule && (
@@ -53,6 +91,7 @@ const ScheduleNewUpload = () => {
                   <button type="button">
                     <BiPlus size={15} />
                   </button>
+
                   <label>Add file</label>
                 </div>
               ) : (
@@ -94,9 +133,14 @@ const ScheduleNewUpload = () => {
                       <label>Login</label>
                       <input type="text" name="login" />
                     </span>
+          
                     <span>
                       <label>Password</label>
                       <input type="password" name="password" />
+                    </span>
+                    <span>
+                      <label>Public Key</label>
+                      <button className="!p-2 whitespace-nowrap !w-fit rounded-lg">Copy to clipboard</button>
                     </span>
                   </div>
                   <div
