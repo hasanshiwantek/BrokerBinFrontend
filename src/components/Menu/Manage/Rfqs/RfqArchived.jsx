@@ -360,7 +360,7 @@ const RfqTableSent = () => {
   console.log("rfqMail ",rfqMail)
 
   const userId = Cookies.get("user_id");
-  console.log("rfqMail ", userId)
+  console.log("UserID", userId)
 
   const restoreRfq = async (rfq) => {
     const token = Cookies.get("token");
