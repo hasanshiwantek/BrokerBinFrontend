@@ -13,6 +13,8 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ScheduleNewUpload from "./ScheduleNewUpload";
 import UploadInventoryContent from "./UploadInventoryContent";
+
+
 const Inventory = () => {
   const token = Cookies.get("token");
   const dispatch = useDispatch();
@@ -97,6 +99,9 @@ const Inventory = () => {
         }
       });
     }
+
+
+
   };
   return (
     <>

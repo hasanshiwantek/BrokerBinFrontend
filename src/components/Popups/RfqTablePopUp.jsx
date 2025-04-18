@@ -133,7 +133,7 @@ const RfqTablePopUp = ({ type }) => {
                             <span key={idx}>{email}</span>
                           ))
                         : recieveName && receiveCompanyName
-                        ? `${recieveName} - ${receiveCompanyName}`
+                        ? `${recieveName} -  ${receiveCompanyName}`
                         : "N/A";
                     })()}
               </p>
@@ -143,7 +143,7 @@ const RfqTablePopUp = ({ type }) => {
                 {type === "sent" && Array.isArray(item.to)
                   ? item.to.map((user, idx) => (
                       <span key={idx}>
-                        {user.firstName} - {user.company.name}
+                        {user.firstName} -  {user.company.name}
                         {idx < item.to.length - 1 && ", "}
                       </span>
                     ))
@@ -152,17 +152,46 @@ const RfqTablePopUp = ({ type }) => {
                   : "N/A"}
               </p>
             </div>
+
+            // <div key={item.id} className={css.RfqTablePopUp_body_mail}>
+            //   <label>To:</label>
+            //   <p>
+            //     {type === "sent"
+            //       ? // Sent → show recipients
+            //         Array.isArray(item.to)
+            //         ? item.to.map((user, idx) => (
+            //             <span key={idx}>
+            //               {user.firstName} {user.lastName}, {user.company.name}
+            //               {idx < item.to.length - 1 && ", "}
+            //             </span>
+            //           ))
+            //         : "N/A"
+            //       : // Received → show current user info
+            //       recieveName && receiveCompanyName
+            //       ? `${recieveName}, ${receiveCompanyName}`
+            //       : "N/A"}
+            //   </p>
+
+            //   <label>From:</label>
+            //   <p>
+            //     {type === "sent"
+            //       ? "me"
+            //       : item.from
+            //       ? `${item.from.firstName} ${item.from.lastName}, ${item.from.company.name}`
+            //       : "N/A"}
+            //   </p>
+            // </div>
           );
         })}
 
         <div className={css.RfqTablePopUp_body_content}>
           {rfqPopBoxInfo.map((item) => (
-          <strong>
-            {/* {type === "sent"
+            <strong>
+              {/* {type === "sent"
               ? "their_request - Still looking for these parts? (Sent)"
               : "their_request - Received these parts? (Received)"} */}
               their_request - {item.subject}
-          </strong>
+            </strong>
           ))}
           <table>
             <thead>
@@ -258,8 +287,7 @@ const RfqTablePopUp = ({ type }) => {
           </button>
         </div>
       </div>
-            <ToastContainer position="top-center" autoClose={1000} />
-      
+      <ToastContainer position="top-center" autoClose={1000} />
     </div>
   );
 };

@@ -49,6 +49,7 @@ const RfqReply = () => {
   const { searchResponseMatched } = useSelector((state) => state.rfqStore);
   const recipientDropdownRef = useRef(null); // Reference to the recipient dropdown
   const [showRecipientDropdown, setShowRecipientDropdown] = useState(false);
+  const [defaultComment, setDefaultComment] = useState("");
   console.log("Search Results in Component:", searchResults);
   const token = Cookies.get("token");
   const modalRef = useRef(null); // Create a reference to the modal
@@ -83,6 +84,7 @@ const RfqReply = () => {
       if (selectedRfqs.length === 0) {
         // If no RFQs are selected, only show the user info
         setComment(userInfo);
+        setDefaultComment(userInfo);
       } else {
         // If RFQs are selected, append the RFQ details to the user info
         const rfqDetails = selectedRfqs
@@ -108,9 +110,10 @@ const RfqReply = () => {
           .join("<br />");
 
         setComment(`${userInfo}<br />${rfqDetails}`);
+        setDefaultComment(`${userInfo}<br />${rfqDetails}`);
       }
     }
-  }, [initialData, selectedRfqs]); // Removed `comment` from dependencies
+  }, [initialData, selectedRfqs, defaultComment]); // Removed `comment` from dependencies
 
   console.log("Comment:", comment);
   console.log("Initial Data:", initialData);
@@ -385,12 +388,11 @@ const RfqReply = () => {
     // if (uploadFile) {
     //   formData.append("uploadFile", uploadFile); // Use 'uploadFile' as the key name
     // }
-    if (uploadFile.length) {
+    if (uploadFile?.length) {
       uploadFile.forEach((file, index) => {
         formData.append(`uploadFile[${index}]`, file);
       });
-    }
-    else {
+    } else {
       console.error("No file selected.");
     }
     console.log("FormData contents:");
@@ -419,8 +421,8 @@ const RfqReply = () => {
       // Clear form fields after successful submission
       clearFields();
     } catch (error) {
-      console.error("Error submitting RFQ:", error);
-      toast.error("Error  submitting RFQ.PLease Try Again!", {
+      console.error("Error submitting RFQ", error);
+      toast.error("Error  submitting RFQ.PLease Try Again!" || error.message, {
         style: { fontSize: "15px", marginTop: "-10px", fontWeight: "bold" }, //
       });
     }
@@ -458,6 +460,14 @@ const RfqReply = () => {
       }
     });
   };
+
+  const [poInHand, setPoInHand] = useState(false);
+  const [partialOrder, setPartialOrder] = useState(false);
+
+  const [subjectValue, setSubjectValue] = useState("Quote Needed");
+
+  console.log("PO in Hand Checked Value:", poInHand);
+  let poInHandValue = "PO in Hand";
 
   return (
     <>
@@ -608,7 +618,8 @@ const RfqReply = () => {
                       <input
                         name="subject"
                         type="text"
-                        defaultValue={subject}
+                        value={subjectValue}
+                        onChange={(e) => setSubjectValue(e.target.value)} // allow user edits
                       />
                     </span>
                   </div>
@@ -658,7 +669,9 @@ const RfqReply = () => {
                           multiple
                           style={{ display: "none" }}
                           // onChange={(e) => setFile(e.target.files[0]) || null}
-                          onChange={(e) => setFile(prev => [...prev, ...e.target.files])}
+                          onChange={(e) =>
+                            setFile((prev) => [...prev, ...e.target.files])
+                          }
                         />
                         {/* {uploadFile && <span className="text-sm">{uploadFile.name}</span>}    */}
                         {/* {uploadFile.length > 0 && uploadFile.map((file, i) => (
@@ -667,15 +680,19 @@ const RfqReply = () => {
                         {uploadFile?.map((file, i) => (
                           <div key={i}>
                             <span>{file.name}</span>
-                            <button className="text-xs" onClick={(e) => {
-                              e.preventDefault();
-                              setFile(prev => prev.filter((_, index) => index !== i))
-                            }}>
+                            <button
+                              className="text-xs"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setFile((prev) =>
+                                  prev.filter((_, index) => index !== i)
+                                );
+                              }}
+                            >
                               ❌
                             </button>
                           </div>
-                        ))
-                        }
+                        ))}
                       </div>
                     </div>
                   </div>
@@ -764,7 +781,72 @@ const RfqReply = () => {
                       <tr>
                         <td>
                           <span>
-                            <input type="checkbox" name="poInHand" id="" />
+                            <input
+                              type="checkbox"
+                              name="poInHand"
+                              id=""
+                                onChange={(e) => {
+                                  const checked = e.target.checked;
+                                  setPoInHand(checked);
+
+                                  // Update subject
+                                  setSubjectValue(
+                                    checked ? "PO in Hand" : "Quote Needed"
+                                  );
+
+                                  // Update comment
+                                  // Update comment
+                                  if (checked) {
+                                    const rfqDetails = selectedRfqs
+                                      .map(
+                                        (rfq) => `
+                                  <p><strong>RFQ initial Details:</strong></p>
+                                  <p>Name: ${rfq.from?.firstName || ""} ${
+                                          rfq.from?.lastName || ""
+                                        }</p>
+                                  <p>Email: ${rfq.from?.email || ""}</p>
+                                  <p>Part Numbers: ${
+                                    rfq.partNumbers?.join(", ") || "N/A"
+                                  }</p>
+                                  <p>Heci/CLI: ${
+                                    rfq.heciCleis?.join(", ") || "N/A"
+                                  }</p>
+                                  <p>Mfg: ${rfq.mfgs?.join(", ") || "N/A"}</p>
+                                  <p>Cond: ${
+                                    rfq.conditions?.join(", ") || "N/A"
+                                  }</p>
+                                  <p>Qty: ${
+                                    rfq.quantities?.join(", ") || "N/A"
+                                  }</p>
+                                  <p>Target Price: ${
+                                    rfq.targetPrices?.join(", ") || "N/A"
+                                  }</p>
+                                  <p>Terms: ${rfq.terms?.join(", ") || "N/A"}</p>
+                                `
+                                      )
+                                      .join("<br />");
+
+                                    const message = `
+                                <p><strong>PURCHASE ORDER IN HAND - READY TO BUY</strong></p>
+                                <p>Looking for the best price, availability & lead time.</p>
+                                <p>--------------</p>
+                                ${rfqDetails}
+                                <p>--------------</p>
+                                <p>${initialData.firstName || ""} ${
+                                      initialData.lastName || ""
+                                    }</p>
+                                <p>${initialData?.company?.name || ""}</p>
+                                <p>${initialData.phoneNumber || ""}</p>
+                                <p>${initialData.email || ""}</p>
+                              `;
+
+                                    setComment(message);
+                                  } else {
+                                    setComment(defaultComment);
+                                  }
+                                }}
+
+                            />
                             <label>PO in Hand</label>
                           </span>
                         </td>
@@ -776,6 +858,72 @@ const RfqReply = () => {
                               type="checkbox"
                               name="partialOrderQuotesAccepted"
                               id=""
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                setPartialOrder(checked);
+
+                                // Update subject
+                                setSubjectValue(
+                                  checked
+                                    ? "Quote Needed, Partial OK"
+                                    : "Quote Needed"
+                                );
+
+                                // Update comment
+                                if (checked) {
+                                  const rfqDetails = selectedRfqs
+                                    .map(
+                                      (rfq) => `
+                                      <p><strong>RFQ initial Details:</strong></p>
+                                      <p>Name: ${rfq.from?.firstName || ""} ${
+                                        rfq.from?.lastName || ""
+                                      }</p>
+                                      <p>Email: ${rfq.from?.email || ""}</p>
+                                      <p>Part Numbers: ${
+                                        rfq.partNumbers?.join(", ") || "N/A"
+                                      }</p>
+                                      <p>Heci/CLI: ${
+                                        rfq.heciCleis?.join(", ") || "N/A"
+                                      }</p>
+                                      <p>Mfg: ${
+                                        rfq.mfgs?.join(", ") || "N/A"
+                                      }</p>
+                                      <p>Cond: ${
+                                        rfq.conditions?.join(", ") || "N/A"
+                                      }</p>
+                                      <p>Qty: ${
+                                        rfq.quantities?.join(", ") || "N/A"
+                                      }</p>
+                                      <p>Target Price: ${
+                                        rfq.targetPrices?.join(", ") || "N/A"
+                                      }</p>
+                                      <p>Terms: ${
+                                        rfq.terms?.join(", ") || "N/A"
+                                      }</p>
+                                    `
+                                    )
+                                    .join("<br />");
+
+                                  const message = `
+                                    <p><strong>Quote Needed Looking for the best price, availability & lead time.</strong></p>
+                                    <p>Partial order quotes are accepted and will be considered.</p>
+                                    <p>--------------</p>
+                                    ${rfqDetails}
+                                    <p>--------------</p>
+                                    <p>${initialData.firstName || ""} ${
+                                    initialData.lastName || ""
+                                  }</p>
+                                    <p>${initialData?.company?.name || ""}</p>
+                                    <p>${initialData.phoneNumber || ""}</p>
+                                    <p>${initialData.email || ""}</p>
+                                  `;
+
+                                  setComment(message);
+                                } else {
+                                  setComment(defaultComment);
+                                }
+                              }}
+
                             />
                             <label>Partial Order Quotes Accepted</label>
                           </span>
@@ -796,7 +944,12 @@ const RfqReply = () => {
                                 style={{ cursor: "pointer" }}
                               />
 
-                              <strong> {item?.addedBy?.company?.name} ({item?.addedBy?.firstName} {item?.addedBy?.lastName})</strong>
+                              <strong>
+                                {" "}
+                                {item?.addedBy?.company?.name} (
+                                {item?.addedBy?.firstName}{" "}
+                                {item?.addedBy?.lastName})
+                              </strong>
                             </div>
                           </span>
                         );
