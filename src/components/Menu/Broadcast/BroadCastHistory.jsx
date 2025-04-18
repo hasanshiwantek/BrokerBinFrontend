@@ -141,6 +141,9 @@ useEffect(() => {
 }, [urlType]);
 
 
+console.log("Broadcast History: ",filteredBroadcasts);
+
+
 
   return (
     <>
