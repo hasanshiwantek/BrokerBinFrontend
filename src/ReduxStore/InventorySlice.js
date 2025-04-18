@@ -103,7 +103,7 @@ export const updateInventoryData = createAsyncThunk(
 
 export const deleteInventoryData = createAsyncThunk(
   "inventoryStore/deleteInventoryData",
-  async ({ token, ids }) => {
+  async ({ token, ids,type }) => {
     console.log(token, "Attempting to delete inventories with IDs:", ids);
     try {
       const response = await axios.delete(
@@ -113,7 +113,7 @@ export const deleteInventoryData = createAsyncThunk(
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          data: { ids } // Pass 'Ids' as part of the request body
+          data: { ids , type} // Pass 'Ids' as part of the request body
         }
       );
       return response.data; // Assuming the backend returns the deleted IDs or a success message
@@ -196,11 +196,43 @@ export const getFilterInventories = createAsyncThunk(
   }
 );
 
+
+
+
+
+export const fetchFilterBroadcast = createAsyncThunk(
+  "inventoryStore/fetchFilterBroadcast",
+  async ({ token,user_id,type,page,pageSize}) => {
+    try {
+      const response = await axios.get(
+        `${brokerAPI}inventory/show?user_id=${user_id}&type=${type}&page=${page}&pageSize=${pageSize}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("Filtered Broadcast From Backend: ",response.data);
+      return response.data;
+      
+    } catch (error) {
+      console.error("Error Fetching Filtered Broadcast Data:", error.response?.data);
+      throw error.response?.data;
+    }
+  }
+);
+
+
+
+
+
 const initialState = {
   // Add inventory data
   inventoryData:{},
   filteredInventoryData:{},
   inventorySearchData:{},
+  fetchFilterBroadcastData:[],
 
   inventoryAddData: [
     {
@@ -380,6 +412,17 @@ const InventorySlice = createSlice({
       })
       .addCase(inventorySearch.rejected, (state, action) => {
           console.error("ERROR FETCHING SEARCHED INVENTORY DATA", action.error);
+      })
+      .addCase(fetchFilterBroadcast.pending, (state) => {
+        console.log("PENDING!!!!!");
+      })
+      .addCase(fetchFilterBroadcast.fulfilled, (state, action) => {
+        console.log("Broadcast Filtered Data Fulfilled",action.payload)
+        state.fetchFilterBroadcastData=action.payload
+
+      })
+      .addCase(fetchFilterBroadcast.rejected, (state, action) => {
+          console.error("Error Fetching Filtered Data", action.error);
       });
 
   }

@@ -6,6 +6,7 @@ import {
   getFilterInventories,
   updateInventoryData,
   deleteInventoryData,
+  fetchFilterBroadcast,
 } from "../../../../ReduxStore/InventorySlice";
 import Cookies from "js-cookie";
 import { useSelector, useDispatch } from "react-redux";
@@ -18,15 +19,20 @@ import { triggerSearchFocus } from "@/ReduxStore/focusSlice";
 const EditDelete = () => {
   const token = Cookies.get("token");
   const dispatch = useDispatch();
-  const { inventoryData, filteredInventoryData } = useSelector(
-    (state) => state.inventoryStore
-  );
+  const { inventoryData, filteredInventoryData, fetchFilterBroadcastData } =
+    useSelector((state) => state.inventoryStore);
   console.log("Inventory Data from Frontend", inventoryData);
   console.log("Filtered Inventory Data from Frontend", filteredInventoryData);
+  console.log(
+    "Filtered Broadcast Data from Frontend: ",
+    fetchFilterBroadcastData
+  );
+  const userId = Cookies.get("user_id");
+  console.log("LoggedIn User id: ", userId);
+
   const companyFromInventory = inventoryData?.data?.map(
     (item) => item.addedBy.company.name
   );
-  console.log("Companies from Inventory ", companyFromInventory);
 
   const pagination =
     filteredInventoryData?.pagination || inventoryData?.pagination || {};
@@ -34,6 +40,7 @@ const EditDelete = () => {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedInventories, setSelectedInventories] = useState([]);
+  const [selectedType, setSelectedType] = useState("inventory");
   const [filters, setFilters] = useState({
     partModel: "",
     mfg: "",
@@ -42,6 +49,55 @@ const EditDelete = () => {
   });
   const [editedItems, setEditedItems] = useState([]); // Track editable rows
   const [visiblePages, setVisiblePages] = useState([1, 10]); // Start with pages 1 to 10
+
+  useEffect(() => {
+    if (["wts", "wtb", "rfq"].includes(selectedType)) {
+      dispatch(
+        fetchFilterBroadcast({
+          token,
+          user_id: userId,
+          type: selectedType,
+          page: currentPage,
+          pageSize: 20,
+        })
+      )
+        .unwrap()
+        .then((response) => {
+          if (response?.data) {
+            setEditedItems(response.data); // replace or merge based on your logic
+          }
+        })
+        .catch((err) => {
+          console.error("Error fetching broadcast data:", err);
+        });
+    } else {
+      fetchInventoryData(); // fallback for 'inventory'
+    }
+  }, [selectedType, currentPage]);
+
+  const fetchFilteredBroadcastData = () => {
+    setLoading(true);
+    if (["wts", "wtb", "rfq"].includes(selectedType)) {
+      dispatch(
+        fetchFilterBroadcast({
+          token,
+          user_id: userId,
+          type: selectedType,
+          page: currentPage,
+          pageSize: 20,
+        })
+      )
+        .unwrap()
+        .then((response) => {
+          setEditedItems(response?.data || []);
+        })
+        .catch((error) => {
+          console.error("Error fetching Filtered Broadcast data:", error);
+          alert("Failed to fetch filtered broadcast data. Please try again.");
+        })
+        .finally(() => setLoading(false));
+    }
+  };
 
   // Fetch inventory data (default)
   const fetchInventoryData = () => {
@@ -96,7 +152,6 @@ const EditDelete = () => {
       // Fetch filtered data if any filter is applied
       fetchFilteredData();
     } else {
-      // Fetch default inventory data if no filter is applied
       fetchInventoryData();
     }
   }, [currentPage]);
@@ -125,18 +180,30 @@ const EditDelete = () => {
 
   const handleSaveModifications = () => {
     const dataToSave = {
-      inventories: editedItems.map((item) => ({
-        id: item.id,
-        partModel: item.partModel,
-        heciClei: item.heciClei,
-        mfg: item.mfg,
-        cond: item.cond,
-        price: item.price,
-        productDescription: item.productDescription,
-        quantity: item.quantity,
-        status: item.status,
-      })),
+      inventories: editedItems.map((item) => {
+        const baseItem = {
+          id: item.id,
+          partModel: item.partModel,
+          heciClei: item.heciClei,
+          mfg: item.mfg,
+          cond: item.cond,
+          price: item.price,
+          quantity: item.quantity,
+          status: item.status,
+          type: selectedType,
+        };
+
+        if (item.description) {
+          baseItem.productDescription = item.description;
+        } else if (item.productDescription) {
+          baseItem.productDescription = item.productDescription;
+        }
+
+        return baseItem;
+      }),
     };
+
+    console.log("Save Modificationns Payload: ", dataToSave);
 
     setLoading(true);
     dispatch(updateInventoryData({ token, inventories: dataToSave }))
@@ -147,7 +214,11 @@ const EditDelete = () => {
         });
         console.log("Inventory updated successfully");
         // fetchFilteredData();
-        fetchInventoryData();
+        // fetchInventoryData();
+
+        selectedType === "inventory"
+          ? fetchInventoryData()
+          : fetchFilteredBroadcastData();
       })
       .catch((error) => {
         console.error("Error updating inventory:", error);
@@ -159,7 +230,13 @@ const EditDelete = () => {
   const handleDeleteClick = () => {
     if (selectedInventories.length > 0) {
       setLoading(true);
-      dispatch(deleteInventoryData({ token, ids: selectedInventories }))
+      dispatch(
+        deleteInventoryData({
+          token,
+          ids: selectedInventories,
+          type: selectedType,
+        })
+      )
         .unwrap()
         .then(() => {
           // ✅ Show success toast with light blue color
@@ -167,11 +244,16 @@ const EditDelete = () => {
             style: { fontSize: "15px", marginTop: "-10px" }, //
           });
           setSelectedInventories([]);
-          fetchInventoryData();
+          // fetchInventoryData();
+          selectedType === "inventory"
+            ? fetchInventoryData()
+            : fetchFilteredBroadcastData();
         })
         .catch((error) => {
           console.error("Error deleting inventory:", error);
-          alert("Failed to delete inventory. Please try again.");
+          toast.info("Failed to delete inventory. Please try again.", {
+            style: { fontSize: "15px", marginTop: "-10px" }, //
+          });
         })
         .finally(() => setLoading(false));
     } else {
@@ -233,7 +315,7 @@ const EditDelete = () => {
     };
     setEditedItems(updatedItems);
   };
-  
+
   const [showHeciClei, setShowHeciClei] = useState(true);
 
   return (
@@ -243,7 +325,13 @@ const EditDelete = () => {
         <div className={inventory.editDeleteTable_top}>
           <span>
             <label>View</label>
-            <select>
+            <select
+              value={selectedType}
+              onChange={(e) => {
+                setSelectedType(e.target.value);
+                setCurrentPage(1); // Reset to page 1 on type change
+              }}
+            >
               <option value="inventory">Inventory</option>
               <option value="wtb">WTB</option>
               <option value="wts">WTS</option>
@@ -252,15 +340,15 @@ const EditDelete = () => {
           </span>
 
           <button
-              type="button"
-              className={`${inventory.editDeleteTable_bottom} cursor-pointer transform active:scale-90 transition-all duration-100 rounded-md !-mt-[1px]`}
-              onClick={() => {dispatch(triggerSearchFocus())
-                setShowHeciClei(!showHeciClei)
-              }}
-            >
-              HECI/CLEI
-            </button>
-
+            type="button"
+            className={`${inventory.editDeleteTable_bottom} cursor-pointer transform active:scale-90 transition-all duration-100 rounded-md !-mt-[1px]`}
+            onClick={() => {
+              dispatch(triggerSearchFocus());
+              setShowHeciClei(!showHeciClei);
+            }}
+          >
+            HECI/CLEI
+          </button>
 
           <span>
             <label>MFG</label>
@@ -361,15 +449,17 @@ const EditDelete = () => {
                         }
                       />
                     </td>
-                    {showHeciClei && <td>
-                      <input
-                        type="text"
-                        value={item.heciClei || ""}
-                        onChange={(e) =>
-                          handleFieldChange(index, "heciClei", e.target.value)
-                        }
-                      />
-                    </td> }
+                    {showHeciClei && (
+                      <td>
+                        <input
+                          type="text"
+                          value={item.heciClei || ""}
+                          onChange={(e) =>
+                            handleFieldChange(index, "heciClei", e.target.value)
+                          }
+                        />
+                      </td>
+                    )}
                     <td>
                       <input
                         type="text"
@@ -403,7 +493,7 @@ const EditDelete = () => {
                     <td>
                       <input
                         type="text"
-                        value={item.productDescription || ""}
+                        value={item.productDescription || item.description}
                         onChange={(e) =>
                           handleFieldChange(
                             index,
