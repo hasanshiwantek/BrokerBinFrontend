@@ -57,8 +57,10 @@ const MyContact = () => {
 
   const [feedbackData, setFeedbackData] = useState(null);
 
-  const companyRatings = myContactsData?.map((vendor) => vendor?.contact?.company?.rating) || [];
-  const ratingCounts = myVendor?.map((vendor) => vendor?.contact?.company?.ratingCount) || [];
+  const companyRatings =
+    myContactsData?.map((vendor) => vendor?.contact?.company?.rating) || [];
+  const ratingCounts =
+    myVendor?.map((vendor) => vendor?.contact?.company?.ratingCount) || [];
 
   console.log(
     "Company Ratings in %:",
@@ -477,14 +479,14 @@ console.log("Notes ",notes);
                                 <p
                                   className={`${css.ratingValue} p-1 font-bold  !text-[1.5rem] text-blue-600`}
                                 >
-                                  {/* {currentRating} */}
+                                  {currentRating}
                                 </p>
                                 <input
                                   type="range"
                                   min="0"
                                   max="10"
                                   step="0.1"
-                                  value={''}
+                                  value={currentRating}
                                   onChange={(e) =>
                                     setRatings((prev) => ({
                                       ...prev,
