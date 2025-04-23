@@ -15,6 +15,13 @@ import { FaUserPlus } from "react-icons/fa";
 import { Tooltip } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { setHoverCompanyDetail } from "../../../ReduxStore/SearchProductSlice";
+import { addMyContacts } from "@/ReduxStore/ToolsSlice";
+import { fetchUserData } from "../../../ReduxStore/ProfleSlice";
+import Cookies from "js-cookie";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+
 
 const SearchResults = () => {
   const results = useSelector((state) => state.profileStore);
@@ -71,6 +78,29 @@ const SearchResults = () => {
   const handleHoverCompanyDetail = (company) => {
     dispatch(setHoverCompanyDetail(company)); // Dispatch company details to Redux store}
   };
+
+
+
+    const user_id = Cookies.get("user_id");
+    console.log("user_id", user_id);
+    
+    const token=Cookies.get("token");
+    const addToContacts = async (id) => {
+      try {
+        const result = await dispatch(addMyContacts({ contact_id: id, token })).unwrap();
+        toast.success(result?.message || "Contact marked as Favourite!", {
+          style: { fontSize: "17px", marginTop: "-10px" },
+        });
+      } catch (err) {
+        console.error("Error adding contact:", err);
+        const errorMessage =
+          err?.response?.data?.message || err?.message || "Failed to add contact.";
+        toast.error(errorMessage, {
+          style: { fontSize: "17px", marginTop: "-10px" },
+        });
+      }
+    };
+    
 
   return (
     <main className="mainSec w-[50%]">
@@ -180,25 +210,6 @@ const SearchResults = () => {
                       </div>
 
                       <div className="profile-details font-medium">
-                        {/* <p>
-                        Company:
-                        <button
-                          className="text-black"
-                          onClick={() => openCompanyModal(val.company)}
-                        >
-                          {val.company?.name || ""}
-                        </button>
-                      </p>
-                      <p className="">Title: {val.specialty || ""}</p>
-                      <p>Phone: {val.phoneNumber || ""}</p>
-                      <p>Toll: {val.tollFree || ""}</p>
-                      <p>
-                        Fax: {val?.company?.primaryContact?.faxNumber || ""}
-                      </p>
-                      <p>Email: {val.email || ""}</p>
-                      <p>City: {val.city || ""}</p>
-                      <p>State: {val.state || ""}</p>
-                      <p>Country: {val.country || ""}</p> */}
                         <p className="flex justify-between">
                           Company:
                           <button
@@ -258,7 +269,7 @@ const SearchResults = () => {
                         <ThemeProvider theme={theme}>
                           <Tooltip title="Add to Contacts">
                             <div className="cursor-pointer">
-                              <FaUserPlus />
+                              <FaUserPlus onClick={()=>addToContacts(val.id)}/>
                             </div>
                           </Tooltip>
                         </ThemeProvider>
@@ -285,6 +296,8 @@ const SearchResults = () => {
       {togglePopUp && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
+            <ToastContainer position="top-center" autoClose={2000} />
+      
     </main>
   );
 };

@@ -6,20 +6,26 @@ import { AiFillMail } from "react-icons/ai";
 import { MdPeople, MdPersonAddAlt1, MdPersonRemove } from "react-icons/md";
 import { BsGlobeAmericas } from "react-icons/bs";
 import { Link, NavLink } from "react-router-dom";
-import SearchMyContact from "./SearchMyContact";
 import { useDispatch, useSelector } from "react-redux";
-import { getMyVendors, removeMyVendors } from "../../../ReduxStore/ToolsSlice";
+import {
+  fetchMyContacts,
+  removeMyFavouriteContacts,
+  addMyNotes,
+  fetchMyNotes,
+} from "../../../ReduxStore/ToolsSlice";
 import Cookies from "js-cookie";
-import { FaUsers } from "react-icons/fa";
-import { CiSquareRemove } from "react-icons/ci";
-import Footer from "../../Footer/Footer";
 import { fetchUserData } from "../../../ReduxStore/ProfleSlice";
-import { brokerAPI } from "../../api/BrokerEndpoint";
-import axios from "axios";
 import { FaStar } from "react-icons/fa";
 import { setTogglePopUp } from "@/ReduxStore/SearchProductSlice";
 import CompanyDetails from "../../Popups/CompanyDetails/CompanyDetails";
 import { setPopupCompanyDetail } from "@/ReduxStore/SearchProductSlice";
+import { alphabets } from "@/data/services";
+import SearchMyFavouriteContact from "./SearchMyFavouriteContacts";
+import { Tooltip } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const MyContact = () => {
   const token = Cookies.get("token");
@@ -27,8 +33,11 @@ const MyContact = () => {
   let [viewAsShow, setViewAsShow] = useState(false);
   let [viewAsCountry, setViewAsCountry] = useState(false);
   let [viewAsState, setViewAsState] = useState(false);
-  const { myVendor, loading } = useSelector((store) => store.toolsStore);
-  console.log("MY Vendors", myVendor);
+  const { myVendor, loading, myContactsData, noteData } = useSelector(
+    (store) => store.toolsStore
+  );
+  console.log("MY Contacts Data From Frontend", myContactsData);
+  console.log("MY Notes Data From Frontend", noteData);
 
   const dispatch = useDispatch();
 
@@ -38,43 +47,20 @@ const MyContact = () => {
     (state) => state.profileStore
   );
 
-  console.log("Initial Data ", initialData);
   const id = user?.user?.id || user_id;
 
   useEffect(() => {
-    console.log(id);
     dispatch(fetchUserData({ id, token }));
   }, []);
 
   const companyId = initialData?.company?.id;
-  console.log("Company ID", companyId);
 
   const [feedbackData, setFeedbackData] = useState(null);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axios.get(`${brokerAPI}feedback/ratings/${companyId}`, {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${token}`,
-  //         }
-  //       })
-  //       setFeedbackData(response.data);
-  //       console.log("RATINGDATA", feedbackData);
-  //     } catch (error) {
-  //       console.log("ERRORRATIMG", error)
-  //     }
-  //   }
-  //   fetchData();
-  // }, [companyId])
-
-  // Extract ratings and counts for each company
-
   const companyRatings =
-    myVendor?.map((vendor) => vendor?.company?.rating) || [];
+    myContactsData?.map((vendor) => vendor?.contact?.company?.rating) || [];
   const ratingCounts =
-    myVendor?.map((vendor) => vendor?.company?.ratingCount) || [];
+    myVendor?.map((vendor) => vendor?.contact?.company?.ratingCount) || [];
 
   console.log(
     "Company Ratings in %:",
@@ -111,17 +97,25 @@ const MyContact = () => {
     }
   };
 
-  const removeFromMyVendors = (id) => {
-    const companyId = { company_id: id };
-    console.log(companyId);
-    dispatch(removeMyVendors({ companyId, token }));
+  const removeFavouriteContacts = async (id) => {
+    try {
+      const resultAction = await dispatch(
+        removeMyFavouriteContacts({ contact_id: id, token })
+      );
+      const result = resultAction.payload;
+
+      if (result?.success) {
+        toast.info(result?.message || "Contact Removed From Favourites!");
+      } else {
+        toast.info(result?.message || "Failed to remove contact.");
+      }
+    } catch (err) {
+      toast.error("Error removing contact: " + err.message);
+    }
   };
 
   useEffect(() => {
-    dispatch(getMyVendors({ token }));
-    // if (myVendor.length === 0) {
-    //   setViewAsCompany(true);
-    // }
+    dispatch(fetchMyContacts({ token }));
   }, []);
 
   const { togglePopUp, popupCompanyDetail } = useSelector(
@@ -133,6 +127,53 @@ const MyContact = () => {
     dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
     dispatch(setTogglePopUp()); // Show company modal
   };
+
+  const theme = createTheme({
+    components: {
+      MuiTooltip: {
+        styleOverrides: {
+          tooltip: {
+            fontSize: "1.2rem", // Adjust font size
+            width: "11rem",
+            textAlign: "center",
+            backgroundColor: "var(--primary-color)",
+          },
+          arrow: {
+            color: "var(--primary-color)",
+          },
+        },
+      },
+    },
+  });
+
+  // NOTES AND RATING LOIGIC
+
+  const [notes, setNotes] = useState({});
+  const [ratings, setRatings] = useState({});
+console.log("Notes ",notes);
+
+  const noteSaveHandler = async (contactId) => {
+    const note = notes[contactId] || "";
+    const rating = ratings[contactId] || 0;
+
+    try {
+      const result = await dispatch(
+        addMyNotes({ user_id: contactId, note, rating, token })
+      );
+      const payload = result?.payload;
+      if (payload?.success) {
+        toast.success("Note and rating saved!");
+      } else {
+        toast.info(payload?.message || "Failed to save note and rating.");
+      }
+    } catch (err) {
+      toast.error("Error saving: " + err.message);
+    }
+  };
+
+  useEffect(() => {
+    dispatch(fetchMyNotes({ token }));
+  }, []);
 
   if (loading) {
     return <p>Loading...</p>;
@@ -164,13 +205,15 @@ const MyContact = () => {
                   </NavLink>
                 </li> */}
               <li>
-                  <NavLink
-                    to="/myprofile/MyVendors"
-                    className={({ isActive }) => (isActive ? myProfile.active : '')}
-                  >
-                    <span>My Vendors</span>
-                  </NavLink>
-                </li>
+                <NavLink
+                  to="/myprofile/MyVendors"
+                  className={({ isActive }) =>
+                    isActive ? myProfile.active : ""
+                  }
+                >
+                  <span>My Vendors</span>
+                </NavLink>
+              </li>
               <li>
                 <NavLink
                   to="/myprofile/MyContact"
@@ -195,13 +238,13 @@ const MyContact = () => {
           </div>
         </div>
         <div className={css.vendor_p}>
-          <p>My Vendors</p>
+          <p>My Contacts</p>
         </div>
         <div className={css.vendor}>
           <div className={css.vendor_view}>
             <div className={css.searchVendor}>
               <div className={css.searchVendor_search}>
-                <SearchMyContact />
+                <SearchMyFavouriteContact />
               </div>
             </div>
             <div className="!flex !justify-center !items-center !gap-5">
@@ -214,62 +257,79 @@ const MyContact = () => {
               </select>
             </div>
           </div>
+
           <div className={css.myVendor}>
             {viewAsCompany && (
               <>
-                <div className={css.myVendor_link}>
-                  <div>
-                    <Link to={"##"}>#</Link>
-                    <Link to={"#A"}>A</Link>
-                    <Link to={"#B"}>B</Link>
-                    <Link to={"#C"}>C</Link>
-                    <Link to={"#D"}>D</Link>
-                    <Link to={"#E"}>E</Link>
-                    <Link to={"#F"}>F</Link>
-                    <Link to={"#G"}>G</Link>
-                    <Link to={"#H"}>H</Link>
-                    <Link to={"#I"}>I</Link>
-                    <Link to={"#J"}>J</Link>
-                    <Link to={"#K"}>K</Link>
-                    <Link to={"#L"}>L</Link>
-                    <Link to={"#M"}>M</Link>
-                    <Link to={"#N"}>N</Link>
-                    <Link to={"#O"}>O</Link>
-                    <Link to={"#P"}>P</Link>
-                    <Link to={"#Q"}>Q</Link>
-                    <Link to={"#R"}>R</Link>
-                    <Link to={"#S"}>S</Link>
-                    <Link to={"#T"}>T</Link>
-                    <Link to={"#U"}>U</Link>
-                    <Link to={"#V"}>V</Link>
-                    <Link to={"#W"}>W</Link>
-                    <Link to={"#X"}>X</Link>
-                    <Link to={"#Y"}>Y</Link>
-                    <Link to={"#Z"}>Z</Link>
+                <div className={""}>
+                  <div className="flex flex-col sticky top-[31vh]">
+                    {alphabets.map((letter, index) => {
+                      const isActive = myContactsData.some(
+                        (item) =>
+                          item.contact?.firstName?.charAt(0).toUpperCase() ===
+                          letter
+                      );
+                      return (
+                        <Link
+                          to={`#letter-${letter}`}
+                          key={index}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            const element = document.getElementById(
+                              `letter-${letter}`
+                            );
+                            if (element) {
+                              element.scrollIntoView({
+                                behavior: "smooth",
+                                block: "center",
+                              });
+                            }
+                          }}
+                          className={`cursor-pointer font-medium pl-3 leading-none ${
+                            isActive
+                              ? "text-black font-bold"
+                              : "opacity-50 text-black"
+                          }`}
+                        >
+                          {letter}
+                        </Link>
+                      );
+                    })}
                   </div>
                 </div>
+
                 <div className={css.myVendor_company}>
-                  {myVendor?.map((vendor, index) => {
+                  {myContactsData?.map((vendor, index) => {
+                    const contactId = vendor?.contact?.id;
+                    console.log("Contact ID:", contactId);
+                    
+                    const noteEntry = noteData?.notes?.find((n) => n.user?.id === contactId);
+                    const contactNote = noteEntry?.note || "";
+                    const savedRating = noteEntry?.rating ?? 0;
+                    
+
                     return (
-                      <div
-                        className={css.myVendor_company_list}
-                        key={vendor.company.id}
-                      >
+                      <div className={css.myVendor_company_list} key={index}>
                         <div className={css.myVendor_company_list_main}>
                           <div className={css.myVendor_company_list_main_img}>
                             <img
-                              src={vendor.company.image}
-                              alt="vendor logo"
+                              src={vendor?.contact?.profileImage}
+                              alt="Contact Person Image"
                               className="cursor-pointer"
-                              onClick={() => openCompanyModal(vendor.company)}
+                              onClick={() =>
+                                openCompanyModal(vendor?.contact?.company)
+                              }
                             />
                             <span>
-                              <p>{vendor.company.name}</p>
+                              <p>
+                                {vendor?.contact?.firstName}{" "}
+                                {vendor?.contact?.lastName}
+                              </p>
                             </span>
                           </div>
                           <div className={css.myVendor_company_list_main_info}>
                             <span>
-                              <p>{vendor.company.name}</p>
+                              <p>{vendor?.contact?.company.name}</p>
                               {/* Ratings Display */}
 
                               <div
@@ -318,9 +378,11 @@ const MyContact = () => {
                             <span>
                               <p
                                 className="cursor-pointer"
-                                onClick={() => openCompanyModal(vendor.company)}
+                                onClick={() =>
+                                  openCompanyModal(vendor?.contact?.company)
+                                }
                               >
-                                {vendor.company.name}
+                                {vendor?.contact?.company.name}
                               </p>
                               <p>
                                 (
@@ -345,26 +407,23 @@ const MyContact = () => {
 
                             <span>
                               <p>fax:</p>
-                              <p>{vendor.company.phone_num}</p>
+                              <p>{vendor?.contact?.phone_num}</p>
+                            </span>
+                            <span>
+                              <p>Email:</p>
+                              <p>{vendor?.contact?.email}</p>
                             </span>
                             <span>
                               <p>phone:</p>
-                              <p>{vendor.company.phone_num}</p>
-                            </span>
-                            <span>
-                              <p>hours:</p>
-                              <p>
-                                {vendor.company.open_timing} to{" "}
-                                {vendor.company.close}
-                              </p>
-                            </span>
-                            <span>
-                              <p>ship by:</p>
-                              <p>4pm</p>
+                              <p>{vendor?.contact?.phoneNumber}</p>
                             </span>
                             <span>
                               <p>location:</p>
-                              <p>{vendor.company.address}</p>
+                              <p>{vendor?.contact?.company?.address}</p>
+                            </span>
+                            <span>
+                              <p>Country:</p>
+                              <p>{vendor?.contact?.country}</p>
                             </span>
                           </div>
                           <div
@@ -381,11 +440,19 @@ const MyContact = () => {
                               <span>
                                 <textarea
                                   name="notes"
-                                  id="notes"
+                                  id={`notes-${contactId}`}
                                   cols={10}
-                                  rows={6}
-                                  className="!w-80"
-                                ></textarea>
+                                  rows={8}
+                                  placeholder="Enter notes here..."
+                                  className="!w-80 text-[8pt] border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-400 resize-none"
+                                  value={notes[contactId] ?? contactNote}
+                                  onChange={(e) =>
+                                    setNotes((prevNotes) => ({
+                                      ...prevNotes,
+                                      [contactId]: e.target.value,
+                                    }))
+                                  }
+                                />
                               </span>
                               <span>
                                 <button
@@ -393,35 +460,64 @@ const MyContact = () => {
                                   className={
                                     css.myVendor_company_list_main_notes_btn
                                   }
+                                  onClick={() => noteSaveHandler(contactId)}
+                                  title="Save Note"
                                 >
-                                  save
+                                  Save
                                 </button>
                               </span>
                             </div>
-                            {/* <div
+                            <div
                               className={css.myVendor_company_list_main_rating}
                             >
-                              <input
-                                type="range"
-                                name="ratingContact"
-                                id="ratingContact"
-                                min={0}
-                                max={5}
-                              />
-                              <span>My Rating: 4</span>
-                            </div> */}
+                              <div className={`${css.ratingWrapper} `}>
+                                <p
+                                  className={`${css.ratingLabel} p-1 !text-[1.2rem]`}
+                                >
+                                  My Rating
+                                </p>
+                                <p
+                                  className={`${css.ratingValue} p-1 font-bold  !text-[1.5rem] text-blue-600`}
+                                >
+                                  {currentRating}
+                                </p>
+                                <input
+                                  type="range"
+                                  min="0"
+                                  max="10"
+                                  step="0.1"
+                                  value={currentRating}
+                                  onChange={(e) =>
+                                    setRatings((prev) => ({
+                                      ...prev,
+                                      [contactId]: parseFloat(e.target.value),
+                                    }))
+                                  }
+                                  className={css.slider}
+                                />
+                              </div>
+                            </div>
                           </div>
+
                           <div
                             className={css.myVendor_company_list_main_actions}
                           >
-                            <button
-                              type="button"
-                              onClick={() =>
-                                removeFromMyVendors(vendor.company.id)
-                              }
-                            >
-                              X
-                            </button>
+                            <ThemeProvider theme={theme}>
+                              <Tooltip
+                                title="Remove from my Contacts"
+                                arrow
+                                placement="bottom"
+                              >
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    removeFavouriteContacts(vendor.contact.id)
+                                  }
+                                >
+                                  X
+                                </button>
+                              </Tooltip>
+                            </ThemeProvider>
                           </div>
                         </div>
                       </div>
@@ -516,6 +612,7 @@ const MyContact = () => {
       {togglePopUp && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
+      <ToastContainer position="top-center" autoClose={2000} />
     </>
   );
 };

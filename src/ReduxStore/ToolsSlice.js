@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { brokerAPI } from "../components/api/BrokerEndpoint";
+
 export const sendEthics = createAsyncThunk(
   "toolsStore/sendEthics",
   async ({ data, token }) => {
@@ -207,10 +208,6 @@ export const editHotListItem = createAsyncThunk(
 );
 
 
-
-
-
-
 export const deleteHotlists = createAsyncThunk(
   "inventoryStore/deleteHotlists ",
   async ({ token, ids }) => {
@@ -235,6 +232,191 @@ export const deleteHotlists = createAsyncThunk(
 );
 
 
+export const addMyContacts= createAsyncThunk(
+  "toolsStore/addMyContacts",
+  async ({ contact_id, token }) => {
+    console.log(contact_id);
+
+    try {
+      const response = await axios.post(
+        `${brokerAPI}contact/is_fav_contact`,
+        {contact_id},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Contact Data From Backend: ",response.data);
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message)
+    }
+  }
+);
+
+export const fetchMyContacts = createAsyncThunk(
+  "toolsStore/fetchMyContacts",
+  async ({ token }) => {
+    try {
+      const response = await axios.get(
+      `${brokerAPI}contact/fvrt_contacts`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Contact Data From Redux: ",response.data.data);
+      return response.data.data;
+    } catch (error) {
+      throw new Error("Error searching Contacts Data");
+    }
+  }
+);
+
+export const searchMyFavouriteContacts = createAsyncThunk(
+  "toolsStore/searchMyFavouriteContacts",
+  async ({ search, token }) => {
+    try {
+      const response = await axios.post(
+        `${brokerAPI}contact/search_contact`,
+        { search },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Contact Data From Redux: ",response.data);
+      return response.data.contacts;
+    } catch (error) {
+      throw new Error("Error searching company name");
+    }
+  }
+);
+
+
+export const removeMyFavouriteContacts = createAsyncThunk(
+  "toolsStore/removeMyFavouriteContacts",
+  async ({ contact_id, token }) => {
+    console.log(contact_id);
+
+    try {
+      const response = await axios.post(
+        `${brokerAPI}contact/remove_fav_contact`,
+        {contact_id},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Favourite contact Removed: ",response.data);
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message);
+    }
+  }
+);
+
+export const addMyNotes = createAsyncThunk(
+  "toolsStore/addMyNotes",
+  async ({ user_id,note,rating,token }) => {
+    console.log(user_id,rating,note);
+    try {
+      const response = await axios.post(
+        `${brokerAPI}notes/create`,
+        {user_id,note,rating},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("User Notes: ",response.data);
+      return response.data;
+    } catch (error) {
+      throw new Error(response?.data?.message);
+    }
+  }
+);
+
+
+export const fetchMyNotes = createAsyncThunk(
+  "toolsStore/fetchMyNotes",
+  async ({token}) => {
+    try {
+      const response = await axios.get(
+        `${brokerAPI}notes/get`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("User Notes Fetched: ",response.data);
+      return response.data;
+    } catch (error) {
+      throw new Error(response?.data?.message);
+    }
+  }
+);
+
+
+export const addMyVendorNotes = createAsyncThunk(
+  "toolsStore/addMyVendorNotes",
+  async ({ company_id,note,token }) => {
+    console.log(company_id,note);
+    try {
+      const response = await axios.post(
+        `${brokerAPI}notes/create`,
+        {company_id,note,rating},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Vendor Notes: ",response.data);
+      return response.data;
+    } catch (error) {
+      throw new Error(response?.data?.message);
+    }
+  }
+);
+
+export const fetchMyVendorNotes = createAsyncThunk(
+  "toolsStore/fetchMyVendorNotes",
+  async ({token}) => {
+    try {
+      const response = await axios.get(
+        `${brokerAPI}notes/get`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Vendor Notes Fetched: ",response.data);
+      return response.data;
+    } catch (error) {
+      throw new Error(response?.data?.message);
+    }
+  }
+);
+
+
+
+
 
 const initialState = {
   tools: [],
@@ -242,6 +424,10 @@ const initialState = {
   searchMyVendor: [],
   myVendor: [],
   myHotListItems: [],
+  myContactsData:[],
+  searchMyContact:[],
+  noteData:[],
+  vendorNoteData:[],
   broadcastFilters: {
     daily_broadcast: 0,
     broadcasts: 0,
@@ -271,6 +457,9 @@ const ToolsSlice = createSlice({
     },
     setEmptySearchCompanies(state, action) {
       state.searchMyVendor = [];
+    },
+    setEmptySearchContacts(state, action) {
+      state.searchMyContact = [];
     },
     // showHotList(state, action) {
     //   state.myHotListItems.push(action.payload);
@@ -391,6 +580,71 @@ const ToolsSlice = createSlice({
       })
       .addCase(deleteHotlists.rejected, (state, action) => {
         console.error("Error Deleting Hotlists", action.error);
+      })
+      .addCase(addMyContacts.pending, (state) => {
+        console.log("ADDING CONTACTS....");
+      })
+      .addCase(addMyContacts.fulfilled, (state, action) => {
+        // state.myContactsData = action.payload;
+        console.log("REQUEST FULFILLED: ",action.payload);
+      })
+      .addCase(addMyContacts.rejected, (state, action) => {
+        console.error("Error Sumbitting Contacts Data", action.error);
+      })
+      .addCase(fetchMyContacts.pending, (state) => {
+        console.log("FETCHIG  CONTACTS....");
+      })
+      .addCase(fetchMyContacts.fulfilled, (state, action) => {
+        state.myContactsData = action.payload;
+        console.log("REQUEST FULFILLED: ",action.payload);
+      })
+      .addCase(fetchMyContacts.rejected, (state, action) => {
+        console.error("Error Fetching Contact Data", action.error);
+      })
+      .addCase(searchMyFavouriteContacts.pending, (state) => {
+        console.log("SEARCHING  CONTACTS....");
+      })
+      .addCase(searchMyFavouriteContacts.fulfilled, (state, action) => {
+        state.searchMyContact = action.payload;
+        console.log("REQUEST FULFILLED: ",action.payload);
+      })
+      .addCase(searchMyFavouriteContacts.rejected, (state, action) => {
+        console.error("Error Fetching Search Contact Data", action.error);
+      })
+      .addCase(removeMyFavouriteContacts.pending, (state) => {
+        console.log("Searching...");
+        state.loading = true;
+      })
+      .addCase(removeMyFavouriteContacts.fulfilled, (state, action) => {
+        console.log(action.payload);
+        state.loading = false;
+        state.myContactsData = state.myContactsData.filter(
+          (contact) => contact.contact?.id !== action.payload.data?.contact?.id
+        ); // Immediately remove the vendor
+      })
+      .addCase(removeMyFavouriteContacts.rejected, (state, action) => {
+        console.error("Error Removing Contact", action.error);
+        state.loading = true;
+      })
+      .addCase(fetchMyNotes.pending, (state) => {
+        console.log("FETCHING  NOTES....");
+      })
+      .addCase(fetchMyNotes.fulfilled, (state, action) => {
+        state.noteData = action.payload;
+        console.log("REQUEST FULFILLED: ",action.payload);
+      })
+      .addCase(fetchMyNotes.rejected, (state, action) => {
+        console.error("Error Fetching Notes", action.error);
+      })
+      .addCase(fetchMyVendorNotes.pending, (state) => {
+        console.log("FETCHING  NOTES....");
+      })
+      .addCase(fetchMyVendorNotes.fulfilled, (state, action) => {
+        state.vendorNoteData = action.payload;
+        console.log("REQUEST FULFILLED: ",action.payload);
+      })
+      .addCase(fetchMyVendorNotes.rejected, (state, action) => {
+        console.error("Error Fetching Notes", action.error);
       });
   },
 });
@@ -402,6 +656,7 @@ export const {
   setEmptySearchCompanies,
   showHotList,
   setBroadcastFilters,
+  setEmptySearchContacts,
 } = ToolsSlice.actions;
 
 export default ToolsSlice.reducer;
