@@ -215,14 +215,15 @@ const MyVendors = () => {
 
   const [notes, setNotes] = useState({});
 
-  const noteSaveHandler = async (companyId) => {
-    const note = notes[companyId] || "";
+  const noteSaveHandler = async (vendorId) => {
+    const note = notes[vendorId] || "";
 
     try {
       const result = await dispatch(
-        addMyVendorNotes({ companyId: companyId, note, token })
+        addMyVendorNotes({ company_id: vendorId, note, token, })
       );
       const payload = result?.payload;
+      console.log("RESULT", payload);
       if (payload?.success) {
         toast.success("Note saved!");
       } else {
@@ -362,10 +363,10 @@ const MyVendors = () => {
                 </div>
                 <div className={css.myVendor_company}>
                   {myVendor.map((vendor, index) => {
-                    const companyId = vendor?.company?.id;
-                    const companyNote =
-                      vendorNoteData?.find((n) => n.company_id === companyId)?.note ||
-                      "";
+                    const vendorId = vendor?.company?.id;
+                    // console.log("COMPANYID", vendorId);
+                    const companyNote = vendorNoteData.notes.find(n => n.company?.id === vendorId)?.note || "";
+                      // console.log(`COMPANYNOTE`, companyNote);
                     return (
                       <div
                         className={css.myVendor_company_list}
@@ -522,11 +523,11 @@ const MyVendors = () => {
                                   rows={8}
                                   placeholder="Enter notes here..."
                                   className="!w-80 text-[8pt] border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-400 resize-none"
-                                  value={notes[companyId] ?? companyNote}
+                                  value={notes[vendorId] ?? companyNote}
                                   onChange={(e) =>
                                     setNotes((prevNotes) => ({
                                       ...prevNotes,
-                                      [companyId]: e.target.value,
+                                      [vendorId]: e.target.value,
                                     }))
                                   }
                                 />
@@ -537,7 +538,7 @@ const MyVendors = () => {
                                   className={
                                     css.myVendor_company_list_main_notes_btn
                                   }
-                                  onClick={() => noteSaveHandler(companyId)}
+                                  onClick={() => noteSaveHandler(vendorId)}
                                   title="Save Note"
                                 >
                                   save
@@ -689,4 +690,4 @@ const MyVendors = () => {
   );
 };
 
-export default MyVendors;
+export default MyVendors; 

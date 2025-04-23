@@ -353,7 +353,7 @@ export const fetchMyNotes = createAsyncThunk(
   async ({token}) => {
     try {
       const response = await axios.get(
-        `${brokerAPI}notes/get`,
+        `${brokerAPI}notes/note-contact`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -374,10 +374,11 @@ export const addMyVendorNotes = createAsyncThunk(
   "toolsStore/addMyVendorNotes",
   async ({ company_id,note,token }) => {
     console.log(company_id,note);
+    
     try {
       const response = await axios.post(
         `${brokerAPI}notes/create`,
-        {company_id,note,rating},
+        {company_id,note,},
         {
           headers: {
             "Content-Type": "application/json",
@@ -388,7 +389,8 @@ export const addMyVendorNotes = createAsyncThunk(
       console.log("Vendor Notes: ",response.data);
       return response.data;
     } catch (error) {
-      throw new Error(response?.data?.message);
+      console.error("Thunk error:", error);
+      throw new Error(error?.response?.data?.message || error.message);
     }
   }
 );
@@ -398,7 +400,7 @@ export const fetchMyVendorNotes = createAsyncThunk(
   async ({token}) => {
     try {
       const response = await axios.get(
-        `${brokerAPI}notes/get`,
+        `${brokerAPI}notes/note-vendor`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -409,14 +411,10 @@ export const fetchMyVendorNotes = createAsyncThunk(
       console.log("Vendor Notes Fetched: ",response.data);
       return response.data;
     } catch (error) {
-      throw new Error(response?.data?.message);
+      throw new Error(error?.response?.data?.message || error.message);
     }
   }
 );
-
-
-
-
 
 const initialState = {
   tools: [],
