@@ -484,7 +484,7 @@ console.log("Notes ",notes);
                                   min="0"
                                   max="10"
                                   step="0.1"
-                                  value={''}
+                                  value={notes[contactId] ?? savedRating}
                                   onChange={(e) =>
                                     setRatings((prev) => ({
                                       ...prev,
