@@ -16,12 +16,14 @@ import { Tooltip } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { setHoverCompanyDetail } from "../../../ReduxStore/SearchProductSlice";
 import { addMyContacts } from "@/ReduxStore/ToolsSlice";
-import { fetchUserData } from "../../../ReduxStore/ProfleSlice";
+import {
+  fetchUserData,
+  submitUserSearchViewBy,
+} from "../../../ReduxStore/ProfleSlice";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-
 
 const SearchResults = () => {
   const results = useSelector((state) => state.profileStore);
@@ -35,6 +37,8 @@ const SearchResults = () => {
 
   const dispatch = useDispatch();
   const [clicked, setClicked] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [resultData, setResultData] = useState(searchResults);
 
   const { togglePopUp, popupCompanyDetail } = useSelector(
     (state) => state.searchProductStore
@@ -46,7 +50,7 @@ const SearchResults = () => {
     dispatch(setTogglePopUp()); // Show company modal
   };
 
-  const [viewBy, setViewBy] = useState("Last");
+  const [viewBy, setViewBy] = useState("last");
 
   const company = searchResults
     .map((results) => results?.company)
@@ -80,27 +84,72 @@ const SearchResults = () => {
   };
 
 
+  const fetchPersonViewBy = () => {
+    if (
+      ["last", "first", "company", "rating", "country", "state"].includes(viewBy)
+    ) {
+      console.log("Fetching from API with viewBy:", viewBy);
+      setLoading(true);
+       dispatch(
+        submitUserSearchViewBy({
+          token,
+          sortBy: viewBy,
+          sortOrder: "asc",
+        })
+      ).unwrap()
+        .then((response) => {
+          console.log("Response from API:", response);
+          let data=response
+          console.log("API response:", data);
+          setResultData(data || []);
+          console.log("Result Data:", resultData);
+          
+        })
+        .catch((error) => {
+          console.error("API error:", error);
+          alert("Failed to fetch filtered data.");
+        })
+        .finally(() => setLoading(false));
+    }
+  };
 
-    const user_id = Cookies.get("user_id");
-    console.log("user_id", user_id);
-    
-    const token=Cookies.get("token");
-    const addToContacts = async (id) => {
-      try {
-        const result = await dispatch(addMyContacts({ contact_id: id, token })).unwrap();
-        toast.success(result?.message || "Contact marked as Favourite!", {
-          style: { fontSize: "17px", marginTop: "-10px" },
-        });
-      } catch (err) {
-        console.error("Error adding contact:", err);
-        const errorMessage =
-          err?.response?.data?.message || err?.message || "Failed to add contact.";
-        toast.error(errorMessage, {
-          style: { fontSize: "17px", marginTop: "-10px" },
-        });
-      }
-    };
-    
+
+  useEffect(() => {
+    if (viewBy !== "last") fetchPersonViewBy();
+  }, [viewBy]);
+
+
+
+
+  const user_id = Cookies.get("user_id");
+  console.log("user_id", user_id);
+
+  const token = Cookies.get("token");
+  const addToContacts = async (id) => {
+    try {
+      const result = await dispatch(
+        addMyContacts({ contact_id: id, token })
+      ).unwrap();
+      toast.success(result?.message || "Contact marked as Favourite!", {
+        style: { fontSize: "17px", marginTop: "-10px" },
+      });
+    } catch (err) {
+      console.error("Error adding contact:", err);
+      const errorMessage =
+        err?.response?.data?.message ||
+        err?.message ||
+        "Failed to add contact.";
+      toast.error(errorMessage, {
+        style: { fontSize: "17px", marginTop: "-10px" },
+      });
+    }
+  };
+
+
+  useEffect(() => {
+    console.log("Updated resultData:", resultData);
+  }, [resultData]);
+  
 
   return (
     <main className="mainSec w-[50%]">
@@ -122,29 +171,21 @@ const SearchResults = () => {
 
       <div className="!flex !justify-end !items-center !gap-5">
         <p className="!text-xl">view by</p>
-        <select
-          onChange={(e) =>
-            setViewBy(
-              e.target.value.split(":")[1]?.trim().toLowerCase() ||
-                e.target.value
-            )
-          }
-        >
-          <option value="Last">Contact: Last</option>
-          <option value="First">Contact: First</option>
-          <option value="Company">Company</option>
-          <option value="Rating">My Rating</option>
+        <select value={viewBy} onChange={(e) => setViewBy(e.target.value)}>
+          <option value="last">Contact: Last</option>
+          <option value="first">Contact: First</option>
+          <option value="company">Company</option>
+          <option value="rating">My Rating</option>
           <option value="country">Country</option>
-          <option value="State">State</option>
+          <option value="state">State</option>
         </select>
       </div>
       <h1 className="pl-[2.3vw] font-bold">Contact {`(${viewBy})`}</h1>
-      <div className="flex flex-row w-auto ">
-        {/* Render the Alphabet List ONCE */}
+      <div className="flex flex-row w-auto">
         <div>
           <div className="flex flex-col sticky top-[35vh]">
             {alphabets.map((letter, index) => {
-              const isActive = searchResults.some(
+              const isActive = resultData.some(
                 (item) => item.firstName?.charAt(0).toUpperCase() === letter
               );
               return (
@@ -155,10 +196,7 @@ const SearchResults = () => {
                     e.preventDefault();
                     const element = document.getElementById(`letter-${letter}`);
                     if (element) {
-                      element.scrollIntoView({
-                        behavior: "smooth",
-                        block: "center",
-                      });
+                      element.scrollIntoView({ behavior: "smooth", block: "center" });
                     }
                   }}
                   className={`cursor-pointer font-medium pl-3 leading-none ${
@@ -173,131 +211,77 @@ const SearchResults = () => {
         </div>
 
         <div>
-          {searchResults && searchResults.length > 0 ? (
-            [...searchResults]
-              .sort(
-                (a, b) => a.firstName?.localeCompare(b.firstName || "") || 0
-              )
-              .map((val, index) => {
-                // Use profileImg as a fallback if val.profileImage is null
-                const profileImage = val.profileImage || profileImg;
-                const firstLetter = val.firstName
-                  ? val.firstName.charAt(0).toUpperCase()
-                  : "";
+          {loading ? (
+            <p className="text-center">Loading...</p>
+          ) : resultData.length > 0 ? (
+            resultData.map((val, index) => {
+              const profileImage = val.profileImage || profileImg;
+              const firstLetter = val.firstName?.charAt(0).toUpperCase() || "";
 
-                return (
-                  <div
-                    className="search-results-container !w-auto"
-                    key={index}
-                    id={`letter-${firstLetter}`}
-                  >
-                    <div className="contact-info">
-                      <div className="profile-image">
-                        <img
-                          src={profileImage}
-                          alt="profile-image"
-                          onError={(e) => (e.target.src = profileImg)} // If image fails to load, use fallback
-                        />
-                        <p
-                          className="font-semibold cursor-pointer text-center "
-                          onClick={() => openCompanyModal(val.company)}
-                          onMouseEnter={() =>
-                            handleHoverCompanyDetail(val.company)
-                          }
-                        >
-                          {val.firstName || ""}
-                        </p>
-                      </div>
+              return (
+                <div
+                  className="search-results-container !w-auto"
+                  key={index}
+                  id={`letter-${firstLetter}`}
+                >
+                  <div className="contact-info">
+                    <div className="profile-image">
+                      <img
+                        src={profileImage}
+                        alt="profile"
+                        onError={(e) => (e.target.src = profileImg)}
+                      />
+                      <p
+                        className="font-semibold cursor-pointer text-center"
+                        onClick={() => openCompanyModal(val.company)}
+                        onMouseEnter={() => handleHoverCompanyDetail(val.company)}
+                      >
+                        {val.firstName || ""}
+                      </p>
+                    </div>
 
-                      <div className="profile-details font-medium">
-                        <p className="flex justify-between">
-                          Company:
-                          <button
-                            className="text-black"
-                            onClick={() => {
-                              openCompanyModal(val.company);
-                            }}
-                            onMouseEnter={() =>
-                              handleHoverCompanyDetail(val.company)
-                            }
-                          >
-                            <p>{val.company?.name || ""}</p>
-                          </button>
-                        </p>
-                        <p className="flex justify-between ">
-                          Title: <p>{val.position || ""} </p>
-                        </p>
-                        <p className="flex justify-between">
-                          Phone: <p>{val.phoneNumber || ""} </p>
-                        </p>
-                        <p className="flex justify-between">
-                          Specialty: <p>{val.specialty || ""} </p>
-                        </p>
-                        <p className="flex justify-between">
-                          Toll: <p>{val.tollFree || ""} </p>
-                        </p>
-                        <p className="flex justify-between">
-                          Fax:{" "}
-                          <p>
-                            {val?.company?.primaryContact?.faxNumber || ""}{" "}
-                          </p>
-                        </p>
-                        <p className="flex justify-between">
-                          Email: <p>{val.email || ""} </p>
-                        </p>
-                        <p className="flex justify-between">
-                          City: <p>{val.city || ""} </p>
-                        </p>
-                        <p className="flex justify-between">
-                          State: <p>{val.state || ""} </p>
-                        </p>
-                        <p className="flex justify-between">
-                          Country: <p>{val.country || ""} </p>
-                        </p>
-                      </div>
+                    <div className="profile-details font-medium">
+                      <p className="flex justify-between">Company: <p>{val.company?.name || ""}</p></p>
+                      <p className="flex justify-between">Title: <p>{val.position || ""}</p></p>
+                      <p className="flex justify-between">Phone: <p>{val.phoneNumber || ""}</p></p>
+                      <p className="flex justify-between">Specialty: <p>{val.specialty || ""}</p></p>
+                      <p className="flex justify-between">Toll: <p>{val.tollFree || ""}</p></p>
+                      <p className="flex justify-between">Fax: <p>{val?.company?.primaryContact?.faxNumber || ""}</p></p>
+                      <p className="flex justify-between">Email: <p>{val.email || ""}</p></p>
+                      <p className="flex justify-between">City: <p>{val.city || ""}</p></p>
+                      <p className="flex justify-between">State: <p>{val.state || ""}</p></p>
+                      <p className="flex justify-between">Country: <p>{val.country || ""}</p></p>
+                    </div>
 
-                      <div className="notes-rating">
-                        <div className="notes">
-                          <h3>My Notes:</h3>
-                        </div>
-                        <div className="rating flex items-center gap-4">
-                          <h3>My Rating:</h3>
-                          <select>
-                            <option value="N/R">N/R</option>
-                          </select>
-                        </div>
-                        <ThemeProvider theme={theme}>
-                          <Tooltip title="Add to Contacts">
-                            <div className="cursor-pointer">
-                              <FaUserPlus onClick={()=>addToContacts(val.id)}/>
-                            </div>
-                          </Tooltip>
-                        </ThemeProvider>
+                    <div className="notes-rating">
+                      <div className="notes"><h3>My Notes:</h3></div>
+                      <div className="rating flex items-center gap-4">
+                        <h3>My Rating:</h3>
+                        <select><option value="N/R">N/R</option></select>
                       </div>
+                      <ThemeProvider theme={theme}>
+                        <Tooltip title="Add to Contacts">
+                          <div className="cursor-pointer">
+                            <FaUserPlus onClick={() => addToContacts(val.id)} />
+                          </div>
+                        </Tooltip>
+                      </ThemeProvider>
                     </div>
                   </div>
-                );
-              })
+                </div>
+              );
+            })
           ) : (
-            <p
-              style={{
-                textAlign: "center",
-                fontSize: "18px",
-                fontWeight: "bold",
-                marginTop: "20px",
-              }}
-            >
-              No search results found.
-            </p>
+            <p className="text-center mt-5 font-bold">No search results found.</p>
           )}
         </div>
       </div>
 
+
       {togglePopUp && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
-            <ToastContainer position="top-center" autoClose={2000} />
-      
+      <ToastContainer position="top-center" autoClose={2000} />
     </main>
   );
 };

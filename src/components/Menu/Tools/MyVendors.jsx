@@ -8,7 +8,8 @@ import {
   getMyVendors,
   removeMyVendors,
   addMyVendorNotes,
-  fetchMyVendorNotes
+  fetchMyVendorNotes,
+  fetchMyViewByVendors,
 } from "../../../ReduxStore/ToolsSlice";
 import Cookies from "js-cookie";
 import { fetchUserData } from "../../../ReduxStore/ProfleSlice";
@@ -30,10 +31,14 @@ import { ToastContainer } from "react-toastify";
 const MyVendors = () => {
   const token = Cookies.get("token");
   let [viewAsCompany, setViewAsCompany] = useState(true);
+  const [viewBy, setViewBy] = useState("company");
   let [viewAsShow, setViewAsShow] = useState(false);
   let [viewAsCountry, setViewAsCountry] = useState(false);
   let [viewAsState, setViewAsState] = useState(false);
-  const { myVendor, loading ,vendorNoteData} = useSelector((store) => store.toolsStore);
+  const [loadingData, setLoadingData] = useState(false);
+  const { myVendor, loading, vendorNoteData } = useSelector(
+    (store) => store.toolsStore
+  );
   console.log("MY Vendors", myVendor);
   console.log("Vendor Note Data", vendorNoteData);
 
@@ -220,7 +225,7 @@ const MyVendors = () => {
 
     try {
       const result = await dispatch(
-        addMyVendorNotes({ company_id: vendorId, note, token, })
+        addMyVendorNotes({ company_id: vendorId, note, token })
       );
       const payload = result?.payload;
       console.log("RESULT", payload);
@@ -234,10 +239,40 @@ const MyVendors = () => {
     }
   };
 
-    
-    useEffect(() => {
-      dispatch(fetchMyVendorNotes({ token }));
-    }, []);
+  useEffect(() => {
+    dispatch(fetchMyVendorNotes({ token }));
+  }, []);
+
+  const fetchVendorViewBy = () => {
+    if (["company", "show", "country", "state"].includes(viewBy)) {
+      console.log("Fetching from API with viewBy:", viewBy);
+      setLoadingData(true);
+      dispatch(
+        fetchMyViewByVendors({
+          token,
+          sortBy: viewBy,
+        })
+      )
+        .unwrap()
+        .then((response) => {
+          console.log("Response from API:", response);
+          let data = response?.data;
+          console.log("API response:", data);
+          // setContactData(data || []);
+        })
+        .catch((error) => {
+          console.error("API error:", error);
+          alert("Failed to fetch filtered data.");
+        })
+        .finally(() => setLoadingData(false));
+    }
+  };
+
+  useEffect(() => {
+    if (viewBy) {
+      fetchVendorViewBy();
+    }
+  }, [viewBy]);
 
   if (loading) {
     return <p>Loading...</p>;
@@ -313,9 +348,12 @@ const MyVendors = () => {
             </div>
             <div className="!flex !justify-center !items-center !gap-5">
               <p className="!text-xl">view by</p>
-              <select onChange={handleChange}>
+              <select
+                value={viewBy}
+                onChange={(e) => setViewBy(e.target.value)}
+              >
                 <option value="company">Company</option>
-                <option value="show: First ">Display</option>
+                <option value="show">Display</option>
                 <option value="country">Country</option>
                 <option value="state">State</option>
               </select>
@@ -365,8 +403,11 @@ const MyVendors = () => {
                   {myVendor.map((vendor, index) => {
                     const vendorId = vendor?.company?.id;
                     // console.log("COMPANYID", vendorId);
-                    const companyNote = vendorNoteData.notes.find(n => n.company?.id === vendorId)?.note || "";
-                      // console.log(`COMPANYNOTE`, companyNote);
+                    const companyNote =
+                      vendorNoteData?.notes?.find(
+                        (n) => n.company?.id === vendorId
+                      )?.note || "";
+                    // console.log(`COMPANYNOTE`, companyNote);
                     return (
                       <div
                         className={css.myVendor_company_list}
@@ -690,4 +731,4 @@ const MyVendors = () => {
   );
 };
 
-export default MyVendors; 
+export default MyVendors;

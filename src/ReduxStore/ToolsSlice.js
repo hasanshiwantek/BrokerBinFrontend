@@ -73,7 +73,7 @@ export const getMyVendors = createAsyncThunk(
   async ({ token }) => {
     try {
       const response = await axios.get(
-      `${brokerAPI}vendor`,
+      `${brokerAPI}vendor/get-vendor`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -416,6 +416,77 @@ export const fetchMyVendorNotes = createAsyncThunk(
   }
 );
 
+
+export const fetchMyViewByContacts = createAsyncThunk(
+  "toolsStore/fetchMyViewByContacts",
+  async ({sortBy,token }) => {
+    try {
+      const response = await axios.get(
+      `${brokerAPI}contact/fvrt_contacts?sort_by=${sortBy}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("View By Contact Data From Redux: ",response.data.data);
+      return response.data.data;
+    } catch (error) {
+      throw new Error("Error searching Contacts Data");
+    }
+  }
+);
+
+
+export const fetchMyViewByVendors = createAsyncThunk(
+  "toolsStore/fetchMyViewByVendors",
+  async ({sortBy,token }) => {
+    try {
+      const response = await axios.get(
+      `${brokerAPI}vendor/get-vendor?sort_by=${sortBy}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("View By Vendor Data From Redux: ",response.data.data);
+      return response.data.data;
+    } catch (error) {
+      throw new Error("Error searching Vendor Data");
+    }
+  }
+);
+
+
+
+
+export const blockMyVendor = createAsyncThunk(
+  "toolsStore/blockMyVendor",
+  async ({ company_id,status,token }) => {
+    console.log(company_id,status);
+    try {
+      const response = await axios.post(
+        `${brokerAPI}vendor/block`,
+        {company_id,status},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Vendor Blocked Succesfully: ",response.data);
+      return response.data;
+    } catch (error) {
+      throw new Error(response?.data?.message);
+    }
+  }
+);
+
+
 const initialState = {
   tools: [],
   searchCompanies: [],
@@ -514,6 +585,20 @@ const ToolsSlice = createSlice({
         console.error("Error searching company name", action.error);
         state.loading = false;
       })
+      .addCase(fetchMyViewByVendors.pending, (state) => {
+        console.log("PENDINGGGG...");
+        state.loading = true;
+      })
+      .addCase(fetchMyViewByVendors.fulfilled, (state, action) => {
+        state.myVendor = action.payload;
+        state.loading = false;
+
+      })
+      .addCase(fetchMyViewByVendors.rejected, (state, action) => {
+        console.error("Error Fetching  company View By", action.error);
+        state.loading = false;
+
+      })
       .addCase(addMyVendors.pending, (state) => {
         console.log("Searching...");
         state.loading = true;
@@ -598,6 +683,16 @@ const ToolsSlice = createSlice({
       })
       .addCase(fetchMyContacts.rejected, (state, action) => {
         console.error("Error Fetching Contact Data", action.error);
+      })
+      .addCase(fetchMyViewByContacts.pending, (state) => {
+        console.log("FETCHIG VIEW BY CONTACTS....");
+      })
+      .addCase(fetchMyViewByContacts.fulfilled, (state, action) => {
+        state.myContactsData = action.payload;
+        console.log("REQUEST FULFILLED: ",action.payload);
+      })
+      .addCase(fetchMyViewByContacts.rejected, (state, action) => {
+        console.error("Error Fetching ViewBy Contact Data", action.error);
       })
       .addCase(searchMyFavouriteContacts.pending, (state) => {
         console.log("SEARCHING  CONTACTS....");
