@@ -124,11 +124,6 @@ export const submitCompanyLogo = createAsyncThunk(
   }
 );
 
-
-
-
-
-
 export const getCompanyFeedback = createAsyncThunk(
   "profileStore/getCompanyFeedback",
   async ({ id, token }) => {
@@ -154,6 +149,32 @@ export const getCompanyFeedback = createAsyncThunk(
   }
 );
 
+
+
+
+export const submitUserSearchViewBy = createAsyncThunk(
+  "profileStore/submitUserSearchViewBy",
+  async ({sortBy,sortOrder,token }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `${brokerAPI}user/search`,
+        {sortBy,sortOrder},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Search response View By data from front-end:", response.data);
+      
+      return response.data.data;
+    } catch (error) {
+      console.error("Request failed with error from front-end:", error);
+      return rejectWithValue(error.toString());
+    }
+  }
+);
 
 
 const initialState = {

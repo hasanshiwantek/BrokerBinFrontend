@@ -474,6 +474,7 @@ console.log("Notes ",notes);
                                 >
                                   My Rating
                                 </p>
+                           
                                 <p
                                   className={`${css.ratingValue} p-1 font-bold  !text-[1.5rem] text-blue-600`}
                                 >
