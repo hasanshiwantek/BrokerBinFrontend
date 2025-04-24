@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useLayoutEffect } from "react";
 import myProfile from "../../../styles/Menu/Manage/MyProfile.module.css";
 import css from "../../../styles/Menu/Tools/MyContact.module.css";
 import { companyList } from "../../../data/tableData";
@@ -12,6 +12,7 @@ import {
   removeMyFavouriteContacts,
   addMyNotes,
   fetchMyNotes,
+  fetchMyViewByContacts,
 } from "../../../ReduxStore/ToolsSlice";
 import Cookies from "js-cookie";
 import { fetchUserData } from "../../../ReduxStore/ProfleSlice";
@@ -33,11 +34,14 @@ const MyContact = () => {
   let [viewAsShow, setViewAsShow] = useState(false);
   let [viewAsCountry, setViewAsCountry] = useState(false);
   let [viewAsState, setViewAsState] = useState(false);
+  const [loadingData, setLoadingData] = useState(false);
   const { myVendor, loading, myContactsData, noteData } = useSelector(
     (store) => store.toolsStore
   );
   console.log("MY Contacts Data From Frontend", myContactsData);
   console.log("MY Notes Data From Frontend", noteData);
+  // const [contactData, setContactData] = useState(myContactsData);
+  const [viewBy, setViewBy] = useState("company");
 
   const dispatch = useDispatch();
 
@@ -57,8 +61,10 @@ const MyContact = () => {
 
   const [feedbackData, setFeedbackData] = useState(null);
 
-  const companyRatings = myContactsData?.map((vendor) => vendor?.contact?.company?.rating) || [];
-  const ratingCounts = myVendor?.map((vendor) => vendor?.contact?.company?.ratingCount) || [];
+  const companyRatings =
+    myContactsData?.map((vendor) => vendor?.contact?.company?.rating) || [];
+  const ratingCounts =
+    myVendor?.map((vendor) => vendor?.contact?.company?.ratingCount) || [];
 
   console.log(
     "Company Ratings in %:",
@@ -126,6 +132,38 @@ const MyContact = () => {
     dispatch(setTogglePopUp()); // Show company modal
   };
 
+  const fetchContactViewBy = () => {
+    if (["company", "show", "country", "state"].includes(viewBy)) {
+      console.log("Fetching from API with viewBy:", viewBy);
+      setLoadingData(true);
+      dispatch(
+        fetchMyViewByContacts({
+          token,
+          sortBy: viewBy,
+        })
+      )
+        .unwrap()
+        .then((response) => {
+          console.log("Response from API:", response);
+          let data = response?.data;
+          console.log("API response:", data);
+          // setContactData(data || []);
+          console.log("Contact View By Data:", myContactsData);
+        })
+        .catch((error) => {
+          console.error("API error:", error);
+          alert("Failed to fetch filtered data.");
+        })
+        .finally(() => setLoadingData(false));
+    }
+  };
+
+  useEffect(() => {
+    if (viewBy) {
+      fetchContactViewBy();
+    }
+  }, [viewBy]);
+
   const theme = createTheme({
     components: {
       MuiTooltip: {
@@ -144,11 +182,17 @@ const MyContact = () => {
     },
   });
 
+  const [clicked, setClicked] = useState(false);
+
+  useLayoutEffect(() => {
+    if (!clicked) window.scrollTo(0, 0);
+  }, [clicked]);
+
   // NOTES AND RATING LOIGIC
 
   const [notes, setNotes] = useState({});
   const [ratings, setRatings] = useState({});
-console.log("Notes ",notes);
+  console.log("Notes ", notes);
 
   const noteSaveHandler = async (contactId) => {
     const note = notes[contactId] || "";
@@ -247,11 +291,14 @@ console.log("Notes ",notes);
             </div>
             <div className="!flex !justify-center !items-center !gap-5">
               <p className="!text-xl">view by</p>
-              <select onChange={handleChange}>
+              <select
+                value={viewBy}
+                onChange={(e) => setViewBy(e.target.value)}
+              >
                 <option value="company">Company</option>
-                {/* <option value="show">Display</option>
+                <option value="show">Display</option>
                 <option value="country">Country</option>
-                <option value="state">State</option> */}
+                <option value="state">State</option>
               </select>
             </div>
           </div>
@@ -300,14 +347,22 @@ console.log("Notes ",notes);
                   {myContactsData?.map((vendor, index) => {
                     const contactId = vendor?.contact?.id;
                     console.log("Contact ID:", contactId);
-                    
-                    const noteEntry = noteData?.notes?.find((n) => n.user?.id === contactId);
+
+                    const noteEntry = noteData?.notes?.find(
+                      (n) => n.user?.id === contactId
+                    );
                     const contactNote = noteEntry?.note || "";
                     const savedRating = noteEntry?.rating ?? 0;
-                    
+                    const firstLetter =
+                      vendor?.contact?.firstName?.charAt(0)?.toUpperCase() ||
+                      "X";
 
                     return (
-                      <div className={css.myVendor_company_list} key={index}>
+                      <div
+                        className={css.myVendor_company_list}
+                        key={index}
+                        id={`letter-${firstLetter}`}
+                      >
                         <div className={css.myVendor_company_list_main}>
                           <div className={css.myVendor_company_list_main_img}>
                             <img
@@ -474,7 +529,7 @@ console.log("Notes ",notes);
                                 >
                                   My Rating
                                 </p>
-                           
+
                                 <p
                                   className={`${css.ratingValue} p-1 font-bold  !text-[1.5rem] text-blue-600`}
                                 >

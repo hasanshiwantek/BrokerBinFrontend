@@ -90,7 +90,7 @@ const SearchResults = () => {
     ) {
       console.log("Fetching from API with viewBy:", viewBy);
       setLoading(true);
-      dispatch(
+       dispatch(
         submitUserSearchViewBy({
           token,
           sortBy: viewBy,
@@ -98,8 +98,10 @@ const SearchResults = () => {
         })
       ).unwrap()
         .then((response) => {
-          console.log("API response:", response?.data);
-          setResultData(response?.data || []);
+          console.log("Response from API:", response);
+          let data=response
+          console.log("API response:", data);
+          setResultData(data || []);
           console.log("Result Data:", resultData);
           
         })
