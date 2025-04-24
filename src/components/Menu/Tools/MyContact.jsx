@@ -477,14 +477,14 @@ console.log("Notes ",notes);
                                 <p
                                   className={`${css.ratingValue} p-1 font-bold  !text-[1.5rem] text-blue-600`}
                                 >
-                                  {/* {currentRating} */}
+                                  {ratings[contactId] ?? savedRating}
                                 </p>
                                 <input
                                   type="range"
                                   min="0"
                                   max="10"
                                   step="0.1"
-                                  value={notes[contactId] ?? savedRating}
+                                  value={ratings[contactId] ?? savedRating}
                                   onChange={(e) =>
                                     setRatings((prev) => ({
                                       ...prev,
