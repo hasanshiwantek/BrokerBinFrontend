@@ -484,6 +484,7 @@ console.log("Notes ",notes);
                                   min="0"
                                   max="10"
                                   step="0.1"
+                                  className={`${css.slider} p-0`}
                                   value={ratings[contactId] ?? savedRating}
                                   onChange={(e) =>
                                     setRatings((prev) => ({
@@ -491,7 +492,6 @@ console.log("Notes ",notes);
                                       [contactId]: parseFloat(e.target.value),
                                     }))
                                   }
-                                  className={css.slider}
                                 />
                               </div>
                             </div>
