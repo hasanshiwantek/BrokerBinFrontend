@@ -41,7 +41,8 @@ const MyContact = () => {
   console.log("MY Contacts Data From Frontend", myContactsData);
   console.log("MY Notes Data From Frontend", noteData);
   // const [contactData, setContactData] = useState(myContactsData);
-  const [viewBy, setViewBy] = useState("company");
+  const [headingWord, setHeadingWord] = useState("last:");
+  const [viewBy, setViewBy] = useState("last");
 
   const dispatch = useDispatch();
 
@@ -77,29 +78,29 @@ const MyContact = () => {
     return index <= rating ? "View Comments" : "";
   };
 
-  const handleChange = (e) => {
-    if (e.target.value === "company") {
-      setViewAsCompany(true);
-      setViewAsShow(false);
-      setViewAsCountry(false);
-      setViewAsState(false);
-    } else if (e.target.value === "show") {
-      setViewAsCompany(false);
-      setViewAsShow(true);
-      setViewAsCountry(false);
-      setViewAsState(false);
-    } else if (e.target.value === "country") {
-      setViewAsCompany(false);
-      setViewAsShow(false);
-      setViewAsCountry(true);
-      setViewAsState(false);
-    } else if (e.target.value === "state") {
-      setViewAsCompany(false);
-      setViewAsShow(false);
-      setViewAsCountry(false);
-      setViewAsState(true);
-    }
-  };
+  // const handleChange = (e) => {
+  //   if (e.target.value === "company") {
+  //     setViewAsCompany(true);
+  //     setViewAsShow(false);
+  //     setViewAsCountry(false);
+  //     setViewAsState(false);
+  //   } else if (e.target.value === "show") {
+  //     setViewAsCompany(false);
+  //     setViewAsShow(true);
+  //     setViewAsCountry(false);
+  //     setViewAsState(false);
+  //   } else if (e.target.value === "country") {
+  //     setViewAsCompany(false);
+  //     setViewAsShow(false);
+  //     setViewAsCountry(true);
+  //     setViewAsState(false);
+  //   } else if (e.target.value === "state") {
+  //     setViewAsCompany(false);
+  //     setViewAsShow(false);
+  //     setViewAsCountry(false);
+  //     setViewAsState(true);
+  //   }
+  // };
 
   const removeFavouriteContacts = async (id) => {
     try {
@@ -133,7 +134,17 @@ const MyContact = () => {
   };
 
   const fetchContactViewBy = () => {
-    if (["company", "show", "country", "state"].includes(viewBy)) {
+    if (
+      [
+        "company",
+        "first",
+        "last",
+        "rating",
+        "show",
+        "country",
+        "state",
+      ].includes(viewBy)
+    ) {
       console.log("Fetching from API with viewBy:", viewBy);
       setLoadingData(true);
       dispatch(
@@ -217,6 +228,43 @@ const MyContact = () => {
     dispatch(fetchMyNotes({ token }));
   }, []);
 
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setViewBy(value);
+    const label = e.target.selectedOptions[0]?.dataset?.label || "Company:";
+    setHeadingWord(label);
+  };
+
+  const groupContactsByKey = (contacts, key) => {
+    return contacts.reduce((acc, item) => {
+      const contact = item.contact;
+      let groupKey = "";
+      switch (key) {
+        case "company":
+          groupKey =
+            contact?.company?.name?.charAt(0)?.toUpperCase() || "Unknown";
+          break;
+        case "first":
+          groupKey = contact?.firstName?.charAt(0)?.toUpperCase() || "Unknown";
+          break;
+        case "last":
+          groupKey = contact?.lastName?.charAt(0)?.toUpperCase() || "Unknown";
+          break;
+        case "country":
+          groupKey = contact?.country || "Unknown Country";
+          break;
+        case "state":
+          groupKey = contact?.state || "Unknown State";
+          break;
+        default:
+          groupKey = "Unknown";
+      }
+      if (!acc[groupKey]) acc[groupKey] = [];
+      acc[groupKey].push(item);
+      return acc;
+    }, {});
+  };
+
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -290,15 +338,33 @@ const MyContact = () => {
               </div>
             </div>
             <div className="!flex !justify-center !items-center !gap-5">
-              <p className="!text-xl">view by</p>
+              <p className="!text-xl">View By</p>
               <select
                 value={viewBy}
-                onChange={(e) => setViewBy(e.target.value)}
+                onChange={(e) => {
+                  setViewBy(e.target.value);
+                  setHeadingWord(e.target.selectedOptions[0].dataset.label);
+                }}
               >
-                <option value="company">Company</option>
-                <option value="show">Display</option>
-                <option value="country">Country</option>
-                <option value="state">State</option>
+                <option value="last" data-label="last">
+                  Contact Last
+                </option>
+                <option value="first" data-label="first">
+                  Contact First
+                </option>
+                <option value="company" data-label="company">
+                  Company
+                </option>
+
+                <option value="rating" data-label="rating">
+                  My Rating
+                </option>
+                <option value="country" data-label="country">
+                  Country
+                </option>
+                <option value="state" data-label="state">
+                  State
+                </option>
               </select>
             </div>
           </div>
@@ -342,241 +408,272 @@ const MyContact = () => {
                     })}
                   </div>
                 </div>
-
                 <div className={css.myVendor_company}>
-                  {myContactsData?.map((vendor, index) => {
-                    const contactId = vendor?.contact?.id;
-                    console.log("Contact ID:", contactId);
+                  {Object.entries(groupContactsByKey(myContactsData, viewBy))
+                    .sort(([a], [b]) => a.localeCompare(b))
+                    .map(([group, contacts]) => (
+                      <div key={group} id={`letter-${group}`}>
+                        <h2 className="text-2xl capitalize font-bold my-4 border-b-2">
+                          {headingWord}: {group}
+                        </h2>
 
-                    const noteEntry = noteData?.notes?.find(
-                      (n) => n.user?.id === contactId
-                    );
-                    const contactNote = noteEntry?.note || "";
-                    const savedRating = noteEntry?.rating ?? 0;
-                    const firstLetter =
-                      vendor?.contact?.firstName?.charAt(0)?.toUpperCase() ||
-                      "X";
+                        {contacts.map((vendor, index) => {
+                          const contactId = vendor?.contact?.id;
+                          const noteEntry = noteData?.notes?.find(
+                            (n) => n.user?.id === contactId
+                          );
+                          const contactNote = noteEntry?.note || "";
+                          const savedRating = noteEntry?.rating ?? 0;
+                          const firstLetter =
+                            vendor?.contact?.firstName
+                              ?.charAt(0)
+                              ?.toUpperCase() || "X";
 
-                    return (
-                      <div
-                        className={css.myVendor_company_list}
-                        key={index}
-                        id={`letter-${firstLetter}`}
-                      >
-                        <div className={css.myVendor_company_list_main}>
-                          <div className={css.myVendor_company_list_main_img}>
-                            <img
-                              src={vendor?.contact?.profileImage}
-                              alt="Contact Person Image"
-                              className="cursor-pointer"
-                              onClick={() =>
-                                openCompanyModal(vendor?.contact?.company)
-                              }
-                            />
-                            <span>
-                              <p>
-                                {vendor?.contact?.firstName}{" "}
-                                {vendor?.contact?.lastName}
-                              </p>
-                            </span>
-                          </div>
-                          <div className={css.myVendor_company_list_main_info}>
-                            <span>
-                              <p>{vendor?.contact?.company.name}</p>
-                              {/* Ratings Display */}
-
-                              <div
-                                className={
-                                  css.gridHome1_MemberDetail_reviews_stars
-                                }
-                              >
+                          return (
+                            <div
+                              className={css.myVendor_company_list}
+                              key={vendor?.contact?.id}
+                              id={`letter-${firstLetter}`}
+                            >
+                              <div className={css.myVendor_company_list_main}>
                                 <div
-                                  style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                  }}
+                                  className={css.myVendor_company_list_main_img}
                                 >
-                                  {[...Array(5)].map((_, starIndex) => {
-                                    const rating = companyRatings?.[index] || 0; // Get company-specific rating
-                                    const isFilled =
-                                      starIndex + 1 <= Math.floor(rating);
-                                    const isPartial =
-                                      starIndex < rating &&
-                                      starIndex + 1 > Math.floor(rating);
+                                  <img
+                                    src={vendor?.contact?.profileImage}
+                                    alt="Contact Person Image"
+                                    className="cursor-pointer"
+                                    onClick={() =>
+                                      openCompanyModal(vendor?.contact?.company)
+                                    }
+                                  />
+                                  <span>
+                                    <p>
+                                      {vendor?.contact?.firstName}{" "}
+                                      {vendor?.contact?.lastName}
+                                    </p>
+                                  </span>
+                                </div>
+                                <div
+                                  className={
+                                    css.myVendor_company_list_main_info
+                                  }
+                                >
+                                  <span>
+                                    <p>{vendor?.contact?.company.name}</p>
 
-                                    return (
-                                      <FaStar
-                                        key={starIndex}
-                                        size={24}
-                                        color={
-                                          isFilled
-                                            ? "#FFD700"
-                                            : isPartial
-                                            ? "rgba(255, 215, 0, 0.5)"
-                                            : "#CCC"
-                                        }
+                                    <div
+                                      className={
+                                        css.gridHome1_MemberDetail_reviews_stars
+                                      }
+                                    >
+                                      <div
                                         style={{
-                                          cursor: "pointer",
-                                          marginRight: 4,
-                                          width: "15px",
+                                          display: "flex",
+                                          alignItems: "center",
                                         }}
+                                      >
+                                        {[...Array(5)].map((_, starIndex) => {
+                                          const rating =
+                                            companyRatings?.[index] || 0;
+                                          const isFilled =
+                                            starIndex + 1 <= Math.floor(rating);
+                                          const isPartial =
+                                            starIndex < rating &&
+                                            starIndex + 1 > Math.floor(rating);
+
+                                          return (
+                                            <FaStar
+                                              key={starIndex}
+                                              size={24}
+                                              color={
+                                                isFilled
+                                                  ? "#FFD700"
+                                                  : isPartial
+                                                  ? "rgba(255, 215, 0, 0.5)"
+                                                  : "#CCC"
+                                              }
+                                              style={{
+                                                cursor: "pointer",
+                                                marginRight: 4,
+                                                width: "15px",
+                                              }}
+                                            />
+                                          );
+                                        })}
+                                      </div>
+                                    </div>
+                                  </span>
+
+                                  <span>
+                                    <p
+                                      className="cursor-pointer"
+                                      onClick={() =>
+                                        openCompanyModal(
+                                          vendor?.contact?.company
+                                        )
+                                      }
+                                    >
+                                      {vendor?.contact?.company.name}
+                                    </p>
+                                    <p>
+                                      (
+                                      {companyRatings[index] == null ||
+                                      isNaN(companyRatings[index])
+                                        ? "N/A"
+                                        : (
+                                            (Math.min(
+                                              Math.max(
+                                                companyRatings[index],
+                                                0
+                                              ),
+                                              5
+                                            ) /
+                                              5) *
+                                            100
+                                          ).toFixed(1) + "%"}
+                                      )
+                                    </p>
+                                  </span>
+
+                                  <span>
+                                    <p>fax:</p>
+                                    <p>{vendor?.contact?.phone_num}</p>
+                                  </span>
+                                  <span>
+                                    <p>Email:</p>
+                                    <p>{vendor?.contact?.email}</p>
+                                  </span>
+                                  <span>
+                                    <p>phone:</p>
+                                    <p>{vendor?.contact?.phoneNumber}</p>
+                                  </span>
+                                  <span>
+                                    <p>location:</p>
+                                    <p>{vendor?.contact?.company?.address}</p>
+                                  </span>
+                                  <span>
+                                    <p>Country:</p>
+                                    <p>{vendor?.contact?.country}</p>
+                                  </span>
+                                </div>
+
+                                <div
+                                  className={
+                                    css.myVendor_company_list_main_notesRating
+                                  }
+                                >
+                                  <div
+                                    className={
+                                      css.myVendor_company_list_main_notes
+                                    }
+                                  >
+                                    <span>
+                                      <p>Notes:</p>
+                                    </span>
+                                    <span>
+                                      <textarea
+                                        name="notes"
+                                        id={`notes-${contactId}`}
+                                        cols={10}
+                                        rows={8}
+                                        placeholder="Enter notes here..."
+                                        className="!w-80 text-[8pt] border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-400 resize-none"
+                                        value={notes[contactId] ?? contactNote}
+                                        onChange={(e) =>
+                                          setNotes((prevNotes) => ({
+                                            ...prevNotes,
+                                            [contactId]: e.target.value,
+                                          }))
+                                        }
                                       />
-                                    );
-                                  })}
+                                    </span>
+                                    <span>
+                                      <button
+                                        type="button"
+                                        className={
+                                          css.myVendor_company_list_main_notes_btn
+                                        }
+                                        onClick={() =>
+                                          noteSaveHandler(contactId)
+                                        }
+                                        title="Save Note"
+                                      >
+                                        Save
+                                      </button>
+                                    </span>
+                                  </div>
+
+                                  <div
+                                    className={
+                                      css.myVendor_company_list_main_rating
+                                    }
+                                  >
+                                    <div className={`${css.ratingWrapper}`}>
+                                      <p
+                                        className={`${css.ratingLabel} p-1 !text-[1.2rem]`}
+                                      >
+                                        My Rating
+                                      </p>
+
+                                      <p
+                                        className={`${css.ratingValue} p-1 font-bold  !text-[1.5rem] text-blue-600`}
+                                      >
+                                        {ratings[contactId] ?? savedRating}
+                                      </p>
+
+                                      <input
+                                        type="range"
+                                        min="0"
+                                        max="10"
+                                        step="0.1"
+                                        className={`${css.slider} p-0`}
+                                        value={
+                                          ratings[contactId] ?? savedRating
+                                        }
+                                        onChange={(e) =>
+                                          setRatings((prev) => ({
+                                            ...prev,
+                                            [contactId]: parseFloat(
+                                              e.target.value
+                                            ),
+                                          }))
+                                        }
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div
+                                  className={
+                                    css.myVendor_company_list_main_actions
+                                  }
+                                >
+                                  <ThemeProvider theme={theme}>
+                                    <Tooltip
+                                      title="Remove from my Contacts"
+                                      arrow
+                                      placement="bottom"
+                                    >
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          removeFavouriteContacts(
+                                            vendor.contact.id
+                                          )
+                                        }
+                                      >
+                                        X
+                                      </button>
+                                    </Tooltip>
+                                  </ThemeProvider>
                                 </div>
                               </div>
-                            </span>
-
-                            {/* Display Rating Value & Count */}
-                            <span>
-                              <p
-                                className="cursor-pointer"
-                                onClick={() =>
-                                  openCompanyModal(vendor?.contact?.company)
-                                }
-                              >
-                                {vendor?.contact?.company.name}
-                              </p>
-                              <p>
-                                (
-                                {companyRatings[index] == null ||
-                                isNaN(companyRatings[index])
-                                  ? "N/A"
-                                  : (
-                                      (Math.min(
-                                        Math.max(companyRatings[index], 0),
-                                        5
-                                      ) /
-                                        5) *
-                                      100
-                                    ).toFixed(1) + "%"}
-                                )
-                              </p>
-                            </span>
-                            {/* <span>
-                              <p>company:</p>
-                              <p>{vendor.company.name}</p>
-                            </span> */}
-
-                            <span>
-                              <p>fax:</p>
-                              <p>{vendor?.contact?.phone_num}</p>
-                            </span>
-                            <span>
-                              <p>Email:</p>
-                              <p>{vendor?.contact?.email}</p>
-                            </span>
-                            <span>
-                              <p>phone:</p>
-                              <p>{vendor?.contact?.phoneNumber}</p>
-                            </span>
-                            <span>
-                              <p>location:</p>
-                              <p>{vendor?.contact?.company?.address}</p>
-                            </span>
-                            <span>
-                              <p>Country:</p>
-                              <p>{vendor?.contact?.country}</p>
-                            </span>
-                          </div>
-                          <div
-                            className={
-                              css.myVendor_company_list_main_notesRating
-                            }
-                          >
-                            <div
-                              className={css.myVendor_company_list_main_notes}
-                            >
-                              <span>
-                                <p>Notes:</p>
-                              </span>
-                              <span>
-                                <textarea
-                                  name="notes"
-                                  id={`notes-${contactId}`}
-                                  cols={10}
-                                  rows={8}
-                                  placeholder="Enter notes here..."
-                                  className="!w-80 text-[8pt] border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-400 resize-none"
-                                  value={notes[contactId] ?? contactNote}
-                                  onChange={(e) =>
-                                    setNotes((prevNotes) => ({
-                                      ...prevNotes,
-                                      [contactId]: e.target.value,
-                                    }))
-                                  }
-                                />
-                              </span>
-                              <span>
-                                <button
-                                  type="button"
-                                  className={
-                                    css.myVendor_company_list_main_notes_btn
-                                  }
-                                  onClick={() => noteSaveHandler(contactId)}
-                                  title="Save Note"
-                                >
-                                  Save
-                                </button>
-                              </span>
                             </div>
-                            <div
-                              className={css.myVendor_company_list_main_rating}
-                            >
-                              <div className={`${css.ratingWrapper} `}>
-                                <p
-                                  className={`${css.ratingLabel} p-1 !text-[1.2rem]`}
-                                >
-                                  My Rating
-                                </p>
-
-                                <p
-                                  className={`${css.ratingValue} p-1 font-bold  !text-[1.5rem] text-blue-600`}
-                                >
-                                  {ratings[contactId] ?? savedRating}
-                                </p>
-                                <input
-                                  type="range"
-                                  min="0"
-                                  max="10"
-                                  step="0.1"
-                                  className={`${css.slider} p-0`}
-                                  value={ratings[contactId] ?? savedRating}
-                                  onChange={(e) =>
-                                    setRatings((prev) => ({
-                                      ...prev,
-                                      [contactId]: parseFloat(e.target.value),
-                                    }))
-                                  }
-                                />
-                              </div>
-                            </div>
-                          </div>
-
-                          <div
-                            className={css.myVendor_company_list_main_actions}
-                          >
-                            <ThemeProvider theme={theme}>
-                              <Tooltip
-                                title="Remove from my Contacts"
-                                arrow
-                                placement="bottom"
-                              >
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    removeFavouriteContacts(vendor.contact.id)
-                                  }
-                                >
-                                  X
-                                </button>
-                              </Tooltip>
-                            </ThemeProvider>
-                          </div>
-                        </div>
+                          );
+                        })}
                       </div>
-                    );
-                  })}
+                    ))}
                 </div>
               </>
             )}
