@@ -10,6 +10,7 @@ import {
   addMyVendorNotes,
   fetchMyVendorNotes,
   fetchMyViewByVendors,
+  blockMyVendor,
 } from "../../../ReduxStore/ToolsSlice";
 import Cookies from "js-cookie";
 import { fetchUserData } from "../../../ReduxStore/ProfleSlice";
@@ -27,7 +28,8 @@ import { alphabets } from "@/data/services";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-
+import emailIcon from "@/assets/email-icon.svg"
+import webIcon from "@/assets/web.svg"
 const MyVendors = () => {
   const token = Cookies.get("token");
   let [viewAsCompany, setViewAsCompany] = useState(true);
@@ -50,16 +52,13 @@ const MyVendors = () => {
     (state) => state.profileStore
   );
 
-  console.log("Initial Data ", initialData);
   const id = user?.user?.id || user_id;
 
   useEffect(() => {
-    console.log(id);
     dispatch(fetchUserData({ id, token }));
   }, []);
 
   const companyId = initialData?.company?.id;
-  console.log("Company ID", companyId);
 
   const [feedbackData, setFeedbackData] = useState(null);
   const [headingWord, setHeadingWord] = useState("Company:");
@@ -87,15 +86,12 @@ const MyVendors = () => {
 
   const companyRatings =
     myVendor?.map((vendor) => vendor?.company?.rating) || [];
+  console.log("Company Ratings", companyRatings);
+
   const ratingCounts =
     myVendor?.map((vendor) => vendor?.company?.ratingCount) || [];
+  console.log("Rating Counts", ratingCounts);
 
-  console.log(
-    "Company Ratings in %:",
-    companyRatings.map((rating) => (rating / 5) * 100)
-  );
-
-  console.log("Rating Counts:", ratingCounts);
   const handleHover = (index) => {
     // Tooltip logic
     return index <= rating ? "View Comments" : "";
@@ -228,7 +224,6 @@ const MyVendors = () => {
         addMyVendorNotes({ company_id: vendorId, note, token })
       );
       const payload = result?.payload;
-      console.log("RESULT", payload);
       if (payload?.success) {
         toast.success("Note saved!");
       } else {
@@ -245,7 +240,6 @@ const MyVendors = () => {
 
   const fetchVendorViewBy = () => {
     if (["company", "show", "country", "state"].includes(viewBy)) {
-      console.log("Fetching from API with viewBy:", viewBy);
       setLoadingData(true);
       dispatch(
         fetchMyViewByVendors({
@@ -255,10 +249,7 @@ const MyVendors = () => {
       )
         .unwrap()
         .then((response) => {
-          console.log("Response from API:", response);
           let data = response?.data;
-          console.log("API response:", data);
-          // setContactData(data || []);
         })
         .catch((error) => {
           console.error("API error:", error);
@@ -273,6 +264,62 @@ const MyVendors = () => {
       fetchVendorViewBy();
     }
   }, [viewBy]);
+
+  // BLOCK VENDOR LOGIC
+
+  const [vendorStatus, setVendorStatus] = useState({});
+
+  const blockVendorHandler = (companyId) => {
+    const currentStatus = vendorStatus[companyId] ?? 1; // default to 1
+    const newStatus = currentStatus === 1 ? 0 : 1;
+    dispatch(
+      blockMyVendor({ company_id: companyId, status: newStatus, token })
+    ).then((response) => {
+      const result = response.payload;
+      if (result?.success) {
+        toast.success(result?.message || "Vendor status updated!");
+        setVendorStatus((prev) => ({
+          ...prev,
+          [companyId]: newStatus,
+        }));
+      } else {
+        toast.error(result?.message || "Failed to update vendor status.");
+      }
+    });
+  };
+
+  // COPMANY ORDER LOGIC
+
+  const companyFirstLetter = myVendor.map((vendor) =>
+    vendor.company.name.charAt(0).toUpperCase()
+  );
+
+  const groupVendorsByKey = (vendors, key) => {
+    return vendors.reduce((acc, vendor) => {
+      let groupKey = "";
+
+      switch (key) {
+        case "company":
+          groupKey = vendor.company.name.charAt(0).toUpperCase();
+          break;
+        case "show":
+          groupKey = vendor.company.display || "Unknown Display";
+          break;
+        case "country":
+          groupKey = vendor.company.country || "Unknown Country";
+          break;
+        case "state":
+          groupKey = vendor.company.state || "Unknown State";
+          break;
+        default:
+          groupKey = "Unknown";
+      }
+
+      if (!acc[groupKey]) acc[groupKey] = [];
+      acc[groupKey].push(vendor);
+      return acc;
+    }, {});
+  };
 
   if (loading) {
     return <p>Loading...</p>;
@@ -347,25 +394,37 @@ const MyVendors = () => {
               </div>
             </div>
             <div className="!flex !justify-center !items-center !gap-5">
-              <p className="!text-xl">view by</p>
+              <p className="!text-xl">View By</p>
               <select
                 value={viewBy}
-                onChange={(e) => setViewBy(e.target.value)}
+                onChange={(e) => {
+                  setViewBy(e.target.value);
+                  setHeadingWord(e.target.selectedOptions[0].dataset.label);
+                }}
               >
-                <option value="company">Company</option>
-                <option value="show">Display</option>
-                <option value="country">Country</option>
-                <option value="state">State</option>
+                <option value="company" data-label="Company:">
+                  Company
+                </option>
+                <option value="show" data-label="Show:">
+                  Display
+                </option>
+                <option value="country" data-label="Country:">
+                  Country
+                </option>
+                <option value="state" data-label="State:">
+                  State
+                </option>
               </select>
             </div>
           </div>
-          <h1 className="ml-[2vw]">{headingWord}</h1>
+          {/* <h1 className="ml-[2vw]">{headingWord}</h1> */}
+          {/* <p></p> */}
 
           <div className={css.myVendor}>
             {viewAsCompany && (
               <>
                 <div className={""}>
-                  <div className="flex flex-col sticky top-[31vh]">
+                  <div className="flex flex-col sticky top-[31vh] p-2 mr-6"> 
                     {alphabets.map((letter, index) => {
                       const isActive = myVendor.some(
                         (item) =>
@@ -400,325 +459,280 @@ const MyVendors = () => {
                   </div>
                 </div>
                 <div className={css.myVendor_company}>
-                  {myVendor.map((vendor, index) => {
-                    const vendorId = vendor?.company?.id;
-                    // console.log("COMPANYID", vendorId);
-                    const companyNote =
-                      vendorNoteData?.notes?.find(
-                        (n) => n.company?.id === vendorId
-                      )?.note || "";
-                    // console.log(`COMPANYNOTE`, companyNote);
-                    return (
-                      <div
-                        className={css.myVendor_company_list}
-                        key={vendor.company.id}
-                        id={`letter-${vendor.company.name
-                          .charAt(0)
-                          .toUpperCase()}`}
-                      >
-                        <div className={css.myVendor_company_list_main}>
-                          <div className={css.myVendor_company_list_main_img}>
-                            <img
-                              src={vendor.company.image}
-                              alt="vendor logo"
-                              className="cursor-pointer"
-                              onClick={() => openCompanyModal(vendor.company)}
-                            />
-                            <span>
-                              <p
-                                className="cursor-pointer"
-                                onClick={() => openCompanyModal(vendor.company)}
-                                onMouseEnter={() =>
-                                  handleHoverCompanyDetail(vendor.company)
-                                }
-                              >
-                                {vendor.company.name}
-                              </p>
-                            </span>
-                          </div>
-                          <div className={css.myVendor_company_list_main_info}>
-                            <span
-                              className="cursor-pointer"
-                              onClick={() => openCompanyModal(vendor.company)}
-                              onMouseEnter={() =>
-                                handleHoverCompanyDetail(vendor.company)
-                              }
-                            >
-                              <p>{vendor.company.name}</p>
-                              {/* Ratings Display */}
+                  {Object.entries(groupVendorsByKey(myVendor, viewBy))
+                    .sort(([a], [b]) => a.localeCompare(b))
+                    .map(([group, vendors]) => (
+                      <div key={group} id={`letter-${group}`}>
+                        <h2 className="text-2xl font-bold my-4 border-b-2">
+                          {headingWord} {group}
+                        </h2>
 
-                              <div
-                                className={
-                                  css.gridHome1_MemberDetail_reviews_stars
-                                }
-                              >
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  {[...Array(5)].map((_, starIndex) => {
-                                    const rating = companyRatings?.[index] || 0; // Get company-specific rating
-                                    const isFilled =
-                                      starIndex + 1 <= Math.floor(rating);
-                                    const isPartial =
-                                      starIndex < rating &&
-                                      starIndex + 1 > Math.floor(rating);
+                        {vendors.map((vendor) => {
+                          const vendorId = vendor?.company?.id;
+                          const rating = vendor?.company?.rating ?? 0;
+                          const ratingCount = vendor?.company?.ratingCount ?? 0;
+                          const companyNote =
+                            vendorNoteData?.notes?.find(
+                              (n) => n.company?.id === vendorId
+                            )?.note || "";
 
-                                    return (
-                                      <FaStar
-                                        key={starIndex}
-                                        size={24}
-                                        color={
-                                          isFilled
-                                            ? "#FFD700"
-                                            : isPartial
-                                            ? "rgba(255, 215, 0, 0.5)"
-                                            : "#CCC"
-                                        }
-                                        style={{
-                                          cursor: "pointer",
-                                          marginRight: 4,
-                                          width: "15px",
-                                        }}
-                                      />
-                                    );
-                                  })}
-                                </div>
-                              </div>
-                            </span>
-
-                            {/* Display Rating Value & Count */}
-                            <span>
-                              <p
-                                className="cursor-pointer"
-                                onClick={() => openCompanyModal(vendor.company)}
-                              >
-                                {/* {vendor.company.name} */}
-                                Rating:
-                              </p>
-                              <p>
-                                (
-                                {companyRatings[index] == null ||
-                                isNaN(companyRatings[index])
-                                  ? "N/A"
-                                  : (
-                                      (Math.min(
-                                        Math.max(companyRatings[index], 0),
-                                        5
-                                      ) /
-                                        5) *
-                                      100
-                                    ).toFixed(1) + "%"}
-                                )
-                              </p>
-                            </span>
-                            {/* <span>
-                              <p>Rating:</p>
-                              <p>{vendor.company.name}</p>
-                            </span> */}
-                            <span>
-                              <p>Location:</p>
-                              <p>
-                                {vendor.company.city} {vendor.company.state}{" "}
-                                {vendor.company.country}
-                              </p>
-                            </span>
-                            <span>
-                              <p>Phone:</p>
-                              <p>{vendor.company.phone_num}</p>
-                            </span>
-                            <span>
-                              <p>Fax:</p>
-                              <p>{vendor.company.fax}</p>
-                            </span>
-                            <span>
-                              <p>Hours:</p>
-                              <p>
-                                {vendor.company.open_timing} to{" "}
-                                {vendor.company.close}
-                              </p>
-                            </span>
-                            <span>
-                              <p>Ship by:</p>
-                              <p>{vendor.company.shipBy}</p>
-                            </span>
-                          </div>
-                          <div
-                            className={
-                              css.myVendor_company_list_main_notesRating
-                            }
-                          >
-                            <div
-                              className={css.myVendor_company_list_main_notes}
-                            >
-                              <span>
-                                <p>Notes:</p>
-                              </span>
-                              <span>
-                                <textarea
-                                  name="notes"
-                                  id={`notes-${companyId}`}
-                                  cols={10}
-                                  rows={8}
-                                  placeholder="Enter notes here..."
-                                  className="!w-80 text-[8pt] border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-400 resize-none"
-                                  value={notes[vendorId] ?? companyNote}
-                                  onChange={(e) =>
-                                    setNotes((prevNotes) => ({
-                                      ...prevNotes,
-                                      [vendorId]: e.target.value,
-                                    }))
-                                  }
-                                />
-                              </span>
-                              <span>
-                                <button
-                                  type="button"
-                                  className={
-                                    css.myVendor_company_list_main_notes_btn
-                                  }
-                                  onClick={() => noteSaveHandler(vendorId)}
-                                  title="Save Note"
-                                >
-                                  save
-                                </button>
-                              </span>
-                            </div>
-                            {/* <div
-                              className={css.myVendor_company_list_main_rating}
-                            >
-                              <input
-                                type="range"
-                                name="ratingContact"
-                                id="ratingContact"
-                                min={0}
-                                max={5}
-                              />
-                              <span>My Rating: 4</span>
-                            </div> */}
-                          </div>
-                          <div
-                            className={css.myVendor_company_list_main_actions}
-                          >
-                            <ThemeProvider theme={theme}>
-                              <Tooltip
-                                title="Remove from my vendors"
-                                arrow
-                                placement="right"
-                              >
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    removeFromMyVendors(vendor.company.id)
-                                  }
-                                >
-                                  X
-                                </button>
-                              </Tooltip>
-                            </ThemeProvider>
-                          </div>
-                          <div className="cursor-pointer">
-                            <ThemeProvider theme={theme}>
-                              <Tooltip
-                                title="Block this vendor from vewing my inventory"
-                                arrow
-                                placement="right"
-                              >
-                                <span>
-                                  <AiOutlineUserDelete />
-                                </span>
-                              </Tooltip>
-                            </ThemeProvider>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </>
-            )}
-            {/* {viewAsShow && (
-              <div className={css.myVendor_company_display}>
-                <h1>Display: Normal</h1>
-                {companyList.map((group, index) => {
-                  const companyName = Object.keys(group)[0]; // Get the company group name (e.g., 'Company A')
-                  const companies = group[companyName]; // Get the array of companies in this group
-                  return (
-                    <div key={index} className={css.myVendor_company_name}>
-                      <div className={css.myVendor_company_name_list}>
-                        {companies.map((company, index) => {
                           return (
                             <div
-                              key={company.name}
-                              className={
-                                css.myVendor_company_name_list_specified
-                              }
+                              className={css.myVendor_company_list}
+                              key={vendor.company.id}
+                              id={`letter-${vendor.company.name
+                                .charAt(0)
+                                .toUpperCase()}`}
                             >
-                              <div
-                                className={
-                                  css.myVendor_company_name_list_specified_main
-                                }
-                              >
+                              <div className={css.myVendor_company_list_main}>
                                 <div
-                                  className={
-                                    css.myVendor_company_name_list_specified_img
-                                  }
+                                  className={css.myVendor_company_list_main_img}
                                 >
-                                  <img src={company.img} alt="company logo" />
-                                  <span>
-                                    <AiFillMail />
-                                    <p>{company.name}</p>
-                                    <BsGlobeAmericas />
+                                  <img
+                                    src={vendor.company.image}
+                                    alt="vendor logo"
+                                    className="cursor-pointer"
+                                    onClick={() =>
+                                      openCompanyModal(vendor.company)
+                                    }
+                                  />
+                                  <span className="!flex !items-center !gap-6 !justify-between">
+                                    <i>
+                                      <a href={`mailto:${vendor.company?.primaryContact?.email}`}>
+                                      <img
+                                        src={emailIcon}
+                                        alt="email icon"
+                                        className="!border-none w-7 !h-7"
+                                        />
+                                    </a>
+                                    </i>
+                                    <p
+                                      className="cursor-pointer"
+                                      onClick={() =>
+                                        openCompanyModal(vendor.company)
+                                      }
+                                      onMouseEnter={() =>
+                                        handleHoverCompanyDetail(vendor.company)
+                                      }
+                                    >
+                                      {vendor.company.name}
+                                    </p>
+                                    <i>
+                                      <a href={vendor.company?.website} target="_blank" >
+                                      <img
+                                        src={webIcon}
+                                        alt="web icon"
+                                        className="!border-none w-7 !h-7"
+                                      />
+                                    </a>
+
+                                    </i>
                                   </span>
                                 </div>
+
                                 <div
                                   className={
-                                    css.myVendor_company_name_list_specified_desc
+                                    css.myVendor_company_list_main_info
                                   }
                                 >
-                                  <div>
-                                    <div>
-                                      <strong>{company.name}</strong>
-                                      <p>{company.address}</p>
+                                  <span
+                                    className="cursor-pointer"
+                                    onClick={() =>
+                                      openCompanyModal(vendor.company)
+                                    }
+                                    onMouseEnter={() =>
+                                      handleHoverCompanyDetail(vendor.company)
+                                    }
+                                  >
+                                    <p>{vendor.company.name}</p>
+                                    <div
+                                      className={
+                                        css.gridHome1_MemberDetail_reviews_stars
+                                      }
+                                    >
+                                      <div
+                                        style={{
+                                          display: "flex",
+                                          alignItems: "center",
+                                        }}
+                                      >
+                                        {[...Array(5)].map((_, starIndex) => {
+                                          const isFilled =
+                                            starIndex + 1 <= Math.floor(rating);
+                                          const isPartial =
+                                            starIndex < rating &&
+                                            starIndex + 1 > Math.floor(rating);
+
+                                          return (
+                                            <FaStar
+                                              key={starIndex}
+                                              size={24}
+                                              color={
+                                                isFilled
+                                                  ? "#FFD700"
+                                                  : isPartial
+                                                  ? "rgba(255, 215, 0, 0.5)"
+                                                  : "#CCC"
+                                              }
+                                              style={{
+                                                cursor: "pointer",
+                                                marginRight: 4,
+                                                width: "15px",
+                                              }}
+                                            />
+                                          );
+                                        })}
+                                      </div>
                                     </div>
-                                    <p>
-                                      <strong>phone: </strong>
-                                      {company.phone}
+                                  </span>
+
+                                  <span>
+                                    <p
+                                      className="cursor-pointer"
+                                      onClick={() =>
+                                        openCompanyModal(vendor.company)
+                                      }
+                                    >
+                                      Rating:
                                     </p>
-                                  </div>
-                                  <p>{company.description}</p>
+                                    <p>
+                                      (
+                                      {rating === 0 || isNaN(rating)
+                                        ? "N/A"
+                                        : (
+                                            (Math.min(Math.max(rating, 0), 5) /
+                                              5) *
+                                            100
+                                          ).toFixed(1) + "%"}
+                                      ){" "}
+                                    </p>
+                                  </span>
+
+                                  <span>
+                                    <p>Location:</p>
+                                    <p>
+                                      {vendor.company.city}{" "}
+                                      {vendor.company.state}{" "}
+                                      {vendor.company.country}
+                                    </p>
+                                  </span>
+                                  <span>
+                                    <p>Phone:</p>
+                                    <p>{vendor.company.phone_num}</p>
+                                  </span>
+                                  <span>
+                                    <p>Fax:</p>
+                                    <p>{vendor.company.fax}</p>
+                                  </span>
+                                  <span>
+                                    <p>Hours:</p>
+                                    <p>
+                                      {vendor.company.open_timing} to{" "}
+                                      {vendor.company.close}
+                                    </p>
+                                  </span>
+                                  <span>
+                                    <p>Ship by:</p>
+                                    <p>{vendor.company.shipBy}</p>
+                                  </span>
                                 </div>
-                              </div>
-                              <div
-                                className={
-                                  css.myVendor_company_name_list_specified_feedback
-                                }
-                              >
-                                <img src={company.feedbackImg} alt="feedback" />
-                                <span>
-                                  <p>{company.ratingCount[0]}%</p>
-                                  <p>({company.ratingCount[1]})</p>
-                                </span>
-                                <p>{company.ratingMember}</p>
-                              </div>
-                              <div
-                                className={
-                                  css.myVendor_company_name_list_specified_add
-                                }
-                              >
-                                <MdPersonAddAlt1 />
+
+                                <div
+                                  className={
+                                    css.myVendor_company_list_main_notesRating
+                                  }
+                                >
+                                  <div
+                                    className={
+                                      css.myVendor_company_list_main_notes
+                                    }
+                                  >
+                                    <span >
+                                      <p>Notes:</p>
+                                    </span>
+                                    <span>
+                                      <textarea
+                                        name="notes"
+                                        id={`notes-${vendorId}`}
+                                        cols={10}
+                                        rows={8}
+                                        placeholder="This section is only visible to you by your log-in. Enter your personal notes about this vendor here."
+                                        className="!w-80 text-[8pt] border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-400 resize-none"
+                                        value={notes[vendorId] ?? companyNote}
+                                        onChange={(e) =>
+                                          setNotes((prevNotes) => ({
+                                            ...prevNotes,
+                                            [vendorId]: e.target.value,
+                                          }))
+                                        }
+                                      />
+                                    </span>
+                                    <span>
+                                      <button
+                                        type="button"
+                                        className={
+                                          css.myVendor_company_list_main_notes_btn
+                                        }
+                                        onClick={() =>
+                                          noteSaveHandler(vendorId)
+                                        }
+                                        title="Save Note"
+                                      >
+                                        Save
+                                      </button>
+                                    </span>
+                                  </div>
+                                </div>
+
+                                <div
+                                  className={
+                                    css.myVendor_company_list_main_actions
+                                  }
+                                >
+                                  <ThemeProvider theme={theme}>
+                                    <Tooltip
+                                      title="Remove from my vendors"
+                                      arrow
+                                      placement="right"
+                                    >
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          removeFromMyVendors(vendor.company.id)
+                                        }
+                                      >
+                                        X
+                                      </button>
+                                    </Tooltip>
+                                  </ThemeProvider>
+                                </div>
+
+                                <div className="cursor-pointer">
+                                  <ThemeProvider theme={theme}>
+                                    <Tooltip
+                                      title="Block this vendor from vewing my inventory"
+                                      arrow
+                                      placement="right"
+                                    >
+                                      <span
+                                        onClick={() =>
+                                          blockVendorHandler(vendor.company.id)
+                                        }
+                                      >
+                                        <AiOutlineUserDelete />
+                                      </span>
+                                    </Tooltip>
+                                  </ThemeProvider>
+                                </div>
                               </div>
                             </div>
                           );
                         })}
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )} */}
+                    ))}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
