@@ -469,7 +469,7 @@ export const blockMyVendor = createAsyncThunk(
     console.log(company_id,status);
     try {
       const response = await axios.post(
-        `${brokerAPI}vendor/block`,
+        `${brokerAPI}vendorblock/vendor-block`,
         {company_id,status},
         {
           headers: {
