@@ -115,7 +115,7 @@ const SearchResults = () => {
 
 
   useEffect(() => {
-    if (viewBy !== "last") fetchPersonViewBy();
+    if (viewBy) fetchPersonViewBy();
   }, [viewBy]);
 
 

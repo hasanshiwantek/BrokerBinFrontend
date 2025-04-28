@@ -21,15 +21,15 @@ import {
 } from "@/ReduxStore/SearchProductSlice";
 import CompanyDetails from "../../Popups/CompanyDetails/CompanyDetails";
 import { setPopupCompanyDetail } from "@/ReduxStore/SearchProductSlice";
-import { AiOutlineUserDelete } from "react-icons/ai";
+import { AiOutlineUserDelete, AiOutlineUserAdd } from "react-icons/ai";
 import { Tooltip } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { alphabets } from "@/data/services";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-import emailIcon from "@/assets/email-icon.svg"
-import webIcon from "@/assets/web.svg"
+import emailIcon from "@/assets/email-icon.svg";
+import webIcon from "@/assets/web.svg";
 const MyVendors = () => {
   const token = Cookies.get("token");
   let [viewAsCompany, setViewAsCompany] = useState(true);
@@ -268,25 +268,75 @@ const MyVendors = () => {
   // BLOCK VENDOR LOGIC
 
   const [vendorStatus, setVendorStatus] = useState({});
+  console.log("Vendor Status", vendorStatus);
+
+  useEffect(() => {
+    if (myVendor && myVendor.length > 0) {
+      const initialStatus = {};
+      myVendor.forEach((vendor) => {
+        const id = vendor.company.id;
+        initialStatus[id] = Number(vendor.status) ?? 0; // backend  blockedStatus
+        console.log("Initial Status", initialStatus);
+      });
+      setVendorStatus(initialStatus);
+    }
+  }, [myVendor]);
 
   const blockVendorHandler = (companyId) => {
-    const currentStatus = vendorStatus[companyId] ?? 1; // default to 1
+    const currentStatus = vendorStatus[companyId] ?? 1;
     const newStatus = currentStatus === 1 ? 0 : 1;
-    dispatch(
-      blockMyVendor({ company_id: companyId, status: newStatus, token })
-    ).then((response) => {
-      const result = response.payload;
-      if (result?.success) {
-        toast.success(result?.message || "Vendor status updated!");
-        setVendorStatus((prev) => ({
-          ...prev,
-          [companyId]: newStatus,
-        }));
-      } else {
-        toast.error(result?.message || "Failed to update vendor status.");
-      }
-    });
+
+    dispatch(blockMyVendor({ company_id: companyId, status: newStatus, token }))
+      .unwrap()
+      .then((result) => {
+        console.log("Server Result:", result);
+
+        if (result?.status === "success") {
+          toast.success(result?.message || "Vendor status updated!");
+          setVendorStatus((prev) => ({
+            ...prev,
+            [companyId]: newStatus,
+          }));
+        } else {
+          toast.info(result?.message || "Failed to update vendor status.");
+        }
+      })
+      .catch((error) => {
+        console.error("Block error:", error);
+        toast.error(
+          error?.message || "Something went wrong. Please try again."
+        );
+      })
+      .finally(() => {
+        dispatch(getMyVendors({ token }));
+      });
   };
+
+
+
+  
+
+
+  // const blockVendorHandler = (companyId) => {
+  //   const currentStatus = vendorStatus[companyId] ?? 1; // If undefined, default 1
+  //   const newStatus = currentStatus === 1 ? 0 : 1;
+
+  //   dispatch(
+  //     blockMyVendor({ company_id: companyId, status: newStatus, token })
+  //   ).then((response) => {
+  //     const result = response.payload;
+  //     if (result?.success) {
+  //       toast.success(result?.message || "Vendor status updated!");
+  //       setVendorStatus((prev) => ({
+  //         ...prev,
+  //         [companyId]: newStatus,
+  //       }));
+  //     } else {
+  //       toast.info(result?.message || "Failed to update vendor status.");
+  //     }
+
+  //   })
+  // };
 
   // COPMANY ORDER LOGIC
 
@@ -424,7 +474,7 @@ const MyVendors = () => {
             {viewAsCompany && (
               <>
                 <div className={""}>
-                  <div className="flex flex-col sticky top-[31vh] p-2 mr-6"> 
+                  <div className="flex flex-col sticky top-[31vh] p-2 mr-6">
                     {alphabets.map((letter, index) => {
                       const isActive = myVendor.some(
                         (item) =>
@@ -498,13 +548,15 @@ const MyVendors = () => {
                                   />
                                   <span className="!flex !items-center !gap-6 !justify-between">
                                     <i>
-                                      <a href={`mailto:${vendor.company?.primaryContact?.email}`}>
-                                      <img
-                                        src={emailIcon}
-                                        alt="email icon"
-                                        className="!border-none w-7 !h-7"
+                                      <a
+                                        href={`mailto:${vendor.company?.primaryContact?.email}`}
+                                      >
+                                        <img
+                                          src={emailIcon}
+                                          alt="email icon"
+                                          className="!border-none w-7 !h-7"
                                         />
-                                    </a>
+                                      </a>
                                     </i>
                                     <p
                                       className="cursor-pointer"
@@ -518,14 +570,16 @@ const MyVendors = () => {
                                       {vendor.company.name}
                                     </p>
                                     <i>
-                                      <a href={vendor.company?.website} target="_blank" >
-                                      <img
-                                        src={webIcon}
-                                        alt="web icon"
-                                        className="!border-none w-7 !h-7"
-                                      />
-                                    </a>
-
+                                      <a
+                                        href={vendor.company?.website}
+                                        target="_blank"
+                                      >
+                                        <img
+                                          src={webIcon}
+                                          alt="web icon"
+                                          className="!border-none w-7 !h-7"
+                                        />
+                                      </a>
                                     </i>
                                   </span>
                                 </div>
@@ -647,7 +701,7 @@ const MyVendors = () => {
                                       css.myVendor_company_list_main_notes
                                     }
                                   >
-                                    <span >
+                                    <span>
                                       <p>Notes:</p>
                                     </span>
                                     <span>
@@ -708,21 +762,34 @@ const MyVendors = () => {
                                 </div>
 
                                 <div className="cursor-pointer">
-                                  <ThemeProvider theme={theme}>
-                                    <Tooltip
-                                      title="Block this vendor from vewing my inventory"
-                                      arrow
-                                      placement="right"
-                                    >
-                                      <span
-                                        onClick={() =>
-                                          blockVendorHandler(vendor.company.id)
+                                  <div className="cursor-pointer">
+                                    <ThemeProvider theme={theme}>
+                                      <Tooltip
+                                        title={
+                                          vendorStatus[vendor.company.id] === 1
+                                            ? "Unblock this vendor"
+                                            : "Block this vendor from viewing my inventory"
                                         }
+                                        arrow
+                                        placement="right"
                                       >
-                                        <AiOutlineUserDelete />
-                                      </span>
-                                    </Tooltip>
-                                  </ThemeProvider>
+                                        <span
+                                          onClick={() =>
+                                            blockVendorHandler(
+                                              vendor.company.id
+                                            )
+                                          }
+                                        >
+                                          {vendorStatus[vendor.company.id] ===
+                                          1 ? (
+                                            <AiOutlineUserAdd size={20} />
+                                          ) : (
+                                            <AiOutlineUserDelete size={20} />
+                                          )}
+                                        </span>
+                                      </Tooltip>
+                                    </ThemeProvider>
+                                  </div>
                                 </div>
                               </div>
                             </div>
