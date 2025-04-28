@@ -422,7 +422,7 @@ export const fetchMyViewByContacts = createAsyncThunk(
   async ({sortBy,token }) => {
     try {
       const response = await axios.get(
-      `${brokerAPI}contact/fvrt_contacts?sort_by=${sortBy}`,
+      `${brokerAPI}contact/fvrt_contacts?sortBy=${sortBy}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -444,7 +444,7 @@ export const fetchMyViewByVendors = createAsyncThunk(
   async ({sortBy,token }) => {
     try {
       const response = await axios.get(
-      `${brokerAPI}vendor/get-vendor?sort_by=${sortBy}`,
+      `${brokerAPI}vendor/get-vendor?sortBy=${sortBy}`,
         {
           headers: {
             "Content-Type": "application/json",

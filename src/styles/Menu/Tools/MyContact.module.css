@@ -11,7 +11,7 @@
     background: var(--primary-color);
     padding: 1rem;
     color: white;
-    font-size: 1.5rem;
+    /* font-size: 1.5rem; */
     input {
       border: none;
     }
@@ -218,8 +218,8 @@
         align-items: center;
 
         img {
-          border: 1px solid #d6d5d5;
-          height: 15rem;
+          /* border: 1px solid #d6d5d5; */
+          height: 18rem;
           aspect-ratio: 1;
           object-fit: contain;
         }
@@ -240,7 +240,7 @@
           display: grid;
           grid-template-columns: 8rem 1fr;
           justify-items: flex-start;
-          margin-top: 5px;
+          margin-top: 2px;
     
         }
       }
