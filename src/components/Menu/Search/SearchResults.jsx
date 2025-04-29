@@ -83,27 +83,28 @@ const SearchResults = () => {
     dispatch(setHoverCompanyDetail(company)); // Dispatch company details to Redux store}
   };
 
-
   const fetchPersonViewBy = () => {
     if (
-      ["last", "first", "company", "rating", "country", "state"].includes(viewBy)
+      ["last", "first", "company", "rating", "country", "state"].includes(
+        viewBy
+      )
     ) {
       console.log("Fetching from API with viewBy:", viewBy);
       setLoading(true);
-       dispatch(
+      dispatch(
         submitUserSearchViewBy({
           token,
           sortBy: viewBy,
           sortOrder: "asc",
         })
-      ).unwrap()
+      )
+        .unwrap()
         .then((response) => {
           console.log("Response from API:", response);
-          let data=response
+          let data = response;
           console.log("API response:", data);
           setResultData(data || []);
           console.log("Result Data:", resultData);
-          
         })
         .catch((error) => {
           console.error("API error:", error);
@@ -113,13 +114,9 @@ const SearchResults = () => {
     }
   };
 
-
   useEffect(() => {
     if (viewBy) fetchPersonViewBy();
   }, [viewBy]);
-
-
-
 
   const user_id = Cookies.get("user_id");
   console.log("user_id", user_id);
@@ -145,11 +142,9 @@ const SearchResults = () => {
     }
   };
 
-
   useEffect(() => {
     console.log("Updated resultData:", resultData);
   }, [resultData]);
-  
 
   return (
     <main className="mainSec w-[50%]">
@@ -196,7 +191,10 @@ const SearchResults = () => {
                     e.preventDefault();
                     const element = document.getElementById(`letter-${letter}`);
                     if (element) {
-                      element.scrollIntoView({ behavior: "smooth", block: "center" });
+                      element.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                      });
                     }
                   }}
                   className={`cursor-pointer font-medium pl-3 leading-none ${
@@ -234,30 +232,59 @@ const SearchResults = () => {
                       <p
                         className="font-semibold cursor-pointer text-center"
                         onClick={() => openCompanyModal(val.company)}
-                        onMouseEnter={() => handleHoverCompanyDetail(val.company)}
+                        onMouseEnter={() =>
+                          handleHoverCompanyDetail(val.company)
+                        }
                       >
-                        {val.firstName || ""}
+                        {
+                          viewBy.includes("first") ? val.firstName : viewBy.includes("last") ? val.lastName : ""
+                        }
                       </p>
                     </div>
 
                     <div className="profile-details font-medium">
-                      <p className="flex justify-between">Company: <p>{val.company?.name || ""}</p></p>
-                      <p className="flex justify-between">Title: <p>{val.position || ""}</p></p>
-                      <p className="flex justify-between">Phone: <p>{val.phoneNumber || ""}</p></p>
-                      <p className="flex justify-between">Specialty: <p>{val.specialty || ""}</p></p>
-                      <p className="flex justify-between">Toll: <p>{val.tollFree || ""}</p></p>
-                      <p className="flex justify-between">Fax: <p>{val?.company?.primaryContact?.faxNumber || ""}</p></p>
-                      <p className="flex justify-between">Email: <p>{val.email || ""}</p></p>
-                      <p className="flex justify-between">City: <p>{val.city || ""}</p></p>
-                      <p className="flex justify-between">State: <p>{val.state || ""}</p></p>
-                      <p className="flex justify-between">Country: <p>{val.country || ""}</p></p>
+                      <p className="flex justify-between">
+                        Company: <p>{val.company?.name || ""}</p>
+                      </p>
+                      <p className="flex justify-between">
+                        Title: <p>{val.position || ""}</p>
+                      </p>
+                      <p className="flex justify-between">
+                        Phone: <p>{val.phoneNumber || ""}</p>
+                      </p>
+                      <p className="flex justify-between">
+                        Specialty: <p>{val.specialty || ""}</p>
+                      </p>
+                      <p className="flex justify-between">
+                        Toll: <p>{val.tollFree || ""}</p>
+                      </p>
+                      <p className="flex justify-between">
+                        Fax:{" "}
+                        <p>{val?.company?.primaryContact?.faxNumber || ""}</p>
+                      </p>
+                      <p className="flex justify-between">
+                        Email: <p>{val.email || ""}</p>
+                      </p>
+                      <p className="flex justify-between">
+                        City: <p>{val.city || ""}</p>
+                      </p>
+                      <p className="flex justify-between">
+                        State: <p>{val.state || ""}</p>
+                      </p>
+                      <p className="flex justify-between">
+                        Country: <p>{val.country || ""}</p>
+                      </p>
                     </div>
 
                     <div className="notes-rating">
-                      <div className="notes"><h3>My Notes:</h3></div>
+                      <div className="notes">
+                        <h3>My Notes:</h3>
+                      </div>
                       <div className="rating flex items-center gap-4">
                         <h3>My Rating:</h3>
-                        <select><option value="N/R">N/R</option></select>
+                        <select>
+                          <option value="N/R">N/R</option>
+                        </select>
                       </div>
                       <ThemeProvider theme={theme}>
                         <Tooltip title="Add to Contacts">
@@ -272,11 +299,12 @@ const SearchResults = () => {
               );
             })
           ) : (
-            <p className="text-center mt-5 font-bold">No search results found.</p>
+            <p className="text-center mt-5 font-bold">
+              No search results found.
+            </p>
           )}
         </div>
       </div>
-
 
       {togglePopUp && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
