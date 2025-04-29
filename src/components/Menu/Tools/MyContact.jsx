@@ -373,7 +373,7 @@ const MyContact = () => {
             {viewAsCompany && (
               <>
                 <div className={""}>
-                  <div className="flex flex-col sticky top-[31vh]">
+                  <div className="flex flex-col sticky top-[31vh] p-4">
                     {alphabets.map((letter, index) => {
                       const isActive = myContactsData.some(
                         (item) =>
