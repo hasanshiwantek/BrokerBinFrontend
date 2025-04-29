@@ -10,6 +10,7 @@ import CompanyDetails from "../../../Popups/CompanyDetails/CompanyDetails";
 import { inventorySearch } from "../../../../ReduxStore/InventorySlice";
 import inventory from "../../../../styles/Menu/Manage/Inventory/Inventory.module.css";
 import Cookies from "js-cookie";
+import { setHoverCompanyDetail } from "@/ReduxStore/SearchProductSlice";
 
 const InventorySearchResult = () => {
     const { togglePopUp } = useSelector((store) => store.searchProductStore);
@@ -117,15 +118,23 @@ const InventorySearchResult = () => {
             return updatedRows;
         });
     };
+
+
+
+    
+      const handleHoverCompanyDetail = (company) => {
+        dispatch(setHoverCompanyDetail(company)); // Dispatch company details to Redux store}
+      };
+
     return (
-        <div className={`${css.productTableDetail} m-28 !bg-[#e8e8e8]`}>
+        <div className={`${css.productTableDetail} m-28 !bg-[#e8e8e8] rounded-lg !p-[6px]`}>
             <div className={styles.profileInfo_links}>
                 <ul>
                     <li>
                         <NavLink
                             to="/search/Inventory"
                             end
-                            className={`${({ isActive }) => (isActive ? styles.active : "")} !text-blue-500`}
+                            className={`${({ isActive }) => (isActive ? styles.active : "")} !text-[#2c83ec]`}
 
                         >
                             <span>Inventory</span>
@@ -148,7 +157,7 @@ const InventorySearchResult = () => {
                 </ul>
             </div>
             <div className={`${css.tableContainer} !bg-[#bfbfbf]`}>
-                <h3 className="m-5 p-3 text-2xl text-white">Inventory Search</h3>
+                <h3 className=" p-2 text-2xl text-white">Inventory Search</h3>
                 <table>
                     <thead>
                         <tr>
@@ -189,6 +198,9 @@ const InventorySearchResult = () => {
                                         <a
                                             style={{ color: "#428bca", fontWeight: "500" }}
                                             onClick={() => handleShowPopupCompanyDetails(val.addedBy.company)}
+                                            onMouseEnter={() =>
+                                                handleHoverCompanyDetail(val.addedBy.company)
+                                              }
                                         >
                                             {val.addedBy.company.name}
                                         </a>
@@ -238,7 +250,7 @@ const InventorySearchResult = () => {
                     </thead>
                 </table>
                 {/* Pagination Controls */}
-                <div className="mt-4 flex justify-between items-center">
+                <div className=" flex justify-between items-center">
                     <button
                         type="button"
                         onClick={handleReply}
