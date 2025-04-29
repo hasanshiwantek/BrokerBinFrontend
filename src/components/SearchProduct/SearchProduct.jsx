@@ -19,6 +19,7 @@ import AddToHotList from "./AddToHotlist";
 import ProductTableBtn from "./ProductTableBtn";
 import ProductTableDetail from "./ProductTableDetail";
 import Filter from "./Filter";
+import CompanyListingTable from "./Table"
 
 const SearchProduct = () => {
   const token = Cookies.get("token");
@@ -231,7 +232,9 @@ const SearchProduct = () => {
           // ✅ Multiple tables for `searchProductQuery`
           Object.entries(
             filteredSearchResponse || searchResponseMatched || {}
-          ).map(([partModel, details], index) => (
+          )
+          .filter(([key]) => key !== 'filters')
+          .map(([partModel, details], index) => (
             <div key={`${partModel}-${index}`}>
               {details?.data?.length > 0 ? (
                 // ✅ Render table for available parts
@@ -266,11 +269,20 @@ const SearchProduct = () => {
             </div>
           ))
         )}
+        {Object.keys(searchResponseMatched || {}).filter(key => key !== "filters").length === 1 &&
+          (searchResponseMatched?.[Object.keys(searchResponseMatched)[0]]?.data?.length > 0) && (
+            <CompanyListingTable entries={Object.entries(searchResponseMatched)} />
+          )}
+
+
       </div>
 
       {togglePopUp && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
+
+
+
     </div>
   );
 };
