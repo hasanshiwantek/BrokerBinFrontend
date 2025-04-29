@@ -175,7 +175,7 @@ const SearchResults = () => {
         </ul>
       </nav>
 
-      <div className="!flex !justify-end !items-center !gap-5">
+      <div className="!flex !justify-end !items-center !gap-5 p-3">
         <p className="!text-xl">view by</p>
         <select value={viewBy} onChange={(e) => setViewBy(e.target.value)}>
           <option value="last">Contact: Last</option>
