@@ -15,7 +15,7 @@ import { FaUserPlus } from "react-icons/fa";
 import { Tooltip } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { setHoverCompanyDetail } from "../../../ReduxStore/SearchProductSlice";
-import { addMyContacts } from "@/ReduxStore/ToolsSlice";
+import { addMyContacts, fetchMyNotes } from "@/ReduxStore/ToolsSlice";
 import {
   fetchUserData,
   submitUserSearchViewBy,
@@ -146,8 +146,19 @@ const SearchResults = () => {
     console.log("Updated resultData:", resultData);
   }, [resultData]);
 
+  // NOTE DATA LOGIC
+  useEffect(() => {
+    dispatch(fetchMyNotes({ token }));
+  }, []);
+
+  const { noteData } = useSelector((store) => store.toolsStore);
+
+  console.log("NOTE DATA", noteData);
+  const userId = noteData?.notes?.map((val) => val.user.id);
+  console.log("USER ID", userId);
+
   return (
-    <main className="mainSec w-[50%]">
+    <main className="mainSec w-[60%]">
       <nav className="menu-bar">
         <ul>
           <li>
@@ -236,9 +247,11 @@ const SearchResults = () => {
                           handleHoverCompanyDetail(val.company)
                         }
                       >
-                        {
-                          viewBy.includes("first") ? val.firstName : viewBy.includes("last") ? val.lastName : ""
-                        }
+                        {viewBy.includes("first")
+                          ? val.firstName
+                          : viewBy.includes("last")
+                          ? val.lastName
+                          : ""}
                       </p>
                     </div>
 
@@ -275,26 +288,40 @@ const SearchResults = () => {
                         Country: <p>{val.country || ""}</p>
                       </p>
                     </div>
-
-                    <div className="notes-rating">
-                      <div className="notes">
-                        <h3>My Notes:</h3>
-                      </div>
-                      <div className="rating flex items-center gap-4">
-                        <h3>My Rating:</h3>
-                        <select>
-                          <option value="N/R">N/R</option>
-                        </select>
-                      </div>
-                      <ThemeProvider theme={theme}>
-                        <Tooltip title="Add to Contacts">
-                          <div className="cursor-pointer">
-                            <FaUserPlus onClick={() => addToContacts(val.id)} />
-                          </div>
-                        </Tooltip>
-                      </ThemeProvider>
-                    </div>
                   </div>
+
+                  <div className="notes-rating">
+                    <div className="notes">
+                      <h3>My Notes:</h3>
+                      <p>
+                        {userId?.includes(val.id)
+                          ? noteData?.notes?.find(
+                              (note) => note.user.id === val.id
+                            )?.note
+                          : ""}
+                      </p>
+                    </div>
+                    <div className=" flex  gap-5 items-center">
+                      <h3>My Rating:</h3>
+                      <p>
+                        {userId?.includes(val.id)
+                          ? Number(
+                              noteData?.notes?.find(
+                                (note) => note.user.id === val.id
+                              )?.rating || 0
+                            ).toFixed(2)
+                          : "N/R"}
+                      </p>
+                    </div>
+             
+                  </div>
+                  <ThemeProvider theme={theme}>
+                      <Tooltip title="Add to Contacts" arrow placement="top"> 
+                        <div className="cursor-pointer p-2">
+                          <FaUserPlus onClick={() => addToContacts(val.id)} />
+                        </div>
+                      </Tooltip>
+                    </ThemeProvider>
                 </div>
               );
             })
