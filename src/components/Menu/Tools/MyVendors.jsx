@@ -284,6 +284,8 @@ const MyVendors = () => {
 
   const blockVendorHandler = (companyId) => {
     const currentStatus = vendorStatus[companyId] ?? 1;
+    console.log("Sending Status..",vendorStatus[companyId]);
+    
     const newStatus = currentStatus === 1 ? 0 : 1;
 
     dispatch(blockMyVendor({ company_id: companyId, status: newStatus, token }))
