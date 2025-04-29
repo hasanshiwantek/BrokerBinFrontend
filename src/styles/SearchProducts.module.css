@@ -209,6 +209,37 @@
 
 
 
+
+
+.companyListingTable{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.companyListingTable table tbody td{
+  font-weight: 500;
+  font-size: 8pt;
+  color: #444;
+}
+
+.companyListingTable table tbody td{
+  width: 7rem;
+}
+
+.companyListingTable table thead th{
+  font-weight: 600;
+  font-size: 8pt;
+}
+
+
+
+
+
+
+
+
+
 @media screen and (min-width: 1440px) {
 
 .hotlistContainer{
