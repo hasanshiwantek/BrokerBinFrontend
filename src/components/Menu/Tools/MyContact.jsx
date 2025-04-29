@@ -41,7 +41,7 @@ const MyContact = () => {
   console.log("MY Contacts Data From Frontend", myContactsData);
   console.log("MY Notes Data From Frontend", noteData);
   // const [contactData, setContactData] = useState(myContactsData);
-  const [headingWord, setHeadingWord] = useState("last:");
+  const [headingWord, setHeadingWord] = useState("last");
   const [viewBy, setViewBy] = useState("last");
 
   const dispatch = useDispatch();

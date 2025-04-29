@@ -414,6 +414,7 @@ const RfqTable = () => {
         rfqArchive({ token, data: payload })
       ).unwrap();
       toast.success(`RFQ(s) ${action} successfully!`);
+      window.location.reload(); // Reload the page to reflect changes
     } catch (error) {
       console.error("Error handling action:", error);
       toast.error(`Failed to ${action} RFQ(s).`);
@@ -447,6 +448,7 @@ const RfqTable = () => {
         statusRfq({ token, data: payload })
       ).unwrap();
       toast.success(`RFQ(s) ${action} successfully!`);
+      window.location.reload();
     } catch (error) {
       console.error("Error handling action:", error);
       toast.error(`Failed to ${action} RFQ(s).`);

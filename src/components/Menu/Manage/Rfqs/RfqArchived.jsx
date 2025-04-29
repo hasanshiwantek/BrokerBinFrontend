@@ -374,6 +374,7 @@ const RfqTableSent = () => {
     try {
       await dispatch(rfqArchive({ token, data: payload }));
       toast.success("RFQ restored successfully!");
+      window.location.reload(); // Reload the page to reflect changes
     } catch (err) {
       console.error(err);
       toast.error("Failed to restore RFQ.");
