@@ -76,7 +76,7 @@ const RfqReply = () => {
             <p>--------------</p>
           <p>${initialData.firstName || ""} ${initialData.lastName || ""}</p>
           <p>${initialData?.company?.name || ""}</p>
-          <p>${initialData.phoneNumber || ""}</p>
+          <p>${initialData.phoneNumber || ""}</p> 
           <p>${initialData.email || ""}</p>
         </div>
       `;
@@ -696,7 +696,7 @@ const RfqReply = () => {
                       </div>
                     </div>
                   </div>
-                  <div className={css.rfqBody_Main_left_comments}>
+                  <div className={`${css.rfqBody_Main_left_comments}`} >
                     <label htmlFor="" style={{ marginLeft: "50px" }}>
                       Comments
                     </label>
@@ -785,25 +785,25 @@ const RfqReply = () => {
                               type="checkbox"
                               name="poInHand"
                               id=""
-                                onChange={(e) => {
-                                  const checked = e.target.checked;
-                                  setPoInHand(checked);
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                setPoInHand(checked);
 
-                                  // Update subject
-                                  setSubjectValue(
-                                    checked ? "PO in Hand" : "Quote Needed"
-                                  );
+                                // Update subject
+                                setSubjectValue(
+                                  checked ? "PO in Hand" : "Quote Needed"
+                                );
 
-                                  // Update comment
-                                  // Update comment
-                                  if (checked) {
-                                    const rfqDetails = selectedRfqs
-                                      .map(
-                                        (rfq) => `
+                                // Update comment
+                                // Update comment
+                                if (checked) {
+                                  const rfqDetails = selectedRfqs
+                                    .map(
+                                      (rfq) => `
                                   <p><strong>RFQ initial Details:</strong></p>
                                   <p>Name: ${rfq.from?.firstName || ""} ${
-                                          rfq.from?.lastName || ""
-                                        }</p>
+                                        rfq.from?.lastName || ""
+                                      }</p>
                                   <p>Email: ${rfq.from?.email || ""}</p>
                                   <p>Part Numbers: ${
                                     rfq.partNumbers?.join(", ") || "N/A"
@@ -821,31 +821,31 @@ const RfqReply = () => {
                                   <p>Target Price: ${
                                     rfq.targetPrices?.join(", ") || "N/A"
                                   }</p>
-                                  <p>Terms: ${rfq.terms?.join(", ") || "N/A"}</p>
+                                  <p>Terms: ${
+                                    rfq.terms?.join(", ") || "N/A"
+                                  }</p>
                                 `
-                                      )
-                                      .join("<br />");
+                                    )
+                                    .join("<br />");
 
-                                    const message = `
+                                  const message = `
                                 <p><strong>PURCHASE ORDER IN HAND - READY TO BUY</strong></p>
                                 <p>Looking for the best price, availability & lead time.</p>
-                                <p>--------------</p>
                                 ${rfqDetails}
                                 <p>--------------</p>
                                 <p>${initialData.firstName || ""} ${
-                                      initialData.lastName || ""
-                                    }</p>
+                                    initialData.lastName || ""
+                                  }</p>
                                 <p>${initialData?.company?.name || ""}</p>
                                 <p>${initialData.phoneNumber || ""}</p>
                                 <p>${initialData.email || ""}</p>
                               `;
 
-                                    setComment(message);
-                                  } else {
-                                    setComment(defaultComment);
-                                  }
-                                }}
-
+                                  setComment(message);
+                                } else {
+                                  setComment(defaultComment);
+                                }
+                              }}
                             />
                             <label>PO in Hand</label>
                           </span>
@@ -907,7 +907,6 @@ const RfqReply = () => {
                                   const message = `
                                     <p><strong>Quote Needed Looking for the best price, availability & lead time.</strong></p>
                                     <p>Partial order quotes are accepted and will be considered.</p>
-                                    <p>--------------</p>
                                     ${rfqDetails}
                                     <p>--------------</p>
                                     <p>${initialData.firstName || ""} ${
@@ -923,7 +922,6 @@ const RfqReply = () => {
                                   setComment(defaultComment);
                                 }
                               }}
-
                             />
                             <label>Partial Order Quotes Accepted</label>
                           </span>
