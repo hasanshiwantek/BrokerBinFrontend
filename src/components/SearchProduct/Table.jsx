@@ -133,8 +133,8 @@ const CompanyListingTable = ({ entries }) => {
     <>
       <div className={css.companyListingTable}>
         <div className="overflow-x-auto border-8 border-[#e8e8e8] rounded-md">
-          <div className="bg-[#bfbfbf] p-2">
-            <h1 className="text-white font-semibold p-1 text-[9pt]">
+          <div className="bg-[#bfbfbf] p-1">
+            <h1 className="text-white font-semibold  text-[9pt]">
               Companies Listing Parts
             </h1>
           </div>
