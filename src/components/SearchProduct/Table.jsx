@@ -21,6 +21,11 @@ const CompanyListingTable = ({ entries }) => {
   const dispatch = useDispatch(); // Initialize Redux dispatch
   const token = Cookies.get("token"); //
 
+   
+
+    const renderedCompanies = new Set(); // Track unique companies
+
+
   // const companyId = entries.filter(([key]) => key === "filters") // Extract company data from entries
 
   const handleHoverCompanyDetail = (company) => {
@@ -153,10 +158,14 @@ const CompanyListingTable = ({ entries }) => {
               </tr>
             </thead>
             <tbody className="">
-              {entries
-                .filter(([key]) => key !== "filters")
-                .flatMap(([partModel, details]) =>
-                  (details.data || []).map((row, i) => (
+            {entries.filter(([key]) => key !== "filters")
+                            .flatMap(([partModel, details]) =>
+                                (details.data || []).filter((row) => {
+                                    const id = row.addedBy?.company?.id;
+                                    if (!id || renderedCompanies.has(id)) return false;
+                                    renderedCompanies.add(id);
+                                    return true;
+                                }).map((row, i) => (
                     <tr key={`${partModel}-${i}`} className="">
                       <td className="p-2 border">
                         <a
