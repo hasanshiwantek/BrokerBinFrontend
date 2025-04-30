@@ -221,6 +221,7 @@
   font-weight: 500;
   font-size: 8pt;
   color: #444;
+  white-space: nowrap;
 }
 
 .companyListingTable table tbody td{
@@ -230,6 +231,7 @@
 .companyListingTable table thead th{
   font-weight: 600;
   font-size: 8pt;
+  white-space: nowrap;
 }
 
 
