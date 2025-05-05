@@ -81,6 +81,11 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
   const handleFiltersUpdate = (selectedFilters) => {
     setFilters(selectedFilters);
   };
+  console.log("Filters", filters);
+
+  const selectedFilters = Object.values(filters)
+  .filter(arr => arr.length > 0).length;
+    console.log("Selected Filters", selectedFilters);
 
   // const applyFilters = async () => {
   //   try {
@@ -227,7 +232,7 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
               <ThemeProvider theme={theme}>
                 <Tooltip title="Show Filters" arrow placement="top">
                   <strong className="!text-white !text-3xl ml-4">
-                    {} selected filters
+                    {selectedFilters} selected filters
                   </strong>
                 </Tooltip>
               </ThemeProvider>
