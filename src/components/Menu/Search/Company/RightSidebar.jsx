@@ -87,21 +87,49 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
   .filter(arr => arr.length > 0).length;
     console.log("Selected Filters", selectedFilters);
 
+
+
+
   // const applyFilters = async () => {
   //   try {
-  //     const queryParams = new URLSearchParams();
-
-  //     filters.country.forEach(country => queryParams.append("country", country));
-  //     filters.region.forEach(region => queryParams.append("region", region));
-  //     filters.state.forEach(state => queryParams.append("state", state));
-
-  //     const { data } = await axios.post(`${brokerAPI}company/company-search${queryParams}`);
+  //     const payload = {
+  //       data: {
+  //         company: "",
+  //         newMembers: null,
+  //         city: "",
+  //         zip: "",
+  //         country: filters.country?.length ? filters.country.join(",") : "",
+  //         region: filters.region?.length ? filters.region.join(",") : "",
+  //         state: filters.state?.length ? filters.state.join(",") : "",
+  //         areaCode: "",
+  //         manufacturer: "",
+  //         products: "",
+  //         categories: "",
+  //         keywords: ""
+  //       }
+  //     };
+  //     console.log("🔍 Sending Filter Payload:", payload);
+  
+  //     const { data } = await axios.post(
+  //       `${brokerAPI}company/company-search`,
+  //       payload,
+  //       { headers: { Authorization: `Bearer ${token}` } }
+  //     );
+  
+  //     console.log("✅ API Response:", data);
   //     setFilteredData(data);
   //     setShowFilters(false);
   //   } catch (error) {
-  //     console.error("Error fetching filtered companies:", error);
+  //     console.error("❌ Error fetching filtered companies:", error);
   //   }
   // };
+  
+
+
+
+
+
+
 
   const applyFilters = async () => {
     try {

@@ -27,6 +27,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import shadowImage from "../../../imgs/logo/shadow.png";
 
 const MyContact = () => {
   const token = Cookies.get("token");
@@ -253,6 +254,9 @@ const MyContact = () => {
         case "country":
           groupKey = contact?.country || "Unknown Country";
           break;
+          case "rating":
+            groupKey = contact?.rating || "My Rating";
+            break;
         case "state":
           groupKey = contact?.state || "Unknown State";
           break;
@@ -440,7 +444,11 @@ const MyContact = () => {
                                   className={css.myVendor_company_list_main_img}
                                 >
                                   <img
-                                    src={vendor?.contact?.profileImage}
+                                    src={
+                                      vendor?.contact?.profileImage
+                                        ? vendor?.contact?.profileImage
+                                        : shadowImage
+                                    }
                                     alt="Contact Person Image"
                                     className="cursor-pointer"
                                     onClick={() =>

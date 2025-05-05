@@ -30,6 +30,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import emailIcon from "@/assets/email-icon.svg";
 import webIcon from "@/assets/web.svg";
+import shadowImage from "../../../imgs/logo/shadow.png";
 const MyVendors = () => {
   const token = Cookies.get("token");
   let [viewAsCompany, setViewAsCompany] = useState(true);
@@ -275,7 +276,7 @@ const MyVendors = () => {
       const initialStatus = {};
       myVendor.forEach((vendor) => {
         const id = vendor.company.id;
-        initialStatus[id] = Number(vendor.status) ?? 0; // backend  blockedStatus
+        initialStatus[id] = Number(vendor.company.status) ?? 0; // backend  blockedStatus
         console.log("Initial Status", initialStatus);
       });
       setVendorStatus(initialStatus);
@@ -284,8 +285,8 @@ const MyVendors = () => {
 
   const blockVendorHandler = (companyId) => {
     const currentStatus = vendorStatus[companyId] ?? 1;
-    console.log("Sending Status..",vendorStatus[companyId]);
-    
+    console.log("Sending Status..", vendorStatus[companyId]);
+
     const newStatus = currentStatus === 1 ? 0 : 1;
 
     dispatch(blockMyVendor({ company_id: companyId, status: newStatus, token }))
@@ -313,11 +314,6 @@ const MyVendors = () => {
         dispatch(getMyVendors({ token }));
       });
   };
-
-
-
-  
-
 
   // const blockVendorHandler = (companyId) => {
   //   const currentStatus = vendorStatus[companyId] ?? 1; // If undefined, default 1
@@ -355,7 +351,7 @@ const MyVendors = () => {
           groupKey = vendor.company.name.charAt(0).toUpperCase();
           break;
         case "show":
-          groupKey = vendor.company.display || "Unknown Display";
+          groupKey = vendor.company.display || "First";
           break;
         case "country":
           groupKey = vendor.company.country || "Unknown Country";
@@ -541,7 +537,11 @@ const MyVendors = () => {
                                   className={css.myVendor_company_list_main_img}
                                 >
                                   <img
-                                    src={vendor.company.image}
+                                    src={
+                                      vendor.company.image
+                                        ? vendor.company.image
+                                        : shadowImage
+                                    }
                                     alt="vendor logo"
                                     className="cursor-pointer"
                                     onClick={() =>

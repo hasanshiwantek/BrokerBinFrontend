@@ -1,26 +1,27 @@
 import React, { useEffect, useState } from "react";
 import css from "../../../styles/Popup/CompanyDetails.module.css";
-import companyLogo from "../../../imgs/logo/companyContact.jpg";
-import companyPhoto from "../../../imgs/logo/companyPhoto.jpg";
-import companyContact from "../../../imgs/logo/companyContact.jpg";
 import shadow from "../../../imgs/logo/shadow.png";
-import { MdPersonRemoveAlt1 } from "react-icons/md";
-import { BsStarFill } from "react-icons/bs";
 import { useSelector, useDispatch } from "react-redux";
 import { getCompanyContact } from "../../../ReduxStore/SearchProductSlice";
-import { use } from "react";
 import Cookies from "js-cookie";
 import { deleteCompanyUser } from "../../../ReduxStore/RfqSlice";
-import { LiaWindowClose } from "react-icons/lia";
-import { VscFeedback } from "react-icons/vsc";
 import FeedbackModal from "../FeedBackModal";
 import { brokerAPI } from "../../api/BrokerEndpoint";
 import axios from "axios";
 import { BiSolidMessageRoundedDots } from "react-icons/bi";
-import { BiMessageRoundedMinus } from "react-icons/bi";
 import { Tooltip } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import shadowImage from "../../../imgs/logo/shadow.png";
+import {
+  addMyNotes,
+  fetchMyNotes,
+  removeMyFavouriteContacts,
+} from "../../../ReduxStore/ToolsSlice";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+import { HiUserRemove } from "react-icons/hi";
+
 const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
   // const [toggleTabs, setToggleTabs] = useState(1);
   // Loading state
@@ -30,6 +31,8 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
   const [companyData, setCompanyData] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [feedbacks, setFeedbacks] = useState([]);
+  const { noteData } = useSelector((store) => store.toolsStore);
+  console.log("MY Notes Data From Frontend", noteData);
 
   const dispatch = useDispatch();
   const { companyContactData } = useSelector(
@@ -69,6 +72,22 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
     }
   }, [dispatch, companyId, token]);
 
+  const fetchCompanyContacts = () => {
+    if (companyId && token) {
+      setLoading(true);
+      dispatch(getCompanyContact({ id: companyId, token }))
+        .then((data) => {
+          setFilteredContacts(data.payload.data.contacts);
+        })
+        .catch((error) => {
+          console.error("Error fetching company data:", error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  };
+
   // Filter contacts dynamically based on the search query
   useEffect(() => {
     if (companyContactData?.data?.contacts) {
@@ -89,7 +108,11 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
   }, [searchQuery, companyContactData]);
 
   const loggedInUserId = Cookies.get("user_id");
-  console.log("Logged In User Id", loggedInUserId);
+  console.log("Logged In User Id", Number(loggedInUserId));
+
+  const primaryContactId =
+    companyContactData?.data?.company?.primaryContact?.id;
+  console.log("Primary Contact Id: ", primaryContactId);
 
   const userDeleteHandler = (id) => {
     const isConfirmed = window.confirm(
@@ -109,24 +132,6 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
       console.log(`User with ID ${id} was not deleted.`);
     }
   };
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axios.get(`${brokerAPI}feedback/company/${companyId}`, {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       });
-  //       const data = response.data;
-  //       console.log("FEEDBACKDATA", data);
-  //     } catch (error) {
-  //       console.log("Error", error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, [companyId]);
 
   useEffect(() => {
     if (toggleTabs === 5) {
@@ -153,9 +158,62 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
     }
   };
 
+  // NOTES AND RATING LOIGIC
+
+  const [notes, setNotes] = useState({});
+  const [ratings, setRatings] = useState({});
+  console.log("Notes ", notes);
+
+  const handleNotes = async (contactId) => {
+    const note = notes[contactId] || "";
+    const rating = ratings[contactId] || 0;
+
+    try {
+      const result = await dispatch(
+        addMyNotes({ user_id: contactId, note, rating, token })
+      );
+      const payload = result?.payload;
+      if (payload?.success) {
+        toast.success("Note and rating saved!");
+      } else {
+        toast.info(payload?.message || "Failed to save note and rating.");
+      }
+    } catch (err) {
+      toast.error("Error saving: " + err.message);
+    }
+  };
+
+  useEffect(() => {
+    dispatch(fetchMyNotes({ token }));
+  }, []);
+
+  // REMOVE CONTACT LOGIC
+  // const removeCompanyContacts = async (id) => {
+  //   const isConfirmed = window.confirm(
+  //     "Are you sure you want to delete this user?"
+  //   );
+  //   if (isConfirmed) {
+  //     try {
+  //       const result = await dispatch(
+  //         removeMyFavouriteContacts({ contact_id: id, token })
+  //       ).unwrap(); // No need for .payload here
+
+  //       if (result?.success) {
+  //         toast.info(result?.message || "Contact Removed From Favourites!");
+  //         fetchCompanyContacts(); // Make sure this function exists
+  //       } else {
+  //         toast.info(result?.message || "Failed to remove contact.");
+  //       }
+  //     } catch (err) {
+  //       toast.error("Error removing contact: " + err.message);
+  //     }
+  //   }
+  // };
+
   const loadMore = () => {
     setVisibleFeedbacks((prev) => prev + 10);
   };
+
   const theme = createTheme({
     components: {
       MuiTooltip: {
@@ -344,15 +402,30 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
                             </span>
                           </div>
                         </div>
-                        {/* <button> */}
-                        {/* <span
-                            className="cursor-pointer hover:text-orange-500 transition-colors"
-                            onClick={() => userDeleteHandler(user.id)}
-                          >
-                            <MdPersonRemoveAlt1 />
-                            Remove contact
-                          </span> */}
-                        {/* </button> */}
+
+                        {loggedInUserId == primaryContactId ? (
+                          <>
+                            <div
+                              className="flex flex-col items-center"
+                              onClick={() => removeCompanyContacts(user.id)}
+                            >
+                              <ThemeProvider theme={theme}>
+                                <Tooltip
+                                  title="Remove from your contacts" 
+                                  arrow
+                                  placement="top"
+                                >
+                                  <button className="cursor-pointer  text-black ">
+                                    <HiUserRemove size={30} />
+                                  </button>
+                                  <span className="hover:border-b-blue-500 border-transparent border-2 cursor-pointer text-[8pt]">
+                                    Remove Contact
+                                  </span>
+                                </Tooltip>
+                              </ThemeProvider>
+                            </div>
+                          </>
+                        ) : null}
                       </div>
                       <div
                         className={
@@ -360,7 +433,15 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
                         }
                       >
                         <div>
-                          <strong className="p-2 text-lg">My Notes:</strong>
+                          <div className="flex items-center justify-center">
+                            <strong className="p-2 text-lg">My Notes:</strong>
+                            <button
+                              className="text-blue-500 hover:underline text-base"
+                              onClick={() => handleNotes(user.id)}
+                            >
+                              Save Notes
+                            </button>
+                          </div>
                           <span>
                             <strong>My Rating</strong>
                             <div className="columns">
@@ -607,6 +688,19 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
                           <textarea
                             placeholder="This section is only visible to you by your login. Enter your personal notes about this here"
                             className="focus:ring-1 focus:ring-blue-500 focus:border-blue-500 border border-gray-300 rounded-lg p-2 w-full focus:outline-none transition"
+                            value={
+                              notes[user.id] ??
+                              (noteData?.notes?.find(
+                                (n) => n.user?.id === user.id
+                              )?.note ||
+                                "")
+                            }
+                            onChange={(e) =>
+                              setNotes((prevNotes) => ({
+                                ...prevNotes,
+                                [user.id]: e.target.value,
+                              }))
+                            }
                           ></textarea>
                         </div>
                       </div>
@@ -744,6 +838,7 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
           </div>
         </div>
       </div>
+      <ToastContainer position="top-center" autoClose={2000} />
     </>
   );
 };

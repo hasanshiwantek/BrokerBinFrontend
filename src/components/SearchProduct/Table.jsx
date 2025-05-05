@@ -9,7 +9,7 @@ import {
 } from "../../ReduxStore/SearchProductSlice";
 import css from "@/styles/SearchProducts.module.css";
 import { FaUserPlus } from "react-icons/fa";
-import { FaUserXmark } from "react-icons/fa6";
+import { FaUserXmark, FaUserCheck } from "react-icons/fa6";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
@@ -63,7 +63,7 @@ const CompanyListingTable = ({ entries }) => {
         .forEach(([partModel, details]) => {
           (details.data || []).forEach((vendor) => {
             const id = vendor.addedBy?.company?.id;
-            const status = Number(vendor.status) ?? 0;
+            const status = Number(vendor.addedBy?.company?.status) ?? 0;
             if (id) {
               initialStatus[id] = status;
             }
@@ -218,21 +218,31 @@ const CompanyListingTable = ({ entries }) => {
                               </span>
                             </Tooltip>
                           </ThemeProvider>
-                          <ThemeProvider theme={theme}>
-                            <Tooltip
-                              title="Block This Vendor"
-                              arrow
-                              placement="top"
-                            >
-                              <span
-                                onClick={() =>
-                                  blockVendorHandler(row.addedBy?.company?.id)
+                          <div className="cursor-pointer">
+                            <ThemeProvider theme={theme}>
+                              <Tooltip
+                                title={
+                                  vendorStatus[row.addedBy?.company?.id] === 1
+                                    ? "Unblock this vendor"
+                                    : "Block this vendor from viewing my inventory"
                                 }
+                                arrow
+                                placement="right"
                               >
-                                <FaUserXmark size={15} />
-                              </span>
-                            </Tooltip>
-                          </ThemeProvider>
+                                <span
+                                  onClick={() =>
+                                    blockVendorHandler(row.addedBy?.company?.id)
+                                  }
+                                >
+                                  {vendorStatus[row.addedBy?.company?.id] === 1 ? (
+                                    < FaUserCheck  size={15} />
+                                  ) : (
+                                    <FaUserXmark size={15} />
+                                  )}
+                                </span>
+                              </Tooltip>
+                            </ThemeProvider>
+                          </div>
                         </td>
                       </tr>
                     ))
