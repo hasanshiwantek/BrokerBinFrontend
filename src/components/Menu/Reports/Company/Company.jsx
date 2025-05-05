@@ -91,14 +91,14 @@ const Company = () => {
                   <span>Email</span>
                 </NavLink>
               </li>
-              <li>
+              {/* <li>
                 <NavLink
                   to="/reports/serviceStats"
                   className={({ isActive }) => (isActive ? myProfile.active : '')}
                 >
                   <span>Stats</span>
                 </NavLink>
-              </li>
+              </li> */}
             </ul>
           </div>
       {/* Overview Section */}

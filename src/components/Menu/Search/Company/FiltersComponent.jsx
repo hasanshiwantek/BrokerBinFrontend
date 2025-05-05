@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/accordion";
 import { regionsList, countriesList, statesList } from "@/data/services";
 
-const FiltersComponent = ({ onFiltersChange, setFilteredData,scrollToSection }) => {
+const FiltersComponent = ({ onFiltersChange, scrollToSection }) => {
   const [filters, setFilters] = useState({
     region: [],
     country: [],

@@ -101,41 +101,41 @@ const Email = () => {
       <div className={css.mainContainer}>
         {/* Navigation Tabs */}
         <div className={myProfile.profileInfo_links}>
-            <ul>
-              <li>
-                <NavLink
-                  to="/reports/Company"
-                  className={({ isActive }) => (isActive ? myProfile.active : '')}
-                >
-                  <span>Company</span>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/reports/sitewide"
-                  className={({ isActive }) => (isActive ? myProfile.active : '')}
-                >
-                  <span>Site Wide</span>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/reports/email"
-                  className={({ isActive }) => (isActive ? myProfile.active : '')}
-                >
-                  <span>Email</span>
-                </NavLink>
-              </li>
-              <li>
+          <ul>
+            <li>
+              <NavLink
+                to="/reports/Company"
+                className={({ isActive }) => (isActive ? myProfile.active : '')}
+              >
+                <span>Company</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/reports/sitewide"
+                className={({ isActive }) => (isActive ? myProfile.active : '')}
+              >
+                <span>Site Wide</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/reports/email"
+                className={({ isActive }) => (isActive ? myProfile.active : '')}
+              >
+                <span>Email</span>
+              </NavLink>
+            </li>
+            {/* <li>
                 <NavLink
                   to="/reports/serviceStats"
                   className={({ isActive }) => (isActive ? myProfile.active : '')}
                 >
                   <span>Stats</span>
                 </NavLink>
-              </li>
-            </ul>
-          </div>
+              </li> */}
+          </ul>
+        </div>
 
         <div className={css.mainBody}>
           <div className={css.container}>
@@ -329,7 +329,7 @@ const Email = () => {
               </div>
 
               {/* Top 200 Searches Per Manufacturer Section */}
-              <div className={css.section} style={{border:"1px solid black"}}>
+              <div className={css.section} style={{ border: "1px solid black" }}>
                 <h1>Top 200 Searches Per Manufacturer</h1>
                 <h1>Send Emails</h1>
                 <div className={css.checkboxGroup}>
@@ -355,26 +355,26 @@ const Email = () => {
                     /> Monthly
                   </label>
                 </div>
-                 {/* Include MFG's Section */}
-              <div className={css.section}>
-                <h1>Include These MFG's</h1>
-                <select
-                  multiple
-                  value={checkboxes.includeMFGs}
-                  onChange={(e) => {
-                    const selectedOptions = Array.from(e.target.selectedOptions, (option) => option.value);
-                    handleSelectChange("includeMFGs", selectedOptions);
-                  }}
-                >
-                  <option value="3COM">3COM</option>
-                  <option value="IBM">IBM</option>
-                  <option value="3rd PARTY">3rd PARTY</option>
-                  <option value="JUNIPER">JUNIPER</option>
-                </select>
-              </div>
+                {/* Include MFG's Section */}
+                <div className={css.section}>
+                  <h1>Include These MFG's</h1>
+                  <select
+                    multiple
+                    value={checkboxes.includeMFGs}
+                    onChange={(e) => {
+                      const selectedOptions = Array.from(e.target.selectedOptions, (option) => option.value);
+                      handleSelectChange("includeMFGs", selectedOptions);
+                    }}
+                  >
+                    <option value="3COM">3COM</option>
+                    <option value="IBM">IBM</option>
+                    <option value="3rd PARTY">3rd PARTY</option>
+                    <option value="JUNIPER">JUNIPER</option>
+                  </select>
+                </div>
               </div>
 
-             
+
 
               {/* Save Changes Button */}
               <div className={css.section}>
@@ -384,8 +384,6 @@ const Email = () => {
           </div>
         </div>
       </div>
-
-
     </>
   );
 };
