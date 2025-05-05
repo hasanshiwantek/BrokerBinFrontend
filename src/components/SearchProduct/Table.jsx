@@ -24,8 +24,6 @@ const CompanyListingTable = ({ entries }) => {
 
   const renderedCompanies = new Set(); // Track unique companies
 
-  // const companyId = entries.filter(([key]) => key === "filters") // Extract company data from entries
-
   const handleHoverCompanyDetail = (company) => {
     dispatch(setHoverCompanyDetail(company));
   };
@@ -34,7 +32,7 @@ const CompanyListingTable = ({ entries }) => {
     dispatch(setPopupCompanyDetail([company]));
     dispatch(setTogglePopUp());
   };
-
+  
   // ADD VENDOR LOGIC
   const addVendorHandler = async (id) => {
     try {
