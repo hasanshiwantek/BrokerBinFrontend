@@ -81,14 +81,21 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
   const handleFiltersUpdate = (selectedFilters) => {
     setFilters(selectedFilters);
   };
-  console.log("Filters", filters);
 
-  const selectedFilters = Object.values(filters)
+  const clearFilters = () => {
+    setFilters({}); // Clear all filters
+    setFilteredData(null); // Reset filtered data to null
+    setShowFilters(false); // Close the filter section
+  }
+
+  // const handleFiltersUpdate = (selectedFilters) => {
+    //   setFilters((prev) => ({ ...prev, ...selectedFilters }));
+    // };
+    console.log("Filters", filters);
+
+  const selectedFiltersCount = Object.values(filters)
   .filter(arr => arr.length > 0).length;
-    console.log("Selected Filters", selectedFilters);
-
-
-
+    console.log("Selected Filters", selectedFiltersCount);
 
   // const applyFilters = async () => {
   //   try {
@@ -124,13 +131,6 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
   //   }
   // };
   
-
-
-
-
-
-
-
   const applyFilters = async () => {
     try {
       const payload = {
@@ -260,7 +260,7 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
               <ThemeProvider theme={theme}>
                 <Tooltip title="Show Filters" arrow placement="top">
                   <strong className="!text-white !text-3xl ml-4">
-                    {selectedFilters} selected filters
+                    {selectedFiltersCount} selected filters
                   </strong>
                 </Tooltip>
               </ThemeProvider>
