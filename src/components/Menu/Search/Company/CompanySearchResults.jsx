@@ -64,6 +64,8 @@ const CompanySearchResults = () => {
     }
   };
 
+
+
   const [isClicked, setIsClicked] = useState(false);
   return (
     <div
