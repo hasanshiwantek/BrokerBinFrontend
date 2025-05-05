@@ -17,32 +17,28 @@ import { Tooltip } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { addMyVendors, blockMyVendor } from "@/ReduxStore/ToolsSlice";
 import Cookies from "js-cookie";
+
 const CompanyListingTable = ({ entries }) => {
-  const dispatch = useDispatch(); // Initialize Redux dispatch
-  const token = Cookies.get("token"); //
+  const dispatch = useDispatch();
+  const token = Cookies.get("token");
 
   const renderedCompanies = new Set(); // Track unique companies
 
-  // const companyId = entries.filter(([key]) => key === "filters") // Extract company data from entries
-
   const handleHoverCompanyDetail = (company) => {
-    dispatch(setHoverCompanyDetail(company)); // Dispatch company details to Redux store}
+    dispatch(setHoverCompanyDetail(company));
   };
 
   const handleShowPopupCompanyDetails = (company) => {
-    dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
-    dispatch(setTogglePopUp()); // Show company modal
+    dispatch(setPopupCompanyDetail([company]));
+    dispatch(setTogglePopUp());
   };
-
+  
   // ADD VENDOR LOGIC
-
   const addVendorHandler = async (id) => {
     try {
       const companyId = { company_id: id };
       const response = await dispatch(addMyVendors({ companyId, token }));
-
       const result = response.payload;
-
       if (response?.error) {
         console.error("Add vendor error:", result?.message);
         toast.error(result?.message || "Vendor already added.");
@@ -56,15 +52,12 @@ const CompanyListingTable = ({ entries }) => {
     }
   };
 
-  //   BLOCK VENDOR LOGIC
-
   const [vendorStatus, setVendorStatus] = useState({});
   console.log("Vendor Status", vendorStatus);
 
   useEffect(() => {
     if (entries && entries.length > 0) {
       const initialStatus = {};
-
       entries
         .filter(([key]) => key !== "filters")
         .forEach(([partModel, details]) => {
@@ -76,7 +69,6 @@ const CompanyListingTable = ({ entries }) => {
             }
           });
         });
-
       console.log("Initial Status", initialStatus);
       setVendorStatus(initialStatus);
     }
@@ -85,14 +77,11 @@ const CompanyListingTable = ({ entries }) => {
   const blockVendorHandler = (companyId) => {
     const currentStatus = vendorStatus[companyId] ?? 1;
     console.log("Sending Status..", vendorStatus[companyId]);
-
     const newStatus = currentStatus === 1 ? 0 : 1;
-
     dispatch(blockMyVendor({ company_id: companyId, status: newStatus, token }))
       .unwrap()
       .then((result) => {
         console.log("Server Result:", result);
-
         if (result?.status === "success") {
           toast.success(result?.message || "Vendor status updated!");
           setVendorStatus((prev) => ({

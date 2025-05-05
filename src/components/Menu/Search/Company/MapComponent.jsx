@@ -12,6 +12,7 @@ import { Tooltip } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "./CompanySearchResults.css";
 import { FaInfoCircle } from "react-icons/fa";
+
 const MapComponent = ({ company }) => {
   const companiesArray = Array.isArray(company?.companies)
     ? company.companies

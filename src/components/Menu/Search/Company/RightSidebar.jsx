@@ -29,11 +29,11 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 
-const RightSidebar = ({ company }) => {
+const RightSidebar = ({ company, filteredData, setFilteredData }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({});
-  const [filteredData, setFilteredData] = useState(null); // ✅ Store filtered data
+  // const [filteredData, setFilteredData] = useState(null); // ✅ it was made to store filtered data but now it is passed from parent.
   const [dropdownOpen, setDropdownOpen] = useState(null);
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -82,47 +82,6 @@ const RightSidebar = ({ company }) => {
     setFilters(selectedFilters);
   };
 
-  const applyFilters = async () => {
-    try {
-      const payload = {
-        data: {
-          country: filters.country,
-          region: filters.region,
-          state: filters.state,
-        }
-      };
-  
-      console.log("📤 Sending Payload to API:", payload);
-  
-      const { data } = await axios.post(
-        `${brokerAPI}company/company-search`,
-        payload,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-  
-      console.log("✅ Response from API:", data);
-  
-      if (!data?.companies || data.companies.length === 0) {
-        toast.warn("No matching companies found.", {
-          style: { fontSize: "16px" }
-        });
-      } else {
-        toast.success("Companies filtered successfully!", {
-          style: { fontSize: "16px" }
-        });
-      }
-  
-      setFilteredData(data);
-      // props.setFilteredData(data); // ✅ this will now call updateFilteredData in parent
-
-    } catch (error) {
-      console.error("❌ Error fetching filtered companies:", error);
-      toast.error("Something went wrong while applying filters.", {
-        style: { fontSize: "16px" }
-      });
-    }
-  };
-  
 
 
 
@@ -167,17 +126,40 @@ const RightSidebar = ({ company }) => {
 
 
 
+  const applyFilters = async () => {
+    try {
+      const payload = {
+        data: {
+          country: filters.country,
+          region: filters.region,
+          state: filters.state,
+          categories: filters.categories,
+          // state: filters.state.length ? filters.state.join(",") : "",
+          // country: filters.country.length ? filters.country.join(",") : "",
+        }
+      }
+      const { data } = await axios.post(`${brokerAPI}company/company-search`, payload,
+        { headers: { Authorization: `Bearer ${token}` } },
+        // console.log("TOKEN", token) 
+      )
+      setFilteredData(data);
+      setShowFilters(false);
+    } catch (error) {
+      console.log("Error fetching filtered companies", error);
+    }
+  };
 
-  const totalResults = company?.total ?? filteredData?.total;
+  const totalResults = filteredData ? filteredData.total : company?.total;
+  // console.log("TOTAL RESULTS", totalResults);
 
   const companiesToShow =
     Array.isArray(filteredData?.companies) && filteredData.companies.length > 0
       ? filteredData.companies
       : company
-      ? Array.isArray(company.companies)
-        ? company.companies
-        : [company]
-      : [];
+        ? Array.isArray(company.companies)
+          ? company.companies
+          : [company]
+        : [];
 
   console.log("COMPANIES TO SHOW", companiesToShow);
   // useEffect(() => {
@@ -218,9 +200,7 @@ const RightSidebar = ({ company }) => {
   };
 
   const companyRatings = companiesToShow?.map((vendor) => vendor?.rating) || [];
-  const ratingCounts =
-    companiesToShow?.map((vendor) => vendor?.ratingCount) || [];
-
+  const ratingCounts = companiesToShow?.map((vendor) => vendor?.ratingCount) || [];
 
   console.log("Rating Counts:", ratingCounts);
 
@@ -275,7 +255,7 @@ const RightSidebar = ({ company }) => {
               <ThemeProvider theme={theme}>
                 <Tooltip title="Show Filters" arrow placement="top">
                   <strong className="!text-white !text-3xl ml-4">
-                    0 selected filters
+                    {} selected filters
                   </strong>
                 </Tooltip>
               </ThemeProvider>
@@ -285,9 +265,8 @@ const RightSidebar = ({ company }) => {
 
         {!showFilters ? (
           <IoIosArrowUp
-            className={`transition-transform ${
-              isDropdownOpen ? "rotate-180" : ""
-            }`}
+            className={`transition-transform ${isDropdownOpen ? "rotate-180" : ""
+              }`}
           />
         ) : (
           <div className="flex gap-2">
@@ -360,7 +339,7 @@ const RightSidebar = ({ company }) => {
         <FiltersComponent
           onFiltersChange={handleFiltersUpdate}
           setShowFilters={setShowFilters}
-          setFilteredData={setFilteredData}
+          // setFilteredData={setFilteredData}
           scrollToSection={scrollToSection}
         />
       ) : (
@@ -415,8 +394,8 @@ const RightSidebar = ({ company }) => {
                             isFilled
                               ? "#FFD700"
                               : isPartial
-                              ? "rgba(255, 215, 0, 0.5)"
-                              : "#CCC"
+                                ? "rgba(255, 215, 0, 0.5)"
+                                : "#CCC"
                           }
                           style={{ cursor: "pointer", marginRight: 2 }}
                         />
@@ -428,13 +407,13 @@ const RightSidebar = ({ company }) => {
                   <p className="text-center text-base m-2">
                     (
                     {companyRatings[index] == null ||
-                    isNaN(companyRatings[index])
+                      isNaN(companyRatings[index])
                       ? "N/A"
                       : (
-                          (Math.min(Math.max(companyRatings[index], 0), 5) /
-                            5) *
-                          100
-                        ).toFixed(1) + "%"}
+                        (Math.min(Math.max(companyRatings[index], 0), 5) /
+                          5) *
+                        100
+                      ).toFixed(1) + "%"}
                     )
                   </p>
                 </div>
@@ -520,7 +499,7 @@ const RightSidebar = ({ company }) => {
                       className="w-7 h-7 "
                       src={addVendorIcon}
                       alt="Email"
-                    />{" "}  
+                    />{" "}
                   </span>{" "}
                   Add Vendor
                 </button>

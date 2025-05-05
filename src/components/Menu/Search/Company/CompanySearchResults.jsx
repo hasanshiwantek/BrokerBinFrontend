@@ -60,7 +60,7 @@ const CompanySearchResults = () => {
         console.log("COMPANY RESULTS", companyData);
       } catch (error) {
         console.log("ERROR while searching", error);
-      }  
+      }
     }
   };
 
@@ -73,7 +73,7 @@ const CompanySearchResults = () => {
     >
       <div className={styles.profileInfo_links}>
         <ul>
-          <li>  
+          <li>
             <NavLink
               to="/search/Inventory"
               end
@@ -117,11 +117,10 @@ const CompanySearchResults = () => {
               />
               <div
                 className={`p-3 rounded-sm cursor-pointer transition duration-300 
-        ${
-          isClicked
-            ? "bg-blue-700 outline outline-blue-300"
-            : "bg-gray-400 hover:bg-blue-500"
-        }`}
+              ${isClicked
+                    ? "bg-blue-700 outline outline-blue-300"
+                    : "bg-gray-400 hover:bg-blue-500"
+                  }`}
                 onClick={() => {
                   setIsClicked(true);
                   handleSearch();

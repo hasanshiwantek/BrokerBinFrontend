@@ -462,9 +462,9 @@ const Header = () => {
                       </Link>
                     </Tooltip>
                   </ThemeProvider>
-                  {/* <Link to={"/reports/Company"}>
+                  <Link to={"/reports/Company"}>
                     <li><img src={dp5} alt="" srcset="" style={{ color: "black" }} />........</li>
-                  </Link> */}
+                  </Link>
                 </ul>
               </div>
             </li>
@@ -590,7 +590,7 @@ const Header = () => {
                 </ul>
               </div>
             </li>
-            {/* <li>
+            <li>
               <a href="/reports/email">reports</a>
               < IoIosArrowDown className={css.onHoverMenuIconDown} />
               <IoIosArrowUp className={css.onHoverMenuIconUp} />
@@ -609,14 +609,14 @@ const Header = () => {
                       Email
                     </li>
                   </Link>
-                  <Link to={"/reports/serviceStats"} >
+                  {/* <Link to={"/reports/serviceStats"} >
                     <li>
                       Service Directory Stats
                     </li>
-                  </Link>
+                  </Link> */}
                 </ul>
               </div>
-            </li> */}
+            </li>
             <li>
               <Link to={"/broadcasts"}>broadcast</Link>
               <IoIosArrowDown className={css.onHoverMenuIconDown} />
@@ -771,11 +771,11 @@ const Header = () => {
                     </li>
                   </Tooltip>
                 </ThemeProvider>
-                {/* <li>
+                <li>
                   <Link to={"/reports/Company"}>
                     <FiTarget />
                   </Link>
-                </li> */}
+                </li>
                 {/* <li className={css.navbar_search_options}>
                   <select name="navbarSearchOptions"  >
                     <option value="">MFG Filter</option>
