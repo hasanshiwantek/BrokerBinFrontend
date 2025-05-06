@@ -12,6 +12,7 @@ import { Tooltip } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "./CompanySearchResults.css";
 import { FaInfoCircle } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 
 const MapComponent = ({ company }) => {
   const companiesArray = Array.isArray(company?.companies)
@@ -87,6 +88,12 @@ const MapComponent = ({ company }) => {
     },
   });
 
+  const companyRatings = companiesArray?.map((vendor) => vendor?.rating) || [];
+  const ratingCounts =
+    companiesArray?.map((vendor) => vendor?.ratingCount) || [];
+
+  console.log("Rating Counts From Mapcomponent page:", ratingCounts);
+
   return (
     <LoadScript googleMapsApiKey="AIzaSyBxPohwrm4YVcvGHwJLE2hoQ_ATCfodbzc">
       <GoogleMap
@@ -120,14 +127,12 @@ const MapComponent = ({ company }) => {
               >
                 <ThemeProvider theme={theme}>
                   <Tooltip title="View Company Profile" arrow placement="top">
-                    <div
-                      className="p-4 max-w-[270px] font-sans text-gray-800 rounded-lg shadow-lg overflow-hidden bg-white text-center cursor-pointer"
-                      onClick={() => openCompanyModal(company)}
-                    >
+                    <div className="p-4 max-w-[270px] font-sans text-gray-800 rounded-lg shadow-lg overflow-hidden bg-white text-center cursor-pointer">
                       <img
                         src={company.logo}
                         alt="Company Logo"
                         className="w-40 rounded-md mb-2 m-auto"
+                        onClick={() => openCompanyModal(company)}
                       />
                       <h3 className="text-2xl font-semibold text-black mb-1">
                         {company.company}
@@ -138,7 +143,59 @@ const MapComponent = ({ company }) => {
                       </p>
                       <p className="!text-xl mb-1">
                         <strong className="!text-lg">Rating:</strong>{" "}
-                        {company.rating} ⭐⭐⭐⭐⭐
+                        <div>
+                          {/* ⭐ Display Star Ratings */}
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              margin: "auto",
+                              width: "10rem",
+                              // marginTop: "10px",
+                            }}
+                          >
+                            {[...Array(5)].map((_, starIndex) => {
+                              const rating = companyRatings?.[index] || 0; // ✅ index is now defined
+                              const isFilled =
+                                starIndex + 1 <= Math.floor(rating);
+                              const isPartial =
+                                starIndex < rating &&
+                                starIndex + 1 > Math.floor(rating);
+
+                              return (
+                                <FaStar
+                                  key={starIndex}
+                                  size={24}
+                                  color={
+                                    isFilled
+                                      ? "#FFD700"
+                                      : isPartial
+                                      ? "rgba(255, 215, 0, 0.5)"
+                                      : "#CCC"
+                                  }
+                                  style={{ cursor: "pointer", marginRight: 2 }}
+                                />
+                              );
+                            })}
+                          </div>
+
+                          {/* Display Rating Value & Count */}
+                          <p className="text-center text-base m-2">
+                            (
+                            {companyRatings[index] == null ||
+                            isNaN(companyRatings[index])
+                              ? "N/A"
+                              : (
+                                  (Math.min(
+                                    Math.max(companyRatings[index], 0),
+                                    5
+                                  ) /
+                                    5) *
+                                  100
+                                ).toFixed(1) + "%"}
+                            )
+                          </p>
+                        </div>
                         <p className="!text-xl mb-1"></p>Comments:{" "}
                         {company.ratingCount}
                       </p>
