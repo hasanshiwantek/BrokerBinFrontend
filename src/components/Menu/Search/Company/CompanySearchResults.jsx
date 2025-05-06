@@ -54,6 +54,7 @@ const CompanySearchResults = () => {
         if (result.companies.length > 0) {
           console.log("API Response:", result);
           console.log("Before update:", companyData);
+          setFilteredData(null);
           setCompanyData(result); // ✅ Update Map with new location
           console.log("Updated companyData:", result.companies[0]);
         }

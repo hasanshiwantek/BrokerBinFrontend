@@ -7,8 +7,8 @@ import {
 } from "@/components/ui/accordion";
 import { regionsList, countriesList, statesList } from "@/data/services";
 
-const FiltersComponent = ({ onFiltersChange, scrollToSection }) => {
-  const [filters, setFilters] = useState({
+const FiltersComponent = ({ onFiltersChange, scrollToSection, initialFilters }) => {
+  const [filters, setFilters] = useState(initialFilters || {
     region: [],
     country: [],
     state: [],
@@ -36,9 +36,6 @@ const FiltersComponent = ({ onFiltersChange, scrollToSection }) => {
     states: statesList[country] || [],
   }));
   console.log("......", combineStates);
-
-
-
 
   const [openAccordion, setOpenAccordion] = useState([]); // 🟢 Stores expanded sections
 
