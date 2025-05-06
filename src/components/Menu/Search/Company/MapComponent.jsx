@@ -122,12 +122,13 @@ const MapComponent = ({ company }) => {
                   <Tooltip title="View Company Profile" arrow placement="top">
                     <div
                       className="p-4 max-w-[270px] font-sans text-gray-800 rounded-lg shadow-lg overflow-hidden bg-white text-center cursor-pointer"
-                      onClick={() => openCompanyModal(company)}
+                    
                     >
                       <img
                         src={company.logo}
                         alt="Company Logo"
                         className="w-40 rounded-md mb-2 m-auto"
+                        onClick={() => openCompanyModal(company)}
                       />
                       <h3 className="text-2xl font-semibold text-black mb-1">
                         {company.company}

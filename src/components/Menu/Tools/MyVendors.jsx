@@ -30,7 +30,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import emailIcon from "@/assets/email-icon.svg";
 import webIcon from "@/assets/web.svg";
-import shadowImage from "../../../imgs/logo/shadow.png";
+import defaultCompanyLogo from "@/assets/defaultComp.png";
+
 const MyVendors = () => {
   const token = Cookies.get("token");
   let [viewAsCompany, setViewAsCompany] = useState(true);
@@ -540,7 +541,7 @@ const MyVendors = () => {
                                     src={
                                       vendor.company.image
                                         ? vendor.company.image
-                                        : shadowImage
+                                        : defaultCompanyLogo
                                     }
                                     alt="vendor logo"
                                     className="cursor-pointer"
