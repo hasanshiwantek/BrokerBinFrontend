@@ -26,7 +26,13 @@ import { setPopupCompanyDetail } from "../../ReduxStore/SearchProductSlice";
 import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { FaStar, FaStarHalfAlt, FaRegStar,FaAddressBook,FaHandshake } from "react-icons/fa";
+import {
+  FaStar,
+  FaStarHalfAlt,
+  FaRegStar,
+  FaAddressBook,
+  FaHandshake,
+} from "react-icons/fa";
 
 const Home = () => {
   const token = Cookies.get("token");
@@ -196,20 +202,30 @@ const Home = () => {
   console.log("Company Ratings ", companyRatings);
 
   console.log("Rating Counts:", ratingCounts);
-
   const renderStars = (rating) => {
     const stars = [];
+  
     for (let i = 1; i <= 5; i++) {
+      let icon;
+      const commonStyle = {
+        stroke: "black",     // Border color
+        strokeWidth: "10",   // Thickness of border
+      };
+  
       if (i <= rating) {
-        stars.push(<FaStar key={i} color="gold" size={20} />); // Full Star
+        icon = <FaStar key={i} size={24} color="gold" style={commonStyle} />;
       } else if (i - 0.5 === rating) {
-        stars.push(<FaStarHalfAlt key={i} color="gold" size={20} />); // Half Star
+        icon = <FaStarHalfAlt key={i} size={24} color="gold" style={commonStyle} />;
       } else {
-        stars.push(<FaRegStar key={i} color="gray" size={20} />); // Empty Star
+        icon = <FaRegStar key={i} size={24} color="gray" style={commonStyle} />;
       }
+  
+      stars.push(icon);
     }
+  
     return stars;
   };
+  
 
   const companyRatingsPer = ((companyRatings / 5) * 100).toFixed(1);
   console.log("Company Ratings in %:", companyRatingsPer);

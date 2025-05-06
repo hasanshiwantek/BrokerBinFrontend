@@ -89,10 +89,11 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
     setFilteredData(null); // Reset filtered data to null
     setShowFilters(false); // Close the filter section
     // applyFilters(); // Re-fetch all data without filters
-  }
+  };
 
-  const selectedFiltersCount = Object.values(filters)
-    .filter(arr => arr.length > 0).length;
+  const selectedFiltersCount = Object.values(filters).filter(
+    (arr) => arr.length > 0
+  ).length;
   console.log("Selected Filters", selectedFiltersCount);
 
   const applyFilters = async () => {
@@ -105,12 +106,14 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
           categories: filters.categories,
           // state: filters.state.length ? filters.state.join(",") : "",
           // country: filters.country.length ? filters.country.join(",") : "",
-        }
-      }
-      const { data } = await axios.post(`${brokerAPI}company/company-search`, payload,
-        { headers: { Authorization: `Bearer ${token}` } },
-        // console.log("TOKEN", token) 
-      )
+        },
+      };
+      const { data } = await axios.post(
+        `${brokerAPI}company/company-search`,
+        payload,
+        { headers: { Authorization: `Bearer ${token}` } }
+        // console.log("TOKEN", token)
+      );
       setFilteredData(data);
       setShowFilters(false);
     } catch (error) {
@@ -125,10 +128,10 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
     Array.isArray(filteredData?.companies) && filteredData.companies.length > 0
       ? filteredData.companies
       : company
-        ? Array.isArray(company.companies)
-          ? company.companies
-          : [company]
-        : [];
+      ? Array.isArray(company.companies)
+        ? company.companies
+        : [company]
+      : [];
 
   console.log("COMPANIES TO SHOW", companiesToShow);
   // useEffect(() => {
@@ -169,7 +172,8 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
   };
 
   const companyRatings = companiesToShow?.map((vendor) => vendor?.rating) || [];
-  const ratingCounts = companiesToShow?.map((vendor) => vendor?.ratingCount) || [];
+  const ratingCounts =
+    companiesToShow?.map((vendor) => vendor?.ratingCount) || [];
 
   console.log("Rating Counts:", ratingCounts);
 
@@ -234,8 +238,9 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
 
         {!showFilters ? (
           <IoIosArrowUp
-            className={`transition-transform ${isDropdownOpen ? "rotate-180" : ""
-              }`}
+            className={`transition-transform ${
+              isDropdownOpen ? "rotate-180" : ""
+            }`}
           />
         ) : (
           <div className="flex gap-2">
@@ -365,10 +370,15 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
                             isFilled
                               ? "#FFD700"
                               : isPartial
-                                ? "rgba(255, 215, 0, 0.5)"
-                                : "#CCC"
+                              ? "rgba(255, 215, 0, 0.5)"
+                              : "#CCC"
                           }
-                          style={{ cursor: "pointer", marginRight: 2 }}
+                          style={{
+                            cursor: "pointer",
+                            marginRight: 2,
+                            stroke: "black",
+                            strokeWidth: "10",
+                          }}
                         />
                       );
                     })}
@@ -378,13 +388,13 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
                   <p className="text-center text-base m-2">
                     (
                     {companyRatings[index] == null ||
-                      isNaN(companyRatings[index])
+                    isNaN(companyRatings[index])
                       ? "N/A"
                       : (
-                        (Math.min(Math.max(companyRatings[index], 0), 5) /
-                          5) *
-                        100
-                      ).toFixed(1) + "%"}
+                          (Math.min(Math.max(companyRatings[index], 0), 5) /
+                            5) *
+                          100
+                        ).toFixed(1) + "%"}
                     )
                   </p>
                 </div>

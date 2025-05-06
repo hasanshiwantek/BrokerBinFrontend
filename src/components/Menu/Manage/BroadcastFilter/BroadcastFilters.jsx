@@ -395,14 +395,16 @@ const Options = () => {
                     <span>Options</span>
                   </NavLink>
                 </li> */}
-                {/* <li>
+                <li>
                   <NavLink
                     to="/myprofile/MyVendors"
-                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                    className={({ isActive }) =>
+                      isActive ? myProfile.active : ""
+                    }
                   >
                     <span>My Vendors</span>
                   </NavLink>
-                </li> */}
+                </li>
                 <li>
                   <NavLink
                     to="/myprofile/MyContact"
@@ -410,7 +412,7 @@ const Options = () => {
                       isActive ? myProfile.active : ""
                     }
                   >
-                    <span>My Vendors</span>
+                    <span>My Contact</span>
                   </NavLink>
                 </li>
                 <li>
@@ -466,25 +468,18 @@ const Options = () => {
                       <option value="1">On</option>
                     </select>
                   </div>
-                  <div className={css.broadcastFilters_item}>
-                    <label>Servicecast</label>
-                    <select
-                      name="servicecast"
-                      value={broadcastFilterState.servicecast ? "1" : "0"}
-                      onChange={handleSelectChange}
-                      className="!w-24"
-                    >
-                      <option value="0">Off</option>
-                      <option value="1">On</option>
-                    </select>
-                  </div>
                 </div>
               </div>
               <div className={css.broadcastFilters_typeOfBroadcast}>
                 <h1>Receive The Following Type Of Broadcast</h1>
                 <div>
                   <span>
-                    <label htmlFor="wtb">Want To Buy (WTB)</label>
+                    <label className="flex items-center gap-1" htmlFor="wtb">
+                      Want To Buy{" "}
+                      <span className="text-blue-800 text-[8pt] font-semibold">
+                        (WTB)
+                      </span>
+                    </label>
                     <input
                       type="checkbox"
                       checked={broadcastFilterState.selectedBroadcastTypes.includes(
@@ -497,7 +492,12 @@ const Options = () => {
                     />
                   </span>
                   <span>
-                    <label htmlFor="rfq">Request For Quote (RFQ)</label>
+                    <label className="flex items-center gap-1" htmlFor="rfq">
+                      Request For Quote{" "}
+                      <span className="text-green-600 text-[8pt] font-semibold">
+                        (RFQ)
+                      </span>
+                    </label>
                     <input
                       type="checkbox"
                       checked={broadcastFilterState.selectedBroadcastTypes.includes(
@@ -510,7 +510,12 @@ const Options = () => {
                     />
                   </span>
                   <span>
-                    <label htmlFor="wts">Want To Sell (WTS)</label>
+                    <label className="flex items-center gap-1" htmlFor="wts">
+                      Want To Sell
+                      <span className="text-red-500 text-[8pt] font-semibold">
+                        (WTS)
+                      </span>
+                    </label>
                     <input
                       type="checkbox"
                       checked={broadcastFilterState.selectedBroadcastTypes.includes(
@@ -535,22 +540,38 @@ const Options = () => {
                     <button
                       type="button"
                       onClick={() => toggleOnlyReceiveMatch("computers")}
+                      className={`px-4 py-1 rounded-md border text-base transition-colors duration-200 ${
+                        onlyReceiveMatch.computers
+                          ? "bg-blue-600 text-white font-semibold"
+                          : "bg-gray-200 text-gray-800 hover:bg-blue-400"
+                      }`}
                     >
                       Computers
                     </button>
                     <button
                       type="button"
                       onClick={() => toggleOnlyReceiveMatch("telecom")}
+                      className={`px-4 py-1 rounded-md border text-base transition-colors duration-200 ${
+                        onlyReceiveMatch.telecom
+                          ? "bg-blue-600 text-white font-semibold"
+                          : "bg-gray-200 text-gray-800 hover:bg-blue-400"
+                      }`}
                     >
                       Telecom
                     </button>
                     <button
                       type="button"
                       onClick={() => toggleOnlyReceiveMatch("mobileDevice")}
+                      className={`px-4 py-1 rounded-md border text-base transition-colors duration-200 ${
+                        onlyReceiveMatch.mobileDevice
+                          ? "bg-blue-600 text-white font-semibold"
+                          : "bg-gray-200 text-gray-800 hover:bg-blue-400"
+                      }`}
                     >
                       Mobile Devices
                     </button>
                   </div>
+
                   {onlyReceiveMatch.computers && (
                     <div>
                       <ul className={css.checkbox}>

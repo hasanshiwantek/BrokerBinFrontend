@@ -182,20 +182,22 @@ const Header = () => {
 
   return (
     <>
-      <div className={`${css.headerFixed} ${css.noPrint}`}>
-        <header className={css.header}>
-          <Link to={"/"} id={css.logo}>
-            <img src={logo} alt="logo" />
-          </Link>
-          <div className={css.search_container}>
-            <form onSubmit={searchProduct}>
-              <input
-                type="search"
-                name="searchStrings"
-                id={css.search}
-                placeholder="What are you looking for?"
-                ref={searchInputRef}
-              />
+    <div className="h-[9rem]">
+
+        <div className={`${css.headerFixed} ${css.noPrint}`}>
+          <header className={css.header}>
+            <Link to={"/"} id={css.logo}>
+              <img src={logo} alt="logo" />
+            </Link>
+            <div className={css.search_container}>
+              <form onSubmit={searchProduct}>
+                <input
+                  type="search"
+                  name="searchStrings"
+                  id={css.search}
+                  placeholder="What are you looking for?"
+                  ref={searchInputRef}
+                />
 
               <button
                 type="submit"
@@ -493,7 +495,7 @@ const Header = () => {
                           srcset=""
                           style={{ color: "black" }}
                         />
-                        ........
+               
                       </li>
                     </Link> */}
                 </ul>
@@ -831,11 +833,13 @@ const Header = () => {
                     }}
                   />
                 </li> */}
-              </>
-            )}
-          </ul>
-        </nav>
-      </div>
+                </>
+              )}
+            </ul>
+          </nav>
+        </div>
+    </div>
+
     </>
   );
 };
