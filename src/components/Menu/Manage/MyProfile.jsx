@@ -22,7 +22,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 
 
-
 const MyProfile = () => {
   const token = Cookies.get("token");
   const user_id = Cookies.get("user_id");
@@ -253,7 +252,6 @@ const MyProfile = () => {
     dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
     dispatch(setTogglePopUp()); // Show company modal
   };
-
 
   return (
     <>
@@ -783,7 +781,6 @@ const MyProfile = () => {
 
       {togglePopUp && <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
       <ToastContainer position="top-center" autoClose={2000} />
-
 
     </>
   );
