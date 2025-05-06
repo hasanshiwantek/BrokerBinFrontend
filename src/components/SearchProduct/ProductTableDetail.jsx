@@ -383,7 +383,8 @@ const ProductTableDetail = React.memo(
       <div className={css.productTableDetail}>
         <div className={css.tableContainer}>
           <h3>Results for: {partModel}</h3>
-          <table>
+          <div className="!overflow-x-scroll ">
+          <table  className="">
             <thead>
               <tr>
                 <th>Cart</th>
@@ -587,6 +588,7 @@ const ProductTableDetail = React.memo(
               </tr>
             </tfoot>
           </table>
+          </div> 
 
           <div className="flex justify-between items-center p-1">
             <div className="flex space-x-2 text-lg font-semibold text-gray-700">
