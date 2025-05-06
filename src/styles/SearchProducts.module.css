@@ -185,7 +185,7 @@
 .productTableDetail table tr{
   background-color: #ffffff;
   border-bottom: 1px solid rgb(228, 225, 225);
-  /* white-space: nowrap; */
+  white-space: nowrap;
 }
 
 .productTableDetail table tr:hover{

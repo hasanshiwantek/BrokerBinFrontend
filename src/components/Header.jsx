@@ -181,6 +181,8 @@ const Header = () => {
 
   return (
     <>
+    <div className="h-[9rem]">
+
         <div className={`${css.headerFixed} ${css.noPrint}`}>
           <header className={css.header}>
             <Link to={"/"} id={css.logo}>
@@ -476,7 +478,7 @@ const Header = () => {
                           srcset=""
                           style={{ color: "black" }}
                         />
-                        ........
+               
                       </li>
                     </Link>
                   </ul>
@@ -813,6 +815,8 @@ const Header = () => {
             </ul>
           </nav>
         </div>
+    </div>
+
     </>
   );
 };

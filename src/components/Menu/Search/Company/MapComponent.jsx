@@ -173,7 +173,12 @@ const MapComponent = ({ company }) => {
                                       ? "rgba(255, 215, 0, 0.5)"
                                       : "#CCC"
                                   }
-                                  style={{ cursor: "pointer", marginRight: 2 }}
+                                  style={{
+                                    cursor: "pointer",
+                                    marginRight: 2,
+                                    stroke: "black",
+                                    strokeWidth: "10",
+                                  }}
                                 />
                               );
                             })}
