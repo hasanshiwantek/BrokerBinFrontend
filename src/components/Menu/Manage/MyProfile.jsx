@@ -236,6 +236,128 @@ const MyProfile = () => {
     }
   };
 
+  // PASSWORD VALIDATION LOGIC
+
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
+  //   dispatch(setBlurWhileLoading(false));
+
+  //   const formDataApi = new FormData(event.target);
+
+  //   // Build nested objects manually
+  //   const imScreenNames = {
+  //     skype: formData?.imScreenNames?.skype || "",
+  //     whatsapp: formData?.imScreenNames?.whatsapp || "",
+  //     trillian: formData?.imScreenNames?.trillian || "",
+  //   };
+
+  //   const socialNetworking = {
+  //     facebook: formData?.socialNetworking?.facebook || "",
+  //     twitter: formData?.socialNetworking?.twitter || "",
+  //     linkedin: formData?.socialNetworking?.linkedin || "",
+  //   };
+
+  //   formDataApi.set("imScreenNames", JSON.stringify(imScreenNames));
+  //   formDataApi.set("socialNetworking", JSON.stringify(socialNetworking));
+
+  //   const passwordChanged =
+  //     passwords.currentPassword &&
+  //     passwords.newPassword &&
+  //     passwords.confirmNewPassword;
+
+  //   // Password validation rules
+  //   if (passwordChanged) {
+  //     const { currentPassword, newPassword, confirmNewPassword } = passwords;
+  //     const loginName = formData?.email?.split("@")[0] || "";
+
+  //     const passwordRegex = {
+  //       length: /^.{8,24}$/,
+  //       uppercase: /[A-Z]/,
+  //       lowercase: /[a-z]/,
+  //       digit: /\d/,
+  //       noLoginName: new RegExp(`^(?!.*${loginName}).*$`, "i"),
+  //     };
+
+  //     if (!passwordRegex.length.test(newPassword)) {
+  //       toast.error("Password must be between 8–24 characters.");
+  //       return;
+  //     }
+  //     if (!passwordRegex.uppercase.test(newPassword)) {
+  //       toast.error("Password must include at least one uppercase letter.");
+  //       return;
+  //     }
+  //     if (!passwordRegex.lowercase.test(newPassword)) {
+  //       toast.error("Password must include at least one lowercase letter.");
+  //       return;
+  //     }
+  //     if (!passwordRegex.digit.test(newPassword)) {
+  //       toast.error("Password must include at least one digit.");
+  //       return;
+  //     }
+  //     if (!passwordRegex.noLoginName.test(newPassword)) {
+  //       toast.error("Password cannot contain your login name.");
+  //       return;
+  //     }
+  //     if (newPassword !== confirmNewPassword) {
+  //       toast.error("New password and confirm password must match.");
+  //       return;
+  //     }
+  //   }
+
+  //   // Append passwords (empty strings if not provided)
+  //   formDataApi.set("currentPassword", passwords.currentPassword || "");
+  //   formDataApi.set("newPassword", passwords.newPassword || "");
+  //   formDataApi.set("confirmNewPassword", passwords.confirmNewPassword || "");
+
+  //   // Handle file upload (if any)
+  //   if (fileBase64) {
+  //     const byteCharacters = atob(fileBase64);
+  //     const byteNumbers = Array.from(byteCharacters, (char) =>
+  //       char.charCodeAt(0)
+  //     );
+  //     const byteArray = new Uint8Array(byteNumbers);
+  //     const blob = new Blob([byteArray], { type: "image/jpeg" });
+  //     const file = new File([blob], "profileImage.jpg", { type: "image/jpeg" });
+  //     formDataApi.set("profileImage", file);
+  //   }
+
+  //   const plainData = Object.fromEntries(formDataApi.entries());
+
+  //   try {
+  //     await dispatch(
+  //       submitUserData({
+  //         id,
+  //         token,
+  //         data: {
+  //           formData: formDataApi,
+  //           plainData,
+  //         },
+  //       })
+  //     );
+
+  //     setPasswords({
+  //       currentPassword: "",
+  //       newPassword: "",
+  //       confirmNewPassword: "",
+  //     });
+
+  //     toast.info("Profile updated successfully!", {
+  //       style: { fontSize: "17px", marginTop: "-10px" },
+  //     });
+
+  //     if (passwordChanged) {
+  //       setTimeout(() => {
+  //         navigate("/login");
+  //       }, 1000);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error submitting data:", error);
+  //     toast.error("Failed to update profile. Try again.", {
+  //       style: { backgroundColor: "#FFCCCC", color: "#000" },
+  //     });
+  //   }
+  // };
+
   useEffect(() => {
     console.log("MyProfile component mounted");
     return () => console.log("MyProfile component unmounted");
@@ -866,6 +988,60 @@ const MyProfile = () => {
                       />
                     </div>
                   </div>
+
+                  {/* 
+                  <div>
+  <label htmlFor="currentPassword">Current Password</label>
+  <input
+    type="password"
+    name="currentPassword"
+    id="currentPassword"
+    placeholder="Enter current password"
+    value={passwords.currentPassword}
+    onChange={handleChange}
+    autoComplete="new-password"
+    minLength={8}
+    maxLength={24}
+    required={!!passwords.newPassword || !!passwords.confirmNewPassword}
+  />
+</div>
+
+<div>
+  <label htmlFor="newPassword">New Password</label>
+  <input
+    type="password"
+    name="newPassword"
+    id="newPassword"
+    placeholder="Enter new password"
+    value={passwords.newPassword}
+    onChange={handleChange}
+    autoComplete="new-password"
+    minLength={8}
+    maxLength={24}
+    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,24}$"
+    title="Must contain 1 uppercase, 1 lowercase, 1 digit, and be 8–24 characters."
+  />
+</div>
+
+<div>
+  <label htmlFor="confirmNewPassword">Confirm New Password</label>
+  <input
+    type="password"
+    name="confirmNewPassword"
+    id="confirmNewPassword"
+    placeholder="Confirm new password"
+    value={passwords.confirmNewPassword}
+    onChange={handleChange}
+    autoComplete="new-password"
+    minLength={8}
+    maxLength={24}
+    required={!!passwords.newPassword}
+  />
+</div>
+
+
+ */}
+
                   <div className={css.profileInfo_form_updatePassword_right}>
                     <fieldset>
                       <legend>Password Requirements</legend>
