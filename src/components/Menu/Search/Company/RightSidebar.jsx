@@ -82,55 +82,19 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
     setFilters(selectedFilters);
   };
 
+  console.log("Filters", filters);
+
   const clearFilters = () => {
     setFilters({}); // Clear all filters
     setFilteredData(null); // Reset filtered data to null
     setShowFilters(false); // Close the filter section
+    // applyFilters(); // Re-fetch all data without filters
   }
 
-  // const handleFiltersUpdate = (selectedFilters) => {
-    //   setFilters((prev) => ({ ...prev, ...selectedFilters }));
-    // };
-    console.log("Filters", filters);
-
   const selectedFiltersCount = Object.values(filters)
-  .filter(arr => arr.length > 0).length;
-    console.log("Selected Filters", selectedFiltersCount);
+    .filter(arr => arr.length > 0).length;
+  console.log("Selected Filters", selectedFiltersCount);
 
-  // const applyFilters = async () => {
-  //   try {
-  //     const payload = {
-  //       data: {
-  //         company: "",
-  //         newMembers: null,
-  //         city: "",
-  //         zip: "",
-  //         country: filters.country?.length ? filters.country.join(",") : "",
-  //         region: filters.region?.length ? filters.region.join(",") : "",
-  //         state: filters.state?.length ? filters.state.join(",") : "",
-  //         areaCode: "",
-  //         manufacturer: "",
-  //         products: "",
-  //         categories: "",
-  //         keywords: ""
-  //       }
-  //     };
-  //     console.log("🔍 Sending Filter Payload:", payload);
-  
-  //     const { data } = await axios.post(
-  //       `${brokerAPI}company/company-search`,
-  //       payload,
-  //       { headers: { Authorization: `Bearer ${token}` } }
-  //     );
-  
-  //     console.log("✅ API Response:", data);
-  //     setFilteredData(data);
-  //     setShowFilters(false);
-  //   } catch (error) {
-  //     console.error("❌ Error fetching filtered companies:", error);
-  //   }
-  // };
-  
   const applyFilters = async () => {
     try {
       const payload = {
@@ -292,8 +256,9 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
               <Tooltip title="Clear Active Filters" arrow placement="top">
                 <button
                   className="bg-[#2c83ec] text-white px-5 py-2 rounded-md font-semibold 
-               hover:bg-[#1e6fd6] focus:ring-2 focus:ring-blue-300 
-               transition duration-300 outline-none"
+                            hover:bg-[#1e6fd6] focus:ring-2 focus:ring-blue-300 
+                            transition duration-300 outline-none"
+                  onClick={clearFilters}
                 >
                   Clear
                 </button>
@@ -344,6 +309,7 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
         <FiltersComponent
           onFiltersChange={handleFiltersUpdate}
           setShowFilters={setShowFilters}
+          initialFilters={filters}
           // setFilteredData={setFilteredData}
           scrollToSection={scrollToSection}
         />
