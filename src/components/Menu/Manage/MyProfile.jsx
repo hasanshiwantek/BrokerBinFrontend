@@ -20,9 +20,7 @@ import { setPopupCompanyDetail } from "../../../ReduxStore/SearchProductSlice";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-
-
-
+import { useNavigate } from "react-router-dom";
 const MyProfile = () => {
   const token = Cookies.get("token");
   const user_id = Cookies.get("user_id");
@@ -38,15 +36,15 @@ const MyProfile = () => {
 
   const id = user?.user?.id || user_id;
   const dispatch = useDispatch();
-  const [fileBase64, setFileBase64] = useState("");
+  const navigate = useNavigate();
 
+  const [fileBase64, setFileBase64] = useState("");
 
   const [passwords, setPasswords] = useState({
     currentPassword: "",
     newPassword: "",
     confirmNewPassword: "",
   });
-
 
   const textAreaContent = [
     formData.sigcheckName ? `${formData.firstName} ${formData.lastName}` : "",
@@ -72,8 +70,16 @@ const MyProfile = () => {
       dispatch(
         setFormData({
           ...response.payload, // API response
-          imScreenNames: response.payload.imScreenNames || { skype: "", whatsapp: "", trillian: "" },
-          socialNetworking: response.payload.socialNetworking || { facebook: "", twitter: "", linkedin: "" },
+          imScreenNames: response.payload.imScreenNames || {
+            skype: "",
+            whatsapp: "",
+            trillian: "",
+          },
+          socialNetworking: response.payload.socialNetworking || {
+            facebook: "",
+            twitter: "",
+            linkedin: "",
+          },
         })
       );
     };
@@ -85,7 +91,9 @@ const MyProfile = () => {
     const { name, value } = e.target;
     const [parentKey, childKey] = name.split("."); // Extract parent & child keys
 
-    if (["currentPassword", "newPassword", "confirmNewPassword"].includes(name)) {
+    if (
+      ["currentPassword", "newPassword", "confirmNewPassword"].includes(name)
+    ) {
       setPasswords((prevPasswords) => ({
         ...prevPasswords,
         [name]: value,
@@ -113,7 +121,6 @@ const MyProfile = () => {
       );
     }
   };
-
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -162,6 +169,11 @@ const MyProfile = () => {
     formDataApi.set("imScreenNames", JSON.stringify(imScreenNames));
     formDataApi.set("socialNetworking", JSON.stringify(socialNetworking));
 
+    const passwordChanged =
+      passwords.currentPassword &&
+      passwords.newPassword &&
+      passwords.confirmNewPassword;
+
     // Manually append password fields (ensuring they are only included at submission)
     // Explicitly set password fields to empty
     formDataApi.set("currentPassword", passwords.currentPassword || "");
@@ -171,7 +183,9 @@ const MyProfile = () => {
     // Handle file upload (if user uploaded an image)
     if (fileBase64) {
       const byteCharacters = atob(fileBase64);
-      const byteNumbers = Array.from(byteCharacters, (char) => char.charCodeAt(0));
+      const byteNumbers = Array.from(byteCharacters, (char) =>
+        char.charCodeAt(0)
+      );
       const byteArray = new Uint8Array(byteNumbers);
       const blob = new Blob([byteArray], { type: "image/jpeg" });
       const file = new File([blob], "profileImage.jpg", { type: "image/jpeg" });
@@ -179,10 +193,6 @@ const MyProfile = () => {
     }
 
     const plainData = Object.fromEntries(formDataApi.entries());
-    // ✅ Show success toast with light blue color
-    toast.info("Profile updated successfully!", {
-      style: { fontSize: "17px", marginTop: "-10px" }, // 
-    });
 
     try {
       await dispatch(
@@ -196,7 +206,6 @@ const MyProfile = () => {
         })
       );
 
-
       // ✅ Reset passwords after successful submission
       setPasswords({
         currentPassword: "",
@@ -204,7 +213,21 @@ const MyProfile = () => {
         confirmNewPassword: "",
       });
       console.log("Form submitted successfully!");
+      // ✅ Show success toast with light blue color
+      toast.info("Profile updated successfully!", {
+        style: { fontSize: "17px", marginTop: "-10px" }, //
+      });
 
+      // ✅ Redirect to login if password was changed
+      if (passwordChanged) {
+        Cookies.remove("token");
+        Cookies.remove("user_id");
+        console.log("Navigating");
+
+        setTimeout(() => {
+          navigate("/login"); // or './login' depending on your router setup
+        }, 1000); // optional delay to allow toast to show
+      }
     } catch (error) {
       console.error("Error submitting data:", error);
       toast.error("Failed to update profile. Try again.", {
@@ -217,7 +240,6 @@ const MyProfile = () => {
     console.log("MyProfile component mounted");
     return () => console.log("MyProfile component unmounted");
   }, []);
-
 
   const toggleCheckAll = (value) => {
     dispatch(
@@ -235,7 +257,6 @@ const MyProfile = () => {
     );
   };
 
-
   if (error) {
     return (
       <>
@@ -244,7 +265,9 @@ const MyProfile = () => {
     );
   }
 
-  const { togglePopUp, popupCompanyDetail } = useSelector((state) => state.searchProductStore)
+  const { togglePopUp, popupCompanyDetail } = useSelector(
+    (state) => state.searchProductStore
+  );
   const company = formData?.company;
 
   // Company Modal Logic
@@ -254,6 +277,52 @@ const MyProfile = () => {
     dispatch(setTogglePopUp()); // Show company modal
   };
 
+  // RESET FORM FUNCTION
+  const resetForm = () => {
+    try {
+      // Transform and fill in missing default structures
+      const transformedInitialData = {
+        ...initialData,
+        imScreenNames: initialData?.imScreenNames || {
+          skype: "",
+          whatsapp: "",
+          trillian: "",
+        },
+        socialNetworking: initialData?.socialNetworking || {
+          facebook: "",
+          twitter: "",
+          linkedin: "",
+        },
+        currentPassword: "",
+        newPassword: "",
+        confirmNewPassword: "",
+      };
+
+      // Dispatch formData update to Redux
+      dispatch(setFormData(transformedInitialData));
+
+      // Reset local state fields
+      setPasswords({
+        currentPassword: "",
+        newPassword: "",
+        confirmNewPassword: "",
+      });
+
+      setFileBase64(""); // Clear uploaded image
+
+      // Show success toast
+      toast.success("Form reset successfully!", {
+        style: { fontSize: "17px", marginTop: "-10px" },
+      });
+      console.log("Form Reset Succesfully");
+    } catch (error) {
+      console.error("Error resetting form:", error);
+      // Show error toast
+      toast.error("Failed to reset form. Try again.", {
+        style: { backgroundColor: "#FFCCCC", color: "#000" },
+      });
+    }
+  };
 
   return (
     <>
@@ -261,11 +330,13 @@ const MyProfile = () => {
       {blurWhileLoading && (
         <div className={css.profileLayout}>
           <form onSubmit={handleSubmit}>
-            <div className={css.profileBtn}>
+            <div className={`${css.profileBtn} fixed`}>
               <h4 className="font-semibold">My Profile</h4>
               <span>
                 <input type="submit" value="submit changes" />
-                <button type="button" onClick={() => openCompanyModal(company)}>view profile</button>
+                <button type="button" onClick={() => openCompanyModal(company)}>
+                  view profile
+                </button>
               </span>
             </div>
             <div className={css.profileInfo}>
@@ -274,40 +345,40 @@ const MyProfile = () => {
                   <li>
                     <NavLink
                       to="/myprofile"
-                      end  // This ensures the exact match for /myprofile
-                      className={({ isActive }) => (isActive ? css.active : '')}
+                      end // This ensures the exact match for /myprofile
+                      className={({ isActive }) => (isActive ? css.active : "")}
                     >
                       <span>Personal Info</span>
                     </NavLink>
                   </li>
-                  {/* <li>
-                  <NavLink
-                    to="/myprofile/Options"
-                    className={({ isActive }) => (isActive ? css.active : '')}
-                  >
-                    <span>Options</span>
-                  </NavLink>
-                </li> */}
-                  {/* <li>
-                  <NavLink
-                    to="/myprofile/MyVendors"
-                    className={({ isActive }) => (isActive ? css.active : '')}
-                  >
-                    <span>My Vendors</span>
-                  </NavLink>
-                </li> */}
                   <li>
                     <NavLink
-                      to="/myprofile/MyContact"
-                      className={({ isActive }) => (isActive ? css.active : '')}
+                      to="/myprofile/Options"
+                      className={({ isActive }) => (isActive ? css.active : "")}
+                    >
+                      <span>Options</span>
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to="/myprofile/MyVendors"
+                      className={({ isActive }) => (isActive ? css.active : "")}
                     >
                       <span>My Vendors</span>
                     </NavLink>
                   </li>
                   <li>
                     <NavLink
+                      to="/myprofile/MyContact"
+                      className={({ isActive }) => (isActive ? css.active : "")}
+                    >
+                      <span>My Contacts</span>
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
                       to="/myprofile/broadcastfilter"
-                      className={({ isActive }) => (isActive ? css.active : '')}
+                      className={({ isActive }) => (isActive ? css.active : "")}
                     >
                       <span>Broadcast Filters</span>
                     </NavLink>
@@ -389,15 +460,10 @@ const MyProfile = () => {
                   <div>
                     <h1>Personal Photo</h1>
                     <div>
-                      <img
-                        src={
-                          formData?.profileImage
-
-                        }
-                        alt="personal photo"
-                      />
+                      <img src={formData?.profileImage} alt="personal photo" />
                     </div>
                   </div>
+
                   <div>
                     <input
                       type="file"
@@ -414,7 +480,11 @@ const MyProfile = () => {
                     <span>
                       <div className="flex items-center justify-center">
                         <label htmlFor="skype">Skype</label>
-                        <img src="https://ben.cachefly.net/images/social_networks/tiny_skype.png" alt="Skype" title="Skype"></img>
+                        <img
+                          src="https://ben.cachefly.net/images/social_networks/tiny_skype.png"
+                          alt="Skype"
+                          title="Skype"
+                        ></img>
                       </div>
                       <input
                         type="text"
@@ -427,8 +497,30 @@ const MyProfile = () => {
                     </span>
                     <span>
                       <div className="flex items-center justify-center">
+                        <label htmlFor="skype">Teams</label>
+                        <img
+                          src="https://ben.cachefly.net/images/social_networks/tiny_teams.png"
+                          alt="Teams"
+                          title="Teams"
+                        ></img>
+                      </div>
+                      <input
+                        type="text"
+                        name="imScreenNames.teams"
+                        id="skype"
+                        onChange={handleChange}
+                        value={formData?.imScreenNames?.skype || ""}
+                        placeholder="Enter Teams username"
+                      />
+                    </span>
+                    <span>
+                      <div className="flex items-center justify-center">
                         <label htmlFor="whatsapp">WhatsApp</label>
-                        <img src="https://ben.cachefly.net/images/social_networks/tiny_whatsapp.png" alt="WhatsApp" title="WhatsApp" />
+                        <img
+                          src="https://ben.cachefly.net/images/social_networks/tiny_whatsapp.png"
+                          alt="WhatsApp"
+                          title="WhatsApp"
+                        />
                       </div>
                       <input
                         type="text"
@@ -442,7 +534,11 @@ const MyProfile = () => {
                     <span>
                       <div className="flex items-center justify-center ">
                         <label htmlFor="trillian">Trillian</label>
-                        <img src="https://ben.cachefly.net/images/social_networks/tiny_trillian.png" alt="Trillian" title="Trillian" />
+                        <img
+                          src="https://ben.cachefly.net/images/social_networks/tiny_trillian.png"
+                          alt="Trillian"
+                          title="Trillian"
+                        />
                       </div>
                       <input
                         type="text"
@@ -461,9 +557,12 @@ const MyProfile = () => {
                     <span>
                       <div className="flex items-center  justify-center">
                         <label htmlFor="facebook">Facebook</label>
-                        <img src="https://ben.cachefly.net/images/social_networks/tiny_facebook.png" alt="Facebook" title="Facebook" />
+                        <img
+                          src="https://ben.cachefly.net/images/social_networks/tiny_facebook.png"
+                          alt="Facebook"
+                          title="Facebook"
+                        />
                       </div>
-
                       <input
                         type="text"
                         name="socialNetworking.facebook"
@@ -476,7 +575,11 @@ const MyProfile = () => {
                     <span>
                       <div className="flex items-center justify-center ">
                         <label htmlFor="twitter">Twitter</label>
-                        <img src="https://ben.cachefly.net/images/social_networks/tiny_twitter.png" alt="Twitter" title="Twitter" />
+                        <img
+                          src="https://ben.cachefly.net/images/social_networks/tiny_twitter.png"
+                          alt="Twitter"
+                          title="Twitter"
+                        />
                       </div>
                       <input
                         type="text"
@@ -490,7 +593,11 @@ const MyProfile = () => {
                     <span>
                       <div className="flex items-center justify-center ">
                         <label htmlFor="linkedin">LinkedIn</label>
-                        <img src="https://ben.cachefly.net/images/social_networks/tiny_linkedin.png" alt="Linked-In" title="Linked-In" />
+                        <img
+                          src="https://ben.cachefly.net/images/social_networks/tiny_linkedin.png"
+                          alt="Linked-In"
+                          title="Linked-In"
+                        />
                       </div>
                       <input
                         type="text"
@@ -669,9 +776,12 @@ const MyProfile = () => {
                       css.profileInfo_form_signature_checkbox_checkUncheck
                     }
                   >
-                    <button type="button" onClick={() => toggleCheckAll(true)}>Check All</button>
-                    <button type="button" onClick={() => toggleCheckAll(false)}>Uncheck All</button>
-
+                    <button type="button" onClick={() => toggleCheckAll(true)}>
+                      Check All
+                    </button>
+                    <button type="button" onClick={() => toggleCheckAll(false)}>
+                      Uncheck All
+                    </button>
                   </div>
                   <p>
                     Uncheck Use Custom Signature to use the checkboxes above.
@@ -740,7 +850,6 @@ const MyProfile = () => {
                         onChange={handleChange}
                         autoComplete="new-password"
                       />
-
                     </div>
                     <div>
                       <label htmlFor="confirmNewPassword">
@@ -776,15 +885,30 @@ const MyProfile = () => {
                   </div>
                 </div>
               </div>
+              <div className="pt-2 flex justify-between items-center">
+                <button
+                  className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-7"
+                  type="submit"
+                >
+                  Submit Changes
+                </button>
+                <button
+                  className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-7"
+                  onClick={resetForm}
+                  type="button"
+                >
+                  Reset
+                </button>
+              </div>
             </div>
           </form>
         </div>
       )}
 
-      {togglePopUp && <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />}
+      {togglePopUp && (
+        <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
+      )}
       <ToastContainer position="top-center" autoClose={2000} />
-
-
     </>
   );
 };

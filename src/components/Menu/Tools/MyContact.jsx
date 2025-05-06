@@ -254,9 +254,9 @@ const MyContact = () => {
         case "country":
           groupKey = contact?.country || "Unknown Country";
           break;
-          case "rating":
-            groupKey = contact?.rating || "My Rating";
-            break;
+        case "rating":
+          groupKey = contact?.rating || "My Rating";
+          break;
         case "state":
           groupKey = contact?.state || "Unknown State";
           break;
@@ -505,6 +505,8 @@ const MyContact = () => {
                                                 cursor: "pointer",
                                                 marginRight: 4,
                                                 width: "15px",
+                                                stroke: "black",
+                                                strokeWidth: "10",
                                               }}
                                             />
                                           );

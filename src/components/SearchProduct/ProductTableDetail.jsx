@@ -383,7 +383,7 @@ const ProductTableDetail = React.memo(
       <div className={css.productTableDetail}>
         <div className={css.tableContainer}>
           <h3>Results for: {partModel}</h3>
-          <div className="!overflow-x-scroll ">
+          <div>
           <table  className="">
             <thead>
               <tr>

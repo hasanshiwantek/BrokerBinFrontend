@@ -635,6 +635,8 @@ const MyVendors = () => {
                                                 cursor: "pointer",
                                                 marginRight: 4,
                                                 width: "15px",
+                                                stroke: "black",     
+                                                strokeWidth: "10",  
                                               }}
                                             />
                                           );

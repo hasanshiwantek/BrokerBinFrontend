@@ -196,16 +196,16 @@ const CompanyDetails = ({ closeModal }) => {
               {/* <button type="button" className="">
                 <FaExternalLinkAlt />
               </button> */}
-               <ThemeProvider theme={theme}>
-               <Tooltip title="Close Profile" arrow placement="top">
-              <button
-                type="button"
-                onClick={() => closeModal()}
-                className="transform active:scale-95 transition-all duration-100  "
-              >
-                <FaRegWindowClose />
-              </button>
-              </Tooltip>
+              <ThemeProvider theme={theme}>
+                <Tooltip title="Close Profile" arrow placement="top">
+                  <button
+                    type="button"
+                    onClick={() => closeModal()}
+                    className="transform active:scale-95 transition-all duration-100  "
+                  >
+                    <FaRegWindowClose />
+                  </button>
+                </Tooltip>
               </ThemeProvider>
             </div>
           </div>
@@ -277,7 +277,12 @@ const CompanyDetails = ({ closeModal }) => {
                                       ? "rgba(255, 215, 0, 0.5)"
                                       : "#CCC"
                                   } // Partial star is dim yellow
-                                  style={{ cursor: "pointer", marginRight: 4 }}
+                                  style={{
+                                    cursor: "pointer",
+                                    marginRight: 4,
+                                    stroke: "black",
+                                    strokeWidth: "10",
+                                  }}
                                   onMouseEnter={() => setRating(index + 1)}
                                   // onClick={handleClick}
                                   title={handleHover(index + 1)} // Tooltip text
