@@ -428,7 +428,6 @@ export const statesList = {
   ]
 };
 
-
 export const telecom = [
   { id: "catv", label: "CATV", value: "CATV" },
   { id: "cellular_wireless", label: "Cellular & Wireless", value: "Cellular & Wireless" },
@@ -568,4 +567,16 @@ export const filterDropdown = [
   { id: "shieldMembers", value: "Shield Members", label: "Shield Members" },
   { id: "listingInventory", value: "Listing Inventory", label: "Listing Inventory" },
   { id: "membershipLevel", value: "Membership Level", label: "Membership Level" },
+];
+
+export const categoriesList = [
+  { label: "Reseller", value: "reseller" },
+  { label: "Broker", value: "broker" },
+  { label: "Dealer", value: "dealer" },
+  { label: "VAR", value: "var" },
+  { label: "Distributor", value: "distributor" },
+  { label: "Service Center", value: "service_center" },
+  { label: "Mfg", value: "mfg" },
+  { label: "Integrator", value: "integrator" },
+  { label: "Retail", value: "retail" },
 ];

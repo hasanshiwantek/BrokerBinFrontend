@@ -1,11 +1,11 @@
-import React, { useState, useEffect,useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Accordion,
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
-import { regionsList, countriesList, statesList } from "@/data/services";
+import { regionsList, countriesList, statesList, categoriesList } from "@/data/services";
 
 const FiltersComponent = ({ onFiltersChange, scrollToSection, initialFilters }) => {
   const [filters, setFilters] = useState(initialFilters || {
@@ -13,6 +13,8 @@ const FiltersComponent = ({ onFiltersChange, scrollToSection, initialFilters }) 
     country: [],
     state: [],
     manufacturer: [],
+    categories: [],
+    inventories: [],
   });
 
   const handleFilterChange = (e) => {
@@ -43,6 +45,7 @@ const FiltersComponent = ({ onFiltersChange, scrollToSection, initialFilters }) 
   const regionRef = useRef(null);
   const countryRef = useRef(null);
   const stateRef = useRef(null);
+  const categoriesRef = useRef(null);
 
   // 🟢 Function to scroll to a specific section
   const scrollToFilter = (id) => {
@@ -50,6 +53,7 @@ const FiltersComponent = ({ onFiltersChange, scrollToSection, initialFilters }) 
       region: regionRef,
       country: countryRef,
       state: stateRef,
+      categories: categoriesRef,
     };
 
     if (refs[id]?.current) {
@@ -58,17 +62,15 @@ const FiltersComponent = ({ onFiltersChange, scrollToSection, initialFilters }) 
     }
   };
 
-
   useEffect(() => {
     if (scrollToSection) {
       scrollToFilter(scrollToSection); // Scroll when requested
     }
   }, [scrollToSection]);
 
-
   return (
     <div className="bg-white shadow-lg p-4 rounded">
-      <Accordion type="multiple" className="mt-4"  value={openAccordion} onValueChange={setOpenAccordion}>
+      <Accordion type="multiple" className="mt-4" value={openAccordion} onValueChange={setOpenAccordion}>
         <AccordionItem value="sort">
           <AccordionTrigger className="text-black text-2xl font-semibold">
             Sort
@@ -144,7 +146,7 @@ const FiltersComponent = ({ onFiltersChange, scrollToSection, initialFilters }) 
           </AccordionContent>
         </AccordionItem>
 
-        <AccordionItem value="country" id="country"  ref={countryRef} >
+        <AccordionItem value="country" id="country" ref={countryRef} >
           <AccordionTrigger className="text-black  text-2xl font-semibold">
             Country
           </AccordionTrigger>
@@ -170,7 +172,7 @@ const FiltersComponent = ({ onFiltersChange, scrollToSection, initialFilters }) 
           </AccordionContent>
         </AccordionItem>
 
-        <AccordionItem value="state"  id="state" ref={stateRef}>
+        <AccordionItem value="state" id="state" ref={stateRef}>
           <AccordionTrigger className="text-black  text-2xl font-semibold">
             State
           </AccordionTrigger>
@@ -201,6 +203,58 @@ const FiltersComponent = ({ onFiltersChange, scrollToSection, initialFilters }) 
                     ))}
                   </div>
                 </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="categories" id="categories" ref={categoriesRef} >
+          <AccordionTrigger className="text-black  text-2xl font-semibold">
+            Categories
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="grid grid-cols-2 gap-5">
+              {categoriesList.map((categories) => (
+                <label
+                  key={categories.label}
+                  className="flex items-center !text-base"
+                >
+                  <input
+                    type="checkbox"
+                    className="mr-2"
+                    name="categories"
+                    value={categories.value}
+                    onChange={handleFilterChange}
+                    checked={filters.categories?.includes(categories.value) || false}
+                  />
+                  {categories.label}
+                </label>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="hasInventory" id="hasInventory" ref={countryRef} >
+          <AccordionTrigger className="text-black  text-2xl font-semibold">
+            Inventories
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="grid grid-cols-2 gap-5">
+              {countriesList.map((country) => (
+                <label
+                  key={country.label}
+                  className="flex items-center !text-base"
+                >
+                  <input
+                    type="checkbox"
+                    className="mr-2"
+                    name="country"
+                    value={country.value}
+                    onChange={handleFilterChange}
+                    checked={filters.country?.includes(country.value) || false}
+                  />
+                  {country.label}
+                </label>
               ))}
             </div>
           </AccordionContent>
