@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { brokerAPI } from "../components/api/BrokerEndpoint";
+import { act } from "react";
 
 export const searchProductQuery = createAsyncThunk(
   "searchProductStore/searchProductQuery",
@@ -217,6 +218,34 @@ export const sortInventory = createAsyncThunk(
     }
   }
 );
+
+
+export const deleteCompanyContact = createAsyncThunk(
+  "toolsStore/deleteCompanyContact",
+  async ({ token, id }) => {
+    try {
+      const response = await axios.delete(
+        `${brokerAPI}company/contacts/${id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("✅ Deleting User Response from Redux:", response.data);
+      return response.data; // Ensure this includes the deleted `id`
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        "An error occurred while deleting the contact.";
+      throw new Error(message);
+    }
+  }
+);
+
+
+
 
 const initialState = {
   companiesListingParts: true,
@@ -468,6 +497,24 @@ const searchProductSlice = createSlice({
         state.error = action.error.message;
         console.error(" Data Not Available:");
       })
+      .addCase(deleteCompanyContact.pending, (state) => {
+        // state.gettingHistory = true; // Set to true when starting the fetch
+        // state.error = null;
+        console.log("DELETING....");
+      })
+      .addCase(deleteCompanyContact.fulfilled, (state, action) => {
+        const deletedId = action.payload?.id;
+        state.companyContactData = state.companyContactData.filter(
+          (contact) => contact.id !== deletedId
+        );
+        console.log("🧹 Deleted contact ID:", deletedId);
+      })      
+      .addCase(deleteCompanyContact.rejected, (state, action) => {
+        state.error = action.error.message;
+        console.error(action.error.message);
+      })
+
+      
       .addCase(sortInventory.pending, (state) => {
         console.log("PENDING!!!!!");
       })
