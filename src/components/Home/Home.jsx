@@ -71,9 +71,9 @@ const Home = () => {
   };
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  if (error) {
-    return <ErrorStatus error={error} />;
-  }
+  // if (error) {
+  //   return <ErrorStatus error={error} />;
+  // }
 
   // const searchProduct = (event) => {
   //   event.preventDefault();

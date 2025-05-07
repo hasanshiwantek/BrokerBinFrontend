@@ -415,6 +415,31 @@ const MyCompany = () => {
                         readOnly
                       />
                     </span>
+
+                    <span>
+                      <div className="flex items-center justify-center">
+                        <label htmlFor="teams">Teams</label>
+                        <img
+                       src="https://ben.cachefly.net/images/social_networks/tiny_teams.png"
+                          alt="Teams"
+                          title="Teams"
+                        ></img>
+                      </div>
+                      <input
+                        type="text"
+                        name="imScreenNames.teams"
+                        id="teams"
+                        onChange={handleChange}
+                        value={
+                          formData?.data?.company?.primaryContact?.imScreenNames
+                            ?.teams || ""
+                        }
+                        placeholder="Enter Teams username"
+                        readOnly
+                      />
+                    </span>
+
+
                     <span>
                       <div className="flex items-center justify-center">
                         <label htmlFor="whatsapp">WhatsApp</label>

@@ -9,6 +9,7 @@ import {
   setCustomSignature,
   setBlurWhileLoading,
   submitUserData,
+  restoreInitialData,
 } from "../../../ReduxStore/ProfleSlice";
 import ErrorStatus from "../../Error/ErrorStatus";
 import Cookies from "js-cookie";
@@ -52,7 +53,7 @@ const MyProfile = () => {
     formData.sigcheckPosition ? `${formData.position}` : "",
     formData.sigcheckPhone ? `${formData.phoneNumber}` : "",
     formData.sigcheckCell ? `${formData.cellular}` : "",
-    formData.sigcheckCompany ? `${formData.experience}` : "",
+    formData.sigcheckCompany ? `${formData?.company?.name}` : "",
     formData.sigcheckToll ? `${formData.tollFree}` : "",
     formData.sigcheckFax ? `${formData.faxNumber}` : "",
     formData.sigcheckIM ? `${formData.specialty}` : "",
@@ -66,29 +67,14 @@ const MyProfile = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await dispatch(fetchUserData({ id, token }));
-      dispatch(
-        setFormData({
-          ...response.payload, // API response
-          imScreenNames: response.payload.imScreenNames || {
-            skype: "",
-            whatsapp: "",
-            trillian: "",
-          },
-          socialNetworking: response.payload.socialNetworking || {
-            facebook: "",
-            twitter: "",
-            linkedin: "",
-          },
-        })
-      );
+      await dispatch(fetchUserData({ id, token }));
     };
     fetchData();
   }, [dispatch, id, token]);
 
   // const cleanInput = (input) => input.trimStart().replace(/\s+/g, " ");
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     const [parentKey, childKey] = name.split("."); // Extract parent & child keys
 
     if (
@@ -116,7 +102,7 @@ const MyProfile = () => {
       dispatch(
         setFormData({
           ...formData,
-          [name]: value,
+          [name]: type === "checkbox" ? checked : value,
         })
       );
     }
@@ -146,98 +132,6 @@ const MyProfile = () => {
     }
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    dispatch(setBlurWhileLoading(false));
-
-    const formDataApi = new FormData(event.target);
-
-    // Build nested objects manually
-    const imScreenNames = {
-      skype: formData?.imScreenNames?.skype || "",
-      whatsapp: formData?.imScreenNames?.whatsapp || "",
-      trillian: formData?.imScreenNames?.trillian || "",
-    };
-
-    const socialNetworking = {
-      facebook: formData?.socialNetworking?.facebook || "",
-      twitter: formData?.socialNetworking?.twitter || "",
-      linkedin: formData?.socialNetworking?.linkedin || "",
-    };
-
-    // Set nested objects in FormData
-    formDataApi.set("imScreenNames", JSON.stringify(imScreenNames));
-    formDataApi.set("socialNetworking", JSON.stringify(socialNetworking));
-
-    const passwordChanged =
-      passwords.currentPassword &&
-      passwords.newPassword &&
-      passwords.confirmNewPassword;
-
-    // Manually append password fields (ensuring they are only included at submission)
-    // Explicitly set password fields to empty
-    formDataApi.set("currentPassword", passwords.currentPassword || "");
-    formDataApi.set("newPassword", passwords.newPassword || "");
-    formDataApi.set("confirmNewPassword", passwords.confirmNewPassword || "");
-
-    // Handle file upload (if user uploaded an image)
-    if (fileBase64) {
-      const byteCharacters = atob(fileBase64);
-      const byteNumbers = Array.from(byteCharacters, (char) =>
-        char.charCodeAt(0)
-      );
-      const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: "image/jpeg" });
-      const file = new File([blob], "profileImage.jpg", { type: "image/jpeg" });
-      formDataApi.set("profileImage", file);
-    }
-
-    const plainData = Object.fromEntries(formDataApi.entries());
-
-    try {
-      await dispatch(
-        submitUserData({
-          id,
-          token,
-          data: {
-            formData: formDataApi,
-            plainData,
-          },
-        })
-      );
-
-      // ✅ Reset passwords after successful submission
-      setPasswords({
-        currentPassword: "",
-        newPassword: "",
-        confirmNewPassword: "",
-      });
-      console.log("Form submitted successfully!");
-      // ✅ Show success toast with light blue color
-      toast.info("Profile updated successfully!", {
-        style: { fontSize: "17px", marginTop: "-10px" }, //
-      });
-
-      // ✅ Redirect to login if password was changed
-      if (passwordChanged) {
-        Cookies.remove("token");
-        Cookies.remove("user_id");
-        console.log("Navigating");
-
-        setTimeout(() => {
-          navigate("/login"); // or './login' depending on your router setup
-        }, 1000); // optional delay to allow toast to show
-      }
-    } catch (error) {
-      console.error("Error submitting data:", error);
-      toast.error("Failed to update profile. Try again.", {
-        style: { backgroundColor: "#FFCCCC", color: "#000" }, // Light red error
-      });
-    }
-  };
-
-  // PASSWORD VALIDATION LOGIC
-
   // const handleSubmit = async (event) => {
   //   event.preventDefault();
   //   dispatch(setBlurWhileLoading(false));
@@ -257,6 +151,7 @@ const MyProfile = () => {
   //     linkedin: formData?.socialNetworking?.linkedin || "",
   //   };
 
+  //   // Set nested objects in FormData
   //   formDataApi.set("imScreenNames", JSON.stringify(imScreenNames));
   //   formDataApi.set("socialNetworking", JSON.stringify(socialNetworking));
 
@@ -265,51 +160,13 @@ const MyProfile = () => {
   //     passwords.newPassword &&
   //     passwords.confirmNewPassword;
 
-  //   // Password validation rules
-  //   if (passwordChanged) {
-  //     const { currentPassword, newPassword, confirmNewPassword } = passwords;
-  //     const loginName = formData?.email?.split("@")[0] || "";
-
-  //     const passwordRegex = {
-  //       length: /^.{8,24}$/,
-  //       uppercase: /[A-Z]/,
-  //       lowercase: /[a-z]/,
-  //       digit: /\d/,
-  //       noLoginName: new RegExp(`^(?!.*${loginName}).*$`, "i"),
-  //     };
-
-  //     if (!passwordRegex.length.test(newPassword)) {
-  //       toast.error("Password must be between 8–24 characters.");
-  //       return;
-  //     }
-  //     if (!passwordRegex.uppercase.test(newPassword)) {
-  //       toast.error("Password must include at least one uppercase letter.");
-  //       return;
-  //     }
-  //     if (!passwordRegex.lowercase.test(newPassword)) {
-  //       toast.error("Password must include at least one lowercase letter.");
-  //       return;
-  //     }
-  //     if (!passwordRegex.digit.test(newPassword)) {
-  //       toast.error("Password must include at least one digit.");
-  //       return;
-  //     }
-  //     if (!passwordRegex.noLoginName.test(newPassword)) {
-  //       toast.error("Password cannot contain your login name.");
-  //       return;
-  //     }
-  //     if (newPassword !== confirmNewPassword) {
-  //       toast.error("New password and confirm password must match.");
-  //       return;
-  //     }
-  //   }
-
-  //   // Append passwords (empty strings if not provided)
+  //   // Manually append password fields (ensuring they are only included at submission)
+  //   // Explicitly set password fields to empty
   //   formDataApi.set("currentPassword", passwords.currentPassword || "");
   //   formDataApi.set("newPassword", passwords.newPassword || "");
   //   formDataApi.set("confirmNewPassword", passwords.confirmNewPassword || "");
 
-  //   // Handle file upload (if any)
+  //   // Handle file upload (if user uploaded an image)
   //   if (fileBase64) {
   //     const byteCharacters = atob(fileBase64);
   //     const byteNumbers = Array.from(byteCharacters, (char) =>
@@ -335,28 +192,185 @@ const MyProfile = () => {
   //       })
   //     );
 
+  //     // ✅ Reset passwords after successful submission
   //     setPasswords({
   //       currentPassword: "",
   //       newPassword: "",
   //       confirmNewPassword: "",
   //     });
-
+  //     console.log("Form submitted successfully!");
+  //     // ✅ Show success toast with light blue color
   //     toast.info("Profile updated successfully!", {
-  //       style: { fontSize: "17px", marginTop: "-10px" },
+  //       style: { fontSize: "17px", marginTop: "-10px" }, //
   //     });
 
+  //     // ✅ Redirect to login if password was changed
   //     if (passwordChanged) {
+  //       Cookies.remove("token");
+  //       Cookies.remove("user_id");
+  //       console.log("Navigating");
+
   //       setTimeout(() => {
-  //         navigate("/login");
-  //       }, 1000);
+  //         navigate("/login"); // or './login' depending on your router setup
+  //       }, 1000); // optional delay to allow toast to show
   //     }
   //   } catch (error) {
   //     console.error("Error submitting data:", error);
   //     toast.error("Failed to update profile. Try again.", {
-  //       style: { backgroundColor: "#FFCCCC", color: "#000" },
+  //       style: { backgroundColor: "#FFCCCC", color: "#000" }, // Light red error
   //     });
   //   }
   // };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    dispatch(setBlurWhileLoading(false));
+    console.log("🚀 Form submission started");
+    const formDataApi = new FormData(event.target);
+
+    // Build nested objects manually
+    const imScreenNames = {
+      skype: formData?.imScreenNames?.skype || "",
+      teams: formData?.imScreenNames?.teams || "",
+      whatsapp: formData?.imScreenNames?.whatsapp || "",
+      trillian: formData?.imScreenNames?.trillian || "",
+    };
+
+    const socialNetworking = {
+      facebook: formData?.socialNetworking?.facebook || "",
+      twitter: formData?.socialNetworking?.twitter || "",
+      linkedin: formData?.socialNetworking?.linkedin || "",
+    };
+
+    // Set nested objects in FormData
+    formDataApi.set("imScreenNames", JSON.stringify(imScreenNames));
+    formDataApi.set("socialNetworking", JSON.stringify(socialNetworking));
+
+    const passwordChanged =
+      passwords.currentPassword &&
+      passwords.newPassword &&
+      passwords.confirmNewPassword;
+
+    //   // Password validation rules
+    if (passwordChanged) {
+      console.log("🔒 Password change detected, validating...");
+      const { currentPassword, newPassword, confirmNewPassword } = passwords;
+      const loginName = formData?.email?.split("@")[0] || "";
+      const passwordRegex = {
+        length: /^.{8,24}$/,
+        uppercase: /[A-Z]/,
+        lowercase: /[a-z]/,
+        digit: /\d/,
+        noLoginName: new RegExp(`^(?!.*${loginName}).*$`, "i"),
+      };
+
+      if (!passwordRegex.length.test(newPassword)) {
+        toast.error("Password must be between 8–24 characters.");
+        dispatch(setBlurWhileLoading(true)); // ✅ Turn loader back off
+        return;
+      }
+      if (!passwordRegex.uppercase.test(newPassword)) {
+        toast.error("Password must include at least one uppercase letter.");
+        dispatch(setBlurWhileLoading(true)); // ✅ Turn loader back off
+        return;
+      }
+      if (!passwordRegex.lowercase.test(newPassword)) {
+        toast.error("Password must include at least one lowercase letter.");
+        dispatch(setBlurWhileLoading(true)); // ✅ Turn loader back off
+        return;
+      }
+      if (!passwordRegex.digit.test(newPassword)) {
+        toast.error("Password must include at least one digit.");
+        dispatch(setBlurWhileLoading(true)); // ✅ Turn loader back off
+        return;
+      }
+      if (!passwordRegex.noLoginName.test(newPassword)) {
+        toast.error("Password cannot contain your login name.");
+        dispatch(setBlurWhileLoading(true)); // ✅ Turn loader back off
+        return;
+      }
+      if (newPassword !== confirmNewPassword) {
+        toast.error("New password and confirm password must match.");
+        dispatch(setBlurWhileLoading(true)); // ✅ Turn loader back off
+        return;
+      }
+      console.log("✅ Password validation passed");
+    }
+
+    // Append passwords (empty strings if not provided)
+    formDataApi.set("currentPassword", passwords.currentPassword || "");
+    formDataApi.set("newPassword", passwords.newPassword || "");
+    formDataApi.set("confirmNewPassword", passwords.confirmNewPassword || "");
+
+    // Handle file upload (if user uploaded an image)
+    if (fileBase64) {
+      const byteCharacters = atob(fileBase64);
+      const byteNumbers = Array.from(byteCharacters, (char) =>
+        char.charCodeAt(0)
+      );
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: "image/jpeg" });
+      const file = new File([blob], "profileImage.jpg", { type: "image/jpeg" });
+      formDataApi.set("profileImage", file);
+      console.log("🖼️ Image converted to file and added to FormData");
+    }
+
+    const plainData = Object.fromEntries(formDataApi.entries());
+    console.log("📤 Payload to be sent (plainData):", plainData);
+    try {
+      const res = await dispatch(
+        submitUserData({
+          id,
+          token,
+          data: {
+            formData: formDataApi,
+            plainData,
+          },
+        })
+      );
+
+      const responsePayload = res?.payload;
+      const status = responsePayload?.status;
+      const message = responsePayload?.message || "Profile updated.";
+
+      console.log("✅ Backend Response:", responsePayload);
+
+      // Reset passwords
+      setPasswords({
+        currentPassword: "",
+        newPassword: "",
+        confirmNewPassword: "",
+      });
+
+      // Success toast
+      toast.success(message, {
+        style: { fontSize: "17px", marginTop: "-10px" },
+      });
+
+      if (passwordChanged) {
+        Cookies.remove("token");
+        Cookies.remove("user_id");
+        console.log("🔐 Password updated. Logging out...");
+        toast.info("Navigating to Login Page",{
+          style: { fontSize: "17px", marginTop: "-10px" },
+        });
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      }
+    } catch (error) {
+      const errMsg =
+        error?.response?.data?.message ||
+        error?.response?.data?.error ||
+        error?.message ||
+        "Failed to update profile. Try again.";
+
+      console.error("❌ Submission error:", errMsg);
+      toast.error(errMsg, {
+        style: { backgroundColor: "#FFCCCC", color: "#000" },
+      });
+    }
+  };
 
   useEffect(() => {
     console.log("MyProfile component mounted");
@@ -379,13 +393,13 @@ const MyProfile = () => {
     );
   };
 
-  if (error) {
-    return (
-      <>
-        <ErrorStatus error={error} />
-      </>
-    );
-  }
+  // if (error) {
+  //   return (
+  //     <>
+  //       <ErrorStatus error={error} />
+  //     </>
+  //   );
+  // }
 
   const { togglePopUp, popupCompanyDetail } = useSelector(
     (state) => state.searchProductStore
@@ -402,15 +416,20 @@ const MyProfile = () => {
   // RESET FORM FUNCTION
   const resetForm = () => {
     try {
-      // Transform and fill in missing default structures
+      console.log("🔁 RESET TRIGGERED");
+      console.log("📦 initialData BEFORE transformation:", initialData);
+      console.log("📦 current formData BEFORE reset:", formData);
+
+      // Fill missing nested structures and clear sensitive fields
       const transformedInitialData = {
         ...initialData,
-        imScreenNames: initialData?.imScreenNames || {
+        imScreenNames: {
           skype: "",
+          teams: "",
           whatsapp: "",
           trillian: "",
         },
-        socialNetworking: initialData?.socialNetworking || {
+        socialNetworking: {
           facebook: "",
           twitter: "",
           linkedin: "",
@@ -420,31 +439,42 @@ const MyProfile = () => {
         confirmNewPassword: "",
       };
 
-      // Dispatch formData update to Redux
+      console.log(
+        "🛠 transformedInitialData TO BE DISPATCHED:",
+        transformedInitialData
+      );
+
+      // Dispatch update to Redux store
       dispatch(setFormData(transformedInitialData));
 
-      // Reset local state fields
+      // Reset local-only password fields and image
       setPasswords({
         currentPassword: "",
         newPassword: "",
         confirmNewPassword: "",
       });
 
-      setFileBase64(""); // Clear uploaded image
+      setFileBase64("");
 
-      // Show success toast
+      // Feedback
       toast.success("Form reset successfully!", {
         style: { fontSize: "17px", marginTop: "-10px" },
       });
-      console.log("Form Reset Succesfully");
+
+      console.log("✅ Form Reset Successfully");
     } catch (error) {
-      console.error("Error resetting form:", error);
-      // Show error toast
+      console.error("❌ Error resetting form:", error);
       toast.error("Failed to reset form. Try again.", {
         style: { backgroundColor: "#FFCCCC", color: "#000" },
       });
     }
   };
+
+  const currentFormData = useSelector((state) => state.profileStore.formData);
+
+  useEffect(() => {
+    console.log("🟢 Updated formData after reset:", currentFormData);
+  }, [currentFormData]);
 
   return (
     <>
@@ -619,7 +649,7 @@ const MyProfile = () => {
                     </span>
                     <span>
                       <div className="flex items-center justify-center">
-                        <label htmlFor="skype">Teams</label>
+                        <label htmlFor="teams">Teams</label>
                         <img
                           src="https://ben.cachefly.net/images/social_networks/tiny_teams.png"
                           alt="Teams"
@@ -629,9 +659,9 @@ const MyProfile = () => {
                       <input
                         type="text"
                         name="imScreenNames.teams"
-                        id="skype"
+                        id="teams"
                         onChange={handleChange}
-                        value={formData?.imScreenNames?.skype || ""}
+                        value={formData?.imScreenNames?.teams || ""}
                         placeholder="Enter Teams username"
                       />
                     </span>
@@ -933,6 +963,8 @@ const MyProfile = () => {
                           name="customSignature"
                           id="customSignature"
                           defaultValue={customTextAreaContent}
+                          className="text-[8pt]"
+                          rows="5"
                         ></textarea>
                       ) : (
                         <textarea
@@ -940,6 +972,8 @@ const MyProfile = () => {
                           id="signature"
                           readOnly
                           value={textAreaContent}
+                          className="text-[8pt]"
+                          rows="5"
                         ></textarea>
                       )}
                     </span>
@@ -948,7 +982,7 @@ const MyProfile = () => {
                 <h1>Update Your Password</h1>
                 <div className={css.profileInfo_form_updatePassword}>
                   <div className={css.profileInfo_form_updatePassword_left}>
-                    <div>
+                    {/* <div>
                       <label htmlFor="currentPassword">Current Password</label>
                       <input
                         type="password"
@@ -986,76 +1020,78 @@ const MyProfile = () => {
                         onChange={handleChange}
                         autoComplete="new-password"
                       />
+                    </div> */}
+                    <div>
+                      <label htmlFor="currentPassword">Current Password</label>
+                      <input
+                        type="password"
+                        name="currentPassword"
+                        id="currentPassword"
+                        placeholder="Enter current password"
+                        value={passwords.currentPassword}
+                        onChange={handleChange}
+                        autoComplete="new-password"
+                        // minLength={8}
+                        // maxLength={24}
+                        // required={
+                        //   !!passwords.newPassword ||
+                        //   !!passwords.confirmNewPassword
+                        // }
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="newPassword">New Password</label>
+                      <input
+                        type="password"
+                        name="newPassword"
+                        id="newPassword"
+                        placeholder="Enter new password"
+                        value={passwords.newPassword}
+                        onChange={handleChange}
+                        autoComplete="new-password"
+                        minLength={8}
+                        maxLength={24}
+                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,24}$"
+                        title="Must contain 1 uppercase, 1 lowercase, 1 digit, and be 8–24 characters."
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="confirmNewPassword">
+                        Confirm New Password
+                      </label>
+                      <input
+                        type="password"
+                        name="confirmNewPassword"
+                        id="confirmNewPassword"
+                        placeholder="Confirm new password"
+                        value={passwords.confirmNewPassword}
+                        onChange={handleChange}
+                        autoComplete="new-password"
+                        minLength={8}
+                        maxLength={24}
+                        required={!!passwords.newPassword}
+                      />
                     </div>
                   </div>
-
-                  {/* 
-                  <div>
-  <label htmlFor="currentPassword">Current Password</label>
-  <input
-    type="password"
-    name="currentPassword"
-    id="currentPassword"
-    placeholder="Enter current password"
-    value={passwords.currentPassword}
-    onChange={handleChange}
-    autoComplete="new-password"
-    minLength={8}
-    maxLength={24}
-    required={!!passwords.newPassword || !!passwords.confirmNewPassword}
-  />
-</div>
-
-<div>
-  <label htmlFor="newPassword">New Password</label>
-  <input
-    type="password"
-    name="newPassword"
-    id="newPassword"
-    placeholder="Enter new password"
-    value={passwords.newPassword}
-    onChange={handleChange}
-    autoComplete="new-password"
-    minLength={8}
-    maxLength={24}
-    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,24}$"
-    title="Must contain 1 uppercase, 1 lowercase, 1 digit, and be 8–24 characters."
-  />
-</div>
-
-<div>
-  <label htmlFor="confirmNewPassword">Confirm New Password</label>
-  <input
-    type="password"
-    name="confirmNewPassword"
-    id="confirmNewPassword"
-    placeholder="Confirm new password"
-    value={passwords.confirmNewPassword}
-    onChange={handleChange}
-    autoComplete="new-password"
-    minLength={8}
-    maxLength={24}
-    required={!!passwords.newPassword}
-  />
-</div>
-
-
- */}
 
                   <div className={css.profileInfo_form_updatePassword_right}>
                     <fieldset>
                       <legend>Password Requirements</legend>
                       <strong>Your password must contain:</strong>
                       <ul>
-                        <li>1 uppercase letter</li>
-                        <li>1 lowercase letter</li>
-                        <li>1 digit</li>
-                        <li>8 characters minimum</li>
-                        <li>24 characters maximum</li>
+                        <li className="text-[8pt]">1 uppercase letter</li>
+                        <li className="text-[8pt]">1 lowercase letter</li>
+                        <li className="text-[8pt]">1 digit</li>
+                        <li className="text-[8pt]">8 characters minimum</li>
+                        <li className="text-[8pt]">24 characters maximum</li>
                       </ul>
-                      <strong>password can not contain:</strong>
+                      <strong className="text-[8pt]">
+                        password can not contain:
+                      </strong>
                       <ul>
-                        <li>your login name</li>
+                        <li className="text-[8pt]">your login name</li>
                       </ul>
                     </fieldset>
                   </div>
@@ -1064,16 +1100,16 @@ const MyProfile = () => {
               <div className="pt-2 flex justify-between items-center">
                 <button
                   className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-7"
-                  type="submit"
-                >
-                  Submit Changes
-                </button>
-                <button
-                  className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-7"
                   onClick={resetForm}
                   type="button"
                 >
                   Reset
+                </button>
+                <button
+                  className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-7"
+                  type="submit"
+                >
+                  Submit Changes
                 </button>
               </div>
             </div>
