@@ -390,7 +390,7 @@ const MyProfile = () => {
     <>
       {!blurWhileLoading && <LoadingState />}
       {blurWhileLoading && (
-        <div className={css.profileLayout}>
+        <div className={`${css.profileLayout}`}>
           <form onSubmit={handleSubmit}>
             <div className={`${css.profileBtn} fixed`}>
               <h4 className="font-semibold">My Profile</h4>

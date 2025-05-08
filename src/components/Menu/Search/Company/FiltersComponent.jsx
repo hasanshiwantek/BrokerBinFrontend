@@ -234,9 +234,88 @@ const FiltersComponent = ({ onFiltersChange, scrollToSection, initialFilters }) 
           </AccordionContent>
         </AccordionItem>
 
+        <AccordionItem value="manufacturer" id="manufacturer" ref={countryRef} >
+          <AccordionTrigger className="text-black  text-2xl font-semibold">
+            Manufacturer
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="grid grid-cols-2 gap-5">
+              {countriesList.map((country) => (
+                <label
+                  key={country.label}
+                  className="flex items-center !text-base"
+                >
+                  <input
+                    type="checkbox"
+                    className="mr-2"
+                    name="country"
+                    value={country.value}
+                    onChange={handleFilterChange}
+                    checked={filters.country?.includes(country.value) || false}
+                  />
+                  {country.label}
+                </label>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        
+        <AccordionItem value="myVendors" id="myVendors" ref={countryRef} >
+          <AccordionTrigger className="text-black  text-2xl font-semibold">
+            My Vendors
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="grid grid-cols-2 gap-5">
+              {countriesList.map((country) => (
+                <label
+                  key={country.label}
+                  className="flex items-center !text-base"
+                >
+                  <input
+                    type="checkbox"
+                    className="mr-2"
+                    name="country"
+                    value={country.value}
+                    onChange={handleFilterChange}
+                    checked={filters.country?.includes(country.value) || false}
+                  />
+                  {country.label}
+                </label>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="products" id="Products" ref={countryRef} >
+          <AccordionTrigger className="text-black  text-2xl font-semibold">
+            Products
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="grid grid-cols-2 gap-5">
+              {countriesList.map((country) => (
+                <label
+                  key={country.label}
+                  className="flex items-center !text-base"
+                >
+                  <input
+                    type="checkbox"
+                    className="mr-2"
+                    name="country"
+                    value={country.value}
+                    onChange={handleFilterChange}
+                    checked={filters.country?.includes(country.value) || false}
+                  />
+                  {country.label}
+                </label>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
         <AccordionItem value="hasInventory" id="hasInventory" ref={countryRef} >
           <AccordionTrigger className="text-black  text-2xl font-semibold">
-            Inventories
+            Listing Inventory
           </AccordionTrigger>
           <AccordionContent>
             <div className="grid grid-cols-2 gap-5">
