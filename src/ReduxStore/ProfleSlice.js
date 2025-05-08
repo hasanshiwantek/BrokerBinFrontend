@@ -6,15 +6,13 @@ export const fetchUserData = createAsyncThunk(
   "profileStore/fetchUserData",
   async ({ id, token }) => {
     try {
-      const response = await axios.get(
-        `${brokerAPI}user/fetch/${id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${brokerAPI}user/fetch/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("User Data Fetched: ", response.data.data);
       return response.data.data;
     } catch (error) {
       console.error(
@@ -37,11 +35,20 @@ export const submitUserData = createAsyncThunk(
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": isFormData ? "multipart/form-data" : "application/json",
+            "Content-Type": isFormData
+              ? "multipart/form-data"
+              : "application/json",
           },
         }
       );
-      return response.data.data;
+      const responseData = {
+        data: response.data.data,
+        status: response.status,
+        message: response.data.message || "Update successful",
+      };
+
+      console.log("✅ Redux Thunk Response:", responseData);
+      return responseData; // return all 3 fields
     } catch (error) {
       console.error(
         "Error while submitting user data:",
@@ -84,7 +91,7 @@ export const submitUserSearch = createAsyncThunk(
     try {
       const response = await axios.post(
         `${brokerAPI}user/search`,
-        {data},
+        { data },
         {
           headers: {
             "Content-Type": "application/json",
@@ -93,7 +100,7 @@ export const submitUserSearch = createAsyncThunk(
         }
       );
       console.log("Search response data from front-end:", response.data);
-      
+
       return response.data.data;
     } catch (error) {
       console.error("Request failed with error from front-end:", error);
@@ -103,20 +110,20 @@ export const submitUserSearch = createAsyncThunk(
 );
 
 export const submitCompanyLogo = createAsyncThunk(
-  'profile/submitCompanyLogo',
+  "profile/submitCompanyLogo",
   async ({ token, file }, { rejectWithValue }) => {
     try {
       const formData = new FormData();
-      formData.append('image', file);  // append the file to the form data
+      formData.append("image", file); // append the file to the form data
 
       const response = await axios.post(`${brokerAPI}company/logo`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
       });
 
-      console.log("Logo Response From Backend ",response.data)
+      console.log("Logo Response From Backend ", response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data || error.message);
@@ -128,15 +135,12 @@ export const getCompanyFeedback = createAsyncThunk(
   "profileStore/getCompanyFeedback",
   async ({ id, token }) => {
     try {
-      const response = await axios.get(
-        `${brokerAPI}feedback/company/${id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${brokerAPI}feedback/company/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log("Company Feedback Data from backend:", response.data);
       return response.data;
     } catch (error) {
@@ -149,16 +153,13 @@ export const getCompanyFeedback = createAsyncThunk(
   }
 );
 
-
-
-
 export const submitUserSearchViewBy = createAsyncThunk(
   "profileStore/submitUserSearchViewBy",
-  async ({sortBy,sortOrder,token }, { rejectWithValue }) => {
+  async ({ sortBy, sortOrder, token }, { rejectWithValue }) => {
     try {
       const response = await axios.post(
         `${brokerAPI}user/search`,
-        {sortBy,sortOrder},
+        { sortBy, sortOrder },
         {
           headers: {
             "Content-Type": "application/json",
@@ -166,8 +167,11 @@ export const submitUserSearchViewBy = createAsyncThunk(
           },
         }
       );
-      console.log("Search response View By data from front-end:", response.data);
-      
+      console.log(
+        "Search response View By data from front-end:",
+        response.data
+      );
+
       return response.data.data;
     } catch (error) {
       console.error("Request failed with error from front-end:", error);
@@ -175,7 +179,6 @@ export const submitUserSearchViewBy = createAsyncThunk(
     }
   }
 );
-
 
 const initialState = {
   user: JSON.parse(localStorage.getItem("user")),
@@ -186,12 +189,13 @@ const initialState = {
     experience: "",
     specialty: "",
     email: "",
-      skype: '',
-      whatsapp: '',
-      trillian: '',
-    facebook: '',
-    twitter: '',
-    linkedin: '',
+    skype: "",
+    teams:"",
+    whatsapp: "",
+    trillian: "",
+    facebook: "",
+    twitter: "",
+    linkedin: "",
     phoneNumber: "",
     tollFree: "",
     cellular: "",
@@ -246,17 +250,16 @@ const initialState = {
     showContactInfo: "1",
     receiveSiteEmails: "0",
     receiveUpdates: "0",
-    cfilterfNEW:false,
-    cfilterfASIS:false,
-
+    cfilterfNEW: false,
+    cfilterfASIS: false,
   },
   initialData: {},
   blurWhileLoading: false,
   customSignature: true,
   error: null,
-  searchUserData:[],
+  searchUserData: [],
   companyLogo: null,
-  companyFeedbackData:[],
+  companyFeedbackData: [],
 };
 
 const profileSlice = createSlice({
@@ -273,9 +276,8 @@ const profileSlice = createSlice({
       state.optionFormData = {
         ...state.optionFormData,
         ...action.payload,
-        
       };
-      console.log(action.payload)
+      console.log(action.payload);
     },
     setCustomSignature: (state, action) => {
       state.customSignature = action.payload;
@@ -289,10 +291,63 @@ const profileSlice = createSlice({
       state.optionFormData = initialState.optionFormData;
       // Add any other state reset logic here
     },
-    clearLogo:(state)=>{
-      state.companyLogo=null
+    clearLogo: (state) => {
+      state.companyLogo = null;
+    },
+    restoreInitialData: (state) => {
+      const defaultFields = {
+        firstName: "",
+        lastName: "",
+        position: "",
+        experience: "",
+        specialty: "",
+        email: "",
+        skype: "",
+        teams:"",
+        whatsapp: "",
+        trillian: "",
+        facebook: "",
+        twitter: "",
+        linkedin: "",
+        phoneNumber: "",
+        tollFree: "",
+        cellular: "",
+        faxNumber: "",
+        currentPassword: "",
+        newPassword: "",
+        confirmNewPassword: "",
+        profileImage: "",
+        customSignature: [],
+        signature: [],
+        sigcheckName: true,
+        sigcheckEmailAddress: true,
+        sigcheckPosition: true,
+        sigcheckPhone: true,
+        sigcheckCell: true,
+        sigcheckCompany: true,
+        sigcheckToll: true,
+        sigcheckFax: true,
+        sigcheckIM: true,
+        imScreenNames: {
+          skype: "",
+          whatsapp: "",
+          trillian: "",
+        },
+        socialNetworking: {
+          facebook: "",
+          twitter: "",
+          linkedin: "",
+        },
+      };
 
-    }
+      state.formData = {
+        ...defaultFields,
+        ...state.initialData,
+        currentPassword: "",
+        newPassword: "",
+        confirmNewPassword: "",
+      };
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -318,17 +373,25 @@ const profileSlice = createSlice({
         state.blurWhileLoading = false;
       })
       .addCase(submitUserData.fulfilled, (state, action) => {
-        state.initialData = action.payload;
-        // console.log("Data from front-end:", action.payload);
+        const { data: updatedUser, message, status } = action.payload;
+      
+        console.log("🟢 Redux Store Updated with:", updatedUser);
+        console.log("📡 Status:", status);
+        console.log("📩 Message:", message);
+      
+        state.initialData = updatedUser;
+      
         state.formData = {
           ...state.formData,
-          ...action.payload,
-          currentPassword: "", // Clear passwords after submission
+          ...updatedUser,
+          currentPassword: "",
           newPassword: "",
           confirmNewPassword: "",
         };
+      
         state.blurWhileLoading = true;
       })
+      
       .addCase(submitUserData.rejected, (state, action) => {
         console.log(action.error.message);
         state.error = action.error.message;
@@ -337,14 +400,12 @@ const profileSlice = createSlice({
       .addCase(submitUserSearch.pending, (state) => {
         state.blurWhileLoading = false;
         console.log("Pending....");
-        
       })
       .addCase(submitUserSearch.fulfilled, (state, action) => {
         // state.searchUserData = action.payload,
         state.blurWhileLoading = true;
-        state.searchUserData=action.payload
+        state.searchUserData = action.payload;
         console.log("Fulfilled....");
-
       })
       .addCase(submitUserSearch.rejected, (state, action) => {
         console.log(action.error.message);
@@ -355,13 +416,11 @@ const profileSlice = createSlice({
       .addCase(submitUserOptions.pending, (state) => {
         state.blurWhileLoading = false;
         console.log("Pending....");
-        
       })
       .addCase(submitUserOptions.fulfilled, (state, action) => {
         state.blurWhileLoading = true;
         // state.searchUserData=action.payload
         console.log("Fulfilled....");
-
       })
       .addCase(submitUserOptions.rejected, (state, action) => {
         console.log(action.error.message);
@@ -389,7 +448,7 @@ const profileSlice = createSlice({
       .addCase(getCompanyFeedback.fulfilled, (state, action) => {
         state.blurWhileLoading = true;
         state.companyFeedbackData = action.payload;
-        console.log("Fulfilled Case: ",action.payload);
+        console.log("Fulfilled Case: ", action.payload);
       })
       .addCase(getCompanyFeedback.rejected, (state, action) => {
         console.log(action.error.message);
@@ -405,7 +464,8 @@ export const {
   setCustomSignature,
   setBlurWhileLoading,
   resetProfileState,
-  clearLogo
+  clearLogo,
+  restoreInitialData,
 } = profileSlice.actions;
 
 export default profileSlice.reducer;

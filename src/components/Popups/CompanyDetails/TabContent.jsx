@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import css from "../../../styles/Popup/CompanyDetails.module.css";
 import shadow from "../../../imgs/logo/shadow.png";
 import { useSelector, useDispatch } from "react-redux";
-import { getCompanyContact } from "../../../ReduxStore/SearchProductSlice";
+import {
+  getCompanyContact,
+  deleteCompanyContact,
+} from "../../../ReduxStore/SearchProductSlice";
 import Cookies from "js-cookie";
 import { deleteCompanyUser } from "../../../ReduxStore/RfqSlice";
 import FeedbackModal from "../FeedBackModal";
@@ -188,27 +191,31 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
   }, []);
 
   // REMOVE CONTACT LOGIC
-  // const removeCompanyContacts = async (id) => {
-  //   const isConfirmed = window.confirm(
-  //     "Are you sure you want to delete this user?"
-  //   );
-  //   if (isConfirmed) {
-  //     try {
-  //       const result = await dispatch(
-  //         removeMyFavouriteContacts({ contact_id: id, token })
-  //       ).unwrap(); // No need for .payload here
+  const removeCompanyContacts = async (id) => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this user?"
+    );
 
-  //       if (result?.success) {
-  //         toast.info(result?.message || "Contact Removed From Favourites!");
-  //         fetchCompanyContacts(); // Make sure this function exists
-  //       } else {
-  //         toast.info(result?.message || "Failed to remove contact.");
-  //       }
-  //     } catch (err) {
-  //       toast.error("Error removing contact: " + err.message);
-  //     }
-  //   }
-  // };
+    if (!isConfirmed) return;
+
+    try {
+      const result = await dispatch(
+        deleteCompanyContact({ id, token })
+      ).unwrap();
+
+      console.log(result); // { status: true, message: 'Contact deleted successfully.' }
+
+      if (result?.status) {
+        console.log("User Deleted with id: ", id);
+        toast.info(result?.message || "User Deleted From Company!");
+        fetchCompanyContacts(); // Optional refresh
+      } else {
+        toast.info(result?.message || "Failed to remove contact.");
+      }
+    } catch (err) {
+      toast.error("Error removing contact: " + err.message);
+    }
+  };
 
   const loadMore = () => {
     setVisibleFeedbacks((prev) => prev + 10);
@@ -411,7 +418,7 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
                             >
                               <ThemeProvider theme={theme}>
                                 <Tooltip
-                                  title="Remove from your contacts" 
+                                  title="Remove from your contacts"
                                   arrow
                                   placement="top"
                                 >
