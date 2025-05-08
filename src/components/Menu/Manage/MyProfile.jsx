@@ -405,12 +405,12 @@ const MyProfile = () => {
       // Transform and fill in missing default structures
       const transformedInitialData = {
         ...initialData,
-        imScreenNames: initialData?.imScreenNames || {
+        imScreenNames:{
           skype: "",
           whatsapp: "",
           trillian: "",
         },
-        socialNetworking: initialData?.socialNetworking || {
+        socialNetworking: {
           facebook: "",
           twitter: "",
           linkedin: "",

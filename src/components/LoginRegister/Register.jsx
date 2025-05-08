@@ -473,7 +473,7 @@ const Register = () => {
                 <input
                   type="checkbox"
                   name="companyCategory"
-                  // value="Reseller"
+                  value="Reseller"
                   id="Reseller"
                   {...register("companyCategory")}
                 />
@@ -483,7 +483,7 @@ const Register = () => {
                 <input
                   type="checkbox"
                   name="companyCategory"
-                  // value="Broker"
+                  value="Broker"
                   id="Broker"
                   {...register("companyCategory")}
 
@@ -494,7 +494,7 @@ const Register = () => {
                 <input
                   type="checkbox"
                   name="companyCategory"
-                  // value="Dealer"
+                  value="Dealer"
                   id="Dealer"
                   {...register("companyCategory")}
 
@@ -505,7 +505,7 @@ const Register = () => {
                 <input
                   type="checkbox"
                   name="companyCategory"
-                  // value="VAR"
+                  value="VAR"
                   id="VAR"
                   {...register("companyCategory")}
 
@@ -516,7 +516,7 @@ const Register = () => {
                 <input
                   type="checkbox"
                   name="companyCategory"
-                  // value="Distributor"
+                  value="Distributor"
                   id="Distributor"
                   {...register("companyCategory")}
                 />
@@ -528,21 +528,27 @@ const Register = () => {
                 <input
                   type="checkbox"
                   name="companyCategory"
-                  // value="Service Center"
+                  value="Service Center"
                   id="Service Center"
                   {...register("companyCategory")}
                 />
                 <label htmlFor="Service Center">Service Center</label>
               </span>
               <span className={css.contact_form_fields_companyCategory}>
-                <input type="checkbox" name="companyCategory" value="Mfg" />
+                <input 
+                type="checkbox" 
+                name="companyCategory" 
+                value="Mfg"
+                id="Mfg" 
+                {...register("companyCategory")}
+                />
                 <label htmlFor="Mfg">Mfg</label>
               </span>
               <span className={css.contact_form_fields_companyCategory}>
                 <input
                   type="checkbox"
                   name="companyCategory"
-                  // value="Integrator"
+                  value="Integrator"
                   id="Integrator"
                   {...register("companyCategory")}
                 />
@@ -552,7 +558,7 @@ const Register = () => {
                 <input
                   type="checkbox"
                   name="companyCategory"
-                  // value="Retail"
+                  value="Retail"
                   id="Retail"
                   {...register("companyCategory")}
                 />
