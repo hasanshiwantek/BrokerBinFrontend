@@ -17,18 +17,16 @@ const Ethics = () => {
   const token = Cookies.get("token");
   const dispatch = useDispatch();
   const user_id = Cookies.get("user_id");
-  const { initialData, user } = useSelector(
-    (state) => state.profileStore
-  );
+  const { initialData, user } = useSelector((state) => state.profileStore);
 
-  console.log("User Data: ", initialData)
-  const companyId = initialData?.company?.id
-  console.log("Company ID: ", companyId)
+  console.log("User Data: ", initialData);
+  const companyId = initialData?.company?.id;
+  console.log("Company ID: ", companyId);
   const id = user?.user?.id || user_id;
 
   useEffect(() => {
     console.log(id);
-    dispatch(fetchUserData({ id, token }))
+    dispatch(fetchUserData({ id, token }));
   }, []);
 
   useEffect(() => {
@@ -140,31 +138,35 @@ const Ethics = () => {
     console.log("Form Data: ", formData);
     const data = { ...formData };
 
-    dispatch(sendEthics({ data, token })).then(() => {
-      handleReset();
-      // ✅ Show success toast with light blue color
-      toast.info("Your Complaint Has Been Sent Successfully", {
-        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, // 
+    dispatch(sendEthics({ data, token }))
+      .then(() => {
+        handleReset();
+        // ✅ Show success toast with light blue color
+        toast.info("Your Complaint Has Been Sent Successfully", {
+          style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
+        });
+      })
+      .catch((error) => {
+        toast.error("Failed Sending Complain.Please Try Again", {
+          style: { fontSize: "15px", marginTop: "-10px" }, //
+        });
       });
-    }).catch((error) => {
-      toast.error("Failed Sending Complain.Please Try Again", {
-        style: { fontSize: "15px", marginTop: "-10px" }, // 
-      });
-    });
   };
 
   return (
     <>
       <div className={basic.basicFormLayout}>
         <form onSubmit={handleSubmit}>
-            <div className={`${basic.basic} !bg-[#e8e8e8]`}>
+          <div className={`${basic.basic} !bg-[#e8e8e8]`}>
             <div className={styles.profileInfo_links}>
               <ul>
                 <li>
                   <NavLink
                     to="/help"
-                    end  // This ensures the exact match for /myprofile
-                    className={({ isActive }) => (isActive ? styles.active : '')}
+                    end // This ensures the exact match for /myprofile
+                    className={({ isActive }) =>
+                      isActive ? styles.active : ""
+                    }
                   >
                     <span>Help</span>
                   </NavLink>
@@ -172,7 +174,9 @@ const Ethics = () => {
                 <li>
                   <NavLink
                     to="/feedback"
-                    className={({ isActive }) => (isActive ? styles.active : '')}
+                    className={({ isActive }) =>
+                      isActive ? styles.active : ""
+                    }
                   >
                     <span>Contact</span>
                   </NavLink>
@@ -180,7 +184,9 @@ const Ethics = () => {
                 <li>
                   <NavLink
                     to="/ethics"
-                    className={({ isActive }) => (isActive ? styles.active : '')}
+                    className={({ isActive }) =>
+                      isActive ? styles.active : ""
+                    }
                   >
                     <span>Ethics</span>
                   </NavLink>
@@ -188,7 +194,9 @@ const Ethics = () => {
                 <li>
                   <NavLink
                     to="/sitemap"
-                    className={({ isActive }) => (isActive ? styles.active : '')}
+                    className={({ isActive }) =>
+                      isActive ? styles.active : ""
+                    }
                   >
                     <span>Site Map</span>
                   </NavLink>
@@ -196,7 +204,7 @@ const Ethics = () => {
                 <li>
                   <NavLink
                     to="/badges"
-                    className={({ isActive }) => (isActive ? css.active : '')}
+                    className={({ isActive }) => (isActive ? css.active : "")}
                   >
                     <span>Badges</span>
                   </NavLink>
@@ -205,17 +213,28 @@ const Ethics = () => {
             </div>
             <div className={basic.basic_form}>
               <div className={css.ethics_form}>
-                <div className={`${css.ethics_form_header}  mb-12 p-3 text-[#444]`} >
-                  <h1>Filing an Ethics Complaint</h1>
+                <div
+                  className={`${css.ethics_form_header}  mb-12 p-3 text-[#444]`}
+                >
+                  <h1 className="font-semibold">Filing an Ethics Complaint</h1>
                   <div>
-                    <p>
-                      To ensure a clear and open process, please observe the required qualifications for our Ethics Committee's review.
+                    <p className="text-[8pt] font-[600]">
+                      To ensure a clear and open process, please observe the
+                      required qualifications for our Ethics Committee's review.
                     </p>
-                    <p>
-                      It should be noted that only complaints with a transactional basis will be considered by the Ethics Committee. Companies must provide supporting documentation for their claim to enable our committee's evaluation.
+                    <p className="text-[8pt] font-[600] ">
+                      It should be noted that only complaints with a
+                      transactional basis will be considered by the Ethics
+                      Committee. Companies must provide supporting documentation
+                      for their claim to enable our committee's evaluation.
                     </p>
-                    <p>
-                      BrokerCell.com enforces a strict no-tolerance stance on counterfeit items. Please submit evidence of counterfeit products through a Testing House or Homeland Security. The BrokerCell Ethics Committee will promptly take the counterfeit products out of circulation and decide on the necessary actions concerning your membership.
+                    <p className="text-[8pt] font-[600]">
+                      BrokerCell.com enforces a strict no-tolerance stance on
+                      counterfeit items. Please submit evidence of counterfeit
+                      products through a Testing House or Homeland Security. The
+                      BrokerCell Ethics Committee will promptly take the
+                      counterfeit products out of circulation and decide on the
+                      necessary actions concerning your membership.
                     </p>
                   </div>
                 </div>
@@ -226,7 +245,7 @@ const Ethics = () => {
                     </li>
                     <li>
                       <label htmlFor="name">Who did you work with?</label>
-                  
+
                       <input
                         type="search"
                         name="name"
@@ -238,9 +257,10 @@ const Ethics = () => {
                     </li>
                     <li>
                       <label htmlFor="date_of_transaction">
-                        What was the date of transaction?<span className="text-red-500">*</span>
+                        What was the date of transaction?
+                        <span className="text-red-500">*</span>
                       </label>
-                
+
                       <input
                         type="date"
                         name="date_of_transaction"
@@ -249,13 +269,13 @@ const Ethics = () => {
                         onChange={handleInputChange}
                         required
                       />
-
                     </li>
                     <li>
                       <label htmlFor="specific_complaint">
-                        What is your specific complaint?<span className="text-red-500">*</span>
+                        What is your specific complaint?
+                        <span className="text-red-500">*</span>
                       </label>
-       
+
                       <textarea
                         name="specific_complaint"
                         id="specific_complaint"
@@ -270,7 +290,7 @@ const Ethics = () => {
                         Have you requested an RMA (Return Merchandise
                         Authorization)?<span className="text-red-500">*</span>
                       </label>
-    
+
                       <div>
                         <span>
                           <label htmlFor="yes">Yes</label>
@@ -312,7 +332,7 @@ const Ethics = () => {
                         What was the above company's response when you contacted
                         them?<span className="text-red-500">*</span>
                       </label>
-  
+
                       <textarea
                         name="company_response"
                         id="company_response"
@@ -320,17 +340,19 @@ const Ethics = () => {
                         onChange={handleInputChange}
                         required
                         rows={5}
-
                       ></textarea>
                     </li>
                     <li>
                       <label>
-                        Have you or do you plan on contacting the authorities?<span className="text-red-500">*</span>
+                        Have you or do you plan on contacting the authorities?
+                        <span className="text-red-500">*</span>
                       </label>
-         
+
                       <div>
                         <span>
-                          <label htmlFor="contacting_authorities_yes">Yes</label>
+                          <label htmlFor="contacting_authorities_yes">
+                            Yes
+                          </label>
                           <input
                             type="radio"
                             name="contacting_authorities"
@@ -355,9 +377,10 @@ const Ethics = () => {
                     </li>
                     <li>
                       <label>
-                        Do you or will you have an attorney representing you?<span className="text-red-500">*</span>
+                        Do you or will you have an attorney representing you?
+                        <span className="text-red-500">*</span>
                       </label>
-                
+
                       <div>
                         <span>
                           <label htmlFor="attorney_yes">Yes</label>
@@ -385,9 +408,10 @@ const Ethics = () => {
                     </li>
                     <li>
                       <label>
-                        Please provide relevant documentation:<span className="text-red-500">*(At least one)</span>
+                        Please provide relevant documentation:
+                        <span className="text-red-500">*(At least one)</span>
                       </label>
-          
+
                       <ul className={css.ethics_form_fields_files}>
                         <li>
                           <label htmlFor="purchase_order[]">
@@ -473,7 +497,7 @@ const Ethics = () => {
                     </li>
                     <li>
                       <label>Enter Additional Information:</label>
-         
+
                       <textarea
                         name="additional_information"
                         id="additional_information"
@@ -491,15 +515,17 @@ const Ethics = () => {
               <button type="button" onClick={handleReset}>
                 Reset
               </button>
-              <input type="submit" value="Submit" className="cursor-pointer hover:bg-blue-400 focus:-translate-y-3 " />
+              <input
+                type="submit"
+                value="Submit"
+                className="cursor-pointer hover:bg-blue-400 focus:-translate-y-3 "
+              />
             </div>
           </div>
         </form>
       </div>
       <ToastContainer position="top-center" autoClose={2000} />
-
     </>
-
   );
 };
 

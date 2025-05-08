@@ -892,7 +892,6 @@ const MyProfile = () => {
                 <h1>Update Your Password</h1>
                 <div className={css.profileInfo_form_updatePassword}>
                   <div className={css.profileInfo_form_updatePassword_left}>
-                   
                     <div>
                       <label htmlFor="currentPassword">Current Password</label>
                       <input

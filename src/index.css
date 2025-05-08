@@ -226,3 +226,8 @@ html {
   white-space: pre-wrap;
   word-wrap: break-word;
 }
+.ql-editor p{
+  margin: 0;
+  padding: 0;
+  display: table-caption !important;
+}
