@@ -22,6 +22,8 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { HiEye, HiEyeOff } from "react-icons/hi";
+
 const MyProfile = () => {
   const token = Cookies.get("token");
   const user_id = Cookies.get("user_id");
@@ -45,6 +47,11 @@ const MyProfile = () => {
     currentPassword: "",
     newPassword: "",
     confirmNewPassword: "",
+  });
+  const [showPassword, setShowPassword] = useState({
+    current: false,
+    new: false,
+    confirm: false,
   });
 
   const textAreaContent = [
@@ -261,7 +268,7 @@ const MyProfile = () => {
         Cookies.remove("token");
         Cookies.remove("user_id");
         console.log("🔐 Password updated. Logging out...");
-        toast.info("Navigating to Login Page",{
+        toast.info("Navigating to Login Page", {
           style: { fontSize: "17px", marginTop: "-10px" },
         });
         setTimeout(() => {
@@ -892,58 +899,90 @@ const MyProfile = () => {
                 <h1>Update Your Password</h1>
                 <div className={css.profileInfo_form_updatePassword}>
                   <div className={css.profileInfo_form_updatePassword_left}>
-                    <div>
+                    <div className="relative">
                       <label htmlFor="currentPassword">Current Password</label>
                       <input
-                        type="password"
+                        type={showPassword.current ? "text" : "password"}
                         name="currentPassword"
                         id="currentPassword"
                         placeholder="Enter current password"
                         value={passwords.currentPassword}
                         onChange={handleChange}
-                        autoComplete="new-password"
-                        // minLength={8}
-                        // maxLength={24}
-                        // required={
-                        //   !!passwords.newPassword ||
-                        //   !!passwords.confirmNewPassword
-                        // }
+                        className="w-full pr-10"
                       />
+                      <span
+                        className="absolute right-2 top-[25px] cursor-pointer text-gray-500"
+                        onClick={() =>
+                          setShowPassword((prev) => ({
+                            ...prev,
+                            current: !prev.current,
+                          }))
+                        }
+                      >
+                        {showPassword.current ? (
+                          <HiEyeOff size={18} />
+                        ) : (
+                          <HiEye size={18} />
+                        )}
+                      </span>
                     </div>
 
-                    <div>
+                    <div className="relative  mt-4">
                       <label htmlFor="newPassword">New Password</label>
                       <input
-                        type="password"
+                        type={showPassword.new ? "text" : "password"}
                         name="newPassword"
                         id="newPassword"
                         placeholder="Enter new password"
                         value={passwords.newPassword}
                         onChange={handleChange}
-                        autoComplete="new-password"
-                        minLength={8}
-                        maxLength={24}
-                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,24}$"
-                        title="Must contain 1 uppercase, 1 lowercase, 1 digit, and be 8–24 characters."
+                        className="w-full pr-10"
                       />
+                      <span
+                        className="absolute right-2 top-[25px] cursor-pointer text-gray-500"
+                        onClick={() =>
+                          setShowPassword((prev) => ({
+                            ...prev,
+                            new: !prev.new,
+                          }))
+                        }
+                      >
+                        {showPassword.new ? (
+                          <HiEyeOff size={18} />
+                        ) : (
+                          <HiEye size={18} />
+                        )}
+                      </span>
                     </div>
 
-                    <div>
+                    <div className="relative  mt-4">
                       <label htmlFor="confirmNewPassword">
                         Confirm New Password
                       </label>
                       <input
-                        type="password"
+                        type={showPassword.confirm ? "text" : "password"}
                         name="confirmNewPassword"
                         id="confirmNewPassword"
                         placeholder="Confirm new password"
                         value={passwords.confirmNewPassword}
                         onChange={handleChange}
-                        autoComplete="new-password"
-                        minLength={8}
-                        maxLength={24}
-                        required={!!passwords.newPassword}
+                        className="w-full pr-10"
                       />
+                      <span
+                        className="absolute right-2 top-[25px] cursor-pointer text-gray-500"
+                        onClick={() =>
+                          setShowPassword((prev) => ({
+                            ...prev,
+                            confirm: !prev.confirm,
+                          }))
+                        }
+                      >
+                        {showPassword.confirm ? (
+                          <HiEyeOff size={18} />
+                        ) : (
+                          <HiEye size={18} />
+                        )}
+                      </span>
                     </div>
                   </div>
 

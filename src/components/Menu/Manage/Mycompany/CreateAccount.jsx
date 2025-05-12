@@ -8,7 +8,7 @@ import { Link, NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 // Define the AsyncThunk
 export const createUser = createAsyncThunk(
   "createUser",
@@ -41,6 +41,9 @@ export const createUser = createAsyncThunk(
 );
 
 const CreateAccount = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showRetype, setShowRetype] = useState(false);
+
   const [formData, setFormData] = useState({
     userId: "",
     lastName: "",
@@ -84,7 +87,7 @@ const CreateAccount = () => {
         };
       }
       // For `socialNetworking` nested updates
-      if (["facebook", "linkedin"].includes(name)) {
+      if (["facebook", "linkedin","twitter"].includes(name)) {
         return {
           ...prevFormData,
           socialNetworking: {
@@ -130,11 +133,13 @@ const CreateAccount = () => {
           email: "",
           imScreenNames: {
             skype: "",
+            teams: "",
             whatsapp: "",
             trillian: "",
           },
           socialNetworking: {
             facebook: "",
+            twitter: "",
             linkedin: "",
           },
           password: "",
@@ -158,7 +163,7 @@ const CreateAccount = () => {
   return (
     <div className={`px-5 ${css.profileLayout} `}>
       <form onSubmit={(e) => e.preventDefault()}>
-        <div className={`${css.profileInfo} !bg-white  border-2 rounded-2xl`}>
+        <div className={`${css.profileInfo} !bg-white  border-8  !p-0`}>
           <div className={css.profileInfo_links}>
             <ul className="bg-gray-200">
               <li>
@@ -172,7 +177,7 @@ const CreateAccount = () => {
               </li>
               <li>
                 <NavLink
-                  to="/mycompany/Createaccount"
+                  to="/Createaccount"
                   className={({ isActive }) => (isActive ? css.active : "")}
                 >
                   <span>Create Account</span>
@@ -198,9 +203,9 @@ const CreateAccount = () => {
             </ul>
           </div>
 
-          <h1 className="pt-5">Create Account</h1>
+          <h1 className="pt-5 p-4 !font-semibold text-[#444]">Create Account</h1>
 
-          <div className="!flex !justify-between !space-x-[4vw] !pt-10">
+          <div className="!flex !justify-between !space-x-[4vw] !pt-10 !p-14 ">
             <div className="!flex !flex-col !text-right !gap-5">
               <span className="space-x-4">
                 <label>Login</label>
@@ -295,12 +300,13 @@ const CreateAccount = () => {
                 />
               </span>
 
-              <span className="space-x-4">
-                <label>Security</label>
+              <span className="space-x-4 flex justify-start items-center ">
+                <label className="w-[150px]">Security</label>
                 <select
                   name="security"
                   value={formData.security}
                   onChange={handleChange}
+                  className="border px-3 py-2 rounded "
                 >
                   <option value="Browse Only">Browse Only</option>
                   <option value="Full Access">Full Access</option>
@@ -318,168 +324,270 @@ const CreateAccount = () => {
                 />
               </span>
 
-              <span className="space-x-4">
-                <label>Password</label>
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                />
-              </span>
+              <div className="space-y-4">
+                {/* Password Field */}
+                <div className="relative flex items-center space-x-4">
+                  <label className="w-[150px] text-sm font-medium text-gray-700">
+                    Password
+                  </label>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                  />
+                  <span
+                    className="absolute right-3 cursor-pointer text-gray-500"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <AiOutlineEyeInvisible size={20} />
+                    ) : (
+                      <AiOutlineEye size={20} />
+                    )}
+                  </span>
+                </div>
 
-              <span className="space-x-4">
-                <label>Re-Type Password</label>
-                <input
-                  type="password"
-                  name="retypePassword"
-                  value={formData.retypePassword}
-                  onChange={handleChange}
-                  required
-                />
-              </span>
+                {/* Retype Password Field */}
+                <div className="relative flex items-center space-x-4">
+                  <label className="w-[150px] text-sm font-medium text-gray-700">
+                    Re-Type Password
+                  </label>
+                  <input
+                    type={showRetype ? "text" : "password"}
+                    name="retypePassword"
+                    value={formData.retypePassword}
+                    onChange={handleChange}
+                    required
+                  />
+                  <span
+                    className="absolute right-3 cursor-pointer text-gray-500"
+                    onClick={() => setShowRetype(!showRetype)}
+                  >
+                    {showRetype ? (
+                      <AiOutlineEyeInvisible size={20} />
+                    ) : (
+                      <AiOutlineEye size={20} />
+                    )}
+                  </span>
+                </div>
+              </div>
+
+              <div className="text-left">
+                <h3 className="!text-2xl font-semibold">
+                  Preferred Brokercell Use
+                </h3>
+                <div className="flex flex-col gap-8 justify-between items-center mt-4">
+                  <label>
+                    <input
+                      type="radio"
+                      name="preferredUse"
+                      value="Telecom"
+                      onChange={handleChange}
+                    />{" "}
+                    Telecom
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="preferredUse"
+                      value="Computer"
+                      onChange={handleChange}
+                    />{" "}
+                    Computer
+                  </label>
+                </div>
+              </div>
             </div>
 
             <div className="flex flex-col text-right gap-5">
-              <h3>IM Screen Names</h3>
+              <div className="border  p-10 flex flex-col gap-5">
+                <h3 className="font-semibold text-[#444] text-left !text-2xl">
+                  IM Screen Names
+                </h3>
 
-              <span className="space-x-4">
-                <div className="flex items-center">
-                  <label>Skype</label>
-                  <img
-                    src="https://ben.cachefly.net/images/social_networks/tiny_skype.png"
-                    alt="Skype"
-                    title="Skype"
-                  ></img>
-                </div>
+                <span className="space-x-4 flex justify-between items-center !text-[8pt]">
+                  <div className="flex items-center">
+                    <label>Skype</label>
+                    <img
+                      src="https://ben.cachefly.net/images/social_networks/tiny_skype.png"
+                      alt="Skype"
+                      title="Skype"
+                    ></img>
+                  </div>
 
-                <input
-                  type="text"
-                  name="skype"
-                  value={formData.imScreenNames.skype}
-                  onChange={handleChange}
-                />
-              </span>
-
-              <span className="space-x-4">
-                <div className="flex items-center ">
-                  <label htmlFor="whatsapp">WhatsApp</label>
-                  <img
-                    src="https://ben.cachefly.net/images/social_networks/tiny_whatsapp.png"
-                    alt="WhatsApp"
-                    title="WhatsApp"
+                  <input
+                    type="text"
+                    name="skype"
+                    value={formData.imScreenNames.skype}
+                    onChange={handleChange}
+                    placeholder="Screen Name"
+                    className="w-[20rem]"
                   />
-                </div>
-                <input
-                  type="text"
-                  name="whatsapp"
-                  value={formData.imScreenNames.whatsapp}
-                  onChange={handleChange}
-                />
-              </span>
+                </span>
 
-              <span className="space-x-4">
-                <div className="flex items-center">
-                  <label htmlFor="trillian">Trillian</label>
-                  <img
-                    src="https://ben.cachefly.net/images/social_networks/tiny_trillian.png"
-                    alt="Trillian"
-                    title="Trillian"
+                <span className="space-x-4 flex justify-between items-center !text-[8pt]">
+                  <div className="flex items-center">
+                    <label>Teams</label>
+                    <img
+                      src="https://ben.cachefly.net/images/social_networks/tiny_teams.png"
+                      alt="Teams"
+                      title="Teams"
+                    ></img>
+                  </div>
+
+                  <input
+                    type="text"
+                    name="teams"
+                    value={formData.imScreenNames.teams}
+                    onChange={handleChange}
+                    placeholder="Screen Name"
+                    className="w-[20rem]"
                   />
-                </div>
-                <input
-                  type="text"
-                  name="trillian"
-                  value={formData.imScreenNames.trillian}
-                  onChange={handleChange}
-                />
-              </span>
+                </span>
 
-              <h3>Social Networking</h3>
-
-              <span className="space-x-4">
-                <div className="flex items-center">
-                  <label htmlFor="facebook">Facebook</label>
-                  <img
-                    src="https://ben.cachefly.net/images/social_networks/tiny_facebook.png"
-                    alt="Facebook"
-                    title="Facebook"
+                <span className="space-x-4 flex justify-between items-center !text-[8pt]">
+                  <div className="flex items-center ">
+                    <label htmlFor="whatsapp">WhatsApp</label>
+                    <img
+                      src="https://ben.cachefly.net/images/social_networks/tiny_whatsapp.png"
+                      alt="WhatsApp"
+                      title="WhatsApp"
+                    />
+                  </div>
+                  <input
+                    type="text"
+                    name="whatsapp"
+                    value={formData.imScreenNames.whatsapp}
+                    onChange={handleChange}
+                    placeholder="Screen Name"
+                    className="w-[20rem]"
                   />
-                </div>
-                <input
-                  type="text"
-                  name="facebook"
-                  value={formData.socialNetworking.facebook || ""}
-                  onChange={handleChange}
-                />
-              </span>
+                </span>
 
-              <span className="space-x-4">
-                <div className="flex items-center">
-                  <label htmlFor="twitter">Twitter</label>
-                  <img
-                    src="https://ben.cachefly.net/images/social_networks/tiny_twitter.png"
-                    alt="Twitter"
-                    title="Twitter"
+                <span className="space-x-4 flex justify-between items-center !text-[8pt]">
+                  <div className="flex items-center">
+                    <label htmlFor="trillian">Trillian</label>
+                    <img
+                      src="https://ben.cachefly.net/images/social_networks/tiny_trillian.png"
+                      alt="Trillian"
+                      title="Trillian"
+                    />
+                  </div>
+                  <input
+                    type="text"
+                    name="trillian"
+                    value={formData.imScreenNames.trillian}
+                    onChange={handleChange}
+                    placeholder="Screen Name"
+                    className="w-[20rem]"
                   />
-                </div>
-                <input
-                  type="text"
-                  name="twitter"
-                  value={formData.socialNetworking.twitter}
-                  onChange={handleChange}
-                />
-              </span>
+                </span>
+              </div>
+              <div className="border p-10 flex flex-col gap-5">
+                <h3 className="font-semibold text-[#444] text-left !text-2xl">
+                  Social Networking
+                </h3>
 
-              <span className="space-x-4">
-                <div className="flex items-center">
-                  <label htmlFor="linkedin">LinkedIn</label>
-                  <img
-                    src="https://ben.cachefly.net/images/social_networks/tiny_linkedin.png"
-                    alt="Linked-In"
-                    title="Linked-In"
+                <span className="space-x-4 flex justify-between items-center !text-[8pt]">
+                  <div className="flex items-center">
+                    <label htmlFor="facebook">Facebook</label>
+                    <img
+                      src="https://ben.cachefly.net/images/social_networks/tiny_facebook.png"
+                      alt="Facebook"
+                      title="Facebook"
+                    />
+                  </div>
+                  <input
+                    type="text"
+                    name="facebook"
+                    value={formData.socialNetworking.facebook || ""}
+                    onChange={handleChange}
+                    placeholder="Profile Link"
+                    className="w-[20rem]"
                   />
+                </span>
+
+                <span className="space-x-4 flex justify-between items-center !text-[8pt]">
+                  <div className="flex items-center">
+                    <label htmlFor="twitter">Twitter</label>
+                    <img
+                      src="https://ben.cachefly.net/images/social_networks/tiny_twitter.png"
+                      alt="Twitter"
+                      title="Twitter"
+                    />
+                  </div>
+                  <input
+                    type="text"
+                    name="twitter"
+                    value={formData.socialNetworking.twitter || ""}
+                    onChange={handleChange}
+                    placeholder="Profile Link"
+                    className="w-[20rem]"
+                  />
+                </span>
+
+                <span className="space-x-4 flex justify-between items-center !text-[8pt]">
+                  <div className="flex items-center">
+                    <label htmlFor="linkedin">LinkedIn</label>
+                    <img
+                      src="https://ben.cachefly.net/images/social_networks/tiny_linkedin.png"
+                      alt="LinkedIn"
+                      title="LinkedIn"
+                    />
+                  </div>
+                  <input
+                    type="text"
+                    name="linkedin"
+                    value={formData.socialNetworking.linkedin || ""}
+                    onChange={handleChange}
+                    placeholder="Profile Link"
+                    className="w-[20rem]"
+                  />
+                </span>
+                <span>
+                  <p className="pt-4 italic text-gray-600 text-[7.5pt] leading-tight w-64">
+                    (use the profile/url name, example 'brokercell' will result
+                    in http://twitter.com/cell )
+                  </p>
+                </span>
+              </div>
+
+              <div className="border p-10 flex flex-col gap-5">
+                <h3 className="font-semibold text-[#444] text-left !text-2xl">
+                  Password Requirements
+                </h3>
+                <div className="text-left">
+                  <p className="text-[8pt] font-semibold">
+                    Your password must contain:
+                  </p>
+                  <ul>
+                    <li className="text-[8pt]">1 uppercase letter</li>
+                    <li className="text-[8pt]">1 lowercase letter</li>
+                    <li className="text-[8pt]">1 digit</li>
+                    <li className="text-[8pt]">8 characters minimum</li>
+                    <li className="text-[8pt]">24 characters maximum</li>
+                  </ul>
+                  <p className="text-[8pt] font-semibold">
+                    Password cannot contain:
+                  </p>
+                  <ul>
+                    <li className="text-[8pt]">Your Login Name</li>
+                  </ul>
                 </div>
-                <input
-                  type="text"
-                  name="linkedin"
-                  value={formData.socialNetworking.linkedin}
-                  onChange={handleChange}
-                />
-              </span>
-
-              <h3>Password Requirements</h3>
-
-              <h3>Preferred Brokercell Use</h3>
-              <label>
-                <input
-                  type="radio"
-                  name="preferredUse"
-                  value="Telecom"
-                  onChange={handleChange}
-                />{" "}
-                Telecom
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="preferredUse"
-                  value="Computer"
-                  onChange={handleChange}
-                />{" "}
-                Computer
-              </label>
+              </div>
             </div>
           </div>
-
-          <button
-            type="button"
-            onClick={handleSubmit}
-            className="bg-[#2c83ec] rounded-lg  px-12 !h-16 !mt-5"
-          >
-            Save
-          </button>
+          <div className="bg-[#bfbfbf]">
+            <button
+              type="button"
+              onClick={handleSubmit}
+              className="bg-[#2c83ec] rounded-lg  px-12 !h-16 "
+            >
+              Save
+            </button>
+          </div>
         </div>
       </form>
       <ToastContainer position="top-center" autoClose={2000} />
