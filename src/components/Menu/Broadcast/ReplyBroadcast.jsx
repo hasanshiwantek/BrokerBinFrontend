@@ -10,6 +10,12 @@ import "react-quill/dist/quill.snow.css";
 import { useDispatch, useSelector } from "react-redux";
 import { sendBroadcastReply } from "../../../ReduxStore/BroadCast";
 import { fetchUserData } from "../../../ReduxStore/ProfleSlice";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+import { setTogglePopUp } from "@/ReduxStore/SearchProductSlice";
+import CompanyDetails from "@/components/Popups/CompanyDetails/CompanyDetails";
+import { setPopupCompanyDetail } from "@/ReduxStore/SearchProductSlice";
 const ReplyBroad = () => {
   const dispatch = useDispatch();
   const location = useLocation();
@@ -30,20 +36,19 @@ const ReplyBroad = () => {
   console.log("User Data", initialData);
   const id = user?.user?.id || user_id;
   console.log(id);
+
   useEffect(() => {
-    if (id || token) {
-      dispatch(fetchUserData({ id, token }))
-        .then((response) => {})
-        .catch((error) => {
-          console.error("Error fetching user data:", error);
-        });
-    }
+    dispatch(fetchUserData({ id, token }))
+      .then((response) => {})
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+      });
   }, [id, token]);
 
   // Now you can use `userData` for the logged-in user's data
 
   // Function to format comments data with <br> tags
-const formatComments = () => {
+  const formatComments = () => {
     if (!broadcast) return "Broadcast data is not available.";
 
     const firstName = initialData.firstName || "";
@@ -60,9 +65,7 @@ const formatComments = () => {
     const additionalComments = broadcast.additional_comments || "";
     const description = broadcast.description || "";
 
-    const userDetails = signature
-        ? signature
-        : `${firstName} ${lastName}<br />${companyName}<br />${email}<br />`;
+    const userDetails = `${firstName} ${lastName}<br />${companyName}<br />${email}<br />${phoneNumber}<br />`;
 
     return `- ------------------ -<br />
     ${userDetails} <br />
@@ -77,7 +80,7 @@ const formatComments = () => {
     Price: ${price}<br />
     Comments: ${additionalComments}<br />
     Description: ${description}<br />`;
-};
+  };
 
   const [email, setEmail] = useState({
     to: broadcast ? `${broadcast.user_id.email} ` : "",
@@ -96,15 +99,15 @@ const formatComments = () => {
       .replace(/<br\s*\/?>/gi, "\n") // Replace <br> with a newline
       .replace(/<\/?[^>]+(>|$)/g, ""); // Remove any remaining HTML tags
   };
-
   useEffect(() => {
-    if (broadcast) {
+    if (broadcast && initialData?.firstName) {
+      const formatted = formatComments();
       setEmail((prev) => ({
         ...prev,
-        comments: formatComments(),
+        comments: formatted,
       }));
     }
-  }, [broadcast]);
+  }, [broadcast, initialData]);
 
   const handleChange = (e) => {
     const { name, type, value, checked } = e.target;
@@ -118,39 +121,69 @@ const formatComments = () => {
     e.preventDefault();
     setLoading(true); // Start loading
 
-    // Convert HTML comments to plain text with line breaks
     const plainTextComments = stripHtmlTagsWithLineBreaks(email.comments);
+    const name = `${initialData.firstName || ""} ${initialData.lastName || ""}`;
 
-    // Prepare data for backend submission
     const emailData = {
       emailData: {
-        // Wrap in an 'emailData' object
         to: email.to,
         subject: email.subject,
-        comments: plainTextComments, // Now it has `\n` line breaks for backend
+        comments: plainTextComments,
         sendCopy: email.sendCopy,
+        // name,
       },
     };
 
-    // Log the emailData with line breaks visible in console
-    console.log("Email Data:", emailData);
+    console.log("📤 Sending Email Data:", emailData);
 
     dispatch(sendBroadcastReply({ token, data: emailData }))
-      .then((response) => {
-        alert("Email sent successfully!");
-        navigate("/broadcasts");
+      .then((res) => {
+        console.log("📥 Response:", res);
+
+        if (res.meta.requestStatus === "fulfilled") {
+          toast.info("✅ Email sent successfully!", {
+            style: { fontSize: "12px", fontWeight: "bold" },
+          });
+          navigate("/broadcasts");
+        } else {
+          const errorPayload = res.payload;
+          console.error("❌ Backend Rejected Response:", errorPayload);
+
+          toast.error(
+            `❌ Failed to send email: ${
+              typeof errorPayload === "string"
+                ? errorPayload
+                : errorPayload?.message || "Unknown error"
+            }`,
+            {
+              style: { fontSize: "12px", fontWeight: "bold" },
+            }
+          );
+        }
       })
-      .catch((error) => {
-        console.error("Failed to send email:", error);
-        alert("Failed to send email.");
+      .catch((err) => {
+        console.error("❗Unexpected error during dispatch:", err);
+        toast.error("⚠️ Unexpected error. Please try again later.", {
+          style: { fontSize: "12px", fontWeight: "bold" },
+        });
       })
       .finally(() => {
         setLoading(false); // Stop loading
       });
   };
 
+  // Company Modal Logic
+  const { togglePopUp, popupCompanyDetail } = useSelector(
+    (state) => state.searchProductStore
+  );
+  const openCompanyModal = (company) => {
+    console.log("Opening Company Modal with Company:", company);
+    dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
+    dispatch(setTogglePopUp()); // Show company modal
+  };
+
   useEffect(() => {
-    console.log(broadcast);
+    console.log("Reply To Broadcast: ", broadcast);
   }, []);
 
   // useEffect(() => {
@@ -186,29 +219,28 @@ const formatComments = () => {
           <div className={styles.replySec}>
             <div className={styles.formGroup}>
               <form onSubmit={handleSubmit} className="mt-10">
-                <div>
-                  <label>
-                    <strong>To:</strong>
-                    <input
-                      type="text"
-                      name="to"
-                      value={email.to}
-                      onChange={handleChange}
-                      className={styles.input}
-                    />
-                  </label>
+                <div className="!flex !items-center justify-between gap-4">
+                  <strong>To:</strong>
+                  <input
+                    type="text"
+                    name="to"
+                    value={email.to}
+                    onChange={handleChange}
+                    className={`${styles.input} !text-[9pt] !font-semibold cursor-pointer`}
+                    readOnly
+                    onClick={() => openCompanyModal(broadcast.user_id.company)}
+                  />
                 </div>
-                <div>
-                  <label>
-                    <strong>Subject:</strong>
-                    <input
-                      type="text"
-                      name="subject"
-                      value={email.subject}
-                      onChange={handleChange}
-                      className={styles.input}
-                    />
-                  </label>
+                <div className="!flex !items-center justify-between  gap-4">
+                  <strong>Subject:</strong>
+                  <input
+                    type="text"
+                    name="subject"
+                    value={email.subject}
+                    onChange={handleChange}
+                    className={`${styles.input} !text-[9pt]`}
+                    readOnly
+                  />
                 </div>
                 <div>
                   <label>
@@ -219,7 +251,7 @@ const formatComments = () => {
                     onChange={(value) =>
                       setEmail((prev) => ({ ...prev, comments: value }))
                     }
-                    className={`${styles.textarea} !block`}
+                    className={`${styles.textarea} !block !text-[8pt]`}
                     theme="snow"
                     modules={{
                       toolbar: [["bold", "italic", "underline"]],
@@ -263,6 +295,10 @@ const formatComments = () => {
           </button>
         </div>
       </main>
+      {togglePopUp && (
+        <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
+      )}
+      <ToastContainer position="top-center" autoClose={2000} />
     </>
   );
 };

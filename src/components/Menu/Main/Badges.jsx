@@ -155,9 +155,9 @@ const Badges = () => {
                     name="text-area"
                     id=""
                     readOnly
-                    value={`<a href="${badgesData.inventory_link}"><img src="//members.brokercell.com/badge.php?cid=vY5XJJ3uM84%3D&pid=1&ptype=default" alt="Brokercell.com Member" border="0" /></a>`}
+                    value={`<a href="${badgesData.inventory_link}"><img src="https://members.brokercell.com/assets/BrokerCell.com%20member%20with%20gray%20background-BCsY8Vx8.svg" alt="Brokercell.com Member" border="0" /></a>`}
                     cols="20"
-                    rows="3"
+                    rows="4"
                   />
                 </div>
                 <div>
@@ -165,7 +165,7 @@ const Badges = () => {
                     className="inv-btn"
                     onClick={() =>
                       copyToClipboard(
-                        `<a href="${badgesData.inventory_link}"><img src="//members.brokercell.com/badge.php?cid=vY5XJJ3uM84%3D&pid=1&ptype=default" alt="Brokercell.com Member" border="0" /></a>`
+                        `<a href="${badgesData.inventory_link}"><img src="https://members.brokercell.com/assets/BrokerCell.com%20member%20with%20gray%20background-BCsY8Vx8.svg" alt="Brokercell.com Member" border="0" /></a>`
                       )
                     }
                   >
@@ -185,16 +185,16 @@ const Badges = () => {
                   name="text-area"
                   id=""
                   readOnly
-                  value={`<a href=${badgesData.company_search_link}><img src="//members.brokercell.com/badge.php?cid=vY5XJJ3uM84%3D&pid=3&ptype=default" alt="Brokercell.com Member" border="0" /></a>`}
+                  value={`<a href="https://members.brokercell.com/"><img src="https://members.brokercell.com/assets/BrokerCell.com%20member%20with%20white%20background-DhMJg5RD.svg" alt="Brokercell.com Member" border="0" /></a>`}
                   cols="20"
-                  rows="3"
+                  rows="4"
                 />
                 <div>
                   <button
                     className="inv-btn"
                     onClick={() =>
                       copyToClipboard(
-                        `<a href=${badgesData.company_search_link}><img src="//members.brokercell.com/badge.php?cid=vY5XJJ3uM84%3D&pid=3&ptype=default" alt="Brokercell.com Member" border="0" /></a>`
+                        `<a href="https://members.brokercell.com/"><img src="https://members.brokercell.com/assets/BrokerCell.com%20member%20with%20white%20background-DhMJg5RD.svg" alt="Brokercell.com Member" border="0" /></a>`
                       )
                     }
                   >
@@ -214,16 +214,16 @@ const Badges = () => {
                   name="text-area"
                   id=""
                   readOnly
-                  value={`<a href=${badgesData.my_vendors_link}><img src="//members.brokercell.com/badge.php?cid=vY5XJJ3uM84%3D&pid=5&ptype=default" alt="Brokercell.com Member" border="0" /></a>`}
+                  value={`<a href=${badgesData.my_vendors_link}><img src="http://localhost:5173/src/assets/BrokerCell.com%20MyVendors%20with%20white%20background.svg" alt="Brokercell.com Member" border="0" /></a>`}
                   cols="20"
-                  rows="3"
+                  rows="4"
                 />
                 <div>
                   <button
                     className="inv-btn"
                     onClick={() =>
                       copyToClipboard(
-                        `<a href=${badgesData.my_vendors_link}><img src="//members.brokercell.com/badge.php?cid=vY5XJJ3uM84%3D&pid=5&ptype=default" alt="Brokercell.com Member" border="0" /></a>`
+                        `<a href=${badgesData.my_vendors_link}><img src="http://localhost:5173/src/assets/BrokerCell.com%20MyVendors%20with%20white%20background.svg" alt="Brokercell.com Member" border="0" /></a>`
                       )
                     }
                   >
@@ -245,16 +245,16 @@ const Badges = () => {
                   name="text-area"
                   id=""
                   readOnly
-                  value={`<a href=${badgesData.company_search_link}><img src="//members.brokercell.com/badge.php?cid=vY5XJJ3uM84%3D&pid=3&ptype=default" alt="Brokercell.com Member" border="0" /></a>`}
+                  value={`<a href="https://members.brokercell.com/"><img src="http://localhost:5173/src/assets/BrokerCell.com%20member%20with%20dark%20gray%20background.svg" alt="Brokercell.com Member" border="0" /></a>`}
                   cols="20"
-                  rows="3"
+                  rows="4"
                 />
                 <div>
                   <button
                     className="inv-btn"
                     onClick={() =>
                       copyToClipboard(
-                        `<a href=${badgesData.company_search_link}><img src="//members.brokercell.com/badge.php?cid=vY5XJJ3uM84%3D&pid=3&ptype=default" alt="Brokercell.com Member" border="0" /></a>`
+                        `<a href="https://members.brokercell.com/"><img src="http://localhost:5173/src/assets/BrokerCell.com%20member%20with%20dark%20gray%20background.svg" alt="Brokercell.com Member" border="0" /></a>`
                       )
                     }
                   >
@@ -274,16 +274,16 @@ const Badges = () => {
                   name="text-area"
                   id=""
                   readOnly
-                  value={`<a href=${badgesData.company_search_link}><img src="//members.brokercell.com/badge.php?cid=vY5XJJ3uM84%3D&pid=3&ptype=default" alt="Brokercell.com Member" border="0" /></a>`}
+                  value={`<a href="https://members.brokercell.com/"><img src="https://members.brokercell.com/assets/BrokerCell.com%20member%20with%20dark%20gray%20background-D-GlYnWh.svg" alt="Brokercell.com Member" border="0" /></a>`}
                   cols="20"
-                  rows="3"
+                  rows="4"
                 />
                 <div>
                   <button
                     className="inv-btn"
                     onClick={() =>
                       copyToClipboard(
-                        `<a href=${badgesData.company_search_link}><img src="//members.brokercell.com/badge.php?cid=vY5XJJ3uM84%3D&pid=3&ptype=default" alt="Brokercell.com Member" border="0" /></a>`
+                        `<a href="https://members.brokercell.com/"><img src="https://members.brokercell.com/assets/BrokerCell.com%20member%20with%20dark%20gray%20background-D-GlYnWh.svg" alt="Brokercell.com Member" border="0" /></a>`
                       )
                     }
                   >
@@ -303,16 +303,16 @@ const Badges = () => {
                   name="text-area"
                   id=""
                   readOnly
-                  value={`<a href=${badgesData.my_vendors_link}><img src="//members.brokercell.com/badge.php?cid=vY5XJJ3uM84%3D&pid=5&ptype=default" alt="Brokercell.com Member" border="0" /></a>`}
+                  value={`<a href=${badgesData.my_vendors_link}><img src="https://members.brokercell.com/assets/BrokerCell.com%20MyVendors%20with%20dark%20gray%20background-CHHOd5uf.svg" alt="Brokercell.com Member" border="0" /></a>`}
                   cols="10"
-                  rows="3"
+                  rows="4"
                 />
                 <div>
                   <button
                     className="inv-btn"
                     onClick={() =>
                       copyToClipboard(
-                        `<a href=${badgesData.my_vendors_link}><img src="//members.brokercell.com/badge.php?cid=vY5XJJ3uM84%3D&pid=5&ptype=default" alt="Brokercell.com Member" border="0" /></a>`
+                        `<a href=${badgesData.my_vendors_link}><img src="https://members.brokercell.com/assets/BrokerCell.com%20MyVendors%20with%20dark%20gray%20background-CHHOd5uf.svg" alt="Brokercell.com Member" border="0" /></a>`
                       )
                     }
                   >

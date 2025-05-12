@@ -3,23 +3,83 @@ import css from "../../../../styles/Menu/Manage/Inventory/Inventory.module.css";
 import { BiMinus, BiPlus } from "react-icons/bi";
 import Tooltip from "@mui/material/Tooltip";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { scheduleUpload } from "@/ReduxStore/InventorySlice";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useDispatch } from "react-redux";
+import Cookies from "js-cookie";
 
 const ScheduleNewUpload = () => {
   const [showSchedule, setShowSchedule] = useState(false);
-  const [showClipboard, setShowClipboard] = useState(false);
-
   const [toggleAddFile, setToggleAddFile] = useState(true);
-  // const handeStauts = ()=>{
-  //   setShowSchedule((prev) =>!prev)
-  // }
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [formKey, setFormKey] = useState(Date.now());
+
+  const dispatch = useDispatch();
+  const token = Cookies.get("token");
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) {
+      toast.error("❗ Please select a file.");
+      return;
+    }
+
+    const allowedTypes = [
+      "text/csv",
+      "application/vnd.ms-excel",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    ];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("❌ Invalid file type. Only CSV or Excel files are allowed.");
+      return;
+    }
+
+    setSelectedFile(file);
+    toast.success(`✅ File selected: ${file.name}`);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = new FormData(e.target);
-    const formData = Object.fromEntries(form.entries());
-    formData.useSSHKey = formData.useSSHKey === "on" ? 1 : 0;
-    console.log(formData);
-  };
 
+    if (!selectedFile) {
+      toast.error("❗ File is required to proceed.");
+      console.log("File is Required");
+
+      return;
+    }
+
+    // Validate required fields
+    const scheduleTime = form.get("time");
+    const uploader = form.get("uploader");
+
+    if (!scheduleTime || !uploader) {
+      toast.error("❗ Please fill all required fields (Time, Uploader, File).");
+      console.log("❗ Please fill all required fields (Time, Uploader, File).");
+
+      return;
+    }
+
+    form.append("file", selectedFile);
+    form.set("useSSHKey", form.get("useSSHKey") === "on" ? 1 : 0);
+
+    toast.info("⏳ Uploading...");
+
+    dispatch(scheduleUpload({ formData: form, token })).then((res) => {
+      console.log("📥 Backend Response:", res);
+
+      if (res.meta.requestStatus === "fulfilled") {
+        toast.success(res.payload.message || " Upload successful!");
+        console.log("✅ Payload returned:", res.payload);
+        setSelectedFile(null);
+        setFormKey(Date.now()); // Reset form
+      } else {
+        toast.error(res.payload.message || "❌ Upload failed.");
+        console.error("❌ Backend Error Payload:", res.payload);
+      }
+    });
+  };
   const theme = createTheme({
     components: {
       MuiTooltip: {
@@ -64,11 +124,11 @@ const ScheduleNewUpload = () => {
 
       {showSchedule && (
         <>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} key={formKey}>
             <div className={css.inventory_main_scheduleUpload}>
               <span>
                 <label>Time (CDT / CST)</label>
-                <input type="time" name="scheduleTime" id="scheduleTime" />
+                <input type="time" name="time" id="time" />
               </span>
               <span>
                 <label>Status</label>
@@ -104,67 +164,42 @@ const ScheduleNewUpload = () => {
                       css.inventory_main_scheduleUpload_addFile_toggle_fields
                     }
                   >
-                    <span>
-                      <label>Protocol</label>
-                      <select name="protocol">
-                        <option value="ftp">ftp</option>
-                        <option value="http">http</option>
-                        <option value="https">https</option>
-                        <option value="sftp">sftp</option>
-                      </select>
-                    </span>
-                    <span>
-                      <label>URL</label>
+                    <div className="flex justify-center items-center">
+                      <label className="flex justify-center items-center">
+                        Excel or CSV <span className="text-red-500">*</span>
+                      </label>
                       <input
-                        type="text"
-                        name="url"
-                        placeholder="host.domain/file.csv"
+                        type="file"
+                        accept=".csv,.xlsx,.xls"
+                        onChange={handleFileChange}
                       />
-                    </span>
-                    <span>
-                      <label>Port</label>
-                      <input type="text" name="port" />
-                    </span>
-                    <span>
-                      <label>Use SSH Key</label>
-                      <input type="checkbox" name="useSSHKey" />
-                    </span>
-                    <span>
-                      <label>Login</label>
-                      <input type="text" name="login" />
-                    </span>
-          
-                    <span>
-                      <label>Password</label>
-                      <input type="password" name="password" />
-                    </span>
-                    <span>
-                      <label>Public Key</label>
-                      <button className="!p-2 whitespace-nowrap !w-fit rounded-lg">Copy to clipboard</button>
-                    </span>
+                    </div>
+                    {selectedFile && (
+                      <div className="mt-2 px-3 py-1 inline-flex items-center bg-blue-100 text-blue-800 w-64 text-sm rounded-full">
+                        📁 {selectedFile.name}
+                      </div>
+                    )}
                   </div>
                   <div
                     className={
                       css.inventory_main_scheduleUpload_addFile_toggle_btn
                     }
                   >
-                    <button type="button">
-                      <input type="submit" value="Add" />
-                      {/* add */}
-                    </button>
+                    <button type="submit">Add</button>
                     <button
                       type="button"
                       onClick={() => setToggleAddFile((prev) => !prev)}
                     >
-                      cancel
+                      Cancel
                     </button>
                   </div>
                 </div>
               )}
             </div>
             <button
-              type="button"
+              type="submit"
               className={css.inventory_main_scheduleUpload_footer}
+              disabled={!selectedFile}
             >
               Create
             </button>

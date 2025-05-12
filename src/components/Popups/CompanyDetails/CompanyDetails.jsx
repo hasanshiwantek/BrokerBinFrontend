@@ -10,11 +10,11 @@ import {
   FaPrint,
   FaRegListAlt,
 } from "react-icons/fa";
-import { FaRegWindowClose } from "react-icons/fa";
+import { FaRegWindowClose, FaUserMinus } from "react-icons/fa";
 import { FaExternalLinkAlt } from "react-icons/fa";
-import { IoPersonAdd, IoPersonRemove } from "react-icons/io5";
-import { BsStarFill } from "react-icons/bs";
-import { setTogglePopUp } from "../../../ReduxStore/SearchProductSlice";
+import { IoPersonAdd, IoPersonRemove, IoEye } from "react-icons/io5";
+
+import { IoMdEyeOff } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import { getCompanyContact } from "../../../ReduxStore/SearchProductSlice";
 import Cookies from "js-cookie";
@@ -24,6 +24,15 @@ import { brokerAPI } from "../../api/BrokerEndpoint";
 import axios from "axios";
 import { Tooltip } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import {
+  blockMyVendor,
+  showFirstVendor,
+  neverShowVendor,
+} from "@/ReduxStore/ToolsSlice";
+import { FaUserXmark, FaUserCheck } from "react-icons/fa6";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const CompanyDetails = ({ closeModal }) => {
   const dispatch = useDispatch();
@@ -153,8 +162,8 @@ const CompanyDetails = ({ closeModal }) => {
       MuiTooltip: {
         styleOverrides: {
           tooltip: {
-            fontSize: "1.2rem", // Adjust font size
-            width: "11rem",
+            fontSize: "1.1rem", // Adjust font size
+            width: "15rem",
             textAlign: "center",
             backgroundColor: "var(--primary-color)",
           },
@@ -165,6 +174,138 @@ const CompanyDetails = ({ closeModal }) => {
       },
     },
   });
+
+  // BLOCK VENDOR FUNCTION
+
+  const [vendorStatus, setVendorStatus] = useState({});
+  console.log("Vendor status", vendorStatus);
+
+  useEffect(() => {
+    if (companyContactData) {
+      const initialStatus = {};
+      const id = companyContactData?.data?.company?.id;
+      initialStatus[id] = +companyContactData?.data?.company?.status || 0;
+      console.log("Initial status", initialStatus);
+      setVendorStatus(initialStatus);
+    }
+  }, [companyContactData]);
+
+  const blockVendorHandler = (companyId) => {
+    const currentStatus = vendorStatus[companyId] ?? 1;
+    console.log("Sending Status..", vendorStatus[companyId]);
+    const newStatus = currentStatus === 1 ? 0 : 1;
+    dispatch(blockMyVendor({ company_id: companyId, status: newStatus, token }))
+      .unwrap()
+      .then((result) => {
+        console.log("Server Result:", result);
+        if (result?.status === "success") {
+          toast.info(result?.message || "Vendor status updated!", {
+            style: { fontSize: "14px", marginTop: "-10px" },
+          });
+          setVendorStatus((prev) => ({
+            ...prev,
+            [companyId]: newStatus,
+          }));
+        } else {
+          toast.info(result?.message || "Failed to update vendor status.", {
+            style: { fontSize: "14px", marginTop: "-10px" },
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Block error:", error);
+        toast.error(
+          error?.message || "Something went wrong. Please try again."
+        );
+      });
+  };
+
+  // SHOW FIRST FUNCTION
+
+  const [showFirstStatus, setShowFirstStatus] = useState({});
+  console.log("Show First status", showFirstStatus);
+
+  useEffect(() => {
+    if (companyContactData) {
+      const showFirstinitialStatus = {};
+      const id = companyContactData?.data?.company?.id;
+      showFirstinitialStatus[id] =
+        +companyContactData?.data?.company?.show_first || 0;
+      console.log("Initial Show First status", showFirstinitialStatus);
+      setShowFirstStatus(showFirstinitialStatus);
+    }
+  }, [companyContactData]);
+
+  const showFirstHandler = (companyId) => {
+    const currentStatus = showFirstStatus[companyId] ?? 1;
+    console.log("Sending Status..", showFirstStatus[companyId]);
+    const newStatus = currentStatus === 1 ? 0 : 1;
+    dispatch(
+      showFirstVendor({ company_id: companyId, show_first: newStatus, token })
+    ) .unwrap()
+      .then((result) => {
+        console.log("Server Result:", result);
+        if (result?.status === "success") {
+          toast.info(result?.message || "Vendor status updated!", {
+            style: { fontSize: "14px", marginTop: "-10px" },
+          });
+        } else {
+          toast.info(result?.message || "Failed to update vendor status.", {
+            style: { fontSize: "14px", marginTop: "-10px" },
+          });
+        }
+      })
+      .catch((error) => {
+        console.error(" error:", error);
+        toast.error(
+          error?.message || "Something went wrong. Please try again."
+        );
+      });
+  };
+
+  // Never Show Handler
+
+  const [neverShowStatus, setneverShowStatus] = useState({});
+  console.log("Never Show status", neverShowStatus);
+
+  useEffect(() => {
+    if (companyContactData) {
+      const neverShowinitialStatus = {};
+      const id = companyContactData?.data?.company?.id;
+      neverShowinitialStatus[id] =
+        +companyContactData?.data?.company?.never_show || 0;
+      console.log("Initial Never status", neverShowinitialStatus);
+      setneverShowStatus(neverShowinitialStatus);
+    }
+  }, [companyContactData]);
+
+  const neverShowHandler = (companyId) => {
+    const currentStatus = neverShowStatus[companyId] ?? 1;
+    console.log("Sending Status..", neverShowStatus[companyId]);
+    const newStatus = currentStatus === 1 ? 0 : 1;
+    dispatch(
+      neverShowVendor({ company_id: companyId, never_show: newStatus, token })
+    )
+      .unwrap()
+      .then((result) => {
+        console.log("Server Result:", result);
+        if (result?.status === "success") {
+          toast.info(result?.message || "Vendor status updated!", {
+            style: { fontSize: "14px", marginTop: "-10px" },
+          });
+        } else {
+          toast.info(result?.message || "Failed to update vendor status.", {
+            style: { fontSize: "14px", marginTop: "-10px" },
+          });
+        }
+      })
+      .catch((error) => {
+        console.error(" error:", error);
+        toast.error(
+          error?.message || "Something went wrong. Please try again."
+        );
+      });
+  };
 
   // While loading, show loading indicator
   if (loading) {
@@ -187,232 +328,354 @@ const CompanyDetails = ({ closeModal }) => {
   }
 
   return (
-    <div className={css.Popup}>
-      <div className={css.Popup_Info}>
-        <div className={css.Popup_Info_height}>
-          <div className={css.Popup_Info_header}>
-            <h1>{companyContactData.data?.company?.name}</h1>
-            <div className="!-mt-2 ">
-              {/* <button type="button" className="">
+    <>
+      <div className={css.Popup}>
+        <div className={css.Popup_Info}>
+          <div className={css.Popup_Info_height}>
+            <div className={css.Popup_Info_header}>
+              <h1>{companyContactData.data?.company?.name}</h1>
+              <div className="!-mt-2 ">
+                {/* <button type="button" className="">
                 <FaExternalLinkAlt />
               </button> */}
-              <ThemeProvider theme={theme}>
-                <Tooltip title="Close Profile" arrow placement="top">
-                  <button
-                    type="button"
-                    onClick={() => closeModal()}
-                    className="transform active:scale-95 transition-all duration-100  "
-                  >
-                    <FaRegWindowClose />
-                  </button>
-                </Tooltip>
-              </ThemeProvider>
-            </div>
-          </div>
-          <div className={css.Popup_Info_Main}>
-            <div className={css.Popup_Info_Main_left}>
-              <div className={css.Popup_Info_Main_left_img}>
-                <a
-                  href={companyContactData.data?.company?.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img src={companyContactData.data?.company?.image} />
-                </a>
-              </div>
-              {/* <div className={css.Popup_Info_Main_left_actions}>
-                <div>
-                  <div>
-                    <IoPersonAdd />
-                    <p>show first</p>
-                  </div>
-                  <div>
-                    <IoPersonRemove />
-                    <p>block vendor</p>
-                  </div>
-                </div>
-                <div>
-                  <div>
-                    <FaEyeSlash />
-                    <p>never show</p>
-                  </div>
-                  <div>
-                    <FaMoneyBill />
-                    <p>give discount</p>
-                  </div>
-                </div>
-              </div> */}
-              <div className={css.Popup_Info_Main_left_comments}>
                 <ThemeProvider theme={theme}>
-                  <Tooltip title="View Comments" arrow placement="top">
-                    <div>
-                      <div className={css.gridHome1_MemberDetail_reviews_stars}>
-                        <div
-                          data-v-217e3916=""
-                          class="vue-rate-it-rating"
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                          }}
-                        >
-                          <div
-                            style={{ display: "flex", alignItems: "center" }}
-                            onClick={() => setToggleTabs(5)}
-                          >
-                            {[...Array(5)].map((_, index) => {
-                              const isFilled = index + 1 <= Math.floor(ratings); // Full yellow stars
-                              const isPartial =
-                                index < ratings &&
-                                index + 1 > Math.floor(ratings); // Partial yellow star
-
-                              return (
-                                <FaStar
-                                  key={index}
-                                  size={24}
-                                  color={
-                                    isFilled
-                                      ? "#FFD700"
-                                      : isPartial
-                                      ? "rgba(255, 215, 0, 0.5)"
-                                      : "#CCC"
-                                  } // Partial star is dim yellow
-                                  style={{
-                                    cursor: "pointer",
-                                    marginRight: 4,
-                                    stroke: "black",
-                                    strokeWidth: "10",
-                                  }}
-                                  onMouseEnter={() => setRating(index + 1)}
-                                  // onClick={handleClick}
-                                  title={handleHover(index + 1)} // Tooltip text
-                                />
-                              );
-                            })}
-                          </div>
-                          <a href="#">
-                            {feedbackData?.rating?.averageRating
-                              ? `${(
-                                  (feedbackData.rating.averageRating / 5) *
-                                  100
-                                ).toFixed(1)}%`
-                              : "100%"}
-                          </a>
-                        </div>
-                        <h1 className="text-center pt-2">
-                          {" "}
-                          ({feedbackData?.rating?.totalFeedbacks || 0})
-                          Feedbacks
-                        </h1>
-                      </div>
-                    </div>
+                  <Tooltip title="Close Profile" arrow placement="top">
+                    <button
+                      type="button"
+                      onClick={() => closeModal()}
+                      className="transform active:scale-95 transition-all duration-100  "
+                    >
+                      <FaRegWindowClose />
+                    </button>
                   </Tooltip>
                 </ThemeProvider>
-                {/* <div>
+              </div>
+            </div>
+            <div className={css.Popup_Info_Main}>
+              <div className={css.Popup_Info_Main_left}>
+                <div className={css.Popup_Info_Main_left_img}>
+                  <a
+                    href={companyContactData.data?.company?.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img src={companyContactData.data?.company?.image} />
+                  </a>
+                </div>
+                <div className={css.Popup_Info_Main_left_actions}>
+                  <div>
+                    <div className="cursor-pointer">
+                      <ThemeProvider theme={theme}>
+                        <Tooltip
+                          title={
+                            showFirstStatus[
+                              companyContactData.data.company?.id
+                            ] === 1
+                              ? "Show First Disabled"
+                              : "Show this Vendor First"
+                          }
+                          arrow
+                          placement="top"
+                        >
+                          <div
+                            className="flex flex-col items-center justify-center"
+                            onClick={() =>
+                              showFirstHandler(
+                                companyContactData.data?.company?.id
+                              )
+                            }
+                          >
+                            {showFirstStatus[
+                              companyContactData.data.company?.id
+                            ] === 1 ? (
+                              <FaUserMinus size={30} />
+                            ) : (
+                              <IoPersonAdd size={30} />
+                            )}
+                            <p className="whitespace-nowrap">
+                              {showFirstStatus[
+                                companyContactData.data.company?.id
+                              ] === 1
+                                ? "Show First Disabled"
+                                : "Show this Vendor First"}
+                            </p>
+                          </div>
+                        </Tooltip>
+                      </ThemeProvider>
+                    </div>
+
+                    <div>
+                      <div className="cursor-pointer">
+                        <ThemeProvider theme={theme}>
+                          <Tooltip
+                            title={
+                              vendorStatus[
+                                companyContactData.data.company?.id
+                              ] === 1
+                                ? "Unblock this vendor"
+                                : "Block this vendor from viewing my inventory"
+                            }
+                            arrow
+                            placement="top"
+                          >
+                            <div
+                              className="flex flex-col items-center justify-center"
+                              onClick={() =>
+                                blockVendorHandler(
+                                  companyContactData.data.company?.id
+                                )
+                              }
+                            >
+                              {vendorStatus[
+                                companyContactData.data.company?.id
+                              ] === 1 ? (
+                                <FaUserCheck size={30} />
+                              ) : (
+                                <FaUserXmark size={30} />
+                              )}
+                              <p>
+                                {vendorStatus[
+                                  companyContactData.data.company?.id
+                                ] === 1
+                                  ? "Unblock Vendor"
+                                  : "Block Vendor"}
+                              </p>
+                            </div>
+                          </Tooltip>
+                        </ThemeProvider>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <div>
+                      <div>
+                        <div className="cursor-pointer">
+                          <ThemeProvider theme={theme}>
+                            <Tooltip
+                              title={
+                                neverShowStatus[
+                                  companyContactData.data.company?.id
+                                ] === 1
+                                  ? "Show this vendor in search results"
+                                  : "Never Show this vendor in search result"
+                              }
+                              arrow
+                              placement="top"
+                            >
+                              <div
+                                className="flex flex-col items-center justify-center"
+                                onClick={() =>
+                                  neverShowHandler(
+                                    companyContactData.data.company?.id
+                                  )
+                                }
+                              >
+                                {neverShowStatus[
+                                  companyContactData.data.company?.id
+                                ] === 1 ? (
+                                  <IoEye size={30} />
+                                ) : (
+                                  <IoMdEyeOff size={30} />
+                                )}
+                                <p className="whitespace-nowrap">
+                                  {neverShowStatus[
+                                    companyContactData.data.company?.id
+                                  ] === 1
+                                    ? "Show this vendor "
+                                    : "Never Show "}
+                                </p>
+                              </div>
+                            </Tooltip>
+                          </ThemeProvider>
+                        </div>
+                      </div>
+                    </div>
+                    {/* <div>
+                    <FaMoneyBill />
+                    <p>give discount</p>
+                  </div> */}
+                  </div>
+                </div>
+                <div className={css.Popup_Info_Main_left_comments}>
+                  <ThemeProvider theme={theme}>
+                    <Tooltip title="View Comments" arrow placement="top">
+                      <div>
+                        <div
+                          className={css.gridHome1_MemberDetail_reviews_stars}
+                        >
+                          <div
+                            data-v-217e3916=""
+                            class="vue-rate-it-rating"
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                            }}
+                          >
+                            <div
+                              style={{ display: "flex", alignItems: "center" }}
+                              onClick={() => setToggleTabs(5)}
+                            >
+                              {[...Array(5)].map((_, index) => {
+                                const isFilled =
+                                  index + 1 <= Math.floor(ratings); // Full yellow stars
+                                const isPartial =
+                                  index < ratings &&
+                                  index + 1 > Math.floor(ratings); // Partial yellow star
+
+                                return (
+                                  <FaStar
+                                    key={index}
+                                    size={24}
+                                    color={
+                                      isFilled
+                                        ? "#FFD700"
+                                        : isPartial
+                                        ? "rgba(255, 215, 0, 0.5)"
+                                        : "#CCC"
+                                    } // Partial star is dim yellow
+                                    style={{
+                                      cursor: "pointer",
+                                      marginRight: 4,
+                                      stroke: "black",
+                                      strokeWidth: "10",
+                                    }}
+                                    onMouseEnter={() => setRating(index + 1)}
+                                    // onClick={handleClick}
+                                    title={handleHover(index + 1)} // Tooltip text
+                                  />
+                                );
+                              })}
+                            </div>
+                            <a href="#">
+                              {feedbackData?.rating?.averageRating
+                                ? `${(
+                                    (feedbackData.rating.averageRating / 5) *
+                                    100
+                                  ).toFixed(1)}%`
+                                : "100%"}
+                            </a>
+                          </div>
+                          <h1 className="text-center pt-2">
+                            {" "}
+                            ({feedbackData?.rating?.totalFeedbacks || 0})
+                            Feedbacks
+                          </h1>
+                        </div>
+                      </div>
+                    </Tooltip>
+                  </ThemeProvider>
+                  {/* <div>
                   <span>(3) comments</span>
                   <span>(0) new</span>
                 </div> */}
-              </div>
-              <div className={css.Popup_Info_Main_left_companySideInformation}>
-                <TabInformation companyId={companyId} />
-              </div>
-            </div>
-            <div className={css.Popup_Info_Main_right}>
-              <p className={css.Popup_Info_Main_right_description}>
-                {companyContactData.data?.company?.description ||
-                  "No company description available."}
-              </p>
-              <div className={css.Popup_Info_Main_right_productInfo}>
-                <div>
-                  <strong className="font-semibold">Product Categories:</strong>
-                  <p>{companyContactData.data?.company?.categories}</p>
                 </div>
-                <div>
-                  <strong className="font-semibold">Mfg(s) We Carry:</strong>
-                  <p>{companyContactData.data?.company?.brands}</p>
+                <div
+                  className={css.Popup_Info_Main_left_companySideInformation}
+                >
+                  <TabInformation companyId={companyId} />
                 </div>
               </div>
-              <div className={css.Popup_Info_Main_right_contact}>
-                <div>
-                  <span>
-                    <strong className="font-semibold">Address:</strong>
-                    <p>{companyContactData.data?.company?.address}</p>
-                  </span>
-                  <span>
-                    <strong className="font-semibold">Phone:</strong>
-                    <a
-                      className="text-[8pt]  "
-                      href={`tel:${companyContactData.data?.company?.phone_num}`}
-                    >
-                      {companyContactData.data?.company?.phone_num}
-                    </a>
-                  </span>
-                  <span>
-                    <strong className="font-semibold">Website:</strong>
-                    <ThemeProvider theme={theme}>
-                      <Tooltip title="View Website" arrow placement="top">
-                        <a
-                          className="text-[8pt] hover:border-b-2 hover:border-blue-600 outline-none "
-                          href={companyContactData.data?.company?.website}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {companyContactData.data?.company?.website}
-                        </a>
-                      </Tooltip>
-                    </ThemeProvider>
-                  </span>
+              <div className={css.Popup_Info_Main_right}>
+                <p className={css.Popup_Info_Main_right_description}>
+                  {companyContactData.data?.company?.description ||
+                    "No company description available."}
+                </p>
+                <div className={css.Popup_Info_Main_right_productInfo}>
+                  <div>
+                    <strong className="font-semibold">
+                      Product Categories:
+                    </strong>
+                    <p>{companyContactData.data?.company?.categories}</p>
+                  </div>
+                  <div>
+                    <strong className="font-semibold">Mfg(s) We Carry:</strong>
+                    <p>{companyContactData.data?.company?.brands}</p>
+                  </div>
                 </div>
-                <div className={css.inventorySecSvgs}>
-                  {/* <span>
+                <div className={css.Popup_Info_Main_right_contact}>
+                  <div>
+                    <span>
+                      <strong className="font-semibold">Address:</strong>
+                      <p>{companyContactData.data?.company?.address}</p>
+                    </span>
+                    <span>
+                      <strong className="font-semibold">Phone:</strong>
+                      <a
+                        className="text-[8pt]  "
+                        href={`tel:${companyContactData.data?.company?.phone_num}`}
+                      >
+                        {companyContactData.data?.company?.phone_num}
+                      </a>
+                    </span>
+                    <span>
+                      <strong className="font-semibold">Website:</strong>
+                      <ThemeProvider theme={theme}>
+                        <Tooltip title="View Website" arrow placement="top">
+                          <a
+                            className="text-[8pt] hover:border-b-2 hover:border-blue-600 outline-none "
+                            href={companyContactData.data?.company?.website}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {companyContactData.data?.company?.website}
+                          </a>
+                        </Tooltip>
+                      </ThemeProvider>
+                    </span>
+                  </div>
+                  <div className={css.inventorySecSvgs}>
+                    {/* <span>
                     <FaMapMarkerAlt />
                     map
                   </span> */}
-                  <ThemeProvider theme={theme}>
-                    <Tooltip title="Show Inventory" arrow placement="top">
-                      <span>
-                        <FaRegListAlt />
-                        <NavLink to={"/inventory"} className="cursor-pointer">
-                          inventory
-                        </NavLink>
-                      </span>
-                    </Tooltip>
-                  </ThemeProvider>
-                  {/* <span>
+                    <ThemeProvider theme={theme}>
+                      <Tooltip title="Show Inventory" arrow placement="top">
+                        <span>
+                          <FaRegListAlt />
+                          <NavLink to={"/inventory"} className="cursor-pointer">
+                            inventory
+                          </NavLink>
+                        </span>
+                      </Tooltip>
+                    </ThemeProvider>
+                    {/* <span>
                     <FaEnvelope />
                     email
                   </span> */}
-                  <ThemeProvider theme={theme}>
-                    <Tooltip title="Print Profile" arrow placement="top">
-                      <span
-                        className="cursor-pointer"
-                        onClick={printCompanyModal}
-                      >
-                        <FaPrint />
-                        Print
-                      </span>
-                    </Tooltip>
-                  </ThemeProvider>
+                    <ThemeProvider theme={theme}>
+                      <Tooltip title="Print Profile" arrow placement="top">
+                        <span
+                          className="cursor-pointer"
+                          onClick={printCompanyModal}
+                        >
+                          <FaPrint />
+                          Print
+                        </span>
+                      </Tooltip>
+                    </ThemeProvider>
+                  </div>
+                </div>
+
+                <div className={css.Popup_Info_Main_right_tabs_layout}>
+                  <TabContent
+                    companyId={companyId}
+                    toggleTabs={toggleTabs}
+                    setToggleTabs={setToggleTabs}
+                  />
                 </div>
               </div>
-
-              <div className={css.Popup_Info_Main_right_tabs_layout}>
-                <TabContent
-                  companyId={companyId}
-                  toggleTabs={toggleTabs}
-                  setToggleTabs={setToggleTabs}
-                />
-              </div>
             </div>
-          </div>
-          <div className={css.Popup_Info_Main_bottom}>
-            <a href="/feedback" target="_blank" rel="noopener noreferrer">
-              Questions, Comments, or Concerns?
-            </a>
+            <div className={css.Popup_Info_Main_bottom}>
+              <a href="/feedback" target="_blank" rel="noopener noreferrer">
+                Questions, Comments, or Concerns?
+              </a>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      <ToastContainer position="top-center" autoClose={2000} />
+    </>
   );
 };
 

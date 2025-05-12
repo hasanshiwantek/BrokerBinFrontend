@@ -204,28 +204,29 @@ const Home = () => {
   console.log("Rating Counts:", ratingCounts);
   const renderStars = (rating) => {
     const stars = [];
-  
+
     for (let i = 1; i <= 5; i++) {
       let icon;
       const commonStyle = {
-        stroke: "black",     // Border color
-        strokeWidth: "10",   // Thickness of border
+        stroke: "black", // Border color
+        strokeWidth: "10", // Thickness of border
       };
-  
+
       if (i <= rating) {
         icon = <FaStar key={i} size={24} color="gold" style={commonStyle} />;
       } else if (i - 0.5 === rating) {
-        icon = <FaStarHalfAlt key={i} size={24} color="gold" style={commonStyle} />;
+        icon = (
+          <FaStarHalfAlt key={i} size={24} color="gold" style={commonStyle} />
+        );
       } else {
         icon = <FaRegStar key={i} size={24} color="gray" style={commonStyle} />;
       }
-  
+
       stars.push(icon);
     }
-  
+
     return stars;
   };
-  
 
   const companyRatingsPer = ((companyRatings / 5) * 100).toFixed(1);
   console.log("Company Ratings in %:", companyRatingsPer);
@@ -389,17 +390,39 @@ const Home = () => {
                     </li>
 
                     <li className={css.gridHome1_MemberDetail_list_options}>
-                      <Link to="/myprofile/myContact">My Vendors</Link>
+                      <Link to="/myprofile/myVendors">My Vendors</Link>
                       <ul>
                         <li className={css.gridHome1_MemberDetail_list_numbers}>
                           <ThemeProvider theme={theme}>
                             <Tooltip title="Vendors" arrow placement="top">
                               <a
                                 onClick={() =>
-                                  handleNavigation("/myprofile/myContact")
+                                  handleNavigation("/myprofile/myVendors")
                                 }
                               >
                                 {(broadcastCount?.data?.myVendors || 0)
+                                  .toLocaleString("en-US")
+                                  .toString()
+                                  .padStart(2, "0")}
+                              </a>
+                            </Tooltip>
+                          </ThemeProvider>
+                        </li>
+                      </ul>
+                    </li>
+
+                    <li className={css.gridHome1_MemberDetail_list_options}>
+                      <Link to="/myprofile/myContact">My Contacts</Link>
+                      <ul>
+                        <li className={css.gridHome1_MemberDetail_list_numbers}>
+                          <ThemeProvider theme={theme}>
+                            <Tooltip title="My Contacts" arrow placement="top">
+                              <a
+                                onClick={() =>
+                                  handleNavigation("/myprofile/MyContacts")
+                                }
+                              >
+                                {(broadcastCount?.data?.myContacts || 0)
                                   .toLocaleString("en-US")
                                   .toString()
                                   .padStart(2, "0")}
