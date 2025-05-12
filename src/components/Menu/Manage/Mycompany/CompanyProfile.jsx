@@ -211,36 +211,21 @@ const MyCompany = () => {
                       <span>Primary Contact</span>
                     </NavLink>
                   </li>
+                                   <li>
+                    <NavLink
+                      to="/companyContacts"
+                      end
+                      className={({ isActive }) => (isActive ? css.active : "")}
+                    >
+                      <span>Company Contacts</span>
+                    </NavLink>
+                  </li>
                   <li>
                     <NavLink
                       to="/mycompany/Createaccount"
                       className={({ isActive }) => (isActive ? css.active : "")}
                     >
                       <span>Create Account</span>
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      to="/myprofile/MyVendors"
-                      className={({ isActive }) => (isActive ? css.active : "")}
-                    >
-                      <span>My Vendors</span>
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      to="/myprofile/MyContact"
-                      className={({ isActive }) => (isActive ? css.active : "")}
-                    >
-                      <span>My Contacts</span>
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      to="/myprofile/broadcastfilter"
-                      className={({ isActive }) => (isActive ? css.active : "")}
-                    >
-                      <span>Broadcast Filters</span>
                     </NavLink>
                   </li>
                 </ul>

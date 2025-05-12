@@ -33,6 +33,10 @@ import { FaUserXmark, FaUserCheck } from "react-icons/fa6";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import {
+  handleVendorStatusUpdate,
+  initializeStatus,
+} from "./HandleVendorStatusUpdate";
 
 const CompanyDetails = ({ closeModal }) => {
   const dispatch = useDispatch();
@@ -176,91 +180,48 @@ const CompanyDetails = ({ closeModal }) => {
   });
 
   // BLOCK VENDOR FUNCTION
-
   const [vendorStatus, setVendorStatus] = useState({});
   console.log("Vendor status", vendorStatus);
-
-  useEffect(() => {
-    if (companyContactData) {
-      const initialStatus = {};
-      const id = companyContactData?.data?.company?.id;
-      initialStatus[id] = +companyContactData?.data?.company?.status || 0;
-      console.log("Initial status", initialStatus);
-      setVendorStatus(initialStatus);
-    }
-  }, [companyContactData]);
-
   const blockVendorHandler = (companyId) => {
-    const currentStatus = vendorStatus[companyId] ?? 1;
-    console.log("Sending Status..", vendorStatus[companyId]);
-    const newStatus = currentStatus === 1 ? 0 : 1;
-    dispatch(blockMyVendor({ company_id: companyId, status: newStatus, token }))
-      .unwrap()
-      .then((result) => {
-        console.log("Server Result:", result);
-        if (result?.status === "success") {
-          toast.info(result?.message || "Vendor status updated!", {
-            style: { fontSize: "14px", marginTop: "-10px" },
-          });
-          setVendorStatus((prev) => ({
-            ...prev,
-            [companyId]: newStatus,
-          }));
-        } else {
-          toast.info(result?.message || "Failed to update vendor status.", {
-            style: { fontSize: "14px", marginTop: "-10px" },
-          });
-        }
-      })
-      .catch((error) => {
-        console.error("Block error:", error);
-        toast.error(
-          error?.message || "Something went wrong. Please try again."
-        );
-      });
+    const currentStatus =
+      typeof vendorStatus[companyId] !== "undefined"
+        ? vendorStatus[companyId]
+        : 0;
+
+    handleVendorStatusUpdate({
+      type: "Block",
+      companyId,
+      currentStatus,
+      setStatus: setVendorStatus,
+      action: blockMyVendor,
+      statusKey: "status",
+      dispatch,
+      token,
+      toast,
+    });
   };
 
   // SHOW FIRST FUNCTION
-
   const [showFirstStatus, setShowFirstStatus] = useState({});
   console.log("Show First status", showFirstStatus);
 
-  useEffect(() => {
-    if (companyContactData) {
-      const showFirstinitialStatus = {};
-      const id = companyContactData?.data?.company?.id;
-      showFirstinitialStatus[id] =
-        +companyContactData?.data?.company?.show_first || 0;
-      console.log("Initial Show First status", showFirstinitialStatus);
-      setShowFirstStatus(showFirstinitialStatus);
-    }
-  }, [companyContactData]);
-
   const showFirstHandler = (companyId) => {
-    const currentStatus = showFirstStatus[companyId] ?? 1;
-    console.log("Sending Status..", showFirstStatus[companyId]);
-    const newStatus = currentStatus === 1 ? 0 : 1;
-    dispatch(
-      showFirstVendor({ company_id: companyId, show_first: newStatus, token })
-    ) .unwrap()
-      .then((result) => {
-        console.log("Server Result:", result);
-        if (result?.status === "success") {
-          toast.info(result?.message || "Vendor status updated!", {
-            style: { fontSize: "14px", marginTop: "-10px" },
-          });
-        } else {
-          toast.info(result?.message || "Failed to update vendor status.", {
-            style: { fontSize: "14px", marginTop: "-10px" },
-          });
-        }
-      })
-      .catch((error) => {
-        console.error(" error:", error);
-        toast.error(
-          error?.message || "Something went wrong. Please try again."
-        );
-      });
+    const currentStatus =
+      typeof showFirstStatus[companyId] !== "undefined"
+        ? showFirstStatus[companyId]
+        : 0;
+
+    handleVendorStatusUpdate({
+      type: "Show First",
+      companyId,
+      currentStatus,
+      setStatus: setShowFirstStatus,
+      action: showFirstVendor,
+      statusKey: "show_first",
+      dispatch,
+      token,
+      toast,
+    });
   };
 
   // Never Show Handler
@@ -268,44 +229,44 @@ const CompanyDetails = ({ closeModal }) => {
   const [neverShowStatus, setneverShowStatus] = useState({});
   console.log("Never Show status", neverShowStatus);
 
+  const neverShowHandler = (companyId) => {
+    const currentStatus =
+      typeof neverShowStatus[companyId] !== "undefined"
+        ? neverShowStatus[companyId]
+        : 0;
+
+    handleVendorStatusUpdate({
+      type: "Never Show",
+      companyId,
+      currentStatus,
+      setStatus: setneverShowStatus,
+      action: neverShowVendor,
+      statusKey: "never_show",
+      dispatch,
+      token,
+      toast,
+    });
+  };
+
   useEffect(() => {
-    if (companyContactData) {
-      const neverShowinitialStatus = {};
-      const id = companyContactData?.data?.company?.id;
-      neverShowinitialStatus[id] =
-        +companyContactData?.data?.company?.never_show || 0;
-      console.log("Initial Never status", neverShowinitialStatus);
-      setneverShowStatus(neverShowinitialStatus);
+    if (companyContactData?.data?.company) {
+      initializeStatus({
+        companyContactData,
+        statusKey: "status",
+        setStatus: setVendorStatus,
+      });
+      initializeStatus({
+        companyContactData,
+        statusKey: "show_first",
+        setStatus: setShowFirstStatus,
+      });
+      initializeStatus({
+        companyContactData,
+        statusKey: "never_show",
+        setStatus: setneverShowStatus,
+      });
     }
   }, [companyContactData]);
-
-  const neverShowHandler = (companyId) => {
-    const currentStatus = neverShowStatus[companyId] ?? 1;
-    console.log("Sending Status..", neverShowStatus[companyId]);
-    const newStatus = currentStatus === 1 ? 0 : 1;
-    dispatch(
-      neverShowVendor({ company_id: companyId, never_show: newStatus, token })
-    )
-      .unwrap()
-      .then((result) => {
-        console.log("Server Result:", result);
-        if (result?.status === "success") {
-          toast.info(result?.message || "Vendor status updated!", {
-            style: { fontSize: "14px", marginTop: "-10px" },
-          });
-        } else {
-          toast.info(result?.message || "Failed to update vendor status.", {
-            style: { fontSize: "14px", marginTop: "-10px" },
-          });
-        }
-      })
-      .catch((error) => {
-        console.error(" error:", error);
-        toast.error(
-          error?.message || "Something went wrong. Please try again."
-        );
-      });
-  };
 
   // While loading, show loading indicator
   if (loading) {
@@ -337,6 +298,7 @@ const CompanyDetails = ({ closeModal }) => {
               <div className="!-mt-2 ">
                 {/* <button type="button" className="">
                 <FaExternalLinkAlt />
+
               </button> */}
                 <ThemeProvider theme={theme}>
                   <Tooltip title="Close Profile" arrow placement="top">

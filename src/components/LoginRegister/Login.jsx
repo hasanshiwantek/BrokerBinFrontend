@@ -46,10 +46,17 @@ const Login = () => {
         const user = result.data;
         const { access_token } = result.data;
         const { id } = result.data.user;
+        const companyId=result.data.user.company_id
 
         Cookies.set("token", access_token, { expires: 1, secure: true });
         Cookies.set("user_id", id, { expires: 1, secure: true });
+        Cookies.set("companyId", companyId, { expires: 1, secure: true });
+
         localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("companyId", JSON.stringify(companyId));
+        console.log("Company id : ",companyId);
+        
+
 
         navigate("/"); // Redirect the user
         // window.location.href = 'http://localhost:5173/';
