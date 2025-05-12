@@ -219,33 +219,54 @@ export const sortInventory = createAsyncThunk(
   }
 );
 
+// export const deleteCompanyContact = createAsyncThunk(
+//   "toolsStore/deleteCompanyContact",
+//   async ({ token, id }) => {
+//     try {
+//       const response = await axios.delete(
+//         `${brokerAPI}company/contacts/${id}`,
+//         {
+//           headers: {
+//             "Content-Type": "application/json",
+//             Authorization: `Bearer ${token}`,
+//           },
+//         }
+//       );
+//       console.log("✅ Deleting User Response from Redux:", response.data);
+//       return response.data; // Ensure this includes the deleted `id`
+//     } catch (error) {
+//       const message =
+//         error.response?.data?.message ||
+//         "An error occurred while deleting the contact.";
+//       throw new Error(message);
+//     }
+//   }
+// );
 
 export const deleteCompanyContact = createAsyncThunk(
   "toolsStore/deleteCompanyContact",
-  async ({ token, id }) => {
+  async ({ token, ids }) => {
     try {
       const response = await axios.delete(
-        `${brokerAPI}company/contacts/${id}`,
+        `${brokerAPI}company/delete_contacts`, // Assuming the route
         {
+          data: { ids }, // Payload: { ids: [1,2,3] }
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      console.log("✅ Deleting User Response from Redux:", response.data);
-      return response.data; // Ensure this includes the deleted `id`
+      console.log("✅ Deleted Contacts Response:", response.data);
+      return response.data; // Should include back the `ids` array for cleanup
     } catch (error) {
       const message =
         error.response?.data?.message ||
-        "An error occurred while deleting the contact.";
+        "An error occurred while deleting contacts.";
       throw new Error(message);
     }
   }
 );
-
-
-
 
 const initialState = {
   companiesListingParts: true,
@@ -503,18 +524,22 @@ const searchProductSlice = createSlice({
         console.log("DELETING....");
       })
       .addCase(deleteCompanyContact.fulfilled, (state, action) => {
-        const deletedId = action.payload?.id;
-        state.companyContactData = state.companyContactData.filter(
-          (contact) => contact.id !== deletedId
-        );
+        const deletedIds = action.payload?.ids || [];
+        if (Array.isArray(state.companyContactData?.data?.contacts)) {
+          state.companyContactData.data.contacts =
+            state.companyContactData.data.contacts.filter(
+              (contact) => !deletedIds.includes(contact.id)
+            );
+        }
+
         console.log("🧹 Deleted contact ID:", deletedId);
-      })      
+      })
+
       .addCase(deleteCompanyContact.rejected, (state, action) => {
         state.error = action.error.message;
         console.error(action.error.message);
       })
 
-      
       .addCase(sortInventory.pending, (state) => {
         console.log("PENDING!!!!!");
       })

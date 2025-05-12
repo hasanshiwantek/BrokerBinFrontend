@@ -45,6 +45,11 @@ const MFGFilter = ({ onIncludedMFGsChange }) => {
 
 
 
+    
+
+
+
+
     return (
         <>
             <div>
@@ -52,7 +57,8 @@ const MFGFilter = ({ onIncludedMFGsChange }) => {
                 <div className={css.mfgcontainer}>
                     <div>
                         <select multiple className={css.listBox} value={selectedIncluded} onChange={(e) => handlesSelectChange(setSelectedIncluded, e)}>
-                            {includedMFGs.map((mfg, idx) => <option key={idx}>{mfg}</option>)}
+                            {includedMFGs.map((mfg, idx) => <option key={idx}>{mfg} 
+                                 </option>)}
                         </select>
                     </div>
                     <div className={css.mfgbuttons}>
@@ -61,6 +67,7 @@ const MFGFilter = ({ onIncludedMFGsChange }) => {
                         <p onClick={reset}>Reset</p>
                     </div>
                     <div>
+
                         <select multiple className={css.listBox} value={selectedAvailable} onChange={(e) => handlesSelectChange(setSelectedAvailable, e)}>
                             {availableMFGs.map((mfg, idx) => <option key={idx}>{mfg}</option>)}
                         </select>

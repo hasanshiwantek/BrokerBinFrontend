@@ -200,7 +200,7 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
 
     try {
       const result = await dispatch(
-        deleteCompanyContact({ id, token })
+        deleteCompanyContact({ ids: [id], token })
       ).unwrap();
 
       console.log(result); // { status: true, message: 'Contact deleted successfully.' }
