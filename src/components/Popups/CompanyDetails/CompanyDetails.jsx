@@ -242,8 +242,7 @@ const CompanyDetails = ({ closeModal }) => {
     const newStatus = currentStatus === 1 ? 0 : 1;
     dispatch(
       showFirstVendor({ company_id: companyId, show_first: newStatus, token })
-    )
-      .unwrap()
+    ) .unwrap()
       .then((result) => {
         console.log("Server Result:", result);
         if (result?.status === "success") {
