@@ -3,9 +3,8 @@ import css from "../../../styles/Popup/CompanyDetails.module.css";
 import PlusSquare from "../../../svgs/PlusSquare";
 import { companySideInformation } from "../../../data/tableData";
 import { useSelector, useDispatch } from "react-redux";
-import Cookies from "js-cookie"
+import Cookies from "js-cookie";
 import { getCompanyContact } from "../../../ReduxStore/SearchProductSlice";
-
 
 const TabInformation = ({ companyId }) => {
   const [toggleTabOne, setToggleTabOne] = useState(true);
@@ -17,17 +16,16 @@ const TabInformation = ({ companyId }) => {
   //   (store) => store.searchProductStore
   // );
 
-
-
-
   const dispatch = useDispatch();
-  const { companyContactData } = useSelector((store) => store.searchProductStore);
+  const { companyContactData } = useSelector(
+    (store) => store.searchProductStore
+  );
   const token = Cookies.get("token");
 
   // Loading state
   const [loading, setLoading] = useState(true);
   const [companyData, setCompanyData] = useState(null);
-  console.log("Company Contact Data From ")
+  console.log("Company Contact Data From ");
   console.log("CompanyId From TabInformation Page", companyId);
   useEffect(() => {
     if (companyId && token) {
@@ -47,8 +45,6 @@ const TabInformation = ({ companyId }) => {
     }
   }, [dispatch, companyId, token]);
 
-
-
   // While loading, show loading indicator
   if (loading) {
     return (
@@ -66,10 +62,8 @@ const TabInformation = ({ companyId }) => {
           </div>
         </div>
       </div>
-
     );
   }
-
 
   return (
     <>
@@ -79,19 +73,20 @@ const TabInformation = ({ companyId }) => {
             className={css.Popup_Info_Main_left_companySideInformation_tabs_li}
           >
             <h3>Company Information</h3>
-            <span onClick={() => setToggleTabOne((prev) => !prev)} className="cursor-pointer">
+            <span
+              onClick={() => setToggleTabOne((prev) => !prev)}
+              className="cursor-pointer"
+            >
               <PlusSquare />
             </span>
           </li>
           <div
             className={toggleTabOne === true ? css.showContent : css.content}
           >
-
-            <ul >
+            <ul>
               <span>
                 <li className="!font-semibold">Employees:</li>
-                <li>{companyContactData.data?.company?.total_employees
-                }</li>
+                <li>{companyContactData.data?.company?.total_employees}</li>
               </span>
               <span>
                 <li className="!font-semibold">Member Since:</li>
@@ -114,14 +109,15 @@ const TabInformation = ({ companyId }) => {
                 <li>Not Available</li>
               </span>
             </ul>
-
-
           </div>
           <li
             className={css.Popup_Info_Main_left_companySideInformation_tabs_li}
           >
             <h3>Primary Contact Information</h3>
-            <span onClick={() => setToggleTabTwo((prev) => !prev)} className="cursor-pointer">
+            <span
+              onClick={() => setToggleTabTwo((prev) => !prev)}
+              className="cursor-pointer"
+            >
               <PlusSquare />
             </span>
           </li>
@@ -129,75 +125,101 @@ const TabInformation = ({ companyId }) => {
           <div
             className={toggleTabTwo === true ? css.showContent : css.content}
           >
-
-            <ul >
+            <ul>
               <span>
                 <li className="!font-semibold">Contact:</li>
-                <li>{companyContactData.data?.company?.primaryContact?.firstName} {companyContactData.data?.company?.primaryContact?.lastName}
+                <li>
+                  {companyContactData.data?.company?.primaryContact?.firstName}{" "}
+                  {companyContactData.data?.company?.primaryContact?.lastName}
                 </li>
               </span>
               <span>
                 <li className="!font-semibold">Position:</li>
-                <li>{companyContactData.data?.company?.primaryContact?.position}</li>
+                <li>
+                  {companyContactData.data?.company?.primaryContact?.position}
+                </li>
               </span>
               <span>
                 <li className="!font-semibold">Phone:</li>
-                <li>{companyContactData.data?.company?.primaryContact?.phoneNumber}</li>
+                <li>
+                  {
+                    companyContactData.data?.company?.primaryContact
+                      ?.phoneNumber
+                  }
+                </li>
               </span>
               <span>
                 <li className="!font-semibold">Networks:</li>
-                <li>{companyContactData.data?.company?.primaryContact?.socialNetworking?.facebook || ""} </li><br />
-                <li>{companyContactData.data?.company?.primaryContact?.socialNetworking?.linkedin || ""}</li><br />
-                <li>{companyContactData.data?.company?.primaryContact?.socialNetworking?.twitter || ""}</li><br />
-
+                <li>
+                  {companyContactData.data?.company?.primaryContact
+                    ?.socialNetworking?.facebook || ""}{" "}
+                </li>
+                <br />
+                <li>
+                  {companyContactData.data?.company?.primaryContact
+                    ?.socialNetworking?.linkedin || ""}
+                </li>
+                <br />
+                <li>
+                  {companyContactData.data?.company?.primaryContact
+                    ?.socialNetworking?.twitter || ""}
+                </li>
+                <br />
               </span>
             </ul>
-
-
           </div>
           <li
             className={css.Popup_Info_Main_left_companySideInformation_tabs_li}
           >
             <h3>Sales Information</h3>
-            <span onClick={() => setToggleTabThree((prev) => !prev)} className="cursor-pointer">
+            <span
+              onClick={() => setToggleTabThree((prev) => !prev)}
+              className="cursor-pointer"
+            >
               <PlusSquare />
             </span>
           </li>
           <div
             className={toggleTabThree === true ? css.showContent : css.content}
           >
-
             <ul>
               <span>
                 <li className="!font-semibold"> Trading Region:</li>
-                <li>{companyContactData.data?.company?.trading_region || "N/A"}</li>
+                <li>
+                  {companyContactData.data?.company?.trading_region || "N/A"}
+                </li>
               </span>
               <span>
                 <li className="!font-semibold">Trade Program:</li>
                 <li>
-                  {companyContactData.data?.company?.trade_program === "1" ? "Yes" : "No"}
+                  {companyContactData.data?.company?.trade_program === "1"
+                    ? "Yes"
+                    : "No"}
                 </li>
               </span>
               <span>
                 <li className="!font-semibold">Rental Programs:</li>
                 <li>
-                  {companyContactData.data?.company?.rental_program === "1" ? "Yes" : "No"}
+                  {companyContactData.data?.company?.rental_program === "1"
+                    ? "Yes"
+                    : "No"}
                 </li>
               </span>
               <span>
                 <li className="!font-semibold">Blind Shipping:</li>
                 <li>
-                  {companyContactData.data?.company?.blind_shipping === "1" ? "Yes" : "No"}
+                  {companyContactData.data?.company?.blind_shipping === "1"
+                    ? "Yes"
+                    : "No"}
                 </li>
               </span>
               <span>
                 <li className="!font-semibold">Shipping Deadline:</li>
-                <li>{companyContactData.data?.company?.shipping_deadline || "N/A"}</li>
+                <li>
+                  {companyContactData.data?.company?.shipping_deadline || "N/A"}
+                </li>
               </span>
             </ul>
-
-
-
           </div>
         </ul>
       </div>

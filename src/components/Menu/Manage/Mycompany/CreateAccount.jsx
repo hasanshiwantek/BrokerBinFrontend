@@ -363,6 +363,8 @@ const CreateAccount = () => {
 
 
             </form>
+                  <ToastContainer position="top-center" autoClose={2000} />
+            
         </div>
     );
 

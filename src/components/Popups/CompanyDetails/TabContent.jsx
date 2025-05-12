@@ -845,7 +845,6 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
           </div>
         </div>
       </div>
-      <ToastContainer position="top-center" autoClose={2000} />
     </>
   );
 };

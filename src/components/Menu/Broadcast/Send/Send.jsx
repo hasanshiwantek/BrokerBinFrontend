@@ -4,7 +4,10 @@ import ToggleCategories from "./Field Components/ToggleCategories";
 import ToggleFilters from "./Field Components/ToggleFilters";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
-import { sendBroadcast,setSelectedCompanyNames } from "../../../../ReduxStore/BroadCast";
+import {
+  sendBroadcast,
+  setSelectedCompanyNames,
+} from "../../../../ReduxStore/BroadCast";
 import Services from "./Field Components/Services";
 import { clearAllSelections } from "../../../../ReduxStore/BroadCast";
 import { toast } from "react-toastify";
@@ -58,9 +61,12 @@ const BroadcastForm = () => {
     companiesSelection,
     regionSelection,
     serviceData,
-    selectedCompanyNames
+    selectedCompanyNames,
   } = useSelector((state) => state.broadcastStore);
-  console.log("Selected Company Name from Send Broadcast Page,", selectedCompanyNames);
+  console.log(
+    "Selected Company Name from Send Broadcast Page,",
+    selectedCompanyNames
+  );
 
   const handleContinue = () => {
     if (broadcastType && category) {

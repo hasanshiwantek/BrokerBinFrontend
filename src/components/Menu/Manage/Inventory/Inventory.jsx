@@ -14,7 +14,6 @@ import "react-toastify/dist/ReactToastify.css";
 import ScheduleNewUpload from "./ScheduleNewUpload";
 import UploadInventoryContent from "./UploadInventoryContent";
 
-
 const Inventory = () => {
   const token = Cookies.get("token");
   const dispatch = useDispatch();
@@ -99,92 +98,84 @@ const Inventory = () => {
         }
       });
     }
-
-
-
   };
   return (
     <>
-    <div className={css.inventory}>
-      <InventoryButtons />
-      <div className={css.inventory_main}>
-        <form onSubmit={submitInventoryBtn}>
-          <h1>Upload Inventory</h1>
+      <div className={css.inventory}>
+        <InventoryButtons />
+        <div className={css.inventory_main}>
+          <form onSubmit={submitInventoryBtn}>
+            <h1>Upload Inventory</h1>
 
-          {/* ✅ File input & metadata handled by AddAnotherFile */}
-          <AddAnotherFile
-            onFileChange={handleFileChange}
-            fileInputRefs={fileInputRefs}
-          />
+            {/* ✅ File input & metadata handled by AddAnotherFile */}
+            <AddAnotherFile
+              onFileChange={handleFileChange}
+              fileInputRefs={fileInputRefs}
+            />
 
-          <p className={css.inventory_main_desc}>
-            or
-            <span>
-              <a href="mailto:kaif.rizvi@shiwantek.com">
-                <u>
-                  <i> Email Parts List</i>
-                </u>
-              </a>
-            </span>
-          </p>
+            <p className={css.inventory_main_desc}>
+              or
+              <span>
+                <a href="mailto:kaif.rizvi@shiwantek.com">
+                  <u>
+                    <i> Email Parts List</i>
+                  </u>
+                </a>
+              </span>
+            </p>
 
-          <div className={css.inventory_main_ExampleFile}>
-            <p>Example Files</p>
-            <div>
-              <a
-                target="_blank"
-                href="https://members.brokerbin.com/help/example.xls"
-              >
-                <p className="!lowercase underline">example.xls</p>
-              </a>
-              <a
-                target="_blank"
-                href="https://members.brokerbin.com/help/example.csv"
-              >
-                <p className="!lowercase underline">example.csv</p>
-              </a>
+            <div className={css.inventory_main_ExampleFile}>
+              <p>Example Files</p>
+              <div>
+                <a
+                  target="_blank"
+                  href="https://members.brokerbin.com/help/example.xls"
+                >
+                  <p className="!lowercase underline">example.xls</p>
+                </a>
+                <a
+                  target="_blank"
+                  href="https://members.brokerbin.com/help/example.csv"
+                >
+                  <p className="!lowercase underline">example.csv</p>
+                </a>
+              </div>
             </div>
-          </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className={`${
-              css.inventory_main_submitBtn
-            } !p-3 border rounded-lg transform active:scale-90 transition-all duration-100 ${
-              loading ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-          >
-            {loading ? "Sending..." : "Send File"}
-          </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className={`${
+                css.inventory_main_submitBtn
+              } !p-3 border rounded-lg transform active:scale-90 transition-all duration-100 ${
+                loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+            >
+              {loading ? "Sending..." : "Send File"}
+            </button>
+          </form>
           <div className="mt-10">
             <h1 className="my-5">Auto Uploads</h1>
             <ScheduleNewUpload />
           </div>
-        </form>
-
-        <div className="mt-10">
-          <h1>Current Uploads</h1>
-          <div className="p-10  shadow rounded-sm">
-            <p className="text-[8pt]">No Auto Uploads are currently scheduled for your company</p>
+          <div className="mt-10">
+            <h1>Current Uploads</h1>
+            <div className="p-10  shadow rounded-sm">
+              <p className="text-[8pt]">
+                No Auto Uploads are currently scheduled for your company
+              </p>
+            </div>
           </div>
         </div>
+
+        <div></div>
       </div>
 
-      <div>
-
+      <div className="flex  justify-center -mt-10 items-center ">
+        <UploadInventoryContent />
       </div>
-
-      <ToastContainer position="top-center" autoClose={3000} />
-    </div>
-
-
-<div className="flex  justify-center -mt-10 items-center ">
-  <UploadInventoryContent />
-</div>
-
+      <ToastContainer position="top-center" autoClose={2000} />
     </>
-
   );
 };
 

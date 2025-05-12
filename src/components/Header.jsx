@@ -373,7 +373,7 @@ const Header = () => {
                         {dropdownOpen.manage && (
                           <div className={css.nav_Mobile_links_ul}>
                             <ul>
-                              <Link to={"/inventory"}>
+                              <Link to={"/inventory/Upload"}>
                                 <li>Inventory</li>
                               </Link>
                               <Link to={"/rfq"}>
@@ -459,7 +459,7 @@ const Header = () => {
                   </ThemeProvider>
                   <ThemeProvider theme={theme}>
                     <Tooltip title="Inventory" arrow placement="left">
-                      <Link to={"/inventory"}>
+                      <Link to={"/inventory/Upload"}>
                         <li>
                           <img
                             src={inventoryIcon}
@@ -588,12 +588,12 @@ const Header = () => {
               </div>
             </li>
             <li>
-              <Link to={"/inventory"}>manage</Link>
+              <Link to={"/inventory/Upload"}>manage</Link>
               <IoIosArrowDown className={css.onHoverMenuIconDown} />
               <IoIosArrowUp className={css.onHoverMenuIconUp} />
               <div className={css.dropdownMenu}>
                 <ul>
-                  <Link to={"/inventory"}>
+                  <Link to={"/inventory/Upload"}>
                     <li>Inventory</li>
                   </Link>
                   <Link to={"/rfq"}>
