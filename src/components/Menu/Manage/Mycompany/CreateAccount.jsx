@@ -87,7 +87,7 @@ const CreateAccount = () => {
         };
       }
       // For `socialNetworking` nested updates
-      if (["facebook", "linkedin","twitter"].includes(name)) {
+      if (["facebook", "linkedin", "twitter"].includes(name)) {
         return {
           ...prevFormData,
           socialNetworking: {
@@ -175,22 +175,14 @@ const CreateAccount = () => {
                   <span>Primary Contact</span>
                 </NavLink>
               </li>
-              <li>
+              {/* <li>
                 <NavLink
                   to="/Createaccount"
                   className={({ isActive }) => (isActive ? css.active : "")}
                 >
                   <span>Create Account</span>
                 </NavLink>
-              </li>
-              {/* <li>
-                                <NavLink
-                                    to="/myprofile/Options"
-                                    className={({ isActive }) => (isActive ? css.active : '')}
-                                >
-                                    <span>Options</span>
-                                </NavLink>
-                            </li> */}
+              </li> */}
               <li>
                 <NavLink
                   to="/companyContacts"
@@ -198,6 +190,15 @@ const CreateAccount = () => {
                   className={({ isActive }) => (isActive ? css.active : "")}
                 >
                   <span>Company Contacts</span>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/mycompany/CompanyInfo"
+                  end
+                  className={({ isActive }) => (isActive ? css.active : "")}
+                >
+                  <span>Company Info</span>
                 </NavLink>
               </li>
             </ul>

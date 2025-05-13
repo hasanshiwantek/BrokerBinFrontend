@@ -34,6 +34,9 @@ const MyProfile = lazy(() => import("./components/Menu/Manage/MyProfile.jsx"));
 const CompanyProfile = lazy(() =>
   import("./components/Menu/Manage/Mycompany/CompanyProfile.jsx")
 );
+const CompanyPrimaryInfo = lazy(() =>
+  import("./components/Menu/Manage/Mycompany/CompanyInfo/PrimaryInfo.jsx")
+);
 const CompanyContacts = lazy(() =>
   import("./components/Menu/Manage/Mycompany/CompanyContacts.jsx")
 );
@@ -293,6 +296,16 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <CreateAccount />
+            <Footer />
+          </Suspense>
+        ),
+      },
+           {
+        path: "/mycompany/CompanyInfo",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <CompanyPrimaryInfo />
             <Footer />
           </Suspense>
         ),
