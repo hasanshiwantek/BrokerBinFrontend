@@ -1,21 +1,11 @@
 import React, { useEffect, useState } from "react";
 import css from "../../../../../styles/Menu/Manage/MyProfile.module.css";
-// import personalPhoto from "../../../../imgs/logo/shadow.png";
 import LoadingState from "../../../../../LoadingState";
 import { useDispatch, useSelector } from "react-redux";
-import {
-    fetchUserData,
-    setFormData as updateFormData,
-    setCustomSignature,
-    setBlurWhileLoading,
-    submitUserData,
-    submitCompanyLogo,
-    clearLogo,
-} from "../../../../../ReduxStore/ProfleSlice";
+import {setBlurWhileLoading,} from "../../../../../ReduxStore/ProfleSlice";
 import ErrorStatus from "../../../../Error/ErrorStatus";
 import Cookies from "js-cookie";
 import { Link, NavLink } from "react-router-dom";
-import Footer from "../../../../Footer/Footer";
 import axios from "axios";
 import { brokerAPI } from "../../../../api/BrokerEndpoint";
 import { toast } from "react-toastify";
@@ -36,12 +26,6 @@ const CompanyPrimaryInfo = () => {
         error,
         companyLogo,
     } = useSelector((state) => state.profileStore);
-    // console.log("INITAL DATA", initialData);
-    // console.log("FORM DATA", formData);
-    // console.log("COMPANY LOGO", companyLogo);
-    // const image = formData.data?.company?.image;
-
-    // console.log("Company Image", image);
 
     const companyId = Cookies.get("companyId");
     console.log("Company ID", companyId);
@@ -68,29 +52,6 @@ const CompanyPrimaryInfo = () => {
             fetchData();
         }
     }, [companyId, token]);
-
-    // const handleChange = (e) => {
-    //     const { name, value } = e.target;
-
-    //     // Update Local State for Nested Structure
-    //     setFormData((prevData) => {
-    //         const updatedData = { ...prevData };
-    //         if (!updatedData.data) updatedData.data = {};
-    //         if (!updatedData.data.company) updatedData.data.company = {};
-    //         if (!updatedData.data.company.primaryContact)
-    //             updatedData.data.company.primaryContact = {};
-
-    //         updatedData.data.company.primaryContact[name] = value; // Update the nested local state
-    //         return updatedData;
-    //     });
-
-    //     // Update Redux State for Flat Structure
-    //     dispatch(
-    //         updateFormData({
-    //             [name]: value, // Match the flat structure for Redux state
-    //         })
-    //     );
-    // };
 
     const handleChange = () => {
         console.log("Handle Change")
