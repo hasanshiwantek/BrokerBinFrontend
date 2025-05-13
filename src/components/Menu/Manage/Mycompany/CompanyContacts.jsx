@@ -208,7 +208,6 @@ const removeCompanyContacts = async () => {
                     account) Your account is editable through <NavLink to={"/myProfile"}>My Profile</NavLink>
                   </p>
                 </div>
- 
               </div>
             </div>
             <div className="flex gap-5 items-center mt-3">

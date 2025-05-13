@@ -211,7 +211,7 @@ const MyCompany = () => {
                       <span>Primary Contact</span>
                     </NavLink>
                   </li>
-                                   <li>
+                  <li>
                     <NavLink
                       to="/companyContacts"
                       end
@@ -220,14 +220,23 @@ const MyCompany = () => {
                       <span>Company Contacts</span>
                     </NavLink>
                   </li>
-                  <li>
+                   <li>
+                    <NavLink
+                      to="/mycompany/CompanyInfo"
+                      end
+                      className={({ isActive }) => (isActive ? css.active : "")}
+                    >
+                      <span>Company Info</span>
+                    </NavLink>
+                  </li>
+                  {/* <li>
                     <NavLink
                       to="/Createaccount"
                       className={({ isActive }) => (isActive ? css.active : "")}
                     >
                       <span>Create Account</span>
                     </NavLink>
-                  </li>
+                  </li> */}
                 </ul>
               </div>
               <div className={css.profileInfo_form}>
@@ -405,7 +414,7 @@ const MyCompany = () => {
                       <div className="flex items-center justify-center">
                         <label htmlFor="teams">Teams</label>
                         <img
-                       src="https://ben.cachefly.net/images/social_networks/tiny_teams.png"
+                          src="https://ben.cachefly.net/images/social_networks/tiny_teams.png"
                           alt="Teams"
                           title="Teams"
                         ></img>
@@ -423,8 +432,6 @@ const MyCompany = () => {
                         readOnly
                       />
                     </span>
-
-
                     <span>
                       <div className="flex items-center justify-center">
                         <label htmlFor="whatsapp">WhatsApp</label>
@@ -541,9 +548,9 @@ const MyCompany = () => {
                         readOnly
                       />
                     </span>
-                      <div className="flex  items-center justify-center p-10  ">
-                        <p className="text-[8pt] text-[#444] ">(use the profile / url name, example 'brokercell' will result in https://twitter.com/brokercell)</p>
-                      </div>
+                    <div className="flex  items-center justify-center p-10  ">
+                      <p className="text-[8pt] text-[#444] ">(use the profile / url name, example 'brokercell' will result in https://twitter.com/brokercell)</p>
+                    </div>
                   </div>
                 </div>
               </div>

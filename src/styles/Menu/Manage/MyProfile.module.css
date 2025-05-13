@@ -36,7 +36,7 @@ label {
   }
 }
 input {
-  padding: 6px;
+  padding: 5px;
 }
 
 .profileInfo {
@@ -197,7 +197,7 @@ input {
 
 .profileInfo_links a.active {
   color: #428bca;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .profileInfo_links a:hover {
@@ -220,7 +220,7 @@ input {
 }
 
 .profileInfo_links ul li span {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 4500;
 }
 
