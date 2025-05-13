@@ -12,7 +12,7 @@ import { ToastContainer } from "react-toastify";
 const CompanyContacts = () => {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const token = Cookies.get("token");
   const companyId = Cookies.get("companyId");
   console.log(companyId);
@@ -41,7 +41,6 @@ const CompanyContacts = () => {
   const contacts = companyContactData?.data?.contacts || [];
 
   // REMOVE CONTACT LOGIC
-
   const [selectedIds, setSelectedIds] = useState([]);
 
   // Handle checkbox toggle
@@ -107,12 +106,21 @@ const CompanyContacts = () => {
                 </li>
                 <li>
                   <NavLink
+                    to="/mycompany/CompanyInfo"
+                    end
+                    className={({ isActive }) => (isActive ? css.active : "")}
+                  >
+                    <span>Company Info</span>
+                  </NavLink>
+                </li>
+                {/* <li>
+                  <NavLink
                     to="/Createaccount"
                     className={({ isActive }) => (isActive ? css.active : "")}
                   >
                     <span>Create Account</span>
                   </NavLink>
-                </li> 
+                </li>  */}
               </ul>
             </div>
 
@@ -169,8 +177,8 @@ const CompanyContacts = () => {
                                 {contact.userRole === 1
                                   ? "Admin"
                                   : contact.userRole === 2
-                                  ? "Browse only"
-                                  : "Unknown"}
+                                    ? "Browse only"
+                                    : "Unknown"}
                               </td>
                             </tr>
                           ))
@@ -187,12 +195,12 @@ const CompanyContacts = () => {
                       </tbody>
                     </table>
                   )}
-                            <p className="pt-4 italic text-gray-600 text-[7.5pt] leading-tight w-96">
-                  (Select account to approve/edit/delete Or create a new
-                  account) Your account is editable through <NavLink to={"/myProfile"}>My Profile</NavLink>
-                </p>
+                  <p className="pt-4 italic text-gray-600 text-[7.5pt] leading-tight w-96">
+                    (Select account to approve/edit/delete Or create a new
+                    account) Your account is editable through <NavLink to={"/myProfile"}>My Profile</NavLink>
+                  </p>
                 </div>
-      
+
               </div>
             </div>
             <div className="flex gap-5 items-center mt-3">

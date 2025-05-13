@@ -36,14 +36,14 @@ const CompanyPrimaryInfo = () => {
         error,
         companyLogo,
     } = useSelector((state) => state.profileStore);
-    console.log("INITAL DATA", initialData);
-    console.log("FORM DATA", formData);
-    console.log("COMPANY LOGO", companyLogo);
-    const image = formData.data?.company?.image;
+    // console.log("INITAL DATA", initialData);
+    // console.log("FORM DATA", formData);
+    // console.log("COMPANY LOGO", companyLogo);
+    // const image = formData.data?.company?.image;
 
-    console.log("Company Image", image);
+    // console.log("Company Image", image);
 
-    const companyId = initialData?.company?.id;
+    const companyId = Cookies.get("companyId");
     console.log("Company ID", companyId);
     console.log("TOKEN", token);
 
@@ -58,39 +58,43 @@ const CompanyPrimaryInfo = () => {
                         }
                     );
                     setFormData(response.data); // API ka response direct set ho raha hai
+                    dispatch(setBlurWhileLoading(true));
                     setLoading(false);
                 } catch (error) {
                     console.error("Error fetching data", error);
                     setLoading(false);
                 }
             };
-
             fetchData();
         }
     }, [companyId, token]);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
+    // const handleChange = (e) => {
+    //     const { name, value } = e.target;
 
-        // Update Local State for Nested Structure
-        setFormData((prevData) => {
-            const updatedData = { ...prevData };
-            if (!updatedData.data) updatedData.data = {};
-            if (!updatedData.data.company) updatedData.data.company = {};
-            if (!updatedData.data.company.primaryContact)
-                updatedData.data.company.primaryContact = {};
+    //     // Update Local State for Nested Structure
+    //     setFormData((prevData) => {
+    //         const updatedData = { ...prevData };
+    //         if (!updatedData.data) updatedData.data = {};
+    //         if (!updatedData.data.company) updatedData.data.company = {};
+    //         if (!updatedData.data.company.primaryContact)
+    //             updatedData.data.company.primaryContact = {};
 
-            updatedData.data.company.primaryContact[name] = value; // Update the nested local state
-            return updatedData;
-        });
+    //         updatedData.data.company.primaryContact[name] = value; // Update the nested local state
+    //         return updatedData;
+    //     });
 
-        // Update Redux State for Flat Structure
-        dispatch(
-            updateFormData({
-                [name]: value, // Match the flat structure for Redux state
-            })
-        );
-    };
+    //     // Update Redux State for Flat Structure
+    //     dispatch(
+    //         updateFormData({
+    //             [name]: value, // Match the flat structure for Redux state
+    //         })
+    //     );
+    // };
+
+    const handleChange = () => {
+        console.log("Handle Change")
+    }
 
     const states = [
         { value: "NY", label: "New York" },
@@ -177,7 +181,7 @@ const CompanyPrimaryInfo = () => {
                                     </li>
                                     <li>
                                         <NavLink
-                                            to="/companyContacts"
+                                            to="/mycompany/CompanyInfo"
                                             end
                                             className={({ isActive }) => (isActive ? css.active : "")}
                                         >
