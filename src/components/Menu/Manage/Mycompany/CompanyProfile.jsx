@@ -231,7 +231,7 @@ const MyCompany = () => {
                   </li>
                   {/* <li>
                     <NavLink
-                      to="/mycompany/Createaccount"
+                      to="/Createaccount"
                       className={({ isActive }) => (isActive ? css.active : "")}
                     >
                       <span>Create Account</span>

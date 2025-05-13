@@ -291,7 +291,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/mycompany/Createaccount",
+        path: "/Createaccount",
         element: (
           <Suspense fallback={<LoadingState />}>
             <Header />
