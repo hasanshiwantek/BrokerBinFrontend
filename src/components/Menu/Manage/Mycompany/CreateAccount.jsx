@@ -170,22 +170,14 @@ const CreateAccount = () => {
                   <span>Primary Contact</span>
                 </NavLink>
               </li>
-              <li>
+              {/* <li>
                 <NavLink
                   to="/mycompany/Createaccount"
                   className={({ isActive }) => (isActive ? css.active : "")}
                 >
                   <span>Create Account</span>
                 </NavLink>
-              </li>
-              {/* <li>
-                                <NavLink
-                                    to="/myprofile/Options"
-                                    className={({ isActive }) => (isActive ? css.active : '')}
-                                >
-                                    <span>Options</span>
-                                </NavLink>
-                            </li> */}
+              </li> */}
               <li>
                 <NavLink
                   to="/companyContacts"

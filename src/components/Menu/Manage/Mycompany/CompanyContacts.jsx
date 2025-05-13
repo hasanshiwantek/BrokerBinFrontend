@@ -6,9 +6,12 @@ import { getCompanyContact } from "@/ReduxStore/SearchProductSlice";
 import Cookies from "js-cookie";
 import { fetchUserData } from "@/ReduxStore/ProfleSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
 const CompanyContacts = () => {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const token = Cookies.get("token");
   const companyId = Cookies.get("companyId");
   console.log(companyId);
@@ -49,7 +52,7 @@ const CompanyContacts = () => {
                     end
                     className={({ isActive }) => (isActive ? css.active : "")}
                   >
-                    <span>Primary Contact</span>
+                    <span className="">Primary Contact</span>
                   </NavLink>
                 </li>
                 <li>
@@ -63,12 +66,21 @@ const CompanyContacts = () => {
                 </li>
                 <li>
                   <NavLink
+                    to="/companyContacts"
+                    end
+                    className={({ isActive }) => (isActive ? css.active : "")}
+                  >
+                    <span>Company Info</span>
+                  </NavLink>
+                </li>
+                {/* <li>
+                  <NavLink
                     to="/mycompany/Createaccount"
                     className={({ isActive }) => (isActive ? css.active : "")}
                   >
                     <span>Create Account</span>
                   </NavLink>
-                </li>
+                </li> */}
               </ul>
             </div>
 
@@ -116,8 +128,8 @@ const CompanyContacts = () => {
                             {contact.userRole === 1
                               ? "Admin"
                               : contact.userRole === 2
-                              ? "Browse only"
-                              : "Unknown"}
+                                ? "Browse only"
+                                : "Unknown"}
                           </td>
                         </tr>
                       ))}
@@ -128,26 +140,27 @@ const CompanyContacts = () => {
             </div>
             <div className="flex gap-5 items-center mt-3">
               <button
-                className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-7"
+                className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6"
                 type="button"
               >
                 Approve
               </button>
               <button
-                className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-7"
+                className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6"
                 type="button"
               >
                 Edit
               </button>
               <button
-                className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-7"
+                className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6"
                 type="button"
               >
                 Delete
               </button>
               <button
-                className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-7"
+                className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6"
                 type="button"
+                onClick={() => { navigate("/mycompany/Createaccount") }}
               >
                 Create Account
               </button>
