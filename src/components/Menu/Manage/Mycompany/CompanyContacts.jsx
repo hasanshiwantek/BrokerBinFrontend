@@ -12,6 +12,7 @@ import { ToastContainer } from "react-toastify";
 const CompanyContacts = () => {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
+  // const navigate = useNavigate();
   const token = Cookies.get("token");
   const companyId = Cookies.get("companyId");
   console.log(companyId);
@@ -19,7 +20,7 @@ const CompanyContacts = () => {
     (store) => store.searchProductStore
   );
   console.log("Company Contact Data from frontend:", companyContactData);
-
+ 
   useEffect(() => {
     if (companyId && token) {
       setLoading(true); // Set loading to true when fetching data
@@ -36,13 +37,12 @@ const CompanyContacts = () => {
       setLoading(false); // In case no company ID or token is found
     }
   }, [dispatch, companyId, token]);
-
+ 
   const contacts = companyContactData?.data?.contacts || [];
-
+ 
   // REMOVE CONTACT LOGIC
-
   const [selectedIds, setSelectedIds] = useState([]);
-
+ 
   // Handle checkbox toggle
   const handleCheckboxChange = (id) => {
     setSelectedIds((prev) =>
@@ -52,33 +52,41 @@ const CompanyContacts = () => {
     );
   };
 
-  const removeCompanyContacts = async () => {
-    const isConfirmed = window.confirm(
-      "Are you sure you want to delete the selected user(s)?"
-    );
 
-    if (!isConfirmed || selectedIds.length === 0) return;
-    try {
-      const result = await dispatch(
-        deleteCompanyContact({ ids: selectedIds, token })
-      ).unwrap();
+const removeCompanyContacts = async () => {
+  if (selectedIds.length === 0) {
+    alert("Please select at least one contact to delete.");
+    return;
+  }
 
-      if (result?.status) {
-        console.log("✅ Deleted users:", selectedIds);
-        toast.info(
-          result?.message || "Selected contacts deleted successfully!"
-        );
-        setSelectedIds([]); // Clear after deletion
-        dispatch(getCompanyContact({ id: companyId, token })); // Refresh contact list
-      } else {
-        toast.info(result?.message || "Failed to delete contacts.");
-      }
-    } catch (err) {
-      toast.error("❌ Error deleting contacts: " + err.message);
-      console.log("Error:", err.message);
+  const isConfirmed = window.confirm(
+    "Are you sure you want to delete the selected user(s)?"
+  );
+  if (!isConfirmed) return;
+
+  try {
+    const result = await dispatch(
+      deleteCompanyContact({ ids: selectedIds, token })
+    ).unwrap();
+    if (result?.status) {
+      console.log("✅ Deleted users:", selectedIds);
+      toast.info(result?.message || "Selected contacts deleted successfully!");
+      setSelectedIds([]);
+
+      // ✅ Reload the page to ensure fresh data
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000); // Delay allows toast to show before reload
+    } else {
+      toast.info(result?.message || "Failed to delete contacts.");
     }
-  };
+  } catch (err) {
+    toast.error("❌ Error deleting contacts: " + err.message);
+    console.error("Error during deletion or reload:", err);
+  }
+};
 
+ 
   return (
     <>
       <div className={css.profileLayout}>
@@ -92,7 +100,7 @@ const CompanyContacts = () => {
                     end
                     className={({ isActive }) => (isActive ? css.active : "")}
                   >
-                    <span>Primary Contact</span>
+                    <span className="">Primary Contact</span>
                   </NavLink>
                 </li>
                 <li>
@@ -106,18 +114,27 @@ const CompanyContacts = () => {
                 </li>
                 <li>
                   <NavLink
+                    to="/mycompany/CompanyInfo"
+                    end
+                    className={({ isActive }) => (isActive ? css.active : "")}
+                  >
+                    <span>Company Info</span>
+                  </NavLink>
+                </li>
+                {/* <li>
+                  <NavLink
                     to="/Createaccount"
                     className={({ isActive }) => (isActive ? css.active : "")}
                   >
                     <span>Create Account</span>
                   </NavLink>
-                </li>
+                </li>  */}
               </ul>
             </div>
-
+ 
             <div className={css.profileInfo_form}>
               <h1>Company Contacts</h1>
-
+ 
               <div className={css.companyListingTable}>
                 <div>
                   {loading ? (
@@ -168,8 +185,8 @@ const CompanyContacts = () => {
                                 {contact.userRole === 1
                                   ? "Admin"
                                   : contact.userRole === 2
-                                  ? "Browse only"
-                                  : "Unknown"}
+                                    ? "Browse only"
+                                    : "Unknown"}
                               </td>
                             </tr>
                           ))
@@ -186,29 +203,29 @@ const CompanyContacts = () => {
                       </tbody>
                     </table>
                   )}
-                            <p className="pt-4 italic text-gray-600 text-[7.5pt] leading-tight w-96">
-                  (Select account to approve/edit/delete Or create a new
-                  account) Your account is editable through <NavLink to={"/myProfile"}>My Profile</NavLink>
-                </p>
+                  <p className="pt-4 italic text-gray-600 text-[7.5pt] leading-tight w-96">
+                    (Select account to approve/edit/delete Or create a new
+                    account) Your account is editable through <NavLink to={"/myProfile"}>My Profile</NavLink>
+                  </p>
                 </div>
-      
+ 
               </div>
             </div>
             <div className="flex gap-5 items-center mt-3">
               <button
-                className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-7"
+                className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6"
                 type="button"
               >
                 Approve
               </button>
               <button
-                className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-7"
+                className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6"
                 type="button"
               >
                 Edit
               </button>
               <button
-                className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-7"
+                className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6"
                 type="button"
                 onClick={removeCompanyContacts}
               >
@@ -230,5 +247,5 @@ const CompanyContacts = () => {
     </>
   );
 };
-
+ 
 export default CompanyContacts;

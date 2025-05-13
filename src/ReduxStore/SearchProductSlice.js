@@ -532,7 +532,7 @@ const searchProductSlice = createSlice({
             );
         }
 
-        console.log("🧹 Deleted contact ID:", deletedId);
+        console.log("🧹 Deleted contact ID:", deletedIds);
       })
 
       .addCase(deleteCompanyContact.rejected, (state, action) => {

@@ -236,6 +236,21 @@ label {
   outline: none;
   border: 1px solid var(--primary-color);
 }
+
+
+.profileLayout form input,
+label {
+  font-size: 9pt !important;
+  font-weight: 600;
+  color: #444;
+  transition: all 0.15s ease-in-out;
+}
+
+.profileLayout form input:focus {
+  outline: none;
+  border: 1px solid var(--primary-color);
+}
+
 /* 
 .profileInfo_form  select:focus{
   outline: none;

@@ -172,7 +172,7 @@ const InventorySearchResult = () => {
         <h3 className=" p-2 text-2xl text-white">Inventory Search</h3>
         <table>
           <thead>
-            <tr>
+            <tr >
               <th>Cart</th>
               <th>
                 <img
@@ -197,7 +197,7 @@ const InventorySearchResult = () => {
           <tbody>
             {searchResults?.length > 0 ? (
               searchResults.map((val, index) => (
-                <tr key={index}>
+                <tr key={index} className="!whitespace-normal">
                   <td>
                     <input
                       type="checkbox"
