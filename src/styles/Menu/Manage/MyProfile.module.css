@@ -289,3 +289,11 @@ label {
 
 
 
+
+/* COMPANY INFO STYLING */
+
+.companyInfoTabs ul li{
+  font-size: 9pt;
+  color: #444;
+  padding: 1rem 0rem;
+}
