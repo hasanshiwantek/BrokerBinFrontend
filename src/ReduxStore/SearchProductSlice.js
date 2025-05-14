@@ -251,9 +251,9 @@ export const deleteCompanyContact = createAsyncThunk(
 
 export const updateCompanyPrimaryInfo = createAsyncThunk(
   "profile/updateCompanyPrimaryInfo",
-  async ({ token, data }, { rejectWithValue }) => {
+  async ({ token, data, companyId }, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${brokerAPI}company/update`, data, {
+      const response = await axios.put(`${brokerAPI}company/companyUpdate/${companyId}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
