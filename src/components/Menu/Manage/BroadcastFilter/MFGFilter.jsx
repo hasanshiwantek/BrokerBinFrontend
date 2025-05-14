@@ -8,6 +8,10 @@ const MFGFilter = ({ onIncludedMFGsChange }) => {
     const [selectedAvailable, setSelectedAvailable] = useState([]);
     const [selectedIncluded, setSelectedIncluded] = useState([]);
 
+    const sortMFGs = (list) => {
+        return list.sort((a, b) => (a === "-ALL MFG's-" ? -1 : b === "-ALL MFG's-" ? 1 : 0));
+    };
+
     const handlesSelectChange = (setSelected, e) => {
         const selectedOptions = Array.from(e.target.selectedOptions, option => option.value);
         setSelected(selectedOptions);
@@ -17,8 +21,8 @@ const MFGFilter = ({ onIncludedMFGsChange }) => {
         if (selectedIncluded.length > 0) {
             const newIncluded = includedMFGs.filter(mfg => !selectedIncluded.includes(mfg));
             const newAvailable = [...availableMFGs, ...selectedIncluded];
-            setIncludedMFGs(newIncluded);
-            setAvailableMFGs(newAvailable);
+            setIncludedMFGs(sortMFGs(newIncluded));
+            setAvailableMFGs(sortMFGs(newAvailable));
             setSelectedIncluded([]);  // Clear selection after move
             onIncludedMFGsChange(newIncluded);
         }
@@ -28,27 +32,20 @@ const MFGFilter = ({ onIncludedMFGsChange }) => {
         if (selectedAvailable.length > 0) {
             const newAvailable = availableMFGs.filter(mfg => !selectedAvailable.includes(mfg));
             const newIncluded = [...includedMFGs, ...selectedAvailable];
-            setAvailableMFGs(newAvailable);
-            setIncludedMFGs(newIncluded);
+            setIncludedMFGs(sortMFGs(newIncluded));
+            setAvailableMFGs(sortMFGs(newAvailable));
             setSelectedAvailable([]);  // Clear selection after move
             onIncludedMFGsChange(newIncluded);
         }
     };
 
     const reset = () => {
-        setAvailableMFGs(initialMFGs);
         setIncludedMFGs(["-ALL MFG's-"]);
+        setAvailableMFGs(sortMFGs([...initialMFGs]));
         setSelectedAvailable([]);
         setSelectedIncluded([]);
         //   onIncludedMFGsChange(["-ALL MFG's-"]);
     };
-
-
-
-    
-
-
-
 
     return (
         <>

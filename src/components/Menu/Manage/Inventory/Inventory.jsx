@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import css from "../../../../styles/Menu/Manage/Inventory/Inventory.module.css";
 import AddAnotherFile from "./AddAnotherFile";
 import InventoryButtons from "./InventoryButtons";
@@ -7,12 +7,14 @@ import {
   sendInventoryFile,
   setAddAnotherFiles,
   resetFiles,
+  fetchCurrentUploads,
 } from "../../../../ReduxStore/InventorySlice";
 import Cookies from "js-cookie";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ScheduleNewUpload from "./ScheduleNewUpload";
 import UploadInventoryContent from "./UploadInventoryContent";
+import UploadsTable from "./UploadsTable";
 
 const Inventory = () => {
   const token = Cookies.get("token");
@@ -26,6 +28,7 @@ const Inventory = () => {
   // Component state for actual files
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [currentUploads, setCurrentUploads] = useState({})
 
   // ✅ Create a reference to multiple file inputs
   const fileInputRefs = useRef([]);
@@ -99,6 +102,27 @@ const Inventory = () => {
       });
     }
   };
+
+  const userId = Cookies.get("user_id");
+  console.log("👤 User ID:", userId);
+
+ const fetchCurrentUploadsData = async () => {
+  try{
+    const response = await dispatch(fetchCurrentUploads({ token, userId })).unwrap();
+    setCurrentUploads(response);
+    console.log("📥 Current Uploads:", response);
+  } catch (error) {
+    console.error("❌ Error fetching current uploads:", error);
+    toast.error("Failed to fetch current uploads.");
+  }
+ }
+
+ useEffect(() => {
+  if (userId){
+    fetchCurrentUploadsData();
+  }
+ },[])
+
   return (
     <>
       <div className={css.inventory}>
@@ -161,9 +185,7 @@ const Inventory = () => {
           <div className="mt-10">
             <h1>Current Uploads</h1>
             <div className="p-10  shadow rounded-sm">
-              <p className="text-[8pt]">
-                No Auto Uploads are currently scheduled for your company
-              </p>
+              <UploadsTable data={currentUploads.data} />
             </div>
           </div>
         </div>
