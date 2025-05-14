@@ -626,7 +626,7 @@ const Options = () => {
                 </div>
               </div>
 
-              <div className={css.broadcastFilters_services}>
+              {/* <div className={css.broadcastFilters_services}>
                 <ul className={css.checkbox}>
                   <CheckboxList
                     items={servicesList}
@@ -638,7 +638,7 @@ const Options = () => {
                     name="selectedServices" // Differentiates between services and groupings
                   />
                 </ul>
-              </div>
+              </div> */}
 
               <div className={css.broadcastFilters_grouping}>
                 <ul className={css.groupCheckbox}>
