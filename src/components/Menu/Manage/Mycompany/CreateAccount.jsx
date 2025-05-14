@@ -58,11 +58,13 @@ const CreateAccount = () => {
     email: "",
     imScreenNames: {
       skype: "",
+      teams: "",
       whatsapp: "",
       trillian: "",
     },
     socialNetworking: {
       facebook: "",
+      twitter: "",
       linkedin: "",
     },
     password: "",
@@ -204,7 +206,9 @@ const CreateAccount = () => {
             </ul>
           </div>
 
-          <h1 className="pt-5 p-4 !font-semibold text-[#444]">Create Account</h1>
+          <h1 className="pt-5 p-4 !font-semibold text-[#444]">
+            Create Account
+          </h1>
 
           <div className="!flex !justify-between !space-x-[4vw] !pt-10 !p-14 ">
             <div className="!flex !flex-col !text-right !gap-5">

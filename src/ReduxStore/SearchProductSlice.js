@@ -219,29 +219,6 @@ export const sortInventory = createAsyncThunk(
   }
 );
 
-// export const deleteCompanyContact = createAsyncThunk(
-//   "toolsStore/deleteCompanyContact",
-//   async ({ token, id }) => {
-//     try {
-//       const response = await axios.delete(
-//         `${brokerAPI}company/contacts/${id}`,
-//         {
-//           headers: {
-//             "Content-Type": "application/json",
-//             Authorization: `Bearer ${token}`,
-//           },
-//         }
-//       );
-//       console.log("✅ Deleting User Response from Redux:", response.data);
-//       return response.data; // Ensure this includes the deleted `id`
-//     } catch (error) {
-//       const message =
-//         error.response?.data?.message ||
-//         "An error occurred while deleting the contact.";
-//       throw new Error(message);
-//     }
-//   }
-// );
 
 export const deleteCompanyContact = createAsyncThunk(
   "toolsStore/deleteCompanyContact",
@@ -267,6 +244,52 @@ export const deleteCompanyContact = createAsyncThunk(
     }
   }
 );
+
+
+
+
+
+export const updateCompanyPrimaryInfo = createAsyncThunk(
+  "profile/updateCompanyPrimaryInfo",
+  async ({ token, data }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`${brokerAPI}company/update`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+
+export const updateCompanyBio = createAsyncThunk(
+  "toolstore/updateCompanyBio",
+  async ({ token, company_id, description }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `${brokerAPI}company/company/description`,
+        { company_id, description },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+
+
 
 const initialState = {
   companiesListingParts: true,
@@ -532,7 +555,7 @@ const searchProductSlice = createSlice({
             );
         }
 
-        console.log("🧹 Deleted contact ID:", deletedId);
+        console.log("🧹 Deleted contact ID:", deletedIds);
       })
 
       .addCase(deleteCompanyContact.rejected, (state, action) => {

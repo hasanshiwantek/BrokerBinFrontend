@@ -20,7 +20,7 @@ const CompanyContacts = () => {
     (store) => store.searchProductStore
   );
   console.log("Company Contact Data from frontend:", companyContactData);
-
+ 
   useEffect(() => {
     if (companyId && token) {
       setLoading(true); // Set loading to true when fetching data
@@ -37,12 +37,12 @@ const CompanyContacts = () => {
       setLoading(false); // In case no company ID or token is found
     }
   }, [dispatch, companyId, token]);
-
+ 
   const contacts = companyContactData?.data?.contacts || [];
-
+ 
   // REMOVE CONTACT LOGIC
   const [selectedIds, setSelectedIds] = useState([]);
-
+ 
   // Handle checkbox toggle
   const handleCheckboxChange = (id) => {
     setSelectedIds((prev) =>
@@ -52,33 +52,41 @@ const CompanyContacts = () => {
     );
   };
 
-  const removeCompanyContacts = async () => {
-    const isConfirmed = window.confirm(
-      "Are you sure you want to delete the selected user(s)?"
-    );
 
-    if (!isConfirmed || selectedIds.length === 0) return;
-    try {
-      const result = await dispatch(
-        deleteCompanyContact({ ids: selectedIds, token })
-      ).unwrap();
+const removeCompanyContacts = async () => {
+  if (selectedIds.length === 0) {
+    alert("Please select at least one contact to delete.");
+    return;
+  }
 
-      if (result?.status) {
-        console.log("✅ Deleted users:", selectedIds);
-        toast.info(
-          result?.message || "Selected contacts deleted successfully!"
-        );
-        setSelectedIds([]); // Clear after deletion
-        dispatch(getCompanyContact({ id: companyId, token })); // Refresh contact list
-      } else {
-        toast.info(result?.message || "Failed to delete contacts.");
-      }
-    } catch (err) {
-      toast.error("❌ Error deleting contacts: " + err.message);
-      console.log("Error:", err.message);
+  const isConfirmed = window.confirm(
+    "Are you sure you want to delete the selected user(s)?"
+  );
+  if (!isConfirmed) return;
+
+  try {
+    const result = await dispatch(
+      deleteCompanyContact({ ids: selectedIds, token })
+    ).unwrap();
+    if (result?.status) {
+      console.log("✅ Deleted users:", selectedIds);
+      toast.info(result?.message || "Selected contacts deleted successfully!");
+      setSelectedIds([]);
+
+      // ✅ Reload the page to ensure fresh data
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000); // Delay allows toast to show before reload
+    } else {
+      toast.info(result?.message || "Failed to delete contacts.");
     }
-  };
+  } catch (err) {
+    toast.error("❌ Error deleting contacts: " + err.message);
+    console.error("Error during deletion or reload:", err);
+  }
+};
 
+ 
   return (
     <>
       <div className={css.profileLayout}>
@@ -123,10 +131,10 @@ const CompanyContacts = () => {
                 </li>  */}
               </ul>
             </div>
-
+ 
             <div className={css.profileInfo_form}>
               <h1>Company Contacts</h1>
-
+ 
               <div className={css.companyListingTable}>
                 <div>
                   {loading ? (
@@ -200,7 +208,6 @@ const CompanyContacts = () => {
                     account) Your account is editable through <NavLink to={"/myProfile"}>My Profile</NavLink>
                   </p>
                 </div>
-
               </div>
             </div>
             <div className="flex gap-5 items-center mt-3">
@@ -239,5 +246,5 @@ const CompanyContacts = () => {
     </>
   );
 };
-
+ 
 export default CompanyContacts;
