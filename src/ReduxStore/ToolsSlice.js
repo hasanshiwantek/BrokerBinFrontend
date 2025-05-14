@@ -500,6 +500,27 @@ export const neverShowVendor = createAsyncThunk(
   }
 );
 
+export const showFirstNeverShowCount = createAsyncThunk(
+  "toolsStore/showFirstNeverShowCount",
+  async ({ id, token }) => {
+    try {
+      const response = await axios.get(
+        `${brokerAPI}companyshow/company-visibility-count/${id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("View By Vendor Data From Redux: ", response.data);
+      return response.data;
+    } catch (error) {
+      throw new Error("Error searching Vendor Data");
+    }
+  }
+);
+
 const initialState = {
   tools: [],
   searchCompanies: [],
@@ -764,7 +785,19 @@ const ToolsSlice = createSlice({
       })
       .addCase(neverShowVendor.rejected, (state, action) => {
         console.error("❌ Upload Rejected:", action.payload);
-      });
+      })
+      .addCase(showFirstNeverShowCount.pending, (state) => {
+        console.log("PENDINGGGG...");
+        state.loading = true;
+      })
+      .addCase(showFirstNeverShowCount.fulfilled, (state, action) => {
+        state.myVendor = action.payload;
+        state.loading = false;
+      })
+      .addCase(showFirstNeverShowCount.rejected, (state, action) => {
+        console.error("Error Fetching  company View By", action.error);
+        state.loading = false;
+      })
   },
 });
 

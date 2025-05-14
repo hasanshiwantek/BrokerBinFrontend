@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import css from "../../../../../styles/Menu/Manage/MyProfile.module.css";
-// import personalPhoto from "../../../../imgs/logo/shadow.png";
 import LoadingState from "../../../../../LoadingState";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -15,7 +14,6 @@ import {
 import ErrorStatus from "../../../../Error/ErrorStatus";
 import Cookies from "js-cookie";
 import { Link, NavLink } from "react-router-dom";
-import Footer from "../../../../Footer/Footer";
 import axios from "axios";
 import { brokerAPI } from "../../../../api/BrokerEndpoint";
 import { toast } from "react-toastify";

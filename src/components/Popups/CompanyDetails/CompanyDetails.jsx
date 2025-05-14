@@ -28,6 +28,7 @@ import {
   blockMyVendor,
   showFirstVendor,
   neverShowVendor,
+  showFirstNeverShowCount
 } from "@/ReduxStore/ToolsSlice";
 import { FaUserXmark, FaUserCheck } from "react-icons/fa6";
 import { toast } from "react-toastify";
@@ -49,6 +50,7 @@ const CompanyDetails = ({ closeModal }) => {
   const [companyData, setCompanyData] = useState(null);
   const [feedbackData, setFeedbackData] = useState(null);
   const [toggleTabs, setToggleTabs] = useState(1);
+  const [vendorCount, setVendorCount] = useState(null);
 
   if (!popupCompanyDetail || !popupCompanyDetail[0]) {
     return <p>Loading company details...</p>;
@@ -114,6 +116,21 @@ const CompanyDetails = ({ closeModal }) => {
     fetchData();
   }, [companyId]);
 
+  const fetchVendorCount = async () => {
+  try {
+    const res = await dispatch(showFirstNeverShowCount({ id: companyId, token }));
+    setVendorCount(res.payload);
+  } catch (err) {
+    console.error("Error fetching count", err);
+  }
+};
+
+useEffect(() => {
+  if (companyId && token) {
+    fetchVendorCount();
+  }
+}, [companyId, token]);
+
   const printCompanyModal = () => {
     window.print();
   };
@@ -129,8 +146,6 @@ const CompanyDetails = ({ closeModal }) => {
     // Redirect to feedbacks tab
     window.location.href = "/feedbacks"; // Adjust the link as needed
   };
-
-  // Close modal when clicking outside or pressing Escape
 
   const ratings = parseFloat(feedbackData?.rating?.averageRating || 5);
 
@@ -222,9 +237,8 @@ const CompanyDetails = ({ closeModal }) => {
       token,
       toast,
     });
+    fetchVendorCount();
   };
-
-  // Never Show Handler
 
   const [neverShowStatus, setneverShowStatus] = useState({});
   console.log("Never Show status", neverShowStatus);
@@ -246,6 +260,7 @@ const CompanyDetails = ({ closeModal }) => {
       token,
       toast,
     });
+    fetchVendorCount();
   };
 
   useEffect(() => {
@@ -358,8 +373,8 @@ const CompanyDetails = ({ closeModal }) => {
                               {showFirstStatus[
                                 companyContactData.data.company?.id
                               ] === 1
-                                ? "Show First Disabled"
-                                : "Show this Vendor First"}
+                                ? `Show First (${vendorCount?.show_first_count})`
+                                : `Show First (${vendorCount?.show_first_count})`}
                             </p>
                           </div>
                         </Tooltip>
@@ -440,11 +455,7 @@ const CompanyDetails = ({ closeModal }) => {
                                   <IoMdEyeOff size={30} />
                                 )}
                                 <p className="whitespace-nowrap">
-                                  {neverShowStatus[
-                                    companyContactData.data.company?.id
-                                  ] === 1
-                                    ? "Show this vendor "
-                                    : "Never Show "}
+                                  {`Never Show (${vendorCount?.never_show_count})`}
                                 </p>
                               </div>
                             </Tooltip>

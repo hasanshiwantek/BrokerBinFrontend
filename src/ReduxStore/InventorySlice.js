@@ -239,6 +239,31 @@ export const scheduleUpload = createAsyncThunk(
   }
 );
 
+export const fetchCurrentUploads = createAsyncThunk(
+  "inventoryStore/fetchCurrentUploads",
+  async ({ token, userId }) => {
+    try {
+      const response = await axios.get(
+        `${brokerAPI}schedule/get_auto_file/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("Filtered Broadcast From Backend: ", response.data);
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error Fetching Filtered Broadcast Data:",
+        error.response?.data
+      );
+      throw error.response?.data;
+    }
+  }
+);
+
 const initialState = {
   // Add inventory data
   inventoryData: {},

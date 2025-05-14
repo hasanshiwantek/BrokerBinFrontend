@@ -42,6 +42,14 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
     (store) => store.searchProductStore
   );
   console.log("Company Contact Data From Tab Content Page", companyContactData);
+
+  const { initialData } = useSelector(
+      (state) => state.profileStore
+    );
+    console.log(`initialData`, initialData)
+
+  const currentUserCompanyId = initialData?.company?.id;
+
   const contactInfo = companyContactData?.data?.contacts;
   const contactProfileImgs = contactInfo?.map(
     (contact) => contact.profileImage
@@ -769,14 +777,16 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
               <span className={`flex space-x-4 cursor-pointer`}>
                 <span
                   onClick={() => {
+                    if (currentUserCompanyId === companyId) {
+                      toast.info(`You can't give feedback to your own company`)
+                      return;
+                    }
                     console.log("Icon clicked!");
                     setIsOpen(true);
                   }}
-                  className="hover:text-[#2c83ec] cursor-pointer"
+                  className={`hover:text-[#2c83ec] cursor-pointer ${currentUserCompanyId === companyId ? 'opacity-50 pointer-events-none' : ''}`}
                 >
-                  {/* <VscFeedback size={20}/> */}
                   <BiSolidMessageRoundedDots size={20} />
-                  {/* <BiMessageRoundedMinus size={20}/> */}
                 </span>
                 {isOpen && (
                   <FeedbackModal

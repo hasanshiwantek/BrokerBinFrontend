@@ -113,7 +113,7 @@ const FeedbackModal = ({ isOpen, onClose, company, onSucces }) => {
                             className="h-[3vh]"></textarea>
                         </label>
 
-                        <label className={styles.checkboxLabel}>
+                        <label className={`${styles.checkboxLabel} !flex-row !flex !items-center`}>
                             <input 
                             type="checkbox"
                             name="emailACopy"
@@ -121,17 +121,17 @@ const FeedbackModal = ({ isOpen, onClose, company, onSucces }) => {
                             className={styles.checkbox}
                             onChange={(e) => setFormData({...formData, [e.target.name]: e.target.checked ? 1 : 0 })} 
                             />
-                            Email me a copy of this post.
+                            <p className='pt-2'>Email me a copy of this post.</p>
                         </label>
 
 
-                        <label className={styles.checkboxLabel}>
+                        <label className={`${styles.checkboxLabel} !flex !flex-row !items-center `}>
                             <input 
                             type="checkbox" 
                             className={styles.checkbox}
                             onChange={(e) => setIsChecked(e.target.checked)} 
                             />
-                            I understand that inappropriate comments may violate the Terms of Service.
+                            <p className='pt-2'>I understand that inappropriate comments may violate the Terms of Service.</p>
                         </label>
                         <div className={styles.termsNotes}>
                             <p>* Feedback must be related to the transaction only.</p>

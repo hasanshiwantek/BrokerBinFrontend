@@ -31,8 +31,6 @@ export const sendBroadcast = createAsyncThunk(
   }
 );
 
-
-
 export const broadCastFilters = createAsyncThunk(
   "broadcastStore/broadCastFilters",
   async ({ data, token }) => {
@@ -115,7 +113,6 @@ export const fetchBroadCastData = createAsyncThunk(
   }
 );
 
-
 export const deleteBroadCastData = createAsyncThunk(
   "broadcastStore/deleteBroadCastData",
   async ({ token, ids }) => {
@@ -143,9 +140,6 @@ export const deleteBroadCastData = createAsyncThunk(
     }
   }
 );
-
-
-
 
 export const sendBroadcastReply = createAsyncThunk(
   "broadcastStore/sendBroadcastReply",
@@ -176,8 +170,6 @@ export const sendBroadcastReply = createAsyncThunk(
   }
 );
 
-
-
 export const fetchBroadCastCount = createAsyncThunk(
   "broadcastStore/fetchBroadCastCount",
   async ({ token }) => {
@@ -203,9 +195,6 @@ export const fetchBroadCastCount = createAsyncThunk(
     }
   }
 );
-
-
-
 
 export const filterBroadCastPartModel = createAsyncThunk(
   "broadcastStore/filterBroadCastPartModel",
@@ -233,11 +222,6 @@ export const filterBroadCastPartModel = createAsyncThunk(
   }
 );
 
-
-
-
-
-
 const initialState = {
   computerSelection: [],
   telecomSelection: [],
@@ -252,9 +236,6 @@ const initialState = {
   filterBroadcastPartModelData:{},
   togglePopUp: false,
   popupCompanyDetail: null,
-
-
-
 };
 
 const broadcastSlice = createSlice({
