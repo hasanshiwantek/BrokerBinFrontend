@@ -106,22 +106,23 @@ const Inventory = () => {
   const userId = Cookies.get("user_id");
   console.log("👤 User ID:", userId);
 
- const fetchCurrentUploadsData = async () => {
-  try{
-    const response = await dispatch(fetchCurrentUploads({ token, userId })).unwrap();
-    setCurrentUploads(response);
-    console.log("📥 Current Uploads:", response);
-  } catch (error) {
-    console.error("❌ Error fetching current uploads:", error);
-    toast.error("Failed to fetch current uploads.");
+  const fetchCurrentUploadsData = async () => {
+    try {
+      const response = await dispatch(fetchCurrentUploads({ token, userId })).unwrap();
+      setCurrentUploads(response);
+      console.log("📥 Current Uploads:", response);
+      console.log("CURRENTUPLOADSDATA", currentUploads)
+    } catch (error) {
+      console.error("❌ Error fetching current uploads:", error);
+      toast.error("Failed to fetch current uploads.");
+    }
   }
- }
 
- useEffect(() => {
-  if (userId){
-    fetchCurrentUploadsData();
-  }
- },[])
+  useEffect(() => {
+    if (userId) {
+      fetchCurrentUploadsData();
+    }
+  }, [])
 
   return (
     <>
@@ -169,11 +170,9 @@ const Inventory = () => {
             <button
               type="submit"
               disabled={loading}
-              className={`${
-                css.inventory_main_submitBtn
-              } !p-3 border rounded-lg transform active:scale-90 transition-all duration-100 ${
-                loading ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+              className={`${css.inventory_main_submitBtn
+                } !p-3 border rounded-lg transform active:scale-90 transition-all duration-100 ${loading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
             >
               {loading ? "Sending..." : "Send File"}
             </button>
@@ -184,9 +183,11 @@ const Inventory = () => {
           </div>
           <div className="mt-10">
             <h1>Current Uploads</h1>
-            <div className="p-10  shadow rounded-sm">
-              <UploadsTable data={currentUploads.data} />
-            </div>
+            {currentUploads?.data && (
+              <div className="p-10 shadow rounded-sm">
+                <UploadsTable data={currentUploads} />
+              </div>
+            )}
           </div>
         </div>
 
