@@ -25,6 +25,7 @@ import {
   updateCompanyBio,
 } from "@/ReduxStore/SearchProductSlice";
 import { useRef } from "react";
+import { BsWindowSidebar } from "react-icons/bs";
 
 const CompanyPrimaryInfo = () => {
   const token = Cookies.get("token");
@@ -85,7 +86,7 @@ const CompanyPrimaryInfo = () => {
     }
   }, [companyId, token, dispatch]);
 
-  
+
 
   const states = [
     { value: "NY", label: "New York" },
@@ -232,7 +233,7 @@ const CompanyPrimaryInfo = () => {
         console.log("🚀 Submitting Company Primary Info:", payload);
 
         const result = await dispatch(
-          updateCompanyPrimaryInfo({ token, data: payload })
+          updateCompanyPrimaryInfo({ token, data: payload, companyId })
         );
 
         if (result?.payload?.status) {
@@ -245,7 +246,7 @@ const CompanyPrimaryInfo = () => {
       }
 
       if (activeTab === "bio") {
-    
+
 
         console.log("🚀 Submitting Company Bio:", bio);
         // Remove outer <p> tags only
@@ -357,9 +358,8 @@ const CompanyPrimaryInfo = () => {
                     <li
                       key={tab.key}
                       onClick={() => setActiveTab(tab.key)}
-                      className={`${
-                        activeTab === tab.key ? "font-bold " : "cursor-pointer"
-                      }`}
+                      className={`${activeTab === tab.key ? "font-bold " : "cursor-pointer"
+                        }`}
                     >
                       {tab.label}
                     </li>
@@ -439,7 +439,7 @@ const CompanyPrimaryInfo = () => {
                                 onChange={handleChange}
                                 value={
                                   formData?.data?.company?.[
-                                    `${field.name}_hour`
+                                  `${field.name}_hour`
                                   ] || ""
                                 }
                               >
@@ -457,7 +457,7 @@ const CompanyPrimaryInfo = () => {
                                 onChange={handleChange}
                                 value={
                                   formData?.data?.company?.[
-                                    `${field.name}_ampm`
+                                  `${field.name}_ampm`
                                   ] || ""
                                 }
                               >
@@ -514,13 +514,18 @@ const CompanyPrimaryInfo = () => {
               )}
               {activeTab === "bio" && bio !== null && (
                 <div className={`${css.profileInfo_form}`}>
-                  <CompanyBio bio={bio} setBio={setBio}  />
+                  <CompanyBio bio={bio} setBio={setBio} />
                 </div>
               )}
 
-              <div className="pt-2">
+              <div className="pt-2 flex justify-between">
+                <button 
+                className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6"
+                onClick={() => window.location.reload()}>
+                  Reset
+                </button>
                 <button
-                  className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-7"
+                  className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6"
                   type="submit"
                 >
                   Submit Changes
