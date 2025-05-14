@@ -28,7 +28,7 @@ import {
   blockMyVendor,
   showFirstVendor,
   neverShowVendor,
-  showFirstNeverShowCount
+  showFirstNeverShowCount,
 } from "@/ReduxStore/ToolsSlice";
 import { FaUserXmark, FaUserCheck } from "react-icons/fa6";
 import { toast } from "react-toastify";
@@ -117,19 +117,21 @@ const CompanyDetails = ({ closeModal }) => {
   }, [companyId]);
 
   const fetchVendorCount = async () => {
-  try {
-    const res = await dispatch(showFirstNeverShowCount({ id: companyId, token }));
-    setVendorCount(res.payload);
-  } catch (err) {
-    console.error("Error fetching count", err);
-  }
-};
+    try {
+      const res = await dispatch(
+        showFirstNeverShowCount({ id: companyId, token })
+      );
+      setVendorCount(res.payload);
+    } catch (err) {
+      console.error("Error fetching count", err);
+    }
+  };
 
-useEffect(() => {
-  if (companyId && token) {
-    fetchVendorCount();
-  }
-}, [companyId, token]);
+  useEffect(() => {
+    if (companyId && token) {
+      fetchVendorCount();
+    }
+  }, [companyId, token]);
 
   const printCompanyModal = () => {
     window.print();
@@ -150,12 +152,12 @@ useEffect(() => {
   const ratings = parseFloat(feedbackData?.rating?.averageRating || 5);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      const modal = document.querySelector(`.${css.Popup_Info}`);
-      if (modal && !modal.contains(event.target)) {
-        closeModal(); // Close modal if clicked outside
-      }
-    };
+    // const handleClickOutside = (event) => {
+    //   const modal = document.querySelector(`.${css.Popup_Info}`);
+    //   if (modal && !modal.contains(event.target)) {
+    //     closeModal(); // Close modal if clicked outside
+    //   }
+    // };
 
     const handleEscapeKey = (event) => {
       if (event.key === "Escape") {
@@ -165,13 +167,13 @@ useEffect(() => {
 
     if (isModalOpen) {
       setTimeout(() => {
-        document.addEventListener("click", handleClickOutside);
+        // document.addEventListener("click", handleClickOutside);
         document.addEventListener("keydown", handleEscapeKey);
       }, 200); // Add delay to avoid detecting the opening click
     }
 
     return () => {
-      document.removeEventListener("click", handleClickOutside);
+      // document.removeEventListener("click", handleClickOutside);
       document.removeEventListener("keydown", handleEscapeKey);
     };
   }, [isModalOpen]); // ✅ Removed `closeModal` from dependencies

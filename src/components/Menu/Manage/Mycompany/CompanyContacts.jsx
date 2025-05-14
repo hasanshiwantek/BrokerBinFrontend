@@ -9,6 +9,7 @@ import { deleteCompanyContact } from "@/ReduxStore/SearchProductSlice";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 const CompanyContacts = () => {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
@@ -84,6 +85,28 @@ const removeCompanyContacts = async () => {
     toast.error("❌ Error deleting contacts: " + err.message);
     console.error("Error during deletion or reload:", err);
   }
+};
+
+
+
+// UPDATE COPMANY USER LOGIC:
+
+const navigate = useNavigate();
+const handleEditContact = () => {
+  if (selectedIds.length !== 1) {
+    toast.warn("Please select exactly one contact to edit.");
+    return;
+  }
+
+  const contactToEdit = contacts.find((c) => c.id === selectedIds[0]);
+  if (!contactToEdit) {
+    toast.error("Selected contact not found.");
+    return;
+  }
+
+  navigate("/updatecompanyuser", {
+    state: { contact: contactToEdit },
+  });
 };
 
  
@@ -220,6 +243,7 @@ const removeCompanyContacts = async () => {
               <button
                 className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6"
                 type="button"
+                 onClick={handleEditContact}
               >
                 Edit
               </button>
