@@ -1,4 +1,4 @@
-import { React, useEffect } from "react";
+import { React, useEffect,useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "../../../styles/Menu/Search/FeedBackProfile.module.css";
 // import "../../Menu/Main/MenuBar.css";
@@ -16,11 +16,12 @@ import { setTogglePopUp } from "../../../ReduxStore/SearchProductSlice";
 import CompanyDetails from "../../Popups/CompanyDetails/CompanyDetails";
 import { setPopupCompanyDetail } from "../../../ReduxStore/SearchProductSlice";
 import { useLocation } from "react-router-dom";
-
+import FeedbackModal from "@/components/Popups/FeedBackModal";
 const FeedBackRating = () => {
   const location = useLocation();
   const companyId = location.state?.companyId;
-  const primaryId=location.state?.companyId
+  const primaryId = location.state?.primaryId;
+  const [isOpen, setIsOpen] = useState(false);
   console.log("Company ID:", companyId);
 
   const token = Cookies.get("token");
@@ -37,10 +38,8 @@ const FeedBackRating = () => {
 
   useEffect(() => {
     console.log(primaryId);
-    dispatch(fetchUserData({ id:primaryId, token }));
+    dispatch(fetchUserData({ id: primaryId, token }));
   }, []);
-
-
 
   console.log("Initial Data ", initialData);
 
@@ -115,6 +114,9 @@ const FeedBackRating = () => {
   };
   console.log("popupCompanyDetail", popupCompanyDetail);
   console.log("togglePopUp", togglePopUp);
+
+  const compId=companyId
+  const companyName = initialData?.company?.name;
 
   return (
     <div className={styles.feedbackContainer}>
@@ -206,7 +208,7 @@ const FeedBackRating = () => {
           </div>
         </div>
 
-        <div className={`!p-3 ${styles.memberInfo}`}>
+        <div className={`!p-3 leading-loose ${styles.memberInfo}`}>
           <img
             src={initialData?.company?.image}
             className="w-52 cursor-pointer"
@@ -214,7 +216,7 @@ const FeedBackRating = () => {
             onClick={() => openCompanyModal(initialData?.company)}
           />
           <p className="!text-2xl">{initialData?.company?.name}</p>
-          <p>Date Established: {initialData?.company?.created_at}</p>
+          <p>Date Established: { new Date(initialData?.company?.created_at).toLocaleString()}</p>
 
           <div className={styles.feedbackStars}>
             <p className="!text-xl whitespace-nowrap ">Feedback Stars:</p>
@@ -225,18 +227,29 @@ const FeedBackRating = () => {
             </div>
           </div>
 
-          <p className="!text-xl">A {companyRatings}Star Member</p>
+          <p className="!text-xl">A {companyRatings} Star Member</p>
         </div>
       </div>
 
       <div className={styles.buttonSec}>
-        <Link to="/ethics" className={styles.ethicsComplaintButton}>
+        <button
+          className={styles.ethicsComplaintButton}
+          onClick={() => setIsOpen(true)}
+        >
           Ethics Complaint
-        </Link>
+        </button>
       </div>
 
       {togglePopUp && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
+      )}
+      {isOpen && (
+        <FeedbackModal
+          company={{ id: compId, name: companyName }}
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          // onSucces={handleFetchData}
+        />
       )}
     </div>
   );

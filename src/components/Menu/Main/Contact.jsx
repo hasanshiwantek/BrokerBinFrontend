@@ -57,7 +57,7 @@ const handleSubmit = async (e) => {
     };
 
     const response = await fetch(
-      "https://backend.brokercell.com/api/contact/store",
+      "https://backend.brokercell.com/api/contactadmin/contact-us",
       {
         method: "POST",
         headers: {
