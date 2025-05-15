@@ -56,8 +56,12 @@ const CompanyDetails = ({ closeModal }) => {
     return <p>Loading company details...</p>;
   }
 
-  // const company = popupCompanyDetail[0];
+  const { initialData } = useSelector(
+        (state) => state.profileStore
+      );
+      console.log(`initialData`, initialData)
 
+  const currentUserCompanyId = initialData?.company?.id;
   // Get the first company object passed to the modal
   const company = popupCompanyDetail ? popupCompanyDetail[0] : null;
 
@@ -117,17 +121,6 @@ const CompanyDetails = ({ closeModal }) => {
     };
     fetchData();
   }, [companyId]);
-
-
-
-
-
-
-
-
-
-
-
 
   const fetchVendorCount = async () => {
     try {
@@ -241,6 +234,10 @@ const CompanyDetails = ({ closeModal }) => {
         ? showFirstStatus[companyId]
         : 0;
 
+        if (currentStatus === 0) {
+    setneverShowStatus((prev) => ({ ...prev, [companyId]: 0 }));
+  }
+
     handleVendorStatusUpdate({
       type: "Show First",
       companyId,
@@ -263,6 +260,10 @@ const CompanyDetails = ({ closeModal }) => {
       typeof neverShowStatus[companyId] !== "undefined"
         ? neverShowStatus[companyId]
         : 0;
+
+        if (currentStatus === 0) {
+    setShowFirstStatus((prev) => ({ ...prev, [companyId]: 0 }));
+  }
 
     handleVendorStatusUpdate({
       type: "Never Show",
@@ -443,7 +444,7 @@ const CompanyDetails = ({ closeModal }) => {
                       <div>
                         <div className="cursor-pointer">
                           <ThemeProvider theme={theme}>
-                            <Tooltip
+                            {/* <Tooltip
                               title={
                                 neverShowStatus[
                                   companyContactData.data.company?.id
@@ -473,7 +474,50 @@ const CompanyDetails = ({ closeModal }) => {
                                   {`Never Show (${vendorCount?.never_show_count})`}
                                 </p>
                               </div>
-                            </Tooltip>
+                            </Tooltip> */}
+                            {
+  companyContactData.data.company?.id === currentUserCompanyId ? (
+    <Tooltip
+      title="This is your company, Show Never toggle is disabled via the company profile viewer"
+      arrow
+      placement="top"
+    >
+      <div className="flex flex-col items-center justify-center text-red-600 cursor-not-allowed">
+        <IoMdEyeOff size={30} />
+        <p className="whitespace-nowrap">
+          {`Never Show (${vendorCount?.never_show_count})`}
+        </p>
+      </div>
+    </Tooltip>
+  ) : (
+    <Tooltip
+      title={
+        neverShowStatus[companyContactData.data.company?.id] === 1
+          ? "Show this vendor in search results"
+          : "Never Show this vendor in search result"
+      }
+      arrow
+      placement="top"
+    >
+      <div
+        className="flex flex-col items-center justify-center"
+        onClick={() =>
+          neverShowHandler(companyContactData.data.company?.id)
+        }
+      >
+        {neverShowStatus[companyContactData.data.company?.id] === 1 ? (
+          <IoEye size={30} />
+        ) : (
+          <IoMdEyeOff size={30} />
+        )}
+        <p className="whitespace-nowrap">
+          {`Never Show (${vendorCount?.never_show_count})`}
+        </p>
+      </div>
+    </Tooltip>
+  )
+}
+
                           </ThemeProvider>
                         </div>
                       </div>
