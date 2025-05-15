@@ -217,7 +217,7 @@ const FeedbackModal = ({ isOpen, onClose, company, onSucces }) => {
       {showSuccessModal && (
         <div className={styles.modalOverlay}>
           <div
-            className={`${styles.modalContent} !w-[100%] !h-[100%] relative flex flex-col justify-center items-center`}
+            className={`${styles.modalContent} !w-[80%] !h-[80%] relative flex flex-col justify-center items-center`}
           >
             <button
               className="absolute top-2 right-2 bg-gray-400 hover:bg-gray-300 px-2 rounded"
