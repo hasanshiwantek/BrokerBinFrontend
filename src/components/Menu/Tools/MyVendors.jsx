@@ -86,13 +86,13 @@ const MyVendors = () => {
 
   // Extract ratings and counts for each company
 
-  const companyRatings =
-    myVendor?.map((vendor) => vendor?.company?.rating) || [];
-  console.log("Company Ratings", companyRatings);
+const vendorList = Array.isArray(myVendor?.data) ? myVendor.data : [];
 
-  const ratingCounts =
-    myVendor?.map((vendor) => vendor?.company?.ratingCount) || [];
-  console.log("Rating Counts", ratingCounts);
+const companyRatings = vendorList.map((vendor) => vendor?.company?.rating);
+console.log("Company Ratings", companyRatings);
+
+const ratingCounts = vendorList.map((vendor) => vendor?.company?.ratingCount);
+console.log("Rating Counts", ratingCounts);
 
   const handleHover = (index) => {
     // Tooltip logic
@@ -316,32 +316,11 @@ const MyVendors = () => {
       });
   };
 
-  // const blockVendorHandler = (companyId) => {
-  //   const currentStatus = vendorStatus[companyId] ?? 1; // If undefined, default 1
-  //   const newStatus = currentStatus === 1 ? 0 : 1;
-
-  //   dispatch(
-  //     blockMyVendor({ company_id: companyId, status: newStatus, token })
-  //   ).then((response) => {
-  //     const result = response.payload;
-  //     if (result?.success) {
-  //       toast.success(result?.message || "Vendor status updated!");
-  //       setVendorStatus((prev) => ({
-  //         ...prev,
-  //         [companyId]: newStatus,
-  //       }));
-  //     } else {
-  //       toast.info(result?.message || "Failed to update vendor status.");
-  //     }
-
-  //   })
-  // };
-
   // COPMANY ORDER LOGIC
 
-  const companyFirstLetter = myVendor.map((vendor) =>
-    vendor.company.name.charAt(0).toUpperCase()
-  );
+  // const companyFirstLetter = myVendor?.map((vendor) =>
+  //   vendor?.company?.name.charAt(0).toUpperCase()
+  // );
 
   const groupVendorsByKey = (vendors, key) => {
     return vendors.reduce((acc, vendor) => {
@@ -475,7 +454,7 @@ const MyVendors = () => {
                 <div className={""}>
                   <div className="flex flex-col sticky top-[31vh] p-2 mr-6">
                     {alphabets.map((letter, index) => {
-                      const isActive = myVendor.some(
+                      const isActive = myVendor?.some(
                         (item) =>
                           item.company?.name?.charAt(0).toUpperCase() === letter
                       );
@@ -539,14 +518,14 @@ const MyVendors = () => {
                                 >
                                   <img
                                     src={
-                                      vendor.company.image
-                                        ? vendor.company.image
+                                      vendor?.company?.image
+                                        ? vendor?.company?.image
                                         : defaultCompanyLogo
                                     }
                                     alt="vendor logo"
                                     className="cursor-pointer"
                                     onClick={() =>
-                                      openCompanyModal(vendor.company)
+                                      openCompanyModal(vendor?.company)
                                     }
                                   />
                                   <span className="!flex !items-center !gap-6 !justify-between">
@@ -564,10 +543,12 @@ const MyVendors = () => {
                                     <p
                                       className="cursor-pointer"
                                       onClick={() =>
-                                        openCompanyModal(vendor.company)
+                                        openCompanyModal(vendor?.company)
                                       }
                                       onMouseEnter={() =>
-                                        handleHoverCompanyDetail(vendor.company)
+                                        handleHoverCompanyDetail(
+                                          vendor?.company
+                                        )
                                       }
                                     >
                                       {vendor.company.name}
@@ -595,10 +576,10 @@ const MyVendors = () => {
                                   <span
                                     className="cursor-pointer"
                                     onClick={() =>
-                                      openCompanyModal(vendor.company)
+                                      openCompanyModal(vendor?.company)
                                     }
                                     onMouseEnter={() =>
-                                      handleHoverCompanyDetail(vendor.company)
+                                      handleHoverCompanyDetail(vendor?.company)
                                     }
                                   >
                                     <p>{vendor.company.name}</p>
@@ -635,8 +616,8 @@ const MyVendors = () => {
                                                 cursor: "pointer",
                                                 marginRight: 4,
                                                 width: "15px",
-                                                stroke: "black",     
-                                                strokeWidth: "10",  
+                                                stroke: "black",
+                                                strokeWidth: "10",
                                               }}
                                             />
                                           );

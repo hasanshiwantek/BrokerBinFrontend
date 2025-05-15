@@ -87,7 +87,6 @@ input {
     &_personalPhoto {
       display: flex;
       align-items: center;
-      /* justify-content: space-between; */
       > :first-child {
         div {
           height: 12rem;
@@ -102,11 +101,9 @@ input {
         display: flex;
         button {
           background: var(--primary-color);
-          /* font-size: 1.5rem; */
           padding: 0.5rem;
         }
         input {
-          /* padding: 0.5rem; */
           width: 20rem;
           height: 3.5rem;
         }

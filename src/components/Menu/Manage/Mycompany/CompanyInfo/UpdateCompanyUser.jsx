@@ -11,10 +11,11 @@ import { updateCompanyUserData } from "@/ReduxStore/ProfleSlice";
 const UpdateCompanyUser = () => {
   const token = Cookies.get("token");
   const user_id = Cookies.get("user_id");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const { state } = useLocation();
   const contact = state?.contact;
   console.log("Selected Contact: ", contact);
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({});
   const dispatch = useDispatch();
@@ -41,15 +42,17 @@ const UpdateCompanyUser = () => {
         userId: contact.userId || "",
         company_id: contact.company_id,
         userRole: contact.userRole,
-         image: contact.profileImage || "",
+        //  image: contact.profileImage || "",
 
         imScreenNames: {
           skype: contact.imScreenNames?.skype || "",
+          teams: contact.imScreenNames?.teams || "",
           whatsapp: contact.imScreenNames?.whatsapp || "",
           trillian: contact.imScreenNames?.trillian || "",
         },
         socialNetworking: {
           facebook: contact.socialNetworking?.facebook || "",
+          twitter: contact.socialNetworking?.twitter || "",
           linkedin: contact.socialNetworking?.linkedin || "",
         },
       });
@@ -77,50 +80,49 @@ const UpdateCompanyUser = () => {
     }
   };
 
-
   const handleFileChange = (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setForm((prev) => ({
-        ...prev,
-        image: reader.result,
-      }));
-    };
-    reader.readAsDataURL(file);
-  }
-};
-const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  try {
-    const result = await dispatch(
-      updateCompanyUserData({
-        id: contact.id, // contact comes from useLocation().state.contact
-        token,
-        data: { plainData: form }, // Send form as plainData object
-      })
-    ).unwrap();
-
-    if (result?.status === 200) {
-      toast.success(result.message || "✅ Contact updated successfully!");
-      setTimeout(() => navigate("/companyContacts"), 1500);
-    } else {
-      toast.error(result.message || "❌ Failed to update contact.");
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setForm((prev) => ({
+          ...prev,
+          image: reader.result,
+        }));
+      };
+      reader.readAsDataURL(file);
     }
-  } catch (error) {
-    toast.error("❌ Error while updating contact. Please try again.");
-    console.error("Submission error:", error);
-  }
-};
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const result = await dispatch(
+        updateCompanyUserData({
+          id: contact.id, // contact comes from useLocation().state.contact
+          token,
+          data: { plainData: form }, // Send form as plainData object
+        })
+      ).unwrap();
+
+      if (result?.status === 200) {
+        toast.success(result.message || "✅ Contact updated successfully!");
+        setTimeout(() => navigate("/companyContacts"), 1500);
+      } else {
+        toast.error(result.message || "❌ Failed to update contact.");
+      }
+    } catch (error) {
+      toast.error("❌ Error while updating contact. Please try again.");
+      console.error("Submission error:", error);
+    }
+    setLoading(false);
+  };
 
   if (!contact) {
     return (
       <div className="p-4 text-red-600">No contact selected for editing.</div>
     );
   }
-
 
   return (
     <>
@@ -206,6 +208,28 @@ const handleSubmit = async (e) => {
                     />
                   </span>
                   <span>
+                    <label htmlFor="position">Position</label>
+                    <input
+                      type="text"
+                      name="position"
+                      id="position"
+                      onChange={handleChange}
+                      value={form.position || ""}
+                      placeholder="Direct phone"
+                    />
+                  </span>
+                  <span>
+                    <label htmlFor="position">Speciality</label>
+                    <input
+                      type="text"
+                      name="speciality"
+                      id="speciality"
+                      onChange={handleChange}
+                      value={form.specialty || ""}
+                      placeholder="speciality"
+                    />
+                  </span>
+                  <span>
                     <label htmlFor="phoneNumber">Direct Phone</label>
                     <input
                       type="text"
@@ -217,47 +241,36 @@ const handleSubmit = async (e) => {
                     />
                   </span>
                   <span>
-                    <label htmlFor="billingEmail">Billing Email</label>
-                    <input
-                      type="email"
-                      name="billingEmail"
-                      id="billingEmail"
-                      onChange={handleChange}
-                      value={form.billingEmail || ""}
-                      placeholder="Billing email"
-                    />
-                  </span>
-                  <span>
-                    <label htmlFor="supportEmail">Support Email</label>
-                    <input
-                      type="email"
-                      name="supportEmail"
-                      id="supportEmail"
-                      onChange={handleChange}
-                      value={form.supportEmail || ""}
-                      placeholder="Support Email"
-                    />
-                  </span>
-                  <span>
-                    <label htmlFor="salesEmail">Sales/RFQ Email</label>
-                    <input
-                      type="email"
-                      name="salesEmail"
-                      id="salesEmail"
-                      onChange={handleChange}
-                      value={form.salesEmail || ""}
-                      placeholder="Sales/RFQ Email"
-                    />
-                  </span>
-                  <span>
-                    <label htmlFor="companyInfoEmail">Company Info Email</label>
+                    <label htmlFor="tollFree">Toll Free</label>
                     <input
                       type="text"
-                      name="companyInfoEmail"
-                      id="companyInfoEmail"
+                      name="tollFree"
+                      id="tollFree"
                       onChange={handleChange}
-                      value={form.companyInfoEmail || ""}
-                      placeholder="Company Info Email"
+                      value={form.tollFree || ""}
+                      placeholder="tollFree"
+                    />
+                  </span>
+                  <span>
+                    <label htmlFor="cellular">Cellular</label>
+                    <input
+                      type="number"
+                      name="cellular"
+                      id="cellular"
+                      onChange={handleChange}
+                      value={form.cellular || ""}
+                      placeholder="cellular"
+                    />
+                  </span>
+                  <span>
+                    <label htmlFor="faxNumber">Fax</label>
+                    <input
+                      type="number"
+                      name="faxNumber"
+                      id="faxNumber"
+                      onChange={handleChange}
+                      value={form.faxNumber || ""}
+                      placeholder="fax"
                     />
                   </span>
                 </div>
@@ -350,10 +363,13 @@ const handleSubmit = async (e) => {
 
             <div className="pt-2">
               <button
-                className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-7"
+                className={`!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-7 focus:border ${
+                  loading ? "opacity-60 cursor-not-allowed" : ""
+                }`}
                 type="submit"
+                disabled={loading}
               >
-                Submit Changes
+                {loading ? "Submitting..." : "Submit Changes"}
               </button>
             </div>
           </div>

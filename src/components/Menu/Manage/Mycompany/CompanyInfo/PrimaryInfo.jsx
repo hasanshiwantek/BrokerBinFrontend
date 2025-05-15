@@ -3,13 +3,8 @@ import css from "../../../../../styles/Menu/Manage/MyProfile.module.css";
 import LoadingState from "../../../../../LoadingState";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  fetchUserData,
   setFormData as updateFormData,
-  setCustomSignature,
   setBlurWhileLoading,
-  submitUserData,
-  submitCompanyLogo,
-  clearLogo,
 } from "../../../../../ReduxStore/ProfleSlice";
 import ErrorStatus from "../../../../Error/ErrorStatus";
 import Cookies from "js-cookie";
@@ -26,7 +21,8 @@ import {
   updateCompanyBio,
 } from "@/ReduxStore/SearchProductSlice";
 import { useRef } from "react";
-import { BsWindowSidebar } from "react-icons/bs";
+import { statesList,countriesList,regionsList } from "@/data/services";
+
 
 const CompanyPrimaryInfo = () => {
   const token = Cookies.get("token");
@@ -85,14 +81,12 @@ const CompanyPrimaryInfo = () => {
     // add more
   ];
 
-  const countries = [
-    { value: "US", label: "United States" },
-    { value: "CA", label: "Canada" },
-    // add more
-  ];
+  const countries = countriesList;
 
-  const regions = countries; // Assuming regions are similar to countries
+  
 
+
+  const regions = regionsList; 
   const timeZones = [
     { value: "8", label: "(GMT -08:00) Pacific Time (US & Canada); Tijuana" },
     { value: "7", label: "(GMT -07:00) Mountain Time (US & Canada)" },
@@ -386,7 +380,7 @@ const CompanyPrimaryInfo = () => {
                               value={
                                 formData?.data?.company?.[field.name] || ""
                               }
-                              className="border-2 p-2 "
+                              className="border-2 p-2 w-[18rem] "
                             >
                               <option value="">Select {field.label}</option>
                               {field.options.map((opt) => (

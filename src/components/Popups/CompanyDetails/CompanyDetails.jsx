@@ -48,7 +48,7 @@ const CompanyDetails = ({ closeModal }) => {
   const [isModalOpen, setIsModalOpen] = useState(true); // Modal initially open
   const [loading, setLoading] = useState(true);
   const [companyData, setCompanyData] = useState(null);
-  const [feedbackData, setFeedbackData] = useState(null);
+  const [feedbackData, setFeedbackData] = useState("");
   const [toggleTabs, setToggleTabs] = useState(1);
   const [vendorCount, setVendorCount] = useState(null);
 
@@ -107,7 +107,9 @@ const CompanyDetails = ({ closeModal }) => {
             },
           }
         );
-        setFeedbackData(response.data);
+        console.log("Rating Response: ",response?.data);
+        const data=response?.data
+        setFeedbackData(data);
         console.log("RATINGDATA", feedbackData);
       } catch (error) {
         console.log("ERRORRATIMG", error);
@@ -115,6 +117,17 @@ const CompanyDetails = ({ closeModal }) => {
     };
     fetchData();
   }, [companyId]);
+
+
+
+
+
+
+
+
+
+
+
 
   const fetchVendorCount = async () => {
     try {
