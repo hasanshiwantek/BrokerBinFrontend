@@ -55,15 +55,17 @@ const MyProfile = () => {
   });
 
   const textAreaContent = [
-    formData.sigcheckName ? `${formData.firstName} ${formData.lastName}` : "",
-    formData.sigcheckEmailAddress ? `${formData.email}` : "",
-    formData.sigcheckPosition ? `${formData.position}` : "",
-    formData.sigcheckPhone ? `${formData.phoneNumber}` : "",
-    formData.sigcheckCell ? `${formData.cellular}` : "",
-    formData.sigcheckCompany ? `${formData?.company?.name}` : "",
-    formData.sigcheckToll ? `${formData.tollFree}` : "",
-    formData.sigcheckFax ? `${formData.faxNumber}` : "",
-    formData.sigcheckIM ? `${formData.specialty}` : "",
+    formData.sigcheckName
+      ? `${formData.firstName || ""} ${formData.lastName || ""}`.trim()
+      : "",
+    formData.sigcheckEmailAddress ? `${formData.email || ""}` : "",
+    formData.sigcheckPosition ? `${formData.position || ""}` : "",
+    formData.sigcheckPhone ? `${formData.phoneNumber || ""}` : "",
+    formData.sigcheckCell ? `${formData.cellular || ""}` : "",
+    formData.sigcheckCompany ? `${formData?.company?.name || ""}` : "",
+    formData.sigcheckToll ? `${formData.tollFree || ""}` : "",
+    formData.sigcheckFax ? `${formData.faxNumber || ""}` : "",
+    formData.sigcheckIM ? `${formData.specialty || ""}` : "",
   ]
     .filter(Boolean)
     .join("\n");

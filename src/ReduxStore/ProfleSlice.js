@@ -180,6 +180,41 @@ export const submitUserSearchViewBy = createAsyncThunk(
   }
 );
 
+export const updateCompanyUserData = createAsyncThunk(
+  "profileStore/updateCompanyUserData",
+  async ({ id, token, data }) => {
+    try {
+      const isFormData = data.formData instanceof FormData;
+      const response = await axios.put(
+        `${brokerAPI}update/contacts/${id}`,
+        isFormData ? data.formData : JSON.stringify(data.plainData),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": isFormData
+              ? "multipart/form-data"
+              : "application/json",
+          },
+        }
+      );
+      const responseData = {
+        data: response.data.data,
+        status: response.status,
+        message: response.data.message || "Update successful",
+      };
+
+      console.log("✅ Redux Thunk Response:", responseData);
+      return responseData; // return all 3 fields
+    } catch (error) {
+      console.error(
+        "Error while submitting user data:",
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  }
+);
+
 const initialState = {
   user: JSON.parse(localStorage.getItem("user")),
   formData: {
@@ -190,7 +225,7 @@ const initialState = {
     specialty: "",
     email: "",
     skype: "",
-    teams:"",
+    teams: "",
     whatsapp: "",
     trillian: "",
     facebook: "",
@@ -303,7 +338,7 @@ const profileSlice = createSlice({
         specialty: "",
         email: "",
         skype: "",
-        teams:"",
+        teams: "",
         whatsapp: "",
         trillian: "",
         facebook: "",
@@ -374,13 +409,13 @@ const profileSlice = createSlice({
       })
       .addCase(submitUserData.fulfilled, (state, action) => {
         const { data: updatedUser, message, status } = action.payload;
-      
+
         console.log("🟢 Redux Store Updated with:", updatedUser);
         console.log("📡 Status:", status);
         console.log("📩 Message:", message);
-      
+
         state.initialData = updatedUser;
-      
+
         state.formData = {
           ...state.formData,
           ...updatedUser,
@@ -388,10 +423,10 @@ const profileSlice = createSlice({
           newPassword: "",
           confirmNewPassword: "",
         };
-      
+
         state.blurWhileLoading = true;
       })
-      
+
       .addCase(submitUserData.rejected, (state, action) => {
         console.log(action.error.message);
         state.error = action.error.message;
@@ -454,6 +489,15 @@ const profileSlice = createSlice({
         console.log(action.error.message);
         state.error = action.error.message;
         state.blurWhileLoading = false;
+      })
+      .addCase(updateCompanyUserData.pending, (state) => {
+        console.log("Pending....");
+      })
+      .addCase(updateCompanyUserData.fulfilled, (state, action) => {
+        console.log("Company User Updation Fulfilled!: ", action.payload);
+      })
+      .addCase(updateCompanyUserData.rejected, (state, action) => {
+        console.log("REJECTED: ",action.error.message);
       });
   },
 });
