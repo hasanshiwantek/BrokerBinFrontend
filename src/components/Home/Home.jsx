@@ -231,6 +231,12 @@ const Home = () => {
   const companyRatingsPer = ((companyRatings / 5) * 100).toFixed(1);
   console.log("Company Ratings in %:", companyRatingsPer);
 
+  const showFeedbackHandler = (id, primaryId) => {
+    navigate("/feedbackprofile", {
+      state: { companyId: id, primaryId: primaryId },
+    });
+  };
+
   return (
     <>
       {!blurWhileLoading ? (
@@ -498,14 +504,32 @@ const Home = () => {
                 </div>
                 <div className={css.gridHome1_MemberDetail_reviews}>
                   <div className={css.gridHome1_MemberDetail_reviews_stars}>
-                    <div className="flex items-center">
-                      <a href="/feedbackprofile">
+                    <div className="flex items-center list-none">
+                      <li
+                        onClick={() =>
+                          showFeedbackHandler(
+                            initialData?.company?.id,
+                            initialData?.company?.primaryContact.id
+                          )
+                        }
+                        className="list-none cursor-pointer"
+                      >
                         <span className="flex items-center">
                           {renderStars(initialData?.company?.rating || 0)}
                         </span>
-                      </a>
+                      </li>
                     </div>
-                    <a href="/feedbackprofile">{companyRatingsPer}%</a>
+                    <li
+                      onClick={() =>
+                        showFeedbackHandler(
+                          initialData?.company?.id,
+                          initialData?.company?.primaryContact.id
+                        )
+                      }
+                      className="list-none cursor-pointer"
+                    >
+                      {companyRatingsPer}%
+                    </li>
                   </div>
 
                   {/* <div className={css.gridHome1_MemberDetail_reviews_watchList}>
@@ -523,9 +547,19 @@ const Home = () => {
                   </div> */}
                   {/* </div> */}
                   <div className={css.gridHome1_MemberDetail_comments}>
-                    <Link to={"/feedbackprofile"}>
+                    <li
+                      // to={"/feedbackprofile"}
+                      onClick={() =>
+                        showFeedbackHandler(
+                          initialData?.company?.id,
+                          initialData?.company?.primaryContact.id
+                        )
+                      }
+                      className="list-none flex justify-between items-center cursor-pointer"
+                    >
                       Comments <span>{ratingCount}</span>
-                    </Link>
+                    </li>
+
                     {/* <a href="#" className={css.newW}>
                       New
                       <span>

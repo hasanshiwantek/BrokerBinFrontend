@@ -18,8 +18,7 @@ import { useLocation } from "react-router-dom";
 
 const LeaveFeedBack = () => {
   const [isModalOpen, setModalOpen] = useState(false); // State to control modal visibility
-  const [feedbackReceivedTab, setFeedbackReceivedTab] = useState(false);
-  const [feedbackGivenTab, setFeedbackGivenTab] = useState(false);
+  const [activeTab, setActiveTab] = useState("received"); // default to received
 
   const { companyFeedbackData, feedbackGivenData } = useSelector(
     (state) => state.profileStore
@@ -73,16 +72,34 @@ const LeaveFeedBack = () => {
       <main className={styles.mainLeaveFeedback}>
         <nav className="menu-bar">
           <ul>
-            <li onClick={() => setFeedbackReceivedTab((prev) => !prev)}>
-              <Link to={"/feedbackprofile"}>Feedback Recieved</Link>
+            <li>
+              <button
+                onClick={() => setActiveTab("received")}
+                className={`px-4 py-2 ${
+                  activeTab === "received"
+                    ? "text-blue-600 border-b-2 border-blue-600"
+                    : "text-gray-600 hover:text-blue-500"
+                }`}
+              >
+                Feedback Received
+              </button>
             </li>
-            <li onClick={() => setFeedbackGivenTab((prev) => !prev)}>
-              <Link to={"#"}>Feedback Given</Link>
+            <li>
+              <button
+                onClick={() => setActiveTab("given")}
+                className={`px-4 py-2  ${
+                  activeTab === "given"
+                    ? "text-blue-600 border-b-2 border-blue-600"
+                    : "text-gray-600 hover:text-blue-500"
+                }`}
+              >
+                Feedback Given
+              </button>
             </li>
           </ul>
         </nav>
 
-        {feedbackReceivedTab && (
+        {activeTab === "received" && (
           <table className={styles.feedbackTable}>
             <thead>
               <tr>
@@ -93,7 +110,7 @@ const LeaveFeedBack = () => {
               </tr>
             </thead>
             <tbody>
-              {feedbacks && feedbacks.length > 0 ? (
+              {feedbacks && feedbacks.length ? (
                 feedbacks.map((feedback, index) => (
                   <tr key={index}>
                     <td>
@@ -125,7 +142,7 @@ const LeaveFeedBack = () => {
                       <br />
                       {feedback.toCompanyName}
                     </td>
-                    <td>{feedback.created_at}</td>
+                     {new Date(feedback?.created_at).toLocaleDateString()}
                   </tr>
                 ))
               ) : (
@@ -142,7 +159,7 @@ const LeaveFeedBack = () => {
           </table>
         )}
 
-        {feedbackGivenTab && (
+        {activeTab === "given" && (
           <table className={styles.feedbackTable}>
             <thead>
               <tr>
@@ -153,8 +170,8 @@ const LeaveFeedBack = () => {
               </tr>
             </thead>
             <tbody>
-              {feedbackGivenData && feedbackGivenData.length > 0 ? (
-                feedbackGivenData.map((feedback, index) => (
+              {givenFeedbackData && givenFeedbackData.length > 0 ? (
+                givenFeedbackData.map((feedback, index) => (
                   <tr key={index}>
                     <td>
                       <span>
@@ -173,20 +190,21 @@ const LeaveFeedBack = () => {
                       {feedback?.feedbackPost}
                     </td>
                     <td>
-                      {" "}
-                      <Link to={"/feedback"}>
+                      <Link to="/feedback">
                         <button className={styles.reportButton}>
                           Report Abuse
                         </button>
                       </Link>
                     </td>
                     <td>
-                      {feedback.from_user.firstName}{" "}
-                      {feedback.from_user.lastName}
+                      {feedback?.from_user?.firstName}{" "}
+                      {feedback?.from_user?.lastName}
                       <br />
-                      {feedback.to_company.name}
+                      {feedback?.to_company?.name}
                     </td>
-                    <td>{feedback.created_at}</td>
+                    <td>
+                      {new Date(feedback?.created_at).toLocaleDateString()}
+                    </td>
                   </tr>
                 ))
               ) : (
