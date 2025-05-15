@@ -56,16 +56,8 @@ const LeaveFeedBack = () => {
 
     console.log("Positive:", positiveCount, "Neutral:", neutralCount, "Negative:", negativeCount);
 
-
-
-
-
-
-
-
     return (
         <>
-
             <main className={styles.mainLeaveFeedback}>
                 <nav className='menu-bar'>
                     <ul>
@@ -74,8 +66,6 @@ const LeaveFeedBack = () => {
 
                     </ul>
                 </nav>
-
-
                 <table className={styles.feedbackTable}>
                     <thead>
                         <tr>

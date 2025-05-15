@@ -59,7 +59,7 @@ const CompanyLogo = ({ logoPreview, setLogoPreview, setSelectedLogoFile }) => {
           <label htmlFor="terms" className="!text-[8pt] text-gray-800">
             I certify that I have the right to distribute these photos and that
             they do not violate the{" "}
-            <strong className="!text-[.7vw] text-gray-800">
+            <strong className="!text-[.7vw] !text-gray-800">
               Terms of Service
             </strong>
             .
