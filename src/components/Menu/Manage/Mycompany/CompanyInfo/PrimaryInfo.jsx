@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import CompanyBio from "./CompanyBio";
+import CompanyLogo from "./CompanyLogo";
 import {
   updateCompanyPrimaryInfo,
   updateCompanyBio,
@@ -32,8 +33,10 @@ const CompanyPrimaryInfo = () => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("primary"); // or 'bio', 'logo', etc.
   const [bio, setBio] = useState("");
+  const [logo, setLogo] = useState("");
+  const [selectedLogoFile, setSelectedLogoFile] = useState(null);
   console.log("BIO", bio)
-  const bioRef = useRef("");
+
   const tabItems = [
     { key: "primary", label: "Primary Info" },
     { key: "bio", label: "Company Bio" },
@@ -43,18 +46,9 @@ const CompanyPrimaryInfo = () => {
 
   const {
     // formData,
-    initialData,
     blurWhileLoading,
-    customSignature,
     error,
-    companyLogo,
   } = useSelector((state) => state.profileStore);
-  // console.log("INITAL DATA", initialData);
-  // console.log("FORM DATA", formData);
-  // console.log("COMPANY LOGO", companyLogo);
-  // const image = formData.data?.company?.image;
-
-  // console.log("Company Image", image);
 
   const companyId = Number(Cookies.get("companyId"));
   console.log("Company ID", companyId);
@@ -80,8 +74,6 @@ const CompanyPrimaryInfo = () => {
       fetchData();
     }
   }, [companyId, token, dispatch]);
-
-
 
   const states = [
     { value: "NY", label: "New York" },
@@ -219,7 +211,6 @@ const CompanyPrimaryInfo = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       if (activeTab === "primary") {
         const payload = formData?.data?.company;
@@ -237,10 +228,7 @@ const CompanyPrimaryInfo = () => {
           console.warn("❌ Failure Response:", result);
         }
       }
-
       if (activeTab === "bio") {
-
-
         console.log("🚀 Submitting Company Bio:", bio);
         // Remove outer <p> tags only
         let cleanedBio = bio.replace(/^<p>(.*?)<\/p>$/i, "$1");
@@ -261,6 +249,19 @@ const CompanyPrimaryInfo = () => {
           console.warn("❌ Failure Response:", result);
         }
       }
+
+      if (activeTab === "logo") {
+        const result = await dispatch(
+          submitCompanyLogo({ token, file: selectedLogoFile }) // selectedLogoFile should be lifted from CompanyLogo component
+        );
+
+        if (result?.payload?.status) {
+          toast.success("✅ Company logo uploaded successfully");
+        } else {
+          toast.error("❌ Failed to upload company logo");
+        }
+      }
+
     } catch (error) {
       console.error("❌ Error during form submission:", error);
       toast.error("❌ Something went wrong during submission");
@@ -505,9 +506,16 @@ const CompanyPrimaryInfo = () => {
                   </div>
                 </div>
               )}
+
               {activeTab === "bio" && bio !== null && (
                 <div className={`${css.profileInfo_form}`}>
                   <CompanyBio bio={bio} setBio={setBio} />
+                </div>
+              )}
+
+              {activeTab === "logo" && logo !== null && (
+                <div className={`${css.profileInfo_form}`}>
+                  <CompanyLogo setSelectedLogoFile={setSelectedLogoFile} />
                 </div>
               )}
 
