@@ -46,11 +46,13 @@ const UpdateCompanyUser = () => {
 
         imScreenNames: {
           skype: contact.imScreenNames?.skype || "",
+          teams: contact.imScreenNames?.teams || "",
           whatsapp: contact.imScreenNames?.whatsapp || "",
           trillian: contact.imScreenNames?.trillian || "",
         },
         socialNetworking: {
           facebook: contact.socialNetworking?.facebook || "",
+          twitter: contact.socialNetworking?.twitter || "",
           linkedin: contact.socialNetworking?.linkedin || "",
         },
       });
