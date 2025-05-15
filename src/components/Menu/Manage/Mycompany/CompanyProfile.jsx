@@ -361,7 +361,7 @@ const MyCompany = () => {
                     </span>
                   </div>
                 </div>
-                <div>
+                {/* <div>
                   <div className={css.profileInfo_form_personalPhoto}>
                     <div>
                       <h1>Company Logo</h1>
@@ -383,7 +383,7 @@ const MyCompany = () => {
                       <button type="submit">Submit Changes</button>
                     </div>
                   </div>
-                </div>
+                </div> */}
                 <div className={`${css.profileInfo_form_IMScreenNames} pt-5`}>
                   <h1>IM Screen Names</h1>
                   <div className="!text-left">
