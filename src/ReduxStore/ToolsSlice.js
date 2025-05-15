@@ -526,6 +526,7 @@ const initialState = {
   searchCompanies: [],
   searchMyVendor: [],
   myVendor: [],
+  
   myHotListItems: [],
   myContactsData: [],
   searchMyContact: [],
@@ -785,19 +786,7 @@ const ToolsSlice = createSlice({
       })
       .addCase(neverShowVendor.rejected, (state, action) => {
         console.error("❌ Upload Rejected:", action.payload);
-      })
-      .addCase(showFirstNeverShowCount.pending, (state) => {
-        console.log("PENDINGGGG...");
-        state.loading = true;
-      })
-      .addCase(showFirstNeverShowCount.fulfilled, (state, action) => {
-        state.myVendor = action.payload;
-        state.loading = false;
-      })
-      .addCase(showFirstNeverShowCount.rejected, (state, action) => {
-        console.error("Error Fetching  company View By", action.error);
-        state.loading = false;
-      })
+      });
   },
 });
 

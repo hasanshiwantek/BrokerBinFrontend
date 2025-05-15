@@ -220,7 +220,7 @@ const MyCompany = () => {
                       <span>Company Contacts</span>
                     </NavLink>
                   </li>
-                   <li>
+                  <li>
                     <NavLink
                       to="/mycompany/CompanyInfo"
                       end
@@ -362,9 +362,9 @@ const MyCompany = () => {
                   </div>
                 </div>
                 <div>
-                  <div className={css.profileInfo_form_personalPhoto}>
-                    <div>
+                  {/* <div className={css.profileInfo_form_personalPhoto}>
                       <h1>Company Logo</h1>
+                    <div className="!flex !justify-start !items-center">
                       <div>
                         <img
                           src={image}
@@ -372,17 +372,17 @@ const MyCompany = () => {
                           className="object-fit"
                         />
                       </div>
+                      <div>
+                        <input
+                          type="file"
+                          name="image"
+                          id="image"
+                          onChange={handleFileChange}
+                        />
+                        <button type="submit">Submit Changes</button>
+                      </div>
                     </div>
-                    <div>
-                      <input
-                        type="file"
-                        name="image"
-                        id="image"
-                        onChange={handleFileChange}
-                      />
-                      <button type="submit">Submit Changes</button>
-                    </div>
-                  </div>
+                  </div> */}
                 </div>
                 <div className={`${css.profileInfo_form_IMScreenNames} pt-5`}>
                   <h1>IM Screen Names</h1>
@@ -549,7 +549,10 @@ const MyCompany = () => {
                       />
                     </span>
                     <div className="flex  items-center justify-center p-10  ">
-                      <p className="text-[8pt] text-[#444] ">(use the profile / url name, example 'brokercell' will result in https://twitter.com/brokercell)</p>
+                      <p className="text-[8pt] text-[#444] ">
+                        (use the profile / url name, example 'brokercell' will
+                        result in https://twitter.com/brokercell)
+                      </p>
                     </div>
                   </div>
                 </div>
