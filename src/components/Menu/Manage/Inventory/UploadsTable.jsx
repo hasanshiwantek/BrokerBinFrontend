@@ -1,12 +1,13 @@
 import React from 'react';
 
 const UploadsTable = ({ data }) => {
-  if (!data) return <p>No Auto Uploads are currently scheduled for your user.</p>;
+  if (!data || !data.data || data.data.length === 0) {
+  return <p>No Auto Uploads are currently scheduled for your user.</p>;
+}
 
   console.log("UploadsTable data", data);
 
   const { data: uploads } = data;
-
 
   return (
     <table className="border cursor-pointer">
