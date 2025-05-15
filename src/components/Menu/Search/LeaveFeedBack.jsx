@@ -15,7 +15,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUserData } from "../../../ReduxStore/ProfleSlice";
 import Cookies from "js-cookie";
 import { useLocation } from "react-router-dom";
-
+import { setTogglePopUp } from "../../../ReduxStore/SearchProductSlice";
+import CompanyDetails from "../../Popups/CompanyDetails/CompanyDetails";
+import { setPopupCompanyDetail } from "../../../ReduxStore/SearchProductSlice";
 const LeaveFeedBack = () => {
   const [isModalOpen, setModalOpen] = useState(false); // State to control modal visibility
   const [activeTab, setActiveTab] = useState("received"); // default to received
@@ -23,6 +25,9 @@ const LeaveFeedBack = () => {
   const { companyFeedbackData, feedbackGivenData } = useSelector(
     (state) => state.profileStore
   );
+    const { togglePopUp, popupCompanyDetail } = useSelector(
+      (state) => state.searchProductStore
+    );
   const feedbacks = companyFeedbackData?.feedbacks;
   console.log("Company Feedback Data ", feedbacks);
   const givenFeedbackData = feedbackGivenData?.feedbacks;
@@ -66,6 +71,13 @@ const LeaveFeedBack = () => {
   useEffect(() => {
     dispatch(fetchGivenFeedback({ company_id: companyId, token }));
   }, [token]);
+
+  // Company Modal Logic
+  const openCompanyModal = (company) => {
+    console.log("Opening Company Modal with Company:", company);
+    dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
+    dispatch(setTogglePopUp()); // Show company modal
+  };
 
   return (
     <>
@@ -137,12 +149,14 @@ const LeaveFeedBack = () => {
                         </button>
                       </Link>
                     </td>
-                    <td>
+                    <td className="cursor-pointer"
+                      onClick={() => openCompanyModal(feedback?.toCompanyName)}
+                    >
                       {feedback.fromUsername}
                       <br />
-                      {feedback.toCompanyName}
+                      {feedback?.toCompanyName?.name}
                     </td>
-                     {new Date(feedback?.created_at).toLocaleDateString()}
+                    {new Date(feedback?.created_at).toLocaleDateString()}
                   </tr>
                 ))
               ) : (
@@ -196,7 +210,10 @@ const LeaveFeedBack = () => {
                         </button>
                       </Link>
                     </td>
-                    <td>
+                    <td  className="cursor-pointer"
+                      onClick={() => openCompanyModal(feedback?.to_company)}
+                    
+                    >
                       {feedback?.from_user?.firstName}{" "}
                       {feedback?.from_user?.lastName}
                       <br />
@@ -231,6 +248,9 @@ const LeaveFeedBack = () => {
           </Link>
         </div>
       </main>
+      {togglePopUp && (
+        <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
+      )}
       <FeedbackModal isOpen={isModalOpen} onClose={handleCloseModal} />{" "}
     </>
   );
