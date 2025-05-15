@@ -155,6 +155,28 @@ export const getCompanyFeedback = createAsyncThunk(
   }
 );
 
+export const fetchGivenFeedback = createAsyncThunk(
+  "profileStore/fetchGivenFeedback",
+  async ({ company_id,token }) => {
+    try {
+      const response = await axios.get(`${brokerAPI}feedback/user-feedbacks?company_id=${company_id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("Given Company Feedback Data from backend:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error while fetching company feedback data:",
+        error.response?.data || error.message
+      );
+      throw "Error while fetching user Given Feedback data:" || error;
+    }
+  }
+);
+
 export const submitUserSearchViewBy = createAsyncThunk(
   "profileStore/submitUserSearchViewBy",
   async ({ sortBy, sortOrder, token }, { rejectWithValue }) => {
@@ -216,12 +238,6 @@ export const updateCompanyUserData = createAsyncThunk(
     }
   }
 );
-
-
-
-
-
-
 
 const initialState = {
   user: JSON.parse(localStorage.getItem("user")),
@@ -303,6 +319,7 @@ const initialState = {
   searchUserData: [],
   companyLogo: null,
   companyFeedbackData: [],
+  feedbackGivenData: [],
 };
 
 const profileSlice = createSlice({
@@ -498,6 +515,20 @@ const profileSlice = createSlice({
         state.error = action.error.message;
         state.blurWhileLoading = false;
       })
+      .addCase(fetchGivenFeedback.pending, (state) => {
+        state.blurWhileLoading = false;
+        console.log("Pending....");
+      })
+      .addCase(fetchGivenFeedback.fulfilled, (state, action) => {
+        state.blurWhileLoading = true;
+        state.feedbackGivenData = action.payload;
+        console.log("Fulfilled Case: ", action.payload);
+      })
+      .addCase(fetchGivenFeedback.rejected, (state, action) => {
+        console.log(action.error.message);
+        state.error = action.error.message;
+        state.blurWhileLoading = false;
+      })
       .addCase(updateCompanyUserData.pending, (state) => {
         console.log("Pending....");
       })
@@ -505,7 +536,7 @@ const profileSlice = createSlice({
         console.log("Company User Updation Fulfilled!: ", action.payload);
       })
       .addCase(updateCompanyUserData.rejected, (state, action) => {
-        console.log("REJECTED: ",action.error.message);
+        console.log("REJECTED: ", action.error.message);
       });
   },
 });

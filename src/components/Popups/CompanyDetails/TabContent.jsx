@@ -24,6 +24,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { HiUserRemove } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
 
 const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
   // const [toggleTabs, setToggleTabs] = useState(1);
@@ -43,10 +44,8 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
   );
   console.log("Company Contact Data From Tab Content Page", companyContactData);
 
-  const { initialData } = useSelector(
-      (state) => state.profileStore
-    );
-    console.log(`initialData`, initialData)
+  const { initialData } = useSelector((state) => state.profileStore);
+  console.log(`initialData`, initialData);
 
   const currentUserCompanyId = initialData?.company?.id;
 
@@ -246,6 +245,14 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
       },
     },
   });
+
+  const navigate = useNavigate();
+
+  const showFeedbackHandler = (id, primaryId) => {
+    navigate("/feedbackprofile", {
+      state: { companyId: id, primaryId: primaryId },
+    });
+  };
 
   if (loading) {
     return (
@@ -776,18 +783,24 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
               <h1 className="font-bold">Feedback Received</h1>
               <span className={`flex space-x-4 cursor-pointer`}>
                 <span
-                  onClick={() => {
-                    if (currentUserCompanyId === companyId) {
-                      toast.info(`You can't give feedback to your own company`)
-                      return;
-                    }
-                    console.log("Icon clicked!");
-                    setIsOpen(true);
-                  }}
-                  className={`hover:text-[#2c83ec] cursor-pointer ${currentUserCompanyId === companyId ? 'opacity-50 pointer-events-none' : ''}`}
+                  // onClick={() => {
+                  //   if (currentUserCompanyId === companyId) {
+                  //     toast.info(`You can't give feedback to your own company`)
+                  //     return;
+                  //   }
+                  //   console.log("Icon clicked!");
+                  //   setIsOpen(true);
+                  // }}
+                  onClick={() => showFeedbackHandler(companyId, primaryContactId)}
+                  className={`hover:text-[#2c83ec] cursor-pointer ${
+                    currentUserCompanyId === companyId
+                      ? "opacity-50 pointer-events-none"
+                      : ""
+                  }`}
                 >
                   <BiSolidMessageRoundedDots size={20} />
                 </span>
+
                 {isOpen && (
                   <FeedbackModal
                     company={{ id: compId, name: companyName }}
@@ -796,6 +809,7 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
                     onSucces={handleFetchData}
                   />
                 )}
+
                 {/* <span><LiaWindowClose /></span> */}
               </span>
             </div>
