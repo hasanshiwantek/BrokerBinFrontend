@@ -123,7 +123,10 @@ export const submitCompanyLogo = createAsyncThunk(
       });
 
       console.log("Logo Response From Backend ", response.data);
-      return response.data;
+      return {
+        status: true,
+        image: response?.data?.data || null, // ensure image URL is extracted correctly
+      };
     } catch (error) {
       return rejectWithValue(error.response.data || error.message);
     }
@@ -213,6 +216,12 @@ export const updateCompanyUserData = createAsyncThunk(
     }
   }
 );
+
+
+
+
+
+
 
 const initialState = {
   user: JSON.parse(localStorage.getItem("user")),

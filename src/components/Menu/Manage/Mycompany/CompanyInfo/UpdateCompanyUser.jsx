@@ -42,7 +42,7 @@ const UpdateCompanyUser = () => {
         userId: contact.userId || "",
         company_id: contact.company_id,
         userRole: contact.userRole,
-        //  image: contact.profileImage || "",
+        profileImage: contact.profileImage || "",
 
         imScreenNames: {
           skype: contact.imScreenNames?.skype || "",
@@ -87,7 +87,7 @@ const UpdateCompanyUser = () => {
       reader.onloadend = () => {
         setForm((prev) => ({
           ...prev,
-          image: reader.result,
+          profileImage: reader.result,
         }));
       };
       reader.readAsDataURL(file);
@@ -281,7 +281,7 @@ const UpdateCompanyUser = () => {
                   <h1>Company Logo</h1>
                   <div>
                     <img
-                      src={form.image}
+                      src={form.profileImage}
                       alt="companyImage"
                       className="object-fit"
                     />
@@ -290,8 +290,8 @@ const UpdateCompanyUser = () => {
                 <div>
                   <input
                     type="file"
-                    name="image"
-                    id="image"
+                    name="profileImage"
+                    id="profileImage"
                     onChange={handleFileChange}
                   />
                   <button type="submit">Submit Changes</button>

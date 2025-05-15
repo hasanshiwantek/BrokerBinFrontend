@@ -21,9 +21,8 @@ import {
   updateCompanyBio,
 } from "@/ReduxStore/SearchProductSlice";
 import { useRef } from "react";
-import { statesList,countriesList,regionsList } from "@/data/services";
-
-
+import { statesList, countriesList, regionsList } from "@/data/services";
+import { submitCompanyLogo } from "@/ReduxStore/ProfleSlice";
 const CompanyPrimaryInfo = () => {
   const token = Cookies.get("token");
   const dispatch = useDispatch();
@@ -33,9 +32,10 @@ const CompanyPrimaryInfo = () => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("primary"); // or 'bio', 'logo', etc.
   const [bio, setBio] = useState("");
-  const [logo, setLogo] = useState("");
-  const [selectedLogoFile, setSelectedLogoFile] = useState(null);
-  console.log("BIO", bio)
+  const [logoPreview, setLogoPreview] = useState(""); // for preview
+  const [selectedLogoFile, setSelectedLogoFile] = useState(null); // actual file for submission
+
+  console.log("BIO", bio);
 
   const tabItems = [
     { key: "primary", label: "Primary Info" },
@@ -66,6 +66,7 @@ const CompanyPrimaryInfo = () => {
           );
           setFormData(response.data);
           setBio(response.data.data.company.description || "");
+          setLogoPreview(response.data.data.company.image || "");
           dispatch(setBlurWhileLoading(true));
         } catch (err) {
           console.error("Error fetching data", err);
@@ -83,10 +84,7 @@ const CompanyPrimaryInfo = () => {
 
   const countries = countriesList;
 
-  
-
-
-  const regions = regionsList; 
+  const regions = regionsList;
   const timeZones = [
     { value: "8", label: "(GMT -08:00) Pacific Time (US & Canada); Tijuana" },
     { value: "7", label: "(GMT -07:00) Mountain Time (US & Canada)" },
@@ -249,19 +247,29 @@ const CompanyPrimaryInfo = () => {
           console.warn("❌ Failure Response:", result);
         }
       }
-
       if (activeTab === "logo") {
-        const result = await dispatch(
-          submitCompanyLogo({ token, file: selectedLogoFile }) // selectedLogoFile should be lifted from CompanyLogo component
-        );
+        if (selectedLogoFile instanceof File) {
+          const result = await dispatch(
+            submitCompanyLogo({ token, file: selectedLogoFile })
+          );
+          console.log("Image result",result);
+          
 
-        if (result?.payload?.status) {
-          toast.success("✅ Company logo uploaded successfully");
+          if (result?.payload?.status && result.payload.image) {
+            toast.success("✅ Company logo uploaded successfully");
+
+            // ✅ Instantly show the new image
+            setLogoPreview(result.payload.image);
+          } else {
+            toast.error("❌ Failed to upload company logo");
+          }
         } else {
-          toast.error("❌ Failed to upload company logo");
+          toast.info("ℹ️ Please select a logo file before submitting.");
         }
+        //         setTimeout(() => {
+        //  window.location.reload(5000)
+        // })
       }
-
     } catch (error) {
       console.error("❌ Error during form submission:", error);
       toast.error("❌ Something went wrong during submission");
@@ -352,8 +360,9 @@ const CompanyPrimaryInfo = () => {
                     <li
                       key={tab.key}
                       onClick={() => setActiveTab(tab.key)}
-                      className={`${activeTab === tab.key ? "font-bold " : "cursor-pointer"
-                        }`}
+                      className={`${
+                        activeTab === tab.key ? "font-bold " : "cursor-pointer"
+                      }`}
                     >
                       {tab.label}
                     </li>
@@ -433,7 +442,7 @@ const CompanyPrimaryInfo = () => {
                                 onChange={handleChange}
                                 value={
                                   formData?.data?.company?.[
-                                  `${field.name}_hour`
+                                    `${field.name}_hour`
                                   ] || ""
                                 }
                               >
@@ -451,7 +460,7 @@ const CompanyPrimaryInfo = () => {
                                 onChange={handleChange}
                                 value={
                                   formData?.data?.company?.[
-                                  `${field.name}_ampm`
+                                    `${field.name}_ampm`
                                   ] || ""
                                 }
                               >
@@ -513,16 +522,21 @@ const CompanyPrimaryInfo = () => {
                 </div>
               )}
 
-              {activeTab === "logo" && logo !== null && (
+              {activeTab === "logo" && (
                 <div className={`${css.profileInfo_form}`}>
-                  <CompanyLogo setSelectedLogoFile={setSelectedLogoFile} />
+                  <CompanyLogo
+                    logoPreview={logoPreview}
+                    setLogoPreview={setLogoPreview}
+                    setSelectedLogoFile={setSelectedLogoFile}
+                  />
                 </div>
               )}
 
               <div className="pt-2 flex justify-between">
-                <button 
-                className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6"
-                onClick={() => window.location.reload()}>
+                <button
+                  className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6"
+                  onClick={() => window.location.reload()}
+                >
                   Reset
                 </button>
                 <button

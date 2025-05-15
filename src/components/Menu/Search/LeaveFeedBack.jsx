@@ -69,8 +69,8 @@ const LeaveFeedBack = () => {
             <main className={styles.mainLeaveFeedback}>
                 <nav className='menu-bar'>
                     <ul>
-                        <li><Link to={'/'}>Feedback Recieved</Link></li>
-                        <li><Link to={'/'}>Feedback Given</Link></li>
+                        <li><Link to={'/feedbackprofile'}>Feedback Recieved</Link></li>
+                        <li><Link to={"#"}>Feedback Given</Link></li>
 
                     </ul>
                 </nav>
