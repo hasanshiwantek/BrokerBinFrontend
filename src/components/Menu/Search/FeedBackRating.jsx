@@ -15,8 +15,14 @@ import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 import { setTogglePopUp } from "../../../ReduxStore/SearchProductSlice";
 import CompanyDetails from "../../Popups/CompanyDetails/CompanyDetails";
 import { setPopupCompanyDetail } from "../../../ReduxStore/SearchProductSlice";
+import { useLocation } from "react-router-dom";
 
 const FeedBackRating = () => {
+  const location = useLocation();
+  const companyId = location.state?.companyId;
+  const primaryId=location.state?.companyId
+  console.log("Company ID:", companyId);
+
   const token = Cookies.get("token");
   const user_id = Cookies.get("user_id");
   const { blurWhileLoading, initialData, user, error } = useSelector(
@@ -30,13 +36,13 @@ const FeedBackRating = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(id);
-    dispatch(fetchUserData({ id, token }));
+    console.log(primaryId);
+    dispatch(fetchUserData({ id:primaryId, token }));
   }, []);
-  console.log("Initial Data ", initialData);
 
-  const companyId = initialData?.company?.id;
-  console.log("Company ID ", companyId);
+
+
+  console.log("Initial Data ", initialData);
 
   useEffect(() => {
     dispatch(getCompanyFeedback({ id: companyId, token }));
