@@ -45,9 +45,11 @@ const Contact = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+
+  try {
     const data = {
       contact_method: formData.contact_method,
       subject: formData.subject,
@@ -65,20 +67,25 @@ const Contact = () => {
         body: JSON.stringify(data),
       }
     );
-    if (response.ok) {
-      setLoading(false);
-      handleReset();
-      // ✅ Show success toast with light blue color
-      toast.info("Contact form Submitted successfully!", {
-        style: { fontSize: "14px", marginTop: "-10px" }, // 
-      });
 
+    if (response.ok) {
+      handleReset();
+      toast.info("Contact form Submitted successfully!", {
+        style: { fontSize: "14px", marginTop: "-10px" },
+      });
     } else {
-      toast.info("Error submitting contact form.Please try again!", {
-        style: { fontSize: "14px", marginTop: "-10px" }, // 
+      toast.info("Error submitting contact form. Please try again!", {
+        style: { fontSize: "14px", marginTop: "-10px" },
       });
     }
-  };
+  } catch (error) {
+    toast.info("❌ Network error. Please try again later.", {
+      style: { fontSize: "14px", marginTop: "-10px" },
+    });
+  } finally {
+    setLoading(false);
+  }
+};
 
   if (loading) {
     return <LoadingState2 />;
