@@ -404,7 +404,7 @@ const MyProfile = () => {
             <div className={`${css.profileBtn} fixed`}>
               <h4 className="font-semibold">My Profile</h4>
               <span>
-                <input type="submit" value="submit changes" />
+                <input type="submit" value="submit changes"  className="!text-white !capitalize !font-[400]"/>
                 <button type="button" onClick={() => openCompanyModal(company)}>
                   view profile
                 </button>
