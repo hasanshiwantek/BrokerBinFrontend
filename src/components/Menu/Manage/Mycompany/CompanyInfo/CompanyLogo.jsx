@@ -8,7 +8,8 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 
-const CompanyLogo = ({  }) => {
+const CompanyLogo = ({ setSelectedLogoFile }) => {
+
 
     return (
         <>
@@ -22,7 +23,7 @@ const CompanyLogo = ({  }) => {
                         name="image"
                         id="image"
                         className="border p-1"
-                        onChange={''}
+                         onChange={(e) => setSelectedLogoFile(e.target.files[0])}
                     />
                 </div>
 

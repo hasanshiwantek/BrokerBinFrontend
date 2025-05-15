@@ -119,7 +119,6 @@ export const submitCompanyLogo = createAsyncThunk(
       const response = await axios.post(`${brokerAPI}company/logo`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
         },
       });
 

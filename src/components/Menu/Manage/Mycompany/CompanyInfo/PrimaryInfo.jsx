@@ -38,6 +38,7 @@ const CompanyPrimaryInfo = () => {
   const [activeTab, setActiveTab] = useState("primary"); // or 'bio', 'logo', etc.
   const [bio, setBio] = useState("");
   const [logo, setLogo] = useState("");
+  const [selectedLogoFile, setSelectedLogoFile] = useState(null);
   console.log("BIO", bio)
 
   const tabItems = [
@@ -254,6 +255,19 @@ const CompanyPrimaryInfo = () => {
           console.warn("❌ Failure Response:", result);
         }
       }
+
+      if (activeTab === "logo") {
+        const result = await dispatch(
+          submitCompanyLogo({ token, file: selectedLogoFile }) // selectedLogoFile should be lifted from CompanyLogo component
+        );
+
+        if (result?.payload?.status) {
+          toast.success("✅ Company logo uploaded successfully");
+        } else {
+          toast.error("❌ Failed to upload company logo");
+        }
+      }
+
     } catch (error) {
       console.error("❌ Error during form submission:", error);
       toast.error("❌ Something went wrong during submission");
@@ -507,7 +521,7 @@ const CompanyPrimaryInfo = () => {
 
               {activeTab === "logo" && logo !== null && (
                 <div className={`${css.profileInfo_form}`}>
-                  <CompanyLogo bio={bio} setBio={setBio} />
+                  <CompanyLogo setSelectedLogoFile={setSelectedLogoFile} />
                 </div>
               )}
 
