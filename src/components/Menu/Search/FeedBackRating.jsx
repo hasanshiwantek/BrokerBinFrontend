@@ -1,4 +1,4 @@
-import { React, useEffect,useState } from "react";
+import { React, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "../../../styles/Menu/Search/FeedBackProfile.module.css";
 // import "../../Menu/Main/MenuBar.css";
@@ -115,74 +115,93 @@ const FeedBackRating = () => {
   console.log("popupCompanyDetail", popupCompanyDetail);
   console.log("togglePopUp", togglePopUp);
 
-  const compId=companyId
+  const compId = companyId;
   const companyName = initialData?.company?.name;
 
   return (
-    <div className={styles.feedbackContainer}>
-      <div className={styles.feedbackHead}>
-        <h2>
-          Feedback Profile for Member: <span>{initialData?.company?.name}</span>
-        </h2>
-      </div>
-
-      <div className={styles.feedbackRatingSection}>
-        <h3>
-          Feedback Rating: <br /> <span>{companyRatingsPer}% </span>
-        </h3>
-        <img
-          src={thumbsUp}
-          alt="feedback icon"
-          className={styles.feedbackIcon}
-        />
-      </div>
-
-      <div className={styles.feedbackDetailsSection}>
-        <div className={`${styles.feedbackGiven} w-64 `}>
-          <h4>Feedback Given</h4>
-          <p>
-            Positive Feedback: <strong>{positiveCount}</strong>
-          </p>
-          <p>
-            Neutral Feedback: <strong>{neutralCount}</strong>
-          </p>
-          <p>
-            Negative Feedback: <strong>{negativeCount}</strong>
-          </p>
-          <p>
-            Total Feedback: <strong>{totalFeedback}</strong>
-          </p>
+    <>
+      <div className={styles.feedbackContainer}>
+        <div className={styles.feedbackHead}>
+          <h2>
+            Feedback Profile for Member:{" "}
+            <span>{initialData?.company?.name}</span>
+          </h2>
         </div>
 
-        <div className={styles.feedbackMainSec}>
-          <div className={styles.feedBackSec}>
-            <div className={styles.feedbackReceived}>
-              <h4>Feedback Received</h4>
-              <div className={styles.feedbackEmojiContainer}>
-                <p>
-                  <span>
-                    <img src={positiveEmoji} alt="Positive" />
-                  </span>{" "}
-                  Positive
-                </p>
-                <p>
-                  <span>
-                    <img src={neutralEmoji} alt="Neutral" />
-                  </span>{" "}
-                  Neutral
-                </p>
-                <p>
-                  <span>
-                    <img src={negativeEmoji} alt="Negative" />
-                  </span>{" "}
-                  Negative
-                </p>
+        <div className={styles.feedbackRatingSection}>
+          <h3>
+            Feedback Rating: <br /> <span>{companyRatingsPer}% </span>
+          </h3>
+          <img
+            src={thumbsUp}
+            alt="feedback icon"
+            className={styles.feedbackIcon}
+          />
+        </div>
+
+        <div className={styles.feedbackDetailsSection}>
+          <div className={`${styles.feedbackGiven} w-64 `}>
+            <h4>Feedback Given</h4>
+            <p>
+              Positive Feedback: <strong>{positiveCount}</strong>
+            </p>
+            <p>
+              Neutral Feedback: <strong>{neutralCount}</strong>
+            </p>
+            <p>
+              Negative Feedback: <strong>{negativeCount}</strong>
+            </p>
+            <p>
+              Total Feedback: <strong>{totalFeedback}</strong>
+            </p>
+          </div>
+
+          <div className={styles.feedbackMainSec}>
+            <div className={styles.feedBackSec}>
+              <div className={styles.feedbackReceived}>
+                <h4>Feedback Received</h4>
+                <div className={styles.feedbackEmojiContainer}>
+                  <p>
+                    <span>
+                      <img src={positiveEmoji} alt="Positive" />
+                    </span>{" "}
+                    Positive
+                  </p>
+                  <p>
+                    <span>
+                      <img src={neutralEmoji} alt="Neutral" />
+                    </span>{" "}
+                    Neutral
+                  </p>
+                  <p>
+                    <span>
+                      <img src={negativeEmoji} alt="Negative" />
+                    </span>{" "}
+                    Negative
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="whitespace-nowrap">Past Month</h4>
+                <div className={styles.feedbackpSec}>
+                  <p style={{ color: "green" }}>{positiveCount}</p>
+                  <p style={{ color: "blue" }}>{neutralCount}</p>
+                  <p style={{ color: "red" }}>{negativeCount}</p>
+                  <p style={{ color: "black" }}>{totalFeedback}</p>
+                </div>
               </div>
             </div>
-
-            <div>
-              <h4 className="whitespace-nowrap">Past Month</h4>
-              <div className={styles.feedbackpSec}>
+            <div className={styles.feedbackPastSec}>
+              <div className={styles.feedbackPast}>
+                <h4>Past Year</h4>
+                <p style={{ color: "green" }}>{positiveCount}</p>
+                <p style={{ color: "blue" }}>{neutralCount}</p>
+                <p style={{ color: "red" }}>{negativeCount}</p>
+                <p style={{ color: "black" }}>{totalFeedback}</p>
+              </div>
+              <div className={styles.feedbackPast}>
+                <h4>Past Total</h4>
                 <p style={{ color: "green" }}>{positiveCount}</p>
                 <p style={{ color: "blue" }}>{neutralCount}</p>
                 <p style={{ color: "red" }}>{negativeCount}</p>
@@ -190,54 +209,41 @@ const FeedBackRating = () => {
               </div>
             </div>
           </div>
-          <div className={styles.feedbackPastSec}>
-            <div className={styles.feedbackPast}>
-              <h4>Past Year</h4>
-              <p style={{ color: "green" }}>{positiveCount}</p>
-              <p style={{ color: "blue" }}>{neutralCount}</p>
-              <p style={{ color: "red" }}>{negativeCount}</p>
-              <p style={{ color: "black" }}>{totalFeedback}</p>
+
+          <div className={`!p-3 leading-loose ${styles.memberInfo}`}>
+            <img
+              src={initialData?.company?.image}
+              className="w-52 cursor-pointer"
+              alt="Company image"
+              onClick={() => openCompanyModal(initialData?.company)}
+            />
+            <p className="!text-2xl">{initialData?.company?.name}</p>
+            <p>
+              Date Established:{" "}
+              {new Date(initialData?.company?.created_at).toLocaleString()}
+            </p>
+
+            <div className={styles.feedbackStars}>
+              <p className="!text-xl whitespace-nowrap ">Feedback Stars:</p>
+              <div className="flex items-center ">
+                <span className="flex items-center ">
+                  {renderStars(initialData?.company?.rating || 0)}
+                </span>
+              </div>
             </div>
-            <div className={styles.feedbackPast}>
-              <h4>Past Total</h4>
-              <p style={{ color: "green" }}>{positiveCount}</p>
-              <p style={{ color: "blue" }}>{neutralCount}</p>
-              <p style={{ color: "red" }}>{negativeCount}</p>
-              <p style={{ color: "black" }}>{totalFeedback}</p>
-            </div>
+
+            <p className="!text-xl">A {companyRatings} Star Member</p>
           </div>
         </div>
 
-        <div className={`!p-3 leading-loose ${styles.memberInfo}`}>
-          <img
-            src={initialData?.company?.image}
-            className="w-52 cursor-pointer"
-            alt=""
-            onClick={() => openCompanyModal(initialData?.company)}
-          />
-          <p className="!text-2xl">{initialData?.company?.name}</p>
-          <p>Date Established: { new Date(initialData?.company?.created_at).toLocaleString()}</p>
-
-          <div className={styles.feedbackStars}>
-            <p className="!text-xl whitespace-nowrap ">Feedback Stars:</p>
-            <div className="flex items-center ">
-              <span className="flex items-center ">
-                {renderStars(initialData?.company?.rating || 0)}
-              </span>
-            </div>
-          </div>
-
-          <p className="!text-xl">A {companyRatings} Star Member</p>
+        <div className={styles.buttonSec}>
+          <button
+            className={styles.ethicsComplaintButton}
+            onClick={() => setIsOpen(true)}
+          >
+            Ethics Complaint
+          </button>
         </div>
-      </div>
-
-      <div className={styles.buttonSec}>
-        <button
-          className={styles.ethicsComplaintButton}
-          onClick={() => setIsOpen(true)}
-        >
-          Ethics Complaint
-        </button>
       </div>
 
       {togglePopUp && (
@@ -251,7 +257,7 @@ const FeedBackRating = () => {
           // onSucces={handleFetchData}
         />
       )}
-    </div>
+    </>
   );
 };
 

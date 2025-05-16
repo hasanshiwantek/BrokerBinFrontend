@@ -26,17 +26,18 @@ label {
     > input,
     button {
       color: white;
-      display: block;
-      width: 100%;
-      padding: 0.5rem 1.5rem;
-      margin-bottom: 1rem;
+      display: block ;
+      width: 100% !important;
+      padding: 0.5rem 1.5rem !important;
+      margin-bottom: 1rem !important;
       background: var(--primary-color);
       cursor: pointer;
     }
   }
 }
-input {
-  padding: 5px;
+
+.profileLayout input {
+  padding: 5px !important;
 }
 
 .profileInfo {

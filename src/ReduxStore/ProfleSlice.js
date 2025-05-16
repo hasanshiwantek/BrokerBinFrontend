@@ -157,14 +157,17 @@ export const getCompanyFeedback = createAsyncThunk(
 
 export const fetchGivenFeedback = createAsyncThunk(
   "profileStore/fetchGivenFeedback",
-  async ({ company_id,token }) => {
+  async ({ company_id, token }) => {
     try {
-      const response = await axios.get(`${brokerAPI}feedback/user-feedbacks?company_id=${company_id}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `${brokerAPI}feedback/user-feedbacks?company_id=${company_id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       console.log("Given Company Feedback Data from backend:", response.data);
       return response.data;
     } catch (error) {
@@ -173,6 +176,29 @@ export const fetchGivenFeedback = createAsyncThunk(
         error.response?.data || error.message
       );
       throw "Error while fetching user Given Feedback data:" || error;
+    }
+  }
+);
+
+export const removeReceiveFeedback = createAsyncThunk(
+  "toolsStore/removeReceiveFeedback",
+  async ({ feedbackId, adminId, token }) => {
+    console.log(feedbackId, adminId);
+    try {
+      const response = await axios.delete(
+        `${brokerAPI}feedback/delete-feedback`,
+        { feedbackId, adminId },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Favourite Removed: ", response.data);
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message);
     }
   }
 );
@@ -514,6 +540,28 @@ const profileSlice = createSlice({
         console.log(action.error.message);
         state.error = action.error.message;
         state.blurWhileLoading = false;
+      })
+      .addCase(removeReceiveFeedback.pending, (state) => {
+        state.blurWhileLoading = false;
+        console.log("🔄 Feedback deletion pending...");
+      })
+      .addCase(removeReceiveFeedback.fulfilled, (state, action) => {
+        state.blurWhileLoading = true;
+        const deletedId = action.payload?.data?.id;
+
+        if (deletedId) {
+          state.companyFeedbackData = state.companyFeedbackData.filter(
+            (feedback) => feedback.id !== deletedId
+          );
+          console.log("✅ Feedback deleted successfully:", deletedId);
+        } else {
+          console.warn("⚠️ No feedback ID found in payload.");
+        }
+      })
+      .addCase(removeReceiveFeedback.rejected, (state, action) => {
+        state.error = action.error.message;
+        state.blurWhileLoading = false;
+        console.error("❌ Feedback deletion failed:", action.error.message);
       })
       .addCase(fetchGivenFeedback.pending, (state) => {
         state.blurWhileLoading = false;

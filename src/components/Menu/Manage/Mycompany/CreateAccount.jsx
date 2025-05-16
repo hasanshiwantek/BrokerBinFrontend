@@ -496,61 +496,78 @@ const CreateAccount = () => {
                 </h3>
 
                 <span className="space-x-4 flex justify-between items-center !text-[8pt]">
-                  <div className="flex items-center">
-                    <label htmlFor="facebook">Facebook</label>
-                    <img
-                      src="https://ben.cachefly.net/images/social_networks/tiny_facebook.png"
-                      alt="Facebook"
-                      title="Facebook"
-                    />
+                  <div className="flex flex-col justify-center items-center">
+                    <div className="flex items-center">
+                      <label htmlFor="facebook">Facebook</label>
+                      <img
+                        src="https://ben.cachefly.net/images/social_networks/tiny_facebook.png"
+                        alt="Facebook"
+                        title="Facebook"
+                      />
+                    </div>
+                    <div>
+                      <span className="text-base text-[#444]">Test</span>
+                    </div>
                   </div>
+
                   <input
                     type="text"
                     name="facebook"
                     value={formData.socialNetworking.facebook || ""}
                     onChange={handleChange}
-                    placeholder="Profile Link"
+                    placeholder="Profile URL"
                     className="w-[20rem]"
                   />
                 </span>
 
                 <span className="space-x-4 flex justify-between items-center !text-[8pt]">
-                  <div className="flex items-center">
-                    <label htmlFor="twitter">Twitter</label>
-                    <img
-                      src="https://ben.cachefly.net/images/social_networks/tiny_twitter.png"
-                      alt="Twitter"
-                      title="Twitter"
-                    />
+                  <div className="flex flex-col justify-center items-center">
+                    <div className="flex items-center">
+                      <label htmlFor="twitter">Twitter</label>
+                      <img
+                        src="https://ben.cachefly.net/images/social_networks/tiny_twitter.png"
+                        alt="Twitter"
+                        title="Twitter"
+                      />
+                    </div>
+                    <div>
+                      <span className="text-base text-[#444]">Test</span>
+                    </div>
                   </div>
                   <input
                     type="text"
                     name="twitter"
                     value={formData.socialNetworking.twitter || ""}
                     onChange={handleChange}
-                    placeholder="Profile Link"
+                    placeholder="Profile URL"
                     className="w-[20rem]"
                   />
                 </span>
 
                 <span className="space-x-4 flex justify-between items-center !text-[8pt]">
-                  <div className="flex items-center">
-                    <label htmlFor="linkedin">LinkedIn</label>
-                    <img
-                      src="https://ben.cachefly.net/images/social_networks/tiny_linkedin.png"
-                      alt="LinkedIn"
-                      title="LinkedIn"
-                    />
+                  <div className="flex flex-col justify-center items-center">
+                    <div className="flex items-center">
+                      <label htmlFor="linkedin">LinkedIn</label>
+                      <img
+                        src="https://ben.cachefly.net/images/social_networks/tiny_linkedin.png"
+                        alt="LinkedIn"
+                        title="LinkedIn"
+                      />
+                    </div>
+                    <div>
+                      <span className="text-base text-[#444]">Test</span>
+                    </div>
                   </div>
                   <input
                     type="text"
                     name="linkedin"
                     value={formData.socialNetworking.linkedin || ""}
                     onChange={handleChange}
-                    placeholder="Profile Link"
+                    placeholder="Profile URL"
                     className="w-[20rem]"
                   />
                 </span>
+
                 <span>
                   <p className="pt-4 italic text-gray-600 text-[7.5pt] leading-tight w-64">
                     (use the profile/url name, example 'brokercell' will result

@@ -155,11 +155,13 @@ const CompanyDetails = ({ closeModal }) => {
 
   const ratings = parseFloat(feedbackData?.rating?.averageRating || 5);
 
+
+  
   useEffect(() => {
     const handleClickOutside = (event) => {
       const modal = document.querySelector(`.${css.Popup_Info}`);
       if (modal && !modal.contains(event.target)) {
-        closeModal(); // Close modal if clicked outside
+        closeModal(); 
       }
     };
 
@@ -590,8 +592,10 @@ const CompanyDetails = ({ closeModal }) => {
                                 : "100%"}
                             </a>
                           </div>
-                          <h1 className="text-center pt-2">
-                            {" "}
+                          <h1
+                            className="text-center pt-2 cursor-pointer"
+                            onClick={() => setToggleTabs(5)}
+                          >
                             ({feedbackData?.rating?.totalFeedbacks || 0})
                             Feedbacks
                           </h1>
