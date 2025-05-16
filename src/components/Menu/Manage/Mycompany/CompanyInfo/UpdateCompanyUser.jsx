@@ -1,24 +1,24 @@
 import React, { useEffect, useState } from "react";
 import css from "@/styles/Menu/Manage/MyProfile.module.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import Cookies from "js-cookie";
-import { Link, NavLink } from "react-router-dom";
-import { toast } from "react-toastify";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
-import { useLocation, useNavigate } from "react-router-dom";
 import { updateCompanyUserData } from "@/ReduxStore/ProfleSlice";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+
 const UpdateCompanyUser = () => {
   const token = Cookies.get("token");
-  const user_id = Cookies.get("user_id");
-  const [loading, setLoading] = useState(false);
   const { state } = useLocation();
   const contact = state?.contact;
-  console.log("Selected Contact: ", contact);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({});
-  const dispatch = useDispatch();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showRetype, setShowRetype] = useState(false);
 
   useEffect(() => {
     if (contact) {
@@ -32,18 +32,14 @@ const UpdateCompanyUser = () => {
         faxNumber: contact.faxNumber || "",
         position: contact.position || "",
         specialty: contact.specialty || "",
-        country: contact.country || "",
-        region: contact.region || "",
-        address: contact.address || "",
-        city: contact.city || "",
-        state: contact.state || "",
-        zipcode: contact.zipcode || "",
-        website: contact.website || "",
         userId: contact.userId || "",
         company_id: contact.company_id,
         userRole: contact.userRole,
-        profileImage: contact.profileImage || "",
+        password: contact.password || "",
+        confirmPassword: contact.confirmPassword || "",
+        preferredUse: contact.preferredUse || "",
 
+        profileImage: contact.profileImage || "",
         imScreenNames: {
           skype: contact.imScreenNames?.skype || "",
           teams: contact.imScreenNames?.teams || "",
@@ -61,8 +57,6 @@ const UpdateCompanyUser = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    // For nested fields like imScreenNames.skype
     if (name.includes(".")) {
       const [parent, child] = name.split(".");
       setForm((prev) => ({
@@ -85,23 +79,21 @@ const UpdateCompanyUser = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setForm((prev) => ({
-          ...prev,
-          profileImage: reader.result,
-        }));
+        setForm((prev) => ({ ...prev, profileImage: reader.result }));
       };
       reader.readAsDataURL(file);
     }
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
       const result = await dispatch(
         updateCompanyUserData({
-          id: contact.id, // contact comes from useLocation().state.contact
+          id: contact.id,
           token,
-          data: { plainData: form }, // Send form as plainData object
+          data: { plainData: form },
         })
       ).unwrap();
 
@@ -125,259 +117,290 @@ const UpdateCompanyUser = () => {
   }
 
   return (
-    <>
-      <div className={css.profileLayout}>
-        <form onSubmit={handleSubmit}>
-          <div className={css.profileInfo}>
-            <div className={css.profileInfo_links}>
-              <ul>
-                <li>
-                  <NavLink
-                    to="/mycompany"
-                    end
-                    className={({ isActive }) => (isActive ? css.active : "")}
+    <div className={`px-5 ${css.profileLayout}`}>
+      <form onSubmit={handleSubmit}>
+        <div className={`${css.profileInfo} !bg-white border-8 !p-0`}>
+          <div className={css.profileInfo_links}>
+            <ul className="bg-gray-200">
+              <li>
+                <NavLink
+                  to="/mycompany"
+                  className={({ isActive }) => (isActive ? css.active : "")}
+                >
+                  Primary Contact
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/companyContacts"
+                  className={({ isActive }) => (isActive ? css.active : "")}
+                >
+                  Company Contacts
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/mycompany/CompanyInfo"
+                  className={({ isActive }) => (isActive ? css.active : "")}
+                >
+                  Company Info
+                </NavLink>
+              </li>
+            </ul>
+          </div>
+
+          <h1 className="pt-5 p-4 !font-semibold text-[#444]">
+            Edit Company Contact
+          </h1>
+
+          <div className="!flex !justify-between !space-x-[4vw] !pt-10 !p-14">
+            <div className="!flex !flex-col !text-right !gap-5">
+              {[
+                { label: "First Name", name: "firstName" },
+                { label: "Last Name", name: "lastName" },
+                { label: "Position", name: "position" },
+                { label: "Specialty", name: "specialty" },
+                { label: "Direct Phone", name: "phoneNumber" },
+                { label: "Toll Free", name: "tollFree" },
+                { label: "Cellular", name: "cellular" },
+                { label: "Fax", name: "faxNumber" },
+                { label: "Email", name: "email" },
+              ].map(({ label, name }) => (
+                <span className="space-x-4" key={name}>
+                  <label>{label}</label>
+                  <input
+                    type="text"
+                    name={name}
+                    value={form[name] || ""}
+                    onChange={handleChange}
+                  />
+                </span>
+              ))}
+
+              <div className="space-y-4">
+                {/* Password Field */}
+                <div className="relative flex items-center space-x-4">
+                  <label className="w-[150px] text-sm font-medium text-gray-700">
+                    Password
+                  </label>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    value={form.password}
+                    onChange={handleChange}
+                    required
+                  />
+                  <span
+                    className="absolute right-3 cursor-pointer text-gray-500"
+                    onClick={() => setShowPassword(!showPassword)}
                   >
-                    <span>Primary Contact</span>
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/companyContacts"
-                    end
-                    className={({ isActive }) => (isActive ? css.active : "")}
+                    {showPassword ? (
+                      <AiOutlineEyeInvisible size={20} />
+                    ) : (
+                      <AiOutlineEye size={20} />
+                    )}
+                  </span>
+                </div>
+
+                {/* Retype Password Field */}
+                <div className="relative flex items-center space-x-4">
+                  <label className="w-[150px] text-sm font-medium text-gray-700">
+                    Re-Type Password
+                  </label>
+                  <input
+                    type={showRetype ? "text" : "password"}
+                    name="confirmPassword"
+                    value={form.confirmPassword}
+                    onChange={handleChange}
+                    required
+                  />
+                  <span
+                    className="absolute right-3 cursor-pointer text-gray-500"
+                    onClick={() => setShowRetype(!showRetype)}
                   >
-                    <span>Company Contacts</span>
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    to="/mycompany/CompanyInfo"
-                    end
-                    className={({ isActive }) => (isActive ? css.active : "")}
-                  >
-                    <span>Company Info</span>
-                  </NavLink>
-                </li>
-                {/* <li>
-                    <NavLink
-                      to="/Createaccount"
-                      className={({ isActive }) => (isActive ? css.active : "")}
-                    >
-                      <span>Create Account</span>
-                    </NavLink>
-                  </li> */}
-              </ul>
-            </div>
-            <div className={css.profileInfo_form}>
-              <div
-                className={`${css.profileInfo_form_personalInfo} font-thin text-left`}
-              >
-                <h1>Edit Contact </h1>
-                <div className="pt-4 !text-left flex justify-start items-left">
-                  <span>
-                    <label htmlFor="firstName">Contact: First</label>
-                    <input
-                      type="text"
-                      name="firstName"
-                      id="firstName"
-                      onChange={handleChange}
-                      value={form.firstName || ""}
-                      placeholder="Your first name"
-                    />
-                  </span>
-                  <span>
-                    <label htmlFor="lastName">Contact: Last</label>
-                    <input
-                      type="text"
-                      name="lastName"
-                      id="lastName"
-                      onChange={handleChange}
-                      value={form.lastName || ""}
-                      placeholder="Your last name"
-                    />
-                  </span>
-                  <span>
-                    <label htmlFor="specialty">Contact: Title</label>
-                    <input
-                      type="text"
-                      name="specialty"
-                      id="specialty"
-                      onChange={handleChange}
-                      value={form.specialty || ""}
-                      placeholder="title"
-                    />
-                  </span>
-                  <span>
-                    <label htmlFor="position">Position</label>
-                    <input
-                      type="text"
-                      name="position"
-                      id="position"
-                      onChange={handleChange}
-                      value={form.position || ""}
-                      placeholder="Direct phone"
-                    />
-                  </span>
-                  <span>
-                    <label htmlFor="position">Speciality</label>
-                    <input
-                      type="text"
-                      name="speciality"
-                      id="speciality"
-                      onChange={handleChange}
-                      value={form.specialty || ""}
-                      placeholder="speciality"
-                    />
-                  </span>
-                  <span>
-                    <label htmlFor="phoneNumber">Direct Phone</label>
-                    <input
-                      type="text"
-                      name="phoneNumber"
-                      id="phoneNumber"
-                      onChange={handleChange}
-                      value={form.phoneNumber || ""}
-                      placeholder="Direct phone"
-                    />
-                  </span>
-                  <span>
-                    <label htmlFor="tollFree">Toll Free</label>
-                    <input
-                      type="text"
-                      name="tollFree"
-                      id="tollFree"
-                      onChange={handleChange}
-                      value={form.tollFree || ""}
-                      placeholder="tollFree"
-                    />
-                  </span>
-                  <span>
-                    <label htmlFor="cellular">Cellular</label>
-                    <input
-                      type="number"
-                      name="cellular"
-                      id="cellular"
-                      onChange={handleChange}
-                      value={form.cellular || ""}
-                      placeholder="cellular"
-                    />
-                  </span>
-                  <span>
-                    <label htmlFor="faxNumber">Fax</label>
-                    <input
-                      type="number"
-                      name="faxNumber"
-                      id="faxNumber"
-                      onChange={handleChange}
-                      value={form.faxNumber || ""}
-                      placeholder="fax"
-                    />
+                    {showRetype ? (
+                      <AiOutlineEyeInvisible size={20} />
+                    ) : (
+                      <AiOutlineEye size={20} />
+                    )}
                   </span>
                 </div>
               </div>
 
-              <div className={css.profileInfo_form_personalPhoto}>
-                <div>
-                  <h1>Company Logo</h1>
-                  <div>
+              <div className="text-left mt-20">
+                <h3 className="!text-2xl font-semibold">
+                  Preferred Brokercell Use
+                </h3>
+                <div className="flex flex-col gap-8 justify-between items-center mt-4">
+                  <label>
+                    <input
+                      type="radio"
+                      name="preferredUse"
+                      value="Telecom"
+                      onChange={handleChange}
+                      className="mr-2"
+                    />
+                    Telecom
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="preferredUse"
+                      value="Computer"
+                      onChange={handleChange}
+                      className="mr-2"
+                    />
+                    Computer
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col text-right gap-5">
+              <div className="border p-10 flex flex-col gap-5">
+                <h3 className="font-semibold text-[#444] text-left !text-2xl">
+                  IM Screen Names
+                </h3>
+                {Object.entries(form.imScreenNames || {}).map(
+                  ([key, value]) => (
+                    <span
+                      className="space-x-4 flex justify-between items-center !text-[8pt]"
+                      key={key}
+                    >
+                      <div className="flex items-center">
+                        <label>
+                          {key.charAt(0).toUpperCase() + key.slice(1)}
+                        </label>
+                        <img
+                          src={`https://ben.cachefly.net/images/social_networks/tiny_${key}.png`}
+                          alt={key}
+                          title={key}
+                        />
+                      </div>
+                      <input
+                        type="text"
+                        name={`imScreenNames.${key}`}
+                        value={value}
+                        onChange={handleChange}
+                        placeholder="Screen Name"
+                        className="w-[20rem]"
+                      />
+                    </span>
+                  )
+                )}
+              </div>
+
+              <div className="border p-10 flex flex-col gap-5">
+                <h3 className="font-semibold text-[#444] text-left !text-2xl">
+                  Social Networking
+                </h3>
+                {Object.entries(form.socialNetworking || {}).map(
+                  ([key, value]) => (
+                    <span
+                      className="space-x-4 flex justify-between items-center !text-[8pt]"
+                      key={key}
+                    >
+                      <div className="flex flex-col justify-center items-center">
+                        <div className="flex items-center">
+                          <label>
+                            {key.charAt(0).toUpperCase() + key.slice(1)}
+                          </label>
+                          <img
+                            src={`https://ben.cachefly.net/images/social_networks/tiny_${key}.png`}
+                            alt={key}
+                            title={key}
+                          />
+                        </div>
+                        <div>
+                          <span className="text-base text-[#444]">Test</span>
+                        </div>
+                      </div>
+
+                      <input
+                        type="text"
+                        name={`socialNetworking.${key}`}
+                        value={value}
+                        onChange={handleChange}
+                        placeholder="Profile Link"
+                        className="w-[20rem]"
+                      />
+                    </span>
+                  )
+                )}
+                <span>
+                  <p className="pt-4 italic text-gray-600 text-[7.5pt] leading-tight w-64">
+                    (use the profile/url name, example 'brokercell' will result
+                    in http://twitter.com/brokercell)
+                  </p>
+                </span>
+              </div>
+
+              <div className="flex flex-col text-right gap-5">
+                <div className="border p-10 flex flex-col  gap-5">
+                  <h3 className="font-semibold text-[#444] text-left !text-2xl">
+                    Profile Image
+                  </h3>
+                  <span className="space-x-4 flex justify-between items-center !text-[8pt]">
+                    <div className="flex items-center">
+                      <label htmlFor="profileImage">Upload Image</label>
+                    </div>
+                    <input
+                      type="file"
+                      name="profileImage"
+                      id="profileImage"
+                      onChange={handleFileChange}
+                      className="w-[20rem]"
+                    />
+                  </span>
+                  {form.profileImage && (
                     <img
                       src={form.profileImage}
-                      alt="companyImage"
-                      className="object-fit"
+                      alt="profile"
+                      className="w-32 h-32 object-cover"
                     />
-                  </div>
-                </div>
-                <div>
-                  <input
-                    type="file"
-                    name="profileImage"
-                    id="profileImage"
-                    onChange={handleFileChange}
-                  />
-                  <button type="submit">Submit Changes</button>
+                  )}
                 </div>
               </div>
 
-              <div className={`${css.profileInfo_form_IMScreenNames} pt-5`}>
-                <h1>IM Screen Names</h1>
-                <div className="!text-left">
-                  {["skype", "teams", "whatsapp", "trillian"].map((im) => (
-                    <span key={im}>
-                      <div className="flex items-center justify-center">
-                        <label htmlFor={im}>
-                          {im.charAt(0).toUpperCase() + im.slice(1)}
-                        </label>
-                        <img
-                          src={`https://ben.cachefly.net/images/social_networks/tiny_${im}.png`}
-                          alt={im}
-                          title={im}
-                        />
-                      </div>
-                      <input
-                        type="text"
-                        name={`imScreenNames.${im}`}
-                        id={im}
-                        onChange={handleChange}
-                        value={form.imScreenNames?.[im] || ""}
-                        placeholder={`Enter ${im}`}
-                      />
-                    </span>
-                  ))}
+              <div className="border p-10 flex flex-col gap-5">
+                <h3 className="font-semibold text-[#444] text-left !text-2xl">
+                  Password Requirements
+                </h3>
+                <div className="text-left">
+                  <p className="text-[8pt] font-semibold">
+                    Your password must contain:
+                  </p>
+                  <ul>
+                    <li className="text-[8pt]">1 uppercase letter</li>
+                    <li className="text-[8pt]">1 lowercase letter</li>
+                    <li className="text-[8pt]">1 digit</li>
+                    <li className="text-[8pt]">8 characters minimum</li>
+                    <li className="text-[8pt]">24 characters maximum</li>
+                  </ul>
+                  <p className="text-[8pt] font-semibold">
+                    Password cannot contain:
+                  </p>
+                  <ul>
+                    <li className="text-[8pt]">Your Login Name</li>
+                  </ul>
                 </div>
               </div>
-
-              <div className={css.profileInfo_form_socialNetworking}>
-                <h1>Social Networking</h1>
-                <div className="!text-left">
-                  {["facebook", "twitter", "linkedin"].map((sn) => (
-                    <span key={sn}>
-                      <div className="flex items-center justify-center">
-                        <label htmlFor={sn}>
-                          {sn.charAt(0).toUpperCase() + sn.slice(1)}
-                        </label>
-                        <img
-                          src={`https://ben.cachefly.net/images/social_networks/tiny_${sn}.png`}
-                          alt={sn}
-                          title={sn}
-                        />
-                      </div>
-                      <input
-                        type="text"
-                        name={`socialNetworking.${sn}`}
-                        id={sn}
-                        onChange={handleChange}
-                        value={form.socialNetworking?.[sn] || ""}
-                        placeholder={`${sn} profile`}
-                      />
-                    </span>
-                  ))}
-                  <div className="flex items-center justify-center p-10">
-                    <p className="text-[8pt] text-[#444]">
-                      (use the profile / url name, example 'brokercell' will
-                      result in https://twitter.com/brokercell)
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-2">
-              <button
-                className={`!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-7 focus:border ${
-                  loading ? "opacity-60 cursor-not-allowed" : ""
-                }`}
-                type="submit"
-                disabled={loading}
-              >
-                {loading ? "Submitting..." : "Submit Changes"}
-              </button>
             </div>
           </div>
-        </form>
-      </div>
 
+          <div className="bg-[#bfbfbf]  ">
+            <button
+              type="submit"
+              className="bg-[#2c83ec] text-white rounded-lg px-12 py-3 disabled:opacity-60"
+              disabled={loading}
+            >
+              {loading ? "Submitting..." : "Submit Changes"}
+            </button>
+          </div>
+        </div>
+      </form>
       <ToastContainer position="top-center" autoClose={2000} />
-    </>
+    </div>
   );
 };
 

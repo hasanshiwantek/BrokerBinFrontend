@@ -404,7 +404,11 @@ const MyProfile = () => {
             <div className={`${css.profileBtn} fixed`}>
               <h4 className="font-semibold">My Profile</h4>
               <span>
-                <input type="submit" value="submit changes"  className="!text-white !capitalize !font-[400]"/>
+                <input
+                  type="submit"
+                  value="submit changes"
+                  className="!text-white !capitalize !font-[400]"
+                />
                 <button type="button" onClick={() => openCompanyModal(company)}>
                   view profile
                 </button>
@@ -626,14 +630,20 @@ const MyProfile = () => {
                   <h1>Social Networking</h1>
                   <div>
                     <span>
-                      <div className="flex items-center  justify-center">
-                        <label htmlFor="facebook">Facebook</label>
-                        <img
-                          src="https://ben.cachefly.net/images/social_networks/tiny_facebook.png"
-                          alt="Facebook"
-                          title="Facebook"
-                        />
+                      <div className="flex flex-col justify-center items-center">
+                        <div className="flex items-center  justify-center">
+                          <label htmlFor="facebook">Facebook</label>
+                          <img
+                            src="https://ben.cachefly.net/images/social_networks/tiny_facebook.png"
+                            alt="Facebook"
+                            title="Facebook"
+                          />
+                        </div>
+                        <div>
+                          <span className="text-base text-[#444]">Test</span>
+                        </div>
                       </div>
+
                       <input
                         type="text"
                         name="socialNetworking.facebook"
@@ -644,14 +654,20 @@ const MyProfile = () => {
                       />
                     </span>
                     <span>
-                      <div className="flex items-center justify-center ">
-                        <label htmlFor="twitter">Twitter</label>
-                        <img
-                          src="https://ben.cachefly.net/images/social_networks/tiny_twitter.png"
-                          alt="Twitter"
-                          title="Twitter"
-                        />
+                      <div className="flex flex-col justify-center items-center">
+                        <div className="flex items-center justify-center ">
+                          <label htmlFor="twitter">Twitter</label>
+                          <img
+                            src="https://ben.cachefly.net/images/social_networks/tiny_twitter.png"
+                            alt="Twitter"
+                            title="Twitter"
+                          />
+                        </div>
+                        <div>
+                          <span className="text-base text-[#444]">Test</span>
+                        </div>
                       </div>
+
                       <input
                         type="text"
                         name="socialNetworking.twitter"
@@ -662,13 +678,18 @@ const MyProfile = () => {
                       />
                     </span>
                     <span>
-                      <div className="flex items-center justify-center ">
-                        <label htmlFor="linkedin">LinkedIn</label>
-                        <img
-                          src="https://ben.cachefly.net/images/social_networks/tiny_linkedin.png"
-                          alt="Linked-In"
-                          title="Linked-In"
-                        />
+                      <div className="flex flex-col justify-center items-center">
+                        <div className="flex items-center justify-center ">
+                          <label htmlFor="linkedin">LinkedIn</label>
+                          <img
+                            src="https://ben.cachefly.net/images/social_networks/tiny_linkedin.png"
+                            alt="Linked-In"
+                            title="Linked-In"
+                          />
+                        </div>
+                        <div>
+                          <span className="text-base text-[#444]">Test</span>
+                        </div>
                       </div>
                       <input
                         type="text"
@@ -679,6 +700,12 @@ const MyProfile = () => {
                         placeholder="LinkedIn profile"
                       />
                     </span>
+                    <div className="flex  items-center justify-center my-8  w-96  ">
+                      <p className="text-[8pt] text-[#444] leading-tight ">
+                        (use the profile / url name, example 'brokercell' will
+                        result in https://twitter.com/brokercell)
+                      </p>
+                    </div>
                   </div>
                 </div>
                 <div className={css.profileInfo_form_phone}>

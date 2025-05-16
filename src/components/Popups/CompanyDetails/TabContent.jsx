@@ -289,12 +289,12 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
           >
             Photos
           </li>
-          <li
+          {/* <li
             onClick={() => setToggleTabs(3)}
             className={toggleTabs === 3 ? css.activeTab : ""}
           >
             Credentials
-          </li>
+          </li> */}
           <li
             onClick={() => setToggleTabs(4)}
             className={toggleTabs === 4 ? css.activeTab : ""}
@@ -837,12 +837,12 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
                       {feedback.feedbackIssue || "Option"}
                     </p>
                     <p>PO #: {feedback.poNumber || "N/A"}</p>
-                    <p className="break-words w-[21vw]">
+                    <p className="break-words  w-[21vw]">
                       {feedback.feedbackPost || "No Feedback Provided"}
                     </p>
                   </div>
 
-                  <div className="md:pl-10 2xl:pl-0">
+                  <div className="md:pl-10 2xl:pl-0 text-center">
                     <p className="font-bold">
                       {feedback.fromUsername || "Anonymous"}
                     </p>
