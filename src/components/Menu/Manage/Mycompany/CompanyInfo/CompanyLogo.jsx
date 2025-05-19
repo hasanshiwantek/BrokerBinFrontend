@@ -24,7 +24,7 @@ const CompanyLogo = ({ logoPreview, setLogoPreview, setSelectedLogoFile }) => {
 
   return (
     <>
-      <div className="mb-20  min-w-[52vw]">
+      <div className="mb-20  min-w-[54vw]">
         <h2 className="text-md font-semibold mb-4">Manage Your Company Logo</h2>
 
         <div className="mb-3 flex items-center">

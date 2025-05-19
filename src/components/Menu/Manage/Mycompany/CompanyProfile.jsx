@@ -197,9 +197,9 @@ const MyCompany = () => {
     <>
       {!blurWhileLoading && <LoadingState />}
       {blurWhileLoading && (
-        <div className={css.profileLayout}>
+        <div className={`${css.profileLayout} `}>
           <form onSubmit={handleSubmit}>
-            <div className={css.profileInfo}>
+            <div className={`${css.profileInfo} !min-w-[54vw]`}>
               <div className={css.profileInfo_links}>
                 <ul>
                   <li>
