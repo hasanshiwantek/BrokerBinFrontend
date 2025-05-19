@@ -482,13 +482,19 @@ const MyCompany = () => {
                   <h1>Social Networking</h1>
                   <div className="!text-left">
                     <span>
-                      <div className="flex items-center  justify-center">
-                        <label htmlFor="facebook">Facebook</label>
-                        <img
-                          src="https://ben.cachefly.net/images/social_networks/tiny_facebook.png"
-                          alt="Facebook"
-                          title="Facebook"
-                        />
+                      <div className="flex flex-col justify-center items-center">
+                        <div className="flex items-center  justify-center">
+                          <label htmlFor="facebook">Facebook</label>
+                          <img
+                            src="https://ben.cachefly.net/images/social_networks/tiny_facebook.png"
+                            alt="Facebook"
+                            title="Facebook"
+                          />
+                        </div>
+
+                        <div>
+                          <span className="text-base text-[#444]">Test</span>
+                        </div>
                       </div>
 
                       <input
@@ -505,13 +511,18 @@ const MyCompany = () => {
                       />
                     </span>
                     <span>
-                      <div className="flex items-center justify-center ">
-                        <label htmlFor="twitter">Twitter</label>
-                        <img
-                          src="https://ben.cachefly.net/images/social_networks/tiny_twitter.png"
-                          alt="Twitter"
-                          title="Twitter"
-                        />
+                      <div className="flex flex-col justify-center items-center">
+                        <div className="flex items-center justify-center ">
+                          <label htmlFor="twitter">Twitter</label>
+                          <img
+                            src="https://ben.cachefly.net/images/social_networks/tiny_twitter.png"
+                            alt="Twitter"
+                            title="Twitter"
+                          />
+                        </div>
+                        <div>
+                          <span className="text-base text-[#444]">Test</span>
+                        </div>
                       </div>
                       <input
                         type="text"
@@ -527,14 +538,20 @@ const MyCompany = () => {
                       />
                     </span>
                     <span>
-                      <div className="flex items-center justify-center ">
-                        <label htmlFor="linkedin">LinkedIn</label>
-                        <img
-                          src="https://ben.cachefly.net/images/social_networks/tiny_linkedin.png"
-                          alt="Linked-In"
-                          title="Linked-In"
-                        />
+                      <div className="flex flex-col justify-center items-center">
+                        <div className="flex items-center justify-center ">
+                          <label htmlFor="linkedin">LinkedIn</label>
+                          <img
+                            src="https://ben.cachefly.net/images/social_networks/tiny_linkedin.png"
+                            alt="Linked-In"
+                            title="Linked-In"
+                          />
+                        </div>
+                        <div>
+                          <span className="text-base text-[#444]">Test</span>
+                        </div>
                       </div>
+
                       <input
                         type="text"
                         name="socialNetworking.linkedin"

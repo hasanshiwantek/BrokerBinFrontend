@@ -233,6 +233,7 @@
 
 .tableBodyInputs td input {
   width: 10rem;
+  padding: 5px;
 }
 .tableBodyInputs td input[type="checkbox"] {
   width: 2rem;
@@ -500,7 +501,7 @@
   white-space: nowrap;
 }
 .inventory_main_scheduleUpload input{
-  padding: 4px 10px;
+  padding: 4px 10px !important;
   color: #444;
   border-radius: 5px;
   border: 1px solid #444;

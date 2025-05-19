@@ -12,6 +12,8 @@ import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 const CompanyContacts = () => {
   const [loading, setLoading] = useState(true);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
   const dispatch = useDispatch();
   // const navigate = useNavigate();
   const token = Cookies.get("token");
@@ -21,7 +23,7 @@ const CompanyContacts = () => {
     (store) => store.searchProductStore
   );
   console.log("Company Contact Data from frontend:", companyContactData);
- 
+
   useEffect(() => {
     if (companyId && token) {
       setLoading(true); // Set loading to true when fetching data
@@ -38,12 +40,12 @@ const CompanyContacts = () => {
       setLoading(false); // In case no company ID or token is found
     }
   }, [dispatch, companyId, token]);
- 
+
   const contacts = companyContactData?.data?.contacts || [];
- 
+
   // REMOVE CONTACT LOGIC
   const [selectedIds, setSelectedIds] = useState([]);
- 
+
   // Handle checkbox toggle
   const handleCheckboxChange = (id) => {
     setSelectedIds((prev) =>
@@ -53,63 +55,59 @@ const CompanyContacts = () => {
     );
   };
 
-
-const removeCompanyContacts = async () => {
-  if (selectedIds.length === 0) {
-    alert("Please select at least one contact to delete.");
-    return;
-  }
-
-  const isConfirmed = window.confirm(
-    "Are you sure you want to delete the selected user(s)?"
-  );
-  if (!isConfirmed) return;
-
-  try {
-    const result = await dispatch(
-      deleteCompanyContact({ ids: selectedIds, token })
-    ).unwrap();
-    if (result?.status) {
-      console.log("✅ Deleted users:", selectedIds);
-      toast.info(result?.message || "Selected contacts deleted successfully!");
-      setSelectedIds([]);
-
-      // ✅ Reload the page to ensure fresh data
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000); // Delay allows toast to show before reload
-    } else {
-      toast.info(result?.message || "Failed to delete contacts.");
+  const handleDeleteClick = () => {
+    if (selectedIds.length === 0) {
+      toast.warning("Please select at least one contact to delete.");
+      return;
     }
-  } catch (err) {
-    toast.error("❌ Error deleting contacts: " + err.message);
-    console.error("Error during deletion or reload:", err);
-  }
-};
+    setShowConfirmModal(true);
+  };
 
+  const confirmDeleteContacts = async () => {
+    try {
+      const result = await dispatch(
+        deleteCompanyContact({ ids: selectedIds, token })
+      ).unwrap();
 
+      if (result?.status) {
+        toast.info(
+          result?.message || "Selected contacts deleted successfully!"
+        );
+        setSelectedIds([]);
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      } else {
+        toast.info(result?.message || "Failed to delete contacts.");
+      }
+    } catch (err) {
+      toast.error("❌ Error deleting contacts: " + err.message);
+      console.error("Error during deletion or reload:", err);
+    } finally {
+      setShowConfirmModal(false);
+    }
+  };
 
-// UPDATE COPMANY USER LOGIC:
+  // UPDATE COPMANY USER LOGIC:
 
-const navigate = useNavigate();
-const handleEditContact = () => {
-  if (selectedIds.length !== 1) {
-    toast.warn("Please select exactly one contact to edit.");
-    return;
-  }
+  const navigate = useNavigate();
+  const handleEditContact = () => {
+    if (selectedIds.length !== 1) {
+      toast.warn("Please select exactly one contact to edit.");
+      return;
+    }
 
-  const contactToEdit = contacts.find((c) => c.id === selectedIds[0]);
-  if (!contactToEdit) {
-    toast.error("Selected contact not found.");
-    return;
-  }
+    const contactToEdit = contacts.find((c) => c.id === selectedIds[0]);
+    if (!contactToEdit) {
+      toast.error("Selected contact not found.");
+      return;
+    }
 
-  navigate("/updatecompanyuser", {
-    state: { contact: contactToEdit },
-  });
-};
+    navigate("/updatecompanyuser", {
+      state: { contact: contactToEdit },
+    });
+  };
 
- 
   return (
     <>
       <div className={css.profileLayout}>
@@ -154,10 +152,10 @@ const handleEditContact = () => {
                 </li>  */}
               </ul>
             </div>
- 
+
             <div className={css.profileInfo_form}>
               <h1>Company Contacts</h1>
- 
+
               <div className={css.companyListingTable}>
                 <div>
                   {loading ? (
@@ -208,8 +206,8 @@ const handleEditContact = () => {
                                 {contact.userRole === 1
                                   ? "Admin"
                                   : contact.userRole === 2
-                                    ? "Browse only"
-                                    : "Unknown"}
+                                  ? "Browse only"
+                                  : "Unknown"}
                               </td>
                             </tr>
                           ))
@@ -228,7 +226,8 @@ const handleEditContact = () => {
                   )}
                   <p className="pt-4 italic text-gray-600 text-[7.5pt] leading-tight w-96">
                     (Select account to approve/edit/delete Or create a new
-                    account) Your account is editable through <NavLink to={"/myProfile"}>My Profile</NavLink>
+                    account) Your account is editable through{" "}
+                    <NavLink to={"/myProfile"}>My Profile</NavLink>
                   </p>
                 </div>
               </div>
@@ -243,14 +242,14 @@ const handleEditContact = () => {
               <button
                 className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6"
                 type="button"
-                 onClick={handleEditContact}
+                onClick={handleEditContact}
               >
                 Edit
               </button>
               <button
                 className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6"
                 type="button"
-                onClick={removeCompanyContacts}
+                onClick={handleDeleteClick}
               >
                 Delete
               </button>
@@ -266,9 +265,37 @@ const handleEditContact = () => {
           </div>
         </form>
       </div>
+
+      {showConfirmModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl shadow-xl p-10 max-w-2xl w-full text-center">
+            <h2 className="text-xl font-semibold mb-4 text-gray-800">
+              Confirm Deletion
+            </h2>
+            <p className="mb-6 text-lg text-gray-600">
+              Are you sure you want to delete the selected user(s)?
+            </p>
+            <div className="flex justify-center space-x-4">
+              <button
+                className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
+                onClick={() => setShowConfirmModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+                onClick={confirmDeleteContacts}
+              >
+                Confirm Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <ToastContainer position="top-center" autoClose={2000} />
     </>
   );
 };
- 
+
 export default CompanyContacts;

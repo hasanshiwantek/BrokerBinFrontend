@@ -389,7 +389,7 @@ const CompanyPrimaryInfo = () => {
                               value={
                                 formData?.data?.company?.[field.name] || ""
                               }
-                              className="border-2 p-2 w-[18rem] "
+                              className="border-[1px] border-gray-300 p-2 w-[17.51rem] "
                             >
                               <option value="">Select {field.label}</option>
                               {field.options.map((opt) => (

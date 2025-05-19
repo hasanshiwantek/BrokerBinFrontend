@@ -365,7 +365,7 @@ const Options = () => {
               <input
                 type="submit"
                 value="submit changes"
-                className={css.sumbitBtn}
+                className={`${css.sumbitBtn} !text-white !text-base !font-normal !capitalize`}
               />
 
               <button type="button" onClick={() => openCompanyModal(company)}>

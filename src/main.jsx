@@ -102,6 +102,10 @@ const FeedBackProfile = lazy(() =>
   import("./components/Menu/Search/FeedBackProfile.jsx")
 );
 
+const FeedBackContact = lazy(() =>
+  import("./components/Menu/Search/FeedbackContact.jsx")
+);
+
 const Manage = lazy(() => import("./components/Menu/Manage/Manage.jsx"));
 const MyServices = lazy(() =>
   import("./components/Menu/Manage/MyServices.jsx")
@@ -513,7 +517,16 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
-
+      {
+        path: "/feedbackContact",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <FeedBackContact />
+            <Footer />
+          </Suspense>
+        ),
+      },
       {
         path: "/manage",
         element: (

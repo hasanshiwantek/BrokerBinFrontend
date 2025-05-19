@@ -155,13 +155,15 @@ const CompanyDetails = ({ closeModal }) => {
 
   const ratings = parseFloat(feedbackData?.rating?.averageRating || 5);
 
+
+  
   useEffect(() => {
-    // const handleClickOutside = (event) => {
-    //   const modal = document.querySelector(`.${css.Popup_Info}`);
-    //   if (modal && !modal.contains(event.target)) {
-    //     closeModal(); // Close modal if clicked outside
-    //   }
-    // };
+    const handleClickOutside = (event) => {
+      const modal = document.querySelector(`.${css.Popup_Info}`);
+      if (modal && !modal.contains(event.target)) {
+        closeModal(); 
+      }
+    };
 
     const handleEscapeKey = (event) => {
       if (event.key === "Escape") {
@@ -171,13 +173,13 @@ const CompanyDetails = ({ closeModal }) => {
 
     if (isModalOpen) {
       setTimeout(() => {
-        // document.addEventListener("click", handleClickOutside);
+        document.addEventListener("click", handleClickOutside);
         document.addEventListener("keydown", handleEscapeKey);
       }, 200); // Add delay to avoid detecting the opening click
     }
 
     return () => {
-      // document.removeEventListener("click", handleClickOutside);
+      document.removeEventListener("click", handleClickOutside);
       document.removeEventListener("keydown", handleEscapeKey);
     };
   }, [isModalOpen]); // ✅ Removed `closeModal` from dependencies
@@ -590,8 +592,10 @@ const CompanyDetails = ({ closeModal }) => {
                                 : "100%"}
                             </a>
                           </div>
-                          <h1 className="text-center pt-2">
-                            {" "}
+                          <h1
+                            className="text-center pt-2 cursor-pointer"
+                            onClick={() => setToggleTabs(5)}
+                          >
                             ({feedbackData?.rating?.totalFeedbacks || 0})
                             Feedbacks
                           </h1>
