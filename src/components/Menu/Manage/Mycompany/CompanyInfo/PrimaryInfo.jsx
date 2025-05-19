@@ -24,7 +24,7 @@ import { useRef } from "react";
 import { statesList, countriesList, regionsList } from "@/data/services";
 import { submitCompanyLogo } from "@/ReduxStore/ProfleSlice";
 import CompanyInfoOptions from "./CompanyInfoOptions";
-
+import MapComponent from "./CompanyMapComponent";
 const CompanyPrimaryInfo = () => {
   const token = Cookies.get("token");
   const dispatch = useDispatch();
@@ -79,9 +79,72 @@ const CompanyPrimaryInfo = () => {
   }, [companyId, token, dispatch]);
 
   const states = [
-    { value: "NY", label: "New York" },
+    { value: "", label: "N/A" },
+    { value: "AL", label: "Alabama" },
+    { value: "AK", label: "Alaska" },
+    { value: "AZ", label: "Arizona" },
+    { value: "AR", label: "Arkansas" },
     { value: "CA", label: "California" },
-    // add more
+    { value: "CO", label: "Colorado" },
+    { value: "CT", label: "Connecticut" },
+    { value: "DE", label: "Delaware" },
+    { value: "DC", label: "District of Columbia" },
+    { value: "FL", label: "Florida" },
+    { value: "GA", label: "Georgia" },
+    { value: "HI", label: "Hawaii" },
+    { value: "ID", label: "Idaho" },
+    { value: "IL", label: "Illinois" },
+    { value: "IN", label: "Indiana" },
+    { value: "IA", label: "Iowa" },
+    { value: "KS", label: "Kansas" },
+    { value: "KY", label: "Kentucky" },
+    { value: "LA", label: "Louisiana" },
+    { value: "ME", label: "Maine" },
+    { value: "MD", label: "Maryland" },
+    { value: "MA", label: "Massachusetts" },
+    { value: "MI", label: "Michigan" },
+    { value: "MN", label: "Minnesota" },
+    { value: "MS", label: "Mississippi" },
+    { value: "MO", label: "Missouri" },
+    { value: "MT", label: "Montana" },
+    { value: "NE", label: "Nebraska" },
+    { value: "NV", label: "Nevada" },
+    { value: "NH", label: "New Hampshire" },
+    { value: "NJ", label: "New Jersey" },
+    { value: "NM", label: "New Mexico" },
+    { value: "NY", label: "New York" },
+    { value: "NC", label: "North Carolina" },
+    { value: "ND", label: "North Dakota" },
+    { value: "OH", label: "Ohio" },
+    { value: "OK", label: "Oklahoma" },
+    { value: "OR", label: "Oregon" },
+    { value: "PA", label: "Pennsylvania" },
+    { value: "PR", label: "Puerto Rico" },
+    { value: "RI", label: "Rhode Island" },
+    { value: "SC", label: "South Carolina" },
+    { value: "SD", label: "South Dakota" },
+    { value: "TN", label: "Tennessee" },
+    { value: "TX", label: "Texas" },
+    { value: "UT", label: "Utah" },
+    { value: "VT", label: "Vermont" },
+    { value: "VA", label: "Virginia" },
+    { value: "WA", label: "Washington" },
+    { value: "WV", label: "West Virginia" },
+    { value: "WI", label: "Wisconsin" },
+    { value: "WY", label: "Wyoming" },
+    { value: "AB", label: "Alberta" },
+    { value: "BC", label: "British Columbia" },
+    { value: "MB", label: "Manitoba" },
+    { value: "NB", label: "New Brunswick" },
+    { value: "NF", label: "Newfoundland" },
+    { value: "NT", label: "Northwest Territories" },
+    { value: "NS", label: "Nova Scotia" },
+    { value: "NU", label: "Nunavut" },
+    { value: "ON", label: "Ontario" },
+    { value: "PE", label: "Prince Edward Island" },
+    { value: "QC", label: "Quebec" },
+    { value: "SK", label: "Saskatchewan" },
+    { value: "YT", label: "Yukon Territory" },
   ];
 
   const countries = countriesList;
@@ -308,6 +371,9 @@ const CompanyPrimaryInfo = () => {
     }
   }, [formData?.data?.company?.open_timing, formData?.data?.company?.close]);
 
+  const company = formData.data?.company;
+  console.log("Company: ", company);
+
   if (error) {
     return (
       <>
@@ -320,7 +386,7 @@ const CompanyPrimaryInfo = () => {
     <>
       {!blurWhileLoading && <LoadingState />}
       {blurWhileLoading && (
-        <div className={`${css.profileLayout} `}>
+        <div className={`${css.profileLayout}  `}>
           <form onSubmit={handleSubmit}>
             <div className={`${css.profileInfo} !min-w-[60vw]`}>
               <div className={css.profileInfo_links}>
@@ -377,7 +443,7 @@ const CompanyPrimaryInfo = () => {
               {activeTab === "primary" && (
                 <div className={`${css.profileInfo_form} `}>
                   <h1>Primary Info</h1>
-                  <div className="flex">
+                  <div className="flex justify-end ">
                     <div className="flex flex-col gap-4 text-left">
                       {generalFields.map((field) => (
                         <span
@@ -417,23 +483,29 @@ const CompanyPrimaryInfo = () => {
                         </span>
                       ))}
                     </div>
-                    <div className="map">
-                      <h2 className="text-xl font-semibold">MAP Div</h2>
+                    <div className="map  w-[35rem] ml-28">
+                      {company ? (
+                        <div className="">
+                          <MapComponent company={company} />
+                        </div>
+                      ) : (
+                        <p>No company data found</p>
+                      )}
                     </div>
                   </div>
 
                   {/* Hours of Operation */}
-                  <div className="flex flex-col gap-4 text-left mt-6">
+                  <div className="flex flex-col gap-4  text-left mt-6">
                     <h2 className="text-md font-semibold">
                       Hours of Operation
                     </h2>
-
+  
                     {hoursOfOperationFields.map((field) => {
                       if (field.name === "open" || field.name === "close") {
                         return (
                           <div
                             key={field.name}
-                            className="flex items-center justify-between gap-4"
+                            className="flex items-center justify-between gap-4 "
                           >
                             <label htmlFor={field.name} className="w-32">
                               {field.label}
@@ -516,6 +588,7 @@ const CompanyPrimaryInfo = () => {
                         </div>
                       );
                     })}
+
                   </div>
                 </div>
               )}
