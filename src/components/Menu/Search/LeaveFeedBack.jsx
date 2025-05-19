@@ -5,7 +5,6 @@ import neutralEmoji from "../../../assets/neutral-emoji.png";
 import negativeEmoji from "../../../assets/negative-emoji.png";
 import "../../Menu/Main/MenuBar.css";
 import { Link } from "react-router-dom";
-import FeedbackModal from "../../Popups/FeedBackModal";
 import { useState } from "react";
 import {
   getCompanyFeedback,
@@ -13,7 +12,6 @@ import {
   removeReceiveFeedback,
 } from "../../../ReduxStore/ProfleSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUserData } from "../../../ReduxStore/ProfleSlice";
 import Cookies from "js-cookie";
 import { useLocation } from "react-router-dom";
 import { setTogglePopUp } from "../../../ReduxStore/SearchProductSlice";
@@ -23,10 +21,11 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-
+import UpdateFeedbackModal from "@/components/Popups/UpdateFeedBackModal";
 const LeaveFeedBack = () => {
-  const [isModalOpen, setModalOpen] = useState(false); // State to control modal visibility
   const [activeTab, setActiveTab] = useState("received"); // default to received
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedFeedback, setSelectedFeedback] = useState(null);
 
   const { companyFeedbackData, feedbackGivenData } = useSelector(
     (state) => state.profileStore
@@ -37,18 +36,11 @@ const LeaveFeedBack = () => {
   const feedbacks = companyFeedbackData?.feedbacks;
   console.log("Company Feedback Data ", feedbacks);
   const givenFeedbackData = feedbackGivenData?.feedbacks;
-  console.log("Given Feedback Data: ", givenFeedbackData);
+  console.log("Given Feedbacks Data: ", givenFeedbackData);
 
   const location = useLocation();
   const companyId = location.state?.companyId;
   console.log("Company ID:", companyId);
-  const handleOpenModal = () => {
-    setModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setModalOpen(false);
-  };
 
   const token = Cookies.get("token");
 
@@ -135,16 +127,15 @@ const LeaveFeedBack = () => {
       });
   };
 
-
-
   // EDIT FEEDBACK FUNCTION
+  const feedbackEditHandler = (feedback) => {
+    console.log("Id for updation: ", feedback);
+    setSelectedFeedback(feedback);
+    setIsOpen(true); // Open the modal
+  };
 
-  const feedbackEditHandler=(id)=>{
-    console.log("Id for updation: ",id);
-    
-
-  }
-
+  const compId = Number(Cookies.get("companyId"));
+  console.log("Company id: ", compId);
 
   return (
     <>
@@ -307,14 +298,17 @@ const LeaveFeedBack = () => {
                         >
                           Report Abuse
                         </button>
-                        <span
-                          className={styles.reportButton}
-                          onClick={() =>
-                            feedbackEditHandler(feedback.id)
-                          }
-                        >
-                          Edit Feedback
-                        </span>
+
+                        {feedback.to === compId ? (
+                          <span
+                            className={styles.reportButton}
+                            onClick={() => {
+                              feedbackEditHandler(feedback);
+                            }}
+                          >
+                            Edit Feedback
+                          </span>
+                        ) : null}
                       </div>
                     </td>
 
@@ -355,11 +349,24 @@ const LeaveFeedBack = () => {
           </Link>
         </div>
       </main>
+
+      <ToastContainer position="top-center" autoClose={2000} />
+
+      {isOpen && selectedFeedback && (
+        <UpdateFeedbackModal
+          company={{
+            id: selectedFeedback?.to_company?.id || compId,
+            name: selectedFeedback?.to_company?.name || "Unknown Company",
+          }}
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          feedbackData={selectedFeedback} // <-- pass the data here
+          companyId={compId}
+        />
+      )}
       {togglePopUp && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
-      <FeedbackModal isOpen={isModalOpen} onClose={handleCloseModal} />
-      <ToastContainer position="top-center" autoClose={2000} />
     </>
   );
 };
