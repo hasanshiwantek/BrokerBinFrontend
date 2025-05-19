@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { updateFeedback, getCompanyFeedback } from "@/ReduxStore/ProfleSlice";
 import { useDispatch } from "react-redux";
-const FeedbackModal = ({
+const UpdateFeedbackModal = ({
   isOpen,
   onClose,
   company,
@@ -253,4 +253,4 @@ const FeedbackModal = ({
   );
 };
 
-export default FeedbackModal;
+export default UpdateFeedbackModal;
