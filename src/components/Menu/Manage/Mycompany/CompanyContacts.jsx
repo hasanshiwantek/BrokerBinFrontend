@@ -110,9 +110,9 @@ const CompanyContacts = () => {
 
   return (
     <>
-      <div className={css.profileLayout}>
+      <div className={`${css.profileLayout} `}>
         <form>
-          <div className={css.profileInfo}>
+          <div className={`${css.profileInfo} min-w-[54vw]`}>
             <div className={css.profileInfo_links}>
               <ul>
                 <li>

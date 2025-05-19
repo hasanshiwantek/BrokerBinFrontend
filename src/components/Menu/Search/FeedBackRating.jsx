@@ -40,7 +40,6 @@ const FeedBackRating = () => {
     console.log(primaryId);
     dispatch(fetchUserData({ id: primaryId, token }));
   }, []);
-
   console.log("Initial Data ", initialData);
 
   useEffect(() => {

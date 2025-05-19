@@ -24,7 +24,7 @@ const CompanyLogo = ({ logoPreview, setLogoPreview, setSelectedLogoFile }) => {
 
   return (
     <>
-      <div className="mb-20  min-w-[52vw]">
+      <div className="mb-20  min-w-[54vw]">
         <h2 className="text-md font-semibold mb-4">Manage Your Company Logo</h2>
 
         <div className="mb-3 flex items-center">
@@ -59,7 +59,7 @@ const CompanyLogo = ({ logoPreview, setLogoPreview, setSelectedLogoFile }) => {
           <label htmlFor="terms" className="!text-[8pt] text-gray-800">
             I certify that I have the right to distribute these photos and that
             they do not violate the{" "}
-            <strong className="!text-[.7vw] text-gray-800">
+            <strong className="!text-[.7vw] !text-gray-800">
               Terms of Service
             </strong>
             .
