@@ -97,7 +97,8 @@ const LeaveFeedBack = () => {
 
   // DELETE FEEDBACK FUNCTION
 
-  const primaryId = Cookies.get("user_id");
+  const primaryId = Number(Cookies.get("user_id"));
+  console.log(primaryId);
 
   const feedbackDeleteHandler = (id, primaryId) => {
     const isConfirmed = window.confirm(
@@ -105,16 +106,24 @@ const LeaveFeedBack = () => {
     );
     if (!isConfirmed) return;
 
-    dispatch(removeReceiveFeedback({ id, primaryId, token }))
+    dispatch(
+      removeReceiveFeedback({
+        feedbackId: id,
+        primaryContact: primaryId,
+        token,
+      })
+    )
       .then((result) => {
         console.log("Result:", result);
-        if (result?.payload?.status === 200) {
+
+        if (result?.meta?.requestStatus === "fulfilled") {
           toast.info(
-            result.payload.message || "✅ Feedback deleted successfully"
+            result.payload?.message || "✅ Feedback deleted successfully"
           );
+          dispatch(getCompanyFeedback({ id: companyId, token }));
         } else {
           toast.warning(
-            result.payload?.message || "⚠️ Failed to delete feedback."
+            result.error?.message || "⚠️ Failed to delete feedback."
           );
         }
       })
@@ -125,6 +134,17 @@ const LeaveFeedBack = () => {
         );
       });
   };
+
+
+
+  // EDIT FEEDBACK FUNCTION
+
+  const feedbackEditHandler=(id)=>{
+    console.log("Id for updation: ",id);
+    
+
+  }
+
 
   return (
     <>
@@ -189,22 +209,22 @@ const LeaveFeedBack = () => {
                       {feedback?.feedbackPost}
                     </td>
                     <td>
-                      <button
-                        className={styles.reportButton}
-                        onClick={() => accountManagerHandler(feedback)}
-                      >
-                        Report Abuse
-                      </button>
-                      <br />
-                      <span
-                        className={styles.reportButton}
-                        onClick={() =>
-                          feedbackDeleteHandler(feedback.id, primaryId)
-                        }
-                      >
-                        {" "}
-                        Delete
-                      </span>
+                      <div className="!flex !flex-col !items-center">
+                        <button
+                          className={styles.reportButton}
+                          onClick={() => accountManagerHandler(feedback)}
+                        >
+                          Report Abuse
+                        </button>
+                        <span
+                          className={styles.reportButton}
+                          onClick={() =>
+                            feedbackDeleteHandler(feedback.id, primaryId)
+                          }
+                        >
+                          Delete
+                        </span>
+                      </div>
                     </td>
                     <td
                       className="cursor-pointer"
@@ -213,7 +233,7 @@ const LeaveFeedBack = () => {
                       <div className="flex flex-col text-[8pt]">
                         <div className="flex gap-2 items-center">
                           <span>{feedback.fromUsername}</span>
-                            {/* <a
+                          {/* <a
                               href={`mailto:${user.email}`}
                               onClick={(e) => e.stopPropagation()}
                             >
@@ -278,14 +298,26 @@ const LeaveFeedBack = () => {
                       PO #: {feedback?.poNumber} <br />
                       {feedback?.feedbackPost}
                     </td>
+
                     <td>
-                      <button
-                        className={styles.reportButton}
-                        onClick={() => accountManagerHandler(feedback)}
-                      >
-                        Report Abuse
-                      </button>
+                      <div className="!flex !flex-col !items-center">
+                        <button
+                          className={styles.reportButton}
+                          onClick={() => accountManagerHandler(feedback)}
+                        >
+                          Report Abuse
+                        </button>
+                        <span
+                          className={styles.reportButton}
+                          onClick={() =>
+                            feedbackEditHandler(feedback.id)
+                          }
+                        >
+                          Edit Feedback
+                        </span>
+                      </div>
                     </td>
+
                     <td
                       className="cursor-pointer"
                       onClick={() => openCompanyModal(feedback?.to_company)}
