@@ -21,7 +21,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-import UpdateFeedbackModal from "@/components/Popups/UpdateFeedBackModal";
+import UpdateFeedbackModal from "../../Popups/UpdateFeedBackModal";
 const LeaveFeedBack = () => {
   const [activeTab, setActiveTab] = useState("received"); // default to received
   const [isOpen, setIsOpen] = useState(false);
