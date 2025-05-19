@@ -257,7 +257,6 @@ const CompanyPrimaryInfo = () => {
           );
           console.log("Image result", result);
 
-
           if (result?.payload?.status && result.payload.image) {
             toast.success("✅ Company logo uploaded successfully");
 
@@ -363,8 +362,11 @@ const CompanyPrimaryInfo = () => {
                     <li
                       key={tab.key}
                       onClick={() => setActiveTab(tab.key)}
-                      className={`${activeTab === tab.key ? "font-bold " : "cursor-pointer"
-                        }`}
+                      className={`${
+                        activeTab === tab.key
+                          ? "font-bold bg-white  !p-4 "
+                          : "cursor-pointer "
+                      }`}
                     >
                       {tab.label}
                     </li>
@@ -444,7 +446,7 @@ const CompanyPrimaryInfo = () => {
                                 onChange={handleChange}
                                 value={
                                   formData?.data?.company?.[
-                                  `${field.name}_hour`
+                                    `${field.name}_hour`
                                   ] || ""
                                 }
                               >
@@ -462,7 +464,7 @@ const CompanyPrimaryInfo = () => {
                                 onChange={handleChange}
                                 value={
                                   formData?.data?.company?.[
-                                  `${field.name}_ampm`
+                                    `${field.name}_ampm`
                                   ] || ""
                                 }
                               >
