@@ -182,20 +182,20 @@ export const fetchGivenFeedback = createAsyncThunk(
 
 export const removeReceiveFeedback = createAsyncThunk(
   "toolsStore/removeReceiveFeedback",
-  async ({ feedbackId, adminId, token }) => {
-    console.log(feedbackId, adminId);
+  async ({ feedbackId, primaryContact, token }) => {
+    console.log(feedbackId, primaryContact);
     try {
       const response = await axios.delete(
         `${brokerAPI}feedback/delete-feedback`,
-        { feedbackId, adminId },
         {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
+          data: { feedbackId, primaryContact },
         }
       );
-      console.log("Favourite Removed: ", response.data);
+      console.log("Feedback Removed: ", response.data);
       return response.data;
     } catch (error) {
       throw new Error(error.response?.data?.message);

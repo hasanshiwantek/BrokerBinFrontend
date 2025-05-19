@@ -236,12 +236,17 @@ const FeedBackRating = () => {
           </div>
         </div>
 
-        <div className={styles.buttonSec}>
+        <div
+          className={`${styles.buttonSec} flex justify-start gap-5 items-center`}
+        >
+          <button className={styles.ethicsComplaintButton}>
+            Ethics Complaint
+          </button>
           <button
             className={styles.ethicsComplaintButton}
             onClick={() => setIsOpen(true)}
           >
-            Ethics Complaint
+            Leave Feedback
           </button>
         </div>
       </div>
