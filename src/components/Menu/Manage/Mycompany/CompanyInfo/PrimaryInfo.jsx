@@ -353,6 +353,15 @@ const CompanyPrimaryInfo = () => {
                       <span>Company Info</span>
                     </NavLink>
                   </li>
+                  <li>
+                    <NavLink
+                      to="/mycompany/SalesInfo"
+                      end
+                      className={({ isActive }) => (isActive ? css.active : "")}
+                    >
+                      <span>Sales Info</span>
+                    </NavLink>
+                  </li>
                 </ul>
               </div>
               <div

@@ -229,14 +229,14 @@ const MyCompany = () => {
                       <span>Company Info</span>
                     </NavLink>
                   </li>
-                  {/* <li>
+                  <li>
                     <NavLink
-                      to="/Createaccount"
+                      to="/mycompany/SalesInfo"
                       className={({ isActive }) => (isActive ? css.active : "")}
                     >
-                      <span>Create Account</span>
+                      <span>Sales Info</span>
                     </NavLink>
-                  </li> */}
+                  </li>
                 </ul>
               </div>
               <div className={css.profileInfo_form}>
