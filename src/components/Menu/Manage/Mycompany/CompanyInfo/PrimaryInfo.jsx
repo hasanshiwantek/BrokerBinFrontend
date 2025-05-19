@@ -23,6 +23,8 @@ import {
 import { useRef } from "react";
 import { statesList, countriesList, regionsList } from "@/data/services";
 import { submitCompanyLogo } from "@/ReduxStore/ProfleSlice";
+import CompanyInfoOptions from "./CompanyInfoOptions";
+
 const CompanyPrimaryInfo = () => {
   const token = Cookies.get("token");
   const dispatch = useDispatch();
@@ -85,6 +87,7 @@ const CompanyPrimaryInfo = () => {
   const countries = countriesList;
 
   const regions = regionsList;
+
   const timeZones = [
     { value: "8", label: "(GMT -08:00) Pacific Time (US & Canada); Tijuana" },
     { value: "7", label: "(GMT -07:00) Mountain Time (US & Canada)" },
@@ -252,8 +255,8 @@ const CompanyPrimaryInfo = () => {
           const result = await dispatch(
             submitCompanyLogo({ token, file: selectedLogoFile })
           );
-          console.log("Image result",result);
-          
+          console.log("Image result", result);
+
 
           if (result?.payload?.status && result.payload.image) {
             toast.success("✅ Company logo uploaded successfully");
@@ -318,9 +321,9 @@ const CompanyPrimaryInfo = () => {
     <>
       {!blurWhileLoading && <LoadingState />}
       {blurWhileLoading && (
-        <div className={css.profileLayout}>
+        <div className={`${css.profileLayout} `}>
           <form onSubmit={handleSubmit}>
-            <div className={css.profileInfo}>
+            <div className={`${css.profileInfo} !min-w-[60vw]`}>
               <div className={css.profileInfo_links}>
                 <ul>
                   <li>
@@ -360,9 +363,8 @@ const CompanyPrimaryInfo = () => {
                     <li
                       key={tab.key}
                       onClick={() => setActiveTab(tab.key)}
-                      className={`${
-                        activeTab === tab.key ? "font-bold " : "cursor-pointer"
-                      }`}
+                      className={`${activeTab === tab.key ? "font-bold " : "cursor-pointer"
+                        }`}
                     >
                       {tab.label}
                     </li>
@@ -442,7 +444,7 @@ const CompanyPrimaryInfo = () => {
                                 onChange={handleChange}
                                 value={
                                   formData?.data?.company?.[
-                                    `${field.name}_hour`
+                                  `${field.name}_hour`
                                   ] || ""
                                 }
                               >
@@ -460,7 +462,7 @@ const CompanyPrimaryInfo = () => {
                                 onChange={handleChange}
                                 value={
                                   formData?.data?.company?.[
-                                    `${field.name}_ampm`
+                                  `${field.name}_ampm`
                                   ] || ""
                                 }
                               >
@@ -528,6 +530,15 @@ const CompanyPrimaryInfo = () => {
                     logoPreview={logoPreview}
                     setLogoPreview={setLogoPreview}
                     setSelectedLogoFile={setSelectedLogoFile}
+                  />
+                </div>
+              )}
+
+              {activeTab === "options" && (
+                <div className={`${css.profileInfo_form}`}>
+                  <CompanyInfoOptions
+                    formData={formData}
+                    setFormData={setFormData}
                   />
                 </div>
               )}

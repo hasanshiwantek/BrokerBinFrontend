@@ -32,14 +32,14 @@ const handleChange = (value) => {
 
   return (
     <>
-      <div className="mt-2 p-8 mb-4">
+      <div className=" min-w-[56vw]">
         <h2 className="text-md font-semibold mb-2">Company Bio</h2>
         <ReactQuill
           theme="snow"
           value={bio}
           onChange={handleChange}
           className="bg-white"
-          style={{ height: "10rem", width: "70rem", marginBottom: "1rem" }}
+          style={{ height: "10rem", width: "70rem", marginBottom: "5rem" }}
           modules={modules}
           formats={formats}
         />
