@@ -21,7 +21,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-import UpdateFeedbackModal from "../../../components/Popups/UpdateFeedBackModal";
+import UpdateFeedbackModal from "@/components/Popups/UpdateFeedBackModal";
 const LeaveFeedBack = () => {
   const [activeTab, setActiveTab] = useState("received"); // default to received
   const [isOpen, setIsOpen] = useState(false);
@@ -36,7 +36,7 @@ const LeaveFeedBack = () => {
   const feedbacks = companyFeedbackData?.feedbacks;
   console.log("Company Feedback Data ", feedbacks);
   const givenFeedbackData = feedbackGivenData?.feedbacks;
-  console.log("Given Feedback Data: ", givenFeedbackData);
+  console.log("Given Feedbacks Data: ", givenFeedbackData);
 
   const location = useLocation();
   const companyId = location.state?.companyId;
