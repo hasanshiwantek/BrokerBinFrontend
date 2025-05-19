@@ -7,7 +7,7 @@ import neutralEmoji from "../../../assets/neutral-emoji.png";
 import negativeEmoji from "../../../assets/negative-emoji.png";
 import ntlogo from "../../../assets/nt-logo.png";
 import thumbsUp from "../../../assets/thumbsup.png";
-import { getCompanyFeedback } from "../../../ReduxStore/ProfleSlice";
+import { getCompanyFeedback,updateFeedback } from "../../../ReduxStore/ProfleSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserData } from "../../../ReduxStore/ProfleSlice";
 import Cookies from "js-cookie";

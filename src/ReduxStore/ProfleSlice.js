@@ -265,6 +265,37 @@ export const updateCompanyUserData = createAsyncThunk(
   }
 );
 
+export const updateFeedback = createAsyncThunk(
+  "profileStore/updateFeedback",
+  async ({ feedbackId, data, token }) => {
+    try {
+      const response = await axios.put(
+        `${brokerAPI}feedback/update-feedback/${feedbackId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const responseData = {
+        data: response.data,
+        message: response.data.message || "Update successful",
+      };
+
+      console.log("✅ Redux Thunk Response:", responseData);
+      return responseData; // return all 3 fields
+    } catch (error) {
+      console.error(
+        "Error while submitting user data:",
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  }
+);
+
 const initialState = {
   user: JSON.parse(localStorage.getItem("user")),
   formData: {
@@ -562,6 +593,19 @@ const profileSlice = createSlice({
         state.error = action.error.message;
         state.blurWhileLoading = false;
         console.error("❌ Feedback deletion failed:", action.error.message);
+      })
+      .addCase(updateFeedback.pending, (state) => {
+        state.blurWhileLoading = false;
+        console.log("🔄 Feedback Updation pending...");
+      })
+      .addCase(updateFeedback.fulfilled, (state, action) => {
+        state.blurWhileLoading = true;
+        console.log("✅ Feedback Updated successfully:");
+      })
+      .addCase(updateFeedback.rejected, (state, action) => {
+        state.error = action.error.message;
+        state.blurWhileLoading = false;
+        console.error("❌ Feedback Updation failed:", action.error.message);
       })
       .addCase(fetchGivenFeedback.pending, (state) => {
         state.blurWhileLoading = false;
