@@ -21,7 +21,6 @@ import { brokerAPI } from "../../../api/BrokerEndpoint";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-
 const MyCompany = () => {
   const token = Cookies.get("token");
   const user_id = Cookies.get("user_id");
@@ -191,6 +190,14 @@ const MyCompany = () => {
         <ErrorStatus error={error} />
       </>
     );
+  }
+
+  if(loading){
+    return(
+      <>
+<LoadingState/>
+      </>
+    )
   }
 
   return (
