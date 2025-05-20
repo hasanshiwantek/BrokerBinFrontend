@@ -87,6 +87,7 @@ const CompanyLogo = ({ logoPreview, setLogoPreview, setSelectedLogoFile }) => {
           )}
         </div>
       </div>
+      <ToastContainer position="top-center" autoClose={2000} />
 
     </>
   );
