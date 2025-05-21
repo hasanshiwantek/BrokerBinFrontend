@@ -526,7 +526,7 @@ const initialState = {
   searchCompanies: [],
   searchMyVendor: [],
   myVendor: [],
-  
+
   myHotListItems: [],
   myContactsData: [],
   searchMyContact: [],
@@ -544,6 +544,7 @@ const initialState = {
     country: ["use"],
   },
   loading: false,
+  localCategories: [],
 };
 
 const ToolsSlice = createSlice({
@@ -573,6 +574,9 @@ const ToolsSlice = createSlice({
         ...state.broadcastFilters,
         ...action.payload,
       };
+    },
+    setLocalCategories: (state, action) => {
+      state.localCategories = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -798,6 +802,7 @@ export const {
   showHotList,
   setBroadcastFilters,
   setEmptySearchContacts,
+  setLocalCategories
 } = ToolsSlice.actions;
 
 export default ToolsSlice.reducer;
