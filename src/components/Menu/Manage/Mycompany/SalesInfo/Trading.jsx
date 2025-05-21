@@ -108,48 +108,53 @@ const handleShippingChange = (value) => {
   }));
 };
 
-  // useEffect(() => {
-  //   if (!companyData) return;
+  useEffect(() => {
+    if (!companyData) return;
 
-  //   // 1. Simple fields
-  //   const basicMap = {
-  //     blind_shipping: companyData.blind_shipping === 1 ? "yes" : "no",
-  //     lease_program: !!companyData.lease_program,
-  //     rental_program: !!companyData.rental_program,
-  //     trade_program: !!companyData.trade_program,
-  //     shippingOther: companyData.shipping_other || "",
-  //   };
+    // 1. Simple fields
+    const basicMap = {
+      blind_shipping: companyData.blind_shipping === 1 ? "yes" : "no",
+      lease_program: !!companyData.lease_program,
+      rental_program: !!companyData.rental_program,
+      trade_program: !!companyData.trade_program,
+      shippingOther: companyData.shipping_other || "",
+    };
 
-  //   Object.entries(basicMap).forEach(([key, val]) => setValue(key, val));
+    Object.entries(basicMap).forEach(([key, val]) => setValue(key, val));
 
-  //   // 2. Trading Region
-  //   const regions = JSON.parse(companyData.trading_region || "[]");
-  //   setSelectedRegions(regions);
-  //   setValue("trading_region", regions);
+    // 2. Trading Region
+    const regions = JSON.parse(companyData.trading_region || "[]");
+    // setSelected(regions);
+    setSelected((prev) => ({
+  ...prev,
+  regions: JSON.parse(companyData.trading_region || "[]"),
+  shipping: JSON.parse(companyData.shipping_options || "[]"),
+}));
+    setValue("trading_region", regions);
 
-  //   // 3. Deadline (hour + AM/PM)
-  //   if (companyData.shipping_deadline) {
-  //     const [hour, ampm] = companyData.shipping_deadline.split(" ");
-  //     setValue("shipping_hour", hour);
-  //     setValue("shipping_ampm", ampm);
-  //   }
+    // 3. Deadline (hour + AM/PM)
+    if (companyData.shipping_deadline) {
+      const [hour, ampm] = companyData.shipping_deadline.split(" ");
+      setValue("shipping_hour", hour);
+      setValue("shipping_ampm", ampm);
+    }
 
-  //   // 4. Shipping Options (FedEx, DHL, etc.)
-  //   try {
-  //     const opts = JSON.parse(companyData.shipping_options || "[]");
-  //     opts.forEach((label) => {
-  //       const normalized = label
-  //         .toLowerCase()
-  //         .replace(/\s+/g, "")
-  //         .replace(/[^a-z]/gi, "");
-  //       setValue(normalized, true);
-  //     });
-  //   } catch (e) {
-  //     console.warn("⚠️ Invalid shipping_options format:", e);
-  //   }
+    // 4. Shipping Options (FedEx, DHL, etc.)
+    try {
+      const opts = JSON.parse(companyData.shipping_options || "[]");
+      opts.forEach((label) => {
+        const normalized = label
+          .toLowerCase()
+          .replace(/\s+/g, "")
+          .replace(/[^a-z]/gi, "");
+        setValue(normalized, true);
+      });
+    } catch (e) {
+      console.warn("⚠️ Invalid shipping_options format:", e);
+    }
 
     
-  // }, [companyData, setValue]);
+  }, [companyData, setValue]);
 
   return (
     <>
