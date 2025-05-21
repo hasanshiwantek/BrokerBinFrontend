@@ -3,7 +3,6 @@ import css from "../../../../../styles/Menu/Manage/MyProfile.module.css";
 import LoadingState from "../../../../../LoadingState";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  setFormData as updateFormData,
   setBlurWhileLoading,
 } from "../../../../../ReduxStore/ProfleSlice";
 import ErrorStatus from "../../../../Error/ErrorStatus";
@@ -21,11 +20,8 @@ import { useForm, FormProvider } from "react-hook-form";
 import { submitTradingData,submitCompanyCategories } from "../../../../../ReduxStore/ProfleSlice";
 const SalesInfo = () => {
   // const methods = useForm();
-
   const token = Cookies.get("token");
   const dispatch = useDispatch();
-  const [formData, setFormData] = useState({});
-  console.log("Form data: ", formData);
 
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("trading"); // or 'bio', 'logo', etc.
@@ -52,92 +48,30 @@ const SalesInfo = () => {
       // you can set other default values here too if needed
     },
   });
+
   const { handleSubmit } = methods;
 
   const handleFormSubmit = async (data) => {
-    if (activeTab !== "trading") return;
-
-    console.log("🚀 Raw Form Data:", data);
-
-    const tradingRegions = [
-      { label: "North America", key: "NorthAmerica" },
-      { label: "Middle East", key: "MiddleEast" },
-      { label: "South America", key: "SouthAmerica" },
-      { label: "Europe", key: "Europe" },
-      { label: "Africa", key: "Africa" },
-      { label: "Oceania", key: "Oceania" },
-      { label: "Asia", key: "Asia" },
-    ];
-
-    const shippingOptions = [
-      { key: "fedex", label: "FedEx" },
-      { key: "dhl", label: "DHL" },
-      { key: "ups", label: "UPS" },
-      { key: "willShipOnOtherAcct", label: "Will Ship on Other Acct#s" },
-      { key: "other", label: "Other" },
-    ];
-
-    const transformedPayload = {
-      company_id: company_id,
-
-      // 1. Regions
-      trading_region: tradingRegions
-        .filter((r) => data[r.key])
-        .map((r) => r.label),
-
-      // 2. Blind shipping
-      blind_shipping: data.blindShipping === "yes" ? 1 : 0,
-
-      // 3. Deadline (e.g. "3 PM")
-      shipping_deadline: `${data.blindShipping_hour} ${data.blindShipping_ampm}`,
-
-      // 4. Programs
-      rental_program: data.rentalProgram ? 1 : 0,
-      trade_program: data.tradeInProgram ? 1 : 0,
-      lease_program: data.leaseProgram ? 1 : 0,
-
-      // 5. Shipping options (as CSV)
-      shipping_options: shippingOptions
-        .filter((r) => data[r.key])
-        .map((r) => r.label),
-
-      // 6. Other shipping
-      shipping_other: data.shippingOther || "",
-    };
-
-    console.log("📦 Final Payload to API:", transformedPayload);
-
-    const result = await dispatch(
-      submitTradingData({
-        data: transformedPayload,
-        token,
-      })
-    );
-
-    if (result?.payload?.data?.status) {
-      toast.success(
-        result?.payload?.data?.message ||
-          "✅ Company Trading Data updated successfully"
-      );
-      console.log("✅ Data Saved:", result.payload);
-    } else {
-      toast.error("❌ Failed to update company trading data");
-      console.warn("❌ Failure Response:", result);
+  try {
+    if (activeTab === "trading") {
+      data.blind_shipping = data.blind_shipping === "yes";
+      await dispatch(
+        submitTradingData({
+          data,
+          token,
+          company_id,
+        })
+      ).unwrap(); // use unwrap to catch errors in try/catch
+      toast.success("Trading info updated!");
     }
 
+    // Add other tab API calls similarly if needed
+  } catch (err) {
+    toast.error("Update failed. Please try again.");
+    console.error(err);
+  }
+};
 
-     
-    
-
-
-
-
-
-
-
-
-
-  };
 
   useEffect(() => {
     dispatch(setBlurWhileLoading(true));
@@ -229,13 +163,13 @@ const SalesInfo = () => {
 
                 {activeTab === "trading" && (
                   <div className={`${css.profileInfo_form}`}>
-                    <Trading formData={formData} setFormData={setFormData} />
+                    <Trading />
                   </div>
                 )}
 
                 {activeTab === "terms" && (
                   <div className={`${css.profileInfo_form}`}>
-                    <Terms formData={formData} setFormData={setFormData} />
+                    <Terms />
                   </div>
                 )}
 

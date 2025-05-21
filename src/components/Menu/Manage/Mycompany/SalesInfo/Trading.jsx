@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { regionsList } from "@/data/services";
 import css from "../../../../../styles/Menu/Manage/MyProfile.module.css";
-import { useFormContext } from "react-hook-form";
-import { getCompanyContact } from "@/ReduxStore/SearchProductSlice";
-import Cookies from "js-cookie";
-import { useDispatch,useSelector } from "react-redux";
+import { useFormContext, Controller } from "react-hook-form";
+
 const Trading = () => {
-  const { register, setValue, getValues, reset } = useFormContext();
+  const { register, setValue, getValues, reset, control } = useFormContext();
+
+  const [selectedRegions, setSelectedRegions] = useState([]);
 
   const regions = [
     { label: "North America", value: "North America", id: "NorthAmerica" },
@@ -19,9 +19,9 @@ const Trading = () => {
   ];
 
   const programOptions = [
-    { name: "leaseProgram", label: "Lease Program" },
-    { name: "rentalProgram", label: "Rental Program" },
-    { name: "tradeInProgram", label: "Trade-In Program" },
+    { name: "lease_program", label: "Lease Program" },
+    { name: "rental_program", label: "Rental Program" },
+    { name: "trade_program", label: "Trade-In Program" },
   ];
 
   const shippingOptions = [
@@ -33,19 +33,20 @@ const Trading = () => {
   ];
 
   const handleCheckAll = (type, check = true) => {
+  if (type === "regions") {
+    setSelectedRegions(check ? regions.map(r => r.value) : []);
+  } else {
     const items =
-      type === "regions"
-        ? regions
-        : type === "programs"
+      type === "programs"
         ? programOptions
         : type === "shipping"
         ? shippingOptions
         : [];
-
     items.forEach((item) => {
       setValue(item.name || item.id, check);
     });
-  };
+  }
+};
 
 
   const companyId=Number(Cookies.get("companyId"))
@@ -59,28 +60,54 @@ const Trading = () => {
   const dispatch=useDispatch()
 
   useEffect(() => {
+    // const fetchTradingData = async () => {
+    //   const res = await axios.get("/your-trading-api-endpoint");
+    //   reset(res.data); // populate form fields
+    // };
+    // fetchTradingData();
+    // reset with existing data if needed
+    // reset(res.data); ← skip if no GET
 
-    dispatch(getCompanyContact({token,id:companyId}))
-
+    // cleanup old fields
+    reset(getValues());
   }, []);
+
+  useEffect(() => {
+  setValue("trading_region", selectedRegions);
+}, [selectedRegions, setValue]);
+
+  const handleRegionChange = (value) => {
+    setSelectedRegions((prev) =>
+      prev.includes(value)
+        ? prev.filter((v) => v !== value)
+        : [...prev, value]
+    );
+  };
 
   return (
     <>
       {/*Regions*/}
       <div className={css.profileInfo_form}>
         <h1>Trading Regions</h1>
-        <div className="grid grid-cols-5 gap-4 text-left">
-          {regions.map((region) => (
-            <label key={region.value} className="flex items-center gap-2 ">
-              <span>{region.label}</span>
-              <input
-                type="checkbox"
-                {...register(region.id)}
-                className="w-4 h-4"
-              />
-            </label>
-          ))}
-        </div>
+        <Controller
+          control={control}
+          name="trading_region"
+          defaultValue={[]}
+          render={() => (
+            <div className="grid grid-cols-5 gap-4 text-left">
+              {regions.map((region) => (
+                <label key={region.value} className="flex items-center gap-2">
+                  <span>{region.label}</span>
+                  <input
+                    type="checkbox"
+                    checked={selectedRegions.includes(region.value)}
+                    onChange={() => handleRegionChange(region.value)}
+                  />
+                </label>
+              ))}
+            </div>
+          )}
+        />
         <div className="flex justify-end gap-4 mt-6 font-bold cursor-pointer">
           <span onClick={() => handleCheckAll("regions", true)}>Check All</span>
           <span onClick={() => handleCheckAll("regions", false)}>
@@ -124,11 +151,11 @@ const Trading = () => {
         {/* Radio Buttons */}
         <div className="flex gap-10 items-center">
           <label className="flex items-center gap-1">
-            <input type="radio" value="yes" {...register("blindShipping")} />
+            <input type="radio" value="yes" {...register("blind_shipping")} />
             Yes
           </label>
           <label className="flex items-center gap-1">
-            <input type="radio" value="no" {...register("blindShipping")} />
+            <input type="radio" value="no" {...register("blind_shipping")} />
             No
           </label>
         </div>
@@ -137,7 +164,7 @@ const Trading = () => {
         <div className="flex gap-2 items-center">
           <span>Shipping Deadline</span>
           <select
-            {...register("blindShipping_hour")}
+            {...register("shipping_deadline")}
             className="border border-gray-300 rounded px-2 py-1"
           >
             {[...Array(12)].map((_, i) => (
@@ -148,7 +175,7 @@ const Trading = () => {
           </select>
 
           <select
-            {...register("blindShipping_ampm")}
+            {...register("shipping_deadline")}
             className="border border-gray-300 rounded px-2 py-1"
           >
             <option value="AM">AM</option>
