@@ -6,7 +6,10 @@ import { useFormContext, Controller } from "react-hook-form";
 const Trading = () => {
   const { register, setValue, getValues, reset, control } = useFormContext();
 
-  const [selectedRegions, setSelectedRegions] = useState([]);
+  const [selected, setSelected] = useState({
+  regions: [],
+  shipping: [],
+})
 
   const regions = [
     { label: "North America", value: "North America", id: "NorthAmerica" },
@@ -34,19 +37,22 @@ const Trading = () => {
 
   const handleCheckAll = (type, check = true) => {
   if (type === "regions") {
-    setSelectedRegions(check ? regions.map(r => r.value) : []);
-  } else {
-    const items =
-      type === "programs"
-        ? programOptions
-        : type === "shipping"
-        ? shippingOptions
-        : [];
-    items.forEach((item) => {
-      setValue(item.name || item.id, check);
+    setSelected((prev) => ({
+      ...prev,
+      regions: check ? regions.map(r => r.value) : [],
+    }));
+  } else if (type === "shipping") {
+    setSelected((prev) => ({
+      ...prev,
+      shipping: check ? shippingOptions.map(s => s.name) : [],
+    }));
+  } else if (type === "programs") {
+    programOptions.forEach((item) => {
+      setValue(item.name, check);
     });
   }
 };
+
 
   useEffect(() => {
     // const fetchTradingData = async () => {
@@ -62,16 +68,28 @@ const Trading = () => {
   }, []);
 
   useEffect(() => {
-  setValue("trading_region", selectedRegions);
-}, [selectedRegions, setValue]);
+  setValue("trading_region", selected.regions);
+  setValue("shipping_options", selected.shipping); // <-- new array field
+}, [selected, setValue]);
 
   const handleRegionChange = (value) => {
-    setSelectedRegions((prev) =>
-      prev.includes(value)
-        ? prev.filter((v) => v !== value)
-        : [...prev, value]
-    );
-  };
+  setSelected((prev) => ({
+    ...prev,
+    regions: prev.regions.includes(value)
+      ? prev.regions.filter((v) => v !== value)
+      : [...prev.regions, value],
+  }));
+};
+
+// For shipping changes
+const handleShippingChange = (value) => {
+  setSelected((prev) => ({
+    ...prev,
+    shipping: prev.shipping.includes(value)
+      ? prev.shipping.filter((v) => v !== value)
+      : [...prev.shipping, value],
+  }));
+};
 
   return (
     <>
@@ -89,7 +107,7 @@ const Trading = () => {
                   <span>{region.label}</span>
                   <input
                     type="checkbox"
-                    checked={selectedRegions.includes(region.value)}
+                    checked={selected.regions.includes(region.value)}
                     onChange={() => handleRegionChange(region.value)}
                   />
                 </label>
@@ -176,18 +194,26 @@ const Trading = () => {
       {/*Shipping Options*/}
       <div className={css.profileInfo_form}>
         <h1>Shipping Options</h1>
-        <div className="flex flex-wrap gap-10 text-left">
-          {shippingOptions.map((opt) => (
-            <label key={opt.name} className="flex items-center gap-2 ">
-              <span>{opt.label} </span>
-              <input
-                type="checkbox"
-                {...register(opt.name)}
-                className="w-4 h-4"
-              />
-            </label>
-          ))}
-        </div>
+        <Controller
+  control={control}
+  name="shipping_options"
+  defaultValue={[]}
+  render={() => (
+    <div className="flex flex-wrap gap-10 text-left">
+      {shippingOptions.map((opt) => (
+        <label key={opt.name} className="flex items-center gap-2">
+          <span>{opt.label}</span>
+          <input
+            type="checkbox"
+            checked={selected.shipping.includes(opt.name)}
+            onChange={() => handleShippingChange(opt.name)}
+          />
+        </label>
+      ))}
+    </div>
+  )}
+/>
+
         <div className="my-5">
           <label> Other</label>
           <input className="ml-5" type="text" {...register("shippingOther")} />
