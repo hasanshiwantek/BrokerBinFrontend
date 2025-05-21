@@ -2,7 +2,9 @@ import React, { useEffect } from "react";
 import { regionsList } from "@/data/services";
 import css from "../../../../../styles/Menu/Manage/MyProfile.module.css";
 import { useFormContext } from "react-hook-form";
-
+import { getCompanyContact } from "@/ReduxStore/SearchProductSlice";
+import Cookies from "js-cookie";
+import { useDispatch,useSelector } from "react-redux";
 const Trading = () => {
   const { register, setValue, getValues, reset } = useFormContext();
 
@@ -45,12 +47,21 @@ const Trading = () => {
     });
   };
 
+
+  const companyId=Number(Cookies.get("companyId"))
+  console.log("Company id: ",companyId);
+  
+  const token=Cookies.get("token")
+  const {companyContactData}=useSelector((state)=>state.searchProductStore)
+  console.log("Company Data: ",companyContactData);
+  
+
+  const dispatch=useDispatch()
+
   useEffect(() => {
-    const fetchTradingData = async () => {
-      const res = await axios.get("/your-trading-api-endpoint");
-      reset(res.data); // populate form fields
-    };
-    fetchTradingData();
+
+    dispatch(getCompanyContact({token,id:companyId}))
+
   }, []);
 
   return (

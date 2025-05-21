@@ -173,6 +173,7 @@ export const getCompanyContact = createAsyncThunk(
   }
 );
 
+
 // export const applyFilters = (filters) => (dispatch, getState) => {
 //   const { searchResponseMatched, page, pageSize } = getState().searchProductStore;
 //   const filteredData = {};

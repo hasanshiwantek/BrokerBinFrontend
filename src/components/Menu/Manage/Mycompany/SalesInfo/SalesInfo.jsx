@@ -16,6 +16,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import Trading from "./Trading";
 import Terms from "./Terms";
+import Categories from "./Categories";
 import { useForm, FormProvider } from "react-hook-form";
 import { submitTradingData } from "../../../../../ReduxStore/ProfleSlice";
 const SalesInfo = () => {
@@ -125,6 +126,10 @@ const SalesInfo = () => {
     }
   };
 
+  useEffect(() => {
+    dispatch(setBlurWhileLoading(true));
+  }, []);
+
   if (error) {
     return (
       <>
@@ -218,6 +223,12 @@ const SalesInfo = () => {
                 {activeTab === "terms" && (
                   <div className={`${css.profileInfo_form}`}>
                     <Terms formData={formData} setFormData={setFormData} />
+                  </div>
+                )}
+
+                {activeTab === "categories" && (
+                  <div className={`${css.profileInfo_form}`}>
+                    <Categories formData={formData} setFormData={setFormData} />
                   </div>
                 )}
 
