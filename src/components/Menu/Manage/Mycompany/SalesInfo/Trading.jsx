@@ -53,7 +53,6 @@ const Trading = () => {
   }
 };
 
-
   useEffect(() => {
     // const fetchTradingData = async () => {
     //   const res = await axios.get("/your-trading-api-endpoint");
@@ -64,7 +63,7 @@ const Trading = () => {
     // reset(res.data); ← skip if no GET
 
     // cleanup old fields
-    reset(getValues());
+    reset(getValues()); 
   }, []);
 
   useEffect(() => {
