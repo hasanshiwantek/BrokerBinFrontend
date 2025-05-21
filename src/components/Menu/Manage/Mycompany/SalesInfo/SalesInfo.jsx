@@ -14,10 +14,14 @@ import { ToastContainer } from "react-toastify";
 import Trading from "./Trading";
 import Terms from "./Terms";
 import Categories from "./Categories";
+import Manufacturers from "./Manufacturer";
+import ReturnPolicy from "./ReturnPolicy";
 import { useForm, FormProvider } from "react-hook-form";
 import {
   submitTradingData,
   submitCompanyCategories,
+  submitCompanyManufacturers,
+  submitCompanyreturnPolicy
 } from "../../../../../ReduxStore/ProfleSlice";
 const SalesInfo = () => {
   // const methods = useForm();
@@ -46,13 +50,6 @@ const SalesInfo = () => {
   const methods = useForm({
     defaultValues: {
       company_id: company_id,
-      companyCategories: {
-        computers: [],
-        telecom: [],
-        mobileDevice: [],
-        general: [],
-        other: [],
-      },
       // you can set other default values here too if needed
     },
   });
@@ -98,6 +95,52 @@ const SalesInfo = () => {
 
         toast.success(result?.data?.message || "Company Categories updated!");
       }
+
+      if (activeTab === "manufacturers") {
+        const mfgPayload = {
+          companyId: company_id,
+          mfgs: data.manufacturers,
+        };
+
+        console.log("📦 Submitting Manufacturer Data:", mfgPayload);
+
+        const result = await dispatch(
+          submitCompanyManufacturers({
+            data: mfgPayload,
+            token,
+          })
+        ).unwrap();
+
+        console.log("✅ Categories Response:", result);
+
+        toast.success(
+          result?.data?.message || "Company Manufacturers updated!"
+        );
+      }
+
+      
+      if (activeTab === "returnPolicy") {
+        const returnPolicyPayload = {
+          companyId: company_id,
+          returnPolicy: data.returnPolicy,
+        };
+
+        console.log("📦 Submitting Manufacturer Data:", returnPolicyPayload);
+
+        const result = await dispatch(
+          submitCompanyreturnPolicy({
+            data: returnPolicyPayload,
+            token,
+          })
+        ).unwrap();
+
+        console.log("✅ Return Policy Response:", result);
+
+        toast.success(
+          result?.data?.message || "Company Return Policy updated!"
+        );
+      }
+
     } catch (err) {
       console.error("❌ Submission Error:", err);
       toast.error(
@@ -211,6 +254,18 @@ const SalesInfo = () => {
                 {activeTab === "categories" && (
                   <div className={`${css.profileInfo_form}`}>
                     <Categories />
+                  </div>
+                )}
+
+                {activeTab === "manufacturers" && (
+                  <div className={`${css.profileInfo_form}`}>
+                    <Manufacturers />
+                  </div>
+                )}
+
+                {activeTab === "returnPolicy" && (
+                  <div className={`${css.profileInfo_form}`}>
+                    <ReturnPolicy />
                   </div>
                 )}
 

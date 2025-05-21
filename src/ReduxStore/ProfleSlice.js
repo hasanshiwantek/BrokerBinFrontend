@@ -363,6 +363,69 @@ export const submitCompanyCategories = createAsyncThunk(
 );
 
 
+export const submitCompanyManufacturers= createAsyncThunk(
+  "profileStore/submitCompanyManufacturers",
+  async ({ data, token }) => {
+    try {
+      const response = await axios.post(
+        `${brokerAPI}company/company-mfg`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const responseData = {
+        data: response.data,
+        message: response.data.message || "Update successful",
+      };
+
+      console.log("✅ Redux Thunk Response:", responseData);
+      return responseData; // return all 3 fields
+    } catch (error) {
+      console.error(
+        "Error while submitting Company Mfgs data:",
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  }
+);
+
+
+export const submitCompanyreturnPolicy= createAsyncThunk(
+  "profileStore/submitCompanyreturnPolicy",
+  async ({ data, token }) => {
+    try {
+      const response = await axios.post(
+        `${brokerAPI}company/company-returnPolicy`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const responseData = {
+        data: response.data,
+        message: response.data.message || "Update successful",
+      };
+
+      console.log("✅ Redux Thunk Response:", responseData);
+      return responseData; // return all 3 fields
+    } catch (error) {
+      console.error(
+        "Error while submitting Company Mfgs data:",
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  }
+);
+
 
 const initialState = {
   user: JSON.parse(localStorage.getItem("user")),

@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useFormContext, useController } from "react-hook-form";
 import {
   mobileDevice,
@@ -27,21 +27,6 @@ const CategoryGroup = ({ name, items }) => {
 
   const checkAll = () => onChange(items.map((item) => item.value));
   const uncheckAll = () => onChange([]);
-
-  const companyId = Number(Cookies.get("companyId"));
-  console.log("Company id: ", companyId);
-
-  const token = Cookies.get("token");
-  const { companyContactData } = useSelector(
-    (state) => state.searchProductStore
-  );
-  const companyData = companyContactData?.data?.company;
-  console.log("Company Data: ", companyData);
-
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getCompanyContact({ token, id: companyId }));
-  }, [dispatch, token, companyId]);
 
   return (
     <div>
@@ -91,7 +76,31 @@ const Categories = () => {
       [type]: true,
     });
   };
+  const { setValue } = useFormContext();
+  const companyId = Number(Cookies.get("companyId"));
+  console.log("Company id: ", companyId);
 
+  const token = Cookies.get("token");
+  const { companyContactData } = useSelector(
+    (state) => state.searchProductStore
+  );
+  const companyData = companyContactData?.data?.company;
+  console.log("Company Data: ", companyData);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getCompanyContact({ token, id: companyId }));
+  }, [dispatch, token, companyId]);
+
+  useEffect(() => {
+    if (!companyData?.companyCategories) return;
+    try {
+      const parsed = JSON.parse(companyData.companyCategories);
+      setValue("companyCategories", parsed);
+    } catch (err) {
+      console.warn("Invalid companyCategories JSON", err);
+    }
+  }, [companyData, setValue]);
   return (
     <div className={`border p-4 ${css.onlyReceiveMatch}`}>
       <div className={css.categoriesToggleButton}>
