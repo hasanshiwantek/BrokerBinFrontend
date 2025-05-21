@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useFormContext, useController } from "react-hook-form";
 import {
   mobileDevice,
@@ -8,6 +8,9 @@ import {
   other,
 } from "@/data/services";
 import css from "@/styles/Company/Company.module.css";
+import { getCompanyContact } from "@/ReduxStore/SearchProductSlice";
+import Cookies from "js-cookie";
+import { useSelector, useDispatch } from "react-redux";
 
 const CategoryGroup = ({ name, items }) => {
   const { control } = useFormContext();
@@ -24,6 +27,21 @@ const CategoryGroup = ({ name, items }) => {
 
   const checkAll = () => onChange(items.map((item) => item.value));
   const uncheckAll = () => onChange([]);
+
+  const companyId = Number(Cookies.get("companyId"));
+  console.log("Company id: ", companyId);
+
+  const token = Cookies.get("token");
+  const { companyContactData } = useSelector(
+    (state) => state.searchProductStore
+  );
+  const companyData = companyContactData?.data?.company;
+  console.log("Company Data: ", companyData);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getCompanyContact({ token, id: companyId }));
+  }, [dispatch, token, companyId]);
 
   return (
     <div>
@@ -82,7 +100,12 @@ const Categories = () => {
             <button
               key={type}
               type="button"
-              className={onlyReceiveMatch[type] ? css.active : ""}
+              className={`px-3 py-1 border rounded 
+        ${
+          onlyReceiveMatch[type]
+            ? "!bg-blue-600 !text-white !font-bold"
+            : "bg-white text-black"
+        }`}
               onClick={() => toggleOnlyReceiveMatch(type)}
             >
               {type}
