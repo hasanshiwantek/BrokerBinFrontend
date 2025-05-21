@@ -138,6 +138,7 @@ const LeaveFeedBack = () => {
   const compId = Number(Cookies.get("companyId"));
   console.log("Company id: ", compId);
 
+  
   return (
     <>
       <main className={styles.mainLeaveFeedback}>
@@ -351,7 +352,6 @@ const LeaveFeedBack = () => {
         </div>
       </main>
 
-      <ToastContainer position="top-center" autoClose={2000} />
 
       {isOpen && selectedFeedback && (
         <UpdateFeedbackModal
@@ -368,6 +368,8 @@ const LeaveFeedBack = () => {
       {togglePopUp && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
+      <ToastContainer position="top-center" autoClose={2000} />
+
     </>
   );
 };

@@ -229,5 +229,5 @@ html {
 .ql-editor p{
   margin: 0;
   padding: 0;
-  display: table-caption !important;
+  /* display: table-caption !important; */
 }

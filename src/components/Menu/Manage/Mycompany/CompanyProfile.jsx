@@ -184,6 +184,11 @@ const MyCompany = () => {
     console.log("Payload Sent:", data);
   };
 
+  const loggedInUserId = Number(Cookies.get("user_id"));
+  const primaryContactId = formData.data?.company?.primaryContact?.id;
+
+  console.log(loggedInUserId, primaryContactId);
+
   if (error) {
     return (
       <>
@@ -192,12 +197,12 @@ const MyCompany = () => {
     );
   }
 
-  if(loading){
-    return(
+  if (loading) {
+    return (
       <>
-<LoadingState/>
+        <LoadingState />
       </>
-    )
+    );
   }
 
   return (
@@ -583,8 +588,13 @@ const MyCompany = () => {
               </div>
               <div className="pt-2">
                 <button
-                  className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-7"
+                  className={
+                    loggedInUserId != primaryContactId
+                      ? "cursor-not-allowed !bg-[#2c83ec]  !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6 disabled:first"
+                      : "!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6 "
+                  }
                   type="submit"
+                  disabled={loggedInUserId != primaryContactId}
                 >
                   Submit Changes
                 </button>

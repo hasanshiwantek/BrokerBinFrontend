@@ -139,7 +139,7 @@ const FeedbackModal = ({ isOpen, onClose, company, onSucces }) => {
                   setFormData({ ...formData, [e.target.name]: e.target.value })
                 }
                 maxLength="61"
-                className="h-[3vh]"
+                className="h-[8vh]"
               ></textarea>
             </label>
 

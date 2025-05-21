@@ -493,13 +493,9 @@ const CompanyPrimaryInfo = () => {
                       ))}
                     </div>
                     <div className="map  w-[35rem] ml-28">
-                      {company ? (
-                        <div className="">
-                          <MapComponent company={company} />
-                        </div>
-                      ) : (
-                        <p>No company data found</p>
-                      )}
+                      <div className="">
+                        <MapComponent company={company} />
+                      </div>
                     </div>
                   </div>
 
@@ -508,13 +504,13 @@ const CompanyPrimaryInfo = () => {
                     <h2 className="text-md font-semibold">
                       Hours of Operation
                     </h2>
-  
+
                     {hoursOfOperationFields.map((field) => {
                       if (field.name === "open" || field.name === "close") {
                         return (
                           <div
                             key={field.name}
-                            className="flex items-center justify-between gap-4 "
+                            className="flex items-center justify-between gap-4  ml-[9rem]"
                           >
                             <label htmlFor={field.name} className="w-32">
                               {field.label}
@@ -559,7 +555,7 @@ const CompanyPrimaryInfo = () => {
 
                       // Standard select or text fields (Office Hours, Time Zone)
                       return (
-                        <div key={field.name} className="flex items-center  ">
+                        <div key={field.name} className="flex items-center ml-[9rem]  ">
                           <label htmlFor={field.name} className="w-32">
                             {field.label}
                           </label>
@@ -572,7 +568,7 @@ const CompanyPrimaryInfo = () => {
                               value={
                                 formData?.data?.company?.[field.name] || ""
                               }
-                              className="border border-gray-300 rounded px-2 py-1 "
+                              className="border border-gray-300 rounded px-2 py-1 w-96"
                             >
                               <option value="">Select {field.label}</option>
                               {field.options.map((opt) => (
@@ -597,7 +593,6 @@ const CompanyPrimaryInfo = () => {
                         </div>
                       );
                     })}
-
                   </div>
                 </div>
               )}

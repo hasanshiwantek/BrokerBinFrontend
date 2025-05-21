@@ -108,6 +108,11 @@ const CompanyContacts = () => {
     });
   };
 
+  const loggedInUserId = Number(Cookies.get("user_id"));
+  const primaryContactId = companyContactData.data?.company?.primaryContact?.id;
+
+  console.log(loggedInUserId, primaryContactId);
+
   return (
     <>
       <div className={`${css.profileLayout} `}>
@@ -234,29 +239,51 @@ const CompanyContacts = () => {
             </div>
             <div className="flex gap-5 items-center mt-3">
               <button
-                className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6"
+                className={
+                  loggedInUserId != primaryContactId
+                    ? "cursor-not-allowed !bg-[#2c83ec]  !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6 disabled:first"
+                    : "!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6 "
+                }
                 type="button"
+                disabled={loggedInUserId != primaryContactId}
               >
                 Approve
               </button>
+
               <button
-                className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6"
+                className={
+                  loggedInUserId != primaryContactId
+                    ? "cursor-not-allowed !bg-[#2c83ec]  !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6 disabled:first"
+                    : "!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6 "
+                }
                 type="button"
                 onClick={handleEditContact}
+                disabled={loggedInUserId != primaryContactId}
               >
                 Edit
               </button>
+
               <button
-                className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6"
+                className={
+                  loggedInUserId != primaryContactId
+                    ? "cursor-not-allowed !bg-[#2c83ec]  !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6 disabled:first"
+                    : "!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6 "
+                }
                 type="button"
                 onClick={handleDeleteClick}
+                disabled={loggedInUserId != primaryContactId}
               >
                 Delete
               </button>
               <NavLink to={"/CreateAccount"}>
                 <button
-                  className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-7"
+                  className={
+                    loggedInUserId != primaryContactId
+                      ? "cursor-not-allowed !bg-[#2c83ec]  !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6 disabled:first"
+                      : "!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6 "
+                  }
                   type="button"
+                  disabled={loggedInUserId != primaryContactId}
                 >
                   Create Account
                 </button>

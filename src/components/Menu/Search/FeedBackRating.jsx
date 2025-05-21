@@ -7,7 +7,10 @@ import neutralEmoji from "../../../assets/neutral-emoji.png";
 import negativeEmoji from "../../../assets/negative-emoji.png";
 import ntlogo from "../../../assets/nt-logo.png";
 import thumbsUp from "../../../assets/thumbsup.png";
-import { getCompanyFeedback,updateFeedback } from "../../../ReduxStore/ProfleSlice";
+import {
+  getCompanyFeedback,
+  updateFeedback,
+} from "../../../ReduxStore/ProfleSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserData } from "../../../ReduxStore/ProfleSlice";
 import Cookies from "js-cookie";
@@ -116,6 +119,13 @@ const FeedBackRating = () => {
 
   const compId = companyId;
   const companyName = initialData?.company?.name;
+
+  // Get the primaryContactId from the first feedback's toCompanyName, if available
+  const feedbackCompanyId =
+    companyFeedbackData?.feedbacks?.[0]?.toCompanyName?.id;
+
+  const loggedInCompanyId = Number(Cookies.get("companyId"));
+  console.log(feedbackCompanyId, loggedInCompanyId);
 
   return (
     <>
@@ -238,11 +248,18 @@ const FeedBackRating = () => {
         <div
           className={`${styles.buttonSec} flex justify-start gap-5 items-center`}
         >
-          <button className={styles.ethicsComplaintButton}>
-            Ethics Complaint
-          </button>
+          <Link to={"/ethics"}>
+            <button className={styles.ethicsComplaintButton}>
+              Ethics Complaint
+            </button>
+          </Link>
+
           <button
-            className={styles.ethicsComplaintButton}
+            className={
+              loggedInCompanyId == feedbackCompanyId
+                ? "hidden"
+                : styles.ethicsComplaintButton
+            }
             onClick={() => setIsOpen(true)}
           >
             Leave Feedback
