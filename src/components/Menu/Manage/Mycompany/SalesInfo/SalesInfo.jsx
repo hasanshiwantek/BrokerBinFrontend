@@ -18,7 +18,7 @@ import Trading from "./Trading";
 import Terms from "./Terms";
 import Categories from "./Categories";
 import { useForm, FormProvider } from "react-hook-form";
-import { submitTradingData } from "../../../../../ReduxStore/ProfleSlice";
+import { submitTradingData,submitCompanyCategories } from "../../../../../ReduxStore/ProfleSlice";
 const SalesInfo = () => {
   // const methods = useForm();
 
@@ -124,6 +124,19 @@ const SalesInfo = () => {
       toast.error("❌ Failed to update company trading data");
       console.warn("❌ Failure Response:", result);
     }
+
+
+     
+    
+
+
+
+
+
+
+
+
+
   };
 
   useEffect(() => {
