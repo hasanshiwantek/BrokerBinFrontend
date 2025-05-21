@@ -331,6 +331,39 @@ export const submitTradingData = createAsyncThunk(
 
 
 
+export const submitCompanyCategories = createAsyncThunk(
+  "profileStore/submitCompanyCategories",
+  async ({ data, token }) => {
+    try {
+      const response = await axios.post(
+        `${brokerAPI}company/company-category`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const responseData = {
+        data: response.data,
+        message: response.data.message || "Update successful",
+      };
+
+      console.log("✅ Redux Thunk Response:", responseData);
+      return responseData; // return all 3 fields
+    } catch (error) {
+      console.error(
+        "Error while submitting Company Categories data:",
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  }
+);
+
+
+
 const initialState = {
   user: JSON.parse(localStorage.getItem("user")),
   formData: {

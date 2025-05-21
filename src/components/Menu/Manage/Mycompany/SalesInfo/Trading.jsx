@@ -2,14 +2,16 @@ import React, { useEffect, useState } from "react";
 import { regionsList } from "@/data/services";
 import css from "../../../../../styles/Menu/Manage/MyProfile.module.css";
 import { useFormContext, Controller } from "react-hook-form";
-
+import Cookies from "js-cookie";
+import { useSelector, useDispatch } from "react-redux";
+import { getCompanyContact } from "@/ReduxStore/SearchProductSlice";
 const Trading = () => {
   const { register, setValue, getValues, reset, control } = useFormContext();
 
   const [selected, setSelected] = useState({
-  regions: [],
-  shipping: [],
-})
+    regions: [],
+    shipping: [],
+  });
 
   const regions = [
     { label: "North America", value: "North America", id: "NorthAmerica" },
@@ -36,23 +38,34 @@ const Trading = () => {
   ];
 
   const handleCheckAll = (type, check = true) => {
-  if (type === "regions") {
-    setSelected((prev) => ({
-      ...prev,
-      regions: check ? regions.map(r => r.value) : [],
-    }));
-  } else if (type === "shipping") {
-    setSelected((prev) => ({
-      ...prev,
-      shipping: check ? shippingOptions.map(s => s.name) : [],
-    }));
-  } else if (type === "programs") {
-    programOptions.forEach((item) => {
-      setValue(item.name, check);
-    });
-  }
-};
+    if (type === "regions") {
+      setSelected((prev) => ({
+        ...prev,
+        regions: check ? regions.map((r) => r.value) : [],
+      }));
+    } else if (type === "shipping") {
+      setSelected((prev) => ({
+        ...prev,
+        shipping: check ? shippingOptions.map((s) => s.name) : [],
+      }));
+    } else if (type === "programs") {
+      programOptions.forEach((item) => {
+        setValue(item.name, check);
+      });
+    }
+  };
 
+  const companyId = Number(Cookies.get("companyId"));
+  console.log("Company id: ", companyId);
+
+  const token = Cookies.get("token");
+  const { companyContactData } = useSelector(
+    (state) => state.searchProductStore
+  );
+  const companyData = companyContactData?.data?.company;
+  console.log("Company Data: ", companyData);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     // const fetchTradingData = async () => {
@@ -68,28 +81,78 @@ const Trading = () => {
   }, []);
 
   useEffect(() => {
-  setValue("trading_region", selected.regions);
-  setValue("shipping_options", selected.shipping); // <-- new array field
-}, [selected, setValue]);
+    dispatch(getCompanyContact({ token, id: companyId }));
+  }, [dispatch, token, companyId]);
+
+  useEffect(() => {
+    setValue("trading_region", selected.regions);
+    setValue("shipping_options", selected.shipping); // <-- new array field
+  }, [selected, setValue]);
 
   const handleRegionChange = (value) => {
-  setSelected((prev) => ({
-    ...prev,
-    regions: prev.regions.includes(value)
-      ? prev.regions.filter((v) => v !== value)
-      : [...prev.regions, value],
-  }));
-};
+    setSelected((prev) => ({
+      ...prev,
+      regions: prev.regions.includes(value)
+        ? prev.regions.filter((v) => v !== value)
+        : [...prev.regions, value],
+    }));
+  };
 
-// For shipping changes
-const handleShippingChange = (value) => {
-  setSelected((prev) => ({
-    ...prev,
-    shipping: prev.shipping.includes(value)
-      ? prev.shipping.filter((v) => v !== value)
-      : [...prev.shipping, value],
-  }));
-};
+  // For shipping changes
+  const handleShippingChange = (value) => {
+    setSelected((prev) => ({
+      ...prev,
+      shipping: prev.shipping.includes(value)
+        ? prev.shipping.filter((v) => v !== value)
+        : [...prev.shipping, value],
+    }));
+  };
+
+  useEffect(() => {
+    if (!companyData) return;
+
+    // 1. Simple fields
+    const basicMap = {
+      blind_shipping: companyData.blind_shipping === 1 ? "yes" : "no",
+      lease_program: !!companyData.lease_program,
+      rental_program: !!companyData.rental_program,
+      trade_program: !!companyData.trade_program,
+      shippingOther: companyData.shipping_other || "",
+    };
+
+    Object.entries(basicMap).forEach(([key, val]) => setValue(key, val));
+
+    // 2. Trading Region
+    const regions = JSON.parse(companyData.trading_region || "[]");
+    // setSelected(regions);
+    setSelected((prev) => ({
+      ...prev,
+      regions: JSON.parse(companyData.trading_region || "[]"),
+      shipping: JSON.parse(companyData.shipping_options || "[]"),
+    }));
+    setValue("trading_region", regions);
+
+    // 3. Deadline (hour + AM/PM)
+    if (companyData.shipping_deadline) {
+      const [hour, ampm] = companyData.shipping_deadline.split(" ");
+      setValue("shipping_hour", hour);
+      setValue("shipping_ampm", ampm);
+    }
+
+    // 4. Shipping Options (FedEx, DHL, etc.)
+    try {
+      const opts = JSON.parse(companyData.shipping_options || "[]");
+      opts.forEach((label) => {
+        const normalized = label
+          .toLowerCase()
+          .replace(/\s+/g, "")
+          .replace(/[^a-z]/gi, "");
+        setValue(normalized, true);
+      });
+    } catch (e) {
+      console.warn("⚠️ Invalid shipping_options format:", e);
+    }
+  }, [companyData, setValue]);
 
   return (
     <>
@@ -171,7 +234,7 @@ const handleShippingChange = (value) => {
         <div className="flex gap-2 items-center">
           <span>Shipping Deadline</span>
           <select
-            {...register("shipping_deadline")}
+            {...register("shipping_hour")}
             className="border border-gray-300 rounded px-2 py-1"
           >
             {[...Array(12)].map((_, i) => (
@@ -182,7 +245,7 @@ const handleShippingChange = (value) => {
           </select>
 
           <select
-            {...register("shipping_deadline")}
+            {...register("shipping_ampm")}
             className="border border-gray-300 rounded px-2 py-1"
           >
             <option value="AM">AM</option>
@@ -195,25 +258,24 @@ const handleShippingChange = (value) => {
       <div className={css.profileInfo_form}>
         <h1>Shipping Options</h1>
         <Controller
-  control={control}
-  name="shipping_options"
-  defaultValue={[]}
-  render={() => (
-    <div className="flex flex-wrap gap-10 text-left">
-      {shippingOptions.map((opt) => (
-        <label key={opt.name} className="flex items-center gap-2">
-          <span>{opt.label}</span>
-          <input
-            type="checkbox"
-            checked={selected.shipping.includes(opt.name)}
-            onChange={() => handleShippingChange(opt.name)}
-          />
-        </label>
-      ))}
-    </div>
-  )}
-/>
-
+          control={control}
+          name="shipping_options"
+          defaultValue={[]}
+          render={() => (
+            <div className="flex flex-wrap gap-10 text-left">
+              {shippingOptions.map((opt) => (
+                <label key={opt.name} className="flex items-center gap-2">
+                  <span>{opt.label}</span>
+                  <input
+                    type="checkbox"
+                    checked={selected.shipping.includes(opt.name)}
+                    onChange={() => handleShippingChange(opt.name)}
+                  />
+                </label>
+              ))}
+            </div>
+          )}
+        />
         <div className="my-5">
           <label> Other</label>
           <input className="ml-5" type="text" {...register("shippingOther")} />

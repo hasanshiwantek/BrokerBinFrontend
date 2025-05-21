@@ -505,11 +505,7 @@ export const telecom = [
   },
 ];
 
-
-export const scrap=[
-  { id: "scrap", label: "Scrap", value: "Scrap" },
-
-]
+export const scrap = [{ id: "scrap", label: "Scrap", value: "Scrap" }];
 
 export const mobileDevice = [
   { id: "accessory", label: "Accessory", value: "Accessory" },
@@ -555,6 +551,25 @@ export const computers = [
     value: "Tape Media Medical",
   },
   { id: "other", label: "Other", value: "Other" },
+];
+
+export const general = [
+  { id: "reseller", label: "Reseller", value: "Reseller" },
+  { id: "broker", label: "Broker", value: "Broker" },
+  { id: "dealer", label: "Dealer", value: "Dealer" },
+  { id: "var", label: "VAR", value: "VAR" },
+  { id: "service_center", label: "Service Center", value: "Service Center" },
+  { id: "mfg", label: "Mfg", value: "Mfg" },
+  { id: "integrator", label: "Integrator", value: "Integrator" },
+  { id: "retail", label: "Retail", value: "Retail" },
+  { id: "distributor", label: "Distributor", value: "Distributor" },
+];
+
+export const other = [
+  { id: "container", label: "Container", value: "Container" },
+  { id: "pallet", label: "Pallet", value: "Pallet" },
+  { id: "recycling", label: "Recycling", value: "Recycling" },
+  { id: "scrap", label: "Scrap", value: "Scrap" },
 ];
 
 export const initialMFGs = [

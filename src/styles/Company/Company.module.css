@@ -1,0 +1,152 @@
+.options_form {
+  background: #fff;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 37vw;
+
+  select {
+    border: 1px solid #8b8b8b;
+    padding: 0.5rem;
+  }
+
+  h1 {
+    color: #444;
+    font-size: 1.5em;
+    font-weight: 700;
+    width: 33vw;
+  }
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 4rem;
+    gap: 2rem;
+  }
+
+  .onlyReceiveMatch {
+    display: flex;
+    flex-direction: column;
+
+    > div:nth-child(1) {
+      display: flex;
+      gap: 1rem;
+      padding-bottom: 5px;
+      margin-bottom: 5px;
+      border-bottom: 5px solid #e8e8e8;
+    }
+
+    button {
+      color: white;
+      background: var(--primary-color);
+      padding: 1rem;
+    }
+
+}
+}
+
+.checkboxContainer {
+  /* border: 1px solid pink; */
+  /* overflow-y: scroll; */
+  /* height: 20rem; */
+  /* padding: 1rem; */
+  /* width: 34vw; */
+}
+
+.checkbox {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  padding: 1rem;
+
+  /* height: 100%; */
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    label {
+      font-weight: normal;
+      font-weight: 500;
+    }
+
+    input[type="checkbox"] {
+      margin-right: 0.5rem;
+    }
+  }
+
+  &_btn {
+    display: flex;
+    justify-content: end;
+  }
+}
+
+.checkbox_btn {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.onlyReceiveMatchBtn button {
+  color: #444;
+  /* display: inline-block !important; */
+  margin: 0 5px;
+  padding: 8px;
+  background-color: #bfbfbf;
+  border: 1px solid #bfbfbf;
+  font-weight: 700;
+}
+
+.onlyReceiveMatchBtn button.active {
+  background-color: #fff;
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+}
+
+.broadcastFilters label {
+  font-weight: 500;
+}
+
+.categoriesToggleButton {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 3px solid lightgray;
+
+  button {
+    background: var(--primary-color);
+    padding: 0.7rem;
+  }
+}
+
+.checkBtn {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+
+  button {
+    color: black;
+    font-weight: 600;
+  }
+}
+
+.checkbox ul {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  padding: 10px;
+  gap: 10px;
+}
+
+.checkbox ul li span label {
+  margin-right: 5px;
+}
+
+.checkbox input[type="checkbox"] {
+  margin-right: 20px;
+}
+
+.active {
+  background-color: #0070f3;
+  color: white;
+}
