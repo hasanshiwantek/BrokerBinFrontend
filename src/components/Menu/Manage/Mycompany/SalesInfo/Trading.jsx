@@ -63,7 +63,7 @@ const Trading = () => {
     // reset(res.data); ← skip if no GET
 
     // cleanup old fields
-    reset(getValues()); 
+    reset(getValues());
   }, []);
 
   useEffect(() => {
