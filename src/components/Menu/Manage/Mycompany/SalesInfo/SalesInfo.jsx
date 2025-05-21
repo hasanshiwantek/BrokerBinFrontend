@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import css from "../../../../../styles/Menu/Manage/MyProfile.module.css";
 import LoadingState from "../../../../../LoadingState";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setBlurWhileLoading,
-} from "../../../../../ReduxStore/ProfleSlice";
+import { setBlurWhileLoading } from "../../../../../ReduxStore/ProfleSlice";
 import ErrorStatus from "../../../../Error/ErrorStatus";
 import Cookies from "js-cookie";
 import { Link, NavLink } from "react-router-dom";
@@ -17,7 +15,10 @@ import Trading from "./Trading";
 import Terms from "./Terms";
 import Categories from "./Categories";
 import { useForm, FormProvider } from "react-hook-form";
-import { submitTradingData,submitCompanyCategories } from "../../../../../ReduxStore/ProfleSlice";
+import {
+  submitTradingData,
+  submitCompanyCategories,
+} from "../../../../../ReduxStore/ProfleSlice";
 const SalesInfo = () => {
   // const methods = useForm();
   const token = Cookies.get("token");
@@ -45,6 +46,13 @@ const SalesInfo = () => {
   const methods = useForm({
     defaultValues: {
       company_id: company_id,
+      companyCategories: {
+        computers: [],
+        telecom: [],
+        mobileDevice: [],
+        general: [],
+        other: [],
+      },
       // you can set other default values here too if needed
     },
   });
@@ -52,26 +60,53 @@ const SalesInfo = () => {
   const { handleSubmit } = methods;
 
   const handleFormSubmit = async (data) => {
-  try {
-    if (activeTab === "trading") {
-      data.blind_shipping = data.blind_shipping === "yes";
-      await dispatch(
-        submitTradingData({
-          data,
-          token,
-          company_id,
-        })
-      ).unwrap(); // use unwrap to catch errors in try/catch
-      toast.success("Trading info updated!");
+    try {
+      if (activeTab === "trading") {
+        console.log("📦 Submitting Trading Data:", data);
+
+        data.blind_shipping = data.blind_shipping === "yes";
+        data.shipping_deadline = `${data.shipping_hour} ${data.shipping_ampm}`;
+        const result = await dispatch(
+          submitTradingData({
+            data,
+            token,
+            company_id,
+          })
+        ).unwrap();
+
+        console.log("✅ Trading Response:", result);
+
+        toast.success(result?.data?.message || "Trading info updated!");
+      }
+
+      if (activeTab === "categories") {
+        const categoryPayload = {
+          companyId: company_id,
+          companyCategories: data.companyCategories,
+        };
+
+        console.log("📦 Submitting Category Data:", categoryPayload);
+
+        const result = await dispatch(
+          submitCompanyCategories({
+            data: categoryPayload,
+            token,
+          })
+        ).unwrap();
+
+        console.log("✅ Categories Response:", result);
+
+        toast.success(result?.data?.message || "Company Categories updated!");
+      }
+    } catch (err) {
+      console.error("❌ Submission Error:", err);
+      toast.error(
+        err?.response?.data?.message ||
+          err?.message ||
+          "Update failed. Please try again."
+      );
     }
-
-    // Add other tab API calls similarly if needed
-  } catch (err) {
-    toast.error("Update failed. Please try again.");
-    console.error(err);
-  }
-};
-
+  };
 
   useEffect(() => {
     dispatch(setBlurWhileLoading(true));
@@ -175,7 +210,7 @@ const SalesInfo = () => {
 
                 {activeTab === "categories" && (
                   <div className={`${css.profileInfo_form}`}>
-                    <Categories formData={formData} setFormData={setFormData} />
+                    <Categories />
                   </div>
                 )}
 
