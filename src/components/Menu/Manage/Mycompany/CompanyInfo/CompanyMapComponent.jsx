@@ -33,12 +33,12 @@ const MapComponent = ({ company }) => {
   };
 
   const defaultCenter =
-    companiesArray.length &&
-    companiesArray[0].latitude &&
-    companiesArray[0].longitude
+    companiesArray?.length &&
+    companiesArray[0]?.latitude &&
+    companiesArray[0]?.longitude
       ? {
-          lat: companiesArray[0].latitude,
-          lng: companiesArray[0].longitude,
+          lat: companiesArray[0]?.latitude,
+          lng: companiesArray[0]?.longitude,
         }
       : { lat: 37.7749, lng: -122.4194 }; // fallback (San Francisco)
 
@@ -83,16 +83,10 @@ const MapComponent = ({ company }) => {
     },
   });
 
-  if (!companiesArray.length || !companiesArray[0].latitude) {
+  if (!companiesArray.length || !companiesArray[0]?.latitude) {
     return (
-      <div className="bg-blue-400 p-4">
-        <p className="text-white text-2xl m-4 font-semibold flex items-center gap-1">
-          <FaInfoCircle className="text-3xl" />
-          No valid location found.
-          <span className="text-black text-2xl ml-4 font-semibold">
-            Try another search
-          </span>
-        </p>
+      <div className="flex justify-center items-center min-h-[200px]">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent"></div>
       </div>
     );
   }
