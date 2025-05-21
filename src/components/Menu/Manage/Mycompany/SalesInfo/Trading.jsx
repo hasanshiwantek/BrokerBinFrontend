@@ -38,22 +38,22 @@ const Trading = () => {
   ];
 
   const handleCheckAll = (type, check = true) => {
-  if (type === "regions") {
-    setSelected((prev) => ({
-      ...prev,
-      regions: check ? regions.map(r => r.value) : [],
-    }));
-  } else if (type === "shipping") {
-    setSelected((prev) => ({
-      ...prev,
-      shipping: check ? shippingOptions.map(s => s.name) : [],
-    }));
-  } else if (type === "programs") {
-    programOptions.forEach((item) => {
-      setValue(item.name, check);
-    });
-  }
-};
+    if (type === "regions") {
+      setSelected((prev) => ({
+        ...prev,
+        regions: check ? regions.map((r) => r.value) : [],
+      }));
+    } else if (type === "shipping") {
+      setSelected((prev) => ({
+        ...prev,
+        shipping: check ? shippingOptions.map((s) => s.name) : [],
+      }));
+    } else if (type === "programs") {
+      programOptions.forEach((item) => {
+        setValue(item.name, check);
+      });
+    }
+  };
 
   const companyId = Number(Cookies.get("companyId"));
   console.log("Company id: ", companyId);
@@ -85,28 +85,28 @@ const Trading = () => {
   }, [dispatch, token, companyId]);
 
   useEffect(() => {
-  setValue("trading_region", selected.regions);
-  setValue("shipping_options", selected.shipping); // <-- new array field
-}, [selected, setValue]);
+    setValue("trading_region", selected.regions);
+    setValue("shipping_options", selected.shipping); // <-- new array field
+  }, [selected, setValue]);
 
   const handleRegionChange = (value) => {
-  setSelected((prev) => ({
-    ...prev,
-    regions: prev.regions.includes(value)
-      ? prev.regions.filter((v) => v !== value)
-      : [...prev.regions, value],
-  }));
-};
- 
-// For shipping changes
-const handleShippingChange = (value) => {
-  setSelected((prev) => ({
-    ...prev,
-    shipping: prev.shipping.includes(value)
-      ? prev.shipping.filter((v) => v !== value)
-      : [...prev.shipping, value],
-  }));
-};
+    setSelected((prev) => ({
+      ...prev,
+      regions: prev.regions.includes(value)
+        ? prev.regions.filter((v) => v !== value)
+        : [...prev.regions, value],
+    }));
+  };
+
+  // For shipping changes
+  const handleShippingChange = (value) => {
+    setSelected((prev) => ({
+      ...prev,
+      shipping: prev.shipping.includes(value)
+        ? prev.shipping.filter((v) => v !== value)
+        : [...prev.shipping, value],
+    }));
+  };
 
   useEffect(() => {
     if (!companyData) return;
@@ -126,10 +126,10 @@ const handleShippingChange = (value) => {
     const regions = JSON.parse(companyData.trading_region || "[]");
     // setSelected(regions);
     setSelected((prev) => ({
-  ...prev,
-  regions: JSON.parse(companyData.trading_region || "[]"),
-  shipping: JSON.parse(companyData.shipping_options || "[]"),
-}));
+      ...prev,
+      regions: JSON.parse(companyData.trading_region || "[]"),
+      shipping: JSON.parse(companyData.shipping_options || "[]"),
+    }));
     setValue("trading_region", regions);
 
     // 3. Deadline (hour + AM/PM)
@@ -152,8 +152,6 @@ const handleShippingChange = (value) => {
     } catch (e) {
       console.warn("⚠️ Invalid shipping_options format:", e);
     }
-
-    
   }, [companyData, setValue]);
 
   return (
@@ -161,7 +159,7 @@ const handleShippingChange = (value) => {
       {/*Regions*/}
       <div className={css.profileInfo_form}>
         <h1>Trading Regions</h1>
-       <Controller
+        <Controller
           control={control}
           name="trading_region"
           defaultValue={[]}
@@ -260,24 +258,24 @@ const handleShippingChange = (value) => {
       <div className={css.profileInfo_form}>
         <h1>Shipping Options</h1>
         <Controller
-  control={control}
-  name="shipping_options"
-  defaultValue={[]}
-  render={() => (
-    <div className="flex flex-wrap gap-10 text-left">
-      {shippingOptions.map((opt) => (
-        <label key={opt.name} className="flex items-center gap-2">
-          <span>{opt.label}</span>
-          <input
-            type="checkbox"
-            checked={selected.shipping.includes(opt.name)}
-            onChange={() => handleShippingChange(opt.name)}
-          />
-        </label>
-      ))}
-    </div>
-  )}
-/>
+          control={control}
+          name="shipping_options"
+          defaultValue={[]}
+          render={() => (
+            <div className="flex flex-wrap gap-10 text-left">
+              {shippingOptions.map((opt) => (
+                <label key={opt.name} className="flex items-center gap-2">
+                  <span>{opt.label}</span>
+                  <input
+                    type="checkbox"
+                    checked={selected.shipping.includes(opt.name)}
+                    onChange={() => handleShippingChange(opt.name)}
+                  />
+                </label>
+              ))}
+            </div>
+          )}
+        />
         <div className="my-5">
           <label> Other</label>
           <input className="ml-5" type="text" {...register("shippingOther")} />
