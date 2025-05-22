@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 // Define the AsyncThunk
+
 export const createUser = createAsyncThunk(
   "createUser",
   async (formData, { rejectWithValue }) => {
@@ -201,6 +202,17 @@ const CreateAccount = () => {
                   className={({ isActive }) => (isActive ? css.active : "")}
                 >
                   <span>Company Info</span>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/mycompany/References"
+                  end
+                  className={({ isActive }) =>
+                    isActive ? css.active : ""
+                  }
+                >
+                  <span>Ref</span>
                 </NavLink>
               </li>
             </ul>
