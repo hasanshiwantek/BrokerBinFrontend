@@ -77,7 +77,7 @@ useEffect(() => {
   if (!companyData) return;
 
   try {
-    const serverMFGs = JSON.parse(companyData.mfg || "null");
+    const serverMFGs = JSON.parse(companyData.manufacturer || "null");
     const included =
       Array.isArray(serverMFGs) && serverMFGs.length > 0
         ? serverMFGs
