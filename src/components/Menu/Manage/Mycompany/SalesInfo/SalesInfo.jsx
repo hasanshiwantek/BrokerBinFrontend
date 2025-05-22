@@ -99,7 +99,7 @@ const SalesInfo = () => {
       if (activeTab === "manufacturers") {
         const mfgPayload = {
           companyId: company_id,
-          mfgs: data.manufacturers,
+          manufacturer: data.manufacturers,
         };
 
         console.log("📦 Submitting Manufacturer Data:", mfgPayload);

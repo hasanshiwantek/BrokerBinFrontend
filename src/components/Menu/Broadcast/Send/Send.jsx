@@ -13,7 +13,10 @@ import { clearAllSelections } from "../../../../ReduxStore/BroadCast";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-
+import { MdModeEditOutline } from "react-icons/md";
+import { RiNumber2 } from "react-icons/ri";
+import { RiNumber3 } from "react-icons/ri";
+import { FaCheck } from "react-icons/fa6";
 const BroadcastForm = () => {
   const token = Cookies.get("token");
   const { user } = JSON.parse(localStorage.getItem("user"));
@@ -47,6 +50,7 @@ const BroadcastForm = () => {
     buy_in: "",
     description: "",
     additional_comments: "",
+    sendCopy: false,
   });
 
   const [emailFormat, setEmailFormat] = useState({
@@ -122,7 +126,7 @@ const BroadcastForm = () => {
   // Handle input change for text and select fields
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    // console.log(type, checked, value, name);
+    console.log(type, checked, value, name);
     setFormData((prevData) => ({
       ...prevData,
       [name]: type === "checkbox" ? checked : value,
@@ -171,41 +175,23 @@ const BroadcastForm = () => {
     setSelectedCompanyNames([]);
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   // Combine form data and other selections
-  //   if (files) {
-  //     const data = {
-  //       uploadFile: files,
-  //       type: broadcastType,
-  //     };
-  //     dispatch(sendBroadcast({ token, data }));
-  //     // console.log(data);
-  //   } else {
-  //     const data = {
-  //       ...formData,
-  //       type: broadcastType,
-  //       selectedCompanies: computerSelection,
-  //       selectedTelecom: telecomSelection,
-  //       selectedMobileDevices: mobileDevicesSelection,
-  //       selectedRegion: regionSelection,
-  //       companiesSelection: companiesSelection,
-  //       service: serviceData
-  //     };
-  //     dispatch(sendBroadcast({ data, token }));
-  //     // console.log(data);
+  const getStepIcon = (step) => {
+    switch (step) {
+      case "choose":
+        if (formTypes.emailFormat) return <FaCheck />;
+        if (formTypes[broadcastType]) return <FaCheck />;
+        return <MdModeEditOutline />;
 
-  //   }
-  //   setEmailFormat((prev) => {
-  //     const updatedFormat = { ...prev };
-  //     updatedFormat.time = new Date().toLocaleTimeString("en-US", {
-  //       hour12: true,
-  //     });
-  //     updatedFormat.date = new Date().toLocaleDateString("en-US");
-  //     return updatedFormat;
-  //   });
-  //   console.log(token)
-  // };
+      case "create":
+        if (formTypes.emailFormat) return <FaCheck />;
+        if (formTypes[broadcastType]) return <MdModeEditOutline />;
+        return <RiNumber2 />;
+
+      case "review":
+        if (formTypes.emailFormat) return <MdModeEditOutline />;
+        return <RiNumber3 />;
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -277,10 +263,35 @@ const BroadcastForm = () => {
   return (
     <div className={css.outerPadding}>
       <div className={css.broadcastForm}>
+        <div className="border-b-2 border-b-gray-300 ">
+          <ul className="flex justify-around items-center my">
+            <li className="text-[10pt] flex justify-start items-center gap-2">
+              <i className="bg-blue-600 text-white rounded-3xl p-2">
+                {getStepIcon("choose")}
+              </i>
+              <span> CHOOSE A TYPE </span>
+            </li>
+
+            <li className="text-[10pt] flex justify-start items-center gap-2">
+              <i className="bg-blue-600 text-white  rounded-3xl p-2">
+                {getStepIcon("create")}
+              </i>
+              <span>CREATE</span>
+            </li>
+
+            <li className="text-[10pt] flex justify-start items-center gap-2">
+              <i className="bg-blue-600 text-white  rounded-3xl p-2">
+                {getStepIcon("review")}
+              </i>
+              <span>REVIEW AND SEND</span>
+            </li>
+          </ul>
+        </div>
         {formTypes.hideFormOne && !formTypes.emailFormat && (
           <>
             <div className={css.broadcastFirstForm}>
               <h2>Send a Broadcast</h2>
+
               <div>
                 <h3>What type of Broadcast would you like to send?</h3>
                 <div className={css.broadcastTypes}>
@@ -474,146 +485,214 @@ const BroadcastForm = () => {
                   )}
                 </div>
                 <div className={css.mainFields}>
-                  <div className={css.mainFields_1}>
-                    <div>
-                      <label htmlFor="partModel">Part #</label>
-                      <input
-                        type="text"
-                        name="partModel"
-                        value={formData.partModel}
-                        onChange={handleInputChange}
-                        placeholder="Enter PartModel"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="mfg">MFG</label>
-                      <input
-                        type="text"
-                        name="mfg"
-                        value={formData.mfg}
-                        onChange={handleInputChange}
-                        placeholder="MFG"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className={css.mainFields_2}>
-                    <div>
-                      <label htmlFor="cond">Condition</label>
-                      <select
-                        name="cond"
-                        value={formData.cond}
-                        onChange={handleInputChange}
-                      >
-                        <option value="">Select</option>
-                        <option value="any">Any</option>
-                        <option value="new">New</option>
-                        <option value="used">Used</option>
-                        <option value="repaired">Repaired</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label htmlFor="heciClei">Heci / Clei</label>
-                      <input
-                        type="text"
-                        name="heciClei"
-                        value={formData.heciClei}
-                        onChange={handleInputChange}
-                        placeholder="HECI / CLEI"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="price">Price</label>
-                      <input
-                        type="number"
-                        name="price"
-                        value={formData.price}
-                        onChange={handleInputChange}
-                        placeholder="Price"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="quantity">Quantity</label>
-                      <input
-                        type="number"
-                        name="quantity"
-                        value={formData.quantity}
-                        onChange={handleInputChange}
-                        placeholder="Quantity"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className={css.mainFields_3}>
-                    <div>
-                      <label htmlFor="buy_in_bulk">Bulk</label>
-                      <input
-                        type="radio"
-                        name="buy_in"
-                        value="bulk"
-                        id="buy_in_bulk"
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="buy_in_container">Container</label>
-                      <input
-                        type="radio"
-                        name="buy_in"
-                        value="container"
-                        id="buy_in_container"
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="buy_in_pallet">Pallet</label>
-                      <input
-                        type="radio"
-                        name="buy_in"
-                        value="pallet"
-                        id="buy_in_pallet"
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="buy_in_wholeUnit">Whole Unit</label>
-                      <input
-                        type="radio"
-                        name="buy_in"
-                        value="wholeUnit"
-                        id="buy_in_wholeUnit"
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                  </div>
+                  {category !== "multiple parts / items" && (
+                    <>
+                      <div className={css.mainFields_1}>
+                        <div>
+                          <label htmlFor="partModel">Part #</label>
+                          <input
+                            type="text"
+                            name="partModel"
+                            value={formData.partModel}
+                            onChange={handleInputChange}
+                            placeholder="Enter PartModel"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor="mfg">MFG</label>
+                          <input
+                            type="text"
+                            name="mfg"
+                            value={formData.mfg}
+                            onChange={handleInputChange}
+                            placeholder="MFG"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div className={css.mainFields_2}>
+                        <div>
+                          <label htmlFor="cond">Condition</label>
+                          <select
+                            name="cond"
+                            value={formData.cond}
+                            onChange={handleInputChange}
+                          >
+                            <option value="">Select</option>
+                            <option value="any">Any</option>
+                            <option value="new">New</option>
+                            <option value="used">Used</option>
+                            <option value="repaired">Repaired</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label htmlFor="heciClei">Heci / Clei</label>
+                          <input
+                            type="text"
+                            name="heciClei"
+                            value={formData.heciClei}
+                            onChange={handleInputChange}
+                            placeholder="HECI / CLEI"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor="price">Price</label>
+                          <input
+                            type="number"
+                            name="price"
+                            value={formData.price}
+                            onChange={handleInputChange}
+                            placeholder="Price"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor="quantity">Quantity</label>
+                          <input
+                            type="number"
+                            name="quantity"
+                            value={formData.quantity}
+                            onChange={handleInputChange}
+                            placeholder="Quantity"
+                            required
+                          />
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  {/* Always show MFG and radio buttons ONLY for multiple parts */}
+                  {category === "multiple parts / items" && (
+                    <>
+                      <div >
+                        <label htmlFor="mfg">MFG</label>
+                        <input
+                          type="text"
+                          name="mfg"
+                          value={formData.mfg}
+                          onChange={handleInputChange}
+                          placeholder="MFG"
+                          required
+                          className="ml-5"
+                        />
+                      </div>
+
+                      <div className={css.mainFields_3}>
+                        <div>
+                          <label htmlFor="buy_in_bulk">Bulk</label>
+                          <input
+                            type="radio"
+                            name="buy_in"
+                            value="bulk"
+                            id="buy_in_bulk"
+                            onChange={handleInputChange}
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor="buy_in_container">Container</label>
+                          <input
+                            type="radio"
+                            name="buy_in"
+                            value="container"
+                            id="buy_in_container"
+                            onChange={handleInputChange}
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor="buy_in_pallet">Pallet</label>
+                          <input
+                            type="radio"
+                            name="buy_in"
+                            value="pallet"
+                            id="buy_in_pallet"
+                            onChange={handleInputChange}
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor="buy_in_wholeUnit">Whole Unit</label>
+                          <input
+                            type="radio"
+                            name="buy_in"
+                            value="wholeUnit"
+                            id="buy_in_wholeUnit"
+                            onChange={handleInputChange}
+                          />
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
+
                 <div className={css.createABroadcast}>
                   <h3>Create a Broadcast</h3>
-                  <div>
-                    <label htmlFor="description">Description</label>
-                    <textarea
-                      name="description"
-                      value={formData.description}
+
+                  {category === "multiple parts / items" && (
+                    <>
+                      <div>
+                        <label htmlFor="description">Description</label>
+                        <textarea
+                          name="description"
+                          value={formData.description}
+                          onChange={handleInputChange}
+                          placeholder="Description"
+                          required
+                        ></textarea>
+                      </div>
+                      <div>
+                        <label htmlFor="additional_comments">Comments</label>
+                        <textarea
+                          type="text"
+                          name="additional_comments"
+                          value={formData.additional_comments}
+                          onChange={handleInputChange}
+                          placeholder="Message , Comments"
+                          cols={10}
+                          rows={5}
+                          required
+                        ></textarea>
+                      </div>
+                    </>
+                  )}
+
+                  {category !== "multiple parts / items" && (
+                    <>
+                      <div>
+                        <label htmlFor="description">Description</label>
+                        <textarea
+                          name="description"
+                          value={formData.description}
+                          onChange={handleInputChange}
+                          placeholder="Description"
+                          required
+                        ></textarea>
+                      </div>
+                      <div>
+                        <label htmlFor="additional_comments">Comments</label>
+                        <textarea
+                          type="text"
+                          name="additional_comments"
+                          value={formData.additional_comments}
+                          onChange={handleInputChange}
+                          placeholder="Message , Comments"
+                          cols={10}
+                          rows={5}
+                          required
+                        ></textarea>
+                      </div>
+                    </>
+                  )}
+
+                  <div className="!flex !flex-row">
+                    <label htmlFor="sendCopy">Send a copy to myself</label>
+                    <input
+                      type="checkbox"
+                      name="sendCopy"
+                      checked={formData.sendCopy}
                       onChange={handleInputChange}
-                      placeholder="Description"
-                      required
-                    ></textarea>
-                  </div>
-                  <div>
-                    <label htmlFor="additional_comments">Comments</label>
-                    <textarea
-                      type="text"
-                      name="additional_comments"
-                      value={formData.additional_comments}
-                      onChange={handleInputChange}
-                      placeholder="Message , Comments"
-                      cols={10}
-                      rows={5}
-                      required
-                    ></textarea>
+                    />
                   </div>
                 </div>
               </div>

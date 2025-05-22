@@ -26,7 +26,10 @@ export const sendBroadcast = createAsyncThunk(
         "Error while fetching user data:",
         error.response?.data || error.message
       );
-      throw new Error("Error while sending broadcast: " + (error.response?.data || error.message));
+      throw new Error(
+        "Error while sending broadcast: " +
+          (error.response?.data || error.message)
+      );
     }
   }
 );
@@ -34,13 +37,12 @@ export const sendBroadcast = createAsyncThunk(
 export const broadCastFilters = createAsyncThunk(
   "broadcastStore/broadCastFilters",
   async ({ data, token }) => {
-    console.log({ data })
+    console.log({ data });
 
     try {
       const response = await axios.post(
         `${brokerAPI}bfilters/store`,
         data,
-
 
         {
           headers: {
@@ -53,7 +55,6 @@ export const broadCastFilters = createAsyncThunk(
       console.log(response.data);
 
       return response.data;
-
     } catch (error) {
       console.error(
         "Error while fetching user data:",
@@ -67,23 +68,19 @@ export const broadCastFilters = createAsyncThunk(
 export const fetchBroadCastFilters = createAsyncThunk(
   "broadcastStore/fetchBroadCastFilters",
   async ({ token }) => {
-    console.log(token)
+    console.log(token);
 
     try {
-      const response = await axios.get(
-        `${brokerAPI}bfilters/show`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${brokerAPI}bfilters/show`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       console.log(response.data);
 
       return response.data;
-
     } catch (error) {
       throw new Error("Error searching User");
     }
@@ -119,24 +116,26 @@ export const deleteBroadCastData = createAsyncThunk(
     console.log(token, "Attempting to delete broadcasts with IDs:", ids);
 
     try {
-      const response = await axios.delete(
-        `${brokerAPI}broadcast/delete`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          data: { ids } // Pass 'ids' as part of the request body
-        }
-      );
+      const response = await axios.delete(`${brokerAPI}broadcast/delete`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        data: { ids }, // Pass 'ids' as part of the request body
+      });
 
       console.log("Broadcast Deleted", response.data);
 
       return ids; // Return the deleted IDs to update the state
-
     } catch (error) {
-      console.error("Error deleting Broadcast Data", error.response?.data || error.message);
-      throw new Error("Error deleting Broadcast Data: " + (error.response?.data || error.message));
+      console.error(
+        "Error deleting Broadcast Data",
+        error.response?.data || error.message
+      );
+      throw new Error(
+        "Error deleting Broadcast Data: " +
+          (error.response?.data || error.message)
+      );
     }
   }
 );
@@ -165,7 +164,10 @@ export const sendBroadcastReply = createAsyncThunk(
         "Error while fetching user data:",
         error.response?.data || error.message
       );
-      throw new Error("Error while sending broadcast Reply: " + (error.response?.data || error.message));
+      throw new Error(
+        "Error while sending broadcast Reply: " +
+          (error.response?.data || error.message)
+      );
     }
   }
 );
@@ -173,23 +175,19 @@ export const sendBroadcastReply = createAsyncThunk(
 export const fetchBroadCastCount = createAsyncThunk(
   "broadcastStore/fetchBroadCastCount",
   async ({ token }) => {
-    console.log(token)
+    console.log(token);
 
     try {
-      const response = await axios.get(
-        `${brokerAPI}broadcast/count`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${brokerAPI}broadcast/count`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       console.log(response.data);
 
       return response.data;
-
     } catch (error) {
       throw new Error("Error fetching broadcast count");
     }
@@ -198,8 +196,8 @@ export const fetchBroadCastCount = createAsyncThunk(
 
 export const filterBroadCastPartModel = createAsyncThunk(
   "broadcastStore/filterBroadCastPartModel",
-  async ({ token,partModel }) => {
-    console.log(token)
+  async ({ token, partModel }) => {
+    console.log(token);
 
     try {
       const response = await axios.get(
@@ -215,7 +213,6 @@ export const filterBroadCastPartModel = createAsyncThunk(
       console.log(response.data);
 
       return response.data;
-
     } catch (error) {
       throw new Error("Error fetching broadcast count");
     }
@@ -231,9 +228,10 @@ const initialState = {
   filters: [],
   broadCastData: [],
   serviceData: [],
-  selectedCompanyNames:[],
-  broadcastCount:{},
-  filterBroadcastPartModelData:{},
+  selectedCompanyNames: [],
+  omittedCompanyNames: [],
+  broadcastCount: {},
+  filterBroadcastPartModelData: {},
   togglePopUp: false,
   popupCompanyDetail: null,
 };
@@ -270,6 +268,9 @@ const broadcastSlice = createSlice({
     setSelectedCompanyNames: (state, action) => {
       state.selectedCompanyNames = action.payload;
     },
+    setOmittedCompanyNames: (state, action) => {
+      state.omittedCompanyNames = action.payload;
+    },
 
     setTogglePopUp: (state) => {
       state.togglePopUp = !state.togglePopUp;
@@ -285,7 +286,7 @@ const broadcastSlice = createSlice({
       state.companiesSelection = [];
       state.regionSelection = [];
       state.serviceData = [];
-      state.selectedCompanyNames=[];
+      state.selectedCompanyNames = [];
     },
   },
   extraReducers: (builder) => {
@@ -298,7 +299,6 @@ const broadcastSlice = createSlice({
         state.isLoading = false;
         // Optionally update state with the result
         // state.filters = action.payload;
-
       })
       .addCase(broadCastFilters.rejected, (state, action) => {
         state.isLoading = false;
@@ -332,14 +332,16 @@ const broadcastSlice = createSlice({
       })
       .addCase(deleteBroadCastData.pending, (state) => {
         state.isLoading = true;
-        console.log("Pending... ")
+        console.log("Pending... ");
         state.error = null;
       })
       .addCase(deleteBroadCastData.fulfilled, (state, action) => {
         state.isLoading = false;
         if (Array.isArray(state.broadCastData)) {
           // Filter out deleted items based on the payload of deleted IDs
-          const filteredData = state.broadCastData.filter(broadcast => !action.payload.includes(broadcast.id));
+          const filteredData = state.broadCastData.filter(
+            (broadcast) => !action.payload.includes(broadcast.id)
+          );
           state.broadCastData = filteredData;
         } else {
           console.error("broadCastData is not an array:", state.broadCastData);
@@ -348,54 +350,52 @@ const broadcastSlice = createSlice({
       })
       .addCase(deleteBroadCastData.rejected, (state, action) => {
         state.isLoading = false;
-        console.log("REJECTED!!!... ")
+        console.log("REJECTED!!!... ");
         state.error = action.error.message;
-      }).addCase(sendBroadcastReply.pending, (state) => {
+      })
+      .addCase(sendBroadcastReply.pending, (state) => {
         state.isLoading = true;
-        console.log("Pending... ")
+        console.log("Pending... ");
         state.error = null;
       })
       .addCase(sendBroadcastReply.fulfilled, (state, action) => {
         state.isLoading = false;
-        console.log("REPLY FULLFILLED")
-
+        console.log("REPLY FULLFILLED");
       })
       .addCase(sendBroadcastReply.rejected, (state, action) => {
         state.isLoading = false;
-        console.log("REJECTED!!!... ")
+        console.log("REJECTED!!!... ");
         state.error = action.error.message;
       })
       .addCase(fetchBroadCastCount.pending, (state) => {
         state.isLoading = true;
-        console.log("Pending... ")
+        console.log("Pending... ");
         state.error = null;
       })
       .addCase(fetchBroadCastCount.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.broadcastCount=action.payload
+        state.broadcastCount = action.payload;
       })
       .addCase(fetchBroadCastCount.rejected, (state, action) => {
         state.isLoading = false;
-        console.log("REJECTED!!!... ")
+        console.log("REJECTED!!!... ");
         state.error = action.error.message;
       })
       .addCase(filterBroadCastPartModel.pending, (state) => {
         state.isLoading = true;
-        console.log("Pending... ")
+        console.log("Pending... ");
         state.error = null;
       })
       .addCase(filterBroadCastPartModel.fulfilled, (state, action) => {
         state.isLoading = false;
-        console.log("Filtered PartModels from Redux ",action.payload)
-        state.filterBroadcastPartModelData=action.payload
+        console.log("Filtered PartModels from Redux ", action.payload);
+        state.filterBroadcastPartModelData = action.payload;
       })
       .addCase(filterBroadCastPartModel.rejected, (state, action) => {
         state.isLoading = false;
-        console.log("REJECTED!!!... ")
+        console.log("REJECTED!!!... ");
         state.error = action.error.message;
       });
-      
-      
   },
 });
 
@@ -411,6 +411,7 @@ export const {
   clearAllSelections,
   setPopupCompanyDetail,
   setSelectedCompanyNames,
+  setOmittedCompanyNames,
 } = broadcastSlice.actions;
 
 export default broadcastSlice.reducer;
