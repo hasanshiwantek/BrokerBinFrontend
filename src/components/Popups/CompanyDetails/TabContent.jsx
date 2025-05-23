@@ -54,6 +54,14 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
     (contact) => contact.profileImage
   );
   console.log("Profile Images: ", contactProfileImgs);
+
+
+
+  const companyImages=companyContactData?.data?.company?.imageGallery
+
+  console.log("Company images: ",companyImages);
+  
+
   const [visibleFeedbacks, setVisibleFeedbacks] = useState(10);
   const token = Cookies.get("token");
 
@@ -65,6 +73,10 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
   const compId = companyContactData.data.company.id;
   const companyName = companyContactData.data.company.name;
   console.log("COMPANYNAME", companyName);
+
+
+
+
 
   const companyUsersCount = companyContactData.data.contacts.length;
   useEffect(() => {
@@ -737,9 +749,11 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
           <div className={css.Popup_Info_Main_right_tabs_photos}>
             <h1>Company photos</h1>
             <div className={css.Popup_Info_Main_right_tabs_photos_img}>
-              {Array.isArray(contactProfileImgs) &&
-              contactProfileImgs.length > 0 ? (
-                contactProfileImgs.map((img, ind) => (
+
+
+              {Array.isArray(companyImages) &&
+              companyImages.length > 0 ? (
+                companyImages.map((img, ind) => (
                   <div key={ind}>
                     <img
                       src={img || shadow} // Fallback if the image is empty/null
@@ -755,6 +769,8 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
                 </p>
               )}
             </div>
+
+
           </div>
         </div>
         <div className={toggleTabs === 3 ? css.showContent : css.content}>
