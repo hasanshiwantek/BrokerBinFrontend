@@ -32,24 +32,48 @@ const InventorySearchResult = () => {
   const token = Cookies.get("token");
 
   // Initialize data from location.state
-  useEffect(() => {
-    if (location.state) {
-      const { searchResults, pagination, filters } = location.state;
-      setSearchResults(searchResults.data || []);
-      setPagination(pagination);
-      setFilters(filters);
-    }
-    else {
-    // Fallback for shared URL or page reload
-    const params = new URLSearchParams(location.search);
-    const company = params.get("company") || "";
-    const page = parseInt(params.get("page")) || 1;
+  // useEffect(() => {
+  //   if (location.state) {
+  //     const { searchResults, pagination, filters } = location.state;
+  //     setSearchResults(searchResults.data || []);
+  //     setPagination(pagination);
+  //     setFilters(filters);
+  //   }
+  //   else {
+  //   // Fallback for shared URL or page reload
+  //   const params = new URLSearchParams(location.search);
+  //   const company = params.get("company") || "";
+  //   const page = parseInt(params.get("page")) || 1;
 
-    const fallbackFilters = { company, page, pageSize: 20 };
+  //   const fallbackFilters = { company, page, pageSize: 20 };
+  //   setFilters(fallbackFilters);
+  //   fetchPageData(page, fallbackFilters); // trigger API call
+  // }
+  // }, [location.state]);
+
+  useEffect(() => {
+  if (location.state) {
+    const { searchResults, pagination, filters } = location.state;
+    setSearchResults(searchResults.data || []);
+    setPagination(pagination);
+    setFilters(filters);
+    setCurrentPage(filters.page || 1);
+  } else {
+    const params = new URLSearchParams(location.search);
+    const fallbackFilters = {};
+
+    for (const [key, value] of params.entries()) {
+      fallbackFilters[key] = value;
+    }
+
+    fallbackFilters.pageSize = 20;
+    const page = parseInt(fallbackFilters.page) || 1;
     setFilters(fallbackFilters);
-    fetchPageData(page, fallbackFilters); // trigger API call
+    setCurrentPage(page);
+    fetchPageData(page, fallbackFilters);
   }
-  }, [location.state]);
+}, []);
+
 
   // Fetch data when pagination changes
 
@@ -83,7 +107,34 @@ const InventorySearchResult = () => {
   //   }
   // };
 
-  const fetchPageData = async (newPage, customFilters = filters) => {
+//   const fetchPageData = async (newPage, customFilters = filters) => {
+//   setLoading(true);
+//   try {
+//     const updatedFilters = { ...customFilters, page: newPage };
+
+//     const result = await dispatch(
+//       inventorySearch({ data: updatedFilters, token })
+//     ).unwrap();
+
+//     setSearchResults(result.data || []);
+//     setPagination(result.pagination || {});
+//     setFilters(updatedFilters);
+//     setCurrentPage(newPage);
+
+//     const params = new URLSearchParams();
+//     if (updatedFilters.company) params.append("company", updatedFilters.company);
+//     params.append("page", newPage);
+//     navigate(`/inventorysearch?${params.toString()}`, {
+//       replace: true,
+//     });
+//   } catch (error) {
+//     console.error("Error fetching paginated data:", error);
+//   } finally {
+//     setLoading(false);
+//   }
+// };
+
+const fetchPageData = async (newPage, customFilters = filters) => {
   setLoading(true);
   try {
     const updatedFilters = { ...customFilters, page: newPage };
@@ -98,11 +149,11 @@ const InventorySearchResult = () => {
     setCurrentPage(newPage);
 
     const params = new URLSearchParams();
-    if (updatedFilters.company) params.append("company", updatedFilters.company);
-    params.append("page", newPage);
-    navigate(`/inventorysearch?${params.toString()}`, {
-      replace: true,
+    Object.entries(updatedFilters).forEach(([key, value]) => {
+      if (value) params.append(key, value);
     });
+
+    navigate(`/inventorysearch?${params.toString()}`, { replace: true });
   } catch (error) {
     console.error("Error fetching paginated data:", error);
   } finally {
