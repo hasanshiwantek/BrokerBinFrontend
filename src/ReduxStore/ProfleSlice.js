@@ -296,8 +296,6 @@ export const updateFeedback = createAsyncThunk(
   }
 );
 
-
-
 export const submitTradingData = createAsyncThunk(
   "profileStore/submitTradingData",
   async ({ data, token }) => {
@@ -328,8 +326,6 @@ export const submitTradingData = createAsyncThunk(
     }
   }
 );
-
-
 
 export const submitCompanyCategories = createAsyncThunk(
   "profileStore/submitCompanyCategories",
@@ -362,8 +358,7 @@ export const submitCompanyCategories = createAsyncThunk(
   }
 );
 
-
-export const submitCompanyManufacturers= createAsyncThunk(
+export const submitCompanyManufacturers = createAsyncThunk(
   "profileStore/submitCompanyManufacturers",
   async ({ data, token }) => {
     try {
@@ -394,8 +389,7 @@ export const submitCompanyManufacturers= createAsyncThunk(
   }
 );
 
-
-export const submitCompanyreturnPolicy= createAsyncThunk(
+export const submitCompanyreturnPolicy = createAsyncThunk(
   "profileStore/submitCompanyreturnPolicy",
   async ({ data, token }) => {
     try {
@@ -422,6 +416,48 @@ export const submitCompanyreturnPolicy= createAsyncThunk(
         error.response?.data || error.message
       );
       throw error;
+    }
+  }
+);
+
+
+export const submitCompanyPhotos = createAsyncThunk(
+  "profile/submitCompanyPhotos",
+  async ({ token, files, imageUrls}, { rejectWithValue }) => {
+    try {
+      const formData = new FormData();
+
+      // Append each file as newImage[]
+      files.forEach((file) => {
+        formData.append("images[]", file);
+      });
+
+      // Append each URL as imageUrl[]
+      imageUrls.forEach((url) => {
+        formData.append("imageUrls[]", url);
+      });
+
+      // Debug log
+      for (let pair of formData.entries()) {
+        console.log("📦 FormData:", pair[0], pair[1]);
+      }
+
+      const response = await axios.post(
+        `${brokerAPI}company/companyImages`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      return {
+        status: true,
+        image: response?.data || null,
+      };
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
@@ -688,6 +724,16 @@ const profileSlice = createSlice({
         console.log(action.error.message);
         state.error = action.error.message;
         state.blurWhileLoading = false;
+      })
+      .addCase(submitCompanyPhotos.pending, (state) => {
+        console.log("Pending....");
+      })
+      .addCase(submitCompanyPhotos.fulfilled, (state, action) => {
+        console.log("Company photos updation Fulfilled....");
+      })
+      .addCase(submitCompanyPhotos.rejected, (state, action) => {
+        console.log(action.error.message);
+        state.error = action.error.message;
       })
       .addCase(getCompanyFeedback.pending, (state) => {
         state.blurWhileLoading = false;

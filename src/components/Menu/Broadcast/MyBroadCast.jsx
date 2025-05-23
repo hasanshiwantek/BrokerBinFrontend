@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import {
   fetchBroadCastData,
   filterBroadCastPartModel,
+  fetchBroadCastSortedData,
 } from "../../../ReduxStore/BroadCast";
 import Cookies from "js-cookie";
 import shieldImage from "../../../assets/shield-img.png";
@@ -29,6 +30,7 @@ import {
 } from "../../../ReduxStore/SearchProductSlice";
 import { FaFileAlt } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 const BroadCast = () => {
   const broadcastItems = useSelector(
@@ -72,15 +74,6 @@ const BroadCast = () => {
     }
   }, [urlType]);
 
-  // Fetch data when currentPage changes
-  useEffect(() => {
-    console.log("Fetching data for pageNumber:", currentPage);
-    setLoading(true);
-    dispatch(fetchBroadCastData({ token, pageNumber: currentPage }))
-      .then(() => setLoading(false))
-      .catch(() => setLoading(false));
-  }, [dispatch, token, currentPage]); // Make sure `currentPage` is in the dependency array
-
   // Fetch filtered data when `searchTerm` changes
   useEffect(() => {
     if (searchTerm) {
@@ -103,17 +96,17 @@ const BroadCast = () => {
       : [];
 
   // Pagination Handlers
-  const handlePageChange = (page) => {
-    if (
-      page !== currentPage &&
-      page >= 1 &&
-      page <= (pagination.last_page || 1)
-    ) {
-      console.log("Changing to page:", page); // Debugging
-      setCurrentPage(page);
-    }
-  };
-  console.log("Current Page State:", currentPage); // Debugging
+  // const handlePageChange = (page) => {
+  //   if (
+  //     page !== currentPage &&
+  //     page >= 1 &&
+  //     page <= (pagination.last_page || 1)
+  //   ) {
+  //     console.log("Changing to page:", page); // Debugging
+  //     setCurrentPage(page);
+  //   }
+  // };
+  // console.log("Current Page State:", currentPage); // Debugging
 
   const Regions = [
     "North America",
@@ -229,6 +222,7 @@ const BroadCast = () => {
   // Search Button Handler to apply the search term
   const handleSearchClick = () => {
     setSearchTerm(inputSearchTerm.trim()); // Update the main search term to trigger filtering
+    setIsSorted(false);
     setCurrentPage(1);
   };
 
@@ -430,6 +424,76 @@ const BroadCast = () => {
   useEffect(() => {
     console.log("togglePopUp in BroadCast:", togglePopUp);
   }, [togglePopUp]);
+
+  // SORTING LOGIC
+  const [isSorted, setIsSorted] = useState(false);
+  const [sortBy, setSortBy] = useState("");
+  const [sortOrder, setSortOrder] = useState("asc");
+  const [pageNumber, setPageNumber] = useState(1);
+
+  const handleSort = (column) => {
+    const newSortOrder =
+      sortBy === column && sortOrder === "asc" ? "desc" : "asc";
+
+    setSortBy(column);
+    setSortOrder(newSortOrder);
+    setIsSorted(true);
+    // setPageNumber(1); // reset to first page when sorting changes
+
+    dispatch(
+      fetchBroadCastSortedData({
+        token,
+        sortBy: column,
+        sortOrder: newSortOrder,
+        pageNumber: 1,
+      })
+    );
+  };
+
+  const handlePageChange = (page) => {
+    if (
+      page !== currentPage &&
+      page >= 1 &&
+      page <= (pagination.last_page || 1)
+    ) {
+      console.log("Changing to page:", page);
+      setCurrentPage(page);
+
+      if (isSorted) {
+        dispatch(
+          fetchBroadCastSortedData({
+            token,
+            sortBy,
+            sortOrder,
+            pageNumber: page,
+          })
+        );
+      } else {
+        dispatch(fetchBroadCastData({ token, pageNumber: page }));
+      }
+    }
+  };
+
+  // Fetch data when currentPage changes
+
+  useEffect(() => {
+    console.log("Fetching data for pageNumber:", currentPage);
+    setLoading(true);
+
+    const action = isSorted
+      ? fetchBroadCastSortedData({
+          token,
+          sortBy,
+          sortOrder,
+          pageNumber: currentPage,
+        })
+      : fetchBroadCastData({ token, pageNumber: currentPage });
+
+    dispatch(action)
+      .then(() => setLoading(false))
+      .catch(() => setLoading(false));
+  }, [dispatch, token, currentPage, sortBy, sortOrder, isSorted]);
+
   return (
     <>
       <main className={styles.mainSec}>
@@ -458,7 +522,7 @@ const BroadCast = () => {
                     isActive ? myProfile.active : ""
                   }
                 >
-                  <span>View</span>
+                  <span onClick={() => window.location.reload(200)}>View</span>
                 </NavLink>
               </li>
               <li className="!text-[.7.8vw]">
@@ -625,19 +689,78 @@ const BroadCast = () => {
                   alt=""
                   srcSet=""
                   style={{ width: "18px", fontWeight: "bold" }}
-                />{" "}
+                />
               </th>
-              <th>Company</th>
-              <th>Ctry</th>
-              <th>Type</th>
+              <th
+                onClick={() => handleSort("company")}
+                style={{ cursor: "pointer" }}
+              >
+                Company
+                {sortBy === "company" && (sortOrder === "asc" ? "↑" : "↓")}
+              </th>
+              <th
+                onClick={() => handleSort("country")}
+                style={{ cursor: "pointer" }}
+              >
+                Ctry
+                {sortBy === "country" && (sortOrder === "asc" ? "↑" : "↓")}
+              </th>
+              <th
+                onClick={() => handleSort("type")}
+                style={{ cursor: "pointer" }}
+              >
+                Type
+                {sortBy === "type" && (sortOrder === "asc" ? "↑" : "↓")}
+              </th>
               <th>View</th>
-              <th>Part / Model</th>
-              <th>HECI/CLEI</th>
-              <th>Mfg</th>
-              <th>Cond</th>
-              <th>Price</th>
-              <th>Qty </th>
-              <th>Product Description</th>
+              <th
+                onClick={() => handleSort("partModel")}
+                style={{ cursor: "pointer" }}
+              >
+                Part / Model{" "}
+                {sortBy === "partModel" && (sortOrder === "asc" ? "↑" : "↓")}
+              </th>
+              <th
+                onClick={() => handleSort("heciClei")}
+                style={{ cursor: "pointer" }}
+              >
+                HECI / CLEI{" "}
+                {sortBy === "heciClei" && (sortOrder === "asc" ? "↑" : "↓")}{" "}
+              </th>
+              <th
+                onClick={() => handleSort("mfg")}
+                style={{ cursor: "pointer" }}
+              >
+                Mfg {sortBy === "mfg" && (sortOrder === "asc" ? "↑" : "↓")}
+              </th>
+
+              <th
+                onClick={() => handleSort("cond")}
+                style={{ cursor: "pointer" }}
+              >
+                Cond{sortBy === "cond" && (sortOrder === "asc" ? "↑" : "↓")}
+              </th>
+
+              <th
+                onClick={() => handleSort("price")}
+                style={{ cursor: "pointer" }}
+              >
+                Price {sortBy === "price" && (sortOrder === "asc" ? "↑" : "↓")}
+              </th>
+              <th
+                onClick={() => handleSort("quantity")}
+                style={{ cursor: "pointer" }}
+              >
+                Quantity{" "}
+                {sortBy === "quantity" && (sortOrder === "asc" ? "↑" : "↓")}
+              </th>
+              <th
+                onClick={() => handleSort("description")}
+                style={{ cursor: "pointer" }}
+              >
+                Product Description
+                {sortBy === "description" && (sortOrder === "asc" ? "↑" : "↓")}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -738,19 +861,78 @@ const BroadCast = () => {
                   alt=""
                   srcSet=""
                   style={{ width: "18px", fontWeight: "bold" }}
-                />{" "}
+                />
               </th>
-              <th>Company</th>
-              <th>Ctry</th>
-              <th>Type</th>
+              <th
+                onClick={() => handleSort("company")}
+                style={{ cursor: "pointer" }}
+              >
+                Company
+                {sortBy === "company" && (sortOrder === "asc" ? "↑" : "↓")}
+              </th>
+              <th
+                onClick={() => handleSort("country")}
+                style={{ cursor: "pointer" }}
+              >
+                Ctry
+                {sortBy === "country" && (sortOrder === "asc" ? "↑" : "↓")}
+              </th>
+              <th
+                onClick={() => handleSort("type")}
+                style={{ cursor: "pointer" }}
+              >
+                Type
+                {sortBy === "type" && (sortOrder === "asc" ? "↑" : "↓")}
+              </th>
               <th>View</th>
-              <th>Part / Model</th>
-              <th>HECI/CLEI</th>
-              <th>Mfg</th>
-              <th>Cond</th>
-              <th>Price</th>
-              <th>Qty </th>
-              <th>Product Description</th>
+              <th
+                onClick={() => handleSort("partModel")}
+                style={{ cursor: "pointer" }}
+              >
+                Part / Model{" "}
+                {sortBy === "partModel" && (sortOrder === "asc" ? "↑" : "↓")}
+              </th>
+              <th
+                onClick={() => handleSort("heciClei")}
+                style={{ cursor: "pointer" }}
+              >
+                HECI / CLEI{" "}
+                {sortBy === "heciClei" && (sortOrder === "asc" ? "↑" : "↓")}{" "}
+              </th>
+              <th
+                onClick={() => handleSort("mfg")}
+                style={{ cursor: "pointer" }}
+              >
+                Mfg {sortBy === "mfg" && (sortOrder === "asc" ? "↑" : "↓")}
+              </th>
+
+              <th
+                onClick={() => handleSort("cond")}
+                style={{ cursor: "pointer" }}
+              >
+                Cond{sortBy === "cond" && (sortOrder === "asc" ? "↑" : "↓")}
+              </th>
+
+              <th
+                onClick={() => handleSort("price")}
+                style={{ cursor: "pointer" }}
+              >
+                Price {sortBy === "price" && (sortOrder === "asc" ? "↑" : "↓")}
+              </th>
+              <th
+                onClick={() => handleSort("quantity")}
+                style={{ cursor: "pointer" }}
+              >
+                Quantity{" "}
+                {sortBy === "quantity" && (sortOrder === "asc" ? "↑" : "↓")}
+              </th>
+              <th
+                onClick={() => handleSort("description")}
+                style={{ cursor: "pointer" }}
+              >
+                Product Description
+                {sortBy === "description" && (sortOrder === "asc" ? "↑" : "↓")}
+              </th>
             </tr>
           </thead>
         </table>
