@@ -68,13 +68,28 @@ const InventorySearch = () => {
         console.log("pagination", pagination);
 
         // Pass the updated formData and results to the results page
-        navigate("/inventory-searchResult", {
+        // navigate("/inventorysearch", {
+        //   state: {
+        //     searchResults: result,
+        //     pagination,
+        //     filters: updatedFormData,
+        //   },
+        // });
+
+        const params = new URLSearchParams();
+        if (updatedFormData.company) {
+          params.append("company", updatedFormData.company)
+        }
+         
+        // else {params.append("page", updatedFormData.page)}
+        navigate(`/inventorysearch?${params.toString()}`, {
           state: {
             searchResults: result,
             pagination,
             filters: updatedFormData,
           },
         });
+
       }
     } catch (error) {
       console.error("Error fetching user search data:", error);

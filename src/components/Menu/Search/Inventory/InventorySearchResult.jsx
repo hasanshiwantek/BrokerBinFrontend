@@ -54,7 +54,19 @@ const InventorySearchResult = () => {
       setSearchResults(result.data || []);
       setPagination(result.pagination || {});
       setFilters(updatedFilters); // Update filters for future requests
-    } catch (error) {
+
+      const params = new URLSearchParams();
+    if (updatedFilters.company) params.append("company", updatedFilters.company);
+    params.append("page", newPage);
+    navigate(`/inventorysearch?${params.toString()}`, {
+      state: {
+        searchResults: result,
+        pagination: result.pagination,
+        filters: updatedFilters,
+      },
+    });
+    }
+     catch (error) {
       console.error("Error fetching paginated data:", error);
     } finally {
       setLoading(false);
@@ -132,6 +144,9 @@ const InventorySearchResult = () => {
   const handleHoverCompanyDetail = (company) => {
     dispatch(setHoverCompanyDetail(company)); // Dispatch company details to Redux store}
   };
+
+  console.log("CURRENT PAGE", currentPage);
+  
 
   return (
     <div
