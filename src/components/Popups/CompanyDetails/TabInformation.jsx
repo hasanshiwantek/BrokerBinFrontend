@@ -186,7 +186,9 @@ const TabInformation = ({ companyId }) => {
               <span>
                 <li className="!font-semibold"> Trading Region:</li>
                 <li>
-                  {companyContactData.data?.company?.trading_region || "N/A"}
+                  {(typeof companyContactData.data?.company?.trading_region === "string"
+                    ? companyContactData.data.company.trading_region.replace(/[\[\]']/g, '').trim()
+                    : "N/A")}
                 </li>
               </span>
               <span>

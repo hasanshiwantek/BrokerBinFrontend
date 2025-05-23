@@ -44,7 +44,7 @@ const CompanyRef = lazy(() =>
   import("./components/Menu/Manage/Mycompany/Ref.jsx")
 );
 const CompanyPhotos = lazy(() =>
-  import("./components/Menu/Manage/Mycompany/Photos.jsx")
+  import("./components/Menu/Manage/Mycompany/CompanyPhotos.jsx")
 );
 const UpdateCompanyUser = lazy(() =>
   import("./components/Menu/Manage/Mycompany/CompanyInfo/UpdateCompanyUser.jsx")

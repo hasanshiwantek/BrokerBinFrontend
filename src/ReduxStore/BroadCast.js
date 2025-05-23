@@ -219,6 +219,28 @@ export const filterBroadCastPartModel = createAsyncThunk(
   }
 );
 
+export const fetchBroadCastSortedData = createAsyncThunk(
+  "broadcastStore/fetchBroadCastSortedData",
+  async ({ token, sortBy, sortOrder , pageNumber  }) => {
+    try {
+      const response = await axios.get(
+        `${brokerAPI}broadcast?sortBy=${sortBy}&sortOrder=${sortOrder}&page=${pageNumber}`, // Ensure pageNumber is used here
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Sorted API Response:", response.data); // Debugging
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching broadcasts:", error); // Debugging
+      throw new Error("Error fetching broadcasts");
+    }
+  }
+);
+
 const initialState = {
   computerSelection: [],
   telecomSelection: [],
@@ -330,6 +352,23 @@ const broadcastSlice = createSlice({
         state.isLoading = false;
         state.error = action.error.message;
       })
+
+      .addCase(fetchBroadCastSortedData.pending, (state) => {
+        console.log("PENDING!!!");
+
+        state.error = null;
+      })
+      .addCase(fetchBroadCastSortedData.fulfilled, (state, action) => {
+        //Update state with the result
+
+        state.broadCastData = action.payload;
+        console.log("Sorted Data: ", action.payload);
+      })
+      .addCase(fetchBroadCastSortedData.rejected, (state, action) => {
+        state.error = action.error.message;
+        console.log("Rejection");
+      })
+
       .addCase(deleteBroadCastData.pending, (state) => {
         state.isLoading = true;
         console.log("Pending... ");

@@ -67,10 +67,15 @@ const ReplyBroad = () => {
 
     const userDetails = `${firstName} ${lastName}<br />${companyName}<br />${email}<br />${phoneNumber}<br />`;
 
-    return `- ------------------ -<br />
+    return `
+    <br />
+    <br />
+    <br />
+    - ------------------ -<br />
     ${userDetails} <br />
 
     <br />
+        <br />
     - ------------------ -<br />
     Original Broadcast Details<br />
     MFG: ${mfg}<br />
