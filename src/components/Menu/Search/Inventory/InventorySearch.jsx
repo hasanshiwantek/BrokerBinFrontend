@@ -119,9 +119,12 @@ const InventorySearch = () => {
       const pagination = result.pagination;
 
       const params = new URLSearchParams();
-      if (updatedFormData.company) {
-        params.append("company", updatedFormData.company);
-      }
+      // if (updatedFormData.company) {
+      //   params.append("company", updatedFormData.company);
+      // }
+      Object.entries(updatedFormData).forEach(([key, value]) => {
+  if (value) params.append(key, value);
+});
       params.append("page", updatedFormData.page);
 
       navigate(`/inventorysearch?${params.toString()}`, {
