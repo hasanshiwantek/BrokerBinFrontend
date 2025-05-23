@@ -39,39 +39,77 @@ const InventorySearchResult = () => {
       setPagination(pagination);
       setFilters(filters);
     }
+    else {
+    // Fallback for shared URL or page reload
+    const params = new URLSearchParams(location.search);
+    const company = params.get("company") || "";
+    const page = parseInt(params.get("page")) || 1;
+
+    const fallbackFilters = { company, page, pageSize: 20 };
+    setFilters(fallbackFilters);
+    fetchPageData(page, fallbackFilters); // trigger API call
+  }
   }, [location.state]);
 
   // Fetch data when pagination changes
 
-  const fetchPageData = async (newPage) => {
-    setLoading(true);
-    try {
-      const updatedFilters = { ...filters, page: newPage }; // Include the new page
-      const result = await dispatch(
-        inventorySearch({ data: updatedFilters, token })
-      ).unwrap();
+  // const fetchPageData = async (newPage) => {
+  //   setLoading(true);
+  //   try {
+  //     const updatedFilters = { ...filters, page: newPage }; // Include the new page
+  //     const result = await dispatch(
+  //       inventorySearch({ data: updatedFilters, token })
+  //     ).unwrap();
 
-      setSearchResults(result.data || []);
-      setPagination(result.pagination || {});
-      setFilters(updatedFilters); // Update filters for future requests
+  //     setSearchResults(result.data || []);
+  //     setPagination(result.pagination || {});
+  //     setFilters(updatedFilters); // Update filters for future requests
 
-      const params = new URLSearchParams();
+  //     const params = new URLSearchParams();
+  //   if (updatedFilters.company) params.append("company", updatedFilters.company);
+  //   params.append("page", newPage);
+  //   navigate(`/inventorysearch?${params.toString()}`, {
+  //     state: {
+  //       searchResults: result,
+  //       pagination: result.pagination,
+  //       filters: updatedFilters,
+  //     },
+  //   });
+  //   }
+  //    catch (error) {
+  //     console.error("Error fetching paginated data:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  const fetchPageData = async (newPage, customFilters = filters) => {
+  setLoading(true);
+  try {
+    const updatedFilters = { ...customFilters, page: newPage };
+
+    const result = await dispatch(
+      inventorySearch({ data: updatedFilters, token })
+    ).unwrap();
+
+    setSearchResults(result.data || []);
+    setPagination(result.pagination || {});
+    setFilters(updatedFilters);
+    setCurrentPage(newPage);
+
+    const params = new URLSearchParams();
     if (updatedFilters.company) params.append("company", updatedFilters.company);
     params.append("page", newPage);
     navigate(`/inventorysearch?${params.toString()}`, {
-      state: {
-        searchResults: result,
-        pagination: result.pagination,
-        filters: updatedFilters,
-      },
+      replace: true,
     });
-    }
-     catch (error) {
-      console.error("Error fetching paginated data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  } catch (error) {
+    console.error("Error fetching paginated data:", error);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   // Handle Page Change
   const handlePageChange = (page) => {

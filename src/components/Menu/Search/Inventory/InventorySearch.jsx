@@ -45,60 +45,101 @@ const InventorySearch = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log("Form Data Submitted:", formData); // Check the values being sent
-    setButtonText("Processing..."); // Set the button text to "Processing..."
-    setLoading(true); // Start loading
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   console.log("Form Data Submitted:", formData); // Check the values being sent
+  //   setButtonText("Processing..."); // Set the button text to "Processing..."
+  //   setLoading(true); // Start loading
 
-    try {
-      // Include page and pageSize in the formData
-      const updatedFormData = { ...formData, page: 1, pageSize: 20 };
+  //   try {
+  //     // Include page and pageSize in the formData
+  //     const updatedFormData = { ...formData, page: 1, pageSize: 20 };
 
-      const result = await dispatch(
-        inventorySearch({ data: updatedFormData, token })
-      ).unwrap();
+  //     const result = await dispatch(
+  //       inventorySearch({ data: updatedFormData, token })
+  //     ).unwrap();
 
-      console.log("API Result:", result);
-      if (result.length === 0) {
-        alert("No matching records found.");
-        resetHandler(); // Reset form data if no results
-      } else {
-        const pagination = result.pagination;
-        console.log("pagination", pagination);
+  //     console.log("API Result:", result);
+  //     if (result.length === 0) {
+  //       alert("No matching records found.");
+  //       resetHandler(); // Reset form data if no results
+  //     } else {
+  //       const pagination = result.pagination;
+  //       console.log("pagination", pagination);
 
-        // Pass the updated formData and results to the results page
-        // navigate("/inventorysearch", {
-        //   state: {
-        //     searchResults: result,
-        //     pagination,
-        //     filters: updatedFormData,
-        //   },
-        // });
+  //       // Pass the updated formData and results to the results page
+  //       // navigate("/inventorysearch", {
+  //       //   state: {
+  //       //     searchResults: result,
+  //       //     pagination,
+  //       //     filters: updatedFormData,
+  //       //   },
+  //       // });
 
-        const params = new URLSearchParams();
-        if (updatedFormData.company) {
-          params.append("company", updatedFormData.company)
-        }
+  //       const params = new URLSearchParams();
+  //       if (updatedFormData.company) {
+  //         params.append("company", updatedFormData.company)
+  //       }
          
-        // else {params.append("page", updatedFormData.page)}
-        navigate(`/inventorysearch?${params.toString()}`, {
-          state: {
-            searchResults: result,
-            pagination,
-            filters: updatedFormData,
-          },
-        });
+  //       // else {params.append("page", updatedFormData.page)}
+  //       navigate(`/inventorysearch?${params.toString()}`, {
+  //         state: {
+  //           searchResults: result,
+  //           pagination,
+  //           filters: updatedFormData,
+  //         },
+  //       });
 
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching user search data:", error);
+  //     alert("An error occurred while fetching data.");
+  //   } finally {
+  //     setLoading(false); // End loading
+  //     setButtonText("Submit"); // Reset the button text
+  //   }
+  // };
+
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  setButtonText("Processing...");
+  setLoading(true);
+
+  try {
+    const updatedFormData = { ...formData, page: 1, pageSize: 20 };
+
+    const result = await dispatch(
+      inventorySearch({ data: updatedFormData, token })
+    ).unwrap();
+
+    if (result.length === 0) {
+      alert("No matching records found.");
+      resetHandler();
+    } else {
+      const pagination = result.pagination;
+
+      const params = new URLSearchParams();
+      if (updatedFormData.company) {
+        params.append("company", updatedFormData.company);
       }
-    } catch (error) {
-      console.error("Error fetching user search data:", error);
-      alert("An error occurred while fetching data.");
-    } finally {
-      setLoading(false); // End loading
-      setButtonText("Submit"); // Reset the button text
+      params.append("page", updatedFormData.page);
+
+      navigate(`/inventorysearch?${params.toString()}`, {
+        state: {
+          searchResults: result,
+          pagination,
+          filters: updatedFormData,
+        },
+      });
     }
-  };
+  } catch (error) {
+    console.error("Error fetching user search data:", error);
+    alert("An error occurred while fetching data.");
+  } finally {
+    setLoading(false);
+    setButtonText("Submit");
+  }
+};
 
   const resetHandler = () => {
     setFormData({
