@@ -527,7 +527,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/inventory-searchResult",
+        path: "/inventorysearch",
         element: (
           <Suspense fallback={<LoadingState />}>
             <Header />
