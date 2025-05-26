@@ -92,18 +92,31 @@ const Categories = () => {
     dispatch(getCompanyContact({ token, id: companyId }));
   }, [dispatch, token, companyId]);
 
+  // useEffect(() => {
+  //   if (!companyData?.companyCategories) return;
+  //   try {
+  //     const parsed = companyData.companyCategories;
+  //     setValue("companyCategories", parsed);
+  //   } catch (err) {
+  //     console.warn("Invalid companyCategories JSON", err);
+  //   }
+  // }, [companyData, setValue]);
 
-  
   useEffect(() => {
     if (!companyData?.companyCategories) return;
     try {
-      const parsed = JSON.parse(companyData.companyCategories);
-      setValue("companyCategories", parsed);
+      const parsed = companyData.companyCategories
+ 
+      const reconstructed = {
+        ...parsed,
+        general: companyData?.categories || [],
+      };
+ 
+      setValue("companyCategories", reconstructed);
     } catch (err) {
       console.warn("Invalid companyCategories JSON", err);
     }
   }, [companyData, setValue]);
-
 
   return (
     <div className={`border p-4 ${css.onlyReceiveMatch}`}>

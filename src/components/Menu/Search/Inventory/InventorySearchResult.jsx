@@ -33,6 +33,8 @@ const InventorySearchResult = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [visiblePages, setVisiblePages] = useState([1, 10]); // Start with pages 1 to 10
+  const [sortConfig, setSortConfig] = useState({ sortBy: "", sortOrder: "" });
+
 
   const token = Cookies.get("token");
 
@@ -221,6 +223,16 @@ const fetchPageData = async (newPage, customFilters = filters) => {
     dispatch(setHoverCompanyDetail(company)); // Dispatch company details to Redux store}
   };
 
+  const handleSort = (column) => {
+  const newOrder = sortConfig.sortOrder === "asc" ? "desc" : "asc";
+  const newSort = { sortBy: column, sortOrder: newOrder };
+  setSortConfig(newSort);
+
+  const newFilters = { ...filters, ...newSort };
+  fetchPageData(1, newFilters);
+};
+
+
   console.log("CURRENT PAGE", currentPage);
   
   return (
@@ -276,17 +288,17 @@ const fetchPageData = async (newPage, customFilters = filters) => {
                   style={{ width: "18px", fontWeight: "bold" }}
                 />
               </th>
-              <th>Company</th>
-              <th>Ctry</th>
-              <th>Part / Model</th>
-              <th>TS</th>
-              <th>HECI / CLEI</th>
-              <th>Mfg</th>
-              <th>Cond</th>
-              <th>Price</th>
-              <th>Quantity</th>
-              <th>Age</th>
-              <th>Product Description</th>
+              <th onClick={() => handleSort("company")}>Company</th>
+              <th onClick={() => handleSort("company_country")}>Ctry</th>
+              <th onClick={() => handleSort("partModel")}>Part / Model</th>
+              <th onClick={() => handleSort("")}>TS</th>
+              <th onClick={() => handleSort("heciClei")}>HECI / CLEI</th>
+              <th onClick={() => handleSort("mfg")}>Mfg</th>
+              <th onClick={() => handleSort("cond")}>Cond</th>
+              <th onClick={() => handleSort("price")}>Price</th>
+              <th onClick={() => handleSort("quantity")}>Quantity</th>
+              <th onClick={() => handleSort("age")}>Age</th>
+              <th onClick={() => handleSort("productDescription")}>Product Description</th>
             </tr>
           </thead>
           <tbody>
