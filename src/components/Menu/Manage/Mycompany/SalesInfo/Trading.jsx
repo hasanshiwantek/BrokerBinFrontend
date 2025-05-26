@@ -123,12 +123,12 @@ const Trading = () => {
     Object.entries(basicMap).forEach(([key, val]) => setValue(key, val));
 
     // 2. Trading Region
-    const regions = JSON.parse(companyData.trading_region || "[]");
+    const regions = companyData.trading_region || "[]";
     // setSelected(regions);
     setSelected((prev) => ({
       ...prev,
-      regions: JSON.parse(companyData.trading_region || "[]"),
-      shipping: JSON.parse(companyData.shipping_options || "[]"),
+      regions: companyData.trading_region || "[]",
+      shipping: companyData.shipping_options || "[]",
     }));
     setValue("trading_region", regions);
 
@@ -141,7 +141,7 @@ const Trading = () => {
 
     // 4. Shipping Options (FedEx, DHL, etc.)
     try {
-      const opts = JSON.parse(companyData.shipping_options || "[]");
+      const opts = companyData.shipping_options || "[]";
       opts.forEach((label) => {
         const normalized = label
           .toLowerCase()
