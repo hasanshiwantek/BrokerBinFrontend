@@ -18,7 +18,8 @@ import {
   receivedRfq,
   sentRfq,
   statusRfq,
-  rfqArchive
+  rfqArchive,
+  receivedSortRfq,
 } from "../../../ReduxStore/RfqSlice.js";
 import Cookies from "js-cookie";
 import myProfile from "../../../styles/Menu/Manage/MyProfile.module.css";
@@ -29,6 +30,9 @@ import { setTogglePopUp as setTogglePopUpCompany } from "../../../ReduxStore/Sea
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import SortableTableHeader from "@/components/Tables/SortableHeader";
+import usePagination from "@/components/hooks/usePagination";
+import PaginationControls from "@/components/pagination/PaginationControls";
 
 const RfqTable = () => {
   const {
@@ -224,20 +228,6 @@ const RfqTable = () => {
     }
   }, [receivedData]);
 
-  const prevPage = () => {
-    if (currentPage === 1) {
-      return;
-    }
-    dispatch(setCurrentPagePrev());
-  };
-
-  const nextPage = () => {
-    if (currentPage === Math.ceil(tableData.length / itemsPerPage)) {
-      return;
-    }
-    dispatch(setCurrentPageNext());
-  };
-
   const handleShowPopupRfq = async (event, rfq) => {
     event.stopPropagation();
     // Use added_by_id and partId to uniquely identify the RFQ
@@ -319,15 +309,6 @@ const RfqTable = () => {
     dispatch(setTogglePopUpCompany()); // Show company modal
   };
 
-  // const handleReply = () => {
-  //   if (rfqMail.length === 0) {
-  //     alert("Please select an RFQ to reply.");
-  //     return;
-  //   }
-  //   const selectedRfq = rfqMail[0]; // For now, handle only the first selected RFQ
-  //   navigate("/rfq-reply", { state: { selectedRfq } }); // Pass the selected RFQ data
-  // };
-
   const handleReply = () => {
     if (rfqMail.length === 0) {
       toast.error("Please select at least one RFQ to reply.");
@@ -347,36 +328,6 @@ const RfqTable = () => {
       state: { selectedRfqs: rfqMail, type: "forward" },
     });
   };
-
-  // const handleAction = async (action) => {
-  //   if (rfqMail.length === 0) {
-  //     alert("Please select at least one RFQ.");
-  //     return;
-  //   }
-
-  //   // Mapping actions to payload fields
-  //   const actionMap = {
-  //     read: { key: "isRead", value: 1 },
-  //     unread: { key: "isRead", value: 0 },
-  //     archive: { key: "isArchive", value: 1 },
-  //     unarchive: { key: "isArchive", value: 0 },
-  //   };
-
-  //   const { key, value } = actionMap[action];
-
-  //   const payload = {
-  //     items: rfqMail.map((rfq) => ({ id: rfq.id, [key]: value })),
-  //   };
-
-  //   try {
-  //     const token = Cookies.get("token");
-  //     await dispatch(statusRfq({ token, data: payload }));
-  //     alert(`RFQ(s) ${action} successfully!`);
-  //   } catch (error) {
-  //     console.error("Error handling action:", error);
-  //     alert(`Failed to ${action} RFQ(s).`);
-  //   }
-  // };
 
   const userId = Cookies.get("user_id");
   console.log("USERID", userId);
@@ -456,44 +407,68 @@ const RfqTable = () => {
     dispatch(receivedRfq({ token, page: currPage })); // Re-fetch received RFQs
   };
 
-  // PAGINATION LOGIC
+  // SORTING FUNCTION LOGIC
 
-  // Dynamic pagination range
-  const [visiblePages, setVisiblePages] = useState([
-    1,
-    Math.min(10, totalPages),
-  ]);
+  const rfqHeaders = [
+    {
+      key: "status",
+      label: (
+        <span>
+          <input
+            type="checkbox"
+            onChange={handleCheckboxClickAll}
+            checked={rfqMailCheckAll}
+          />
+          status
+        </span>
+      ),
+      sortable: false,
+    },
+    { key: "qty", label: "Qty", sortable: false },
+    { key: "parts", label: "Parts", sortable: false },
+    { key: "subject", label: "PO subject", sortable: true },
+    { key: "from", label: "From", sortable: true },
+    { key: "company", label: "Company", sortable: true },
+    { key: "date", label: "Date", sortable: true },
+  ];
 
-  const handlePageChange = (page) => {
-    if (page >= 1 && page <= totalPages) {
-      dispatch(receivedRfq({ token, page })) // Fetch data for the selected page
-        .unwrap()
-        .then((response) => {
-          const { pagination } = response;
-          if (pagination) {
-            setVisiblePages([1, Math.min(10, pagination.totalPages)]); // Update visible pages
-          }
-        })
-        .catch((error) => console.error("Error changing page:", error));
-    }
+  const [sortBy, setSortBy] = useState("");
+  const [sortOrder, setSortOrder] = useState("asc");
+  const [isSorted, setIsSorted] = useState(false);
+
+  const handleSort = (columnKey) => {
+    const newSortOrder =
+      sortBy === columnKey && sortOrder === "asc" ? "desc" : "asc";
+
+    setSortBy(columnKey);
+    setSortOrder(newSortOrder);
+    setIsSorted(true);
+
+    dispatch(
+      receivedSortRfq({
+        token,
+        sortBy: columnKey,
+        sortOrder: newSortOrder,
+        page: currPage,
+      })
+    );
   };
 
-  const handlePrevious = () => {
-    if (visiblePages[0] > 1) {
-      setVisiblePages([Math.max(visiblePages[0] - 10, 1), visiblePages[0] - 1]);
-      dispatch(receivedRfq({ token, page: visiblePages[0] - 1 }));
-    }
-  };
-
-  const handleNext = () => {
-    if (visiblePages[1] < totalPages) {
-      setVisiblePages([
-        visiblePages[1] + 1,
-        Math.min(visiblePages[1] + 10, totalPages),
-      ]);
-      dispatch(receivedRfq({ token, page: visiblePages[1] + 1 }));
-    }
-  };
+  const {
+    curr_Page,
+    visiblePages,
+    handlePageChange,
+    handlePrevious,
+    handleNext,
+  } = usePagination({
+    token,
+    totalPages,
+    fetchAction: receivedRfq,
+    fetchSortedAction: receivedSortRfq,
+    isSorted,
+    sortBy,
+    sortOrder,
+  });
 
   return (
     <>
@@ -509,7 +484,7 @@ const RfqTable = () => {
                       isActive ? myProfile.active : ""
                     }
                   >
-                    <span>
+                    <span onClick={() => window.location.reload(200)}>
                       Received({receiveRfqData.totalCount}/
                       {receiveRfqData.unreadCount})
                     </span>
@@ -555,28 +530,13 @@ const RfqTable = () => {
                 isSent={false}
               />
               <table>
-                <thead>
-                  <tr>
-                    <th>
-                      <span>
-                        <input
-                          type="checkbox"
-                          name=""
-                          id=""
-                          onChange={handleCheckboxClickAll}
-                          checked={rfqMailCheckAll}
-                        />
-                        status
-                      </span>
-                    </th>
-                    <th>Qty</th>
-                    <th>Parts</th>
-                    <th>PO subject</th>
-                    <th>from</th>
-                    <th>Company</th>
-                    <th>date</th>
-                  </tr>
-                </thead>
+                <SortableTableHeader
+                  headers={rfqHeaders}
+                  sortBy={sortBy}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
+
                 <tbody>
                   {
                     console.log(
@@ -664,28 +624,12 @@ const RfqTable = () => {
                     </tr>
                   ))}
                 </tbody>
-                <tfoot className={css.rfqTableDetailBottom}>
-                  <tr>
-                    <th>
-                      <span>
-                        <input
-                          type="checkbox"
-                          name=""
-                          id=""
-                          onChange={handleCheckboxClickAll}
-                          checked={rfqMailCheckAll}
-                        />
-                        status
-                      </span>
-                    </th>
-                    <th>Qty</th>
-                    <th>Parts</th>
-                    <th>PO subject</th>
-                    <th>from</th>
-                    <th>company</th>
-                    <th>date</th>
-                  </tr>
-                </tfoot>
+                <SortableTableHeader
+                  headers={rfqHeaders}
+                  sortBy={sortBy}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
               </table>
             </div>
             <div className={css.rfqTableBtn_bottom}>
@@ -737,46 +681,14 @@ const RfqTable = () => {
                   Page <span className="text-blue-800">{currPage}</span> of
                   <span className="text-blue-800"> {totalPages}</span>
                 </span>
-
-                {/* Previous Button */}
-                <button
-                  onClick={handlePrevious}
-                  className={`${""} ${
-                    visiblePages[0] === 1 ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
-                  disabled={visiblePages[0] === 1}
-                >
-                  Previous
-                </button>
-
-                {/* Dynamic Page Buttons */}
-                {Array.from(
-                  { length: visiblePages[1] - visiblePages[0] + 1 },
-                  (_, i) => visiblePages[0] + i
-                )
-                  .filter((page) => page >= 1 && page <= totalPages)
-                  .map((page) => (
-                    <button
-                      key={page}
-                      onClick={() => handlePageChange(page)}
-                      className={`${""} ${currPage === page ? css.active : ""}`}
-                    >
-                      {page}
-                    </button>
-                  ))}
-
-                {/* Next Button */}
-                <button
-                  onClick={handleNext}
-                  className={`${""} ${
-                    visiblePages[1] === totalPages
-                      ? "opacity-50 cursor-not-allowed"
-                      : ""
-                  }`}
-                  disabled={visiblePages[1] === totalPages}
-                >
-                  Next
-                </button>
+                <PaginationControls
+                  currPage={curr_Page}
+                  totalPages={totalPages}
+                  visiblePages={visiblePages}
+                  onPageChange={(page) => handlePageChange(page, dispatch)}
+                  onPrev={() => handlePrevious(dispatch)}
+                  onNext={() => handleNext(dispatch)}
+                />
               </div>
             </div>
           </div>

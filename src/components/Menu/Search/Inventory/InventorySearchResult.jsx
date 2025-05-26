@@ -17,13 +17,12 @@ import { setHoverCompanyDetail } from "@/ReduxStore/SearchProductSlice";
 import LoadingState from "../../../../LoadingState";
 import { setBlurWhileLoading } from "@/ReduxStore/ProfleSlice";
 
-
 const InventorySearchResult = () => {
   const { togglePopUp } = useSelector((store) => store.searchProductStore);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-   const { blurWhileLoading } = useSelector((state) => state.profileStore);
+  const { blurWhileLoading } = useSelector((state) => state.profileStore);
 
   const location = useLocation();
   const [searchResults, setSearchResults] = useState([]);
@@ -37,28 +36,27 @@ const InventorySearchResult = () => {
   const token = Cookies.get("token");
 
   useEffect(() => {
-  if (location.state) {
-    const { searchResults, pagination, filters } = location.state;
-    setSearchResults(searchResults.data || []);
-    setPagination(pagination);
-    setFilters(filters);
-    setCurrentPage(filters.page || 1);
-  } else {
-    const params = new URLSearchParams(location.search);
-    const fallbackFilters = {};
+    if (location.state) {
+      const { searchResults, pagination, filters } = location.state;
+      setSearchResults(searchResults.data || []);
+      setPagination(pagination);
+      setFilters(filters);
+      setCurrentPage(filters.page || 1);
+    } else {
+      const params = new URLSearchParams(location.search);
+      const fallbackFilters = {};
 
-    for (const [key, value] of params.entries()) {
-      fallbackFilters[key] = value;
+      for (const [key, value] of params.entries()) {
+        fallbackFilters[key] = value;
+      }
+
+      fallbackFilters.pageSize = 20;
+      const page = parseInt(fallbackFilters.page) || 1;
+      setFilters(fallbackFilters);
+      setCurrentPage(page);
+      fetchPageData(page, fallbackFilters);
     }
-
-    fallbackFilters.pageSize = 20;
-    const page = parseInt(fallbackFilters.page) || 1;
-    setFilters(fallbackFilters);
-    setCurrentPage(page);
-    fetchPageData(page, fallbackFilters);
-  }
-}, []);
-
+  }, []);
 
   // Fetch data when pagination changes
 
@@ -92,62 +90,62 @@ const InventorySearchResult = () => {
   //   }
   // };
 
-//   const fetchPageData = async (newPage, customFilters = filters) => {
-//   setLoading(true);
-//   try {
-//     const updatedFilters = { ...customFilters, page: newPage };
+  //   const fetchPageData = async (newPage, customFilters = filters) => {
+  //   setLoading(true);
+  //   try {
+  //     const updatedFilters = { ...customFilters, page: newPage };
 
-//     const result = await dispatch(
-//       inventorySearch({ data: updatedFilters, token })
-//     ).unwrap();
+  //     const result = await dispatch(
+  //       inventorySearch({ data: updatedFilters, token })
+  //     ).unwrap();
 
-//     setSearchResults(result.data || []);
-//     setPagination(result.pagination || {});
-//     setFilters(updatedFilters);
-//     setCurrentPage(newPage);
+  //     setSearchResults(result.data || []);
+  //     setPagination(result.pagination || {});
+  //     setFilters(updatedFilters);
+  //     setCurrentPage(newPage);
 
-//     const params = new URLSearchParams();
-//     if (updatedFilters.company) params.append("company", updatedFilters.company);
-//     params.append("page", newPage);
-//     navigate(`/inventorysearch?${params.toString()}`, {
-//       replace: true,
-//     });
-//   } catch (error) {
-//     console.error("Error fetching paginated data:", error);
-//   } finally {
-//     setLoading(false);
-//   }
-// };
+  //     const params = new URLSearchParams();
+  //     if (updatedFilters.company) params.append("company", updatedFilters.company);
+  //     params.append("page", newPage);
+  //     navigate(`/inventorysearch?${params.toString()}`, {
+  //       replace: true,
+  //     });
+  //   } catch (error) {
+  //     console.error("Error fetching paginated data:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-const fetchPageData = async (newPage, customFilters = filters) => {
-      dispatch(setBlurWhileLoading(false));
-  setLoading(true);
-  try {
-    const updatedFilters = { ...customFilters, page: newPage };
+  const fetchPageData = async (newPage, customFilters = filters) => {
+    dispatch(setBlurWhileLoading(false));
+    setLoading(true);
+    try {
+      const updatedFilters = { ...customFilters, page: newPage };
 
-    const result = await dispatch(
-      inventorySearch({ data: updatedFilters, token })
-    ).unwrap();
+      const result = await dispatch(
+        inventorySearch({ data: updatedFilters, token })
+      ).unwrap();
 
-    setSearchResults(result.data || []);
-    setPagination(result.pagination || {});
-    setFilters(updatedFilters);
-    setCurrentPage(newPage);
+      setSearchResults(result.data || []);
+      setPagination(result.pagination || {});
+      setFilters(updatedFilters);
+      setCurrentPage(newPage);
 
-    const params = new URLSearchParams();
-    Object.entries(updatedFilters).forEach(([key, value]) => {
-      if (value) params.append(key, value);
-    });
+      const params = new URLSearchParams();
+      Object.entries(updatedFilters).forEach(([key, value]) => {
+        if (value) params.append(key, value);
+      });
 
-    navigate(`/inventorysearch?${params.toString()}`, { replace: true });
-  } catch (error) {
-    console.error("Error fetching paginated data:", error);
-  } finally {
-    setLoading(false);
-        dispatch(setBlurWhileLoading(true)); 
-  }
-};
- 
+      navigate(`/inventorysearch?${params.toString()}`, { replace: true });
+    } catch (error) {
+      console.error("Error fetching paginated data:", error);
+    } finally {
+      setLoading(false);
+      dispatch(setBlurWhileLoading(true));
+    }
+  };
+
   // Handle Page Change
   const handlePageChange = (page) => {
     if (page >= 1 && page <= pagination.totalPages) {
@@ -221,213 +219,215 @@ const fetchPageData = async (newPage, customFilters = filters) => {
   };
 
   console.log("CURRENT PAGE", currentPage);
-  
+
   return (
     <>
-    {!blurWhileLoading ? (
+      {!blurWhileLoading ? (
         <LoadingState />
       ) : (
-    <div
-      className={`${css.productTableDetail} m-28 !bg-[#e8e8e8] rounded-lg !p-[6px]`}
-    >
-      <div className={styles.profileInfo_links}>
-        <ul>
-          <li>
-            <NavLink
-              to="/search/Inventory"
-              end
-              className={`${({ isActive }) =>
-                isActive ? styles.active : ""} !text-[#2c83ec]`}
-            >
-              <span>Inventory</span>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/search/Company"
-              end
-              className={({ isActive }) => (isActive ? styles.active : "")}
-            >
-              <span>Company</span>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/person"
-              className={({ isActive }) => (isActive ? styles.active : "")}
-            >
-              <span>Person</span>
-            </NavLink>
-          </li>
-        </ul>
-      </div>
-
-      <div className={`${css.tableContainer} !bg-[#bfbfbf]`}>
-        <h3 className=" p-2 text-2xl text-white">Inventory Search</h3>
-        <table>
-          <thead>
-            <tr >
-              <th>Cart</th>
-              <th>
-                <img
-                  src={sheildImage}
-                  alt="Shield"
-                  style={{ width: "18px", fontWeight: "bold" }}
-                />
-              </th>
-              <th>Company</th>
-              <th>Ctry</th>
-              <th>Part / Model</th>
-              <th>TS</th>
-              <th>HECI / CLEI</th>
-              <th>Mfg</th>
-              <th>Cond</th>
-              <th>Price</th>
-              <th>Quantity</th>
-              <th>Age</th>
-              <th>Product Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            {searchResults?.length > 0 ? (
-              searchResults.map((val, index) => (
-                <tr key={index} className="!whitespace-normal">
-                  <td>
-                    <input
-                      type="checkbox"
-                      onChange={() => handleCheckboxChange(val)}
-                      checked={selectedRows.some((row) => row.id === val.id)}
-                    />
-                  </td>
-                  <td></td>
-                  <td>
-                    <a
-                      style={{ color: "#428bca", fontWeight: "500" }}
-                      onClick={() =>
-                        handleShowPopupCompanyDetails(val.addedBy.company)
-                      }
-                      onMouseEnter={() =>
-                        handleHoverCompanyDetail(val.addedBy.company)
-                      }
-                    >
-                      {val.addedBy.company.name}
-                    </a>
-                  </td>
-                  <td>{val.company_region}</td>
-                  <td>{val.partModel}</td>
-                  <td>No</td>
-                  <td>{val.heciClei}</td>
-                  <td>{val.mfg}</td>
-                  <td>{val.cond}</td>
-                  <td>{val.price}</td>
-                  <td>{val.quantity}</td>
-                  <td>{val.age}</td>
-                  <td>{val.productDescription}</td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="15">
-                  <h1 className="text-red-700 text-center font-bold">
-                    No Result Found
-                  </h1>
-                </td>
-              </tr>
-            )}
-          </tbody>
-          <thead>
-            <tr>
-              <th>Cart</th>
-              <th>
-                <img
-                  src={sheildImage}
-                  alt="Shield"
-                  style={{ width: "18px", fontWeight: "bold" }}
-                />
-              </th>
-              <th>Company</th>
-              <th>Ctry</th>
-              <th>Part / Model</th>
-              <th>TS</th>
-              <th>HECI / CLEI</th>
-              <th>Mfg</th>
-              <th>Cond</th>
-              <th>Price</th>
-              <th>Quantity</th>
-              <th>Age</th>
-              <th>Product Description</th>
-            </tr>
-          </thead>
-        </table>
-        {/* Pagination Controls */}
-        <div className=" flex justify-between items-center">
-          <button
-            type="button"
-            onClick={handleReply}
-            className="!text-xl !flex !justify-start !gap-8 !py-[0.6rem] !px-8 !bg-blue-500 !text-white !capitalize"
-          >
-            RFQ
-          </button>
-
-          <span className="text-orange-700 text-lg m-3">
-            Page <span className="text-blue-800">{currentPage}</span> of{" "}
-            <span className="text-blue-800">{pagination.totalPages}</span>
-          </span>
-          <div className="flex items-center">
-            <button
-              onClick={handlePrevious}
-              className={`px-4 py-2 bg-blue-500 text-white rounded-md mx-1 ${
-                visiblePages[0] === 1
-                  ? "opacity-50 cursor-not-allowed"
-                  : "hover:bg-blue-600"
-              }`}
-              disabled={visiblePages[0] === 1 || loading}
-            >
-              Previous
-            </button>
-
-            {/* Dynamic Page Buttons */}
-            {[...Array(pagination.totalPages || 1).keys()]
-              .map((page) => page + 1)
-              .filter(
-                (page) => page >= visiblePages[0] && page <= visiblePages[1]
-              )
-              .map((page) => (
-                <button
-                  key={page}
-                  onClick={() => handlePageChange(page)}
-                  className={`px-4 py-2 mx-1 rounded-md ${
-                    currentPage === page
-                      ? "bg-blue-700 text-white"
-                      : "bg-gray-200 hover:bg-gray-300 text-gray-800"
-                  }`}
-                  disabled={loading}
+        <div
+          className={`${css.productTableDetail} m-28 !bg-[#e8e8e8] rounded-lg !p-[6px]`}
+        >
+          <div className={styles.profileInfo_links}>
+            <ul>
+              <li>
+                <NavLink
+                  to="/search/Inventory"
+                  end
+                  className={`${({ isActive }) =>
+                    isActive ? styles.active : ""} !text-[#2c83ec]`}
                 >
-                  {page}
-                </button>
-              ))}
+                  <span>Inventory</span>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/search/Company"
+                  end
+                  // className={({ isActive }) => (isActive ? styles.active : "")}
+                  className="text-[#444]"
+                >
+                  <span>Company</span>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/person" className="text-[#444]">
+                  <span>Person</span>
+                </NavLink>
+              </li>
+            </ul>
+          </div>
 
-            <button
-              onClick={handleNext}
-              className={`px-4 py-2 bg-blue-500 text-white rounded-md mx-1 ${
-                visiblePages[1] === pagination.totalPages
-                  ? "opacity-50 cursor-not-allowed"
-                  : "hover:bg-blue-600"
-              }`}
-              disabled={visiblePages[1] === pagination.totalPages || loading}
-            >
-              Next
-            </button>
+          <div className={`${css.tableContainer} !bg-[#bfbfbf]`}>
+            <h3 className=" p-2 text-2xl text-white">Inventory Search</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Cart</th>
+                  <th>
+                    <img
+                      src={sheildImage}
+                      alt="Shield"
+                      style={{ width: "18px", fontWeight: "bold" }}
+                    />
+                  </th>
+                  <th>Company</th>
+                  <th>Ctry</th>
+                  <th>Part / Model</th>
+                  <th>TS</th>
+                  <th>HECI / CLEI</th>
+                  <th>Mfg</th>
+                  <th>Cond</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Age</th>
+                  <th>Product Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {searchResults?.length > 0 ? (
+                  searchResults.map((val, index) => (
+                    <tr key={index} className="!whitespace-normal">
+                      <td>
+                        <input
+                          type="checkbox"
+                          onChange={() => handleCheckboxChange(val)}
+                          checked={selectedRows.some(
+                            (row) => row.id === val.id
+                          )}
+                        />
+                      </td>
+                      <td></td>
+                      <td>
+                        <a
+                          style={{ color: "#428bca", fontWeight: "500" }}
+                          onClick={() =>
+                            handleShowPopupCompanyDetails(val.addedBy.company)
+                          }
+                          onMouseEnter={() =>
+                            handleHoverCompanyDetail(val.addedBy.company)
+                          }
+                        >
+                          {val.addedBy.company.name}
+                        </a>
+                      </td>
+                      <td>{val.company_region}</td>
+                      <td>{val.partModel}</td>
+                      <td>No</td>
+                      <td>{val.heciClei}</td>
+                      <td>{val.mfg}</td>
+                      <td>{val.cond}</td>
+                      <td>{val.price}</td>
+                      <td>{val.quantity}</td>
+                      <td>{val.age}</td>
+                      <td>{val.productDescription}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="15">
+                      <h1 className="text-red-700 text-center font-bold">
+                        No Result Found
+                      </h1>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+              <thead>
+                <tr>
+                  <th>Cart</th>
+                  <th>
+                    <img
+                      src={sheildImage}
+                      alt="Shield"
+                      style={{ width: "18px", fontWeight: "bold" }}
+                    />
+                  </th>
+                  <th>Company</th>
+                  <th>Ctry</th>
+                  <th>Part / Model</th>
+                  <th>TS</th>
+                  <th>HECI / CLEI</th>
+                  <th>Mfg</th>
+                  <th>Cond</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Age</th>
+                  <th>Product Description</th>
+                </tr>
+              </thead>
+            </table>
+            {/* Pagination Controls */}
+            <div className=" flex justify-between items-center">
+              <button
+                type="button"
+                onClick={handleReply}
+                className="!text-xl !flex !justify-start !gap-8 !py-[0.6rem] !px-8 !bg-blue-500 !text-white !capitalize"
+              >
+                RFQ
+              </button>
+
+              <span className="text-orange-700 text-lg m-3">
+                Page <span className="text-blue-800">{currentPage}</span> of{" "}
+                <span className="text-blue-800">{pagination.totalPages}</span>
+              </span>
+              <div className="flex items-center">
+                <button
+                  onClick={handlePrevious}
+                  className={`px-4 py-2 bg-blue-500 text-white rounded-md mx-1 ${
+                    visiblePages[0] === 1
+                      ? "opacity-50 cursor-not-allowed"
+                      : "hover:bg-blue-600"
+                  }`}
+                  disabled={visiblePages[0] === 1 || loading}
+                >
+                  Previous
+                </button>
+
+                {/* Dynamic Page Buttons */}
+                {[...Array(pagination.totalPages || 1).keys()]
+                  .map((page) => page + 1)
+                  .filter(
+                    (page) => page >= visiblePages[0] && page <= visiblePages[1]
+                  )
+                  .map((page) => (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`px-4 py-2 mx-1 rounded-md ${
+                        currentPage === page
+                          ? "bg-blue-700 text-white"
+                          : "bg-gray-200 hover:bg-gray-300 text-gray-800"
+                      }`}
+                      disabled={loading}
+                    >
+                      {page}
+                    </button>
+                  ))}
+
+                <button
+                  onClick={handleNext}
+                  className={`px-4 py-2 bg-blue-500 text-white rounded-md mx-1 ${
+                    visiblePages[1] === pagination.totalPages
+                      ? "opacity-50 cursor-not-allowed"
+                      : "hover:bg-blue-600"
+                  }`}
+                  disabled={
+                    visiblePages[1] === pagination.totalPages || loading
+                  }
+                >
+                  Next
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      </div>
       )}
 
       {togglePopUp && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
-      </>
+    </>
   );
 };
 
