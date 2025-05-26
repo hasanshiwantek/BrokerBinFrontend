@@ -1,385 +1,353 @@
 .feedbackContainer {
-    border: 8px solid #e0e0e0;
-    /* padding: 20px; */
-    width: 53vw; /* Adjust width as necessary */
-    margin: auto;   
-    margin-top: 40px;
-  }
-  .feedbackHead{
-    color: #fff;
-    background-color: #bfbfbf;;
-  }
-  .feedbackHead h2{
-    font-size: 16px;
-    padding: 6px 8px;
-    font-weight: 700;
-  }
-  .feedbackRatingSection {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start; 
-    /* margin-bottom: 15px;  */
-  }
-  .feedbackRatingSection h3{
-    color: #ef6421;
-    font-size: 1.3em;
-    font-weight: 700;
-    padding: 5px;
-  }
-  .feedbackRatingSection span{
-    color: black;
-    margin-left: 30px;
-  }
-  .feedbackIcon{
-    margin-top: 20px;
-    margin-left: -68px;
-  }
- 
-  
-  .feedbackDetailsSection {
-    display: flex;
-    justify-content: space-between; 
-    flex-direction: row;
-    margin-bottom: 15px; /* Space after the details section */
-    padding: 6px 39px;
-  }
-  
-  .feedbackGiven,
-  .feedbackReceived,
-  .feedbackPast {
-    border-radius: 5px; /* Rounded corners */
-    padding: 10px; /* Inner spacing */
-    white-space: nowrap;
-    margin-right: 10px; /* Space between sections */
-  }
+  border: 8px solid #e0e0e0;
+  /* padding: 20px; */
+  width: 53vw; /* Adjust width as necessary */
+  margin: auto;
+  margin-top: 40px;
+}
+.feedbackHead {
+  color: #fff;
+  background-color: #bfbfbf;
+}
+.feedbackHead h2 {
+  font-size: 16px;
+  padding: 6px 8px;
+  font-weight: 700;
+}
+.feedbackRatingSection {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  /* margin-bottom: 15px;  */
+}
+.feedbackRatingSection h3 {
+  color: #ef6421;
+  font-size: 1.3em;
+  font-weight: 700;
+  padding: 5px;
+}
+.feedbackRatingSection span {
+  color: black;
+  margin-left: 30px;
+}
+.feedbackIcon {
+  margin-top: 20px;
+  margin-left: -68px;
+}
 
-  .feedbackGiven p{
-    margin-top: 6px;
-    font-weight: 500;
-    font-size: 9pt;
-  }
-  
-  .feedbackPast {
-    margin-right: 0; /* Remove margin for last section */
-  }
-  
-  .memberInfo {
-    border-radius: 5px; /* Rounded corners */
-    padding: 10px; /* Inner spacing */
-    margin-bottom: 15px; /* Space below member info */
-  }
-  
-  .ethicsComplaintButton {
-    display: inline-block;
-    padding: 10px 12px;
-    color: white;
-    background-color: var(--primary-color);
-    text-decoration: none;
-    border-radius: 5px;
-    text-align: center; /* Center the text */
-  }
-  
-  
-  
-  .feedbackStars {
-    display: flex;
-    align-items: center;
-  }
-  
-  .feedbackStars span {
-    margin-left: 5px; /* Space between text and stars */
-  }
-  
-  .feedBackSec{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
- 
-  .feedbackMainSec{
-    background-color:  #efefef;;
-    border: 1px solid #989898;;
-    padding: 17px 32px;
-  }
-  .feedbackMainSec p{
-    font-weight: 700;
-    font-size: 8pt;
-  }
+.feedbackDetailsSection {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  margin-bottom: 15px; /* Space after the details section */
+  padding: 6px 39px;
+}
 
-  .feedbackPastSec{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+.feedbackGiven,
+.feedbackReceived,
+.feedbackPast {
+  border-radius: 5px; /* Rounded corners */
+  padding: 10px; /* Inner spacing */
+  white-space: nowrap;
+  margin-right: 10px; /* Space between sections */
+}
 
-  .feedbackPastSec p{
-    text-align: center;
-  }
+.feedbackGiven p {
+  margin-top: 6px;
+  font-weight: 500;
+  font-size: 9pt;
+}
 
+.feedbackPast {
+  margin-right: 0; /* Remove margin for last section */
+}
 
-  .feedbackEmojiContainer {
-    display: flex; /* Use flexbox to align items side by side */
-    flex-direction: column; /* Stack items vertically */
-  }
-  
-  .feedbackEmojiContainer p {
-    display: flex; /* Make each paragraph a flex container */
-    align-items: center; /* Center the emoji and text vertically */
-  }
-  
-  .feedbackEmojiContainer span {
-    margin-right: 8px; 
-    padding: 2px;
-  }
+.memberInfo {
+  border-radius: 5px; /* Rounded corners */
+  padding: 10px; /* Inner spacing */
+  margin-bottom: 15px; /* Space below member info */
+}
 
-  .feedbackpSec p{
-    text-align: center;
-  }
+.ethicsComplaintButton {
+  display: inline-block;
+  padding: 10px 12px;
+  color: white;
+  background-color: var(--primary-color);
+  text-decoration: none;
+  border-radius: 5px;
+  text-align: center; /* Center the text */
+}
 
-  .buttonSec{
-    background-color: #bfbfbf;
-  }
+.feedbackStars {
+  display: flex;
+  align-items: center;
+}
 
+.feedbackStars span {
+  margin-left: 5px; /* Space between text and stars */
+}
 
+.feedBackSec {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
+.feedbackMainSec {
+  background-color: #efefef;
+  border: 1px solid #989898;
+  padding: 17px 32px;
+}
+.feedbackMainSec p {
+  font-weight: 700;
+  font-size: 8pt;
+}
 
+.feedbackPastSec {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
+.feedbackPastSec p {
+  text-align: center;
+}
 
+.feedbackEmojiContainer {
+  display: flex; /* Use flexbox to align items side by side */
+  flex-direction: column; /* Stack items vertically */
+}
 
-  /* LEAVE FEEDBACK PAGE STYLING */
+.feedbackEmojiContainer p {
+  display: flex; /* Make each paragraph a flex container */
+  align-items: center; /* Center the emoji and text vertically */
+}
 
-  .leavefeedbackContainer {
-    background-color: #ffffff;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-  }
-  
-  .leavefeedbackList {
-    margin-bottom: 20px;
-  }
-  
-  .leavefeedbackItem {
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 10px;
-  }
-  
-  .commentDetails {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 5px;
-  }
-  
-  .reportButton {
-    background-color: transparent;
-    border: none;
-    /* color: gray; */
-    color: #444;
-    font-size: 8pt;
-    cursor: pointer;
-    /* text-decoration: underline; */
-  }
-  .reportButton:hover{
-    color: black !important;
-  }
-  
-  .mainLeaveFeedback{
-    /* width: fit-content; */
-    border-radius: 0px;
-  }
+.feedbackEmojiContainer span {
+  margin-right: 8px;
+  padding: 2px;
+}
 
+.feedbackpSec p {
+  text-align: center;
+}
 
+.buttonSec {
+  background-color: #bfbfbf;
+}
 
-  .feedbackTable {
-    width: 100%;
-    border-collapse: collapse; /* Remove space between borders */
-    margin-bottom: 20px; /* Space below the table */
-  }
-  
-  .feedbackTable tr{
-    border-top: 1px solid #bfbfbf;
+/* LEAVE FEEDBACK PAGE STYLING */
 
-  }
-  
-  .feedbackTable th,
-  .feedbackTable td {
-    padding: 5px; /* Inner spacing for table cells */
-    text-align: left;
-    font-size: 8pt;
-  }
-  
-  .feedbackTable th {
-    background-color: #44565b;
-    border-bottom: 1px solid #bfbfbf;
-    border-top: 1px solid #bfbfbf;
-    color: #fff;
-    font-weight: 700;
-    padding: 0 3px;
-    text-align: left;
-  }
-  
-  .feedbackTable tr:nth-child(even) {
-    background-color: #f9f9f9; /* Zebra striping for even rows */
-  }
-  
-  .feedbackTable img {
-    width: 20px; /* Adjust the size of emojis */
-    height: 20px; /* Adjust the size of emojis */
-  }
-  
-  .actionButtons {
-    display: flex;
-    justify-content: flex-start; /* Align buttons to the left */
-    background-color: #bfbfbf;
-    padding: 5px;
+.leavefeedbackContainer {
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
 
-  }
+.leavefeedbackList {
+  margin-bottom: 20px;
+}
 
-  .actionButtons button{
-    margin-right: 5px;
-  }
+.leavefeedbackItem {
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
 
-  
- 
-  .footerlinks{
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-  }
-  .footerlinks li{
-    list-style: none;
-    color: #3A57AB;;
-  }
-  .footerlinks li a{
-    font-size: 11px;
-  }
+.commentDetails {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 5px;
+}
 
+.reportButton {
+  background-color: transparent;
+  border: none;
+  /* color: gray; */
+  color: #444;
+  font-size: 8pt;
+  cursor: pointer;
+  /* text-decoration: underline; */
+}
+.reportButton:hover {
+  color: black !important;
+}
 
+.mainLeaveFeedback {
+  /* width: fit-content; */
+  border-radius: 0px;
+}
 
+.feedbackTable {
+  width: 100%;
+  border-collapse: collapse; /* Remove space between borders */
+  margin-bottom: 20px; /* Space below the table */
+}
 
+.feedbackTable tr {
+  border-top: 1px solid #bfbfbf;
+}
 
+.feedbackTable th,
+.feedbackTable td {
+  padding: 5px; /* Inner spacing for table cells */
+  text-align: left;
+  font-size: 8pt;
+}
 
+.feedbackTable th {
+  background-color: #44565b;
+  border-bottom: 1px solid #bfbfbf;
+  border-top: 1px solid #bfbfbf;
+  color: #fff;
+  font-weight: 700;
+  padding: 0 3px;
+  text-align: left;
+}
 
+.feedbackTable tr:nth-child(even) {
+  background-color: #f9f9f9; /* Zebra striping for even rows */
+}
 
-  /* FEEDBACK MODAL STYLING */
+.feedbackTable img {
+  width: 20px; /* Adjust the size of emojis */
+  height: 20px; /* Adjust the size of emojis */
+}
 
-  .modalOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5); 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000; /* Ensure it appears above other elements */
-    /* backdrop-filter: none !important;  */
-    margin-left: 0 !important;
+.actionButtons {
+  display: flex;
+  justify-content: flex-start; /* Align buttons to the left */
+  background-color: #bfbfbf;
+  padding: 5px;
+}
+
+.actionButtons button {
+  margin-right: 5px;
+}
+
+.footerlinks {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.footerlinks li {
+  list-style: none;
+  color: #3a57ab;
+}
+.footerlinks li a {
+  font-size: 11px;
+}
+
+/* FEEDBACK MODAL STYLING */
+
+#modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it appears above other elements */
+  /* backdrop-filter: none !important;  */
+  margin-left: 0 !important;
 }
 
 .modalContent {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    width: 400px; 
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    overflow-y: auto;
-    max-height: 80vh;
-    /* box-shadow: none !important; */
-    /* text-shadow: none !important; */
-    /* filter: none !important; */
-    /* backdrop-filter: none !important; */
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  overflow-y: auto;
+  max-height: 80vh;
+  /* box-shadow: none !important; */
+  /* text-shadow: none !important; */
+  /* filter: none !important; */
+  /* backdrop-filter: none !important; */
 }
 
-.termsNotes p{
-    font-size: 12px;
+.termsNotes p {
+  font-size: 12px;
 }
 
 .formSection {
-    display: grid; /* Use grid to arrange items in rows */
-    grid-template-columns: 1fr; /* Two columns for inputs */
-    gap: 12px; /* Space between rows */
-    /* width: 100%;  */
-    /* overflow: scroll; */
-  }
-     
-  .formSection label {
-    display: flex; /* Flex for label and input alignment */
-    flex-direction: column; /* Stack label above input */
-  }
-  
-  .formSection input, select, textarea {
-    padding: 3px; 
-    margin-top: 3px; 
-    border: 1px solid #ccc; /* Border for input fields */
-    border-radius: 4px; /* Rounded corners */
-  }
+  display: grid; /* Use grid to arrange items in rows */
+  grid-template-columns: 1fr; /* Two columns for inputs */
+  gap: 12px; /* Space between rows */
+  /* width: 100%;  */
+  /* overflow: scroll; */
+}
+
+.formSection label {
+  display: flex; /* Flex for label and input alignment */
+  flex-direction: column; /* Stack label above input */
+}
+#modalOverlay .formSection input,
+#modalOverlay .formSection select,
+#modalOverlay .formSection textarea {
+  padding: 3px;
+  margin-top: 3px;
+  border: 1px solid #ccc; /* Border for input fields */
+  border-radius: 4px; /* Rounded corners */
+}
 .modalButtons {
-    display: flex;
-    justify-content: space-between; /* Align buttons to the right */
-    margin-top: 5px; 
+  display: flex;
+  justify-content: space-between; /* Align buttons to the right */
+  margin-top: 5px;
 }
 
 .modalButtons button {
-    margin-left: 10px; /* Space between buttons */
-    background-color: #2c83ec;
-    display: inline-block;
-    padding: 10px ;
-    color: white;
-    background-color: #2c83ec;
-    text-decoration: none;
-    border-radius: 5px;
-    text-align: center; /* Center the text */
-
+  margin-left: 10px; /* Space between buttons */
+  background-color: #2c83ec;
+  display: inline-block;
+  padding: 10px;
+  color: white;
+  background-color: #2c83ec;
+  text-decoration: none;
+  border-radius: 5px;
+  text-align: center; /* Center the text */
 }
 
-
 .closeButton {
-    position: absolute;
-    top: 33%;
-    right: 38%;
-    background: transparent; /* No background */
-    border: none; /* No border */
-    font-size: 18px; /* Adjust size */
-    color: black; /* Color for the close button */
-    cursor: pointer; /* Pointer cursor */
-    background-color: gray;
-    padding: 6px;
-    border-radius: 8px;
-    border: 1px solid black;
-
+  position: absolute;
+  top: 33%;
+  right: 38%;
+  background: transparent; /* No background */
+  border: none; /* No border */
+  font-size: 18px; /* Adjust size */
+  color: black; /* Color for the close button */
+  cursor: pointer; /* Pointer cursor */
+  background-color: gray;
+  padding: 6px;
+  border-radius: 8px;
+  border: 1px solid black;
 }
 
 .closeButton:hover {
-    color: red; /* Change color on hover for visibility */
-
+  color: red; /* Change color on hover for visibility */
 }
 
-
-
 .checkboxLabel {
-    display: flex; /* Use flexbox for alignment */
-    flex-direction: row;
-    align-items: center; /* Center items vertically */
-    margin-top: 5px; /* Space above the label */
-  }
-  
-  .checkbox {
-    margin-top: -2px;
-    margin-right: 8px; /* Space between checkbox and label text */
-    cursor: pointer; /* Pointer cursor on hover */
-  }
-  
-  .checkboxLabel span {
-    color: #3A57AB; /* Color of the label text */
-    font-weight: 500; /* Font weight for visibility */
-  }
-  
+  display: flex; /* Use flexbox for alignment */
+  flex-direction: row;
+  align-items: center; /* Center items vertically */
+  margin-top: 5px; /* Space above the label */
+}
 
+.checkbox {
+  margin-top: -2px;
+  margin-right: 8px; /* Space between checkbox and label text */
+  cursor: pointer; /* Pointer cursor on hover */
+}
 
-
+.checkboxLabel span {
+  color: #3a57ab; /* Color of the label text */
+  font-weight: 500; /* Font weight for visibility */
+}

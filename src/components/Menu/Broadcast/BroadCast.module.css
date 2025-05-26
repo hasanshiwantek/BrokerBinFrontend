@@ -11,7 +11,7 @@
   background: #f4f4f4;
   display: flex;
   justify-content: start;
-  gap: 10px; 
+  gap: 10px;
   /* width: 100%; */
 }
 
@@ -46,13 +46,12 @@
 }
 
 .dropdownContent a:hover {
-  background-color: #f1f1f1
+  background-color: #f1f1f1;
 }
 
 .dropdown:hover .dropdownContent {
   display: block;
 }
-
 
 .table {
   width: 100%;
@@ -102,10 +101,9 @@
   width: 100%;
 }
 
-
-button,
-select {
-  padding: 10px;
+.tableHeader button,
+.tableHeader select {
+  padding: 3px;
   margin: 3px;
 }
 
@@ -119,8 +117,7 @@ select {
 
 .footerlinks li {
   list-style: none;
-  color: #3A57AB;
-  ;
+  color: #3a57ab;
 }
 
 .footerlinks li a {
@@ -138,9 +135,8 @@ select {
   transform: scale(0.95); /* Slight shrink effect when clicked */
 }
 
-
 .replyBtnSec {
-  background-color: #ddd
+  background-color: #ddd;
 }
 
 .searchBroadcastSec button {
@@ -162,22 +158,19 @@ select {
 }
 
 .type-wtb {
-  color: blue  !important;
+  color: blue !important;
   text-transform: uppercase;
 }
 
 .type-wts {
   color: red !important;
   text-transform: uppercase;
-
 }
 
 .type-rfq {
   color: green !important;
   text-transform: uppercase;
-
 }
-
 
 .replyform h2 {
   font-size: 2.2rem;
@@ -204,16 +197,10 @@ textarea {
   margin-top: 20px;
 }
 
-
 .replySec {
   border: 1px solid #ccc;
   padding: 10px 15px;
 }
-
-
-
-
-
 
 .formGroup {
   max-width: 600px;
@@ -276,35 +263,30 @@ textarea {
   cursor: pointer;
 }
 
-.sendButton , .resetButton{
+.sendButton,
+.resetButton {
   background-color: #007bff;
   color: white;
 }
-
-
-
 
 .replyform {
   padding: 14px 40px;
 }
 
-
-
 .profileInfo_links a.active {
   color: #428bca;
   font-weight: bold;
-}   
+}
 
-.fileIcon{
+.fileIcon {
   transition: all 0.2s ease-in-out;
 }
 
-.fileIcon:hover{
+.fileIcon:hover {
   transform: scale(1.2);
-
 }
 
-.pagination button{
+.pagination button {
   color: white;
   background-color: var(--primary-color);
   margin: 5px;
@@ -313,12 +295,12 @@ textarea {
   border: 1px solid var(--primary-color);
 }
 
-.paginationSec{
+.paginationSec {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.pagination{
+.pagination {
   text-align: end;
 }
 
@@ -326,8 +308,6 @@ textarea {
 .quill .ql-editor {
   white-space: pre-wrap; /* Preserves formatting, line breaks, and spaces */
 }
-
-
 
 .pageButton {
   /* Add default styling for all page buttons here */
@@ -349,8 +329,6 @@ textarea {
   font-weight: bold;
   border-color: #428bca;
 }
-
-
 
 .tooltipWrapper {
   position: relative;

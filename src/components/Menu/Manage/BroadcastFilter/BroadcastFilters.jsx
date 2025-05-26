@@ -359,7 +359,7 @@ const Options = () => {
     <>
       <div className={myProfile.profileLayout}>
         <form onSubmit={submitBroadcastFilters}>
-          <div className={myProfile.profileBtn}>
+          <div className={`fixed ${myProfile.profileBtn}`}>
             <h1>My Profile</h1>
             <span>
               <input

@@ -37,7 +37,7 @@ const CategoryGroup = ({ name, items }) => {
               <input
                 type="checkbox"
                 id={`cat_${name}_${item.id}`}
-                checked={value.includes(item.value)}
+                checked={value?.includes(item.value)}
                 onChange={() => toggleValue(item.value)}
               />
               <label htmlFor={`cat_${name}_${item.id}`}>{item.label}</label>
@@ -92,26 +92,16 @@ const Categories = () => {
     dispatch(getCompanyContact({ token, id: companyId }));
   }, [dispatch, token, companyId]);
 
-  // useEffect(() => {
-  //   if (!companyData?.companyCategories) return;
-  //   try {
-  //     const parsed = companyData.companyCategories;
-  //     setValue("companyCategories", parsed);
-  //   } catch (err) {
-  //     console.warn("Invalid companyCategories JSON", err);
-  //   }
-  // }, [companyData, setValue]);
-
   useEffect(() => {
     if (!companyData?.companyCategories) return;
     try {
-      const parsed = companyData.companyCategories
- 
+      const parsed = companyData.companyCategories;
+
       const reconstructed = {
         ...parsed,
         general: companyData?.categories || [],
       };
- 
+
       setValue("companyCategories", reconstructed);
     } catch (err) {
       console.warn("Invalid companyCategories JSON", err);

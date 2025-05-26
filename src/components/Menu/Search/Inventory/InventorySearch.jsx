@@ -16,7 +16,7 @@ const InventorySearch = () => {
   const [buttonText, setButtonText] = useState("Submit");
   const token = Cookies.get("token");
   const { inventorySearchData } = useSelector((state) => state.inventoryStore);
-  console.log("Searchg Inventory Data: ",inventorySearchData);
+  console.log("Searchg Inventory Data: ", inventorySearchData);
   const [formData, setFormData] = useState({
     part: "",
     heci: "",
@@ -80,7 +80,7 @@ const InventorySearch = () => {
   //       if (updatedFormData.company) {
   //         params.append("company", updatedFormData.company)
   //       }
-         
+
   //       // else {params.append("page", updatedFormData.page)}
   //       navigate(`/inventorysearch?${params.toString()}`, {
   //         state: {
@@ -101,48 +101,48 @@ const InventorySearch = () => {
   // };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setButtonText("Processing...");
-  setLoading(true);
+    e.preventDefault();
+    setButtonText("Processing...");
+    setLoading(true);
 
-  try {
-    const updatedFormData = { ...formData, page: 1, pageSize: 20 };
+    try {
+      const updatedFormData = { ...formData, page: 1, pageSize: 20 };
 
-    const result = await dispatch(
-      inventorySearch({ data: updatedFormData, token })
-    ).unwrap();
+      const result = await dispatch(
+        inventorySearch({ data: updatedFormData, token })
+      ).unwrap();
 
-    if (result.length === 0) {
-      alert("No matching records found.");
-      resetHandler();
-    } else {
-      const pagination = result.pagination;
+      if (result.length === 0) {
+        alert("No matching records found.");
+        resetHandler();
+      } else {
+        const pagination = result.pagination;
 
-      const params = new URLSearchParams();
-      // if (updatedFormData.company) {
-      //   params.append("company", updatedFormData.company);
-      // }
-      Object.entries(updatedFormData).forEach(([key, value]) => {
-  if (value) params.append(key, value);
-});
-      params.append("page", updatedFormData.page);
+        const params = new URLSearchParams();
+        // if (updatedFormData.company) {
+        //   params.append("company", updatedFormData.company);
+        // }
+        Object.entries(updatedFormData).forEach(([key, value]) => {
+          if (value) params.append(key, value);
+        });
+        params.append("page", updatedFormData.page);
 
-      navigate(`/inventorysearch?${params.toString()}`, {
-        state: {
-          searchResults: result,
-          pagination,
-          filters: updatedFormData,
-        },
-      });
+        navigate(`/inventorysearch?${params.toString()}`, {
+          state: {
+            searchResults: result,
+            pagination,
+            filters: updatedFormData,
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching user search data:", error);
+      alert("An error occurred while fetching data.");
+    } finally {
+      setLoading(false);
+      setButtonText("Submit");
     }
-  } catch (error) {
-    console.error("Error fetching user search data:", error);
-    alert("An error occurred while fetching data.");
-  } finally {
-    setLoading(false);
-    setButtonText("Submit");
-  }
-};
+  };
 
   const resetHandler = () => {
     setFormData({
@@ -258,6 +258,7 @@ const InventorySearch = () => {
                       className="ml-[1vw]"
                     />
                   </span>
+
                   <h2>Keyword Searches</h2>
                   <span className="!flex !justify-end ">
                     <label htmlFor="partHeci">Part #/HECI</label>
@@ -280,7 +281,8 @@ const InventorySearch = () => {
                       className="ml-[1vw]"
                     />
                   </span>
-                  <div className="!flex !justify-end ">
+
+                  <div className="!flex !justify-end !items-center">
                     <label htmlFor="condition">Condition</label>
                     <select
                       name="condition"
@@ -302,7 +304,7 @@ const InventorySearch = () => {
                     </select>
                   </div>
 
-                  <span className="!flex !justify-end ">
+                  <span className="!flex !justify-end  ">
                     <CompanySearchInventory
                       setFormData={setFormData}
                       formData={formData}
@@ -317,7 +319,7 @@ const InventorySearch = () => {
                         id="region"
                         value={formData.country}
                         onChange={handleChange}
-                        className="ml-[1vw] w-72 border-2"
+                        className="ml-[1vw] w-[17.3rem] border-2 "
                       >
                         {countriesList.map((country) => (
                           <option key={country.value} value={country.value}>
@@ -333,7 +335,7 @@ const InventorySearch = () => {
                         id="region"
                         value={formData.region}
                         onChange={handleChange}
-                        className="ml-[1vw] w-72 border-2"
+                        className="ml-[1vw] w-[17.3rem] border-2"
                       >
                         {regionsList.map((region) => (
                           <option key={region.value} value={region.value}>
