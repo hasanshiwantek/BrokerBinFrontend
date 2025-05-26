@@ -156,7 +156,7 @@ export const inventorySearch = createAsyncThunk(
           },
         }
       );
-      console.log("Response from backend: " + response.data);
+      console.log("Response from backend: ", response.data);
       return response.data;
     } catch (error) {
       console.error(

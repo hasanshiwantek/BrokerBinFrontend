@@ -14,11 +14,16 @@ import { inventorySearch } from "../../../../ReduxStore/InventorySlice";
 import inventory from "../../../../styles/Menu/Manage/Inventory/Inventory.module.css";
 import Cookies from "js-cookie";
 import { setHoverCompanyDetail } from "@/ReduxStore/SearchProductSlice";
+import LoadingState from "../../../../LoadingState";
+import { setBlurWhileLoading } from "@/ReduxStore/ProfleSlice";
+
 
 const InventorySearchResult = () => {
   const { togglePopUp } = useSelector((store) => store.searchProductStore);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+   const { blurWhileLoading } = useSelector((state) => state.profileStore);
 
   const location = useLocation();
   const [searchResults, setSearchResults] = useState([]);
@@ -30,26 +35,6 @@ const InventorySearchResult = () => {
   const [visiblePages, setVisiblePages] = useState([1, 10]); // Start with pages 1 to 10
 
   const token = Cookies.get("token");
-
-  // Initialize data from location.state
-  // useEffect(() => {
-  //   if (location.state) {
-  //     const { searchResults, pagination, filters } = location.state;
-  //     setSearchResults(searchResults.data || []);
-  //     setPagination(pagination);
-  //     setFilters(filters);
-  //   }
-  //   else {
-  //   // Fallback for shared URL or page reload
-  //   const params = new URLSearchParams(location.search);
-  //   const company = params.get("company") || "";
-  //   const page = parseInt(params.get("page")) || 1;
-
-  //   const fallbackFilters = { company, page, pageSize: 20 };
-  //   setFilters(fallbackFilters);
-  //   fetchPageData(page, fallbackFilters); // trigger API call
-  // }
-  // }, [location.state]);
 
   useEffect(() => {
   if (location.state) {
@@ -135,6 +120,7 @@ const InventorySearchResult = () => {
 // };
 
 const fetchPageData = async (newPage, customFilters = filters) => {
+      dispatch(setBlurWhileLoading(false));
   setLoading(true);
   try {
     const updatedFilters = { ...customFilters, page: newPage };
@@ -158,10 +144,10 @@ const fetchPageData = async (newPage, customFilters = filters) => {
     console.error("Error fetching paginated data:", error);
   } finally {
     setLoading(false);
+        dispatch(setBlurWhileLoading(true)); 
   }
 };
-
-
+ 
   // Handle Page Change
   const handlePageChange = (page) => {
     if (page >= 1 && page <= pagination.totalPages) {
@@ -236,8 +222,11 @@ const fetchPageData = async (newPage, customFilters = filters) => {
 
   console.log("CURRENT PAGE", currentPage);
   
-
   return (
+    <>
+    {!blurWhileLoading ? (
+        <LoadingState />
+      ) : (
     <div
       className={`${css.productTableDetail} m-28 !bg-[#e8e8e8] rounded-lg !p-[6px]`}
     >
@@ -272,6 +261,7 @@ const fetchPageData = async (newPage, customFilters = filters) => {
           </li>
         </ul>
       </div>
+
       <div className={`${css.tableContainer} !bg-[#bfbfbf]`}>
         <h3 className=" p-2 text-2xl text-white">Inventory Search</h3>
         <table>
@@ -431,10 +421,13 @@ const fetchPageData = async (newPage, customFilters = filters) => {
           </div>
         </div>
       </div>
+      </div>
+      )}
+
       {togglePopUp && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
-    </div>
+      </>
   );
 };
 
