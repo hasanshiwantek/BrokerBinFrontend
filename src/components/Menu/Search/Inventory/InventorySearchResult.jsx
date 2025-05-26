@@ -19,7 +19,8 @@ const InventorySearchResult = () => {
   const { togglePopUp } = useSelector((store) => store.searchProductStore);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const { inventorySearchData } = useSelector((state) => state.inventoryStore);
+  console.log("Search Inventory Data from Search Result Page: ",inventorySearchData);
   const location = useLocation();
   const [searchResults, setSearchResults] = useState([]);
   const [pagination, setPagination] = useState({});
