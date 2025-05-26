@@ -95,7 +95,7 @@ const Categories = () => {
   useEffect(() => {
     if (!companyData?.companyCategories) return;
     try {
-      const parsed = companyData.companyCategories
+      const parsed = companyData.companyCategories;
 
       const reconstructed = {
         ...parsed,

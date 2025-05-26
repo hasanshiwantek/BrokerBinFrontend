@@ -141,7 +141,7 @@ const Trading = () => {
 
     // 4. Shipping Options (FedEx, DHL, etc.)
     try {
-      const opts = companyData.shipping_options || "[]"
+      const opts = companyData.shipping_options || "[]";
       opts.forEach((label) => {
         const normalized = label
           .toLowerCase()
