@@ -38,11 +38,13 @@ const InventorySearchResult = () => {
 
   useEffect(() => {
   if (location.state) {
+    dispatch(setBlurWhileLoading(false));
     const { searchResults, pagination, filters } = location.state;
     setSearchResults(searchResults.data || []);
     setPagination(pagination);
     setFilters(filters);
     setCurrentPage(filters.page || 1);
+    dispatch(setBlurWhileLoading(true));
   } else {
     const params = new URLSearchParams(location.search);
     const fallbackFilters = {};
@@ -53,12 +55,11 @@ const InventorySearchResult = () => {
 
     fallbackFilters.pageSize = 20;
     const page = parseInt(fallbackFilters.page) || 1;
-    setFilters(fallbackFilters);
     setCurrentPage(page);
     fetchPageData(page, fallbackFilters);
+    setFilters(fallbackFilters);
   }
 }, []);
-
 
   // Fetch data when pagination changes
 
@@ -144,7 +145,7 @@ const fetchPageData = async (newPage, customFilters = filters) => {
     console.error("Error fetching paginated data:", error);
   } finally {
     setLoading(false);
-        dispatch(setBlurWhileLoading(true)); 
+    dispatch(setBlurWhileLoading(true)); 
   }
 };
  
