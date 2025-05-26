@@ -11,13 +11,13 @@ import { ToastContainer } from "react-toastify";
 const CompanyBio = ({ bio, setBio }) => {
   console.log("Bio: ", bio);
 
-const handleChange = (value) => {
+  const handleChange = (value) => {
     if (setBio) {
-        setBio(value);
+      setBio(value);
     } else {
-        console.warn("setBio is not defined");
+      console.warn("setBio is not defined");
     }
-};
+  };
   const formats = ["bold", "italic", "underline", "link"];
 
   const modules = {
@@ -39,7 +39,11 @@ const handleChange = (value) => {
           value={bio}
           onChange={handleChange}
           className="bg-white"
-          style={{ height: "10rem", width: "70rem", marginBottom: "5rem" }}
+          style={{
+            height: "10rem",
+            width: "70rem",
+            marginBottom: "5rem",
+          }}
           modules={modules}
           formats={formats}
         />

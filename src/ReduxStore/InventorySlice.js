@@ -264,6 +264,11 @@ export const fetchCurrentUploads = createAsyncThunk(
   }
 );
 
+
+
+
+
+
 const initialState = {
   // Add inventory data
   inventoryData: {},

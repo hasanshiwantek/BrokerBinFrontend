@@ -92,6 +92,8 @@ const Categories = () => {
     dispatch(getCompanyContact({ token, id: companyId }));
   }, [dispatch, token, companyId]);
 
+
+  
   useEffect(() => {
     if (!companyData?.companyCategories) return;
     try {
@@ -101,6 +103,8 @@ const Categories = () => {
       console.warn("Invalid companyCategories JSON", err);
     }
   }, [companyData, setValue]);
+
+
   return (
     <div className={`border p-4 ${css.onlyReceiveMatch}`}>
       <div className={css.categoriesToggleButton}>

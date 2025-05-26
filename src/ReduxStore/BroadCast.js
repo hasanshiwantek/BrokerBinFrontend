@@ -224,7 +224,7 @@ export const fetchBroadCastSortedData = createAsyncThunk(
   async ({ token, sortBy, sortOrder , pageNumber  }) => {
     try {
       const response = await axios.get(
-        `${brokerAPI}broadcast?sortBy=${sortBy}&sortOrder=${sortOrder}&page=${pageNumber}`, // Ensure pageNumber is used here
+        `${brokerAPI}broadcast?sortBy=${sortBy}&sortOrder=${sortOrder}&pageNumber=${pageNumber}`, // Ensure pageNumber is used here
         {
           headers: {
             "Content-Type": "application/json",

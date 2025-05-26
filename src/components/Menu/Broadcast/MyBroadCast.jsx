@@ -31,6 +31,7 @@ import {
 import { FaFileAlt } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
+import SortableTableHeader from "@/components/Tables/SortableHeader";
 
 const BroadCast = () => {
   const broadcastItems = useSelector(
@@ -426,24 +427,45 @@ const BroadCast = () => {
   }, [togglePopUp]);
 
   // SORTING LOGIC
+
+  const headers = [
+    { key: "cart", label: "Cart", sortable: false },
+    { key: "posted", label: "Posted", sortable: false },
+    { key: "shield", label: "", sortable: false },
+    { key: "company", label: "Company", sortable: true },
+    { key: "country", label: "Ctry", sortable: true },
+    { key: "type", label: "Type", sortable: true },
+    { key: "view", label: "View", sortable: false },
+    { key: "partModel", label: "Part / Model", sortable: true },
+    { key: "heciClei", label: "HECI / CLEI", sortable: true },
+    { key: "mfg", label: "Mfg", sortable: true },
+    { key: "cond", label: "Cond", sortable: true },
+    { key: "price", label: "Price", sortable: true },
+    { key: "quantity", label: "Quantity", sortable: true },
+    { key: "description", label: "Product Description", sortable: true },
+  ];
+
+  const extraIcons = {
+    shield: shieldImage,
+  };
+
   const [isSorted, setIsSorted] = useState(false);
   const [sortBy, setSortBy] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
   const [pageNumber, setPageNumber] = useState(1);
 
-  const handleSort = (column) => {
+  const handleSort = (columnKey) => {
     const newSortOrder =
-      sortBy === column && sortOrder === "asc" ? "desc" : "asc";
+      sortBy === columnKey && sortOrder === "asc" ? "desc" : "asc";
 
-    setSortBy(column);
+    setSortBy(columnKey);
     setSortOrder(newSortOrder);
     setIsSorted(true);
-    // setPageNumber(1); // reset to first page when sorting changes
 
     dispatch(
       fetchBroadCastSortedData({
         token,
-        sortBy: column,
+        sortBy: columnKey,
         sortOrder: newSortOrder,
         pageNumber: 1,
       })
@@ -679,90 +701,13 @@ const BroadCast = () => {
           </div>
         </div>
         <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>Cart</th>
-              <th>Posted</th>
-              <th>
-                <img
-                  src={shieldImage}
-                  alt=""
-                  srcSet=""
-                  style={{ width: "18px", fontWeight: "bold" }}
-                />
-              </th>
-              <th
-                onClick={() => handleSort("company")}
-                style={{ cursor: "pointer" }}
-              >
-                Company
-                {sortBy === "company" && (sortOrder === "asc" ? "↑" : "↓")}
-              </th>
-              <th
-                onClick={() => handleSort("country")}
-                style={{ cursor: "pointer" }}
-              >
-                Ctry
-                {sortBy === "country" && (sortOrder === "asc" ? "↑" : "↓")}
-              </th>
-              <th
-                onClick={() => handleSort("type")}
-                style={{ cursor: "pointer" }}
-              >
-                Type
-                {sortBy === "type" && (sortOrder === "asc" ? "↑" : "↓")}
-              </th>
-              <th>View</th>
-              <th
-                onClick={() => handleSort("partModel")}
-                style={{ cursor: "pointer" }}
-              >
-                Part / Model{" "}
-                {sortBy === "partModel" && (sortOrder === "asc" ? "↑" : "↓")}
-              </th>
-              <th
-                onClick={() => handleSort("heciClei")}
-                style={{ cursor: "pointer" }}
-              >
-                HECI / CLEI{" "}
-                {sortBy === "heciClei" && (sortOrder === "asc" ? "↑" : "↓")}{" "}
-              </th>
-              <th
-                onClick={() => handleSort("mfg")}
-                style={{ cursor: "pointer" }}
-              >
-                Mfg {sortBy === "mfg" && (sortOrder === "asc" ? "↑" : "↓")}
-              </th>
-
-              <th
-                onClick={() => handleSort("cond")}
-                style={{ cursor: "pointer" }}
-              >
-                Cond{sortBy === "cond" && (sortOrder === "asc" ? "↑" : "↓")}
-              </th>
-
-              <th
-                onClick={() => handleSort("price")}
-                style={{ cursor: "pointer" }}
-              >
-                Price {sortBy === "price" && (sortOrder === "asc" ? "↑" : "↓")}
-              </th>
-              <th
-                onClick={() => handleSort("quantity")}
-                style={{ cursor: "pointer" }}
-              >
-                Quantity{" "}
-                {sortBy === "quantity" && (sortOrder === "asc" ? "↑" : "↓")}
-              </th>
-              <th
-                onClick={() => handleSort("description")}
-                style={{ cursor: "pointer" }}
-              >
-                Product Description
-                {sortBy === "description" && (sortOrder === "asc" ? "↑" : "↓")}
-              </th>
-            </tr>
-          </thead>
+          <SortableTableHeader
+            headers={headers}
+            sortBy={sortBy}
+            sortOrder={sortOrder}
+            onSort={handleSort}
+            extraIcons={extraIcons}
+          />
           <tbody>
             {loading ? (
               <tr>
@@ -851,90 +796,13 @@ const BroadCast = () => {
               </tr>
             )}
           </tbody>
-          <thead>
-            <tr>
-              <th>Cart</th>
-              <th>Posted</th>
-              <th>
-                <img
-                  src={shieldImage}
-                  alt=""
-                  srcSet=""
-                  style={{ width: "18px", fontWeight: "bold" }}
-                />
-              </th>
-              <th
-                onClick={() => handleSort("company")}
-                style={{ cursor: "pointer" }}
-              >
-                Company
-                {sortBy === "company" && (sortOrder === "asc" ? "↑" : "↓")}
-              </th>
-              <th
-                onClick={() => handleSort("country")}
-                style={{ cursor: "pointer" }}
-              >
-                Ctry
-                {sortBy === "country" && (sortOrder === "asc" ? "↑" : "↓")}
-              </th>
-              <th
-                onClick={() => handleSort("type")}
-                style={{ cursor: "pointer" }}
-              >
-                Type
-                {sortBy === "type" && (sortOrder === "asc" ? "↑" : "↓")}
-              </th>
-              <th>View</th>
-              <th
-                onClick={() => handleSort("partModel")}
-                style={{ cursor: "pointer" }}
-              >
-                Part / Model{" "}
-                {sortBy === "partModel" && (sortOrder === "asc" ? "↑" : "↓")}
-              </th>
-              <th
-                onClick={() => handleSort("heciClei")}
-                style={{ cursor: "pointer" }}
-              >
-                HECI / CLEI{" "}
-                {sortBy === "heciClei" && (sortOrder === "asc" ? "↑" : "↓")}{" "}
-              </th>
-              <th
-                onClick={() => handleSort("mfg")}
-                style={{ cursor: "pointer" }}
-              >
-                Mfg {sortBy === "mfg" && (sortOrder === "asc" ? "↑" : "↓")}
-              </th>
-
-              <th
-                onClick={() => handleSort("cond")}
-                style={{ cursor: "pointer" }}
-              >
-                Cond{sortBy === "cond" && (sortOrder === "asc" ? "↑" : "↓")}
-              </th>
-
-              <th
-                onClick={() => handleSort("price")}
-                style={{ cursor: "pointer" }}
-              >
-                Price {sortBy === "price" && (sortOrder === "asc" ? "↑" : "↓")}
-              </th>
-              <th
-                onClick={() => handleSort("quantity")}
-                style={{ cursor: "pointer" }}
-              >
-                Quantity{" "}
-                {sortBy === "quantity" && (sortOrder === "asc" ? "↑" : "↓")}
-              </th>
-              <th
-                onClick={() => handleSort("description")}
-                style={{ cursor: "pointer" }}
-              >
-                Product Description
-                {sortBy === "description" && (sortOrder === "asc" ? "↑" : "↓")}
-              </th>
-            </tr>
-          </thead>
+          <SortableTableHeader
+            headers={headers}
+            sortBy={sortBy}
+            sortOrder={sortOrder}
+            onSort={handleSort}
+            extraIcons={extraIcons}
+          />
         </table>
         {/* PAGINATION */}
         <div className={styles.pagination}>

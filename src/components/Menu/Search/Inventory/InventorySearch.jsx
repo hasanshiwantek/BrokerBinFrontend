@@ -16,7 +16,7 @@ const InventorySearch = () => {
   const [buttonText, setButtonText] = useState("Submit");
   const token = Cookies.get("token");
   const { inventorySearchData } = useSelector((state) => state.inventoryStore);
-  console.log(inventorySearchData);
+  console.log("Searchg Inventory Data: ",inventorySearchData);
   const [formData, setFormData] = useState({
     part: "",
     heci: "",
