@@ -399,7 +399,7 @@ const FiltersComponent = ({
                         filters.computers?.includes(computer.value) || false
                       }
                     />
-                    {computer.label} ({companyCategoriesCount?.[computer.value] || 0})
+                    {computer.label} ({companyCategoriesCount?.[computer.label] || 0})
                   </label>
                 ))}
               </div>
@@ -421,7 +421,7 @@ const FiltersComponent = ({
                         filters.telecom?.includes(telecom.value) || false
                       }
                     />
-                    {telecom.label}
+                    {telecom.label} ({companyCategoriesCount?.[telecom.label] || 0})
                   </label>
                 ))}
               </div>
@@ -441,14 +441,14 @@ const FiltersComponent = ({
                       onChange={handleFilterChange}
                       checked={filters.scrap?.includes(scrap.value) || false}
                     />
-                    {scrap.label}
+                    {scrap.label} ({companyCategoriesCount?.[scrap.label] || 0})
                   </label>
                 ))}
               </div>
 
               <div  className="grid grid-cols-2 gap-5 mb-4">
                 <h3 className="text-2xl mb-2 font-[500]">Mobile Devices:</h3>
-                {mobileDevice.map((mobile) => (
+                 {mobileDevice.map((mobile) => (
                   <label
                     key={mobile.label}
                     className="flex items-center !text-base"
@@ -461,7 +461,7 @@ const FiltersComponent = ({
                       onChange={handleFilterChange}
                       checked={filters.mobile?.includes(mobile.value) || false}
                     />
-                    {mobile.label}
+                    {mobile.label} ({companyCategoriesCount?.[mobile.label] || 0})
                   </label>
                 ))}
               </div>
