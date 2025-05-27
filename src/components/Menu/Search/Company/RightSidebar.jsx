@@ -241,8 +241,6 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
     }
   })
 
-
-
   const companyCategoriesCountMap = {};
   (company?.companyCategoryCounts || []).forEach(item => {
     if (Array.isArray(item.subcategory)) {
