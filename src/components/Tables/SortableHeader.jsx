@@ -27,7 +27,7 @@ const SortableTableHeader = ({
               header.label
             )}
             {header.sortable && sortBy === header.key && (
-              <span>{sortOrder === "asc" ? " ↑" : " ↓"}</span>
+              <i>{sortOrder === "asc" ? " ↑" : " ↓"}</i>
             )}
           </th>
         ))}
