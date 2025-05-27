@@ -348,6 +348,31 @@ export const sentSortRfq = createAsyncThunk(
   }
 );
 
+export const getSortRfqArchived = createAsyncThunk(
+  "searchProductStore/getSortRfqArchived",
+  async ({ token, page, sortBy, sortOrder }) => {
+    try {
+      const response = await axios.get(
+        `${brokerAPI}rfq/archived?sortBy=${sortBy}&sortOrder=${sortOrder}&page=${page}`,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`, // Token passed correctly in headers
+          },
+        }
+      );
+
+      console.log(" Sort RFQ Archive from backend", response.data);
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error Fetching RFQ Sorted Archive data:",
+        error.response?.data || error.message
+      );
+    }
+  }
+);
+
 const initialState = {
   togglePopUp: false,
   rfqMailCheckAll: false,
@@ -484,6 +509,19 @@ const RfqSlice = createSlice({
       })
       .addCase(rfqArchive.fulfilled, (state, action) => {
         console.log("RFQ status updated:", action.payload); // Log the response
+        // Optionally update state based on action.payload
+      })
+      .addCase(getSortRfqArchived.rejected, (state, action) => {
+        console.error("Failed to update RFQ status:", action.error.message);
+        // Handle error if necessary
+      })
+      .addCase(getSortRfqArchived.pending, (state) => {
+        console.log("Updating RFQ status..."); // Log for debugging
+      })
+      .addCase(getSortRfqArchived.fulfilled, (state, action) => {
+        console.log("Sorted RFQ  response:", action.payload); // Log the response
+        state.rfqArchiveData = action.payload;
+
         // Optionally update state based on action.payload
       })
       .addCase(rfqArchive.rejected, (state, action) => {

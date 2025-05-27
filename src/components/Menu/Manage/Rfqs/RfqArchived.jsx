@@ -14,57 +14,70 @@ import {
   setCurrentPagePrev,
 } from "../../../../ReduxStore/RfqSlice.js";
 import { IoMail, IoMailOpen } from "react-icons/io5";
-import { getRfqArchived, deleteArchiveRfq, receivedRfq, sentRfq, rfqArchive } from "../../../../ReduxStore/RfqSlice.js";
+import {
+  getRfqArchived,
+  deleteArchiveRfq,
+  receivedRfq,
+  sentRfq,
+  rfqArchive,
+  getSortRfqArchived,
+} from "../../../../ReduxStore/RfqSlice.js";
 import Cookies from "js-cookie";
 import myProfile from "../../../../styles/Menu/Manage/MyProfile.module.css";
 import { NavLink } from "react-router-dom";
 import { setPopupCompanyDetail } from "../../../../ReduxStore/SearchProductSlice.js";
 import CompanyDetails from "../../../Popups/CompanyDetails/CompanyDetails.jsx";
-import {
-  setTogglePopUp as setTogglePopUpCompany
-} from "../../../../ReduxStore/SearchProductSlice";
+import { setTogglePopUp as setTogglePopUpCompany } from "../../../../ReduxStore/SearchProductSlice";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import SortableTableHeader from "@/components/Tables/SortableHeader";
+import usePagination from "@/components/hooks/usePagination";
+import PaginationControls from "@/components/pagination/PaginationControls";
 
 const RfqTableSent = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-
-  const { togglePopUp: togglePopUpRfq, rfqMail, rfqMailCheckAll, currentPage } = useSelector(
-    (state) => state.rfqStore
-  );
+  const {
+    togglePopUp: togglePopUpRfq,
+    rfqMail,
+    rfqMailCheckAll,
+    currentPage,
+  } = useSelector((state) => state.rfqStore);
 
   const [resetTrigger, setResetTrigger] = useState(false);
 
-  const { togglePopUp: togglePopUpCompany } = useSelector((state) => state.searchProductStore)
-  const { sentRfqData, receiveRfqData } = useSelector((state) => state.rfqStore)
+  const { togglePopUp: togglePopUpCompany } = useSelector(
+    (state) => state.searchProductStore
+  );
+  const { sentRfqData, receiveRfqData } = useSelector(
+    (state) => state.rfqStore
+  );
 
-  const { popupCompanyDetail } = useSelector((state) => state.searchProductStore)
+  const { popupCompanyDetail } = useSelector(
+    (state) => state.searchProductStore
+  );
 
   const dispatch = useDispatch();
 
   const token = Cookies.get("token");
 
-  const { rfqArchiveData } = useSelector((state) => state.rfqStore)
-  console.log("Archived Data ", rfqArchiveData)
+  const { rfqArchiveData } = useSelector((state) => state.rfqStore);
+  console.log("Archived Data ", rfqArchiveData);
 
   // Extract pagination details
   const pagination = rfqArchiveData?.pagination || {}; // Assuming pagination is present in sentRfqData
-  console.log("Pagination ", pagination)
+  console.log("Pagination ", pagination);
   const totalPages = pagination.totalPages || 1;
-  console.log("TOTAL PAGES ", totalPages)
+  console.log("TOTAL PAGES ", totalPages);
   const currPage = pagination.currentPage || 1;
-  console.log("current page  ", currPage)
+  console.log("current page  ", currPage);
 
-
-  console.log("Data From Page", sentRfqData)
-
+  console.log("Data From Page", sentRfqData);
 
   const sentData = rfqArchiveData.data || [];
-  console.log("SENDATA", sentData)
+  console.log("SENDATA", sentData);
 
   const [filteredData, setFilteredData] = useState(sentData);
 
@@ -74,19 +87,27 @@ const RfqTableSent = () => {
 
     // Date Filter
     if (filters.fromDate || filters.toDate) {
-      const fromDate = filters.fromDate ? new Date(filters.fromDate + "T00:00:00") : null;
-      const toDate = filters.toDate ? new Date(filters.toDate + "T23:59:59") : null;
+      const fromDate = filters.fromDate
+        ? new Date(filters.fromDate + "T00:00:00")
+        : null;
+      const toDate = filters.toDate
+        ? new Date(filters.toDate + "T23:59:59")
+        : null;
 
       filtered = filtered.filter((item) => {
         const itemDate = new Date(item.updated_at.replace(" ", "T"));
-        return (!fromDate || itemDate >= fromDate) && (!toDate || itemDate <= toDate);
+        return (
+          (!fromDate || itemDate >= fromDate) && (!toDate || itemDate <= toDate)
+        );
       });
     }
 
     // Subject Filter
     if (filters.subject) {
       filtered = filtered.filter((item) =>
-        (item.subject || "").toLowerCase().includes(filters.subject.toLowerCase())
+        (item.subject || "")
+          .toLowerCase()
+          .includes(filters.subject.toLowerCase())
       );
     }
 
@@ -94,11 +115,16 @@ const RfqTableSent = () => {
     if (filters.firstName) {
       filtered = filtered.filter((item) => {
         const recipientInfo = item.to
-          ?.map((recipient) =>
-            `${recipient.firstName || ""} ${recipient.lastName || ""} ${recipient.email || ""} ${recipient.company?.name || ""}`
+          ?.map(
+            (recipient) =>
+              `${recipient.firstName || ""} ${recipient.lastName || ""} ${
+                recipient.email || ""
+              } ${recipient.company?.name || ""}`
           )
           .join(" ");
-        return recipientInfo?.toLowerCase().includes(filters.firstName.toLowerCase());
+        return recipientInfo
+          ?.toLowerCase()
+          .includes(filters.firstName.toLowerCase());
       });
     }
 
@@ -126,15 +152,13 @@ const RfqTableSent = () => {
     setFilteredData(filtered);
   };
 
-
   const companyData = sentData?.map((item) => {
     return item.to?.map((recipient) => recipient.company?.name);
   });
 
   console.log("Company Names: ", companyData);
 
-
-  console.log("Sent Data Received", sentData)
+  console.log("Sent Data Received", sentData);
 
   useEffect(() => {
     // Fetch data and ensure pagination details are retrieved
@@ -150,17 +174,12 @@ const RfqTableSent = () => {
       .catch((error) => {
         console.error("Error fetching sent RFQs:", error);
       });
-
   }, [dispatch, token, currPage]);
-
-
 
   useEffect(() => {
     dispatch(receivedRfq({ token }));
     dispatch(sentRfq({ token }));
   }, [dispatch, token]); // Adding token and dispatch as dependencies
-
-
 
   useEffect(() => {
     if (sentData.length > 0) {
@@ -169,14 +188,11 @@ const RfqTableSent = () => {
     }
   }, [sentData]);
 
-
-
-
   const itemsPerPage = 20;
   const sliceTo = currentPage * itemsPerPage;
   const sliceFrom = sliceTo - itemsPerPage;
   const currentItems = sentData.slice(sliceFrom, sliceTo);
-  console.log("CURRENT ITEMS", currentItems)
+  console.log("CURRENT ITEMS", currentItems);
 
   const prevPage = () => {
     if (currentPage === 1) {
@@ -194,19 +210,19 @@ const RfqTableSent = () => {
   console.log("Current Page:", currentPage);
   console.log("Current Items:", currentItems);
 
-
   const now = new Date();
-  const date = `${now.getHours() > 12
-    ? (now.getHours() % 12) +
-    `:` +
-    (now.getMinutes() < 9 ? `0` + now.getMinutes() : now.getMinutes()) +
-    `PM`
-    : `0` +
-    now.getHours() +
-    `:` +
-    (now.getMinutes() < 9 ? `0` + now.getMinutes() : now.getMinutes()) +
-    `AM`
-    } ${now.getDate()}/${now.getMonth()}/${now.getFullYear()}`;
+  const date = `${
+    now.getHours() > 12
+      ? (now.getHours() % 12) +
+        `:` +
+        (now.getMinutes() < 9 ? `0` + now.getMinutes() : now.getMinutes()) +
+        `PM`
+      : `0` +
+        now.getHours() +
+        `:` +
+        (now.getMinutes() < 9 ? `0` + now.getMinutes() : now.getMinutes()) +
+        `AM`
+  } ${now.getDate()}/${now.getMonth()}/${now.getFullYear()}`;
 
   // const handleShowPopupRfq = (event, { id }) => {
   //     event.stopPropagation(); // Prevent the event from propagating to the row click event
@@ -225,10 +241,6 @@ const RfqTableSent = () => {
     dispatch(setRfqPopBoxInfo(filteredData));
   };
 
-
-
-
-
   const handleCheckboxClick = (event, rfqId) => {
     event.stopPropagation(); // Prevent row click event from triggering
     const isChecked = event.target.checked;
@@ -240,7 +252,6 @@ const RfqTableSent = () => {
       dispatch(setRfqMail(rfqMail.filter((mail) => mail.rfqId !== rfqId)));
     }
   };
-
 
   const handleCheckboxClickAll = (event) => {
     event.stopPropagation(); // Prevent row click event from triggering
@@ -255,7 +266,6 @@ const RfqTableSent = () => {
     }
   };
 
-
   // Company Modal Logic
   const openCompanyModal = (company) => {
     console.log("Opening Company Modal with Company:", company);
@@ -265,14 +275,11 @@ const RfqTableSent = () => {
   console.log("popupCompanyDetail", popupCompanyDetail);
   console.log("togglePopUp", togglePopUpCompany);
 
-
   const resetFilters = () => {
     setFilteredData(sentData);
     setResetTrigger((prev) => !prev);
     console.log("Filters Reset. Data Reset to Original:", sentData);
   };
-
-
 
   const handleReply = () => {
     if (rfqMail.length === 0) {
@@ -282,8 +289,6 @@ const RfqTableSent = () => {
 
     navigate("/rfq/create", { state: { selectedRfqs: rfqMail } }); // Pass all selected RFQs
   };
-
-
 
   const handleDelete = () => {
     if (rfqMail.length === 0) {
@@ -296,17 +301,15 @@ const RfqTableSent = () => {
 
     dispatch(deleteArchiveRfq({ token, ids: rfqIdsToDelete }))
       .then(() => {
-        console.log("Selected RGQs Deleted")
+        console.log("Selected RGQs Deleted");
         alert("Selected RFQs deleted successfully!");
-        dispatch(getRfqArchived({ token,page:currPage })); // Refresh the data
+        dispatch(getRfqArchived({ token, page: currPage })); // Refresh the data
       })
       .catch((error) => {
         console.error("Error deleting RFQs:", error);
         alert("Failed to delete RFQs. Please try again.");
       });
   };
-
-
 
   const handleForward = () => {
     if (rfqMail.length === 0) {
@@ -322,45 +325,10 @@ const RfqTableSent = () => {
     navigate("/rfq/create", { state: { selectedRfqs, type: "forward" } });
   };
 
-
-
-  // PAGINATION LOGIC
-
-  // Dynamic pagination range
-  const [visiblePages, setVisiblePages] = useState([1, Math.min(10, totalPages)]);
-
-  const handlePageChange = (page) => {
-    if (page >= 1 && page <= totalPages) {
-      dispatch(getRfqArchived({ token, page })) // Fetch data for the selected page
-        .unwrap()
-        .then((response) => {
-          const { pagination } = response;
-          if (pagination) {
-            setVisiblePages([1, Math.min(10, pagination.totalPages)]); // Update visible pages
-          }
-        })
-        .catch((error) => console.error("Error changing page:", error));
-    }
-  };
-
-  const handlePrevious = () => {
-    if (visiblePages[0] > 1) {
-      setVisiblePages([Math.max(visiblePages[0] - 10, 1), visiblePages[0] - 1]);
-      dispatch(getRfqArchived({ token, page: visiblePages[0] - 1 }));
-    }
-  };
-
-  const handleNext = () => {
-    if (visiblePages[1] < totalPages) {
-      setVisiblePages([visiblePages[1] + 1, Math.min(visiblePages[1] + 10, totalPages)]);
-      dispatch(getRfqArchived({ token, page: visiblePages[1] + 1 }));
-    }
-  };
-
-  console.log("rfqMail ",rfqMail)
+  console.log("rfqMail ", rfqMail);
 
   const userId = Cookies.get("user_id");
-  console.log("UserID", userId)
+  console.log("UserID", userId);
 
   const restoreRfq = async (rfq) => {
     const token = Cookies.get("token");
@@ -368,9 +336,9 @@ const RfqTableSent = () => {
       rfq_id: rfq.rfqId,
       status: 0,
       user_id: userId,
-    }));    
+    }));
     console.log("Payload", payload);
-  
+
     try {
       await dispatch(rfqArchive({ token, data: payload }));
       toast.success("RFQ restored successfully!");
@@ -381,27 +349,96 @@ const RfqTableSent = () => {
     }
   };
 
+  // PAGINATION LOGIC And
+  // SORTING LOGIC
+
+  const rfqHeaders = [
+    {
+      key: "status",
+      label: (
+        <span>
+          <input
+            type="checkbox"
+            onChange={handleCheckboxClickAll}
+            checked={rfqMailCheckAll}
+          />
+          status
+        </span>
+      ),
+      sortable: false,
+    },
+    { key: "qty", label: "Qty", sortable: false },
+    { key: "parts", label: "Parts", sortable: false },
+    { key: "subject", label: "PO subject", sortable: true },
+    { key: "from", label: "From", sortable: true },
+    { key: "company", label: "Company", sortable: true },
+    { key: "date", label: "Date", sortable: true },
+  ];
+
+  const [sortBy, setSortBy] = useState("");
+  const [sortOrder, setSortOrder] = useState("asc");
+  const [isSorted, setIsSorted] = useState(false);
+
+  const handleSort = (columnKey) => {
+    const newSortOrder =
+      sortBy === columnKey && sortOrder === "asc" ? "desc" : "asc";
+
+    setSortBy(columnKey);
+    setSortOrder(newSortOrder);
+    setIsSorted(true);
+
+    dispatch(
+      getSortRfqArchived({
+        token,
+        sortBy: columnKey,
+        sortOrder: newSortOrder,
+        page: currPage,
+      })
+    );
+  };
+
+  const {
+    curr_Page,
+    visiblePages,
+    handlePageChange,
+    handlePrevious,
+    handleNext,
+  } = usePagination({
+    token,
+    totalPages,
+    fetchAction: getRfqArchived,
+    fetchSortedAction: getSortRfqArchived,
+    isSorted,
+    sortBy,
+    sortOrder,
+  });
 
   return (
     <>
       <div className={css.layout}>
         <div className={css.tableArea}>
           <div className={css.rfqTable}>
-
             <div className={myProfile.profileInfo_links}>
               <ul>
                 <li>
                   <NavLink
                     to="/rfq"
-                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                    className={({ isActive }) =>
+                      isActive ? myProfile.active : ""
+                    }
                   >
-                    <span>Received({receiveRfqData.totalCount}/{receiveRfqData.unreadCount})</span>
+                    <span>
+                      Received({receiveRfqData.totalCount}/
+                      {receiveRfqData.unreadCount})
+                    </span>
                   </NavLink>
                 </li>
                 <li>
                   <NavLink
                     to="/rfqSent"
-                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                    className={({ isActive }) =>
+                      isActive ? myProfile.active : ""
+                    }
                   >
                     <span>Sent ({sentRfqData?.totalCount})</span>
                   </NavLink>
@@ -409,7 +446,9 @@ const RfqTableSent = () => {
                 <li>
                   <NavLink
                     to="/rfq/create"
-                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                    className={({ isActive }) =>
+                      isActive ? myProfile.active : ""
+                    }
                   >
                     <span>New</span>
                   </NavLink>
@@ -417,9 +456,11 @@ const RfqTableSent = () => {
                 <li>
                   <NavLink
                     to="/rfqArchived"
-                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                    className={({ isActive }) =>
+                      isActive ? myProfile.active : ""
+                    }
                   >
-                    <span>Archive</span>
+                    <span onClick={(()=>window.location.reload(200))}>Archive</span>
                   </NavLink>
                 </li>
               </ul>
@@ -431,28 +472,12 @@ const RfqTableSent = () => {
                 isSent={true} // Optional for resetting fields
               />
               <table>
-                <thead>
-                  <tr>
-                    <th>
-                      <span>
-                        <input
-                          type="checkbox"
-                          name=""
-                          id=""
-                          onChange={handleCheckboxClickAll}
-                          checked={rfqMailCheckAll}
-                        />
-                        status
-                      </span>
-                    </th>
-                    <th>Qty</th>
-                    <th>Parts</th>
-                    <th>PO subject</th>
-                    <th>from</th>
-                    <th>Company</th>
-                    <th>date</th>
-                  </tr>
-                </thead>
+                <SortableTableHeader
+                  headers={rfqHeaders}
+                  sortBy={sortBy}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
                 <tbody>
                   {(filteredData || []).map((e) => (
                     <tr
@@ -469,8 +494,12 @@ const RfqTableSent = () => {
                           name="addToCart"
                           id={`checkbox-${e.rfqId}`} // Add unique ID
                           onClick={(event) => event.stopPropagation()} // Ensure row click doesn't interfere
-                          onChange={(event) => handleCheckboxClick(event, e.rfqId)} // Correctly handle checkbox clicks
-                          checked={rfqMail.some((mail) => mail.rfqId === e.rfqId)} // Check if this item is selected
+                          onChange={(event) =>
+                            handleCheckboxClick(event, e.rfqId)
+                          } // Correctly handle checkbox clicks
+                          checked={rfqMail.some(
+                            (mail) => mail.rfqId === e.rfqId
+                          )} // Check if this item is selected
                         />
 
                         {/* Dynamic image based on isRead */}
@@ -511,7 +540,9 @@ const RfqTableSent = () => {
                         )}
                       </td>
                       <td>{e.subject || "N/A"}</td>
-                      <td>{e.from.firstName}  {e.from.lastName}</td>
+                      <td>
+                        {e.from.firstName} {e.from.lastName}
+                      </td>
                       <td>
                         {e.from?.company ? (
                           <td onClick={() => openCompanyModal(e.from.company)}>
@@ -524,54 +555,36 @@ const RfqTableSent = () => {
                       <td>{e.updated_at || "N/A"}</td>
                     </tr>
                   ))}
-
                 </tbody>
-                <tfoot className={css.rfqTableDetailBottom}>
-                  <tr>
-                    <th>
-                      <span>
-                        <input
-                          type="checkbox"
-                          name=""
-                          id=""
-                          onChange={handleCheckboxClickAll}
-                          checked={rfqMailCheckAll}
-                        />
-                        status
-                      </span>
-                    </th>
-                    <th>Qty</th>
-                    <th>Parts</th>
-                    <th>PO subject</th>
-                    <th>from</th>
-                    <th>company</th>
-                    <th>date</th>
-                  </tr>
-                </tfoot>
+                <SortableTableHeader
+                  headers={rfqHeaders}
+                  sortBy={sortBy}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
               </table>
             </div>
             <div className={css.rfqTableBtn_bottom}>
               <div>
                 <NavLink to={"/rfq/create"}>
-                  <button type="button" >send</button>
+                  <button type="button">send</button>
                 </NavLink>
-                <button
-                  type="button"
-                  onClick={resetFilters}>
-                    reset
+                <button type="button" onClick={resetFilters}>
+                  reset
                 </button>
 
                 <button type="button" onClick={handleReply}>
                   reply
                 </button>
-                <button type="button" onClick={handleForward}>forward</button>
+                <button type="button" onClick={handleForward}>
+                  forward
+                </button>
                 <button type="button" onClick={restoreRfq}>
                   Restore
                 </button>
                 <button type="button" onClick={handleDelete}>
                   Delete
                 </button>
-                
               </div>
 
               {/* PAGINATION CONTROLS */}
@@ -580,50 +593,24 @@ const RfqTableSent = () => {
                   Page <span className="text-blue-800">{currPage}</span> of
                   <span className="text-blue-800"> {totalPages}</span>
                 </span>
-
-                {/* Previous Button */}
-                <button
-                  onClick={handlePrevious}
-                  className={`${css.pageButton} ${visiblePages[0] === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
-                  disabled={visiblePages[0] === 1}
-                >
-                  Previous
-                </button>
-
-                {/* Dynamic Page Buttons */}
-                {Array.from(
-                  { length: visiblePages[1] - visiblePages[0] + 1 },
-                  (_, i) => visiblePages[0] + i
-                )
-                  .filter((page) => page >= 1 && page <= totalPages)
-                  .map((page) => (
-                    <button
-                      key={page}
-                      onClick={() => handlePageChange(page)}
-                      className={`${css.pageButton} ${currPage === page ? css.active : ""}`}
-                    >
-                      {page}
-                    </button>
-                  ))}
-
-                {/* Next Button */}
-                <button
-                  onClick={handleNext}
-                  className={`${css.pageButton} ${visiblePages[1] === totalPages ? "opacity-50 cursor-not-allowed" : ""}`}
-                  disabled={visiblePages[1] === totalPages}
-                >
-                  Next
-                </button>
+                <PaginationControls
+                  currPage={curr_Page}
+                  totalPages={totalPages}
+                  visiblePages={visiblePages}
+                  onPageChange={(page) => handlePageChange(page, dispatch)}
+                  onPrev={() => handlePrevious(dispatch)}
+                  onNext={() => handleNext(dispatch)}
+                />
               </div>
-
             </div>
           </div>
         </div>
-                    <ToastContainer position="top-center" autoClose={1000} />
-        
+        <ToastContainer position="top-center" autoClose={1000} />
       </div>
       {togglePopUpRfq && <RfqTablePopUp type="sent" />}
-      {togglePopUpCompany && <CompanyDetails closeModal={() => dispatch(setTogglePopUpCompany())} />}
+      {togglePopUpCompany && (
+        <CompanyDetails closeModal={() => dispatch(setTogglePopUpCompany())} />
+      )}
     </>
   );
 };
