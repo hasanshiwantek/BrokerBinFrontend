@@ -21,8 +21,14 @@ const FiltersComponent = ({
   onFiltersChange,
   scrollToSection,
   initialFilters,
+  regionCounts,
+  countryCounts,
+  stateCounts,
+  categoryCounts,
+  manufacturerCounts,
+   companyCategoriesCount,
 }) => {
-  const [filters, setFilters] = useState(
+  const [filters, setFilters] = useState( 
     initialFilters || {
       region: [],
       country: [],
@@ -60,6 +66,9 @@ const FiltersComponent = ({
     states: statesList[country] || [],
   }));
   console.log("......", combineStates);
+
+  console.log("Company Categ Counts: ",companyCategoriesCount);
+  
 
   const [openAccordion, setOpenAccordion] = useState([]); // 🟢 Stores expanded sections
 
@@ -109,6 +118,8 @@ const FiltersComponent = ({
         mfg.toLowerCase().includes(showMfgs.toLowerCase())
       )
     : initialMFGs.slice(0, 20);
+
+  
 
   return (
     <div className="bg-white shadow-lg p-4 rounded">
@@ -186,7 +197,7 @@ const FiltersComponent = ({
                     onChange={handleFilterChange}
                     className="mr-2"
                   />
-                  {regionOption.label} {/* ✅ Render label correctly */}
+                  {regionOption.label} ({regionCounts?.[regionOption.label] || 0})
                 </label>
               ))}
             </div>
@@ -212,7 +223,7 @@ const FiltersComponent = ({
                     onChange={handleFilterChange}
                     checked={filters.country?.includes(country.value) || false}
                   />
-                  {country.label}
+                  {country.label} ({countryCounts?.[country.value] || 0})
                 </label>
               ))}
             </div>
@@ -245,7 +256,7 @@ const FiltersComponent = ({
                           onChange={handleFilterChange}
                           className="mr-2"
                         />
-                        {stateOptions.label}
+                        {stateOptions.label} ({stateCounts?.[stateOptions.value] || 0})
                       </label>
                     ))}
                   </div>
@@ -276,7 +287,7 @@ const FiltersComponent = ({
                       filters.categories?.includes(categories.value) || false
                     }
                   />
-                  {categories.label}
+                  {categories.label} ({categoryCounts?.[categories.label] || 0})
                 </label>
               ))}
             </div>
@@ -313,7 +324,7 @@ const FiltersComponent = ({
                     onChange={handleFilterChange}
                     checked={filters.manufacturer?.includes(mfg) || false}
                   />
-                  {mfg}
+                  {mfg} ({manufacturerCounts?.[mfg] || 0})
                 </label>
               ))}
             </div>
@@ -388,7 +399,7 @@ const FiltersComponent = ({
                         filters.computers?.includes(computer.value) || false
                       }
                     />
-                    {computer.label}
+                    {computer.label} ({companyCategoriesCount?.[computer.value] || 0})
                   </label>
                 ))}
               </div>

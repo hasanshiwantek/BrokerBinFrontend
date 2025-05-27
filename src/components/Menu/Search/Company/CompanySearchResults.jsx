@@ -13,7 +13,6 @@ import CompanyDetails from "../../../Popups/CompanyDetails/CompanyDetails";
 import { inventorySearch } from "../../../../ReduxStore/InventorySlice";
 import inventory from "../../../../styles/Menu/Manage/Inventory/Inventory.module.css";
 import Cookies from "js-cookie";
-import LeafletMap from "./LeafletMap";
 import axios from "axios";
 import { FaSearch } from "react-icons/fa";
 import { error } from "jquery";
