@@ -32,7 +32,7 @@ const PaginationControls = ({
             onClick={() => onPageChange(page)}
             className={`px-3 py-1 rounded border transition ${
               currPage === page
-                ? "bg-blue-600 text-white border-blue-600"
+                ? "!bg-blue-300 text-white border-blue-600"
                 : "border-gray-300 text-blue-600 hover:bg-blue-400"
             }`}
           >

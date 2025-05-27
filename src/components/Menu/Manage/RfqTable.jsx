@@ -204,13 +204,7 @@ const RfqTable = () => {
     // Fetch data and ensure pagination details are retrieved
     dispatch(receivedRfq({ token, page: currPage }))
       .unwrap()
-      .then((response) => {
-        // Optional: You can set local state based on response if needed
-        const { pagination } = response;
-        if (pagination) {
-          setVisiblePages([1, Math.min(10, pagination.totalPages)]); // Initialize visible pages
-        }
-      })
+
       .catch((error) => {
         console.error("Error fetching sent RFQs:", error);
       });
