@@ -1,31 +1,54 @@
 import { React, useEffect, useState } from "react";
 import css from "../../../styles/Menu/Tools/HotListView.module.css"; // Assuming you have styles in CSS module
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
-import styles from "../../../styles/Menu/Tools/Tools.module.css";
 import {
   showHotListItem,
   deleteHotlists,
+  showSortHotListItem,
 } from "../../../ReduxStore/ToolsSlice";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import PaginationControls from "@/components/pagination/PaginationControls";
+import SortableTableHeader from "@/components/Tables/SortableHeader";
 
 const HotListView = () => {
   // const [selectedItems, setSelectedItems] = useState([]);
   const items = useSelector((state) => state.toolsStore.myHotListItems);
-
+  const pagination = useSelector(
+    (state) => state.toolsStore.myHotListItems?.pagination || {}
+  );
+  const totalPages = pagination.lastPage || 1;
   const [selectedIds, setSelectedIds] = useState([]);
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentPage = parseInt(searchParams.get("page") || "1", 10);
+
   console.log("items:", items);
+
+  // Query param hooks
+  const sortBy = searchParams.get("sortBy") || "";
+  const sortOrder = searchParams.get("sortOrder") || "asc";
+  const isSorted = !!sortBy;
 
   const dispatch = useDispatch();
   const token = Cookies.get("token");
 
+  // Fetch data on mount or when page/sort params change
   useEffect(() => {
-    dispatch(showHotListItem({ token }));
-  }, [dispatch, token]);
+    const fetchAction = isSorted
+      ? showSortHotListItem({
+          token,
+          sortBy,
+          sortOrder,
+          pageNumber: currentPage,
+        })
+      : showHotListItem({ token, pageNumber: currentPage });
+
+    dispatch(fetchAction);
+  }, [dispatch, token, currentPage, sortBy, sortOrder]);
 
   // Handle checkbox toggle
   const handleCheckboxChange = (id) => {
@@ -52,7 +75,7 @@ const HotListView = () => {
     dispatch(deleteHotlists({ token, ids: payload }))
       .then(() => {
         console.log("Deletion successful.");
-        setSelectedIds([]); 
+        setSelectedIds([]);
         dispatch(showHotListItem({ token })); // Refresh the list
       })
       .catch((error) => {
@@ -62,13 +85,55 @@ const HotListView = () => {
       });
   };
 
+  // SORTING FUNCTION LOGIC
+
+  const rfqHeaders = [
+    { key: "details", label: "Details", sortable: false },
+    { key: "day", label: "D", sortable: true },
+    { key: "week", label: "W", sortable: true },
+    { key: "month", label: "M", sortable: true },
+    { key: "part_model", label: "Part/Model", sortable: true },
+    { key: "heciClei", label: "HECI/CLEI", sortable: true },
+    { key: "manufacturer", label: "MFG", sortable: true },
+    { key: "condition", label: "Cond", sortable: true },
+    { key: "low", label: "Low", sortable: false },
+    { key: "avg", label: "Avg", sortable: false },
+    { key: "high", label: "High", sortable: false },
+    { key: "clp", label: "CLP", sortable: false },
+    {
+      key: "product_description",
+      label: "Product Description",
+      sortable: true,
+    },
+    { key: "details", label: "Details", sortable: false },
+  ];
+
+  // Handle sorting
+  const handleSort = (columnKey) => {
+    const newSortOrder =
+      sortBy === columnKey && sortOrder === "asc" ? "desc" : "asc";
+    setSearchParams({
+      page: "1", // reset to first page on sort
+      sortBy: columnKey,
+      sortOrder: newSortOrder,
+    });
+  };
+
+  const handlePageChange = (page) => {
+    const params = {};
+    if (sortBy) params.sortBy = sortBy;
+    if (sortOrder) params.sortOrder = sortOrder;
+    params.page = page.toString();
+    setSearchParams(params);
+  };
+
   return (
     <>
       <div className={css.container}>
         {/* Tabs */}
         <div className={css.tabs}>
           <ul>
-            <li>
+            <li onClick={(()=>window.location.reload(200))}>
               <Link to="/hotlist/view" className={css.activeTab}>
                 View
               </Link>
@@ -106,24 +171,12 @@ const HotListView = () => {
 
           {/* Table */}
           <table className={css.table}>
-            <thead>
-              <tr>
-                <th>Details</th>
-                <th>D</th>
-                <th>W</th>
-                <th>M</th>
-                <th>Part / Model</th>
-                <th>HECI / CLEI</th>
-                <th>Mfg</th>
-                <th>Cond</th>
-                <th>Low</th>
-                <th>Avg</th>
-                <th>High</th>
-                <th>CLP</th>
-                <th>Product Description</th>
-                <th>Details</th>
-              </tr>
-            </thead>
+            <SortableTableHeader
+              headers={rfqHeaders}
+              sortBy={sortBy}
+              sortOrder={sortOrder}
+              onSort={handleSort}
+            />
             {items?.map((item, index) => {
               return (
                 <tbody key={index}>
@@ -135,9 +188,9 @@ const HotListView = () => {
                       />
                     </td>
 
-                    <td>1</td>
-                    <td>4</td>
-                    <td>---</td>
+                    <td>{item.day}</td>
+                    <td>{item.week}</td>
+                    <td>{item.month}</td>
                     <td>{item.part_model}</td>
                     <td>{item.heciClei}</td>
                     <td>{item.manufacturer}</td>
@@ -160,13 +213,25 @@ const HotListView = () => {
             })}
           </table>
 
-          {/* <div className={css.actionButtons}> */}
+          <div className="flex justify-between ">
+            <button className={css.deleteButton} onClick={handleDelete}>
+              Delete
+            </button>
 
-          <button className={css.deleteButton} onClick={handleDelete}>
-            Delete
-          </button>
-          {/* <button className={css.previewButton}>Preview/Print</button> */}
-          {/* </div> */}
+            {/* PAGINATION */}
+            <div className="mt-4 ">
+              <PaginationControls
+                currPage={currentPage}
+                totalPages={totalPages}
+                visiblePages={[1, totalPages]}
+                onPageChange={handlePageChange}
+                onPrev={() => handlePageChange(Math.max(1, currentPage - 1))}
+                onNext={() =>
+                  handlePageChange(Math.min(totalPages, currentPage + 1))
+                }
+              />
+            </div>
+          </div>
         </div>
 
         <div className={css.learnMore}>

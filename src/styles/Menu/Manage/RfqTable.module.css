@@ -82,7 +82,7 @@
       color: white;
       text-align: left;
       > :first-child {
-        display: flex;
+        /* display: flex; */
         align-items: center;
       }
     }
