@@ -76,7 +76,7 @@ const HotListView = () => {
       .then(() => {
         console.log("Deletion successful.");
         setSelectedIds([]);
-        dispatch(showHotListItem({ token })); // Refresh the list
+        dispatch(showHotListItem({ token , pageNumber: currentPage })); // Refresh the list
       })
       .catch((error) => {
         console.error("Error during deletion:", error);

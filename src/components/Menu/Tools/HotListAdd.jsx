@@ -37,17 +37,18 @@ const HotListAdd = () => {
 
     const hotlists = rows;
 
-    dispatch(addHotListItem({ hotlists, token })).then(() => {
-               toast.info("Hotlists Added successfully!", {
-                  style: { fontSize:"17px" ,marginTop:"-10px"} , // 
-                });
-      console.log("Hotlist Saved SuccesFully")
-    }).catch((error) => {
-      console.log("Error Saving Hotlists", error)
-      toast.error("Failed to Add Hotlist. Try again.", {
-                   });
+    dispatch(addHotListItem({ hotlists, token }))
+      .then(() => {
+        toast.info("Hotlists Added successfully!", {
+          style: { fontSize: "17px", marginTop: "-10px" }, //
+        });
+        console.log("Hotlist Saved SuccesFully");
 
-    })
+      })
+      .catch((error) => {
+        console.log("Error Saving Hotlists", error);
+        toast.error("Failed to Add Hotlist. Try again.", {});
+      });
   };
 
   return (
@@ -59,7 +60,9 @@ const HotListAdd = () => {
               <Link to={"/hotlist/view"}>View</Link>
             </li>
             <li>
-              <Link to={"/hotlist/add"} className={css.activeTab}>Add</Link>
+              <Link to={"/hotlist/add"} className={css.activeTab}>
+                Add
+              </Link>
             </li>
             <li>
               <Link to={"/hotlist/edit"}>Edit</Link>
@@ -97,8 +100,8 @@ const HotListAdd = () => {
                     <td>
                       <input type="text" name={`mfg_${index}`} />
                     </td>
-                    <td>
-                      <select name={`cond_${index}`}>
+                    <td >
+                      <select name={`cond_${index}`}  className="border-2">
                         <option value="New">New</option>
                         <option value="Used">Used</option>
                       </select>
@@ -112,16 +115,17 @@ const HotListAdd = () => {
             </table>
 
             <div className={css.saveButtonContainer}>
-              <button className={`${css.saveButton} hover:!bg-blue-600 hover:-translate-y-1 transition-all ease-in-out`} type="submit">
+              <button
+                className={`${css.saveButton} hover:!bg-blue-600 hover:-translate-y-1 transition-all ease-in-out`}
+                type="submit"
+              >
                 Save
               </button>
             </div>
           </form>
         </div>
       </div>
-                  <ToastContainer position="top-center" autoClose={2000} />
-      
-
+      <ToastContainer position="top-center" autoClose={2000} />
     </>
   );
 };
