@@ -64,7 +64,7 @@ const FeedbackModal = ({ isOpen, onClose, company, onSucces }) => {
   const isDisabled = !formData.feedbackRating;
 
   return (
-    <div className={`${styles.modalOverlay} `}>
+    <div id={`${styles.modalOverlay} `}>
       <div className={`${styles.modalContent} !w-[30vw]`}>
         <h2>Post Feedback to a Member</h2>
         <form onSubmit={handleSubmit}>

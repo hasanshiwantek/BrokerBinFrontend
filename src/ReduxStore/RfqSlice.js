@@ -29,7 +29,6 @@ export const addRecipients = createAsyncThunk(
   }
 );
 
-
 export const searchProductQuery = createAsyncThunk(
   "rfqstore/searchProductQuery",
   async ({ token, page, search }) => {
@@ -60,7 +59,6 @@ export const searchProductQuery = createAsyncThunk(
   }
 );
 
-
 export const submitRfq = createAsyncThunk(
   "searchProductStore/submitRfq ",
   async ({ token, data }) => {
@@ -79,32 +77,33 @@ export const submitRfq = createAsyncThunk(
         }
       );
 
-      console.log("Formdata from backend",response.data)
+      console.log("Formdata from backend", response.data);
       return response.data;
     } catch (error) {
       console.error(
         "Error submitting RFQ data:",
         error.response?.data || error.message
       );
-      throw new Error("Error while sending broadcast: " + (error.response?.data || error.message));
+      throw new Error(
+        "Error while sending broadcast: " +
+          (error.response?.data || error.message)
+      );
     }
   }
 );
 
-
-
 export const receivedRfq = createAsyncThunk(
   "searchProductStore/receivedRfq",
-  async ({ token,page }) => {
+  async ({ token, page }) => {
     console.log("Token:", token);
 
     try {
       const response = await axios.get(
-        `${brokerAPI}rfq/received?page=${page}`, 
+        `${brokerAPI}rfq/received?page=${page}`,
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,  // Token passed correctly in headers
+            Authorization: `Bearer ${token}`, // Token passed correctly in headers
           },
         }
       );
@@ -112,51 +111,54 @@ export const receivedRfq = createAsyncThunk(
       console.log("RFQ from backend", response.data);
       return response.data;
     } catch (error) {
-      console.error("Error Fetching RFQ received data:", error.response?.data || error.message);
-      throw new Error("Error while sending broadcast: " + (error.response?.data || error.message));
+      console.error(
+        "Error Fetching RFQ received data:",
+        error.response?.data || error.message
+      );
+      throw new Error(
+        "Error while sending broadcast: " +
+          (error.response?.data || error.message)
+      );
     }
   }
 );
 
-
 export const sentRfq = createAsyncThunk(
   "searchProductStore/sentRfq",
-  async ({ token,page }) => {
+  async ({ token, page }) => {
     console.log("Token:", token);
 
     try {
-      const response = await axios.get(
-        `${brokerAPI}rfq/sent?page=${page}`, 
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,  // Token passed correctly in headers
-          },
-        }
-      );
+      const response = await axios.get(`${brokerAPI}rfq/sent?page=${page}`, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`, // Token passed correctly in headers
+        },
+      });
 
       console.log("Sent RFQ from backend", response.data);
       return response.data;
     } catch (error) {
-      console.error("Error Fetching RFQ Sent data:", error.response?.data || error.message);
+      console.error(
+        "Error Fetching RFQ Sent data:",
+        error.response?.data || error.message
+      );
     }
   }
 );
 
-
-
 export const getRfqArchived = createAsyncThunk(
   "searchProductStore/getRfqArchived",
-  async ({ token,page }) => {
+  async ({ token, page }) => {
     console.log("Token:", token);
 
     try {
       const response = await axios.get(
-        `${brokerAPI}rfq/archived?page=${page}`, 
+        `${brokerAPI}rfq/archived?page=${page}`,
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,  // Token passed correctly in headers
+            Authorization: `Bearer ${token}`, // Token passed correctly in headers
           },
         }
       );
@@ -164,27 +166,26 @@ export const getRfqArchived = createAsyncThunk(
       console.log(" RFQ Archive from backend", response.data);
       return response.data;
     } catch (error) {
-      console.error("Error Fetching RFQ Archive data:", error.response?.data || error.message);
+      console.error(
+        "Error Fetching RFQ Archive data:",
+        error.response?.data || error.message
+      );
     }
   }
 );
-
 
 export const deleteArchiveRfq = createAsyncThunk(
   "inventoryStore/deleteArchiveRfq ",
   async ({ token, ids }) => {
     console.log(token, "Attempting to delete RFQs with IDs:", ids);
     try {
-      const response = await axios.delete(
-        `${brokerAPI}rfq/delete`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          data: { ids } // Pass 'Ids' as part of the request body
-        }
-      );
+      const response = await axios.delete(`${brokerAPI}rfq/delete`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        data: { ids }, // Pass 'Ids' as part of the request body
+      });
       return response.data; // Assuming the backend returns the deleted IDs or a success message
     } catch (error) {
       console.error("Error Deleting RFQS:", error.response?.data);
@@ -215,7 +216,10 @@ export const deleteCompanyUser = createAsyncThunk(
         "Error Deleting Company User:",
         error.response?.data || error.message
       );
-      throw new Error("Error Deleting Company User: " + (error.response?.data || error.message));
+      throw new Error(
+        "Error Deleting Company User: " +
+          (error.response?.data || error.message)
+      );
     }
   }
 );
@@ -226,16 +230,12 @@ export const statusRfq = createAsyncThunk(
     try {
       console.log("Sending status RFQ data:", data);
 
-      const response = await axios.post(
-        `${brokerAPI}rfq/status`,
-        data, 
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, 
-          },
-        }
-      );
+      const response = await axios.post(`${brokerAPI}rfq/status`, data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       console.log("Response from backend:", response.data);
 
@@ -263,16 +263,12 @@ export const rfqArchive = createAsyncThunk(
     try {
       console.log("Sending status RFQ data:", data);
 
-      const response = await axios.post(
-        `${brokerAPI}rfq/is-archived`,
-        data, 
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, 
-          },
-        }
-      );
+      const response = await axios.post(`${brokerAPI}rfq/is-archived`, data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       console.log("Response from backend:", response.data);
 
@@ -294,6 +290,88 @@ export const rfqArchive = createAsyncThunk(
   }
 );
 
+export const receivedSortRfq = createAsyncThunk(
+  "searchProductStore/receivedSortRfq",
+  async ({ token, sortBy, sortOrder, page }) => {
+    try {
+      const response = await axios.get(
+        `${brokerAPI}rfq/received?sortBy=${sortBy}&sortOrder=${sortOrder}&page=${page}`,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`, // Token passed correctly in headers
+          },
+        }
+      );
+
+      console.log("Sorted RFQ from backend", response.data);
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error Fetching RFQ received data:",
+        error.response?.data || error.message
+      );
+      throw new Error(
+        "Error while fetching received rfq: " +
+          (error.response?.data || error.message)
+      );
+    }
+  }
+);
+
+export const sentSortRfq = createAsyncThunk(
+  "searchProductStore/sentSortRfq",
+  async ({ token, sortBy, sortOrder, page }) => {
+    try {
+      const response = await axios.get(
+        `${brokerAPI}rfq/sent?sortBy=${sortBy}&sortOrder=${sortOrder}&page=${page}`,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`, // Token passed correctly in headers
+          },
+        }
+      );
+
+      console.log("Sorted Sent RFQ from backend", response.data);
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error Fetching RFQ sent data:",
+        error.response?.data || error.message
+      );
+      throw new Error(
+        "Error while fetching sorted sent  rfqs: " +
+          (error.response?.data || error.message)
+      );
+    }
+  }
+);
+
+export const getSortRfqArchived = createAsyncThunk(
+  "searchProductStore/getSortRfqArchived",
+  async ({ token, page, sortBy, sortOrder }) => {
+    try {
+      const response = await axios.get(
+        `${brokerAPI}rfq/archived?sortBy=${sortBy}&sortOrder=${sortOrder}&page=${page}`,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`, // Token passed correctly in headers
+          },
+        }
+      );
+
+      console.log(" Sort RFQ Archive from backend", response.data);
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error Fetching RFQ Sorted Archive data:",
+        error.response?.data || error.message
+      );
+    }
+  }
+);
 
 const initialState = {
   togglePopUp: false,
@@ -303,9 +381,9 @@ const initialState = {
   rfqMail: [],
   searchResults: [],
   searchResponseMatched: [],
-  receiveRfqData:[],
-  sentRfqData:[],
-  rfqArchiveData:[],
+  receiveRfqData: [],
+  sentRfqData: [],
+  rfqArchiveData: [],
 };
 
 const RfqSlice = createSlice({
@@ -318,7 +396,7 @@ const RfqSlice = createSlice({
     setRfqPopBoxInfo: (state, { payload }) => {
       state.rfqPopBoxInfo = payload;
     },
-    
+
     setRfqMail: (state, { payload }) => {
       state.rfqMail = payload;
     },
@@ -353,7 +431,7 @@ const RfqSlice = createSlice({
       .addCase(submitRfq.pending, (state) => {
         console.log("Pending API Call");
       })
-      .addCase(submitRfq .fulfilled, (state, action) => {
+      .addCase(submitRfq.fulfilled, (state, action) => {
         console.log("API Response:", action.payload); // Log the response
       })
       .addCase(submitRfq.rejected, (state) => {
@@ -376,26 +454,44 @@ const RfqSlice = createSlice({
         state.gettingProducts = false; // Set to false if the fetch fails
       })
       .addCase(receivedRfq.pending, (state) => {
-        console.log("Pending....")
+        console.log("Pending....");
       })
       .addCase(receivedRfq.fulfilled, (state, action) => {
-        state.receiveRfqData=action.payload
-        console.log("PAYLOAD "+ action.payload)
-
+        state.receiveRfqData = action.payload;
+        console.log("PAYLOAD " + action.payload);
       })
       .addCase(receivedRfq.rejected, (state, action) => {
         console.error("Error while Fetching Received Data");
+      })
+      .addCase(receivedSortRfq.pending, (state) => {
+        console.log("Pending....");
+      })
+      .addCase(receivedSortRfq.fulfilled, (state, action) => {
+        state.receiveRfqData = action.payload;
+        console.log("Sorted RFQ PAYLOAD " + action.payload);
+      })
+      .addCase(receivedSortRfq.rejected, (state, action) => {
+        console.error("Error while Fetching Received Sorted Data");
       })
       .addCase(sentRfq.pending, (state) => {
         // console.log("Pending....")
       })
       .addCase(sentRfq.fulfilled, (state, action) => {
-        state.sentRfqData =action.payload
-        console.log("PAYLOAD "+ action.payload)
-
+        state.sentRfqData = action.payload;
+        console.log("PAYLOAD " + action.payload);
       })
       .addCase(sentRfq.rejected, (state, action) => {
         console.error("Error while Fetching Sent Data");
+      })
+      .addCase(sentSortRfq.pending, (state) => {
+        console.log("Sent sorting Pending....");
+      })
+      .addCase(sentSortRfq.fulfilled, (state, action) => {
+        state.sentRfqData = action.payload;
+        console.log("PAYLOAD " + action.payload);
+      })
+      .addCase(sentSortRfq.rejected, (state, action) => {
+        console.error("Error while Fetching sort Sent rfq  Data");
       })
       .addCase(statusRfq.pending, (state) => {
         console.log("Updating RFQ status..."); // Log for debugging
@@ -415,24 +511,34 @@ const RfqSlice = createSlice({
         console.log("RFQ status updated:", action.payload); // Log the response
         // Optionally update state based on action.payload
       })
+      .addCase(getSortRfqArchived.rejected, (state, action) => {
+        console.error("Failed to update RFQ status:", action.error.message);
+        // Handle error if necessary
+      })
+      .addCase(getSortRfqArchived.pending, (state) => {
+        console.log("Updating RFQ status..."); // Log for debugging
+      })
+      .addCase(getSortRfqArchived.fulfilled, (state, action) => {
+        console.log("Sorted RFQ  response:", action.payload); // Log the response
+        state.rfqArchiveData = action.payload;
+
+        // Optionally update state based on action.payload
+      })
       .addCase(rfqArchive.rejected, (state, action) => {
         console.error("Failed to update RFQ status:", action.error.message);
         // Handle error if necessary
       })
       .addCase(getRfqArchived.pending, (state) => {
-        console.log("Pending....")
+        console.log("Pending....");
       })
       .addCase(getRfqArchived.fulfilled, (state, action) => {
-        state.rfqArchiveData =action.payload
-        console.log("PAYLOAD "+ action.payload)
-
+        state.rfqArchiveData = action.payload;
+        console.log("PAYLOAD " + action.payload);
       })
       .addCase(getRfqArchived.rejected, (state, action) => {
         console.error("Error while Fetching Archive Data");
-      })
-
+      });
   },
-  
 });
 
 export const {

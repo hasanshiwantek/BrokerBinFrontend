@@ -73,8 +73,8 @@ const MFGFilter = () => {
     dispatch(getCompanyContact({ token, id: companyId }));
   }, []);
 
-useEffect(() => {
-  if (!companyData) return;
+  useEffect(() => {
+    if (!companyData) return;
 
   try {
     const serverMFGs = companyData.manufacturer || "null";
@@ -83,21 +83,20 @@ useEffect(() => {
         ? serverMFGs
         : ["-ALL MFG's-"];
 
-    onChange(included); // updates the RHF field
-    setAvailableMFGs(
-      sortMFGs(initialMFGs.filter((mfg) => !included.includes(mfg)))
-    );
-  } catch (e) {
-    console.warn("Invalid manufacturers format:", e);
+      onChange(included); // updates the RHF field
+      setAvailableMFGs(
+        sortMFGs(initialMFGs.filter((mfg) => !included.includes(mfg)))
+      );
+    } catch (e) {
+      console.warn("Invalid manufacturers format:", e);
 
-    // 🛠️ Fix: explicitly show -ALL MFG's- when null or error
-    onChange(["-ALL MFG's-"]);
-    setAvailableMFGs(
-      sortMFGs(initialMFGs.filter((mfg) => mfg !== "-ALL MFG's-"))
-    );
-  }
-}, [companyData]);
-
+      // 🛠️ Fix: explicitly show -ALL MFG's- when null or error
+      onChange(["-ALL MFG's-"]);
+      setAvailableMFGs(
+        sortMFGs(initialMFGs.filter((mfg) => mfg !== "-ALL MFG's-"))
+      );
+    }
+  }, [companyData]);
 
   return (
     <div>
@@ -138,7 +137,9 @@ useEffect(() => {
           </select>
         </div>
       </div>
-       <p className="italic mt-10 text-[8pt] text-center">Move MFGs to the left box to add them to your company mfg list.</p>
+      <p className="italic mt-10 text-[8pt] text-center">
+        Move MFGs to the left box to add them to your company mfg list.
+      </p>
     </div>
   );
 };
