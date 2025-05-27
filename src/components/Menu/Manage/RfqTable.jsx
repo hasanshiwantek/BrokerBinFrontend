@@ -392,7 +392,11 @@ const RfqTable = () => {
       const response = await dispatch(
         statusRfq({ token, data: payload })
       ).unwrap();
+      console.log("result : ",response);
+      
       toast.success(`RFQ(s) ${action} successfully!`);
+      console.log(`RFQ(s) ${action} successfully!`);
+      
       window.location.reload();
     } catch (error) {
       console.error("Error handling action:", error);

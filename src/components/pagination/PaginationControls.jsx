@@ -14,7 +14,7 @@ const PaginationControls = ({
       <button
         className={`px-3 py-1 border rounded transition ${
           visiblePages[0] === 1
-            ? "opacity-50 cursor-not-allowed text-blue-300"
+            ? "opacity-100 cursor-not-allowed text-blue-300"
             : "text-blue-600 hover:bg-blue-100 border-blue-300"
         }`}
         disabled={visiblePages[0] === 1}
@@ -32,7 +32,7 @@ const PaginationControls = ({
             onClick={() => onPageChange(page)}
             className={`px-3 py-1 rounded border transition ${
               currPage === page
-                ? "!bg-blue-300 text-white border-blue-600"
+                ? "!bg-blue-800 text-white border-blue-600"
                 : "border-gray-300 text-blue-600 hover:bg-blue-400"
             }`}
           >
@@ -44,7 +44,7 @@ const PaginationControls = ({
       <button
         className={`px-3 py-1 border rounded transition ${
           visiblePages[1] === totalPages
-            ? "opacity-50 cursor-not-allowed text-blue-300"
+            ? "opacity-100 cursor-not-allowed text-blue-300"
             : "text-blue-600 hover:bg-blue-100 border-blue-400"
         }`}
         disabled={visiblePages[1] === totalPages}
