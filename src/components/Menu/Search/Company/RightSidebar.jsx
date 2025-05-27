@@ -209,7 +209,50 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
     dispatch(setTogglePopUp()); // Show company modal
   };
 
-  // max-h-[85vh]
+  //Counts Logics ...
+
+  const regionCountsMap = Object.fromEntries(
+    company?.regionCounts.map(item => [item.region, item.count])
+  )
+
+  const stateCountsMap = Object.fromEntries(
+    company?.stateCounts.map(item => [item.state, item.count])
+  )
+
+  const countryCountsMap = Object.fromEntries(
+    company?.countryCounts.map(item => [item.country, item.count] )
+  )
+
+  const categoryCountsMap = {};
+  (company?.categoryCounts || []).forEach(item => {
+    if (Array.isArray(item.categories)) {
+      item.categories.forEach(cat => {
+        categoryCountsMap[cat] = (categoryCountsMap[cat] || 0) + item.count;
+      })
+    }
+  })
+
+  const manufacturerCountsMap = {};
+  (company?.manufacturerCounts || []).forEach(item => {
+    if (Array.isArray(item.manufacturer)) {
+      item.manufacturer.forEach(mfg => {
+        manufacturerCountsMap[mfg] = (manufacturerCountsMap[mfg] || 0) + item.count;
+      })
+    }
+  })
+
+
+
+  const companyCategoriesCountMap = {};
+  (company?.companyCategoryCounts || []).forEach(item => {
+    if (Array.isArray(item.subcategory)) {
+      item.subcategory.forEach(count => {
+        companyCategoriesCountMap[count] = (companyCategoriesCountMap[count] || 0) + item.count;
+      })
+    }
+  })
+
+
   return (
     <div className=" !w-[50rem] border-[1px] border-l-gray-500 2xl:h-[70vh] md:max-h-[102vh]  overflow-y-scroll  overflow-x-hidden relative ">
       <div
@@ -323,6 +366,13 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
           initialFilters={filters}
           // setFilteredData={setFilteredData}
           scrollToSection={scrollToSection}
+          regionCounts={regionCountsMap}
+          countryCounts={countryCountsMap}
+          stateCounts={stateCountsMap}
+          categoryCounts={categoryCountsMap}
+          manufacturerCounts={manufacturerCountsMap}
+          companyCategoriesCount={companyCategoriesCountMap}
+
         />
       ) : (
         companiesToShow.map((comp, index) => (
