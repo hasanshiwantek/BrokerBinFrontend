@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useLayoutEffect } from "react";
 import myProfile from "../../../styles/Menu/Manage/MyProfile.module.css";
 import css from "../../../styles/Menu/Tools/MyContact.module.css";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useParams } from "react-router-dom";
 import SearchMyContact from "./SearchMyContact";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -11,6 +11,7 @@ import {
   fetchMyVendorNotes,
   fetchMyViewByVendors,
   blockMyVendor,
+  addToMyVendorsBadge
 } from "../../../ReduxStore/ToolsSlice";
 import Cookies from "js-cookie";
 import { fetchUserData } from "../../../ReduxStore/ProfleSlice";
@@ -62,29 +63,19 @@ const MyVendors = () => {
 
   const companyId = initialData?.company?.id;
 
+ useEffect(() => {
+  const params = new URLSearchParams(window.location.search);
+  const cid = params.get("cid");
+  if (cid) {
+    const decodedId = atob(cid); // your decode logic
+    dispatch(addToMyVendorsBadge({ company_id: decodedId, token }));
+    console.log("CID", decodedId)
+  }
+}, []);
+
   const [feedbackData, setFeedbackData] = useState(null);
   const [headingWord, setHeadingWord] = useState("Company:");
   const [clicked, setClicked] = useState(false);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axios.get(`${brokerAPI}feedback/ratings/${companyId}`, {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${token}`,
-  //         }
-  //       })
-  //       setFeedbackData(response.data);
-  //       console.log("RATINGDATA", feedbackData);
-  //     } catch (error) {
-  //       console.log("ERRORRATIMG", error)
-  //     }
-  //   }
-  //   fetchData();
-  // }, [companyId])
-
-  // Extract ratings and counts for each company
 
 const vendorList = Array.isArray(myVendor?.data) ? myVendor.data : [];
 
@@ -98,30 +89,6 @@ console.log("Rating Counts", ratingCounts);
     // Tooltip logic
     return index <= rating ? "View Comments" : "";
   };
-
-  // const handleChange = (e) => {
-  //   if (e.target.value === "company") {
-  //     setViewAsCompany(true);
-  //     setViewAsShow(false);
-  //     setViewAsCountry(false);
-  //     setViewAsState(false);
-  //   } else if (e.target.value === "show") {
-  //     setViewAsCompany(false);
-  //     setViewAsShow(true);
-  //     setViewAsCountry(false);
-  //     setViewAsState(false);
-  //   } else if (e.target.value === "country") {
-  //     setViewAsCompany(false);
-  //     setViewAsShow(false);
-  //     setViewAsCountry(true);
-  //     setViewAsState(false);
-  //   } else if (e.target.value === "state") {
-  //     setViewAsCompany(false);
-  //     setViewAsShow(false);
-  //     setViewAsCountry(false);
-  //     setViewAsState(true);
-  //   }
-  // };
 
   const handleChange = (e) => {
     setHeadingWord(e.target.selectedOptions[0].dataset.label);

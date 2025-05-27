@@ -521,6 +521,30 @@ export const showFirstNeverShowCount = createAsyncThunk(
   }
 );
 
+export const addToMyVendorsBadge = createAsyncThunk(
+  "toolsStore/addToMyVendorsBadge",
+  async ({ company_id, token }) => {
+    console.log(company_id);
+
+    try {
+      const response = await axios.post(
+        `${brokerAPI}badges/addTo-myvendors`,
+        {company_id},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      throw new Error("Error searching company name");
+    }
+  }
+);
+
 const initialState = {
   tools: [],
   searchCompanies: [],
