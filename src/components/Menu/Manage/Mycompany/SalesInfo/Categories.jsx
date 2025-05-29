@@ -77,6 +77,7 @@ const Categories = () => {
     });
   };
   const { setValue } = useFormContext();
+  
   const companyId = Number(Cookies.get("companyId"));
   console.log("Company id: ", companyId);
 
@@ -93,9 +94,11 @@ const Categories = () => {
   }, [dispatch, token, companyId]);
 
   useEffect(() => {
-    if (!companyData?.companyCategories) return;
+    // if (!companyData?.companyCategories) return;
     try {
       const parsed = companyData.companyCategories;
+      console.log("Parsed: ",parsed);
+      
 
       const reconstructed = {
         ...parsed,
@@ -103,10 +106,13 @@ const Categories = () => {
       };
 
       setValue("companyCategories", reconstructed);
+      console.log("companyCategories", reconstructed);
+      
     } catch (err) {
       console.warn("Invalid companyCategories JSON", err);
     }
   }, [companyData, setValue]);
+  
 
   return (
     <div className={`border p-4 ${css.onlyReceiveMatch}`}>
