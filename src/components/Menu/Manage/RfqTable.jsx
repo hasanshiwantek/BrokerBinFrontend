@@ -33,6 +33,7 @@ import { ToastContainer } from "react-toastify";
 import SortableTableHeader from "@/components/Tables/SortableHeader";
 import usePagination from "@/components/hooks/usePagination";
 import PaginationControls from "@/components/pagination/PaginationControls";
+import { useSearchParams } from "react-router-dom";
 
 const RfqTable = () => {
   const {
@@ -392,7 +393,11 @@ const RfqTable = () => {
       const response = await dispatch(
         statusRfq({ token, data: payload })
       ).unwrap();
+      console.log("result : ",response);
+      
       toast.success(`RFQ(s) ${action} successfully!`);
+      console.log(`RFQ(s) ${action} successfully!`);
+      
       window.location.reload();
     } catch (error) {
       console.error("Error handling action:", error);
@@ -400,6 +405,36 @@ const RfqTable = () => {
     }
     dispatch(receivedRfq({ token, page: currPage })); // Re-fetch received RFQs
   };
+
+
+
+  // QUERY PARAMS LOGIC
+  const [searchParams, setSearchParams] = useSearchParams();
+
+useEffect(() => {
+  const pageParam = Number(searchParams.get("page"));
+  const sortByParam = searchParams.get("sort");
+  const sortOrderParam = searchParams.get("order");
+
+  const hasParams = searchParams.has("page") || searchParams.has("sort");
+
+  if (hasParams) {
+    // Reset the URL silently
+    setSearchParams({}); // removes ?page & ?sort
+
+    // Reset local state
+    setSortBy("");
+    setSortOrder("asc");
+    setIsSorted(false);
+
+    // Fetch fresh unfiltered, unsorted data (page 1)
+    dispatch(receivedRfq({ token, page: currPage }));
+  } else {
+    // No URL params — normal behavior
+    dispatch(receivedRfq({ token, page: currPage }));
+  }
+}, [token]);
+
 
   // SORTING FUNCTION LOGIC
 
@@ -430,23 +465,26 @@ const RfqTable = () => {
   const [sortOrder, setSortOrder] = useState("asc");
   const [isSorted, setIsSorted] = useState(false);
 
-  const handleSort = (columnKey) => {
-    const newSortOrder =
-      sortBy === columnKey && sortOrder === "asc" ? "desc" : "asc";
+const handleSort = (columnKey) => {
+  const newSortOrder =
+    sortBy === columnKey && sortOrder === "asc" ? "desc" : "asc";
 
-    setSortBy(columnKey);
-    setSortOrder(newSortOrder);
-    setIsSorted(true);
+  setSortBy(columnKey);
+  setSortOrder(newSortOrder);
+  setIsSorted(true);
 
-    dispatch(
-      receivedSortRfq({
-        token,
-        sortBy: columnKey,
-        sortOrder: newSortOrder,
-        page: currPage,
-      })
-    );
-  };
+  // Update the URL query parameters
+  setSearchParams({ sort: columnKey, order: newSortOrder });
+
+  dispatch(
+    receivedSortRfq({
+      token,
+      sortBy: columnKey,
+      sortOrder: newSortOrder,
+      page: currPage,
+    })
+  );
+};
 
   const {
     curr_Page,

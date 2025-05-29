@@ -156,19 +156,43 @@ export const addHotListItem = createAsyncThunk(
 
 export const showHotListItem = createAsyncThunk(
   "toolsStore/addHotListItem",
-  async ({ token }) => {
+  async ({ token, pageNumber }) => {
     console.log(token);
     try {
-      const response = await axios.get(`${brokerAPI}hot-lists`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `${brokerAPI}hot-lists?pageNumber=${pageNumber}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       console.log("HotListdata:", response.data);
       return response.data.data;
     } catch (error) {
-      throw new Error("Error searching company name");
+      throw new Error("Error Fetching Hotlists");
+    }
+  }
+);
+
+export const showSortHotListItem = createAsyncThunk(
+  "toolsStore/showSortHotListItem",
+  async ({ token, pageNumber, sortOrder, sortBy }) => {
+    try {
+      const response = await axios.get(
+        `${brokerAPI}hot-lists?pageNumber=${pageNumber}&sortBy=${sortBy}&sortOrder=${sortOrder}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Sorted HotListdata:", response.data);
+      return response.data.data;
+    } catch (error) {
+      throw new Error("Error Fetching Sorted Hotlists");
     }
   }
 );
@@ -529,7 +553,7 @@ export const addToMyVendorsBadge = createAsyncThunk(
     try {
       const response = await axios.post(
         `${brokerAPI}badges/addTo-myvendors`,
-        {company_id},
+        { company_id },
         {
           headers: {
             "Content-Type": "application/json",
@@ -700,6 +724,18 @@ const ToolsSlice = createSlice({
         console.error("Error searching company name", action.error);
         state.loading = true;
       })
+      .addCase(showSortHotListItem.pending, (state) => {
+        console.log("PENDING...");
+      })
+      .addCase(showSortHotListItem.fulfilled, (state, action) => {
+        state.myHotListItems = action.payload;
+        console.log("|Sorted Hotlist| ",action.payload);
+        
+      })
+      .addCase(showSortHotListItem.rejected, (state, action) => {
+        console.error("Error Fetching Sorted Hotlist", action.error);
+      })
+
       .addCase(editHotListItem.pending, (state) => {
         console.log("Searching...");
         state.loading = true;
@@ -826,7 +862,7 @@ export const {
   showHotList,
   setBroadcastFilters,
   setEmptySearchContacts,
-  setLocalCategories
+  setLocalCategories,
 } = ToolsSlice.actions;
 
 export default ToolsSlice.reducer;

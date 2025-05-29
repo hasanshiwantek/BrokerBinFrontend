@@ -33,7 +33,6 @@ const SearchResults = () => {
   const { searchResults } = location.state;
   console.log("Search Results: ", searchResults);
   const profileImage = searchResults?.map((val) => val?.profileImage);
-  console.log("Profile Image: ", profileImage);
 
   const dispatch = useDispatch();
   const [clicked, setClicked] = useState(false);
@@ -55,7 +54,6 @@ const SearchResults = () => {
   const company = searchResults
     .map((results) => results?.company)
     .filter(Boolean);
-  console.log("COMPANY", company);
 
   const theme = createTheme({
     components: {
@@ -113,11 +111,17 @@ const SearchResults = () => {
         .finally(() => setLoading(false));
     }
   };
+  useEffect(() => {
+    if (!searchResults) return; // If nothing was passed, don't override
+    setResultData(searchResults); // Initial load from navigation
+  }, [searchResults]);
 
   useEffect(() => {
-    if (viewBy) fetchPersonViewBy();
-  }, [viewBy]);
-
+    if (viewBy && clicked) {
+      // Only run if user changed viewBy
+      fetchPersonViewBy();
+    }
+  }, [viewBy, clicked]);
   const user_id = Cookies.get("user_id");
   console.log("user_id", user_id);
 
@@ -177,7 +181,14 @@ const SearchResults = () => {
 
       <div className="!flex !justify-end !items-center !gap-5 p-3">
         <p className="!text-xl">view by</p>
-        <select value={viewBy} onChange={(e) => setViewBy(e.target.value)}>
+        <select
+          value={viewBy}
+          onChange={(e) => {
+            setClicked(true);
+            setViewBy(e.target.value);
+          }}
+          className="border-2"
+        >
           <option value="last">Contact: Last</option>
           <option value="first">Contact: First</option>
           <option value="company">Company</option>
@@ -254,39 +265,27 @@ const SearchResults = () => {
                           : ""}
                       </p>
                     </div>
-
                     <div className="profile-details font-medium">
-                      <p className="flex justify-between">
-                        Company: <p>{val.company?.name || ""}</p>
-                      </p>
-                      <p className="flex justify-between">
-                        Title: <p>{val.position || ""}</p>
-                      </p>
-                      <p className="flex justify-between">
-                        Phone: <p>{val.phoneNumber || ""}</p>
-                      </p>
-                      <p className="flex justify-between">
-                        Specialty: <p>{val.specialty || ""}</p>
-                      </p>
-                      <p className="flex justify-between">
-                        Toll: <p>{val.tollFree || ""}</p>
-                      </p>
-                      <p className="flex justify-between">
-                        Fax:{" "}
-                        <p>{val?.company?.primaryContact?.faxNumber || ""}</p>
-                      </p>
-                      <p className="flex justify-between">
-                        Email: <p>{val.email || ""}</p>
-                      </p>
-                      <p className="flex justify-between">
-                        City: <p>{val.city || ""}</p>
-                      </p>
-                      <p className="flex justify-between">
-                        State: <p>{val.state || ""}</p>
-                      </p>
-                      <p className="flex justify-between">
-                        Country: <p>{val.country || ""}</p>
-                      </p>
+                      {[
+                        { label: "Company", value: val.company?.name },
+                        { label: "Title", value: val.position },
+                        { label: "Phone", value: val.phoneNumber },
+                        { label: "Specialty", value: val.specialty },
+                        { label: "Toll", value: val.tollFree },
+                        {
+                          label: "Fax",
+                          value: val.company?.primaryContact?.faxNumber,
+                        },
+                        { label: "Email", value: val.email },
+                        { label: "City", value: val.city },
+                        { label: "State", value: val.state },
+                        { label: "Country", value: val.country },
+                      ].map((item, index) => (
+                        <div key={index} className="flex justify-start gap-10">
+                          <span className="text-[8pt] w-16">{item.label}:</span>
+                          <span className="text-[8pt]">{item.value || ""}</span>
+                        </div>
+                      ))}
                     </div>
                   </div>
 
@@ -313,15 +312,14 @@ const SearchResults = () => {
                           : "N/R"}
                       </p>
                     </div>
-             
                   </div>
                   <ThemeProvider theme={theme}>
-                      <Tooltip title="Add to Contacts" arrow placement="top"> 
-                        <div className="cursor-pointer p-2">
-                          <FaUserPlus onClick={() => addToContacts(val.id)} />
-                        </div>
-                      </Tooltip>
-                    </ThemeProvider>
+                    <Tooltip title="Add to Contacts" arrow placement="top">
+                      <div className="cursor-pointer p-2">
+                        <FaUserPlus onClick={() => addToContacts(val.id)} />
+                      </div>
+                    </Tooltip>
+                  </ThemeProvider>
                 </div>
               );
             })
