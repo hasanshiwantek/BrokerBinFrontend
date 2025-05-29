@@ -31,7 +31,7 @@ const CompanyPrimaryInfo = () => {
   const [formData, setFormData] = useState({});
   console.log("Form data: ", formData);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("primary"); // or 'bio', 'logo', etc.
   const [bio, setBio] = useState("");
   const [logoPreview, setLogoPreview] = useState(""); // for preview
@@ -275,6 +275,7 @@ const CompanyPrimaryInfo = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       if (activeTab === "primary") {
         const payload = formData?.data?.company;
@@ -284,11 +285,19 @@ const CompanyPrimaryInfo = () => {
           updateCompanyPrimaryInfo({ token, data: payload, companyId })
         );
 
+        console.log("result: ", result);
+
         if (result?.payload?.status) {
-          toast.success("✅ Company primary info updated successfully");
+          toast.success(
+            result?.payload?.message ||
+              "✅ Company primary info updated successfully"
+          );
           console.log("✅ Success Response:", result.payload);
         } else {
-          toast.error("❌ Failed to update company primary info");
+          toast.error(
+            result?.payload?.message ||
+              "❌ Failed to update company primary info"
+          );
           console.warn("❌ Failure Response:", result);
         }
       }
@@ -338,6 +347,8 @@ const CompanyPrimaryInfo = () => {
     } catch (error) {
       console.error("❌ Error during form submission:", error);
       toast.error("❌ Something went wrong during submission");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -431,9 +442,7 @@ const CompanyPrimaryInfo = () => {
                     <NavLink
                       to="/mycompany/References"
                       end
-                      className={({ isActive }) =>
-                        isActive ? css.active : ""
-                      }
+                      className={({ isActive }) => (isActive ? css.active : "")}
                     >
                       <span>Ref</span>
                     </NavLink>
@@ -442,9 +451,7 @@ const CompanyPrimaryInfo = () => {
                     <NavLink
                       to="/mycompany/Photos"
                       end
-                      className={({ isActive }) =>
-                        isActive ? css.active : ""
-                      }
+                      className={({ isActive }) => (isActive ? css.active : "")}
                     >
                       <span>Photos</span>
                     </NavLink>
@@ -577,7 +584,10 @@ const CompanyPrimaryInfo = () => {
 
                       // Standard select or text fields (Office Hours, Time Zone)
                       return (
-                        <div key={field.name} className="flex items-center ml-[9rem]  ">
+                        <div
+                          key={field.name}
+                          className="flex items-center ml-[9rem]  "
+                        >
                           <label htmlFor={field.name} className="w-32">
                             {field.label}
                           </label>
@@ -652,10 +662,39 @@ const CompanyPrimaryInfo = () => {
                   Reset
                 </button>
                 <button
-                  className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6"
+                  className={`!bg-[#2c83ec] !h-[1.5vw] items-center flex justify-center !rounded-[.2vw] !px-4 !py-6 text-white font-semibold transition-all duration-150 ${
+                    loading ? "opacity-60 cursor-not-allowed" : ""
+                  }`}
                   type="submit"
+                  disabled={loading}
                 >
-                  Submit Changes
+                  {loading ? (
+                    <span className="flex items-center gap-2">
+                      <svg
+                        className="animate-spin h-4 w-4 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v8H4z"
+                        ></path>
+                      </svg>
+                      Submitting...
+                    </span>
+                  ) : (
+                    "Submit Changes"
+                  )}
                 </button>
               </div>
             </div>

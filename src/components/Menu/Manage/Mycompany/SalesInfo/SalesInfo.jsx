@@ -21,14 +21,14 @@ import {
   submitTradingData,
   submitCompanyCategories,
   submitCompanyManufacturers,
-  submitCompanyreturnPolicy
+  submitCompanyreturnPolicy,
 } from "../../../../../ReduxStore/ProfleSlice";
 const SalesInfo = () => {
   // const methods = useForm();
   const token = Cookies.get("token");
   const dispatch = useDispatch();
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("trading"); // or 'bio', 'logo', etc.
 
   const tabItems = [
@@ -57,6 +57,7 @@ const SalesInfo = () => {
   const { handleSubmit } = methods;
 
   const handleFormSubmit = async (data) => {
+    setLoading(true);
     try {
       if (activeTab === "trading") {
         console.log("📦 Submitting Trading Data:", data);
@@ -118,7 +119,6 @@ const SalesInfo = () => {
         );
       }
 
-      
       if (activeTab === "returnPolicy") {
         const returnPolicyPayload = {
           companyId: company_id,
@@ -140,7 +140,6 @@ const SalesInfo = () => {
           result?.data?.message || "Company Return Policy updated!"
         );
       }
-
     } catch (err) {
       console.error("❌ Submission Error:", err);
       toast.error(
@@ -148,6 +147,8 @@ const SalesInfo = () => {
           err?.message ||
           "Update failed. Please try again."
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -299,10 +300,39 @@ const SalesInfo = () => {
                     Reset
                   </button>
                   <button
-                    className="!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6"
+                    className={`!bg-[#2c83ec] !h-[1.5vw] items-center flex justify-center !rounded-[.2vw] !px-4 !py-6 text-white font-semibold transition-all duration-150 ${
+                      loading ? "opacity-60 cursor-not-allowed" : ""
+                    }`}
                     type="submit"
+                    disabled={loading}
                   >
-                    Submit Changes
+                    {loading ? (
+                      <span className="flex items-center gap-2">
+                        <svg
+                          className="animate-spin h-4 w-4 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8v8H4z"
+                          ></path>
+                        </svg>
+                        Submitting...
+                      </span>
+                    ) : (
+                      "Submit Changes"
+                    )}
                   </button>
                 </div>
               </div>

@@ -74,6 +74,28 @@ export const getInventoryData = createAsyncThunk(
   }
 );
 
+export const getSortedInventoryData = createAsyncThunk(
+  "inventoryStore/getSortedInventoryData",
+  async ({ token, page, sortOrder, sortBy }) => {
+    try {
+      const response = await axios.get(
+        `${brokerAPI}inventory/get?sortBy=${sortBy}&sortOrder=${sortOrder}&page=${page}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("Sorted Response From Redux: ", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error Fetching inventory Data:", error.response?.data);
+      throw error.response?.data;
+    }
+  }
+);
+
 export const updateInventoryData = createAsyncThunk(
   "inventoryStore/updateInventoryData",
   async ({ token, inventories }) => {
@@ -221,7 +243,7 @@ export const scheduleUpload = createAsyncThunk(
     try {
       const response = await axios.post(
         `${brokerAPI}schedule/auto-schedule`,
-        formData, 
+        formData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -263,11 +285,6 @@ export const fetchCurrentUploads = createAsyncThunk(
     }
   }
 );
-
-
-
-
-
 
 const initialState = {
   // Add inventory data
@@ -415,6 +432,20 @@ const InventorySlice = createSlice({
         if (action.error.message === "Unauthorized") {
         }
       })
+      .addCase(getSortedInventoryData.pending, (state) => {
+        console.log("FETCHING SORTED INVENTORY DATA FROM REDUX");
+      })
+      .addCase(getSortedInventoryData.fulfilled, (state, action) => {
+        state.inventoryData = action.payload;
+        console.log("Sorted Inventory Data : ",action.payload);
+        
+      })
+      .addCase(getSortedInventoryData.rejected, (state, action) => {
+        console.error("ERROR FETCHING INVENTORY DATA", action.error);
+        if (action.error.message === "Unauthorized") {
+        }
+      })
+
       .addCase(updateInventoryData.pending, (state) => {
         console.log("UPDATING INVENTORY DATA FROM REDUX");
       })

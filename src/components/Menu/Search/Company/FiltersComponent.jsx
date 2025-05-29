@@ -42,7 +42,7 @@ const FiltersComponent = ({
       computers: [],
       other: [],
       mobile: [],
-      hasInventory: false,
+      hasInventory: "No",
       feedbackRating: false,
 
     }
@@ -506,7 +506,7 @@ const FiltersComponent = ({
                 style={{ border: "1px solid black" }}
                 onClick={() => setFilters((prev) => ({
                   ...prev,
-                  hasInventory: !prev.hasInventory,
+                  hasInventory: "Yes",
                 }))}
                 className={`px-[5vw] mt-2 py-2 rounded-md text-xl border 
                   ${filters.hasInventory ? 'bg-primary text-white' : 'bg-white text-[#444]'} 

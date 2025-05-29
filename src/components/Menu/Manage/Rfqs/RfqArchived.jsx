@@ -350,40 +350,32 @@ const RfqTableSent = () => {
     }
   };
 
+  // QUERY PARAMS LOGIC
+  const [searchParams, setSearchParams] = useSearchParams();
 
+  useEffect(() => {
+    const pageParam = Number(searchParams.get("page"));
+    const sortByParam = searchParams.get("sort");
+    const sortOrderParam = searchParams.get("order");
 
+    const hasParams = searchParams.has("page") || searchParams.has("sort");
 
-    // QUERY PARAMS LOGIC
-    const [searchParams, setSearchParams] = useSearchParams();
-  
-    useEffect(() => {
-      const pageParam = Number(searchParams.get("page"));
-      const sortByParam = searchParams.get("sort");
-      const sortOrderParam = searchParams.get("order");
-  
-      const hasParams = searchParams.has("page") || searchParams.has("sort");
-  
-      if (hasParams) {
-        // Reset the URL silently
-        setSearchParams({}); // removes ?page & ?sort
-  
-        // Reset local state
-        setSortBy("");
-        setSortOrder("asc");
-        setIsSorted(false);
-  
-        // Fetch fresh unfiltered, unsorted data (page 1)
-        dispatch(rfqArchive({ token, page: currPage }));
-      } else {
-        // No URL params — normal behavior
-        dispatch(rfqArchive({ token, page: currPage }));
-      }
-    }, [token]);
-  
+    if (hasParams) {
+      // Reset the URL silently
+      setSearchParams({}); // removes ?page & ?sort
 
+      // Reset local state
+      setSortBy("");
+      setSortOrder("asc");
+      setIsSorted(false);
 
-
-
+      // Fetch fresh unfiltered, unsorted data (page 1)
+      dispatch(rfqArchive({ token, page: currPage }));
+    } else {
+      // No URL params — normal behavior
+      dispatch(rfqArchive({ token, page: currPage }));
+    }
+  }, [token]);
 
   // PAGINATION LOGIC And
   // SORTING LOGIC
@@ -503,7 +495,9 @@ const RfqTableSent = () => {
                       isActive ? myProfile.active : ""
                     }
                   >
-                    <span onClick={(()=>window.location.reload(200))}>Archive</span>
+                    <span onClick={() => window.location.reload(200)}>
+                      Archive
+                    </span>
                   </NavLink>
                 </li>
               </ul>
