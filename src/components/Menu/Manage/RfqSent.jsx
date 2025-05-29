@@ -29,6 +29,7 @@ import { useNavigate } from "react-router-dom";
 import SortableTableHeader from "@/components/Tables/SortableHeader";
 import usePagination from "@/components/hooks/usePagination";
 import PaginationControls from "@/components/pagination/PaginationControls";
+import { useSearchParams } from "react-router-dom";
 
 const RfqTableSent = () => {
   const navigate = useNavigate();
@@ -329,6 +330,33 @@ const RfqTableSent = () => {
 
   console.log("rfqMail:", rfqMail);
 
+  // QUERY PARAMS LOGIC
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    const pageParam = Number(searchParams.get("page"));
+    const sortByParam = searchParams.get("sort");
+    const sortOrderParam = searchParams.get("order");
+
+    const hasParams = searchParams.has("page") || searchParams.has("sort");
+
+    if (hasParams) {
+      // Reset the URL silently
+      setSearchParams({}); // removes ?page & ?sort
+
+      // Reset local state
+      setSortBy("");
+      setSortOrder("asc");
+      setIsSorted(false);
+
+      // Fetch fresh unfiltered, unsorted data (page 1)
+      dispatch(sentRfq({ token, page: currPage }));
+    } else {
+      // No URL params — normal behavior
+      dispatch(sentRfq({ token, page: currPage }));
+    }
+  }, [token]);
+
   // SORTING FUNCTION LOGIC
 
   const rfqHeaders = [
@@ -366,12 +394,20 @@ const RfqTableSent = () => {
     setSortOrder(newSortOrder);
     setIsSorted(true);
 
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev);
+      params.set("sort", columnKey);
+      params.set("order", newSortOrder);
+      params.set("page", "1"); // reset to first page on sort
+      return params;
+    });
+
     dispatch(
       sentSortRfq({
         token,
         sortBy: columnKey,
         sortOrder: newSortOrder,
-        page: 1,
+        page: currPage,
       })
     );
   };

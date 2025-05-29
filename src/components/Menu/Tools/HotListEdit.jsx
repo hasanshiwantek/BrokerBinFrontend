@@ -216,6 +216,7 @@ const HotListEdit = () => {
                         onChange={(e) =>
                           handleChange(index, "condition", e.target.value)
                         } 
+                        className="border-2"
                       >
                         <option value="New">New</option>
                         <option value="Used">Used</option>
