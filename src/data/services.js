@@ -516,11 +516,7 @@ export const mobileDevice = [
 
 export const computers = [
   { id: "barcode_rfid", label: "Barcode/ RFID", value: "Barcode/ RFID" },
-  {
-    id: "consumer_electronics",
-    label: "Consumer Electronics",
-    value: "Consumer Electronics",
-  },
+  {id: "consumer_electronics",label: "Consumer Electronics",value: "Consumer Electronics"},
   { id: "copiers_faxes", label: "Copiers/ Faxes", value: "Copiers/ Faxes" },
   { id: "displays_lcd", label: "Displays/LCD", value: "Displays/LCD" },
   { id: "full_systems", label: "Full Systems", value: "Full Systems" },
@@ -533,11 +529,7 @@ export const computers = [
   { id: "peripherals", label: "Peripherals", value: "Peripherals" },
   { id: "pos_atm", label: "POS/ ATM", value: "POS/ ATM" },
   { id: "power_pdu", label: "Power/PDU", value: "Power/PDU" },
-  {
-    id: "printer_consumable",
-    label: "Printer Consumable",
-    value: "Printer Consumable",
-  },
+  {id: "printer_consumable",label: "Printer Consumable",value: "Printer Consumable"},
   { id: "printers", label: "Printers", value: "Printers" },
   { id: "rackmount", label: "Rackmount", value: "Rackmount" },
   { id: "recycling", label: "Recycling", value: "Recycling" },
@@ -545,11 +537,7 @@ export const computers = [
   { id: "servers", label: "Servers", value: "Servers" },
   { id: "software", label: "Software", value: "Software" },
   { id: "storage", label: "Storage", value: "Storage" },
-  {
-    id: "tape_media_medical",
-    label: "Tape Media Medical",
-    value: "Tape Media Medical",
-  },
+  {id: "tape_media_medical",label: "Tape Media Medical",value: "Tape Media Medical"},
   { id: "other", label: "Other", value: "Other" },
 ];
 
