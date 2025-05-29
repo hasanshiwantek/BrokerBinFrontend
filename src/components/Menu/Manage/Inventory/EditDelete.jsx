@@ -7,6 +7,7 @@ import {
   updateInventoryData,
   deleteInventoryData,
   fetchFilterBroadcast,
+  getSortedInventoryData,
 } from "../../../../ReduxStore/InventorySlice";
 import Cookies from "js-cookie";
 import { useSelector, useDispatch } from "react-redux";
@@ -14,7 +15,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { triggerSearchFocus } from "@/ReduxStore/focusSlice";
-
+import SortableTableHeader from "@/components/Tables/SortableHeader";
 const EditDelete = () => {
   const token = Cookies.get("token");
   const dispatch = useDispatch();
@@ -101,6 +102,7 @@ const EditDelete = () => {
   // Fetch inventory data (default)
   const fetchInventoryData = () => {
     setLoading(true);
+
     dispatch(getInventoryData({ token, page: currentPage }))
       .unwrap()
       .then((response) => {
@@ -282,14 +284,12 @@ const EditDelete = () => {
       }
     }
   };
-
   const handlePrevious = () => {
     if (visiblePages[0] > 1) {
       setVisiblePages([Math.max(visiblePages[0] - 10, 1), visiblePages[0] - 1]);
       setCurrentPage(visiblePages[0] - 1);
     }
   };
-
   const handleNext = () => {
     if (visiblePages[1] < pagination.totalPages) {
       setVisiblePages([
@@ -316,6 +316,69 @@ const EditDelete = () => {
   };
 
   const [showHeciClei, setShowHeciClei] = useState(true);
+
+  // SORTING FUNCTION LOGIC
+
+  // const headers = [
+  //   { key: "cart", label: "Cart", sortable: false },
+  //   { key: "partModel", label: "Part#", sortable: true },
+  //   { key: "heciClei", label: "HECI/CLEI", sortable: true },
+  //   { key: "price", label: "Price", sortable: true },
+  //   { key: "quantity", label: "Qty", sortable: true },
+  //   { key: "status", label: "Status", sortable: true },
+  //   { key: "description", label: "Description", sortable: true },
+  //   { key: "mfg", label: "Mfg", sortable: true },
+  //   { key: "cond", label: "Cond", sortable: true },
+  //   { key: "age", label: "Age", sortable: true },
+  // ];
+
+  // const filteredHeaders = headers.filter((header) => {
+  //   if (header.key === "heciClei" && !showHeciClei) return false;
+  //   return true;
+  // });
+
+  // const [isSorted, setIsSorted] = useState(false);
+  // const [sortBy, setSortBy] = useState("");
+  // const [sortOrder, setSortOrder] = useState("asc");
+
+  // const handleSort = (columnKey) => {
+  //   const newSortOrder =
+  //     sortBy === columnKey && sortOrder === "asc" ? "desc" : "asc";
+
+  //   setSortBy(columnKey);
+  //   setSortOrder(newSortOrder);
+  //   setIsSorted(true); // triggers useEffect
+  //   setCurrentPage(currentPage); // reset to first page
+  //   setVisiblePages([1, Math.min(10, pagination.totalPages)]);
+  // };
+
+  // // Fetch data when currentPage changes
+
+  // useEffect(() => {
+  //   console.log("Fetching data for pageNumber:", currentPage);
+  //   setLoading(true);
+
+  //   const action = isSorted
+  //     ? getSortedInventoryData({
+  //         token,
+  //         sortBy,
+  //         sortOrder,
+  //         page: currentPage,
+  //       })
+  //     : getInventoryData({ token, page: currentPage });
+
+  //   dispatch(action)
+  //     .unwrap()
+  //     .then((response) => {
+  //       // Put the result into editedItems (this is what you're displaying)
+  //       setEditedItems(response?.data || []);
+  //     })
+  //     .catch((err) => {
+  //       console.error("Fetch error:", err);
+  //       alert("Failed to fetch data. Please try again.");
+  //     })
+  //     .finally(() => setLoading(false));
+  // }, [dispatch, token, currentPage, sortBy, sortOrder, isSorted]);
 
   return (
     <div className={`${inventory.inventory} !min-w-fit`}>
@@ -391,7 +454,7 @@ const EditDelete = () => {
             </button>
           </div>
         </div>
-
+ 
         <div>
           <table>
             <thead>
