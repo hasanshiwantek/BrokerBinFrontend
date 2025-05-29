@@ -96,6 +96,12 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
   ).length;
   console.log("Selected Filters", selectedFiltersCount);
 
+  const hasCompanyCategories =
+  (filters.computers?.length || 0) ||
+  (filters.telecom?.length || 0) ||
+  (filters.mobile?.length || 0) ||
+  (filters.other?.length || 0);
+
   const applyFilters = async () => {
     try {
       const payload = {
@@ -106,12 +112,16 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
           manufacturer: filters.manufacturer,
           categories: filters.categories,
           myVendors: filters.myVendors,
-          telecom: filters.telecom,
-          computers: filters.computers,
-          scrap: filters.scrap,
-          mobile: filters.mobile,
-          // state: filters.state.length ? filters.state.join(",") : "",
-          // country: filters.country.length ? filters.country.join(",") : "",
+          ...(hasCompanyCategories && {
+            companyCategories: {
+              ...(filters.computers?.length && { computers: filters.computers }),
+              ...(filters.telecom?.length && { telecom: filters.telecom }),
+              ...(filters.mobile?.length && { mobileDevice: filters.mobile }),
+              ...(filters.other?.length && { other: filters.other }),
+            }
+          }),
+          hasInventory: filters.hasInventory,
+          rating: filters.feedbackRating,
         },
       };
       const { data } = await axios.post(
@@ -250,6 +260,12 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
     }
   })
 
+  const feedbackCompanies = company?.feedbackCount;
+  const inventoryCompanies = company?.hasInventoryCount;
+
+  console.log("FC & IC", feedbackCompanies, inventoryCompanies);
+  
+
 
   return (
     <div className=" !w-[50rem] border-[1px] border-l-gray-500 2xl:h-[70vh] md:max-h-[102vh]  overflow-y-scroll  overflow-x-hidden relative ">
@@ -370,6 +386,8 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
           categoryCounts={categoryCountsMap}
           manufacturerCounts={manufacturerCountsMap}
           companyCategoriesCount={companyCategoriesCountMap}
+          feedbackCompaniesCount={feedbackCompanies}
+          inventoryCompaniesCount={inventoryCompanies}
 
         />
       ) : (
