@@ -16,7 +16,6 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const MyRFQNew = () => {
-
   const { selectedProducts } = useSelector((store) => store.searchProductStore);
   console.log("SelectedProducts", selectedProducts);
   const dispatch = useDispatch();
@@ -28,7 +27,7 @@ const MyRFQNew = () => {
   const [showRecipientDropdown, setShowRecipientDropdown] = useState(false);
   console.log("Search Results in Component:", searchResults);
   const [isFormValid, setFormValid] = useState(false);
-  const validParts = useRef({});  // Use a ref to track validity of each part
+  const validParts = useRef({}); // Use a ref to track validity of each part
   const token = Cookies.get("token");
   const modalRef = useRef(null); // Create a reference to the modal
 
@@ -38,11 +37,8 @@ const MyRFQNew = () => {
   const handlePartValidity = (partId, isValid) => {
     validParts.current[partId] = isValid;
     // Check if all parts are valid
-    setFormValid(Object.values(validParts.current).every(status => status));
+    setFormValid(Object.values(validParts.current).every((status) => status));
   };
-
-
-
 
   const subject = "Quote Needed"; // Default to "Quote Needed" if no RFQ is selected
 
@@ -53,14 +49,18 @@ const MyRFQNew = () => {
     }
   }, [id, dispatch, token]);
 
-
   useEffect(() => {
     if (initialData) {
       // Format the user information for the text editor
       const userInfo = `
      <p><strong>Quote Needed Looking for the best price, availability & lead time.</strong></p>
+         <br />
+    <br />
+    <br />
         <p>--------------</p>
-        <p><strong>${initialData.firstName || " "} ${initialData.lastName || ""}</strong></p>
+        <p><strong>${initialData.firstName || " "} ${
+        initialData.lastName || ""
+      }</strong></p>
         <p>${initialData?.company?.name || ""}</p>
         <p><strong></strong> ${initialData.phoneNumber || ""}</p>
         <p><strong></strong> ${initialData.email || ""}</p>
@@ -85,20 +85,22 @@ const MyRFQNew = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (recipientDropdownRef.current && !recipientDropdownRef.current.contains(event.target)) {
+      if (
+        recipientDropdownRef.current &&
+        !recipientDropdownRef.current.contains(event.target)
+      ) {
         setShowRecipientDropdown(false); // Close the dropdown if the click is outside
       }
     };
 
     // Attach the event listener to the document
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
       // Clean up the event listener when the component unmounts
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
 
   // Handle comment change
   const handleCommentChange = (content, delta, source, editor) => {
@@ -131,7 +133,6 @@ const MyRFQNew = () => {
         mfg: mfgs[0] || "", // Default to the first MFG
         cond: conds[0] || "", // Default to the first Condition
       };
-
     });
   };
 
@@ -139,7 +140,6 @@ const MyRFQNew = () => {
   const groupedParts = groupByPartModel(selectedProducts);
   const filteredData = getUniqueMFGsAndConditions(groupedParts);
   console.log(filteredData);
-
 
   const [parts, setParts] = useState(filteredData);
   console.log("Parts", parts);
@@ -152,9 +152,21 @@ const MyRFQNew = () => {
     setSelectedProductsBCC((prev) => prev.filter((item) => item.id !== id));
   };
 
-
   const addPart = () => {
-    setParts([...parts, { id: Date.now(), partModel: " ", heciClei: " ", mfg: "", condition: "", quantity: "", isNew: true, targetPrice: "", terms: "", }]);
+    setParts([
+      ...parts,
+      {
+        id: Date.now(),
+        partModel: " ",
+        heciClei: " ",
+        mfg: "",
+        condition: "",
+        quantity: "",
+        isNew: true,
+        targetPrice: "",
+        terms: "",
+      },
+    ]);
   };
 
   // Function to handle removing a part by id
@@ -174,7 +186,6 @@ const MyRFQNew = () => {
       )
     );
   };
-
 
   const [recipients, setRecipients] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -203,11 +214,12 @@ const MyRFQNew = () => {
 
     setInputValue(""); // Clear input field
 
-    dispatch(clearSearchResults()) ? console.log("Cleared") : console.log("Not cleared");
-
+    dispatch(clearSearchResults())
+      ? console.log("Cleared")
+      : console.log("Not cleared");
   };
 
-  console.log(recipients)
+  console.log(recipients);
 
   const handleRecipientSearch = async (e) => {
     const query = e.target.value;
@@ -221,7 +233,9 @@ const MyRFQNew = () => {
     }
 
     try {
-      await dispatch(addRecipients({ token: Cookies.get("token"), search: query })).unwrap();
+      await dispatch(
+        addRecipients({ token: Cookies.get("token"), search: query })
+      ).unwrap();
     } catch (error) {
       console.error("Error fetching recipients:", error);
     }
@@ -243,19 +257,19 @@ const MyRFQNew = () => {
     console.log("Before removal:", recipients);
     console.log("Removing:", emailToRemove);
 
-    setRecipients((prev) => prev.filter((recipient) => recipient.email !== emailToRemove));
+    setRecipients((prev) =>
+      prev.filter((recipient) => recipient.email !== emailToRemove)
+    );
 
     console.log("After removal:", recipients);
   };
 
-  console.log("BCC", selectedProductsBCC)
+  console.log("BCC", selectedProductsBCC);
 
   const isValidEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
-
-
 
   const getUniqueBCC = (data) => {
     const seen = new Set();
@@ -271,17 +285,16 @@ const MyRFQNew = () => {
 
   // Filtered BCC list to ensure uniqueness
   const uniqueBCCList = getUniqueBCC(selectedProductsBCC);
-  console.log("Unique BCCS ", uniqueBCCList)
-
+  console.log("Unique BCCS ", uniqueBCCList);
 
   const submitHandle = async (e) => {
-
-
     const formData = new FormData();
     console.log("Submit handle triggered"); // Debugging log
 
     // Add Region field
-    const region = document.querySelector('[name="send_all_vendors_region"]')?.value;
+    const region = document.querySelector(
+      '[name="send_all_vendors_region"]'
+    )?.value;
     formData.append("region", region || "");
 
     // Add the subject field
@@ -327,7 +340,10 @@ const MyRFQNew = () => {
       "partialOrderQuotesAccepted",
     ];
     booleanFields.forEach((field) => {
-      formData.append(field, document.querySelector(`[name="${field}"]`)?.checked ? 1 : 0);
+      formData.append(
+        field,
+        document.querySelector(`[name="${field}"]`)?.checked ? 1 : 0
+      );
     });
 
     // Add file to FormData
@@ -344,20 +360,33 @@ const MyRFQNew = () => {
 
     // Send the data
     try {
-      await dispatch(submitRfq({ token, data: formData }))
-
+      const result = await dispatch(
+        submitRfq({ token, data: formData })
+      ).unwrap();
+      console.log("result: ", result);
       console.log("Submission successful! Triggering toast..."); // Debugging log
       // Clear form fields after successful submission
       clearFields();
       // ✅ Show success toast with light blue color
-      toast.info("RFQ submitted Succesfully!", {
-        style: { fontSize: "12px", marginTop: "-20px", fontWeight: "bold" }, // 
-      })
-
+      if (result?.status === 201) {
+        toast.info(result?.data?.message || "RFQ submitted Succesfully!", {
+          style: { fontSize: "12px", marginTop: "-20px", fontWeight: "bold" }, //
+        });
+        setTimeout(()=>{
+          dispatch(setPopUpRfq(false));
+        },3000)
+      } else {
+        toast.info(
+          result?.data?.message || "Failed to send RFQ.Please try again!",
+          {
+            style: { fontSize: "12px", marginTop: "-20px", fontWeight: "bold" },
+          }
+        );
+      }
     } catch (error) {
       console.error("Error submitting RFQ:", error);
       toast.error("Error submitting RFQ.Please try Again.", {
-        style: { fontSize: "12px", marginTop: "-20px", fontWeight: "bold" }, // 
+        style: { fontSize: "12px", marginTop: "-20px", fontWeight: "bold" }, //
       });
     }
   };
@@ -371,7 +400,9 @@ const MyRFQNew = () => {
     setFile(null);
 
     // Clear inputs in the DOM
-    const regionInput = document.querySelector('[name="send_all_vendors_region"]');
+    const regionInput = document.querySelector(
+      '[name="send_all_vendors_region"]'
+    );
     if (regionInput) regionInput.value = "";
 
     const subjectInput = document.querySelector('[name="subject"]');
@@ -393,29 +424,28 @@ const MyRFQNew = () => {
     });
   };
 
-
-
   return (
     <>
       <div className={css.rfqPopUp}>
-        <form >
-          <div className={`${css.rfqNew}  sm:h-[58vh] lg:h-[68vh]`} ref={modalRef}>
-
+        <form>
+          <div
+            className={`${css.rfqNew}  sm:h-[58vh] lg:h-[68vh]`}
+            ref={modalRef}
+          >
             <div className={css.rfqBody}>
               <div className={css.rfqHeaderSec}>
-
                 <div className={css.rfqBody_Header}>
                   <ul>
                     <li>
-                      <a href="/rfq">
-                        received
-                      </a>
+                      <a href="/rfq">received</a>
                     </li>
                     <li>
                       <a href="/rfqSent">sent</a>
                     </li>
                     <li>
-                      <a href="/" style={{ color: " rgb(102, 142, 252)" }}>new</a>
+                      <a href="/" style={{ color: " rgb(102, 142, 252)" }}>
+                        new
+                      </a>
                     </li>
                     <li>
                       <a href="/">archive</a>
@@ -440,7 +470,11 @@ const MyRFQNew = () => {
                         onChange={handleRecipientSearch} // Trigger search on input change
                         style={{ width: "20vw" }}
                       />
-                      <div ref={recipientDropdownRef} className={css.receipentSec} style={{ position: "relative" }}>
+                      <div
+                        ref={recipientDropdownRef}
+                        className={css.receipentSec}
+                        style={{ position: "relative" }}
+                      >
                         {searchResults.length > 0 && showRecipientDropdown && (
                           <ul
                             style={{
@@ -452,28 +486,27 @@ const MyRFQNew = () => {
                               left: "132px",
                               width: "223%",
                               padding: "4px",
-                              maxHeight: "300px"
+                              maxHeight: "300px",
                             }}
                           >
-                            {
-                              searchResults.map((user) => (
-                                <li
-                                  key={user.id}
-                                  onClick={(e) => {
-                                    handleRecipientClick(e, user);
-                                    setShowRecipientDropdown(false);
-                                  }}
-
-                                  style={{
-                                    borderBottom: "1px solid #ccc",
-                                    padding: "1px",
-                                    cursor: "pointer",
-                                  }}
-                                >
-                                  {user.firstName} {user.lastName}<br />
-                                  {user.email.replace("mailto:", "")}
-                                </li>
-                              ))}
+                            {searchResults.map((user) => (
+                              <li
+                                key={user.id}
+                                onClick={(e) => {
+                                  handleRecipientClick(e, user);
+                                  setShowRecipientDropdown(false);
+                                }}
+                                style={{
+                                  borderBottom: "1px solid #ccc",
+                                  padding: "1px",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                {user.firstName} {user.lastName}
+                                <br />
+                                {user.email.replace("mailto:", "")}
+                              </li>
+                            ))}
                           </ul>
                         )}
                       </div>
@@ -489,29 +522,38 @@ const MyRFQNew = () => {
                                 style={{ cursor: "pointer" }}
                               />
                               <strong>
-                                {item.addedBy.company.name} ({item.addedBy.firstName} {item.addedBy.lastName})
+                                {item.addedBy.company.name} (
+                                {item.addedBy.firstName} {item.addedBy.lastName}
+                                )
                               </strong>
                             </div>
                           </span>
                         ))}
-                        {
-                          recipients.map((item, i) => {
-                            return (
-                              <span key={i}>
-                                <MdRemoveCircle
-                                  onClick={(e) => handleRemoveRecipient(e, item.email)} // Pass the email
-                                  style={{ cursor: "pointer" }}
-                                />
-                                <strong> {item.firstName} {item.lastName}</strong>
-                              </span>
-                            );
-                          })
-                        }
+                        {recipients.map((item, i) => {
+                          return (
+                            <span key={i}>
+                              <MdRemoveCircle
+                                onClick={(e) =>
+                                  handleRemoveRecipient(e, item.email)
+                                } // Pass the email
+                                style={{ cursor: "pointer" }}
+                              />
+                              <strong>
+                                {" "}
+                                {item.firstName} {item.lastName}
+                              </strong>
+                            </span>
+                          );
+                        })}
                       </span>
                     </span>
                     <span>
                       <label htmlFor="">Subject:</label>
-                      <input name="subject" type="text" defaultValue={subject} />
+                      <input
+                        name="subject"
+                        type="text"
+                        defaultValue={subject}
+                      />
                     </span>
                   </div>
 
@@ -524,7 +566,10 @@ const MyRFQNew = () => {
                           <label htmlFor="text">HECI / CLEI</label>
                           <label htmlFor="select">Mfg </label>
                           <label htmlFor="select">Cond </label>
-                          <label htmlFor="number">Qty <span className="text-red-600 -mt-8 ml-9">*</span></label>
+                          <label htmlFor="number">
+                            Qty{" "}
+                            <span className="text-red-600 -mt-8 ml-9">*</span>
+                          </label>
                           <label htmlFor="number">Target Price </label>
                           <label htmlFor="text">Terms</label>
                         </div>
@@ -542,7 +587,6 @@ const MyRFQNew = () => {
                             selectedProducts={selectedProducts}
                             onValidityChange={handlePartValidity}
                           />
-
                         ))}
                       </span>
 
@@ -561,12 +605,16 @@ const MyRFQNew = () => {
                           style={{ display: "none" }}
                           onChange={(e) => setFile(e.target.files[0]) || null} // Update state with the selected file
                         />
-                        {uploadFile && <span className="text-sm">{uploadFile.name}</span>}
+                        {uploadFile && (
+                          <span className="text-sm">{uploadFile.name}</span>
+                        )}
                       </div>
                     </div>
                   </div>
                   <div className={css.rfqBody_Main_left_comments}>
-                    <label htmlFor="" style={{ marginLeft: "50px" }}>Comments</label>
+                    <label htmlFor="" style={{ marginLeft: "50px" }}>
+                      Comments
+                    </label>
 
                     <TextEditor
                       handleCommentChange={handleCommentChange}
@@ -591,7 +639,7 @@ const MyRFQNew = () => {
                 </div>
                 <div className={css.rfqBody_Main_right}>
                   <table>
-                    <thead >
+                    <thead>
                       <tr>
                         <th>RFQ Options</th>
                       </tr>
@@ -678,29 +726,29 @@ const MyRFQNew = () => {
                               style={{ cursor: "pointer" }}
                             />
                             <strong>
-                              {item.addedBy.company.name} ({item.addedBy.firstName} {item.addedBy.lastName})
+                              {item.addedBy.company.name} (
+                              {item.addedBy.firstName} {item.addedBy.lastName})
                             </strong>
                           </div>
                         </span>
                       ))}
-                      {
-                        recipients.map((item, i) => {
-                          return (
-
-                            <span key={i}>
-                              <div className="flex items-center mt-2 gap-2">
-
-                                <MdRemoveCircle
-                                  onClick={(e) => handleRemoveRecipient(e, item.email)} // Pass the email
-                                  style={{ cursor: "pointer" }}
-                                />
-                                <strong>({item.firstName} {item.lastName})</strong>
-                              </div>
-                            </span>
-
-                          );
-                        })
-                      }
+                      {recipients.map((item, i) => {
+                        return (
+                          <span key={i}>
+                            <div className="flex items-center mt-2 gap-2">
+                              <MdRemoveCircle
+                                onClick={(e) =>
+                                  handleRemoveRecipient(e, item.email)
+                                } // Pass the email
+                                style={{ cursor: "pointer" }}
+                              />
+                              <strong>
+                                ({item.firstName} {item.lastName})
+                              </strong>
+                            </div>
+                          </span>
+                        );
+                      })}
                     </tfoot>
                   </table>
                 </div>
@@ -712,17 +760,16 @@ const MyRFQNew = () => {
                   onClick={(e) => {
                     e.preventDefault();
                     submitHandle();
-                    dispatch(setPopUpRfq(false));
+                    // dispatch(setPopUpRfq(false));
                   }}
-                  className={`${isFormValid
-                    ? "bg-blue-500 hover:bg-blue-700 text-white"
-                    : "bg-blue-500 text-white opacity-50 cursor-not-allowed"
-                    } px-4 py-2 rounded shadow`}
+                  className={`${
+                    isFormValid
+                      ? "bg-blue-500 hover:bg-blue-700 text-white"
+                      : "bg-blue-500 text-white opacity-50 cursor-not-allowed"
+                  } px-4 py-2 rounded shadow`}
                 >
                   Send
                 </button>
-
-
               </div>
             </div>
           </div>
@@ -730,89 +777,8 @@ const MyRFQNew = () => {
       </div>
 
       <ToastContainer position="top-center" autoClose={2000} />
-
-
     </>
   );
 };
 
 export default MyRFQNew;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

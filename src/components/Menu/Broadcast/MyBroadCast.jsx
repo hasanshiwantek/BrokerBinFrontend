@@ -426,11 +426,55 @@ const BroadCast = () => {
     console.log("togglePopUp in BroadCast:", togglePopUp);
   }, [togglePopUp]);
 
+  const [isSorted, setIsSorted] = useState(false);
+  const [sortBy, setSortBy] = useState("");
+  const [sortOrder, setSortOrder] = useState("asc");
+  const [pageNumber, setPageNumber] = useState(1);
+  const [broadcastSearchParams, setSearchParams] = useSearchParams();
+  // =======================
+  // QUERY PARAMS ON LOAD
+  // =======================
+  useEffect(() => {
+    const pageParam = Number(broadcastSearchParams.get("page"));
+    const sortByParam = broadcastSearchParams.get("sort");
+    const sortOrderParam = broadcastSearchParams.get("order");
+    const hasParams =
+      broadcastSearchParams.has("page") || broadcastSearchParams.has("sort");
 
+    if (hasParams) {
+      // Reset the URL silently
+      setSearchParams({});
 
+      // Reset local sort state
+      setSortBy("");
+      setSortOrder("asc");
+      setIsSorted(false);
+      setCurrentPage(1);
 
+      dispatch(fetchBroadCastData({ token, pageNumber: 1 }));
+    } else {
+      dispatch(fetchBroadCastData({ token, pageNumber: currentPage }));
+    }
+  }, [token]);
 
+  // =======================
+  // DATA FETCH ON CHANGES
+  // =======================
+  useEffect(() => {
+    setLoading(true);
+    const action = isSorted
+      ? fetchBroadCastSortedData({
+          token,
+          sortBy,
+          sortOrder,
+          pageNumber: currentPage,
+        })
+      : fetchBroadCastData({ token, pageNumber: currentPage });
 
+    dispatch(action)
+      .then(() => setLoading(false))
+      .catch(() => setLoading(false));
+  }, [dispatch, token, currentPage, sortBy, sortOrder, isSorted]);
 
   // SORTING LOGIC
 
@@ -455,11 +499,9 @@ const BroadCast = () => {
     shield: shieldImage,
   };
 
-  const [isSorted, setIsSorted] = useState(false);
-  const [sortBy, setSortBy] = useState("");
-  const [sortOrder, setSortOrder] = useState("asc");
-  const [pageNumber, setPageNumber] = useState(1);
-
+  // =======================
+  // HANDLE SORT
+  // =======================
   const handleSort = (columnKey) => {
     const newSortOrder =
       sortBy === columnKey && sortOrder === "asc" ? "desc" : "asc";
@@ -468,26 +510,26 @@ const BroadCast = () => {
     setSortOrder(newSortOrder);
     setIsSorted(true);
 
+    setSearchParams({ sort: columnKey, order: newSortOrder });
+
     dispatch(
       fetchBroadCastSortedData({
         token,
         sortBy: columnKey,
         sortOrder: newSortOrder,
-        pageNumber: 1,
+        pageNumber: currentPage,
       })
     );
   };
 
+  // =======================
+  // HANDLE PAGE CHANGE
+  // =======================
   const handlePageChange = (page) => {
-    if (
-      page !== currentPage &&
-      page >= 1 &&
-      page <= (pagination.last_page || 1)
-    ) {
-      console.log("Changing to page:", page);
+    if (page !== currentPage && page >= 1) {
       setCurrentPage(page);
-
       if (isSorted) {
+        setSearchParams({ sort: sortBy, order: sortOrder, page });
         dispatch(
           fetchBroadCastSortedData({
             token,
@@ -497,30 +539,11 @@ const BroadCast = () => {
           })
         );
       } else {
+        setSearchParams({ page });
         dispatch(fetchBroadCastData({ token, pageNumber: page }));
       }
     }
   };
-
-  // Fetch data when currentPage changes
-
-  useEffect(() => {
-    console.log("Fetching data for pageNumber:", currentPage);
-    setLoading(true);
-
-    const action = isSorted
-      ? fetchBroadCastSortedData({
-          token,
-          sortBy,
-          sortOrder,
-          pageNumber: currentPage,
-        })
-      : fetchBroadCastData({ token, pageNumber: currentPage });
-
-    dispatch(action)
-      .then(() => setLoading(false))
-      .catch(() => setLoading(false));
-  }, [dispatch, token, currentPage, sortBy, sortOrder, isSorted]);
 
   return (
     <>
