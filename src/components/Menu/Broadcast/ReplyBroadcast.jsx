@@ -93,7 +93,7 @@ const ReplyBroad = () => {
       ? `Re: ${broadcast.type} : ${broadcast.mfg} : ${broadcast.partModel} : ${broadcast?.additional_comments} : ${broadcast?.description}`
       : "",
     comments: broadcast ? formatComments() : "",
-    sendCopy: false,
+    sendCopy: true,
   });
 
   // Strip HTML tags and preserve line breaks
@@ -146,10 +146,12 @@ const ReplyBroad = () => {
         console.log("📥 Response:", res);
 
         if (res.meta.requestStatus === "fulfilled") {
-          toast.info("✅ Email sent successfully!", {
+          toast.info("Email sent successfully!", {
             style: { fontSize: "12px", fontWeight: "bold" },
           });
-          navigate("/broadcasts");
+          setTimeout(()=>{
+            navigate("/broadcasts");
+          },3000)
         } else {
           const errorPayload = res.payload;
           console.error("❌ Backend Rejected Response:", errorPayload);
@@ -243,7 +245,7 @@ const ReplyBroad = () => {
                     name="subject"
                     value={email.subject}
                     onChange={handleChange}
-                    className={`${styles.input} !text-[9pt]`}
+                    className={`${styles.input} !capitalize !text-[9pt]`}
                     readOnly
                   />
                 </div>
@@ -293,7 +295,7 @@ const ReplyBroad = () => {
           </button>
           <button
             type="button"
-            onClick={() => setEmail({ comments: "", sendCopy: false })}
+            // onClick={() => setEmail({ comments: "", sendCopy: false })}
             className={styles.resetButton}
           >
             Reset

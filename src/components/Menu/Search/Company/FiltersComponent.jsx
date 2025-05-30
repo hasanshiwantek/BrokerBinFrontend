@@ -180,7 +180,7 @@ const handleSortOrderChange = (order) => {
             Sort
           </AccordionTrigger>
           <AccordionContent>
-            <p>Sort By:</p>
+            <h3 className="mt-5">Sort By:</h3>
             <div className="mt-2 grid grid-cols-2 gap-5">
               <button
                 style={{ border: "1px solid black" }}
@@ -226,7 +226,7 @@ const handleSortOrderChange = (order) => {
               </button>
             </div>
 
-            <p>Sort Order:</p>
+            <h3 className="mt-10">Order By:</h3>
             <div className="mt-2 grid grid-cols-2 gap-5">
               <button
                 style={{ border: "1px solid black" }}

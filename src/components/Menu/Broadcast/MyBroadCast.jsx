@@ -679,7 +679,7 @@ const BroadCast = () => {
                 </select>
               </div>
 
-              <div>
+              <div className="flex items-center">
                 <label htmlFor="bulk">Bulk</label>
                 <input
                   type="checkbox"
@@ -688,7 +688,7 @@ const BroadCast = () => {
                   onChange={handleBuyInChange}
                 />
               </div>
-              <div>
+              <div className="flex items-center">
                 <label htmlFor="wholeUnit">Whole Unit</label>
                 <input
                   type="checkbox"
@@ -697,7 +697,7 @@ const BroadCast = () => {
                   onChange={handleBuyInChange}
                 />
               </div>
-              <div>
+              <div className="flex items-center">
                 <label htmlFor="container">Container</label>
                 <input
                   type="checkbox"
@@ -706,7 +706,7 @@ const BroadCast = () => {
                   onChange={handleBuyInChange}
                 />
               </div>
-              <div>
+              <div className="flex items-center">
                 <label htmlFor="pallet">Pallet</label>
                 <input
                   type="checkbox"

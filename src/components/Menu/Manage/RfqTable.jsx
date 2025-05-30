@@ -306,7 +306,7 @@ const RfqTable = () => {
 
   const handleReply = () => {
     if (rfqMail.length === 0) {
-      toast.error("Please select at least one RFQ to reply.");
+      toast.warning("Please select at least one RFQ to reply.");
       return;
     }
 
@@ -315,7 +315,7 @@ const RfqTable = () => {
 
   const handleForward = () => {
     if (rfqMail.length === 0) {
-      toast.error("Please select at least one RFQ to forward.");
+      toast.warning("Please select at least one RFQ to forward.");
       return;
     }
 
@@ -329,7 +329,7 @@ const RfqTable = () => {
 
   const handleArchive = async (action) => {
     if (rfqMail.length === 0) {
-      toast.error("Please select at least one RFQ.");
+      toast.warning("Please select at least one RFQ.");
       return;
     }
 
@@ -360,7 +360,9 @@ const RfqTable = () => {
         rfqArchive({ token, data: payload })
       ).unwrap();
       toast.success(`RFQ(s) ${action} successfully!`);
-      window.location.reload(); // Reload the page to reflect changes
+      setTimeout(()=>{
+        window.location.reload(); 
+      },1000)
     } catch (error) {
       console.error("Error handling action:", error);
       toast.error(`Failed to ${action} RFQ(s).`);
@@ -370,7 +372,7 @@ const RfqTable = () => {
 
   const handleAction = async (action) => {
     if (rfqMail.length === 0) {
-      toast.error("Please select at least one RFQ.");
+      toast.warning("Please select at least one RFQ.");
       return;
     }
 

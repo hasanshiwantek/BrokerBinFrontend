@@ -156,7 +156,7 @@ const SearchCompany = () => {
             </div>
 
             <div className={styles.formRow}>
-              <label htmlFor="newMembers">New Members</label>
+              <label htmlFor="newMembers" >New Members</label>
               <input
                 type="checkbox"
                 id="newMembers"
@@ -166,7 +166,7 @@ const SearchCompany = () => {
               />
             </div>
 
-            <div className={styles.formRow}>
+            <div className={`${styles.formRow}  `}>
               <label htmlFor="city">City</label>
               <input
                 type="text"
