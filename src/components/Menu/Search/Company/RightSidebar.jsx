@@ -120,8 +120,11 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
               ...(filters.other?.length && { other: filters.other }),
             }
           }),
+          show: filters.show,
           hasInventory: filters.hasInventory,
           rating: filters.feedbackRating,
+          sortBy: filters.sortBy,
+          sortOrder: filters.sortOrder,
         },
       };
       const { data } = await axios.post(
@@ -262,6 +265,8 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
 
   const feedbackCompanies = company?.feedbackCount;
   const inventoryCompanies = company?.hasInventoryCount;
+  const showFirstCount = company?.showFirstCount;
+  const neverShowCount = company?.neverShowCount;
 
   console.log("FC & IC", feedbackCompanies, inventoryCompanies);
   
@@ -388,7 +393,8 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
           companyCategoriesCount={companyCategoriesCountMap}
           feedbackCompaniesCount={feedbackCompanies}
           inventoryCompaniesCount={inventoryCompanies}
-
+          showFirstCount={showFirstCount}
+          neverShowCount={neverShowCount}
         />
       ) : (
         companiesToShow.map((comp, index) => (

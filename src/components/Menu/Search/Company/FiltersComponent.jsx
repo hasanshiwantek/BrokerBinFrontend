@@ -28,6 +28,8 @@ const FiltersComponent = ({
   companyCategoriesCount,
   feedbackCompaniesCount,
   inventoryCompaniesCount,
+  showFirstCount,
+  neverShowCount,
 }) => {
   const [filters, setFilters] = useState(
     initialFilters || {
@@ -42,21 +44,43 @@ const FiltersComponent = ({
       computers: [],
       other: [],
       mobile: [],
+      show: [],
       hasInventory: "No",
       feedbackRating: false,
-
+      sortOrder: "asc",
+      sortBy: "company",
+      show: "",
     }
   );
 
+  // const handleFilterChange = (e) => {
+  //   const { name, value, checked } = e.target;
+  //   setFilters((prev) => ({
+  //     ...prev,
+  //     [name]: checked
+  //       ? [...(prev[name] || []), value] // ✅ Add value if checked
+  //       : prev[name].filter((item) => item !== value), // ❌ Remove if unchecked
+  //   }));
+  // };
+
   const handleFilterChange = (e) => {
-    const { name, value, checked } = e.target;
+  const { name, value, checked } = e.target;
+
+  if (name === "show") {
+    setFilters((prev) => ({
+      ...prev,
+      show: checked ? value : "", // ✅ set or clear string
+    }));
+  } else {
     setFilters((prev) => ({
       ...prev,
       [name]: checked
-        ? [...(prev[name] || []), value] // ✅ Add value if checked
-        : prev[name].filter((item) => item !== value), // ❌ Remove if unchecked
+        ? [...(prev[name] || []), value]
+        : prev[name].filter((item) => item !== value),
     }));
-  };
+  }
+};
+
 
   useEffect(() => {
     onFiltersChange(filters);
@@ -82,7 +106,9 @@ const FiltersComponent = ({
   const categoriesRef = useRef(null);
   const manufacturerRef = useRef(null);
   const vendorRef = useRef(null);
-  const productsRef = useRef(null)
+  const productsRef = useRef(null);
+  const ratingRef = useRef(null);
+  const inventoryRef = useRef(null)
 
   // 🟢 Function to scroll to a specific section
   const scrollToFilter = (id) => {
@@ -94,6 +120,8 @@ const FiltersComponent = ({
       manufacturer: manufacturerRef,
       myVendors: vendorRef,
       products: productsRef,
+      rating: ratingRef,
+      hasInventory: inventoryRef,
     };
 
     if (refs[id]?.current) {
@@ -124,6 +152,19 @@ const FiltersComponent = ({
 
   const other = [{ id: "scrap", label: "Scrap", value: "Scrap" }];
 
+  const handleSortChange = (sortType) => {
+  setFilters((prev) => ({
+    ...prev,
+    sortBy: sortType,
+  }));
+};
+
+const handleSortOrderChange = (order) => {
+  setFilters((prev) => ({
+    ...prev,
+    sortOrder: order,
+  }));
+};
 
 
   return (
@@ -139,43 +180,70 @@ const FiltersComponent = ({
             Sort
           </AccordionTrigger>
           <AccordionContent>
-            <div className="grid grid-cols-2 gap-5">
+            <p>Sort By:</p>
+            <div className="mt-2 grid grid-cols-2 gap-5">
               <button
                 style={{ border: "1px solid black" }}
-                className="bg-white px-2 py-2 rounded-md text-[#444] text-xl 
-             border-black hover:bg-[#f0f0f0]  hover:shadow-md
-             focus:outline-none
-             transition-all duration-300 ease-in-out"
+                onClick={() => handleSortChange("relevance")}
+                className={`${filters.sortBy === "relevance" ? 'bg-[#2c83ec] text-white !border !border-transparent' : 'bg-white text-[#444]'} 
+                  hover:shadow-md py-2 transition-all duration-300 ease-in-out`}
               >
                 Relevance
               </button>
 
               <button
                 style={{ border: "1px solid black" }}
-                className="bg-white px-2 py-2 rounded-md text-[#444] text-xl 
-             border-black hover:bg-[#f0f0f0]  hover:shadow-md
-             focus:outline-none
-             transition-all duration-300 ease-in-out"
+                onClick={() => handleSortChange("companyName")}
+                className={` ${filters.sortBy === "companyName" ? 'bg-[#2c83ec] text-white !border !border-transparent' : 'bg-white text-[#444]'} 
+                  hover:shadow-md transition-all py-2 duration-300 ease-in-out`}
               >
                 Company Name
               </button>
               <button
                 style={{ border: "1px solid black" }}
-                className="bg-white px-2 py-2 rounded-md text-[#444] text-xl 
-             border-black hover:bg-[#f0f0f0]  hover:shadow-md
-             focus:outline-none
-             transition-all duration-300 ease-in-out"
+                 onClick={() => handleSortChange("member_since")}
+                className={` ${filters.sortBy === "member_since" ? 'bg-[#2c83ec] text-white !border !border-transparent' : 'bg-white text-[#444]'} 
+                  hover:shadow-md py-2 transition-all duration-300 ease-in-out`}
               >
                 Age of Membership
               </button>
               <button
                 style={{ border: "1px solid black" }}
-                className="bg-white px-2 py-2 rounded-md text-[#444] text-xl 
-             border-black hover:bg-[#f0f0f0]  hover:shadow-md
-             focus:outline-none
-             transition-all duration-300 ease-in-out"
+                onClick={() => handleSortChange("rating")}
+                className={` ${filters.sortBy === "rating" ? 'bg-[#2c83ec] text-white !border !border-transparent' : 'bg-white text-[#444]'} 
+                  hover:shadow-md py-2 transition-all duration-300 ease-in-out`}
               >
                 Feedback Rating
+              </button>
+
+              <button
+                style={{ border: "1px solid black" }}
+                 onClick={() => handleSortChange("hasInventory")}
+                className={` ${filters.sortBy === "hasInventory" ? 'bg-[#2c83ec] text-white !border !border-transparent' : 'bg-white text-[#444]'} 
+                  hover:shadow-md py-2 transition-all duration-300 ease-in-out`}
+              >
+                Parts Listed
+              </button>
+            </div>
+
+            <p>Sort Order:</p>
+            <div className="mt-2 grid grid-cols-2 gap-5">
+              <button
+                style={{ border: "1px solid black" }}
+                onClick={() => handleSortOrderChange("asc")}
+                className={` ${filters.sortOrder === "asc" ? 'bg-[#2c83ec] text-white !border !border-transparent' : 'bg-white text-[#444]'} 
+                  hover:shadow-md py-2 transition-all duration-300 ease-in-out`}
+              >
+                Ascending
+              </button>
+
+              <button
+                style={{ border: "1px solid black" }}
+               onClick={() => handleSortOrderChange("desc")}
+                className={` ${filters.sortOrder === "desc" ? 'bg-[#2c83ec] text-white !border !border-transparent' : 'bg-white text-[#444]'} 
+                  hover:shadow-md py-2 transition-all duration-300 ease-in-out`}
+              >
+                Descending
               </button>
             </div>
           </AccordionContent>
@@ -323,14 +391,14 @@ const FiltersComponent = ({
                 >
                   <input
                     type="checkbox"
-                    name="myVendors"
-                    value="First"
+                    name="show"
+                    value="first"
                     id="first"
                     onChange={handleFilterChange}
-                    checked={filters.myVendors?.includes("First") || false}
+                    checked={filters.show === "first"}
                     className="w-5 h-5"
                   />
-                  First
+                  First ({showFirstCount})
                 </label>
 
                 <label
@@ -339,14 +407,14 @@ const FiltersComponent = ({
                 >
                   <input
                     type="checkbox"
-                    name="myVendors"
-                    value="Never"
+                    name="show"
+                    value="never"
                     id="never"
                     onChange={handleFilterChange}
-                    checked={filters.myVendors?.includes("Never") || false}
+                    checked={filters.show === "never"}
                     className="w-5 h-5"
                   />
-                  Never
+                  Never ({neverShowCount})
                 </label>
               </div>
             </div>
@@ -474,7 +542,7 @@ const FiltersComponent = ({
           </AccordionContent>
         </AccordionItem>
 
-        <AccordionItem value="rating">
+        <AccordionItem value="rating" id="rating" ref={ratingRef}>
           <AccordionTrigger className="text-black text-2xl font-semibold">
             Feedback Rating
           </AccordionTrigger>
@@ -487,7 +555,7 @@ const FiltersComponent = ({
                   feedbackRating: !prev.feedbackRating,
                 }))}
                 className={`px-[5vw] mt-2 py-2 rounded-md text-xl border 
-                  ${filters.feedbackRating ? 'bg-primary text-white' : 'bg-white text-[#444]'} 
+                  ${filters.feedbackRating ? 'bg-[#2c83ec] text-white !border !border-transparent' : 'bg-white text-[#444]'} 
                   hover:shadow-md transition-all duration-300 ease-in-out`}
               >
                 ({feedbackCompaniesCount}) Companies
@@ -496,7 +564,7 @@ const FiltersComponent = ({
           </AccordionContent>
         </AccordionItem>
 
-        <AccordionItem value="hasInventory">
+        <AccordionItem value="hasInventory" id="hasInventory" ref={inventoryRef}>
           <AccordionTrigger className="text-black text-2xl font-semibold">
             Listing Inventory
           </AccordionTrigger>
@@ -506,10 +574,10 @@ const FiltersComponent = ({
                 style={{ border: "1px solid black" }}
                 onClick={() => setFilters((prev) => ({
                   ...prev,
-                  hasInventory: "Yes",
+                  hasInventory: prev.hasInventory === "Yes" ? "No" : "Yes",
                 }))}
                 className={`px-[5vw] mt-2 py-2 rounded-md text-xl border 
-                  ${filters.hasInventory ? 'bg-primary text-white' : 'bg-white text-[#444]'} 
+                  ${filters.hasInventory === "Yes" ? 'bg-[#2c83ec] text-white !border !border-transparent' : 'bg-white text-[#444]'} 
                   hover:shadow-md transition-all duration-300 ease-in-out`}
               >
                 Show Only Companies With Inventory ({inventoryCompaniesCount})
