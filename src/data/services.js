@@ -1117,17 +1117,11 @@ export const filterDropdown = [
   { id: "manufacturer", value: "Manufacturer", label: "Manufacturer" },
   { id: "myVendors", value: "My Vendors", label: "My Vendors" },
   { id: "products", value: "Products", label: "Products" },
-  { id: "feedbackRating", value: "Feedback Rating", label: "Feedback Rating" },
-  { id: "shieldMembers", value: "Shield Members", label: "Shield Members" },
+  { id: "rating", value: "Feedback Rating", label: "Feedback Rating" },
   {
-    id: "listingInventory",
+    id: "hasInventory",
     value: "Listing Inventory",
     label: "Listing Inventory",
-  },
-  {
-    id: "membershipLevel",
-    value: "Membership Level",
-    label: "Membership Level",
   },
 ];
 
