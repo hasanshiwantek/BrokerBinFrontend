@@ -78,7 +78,8 @@ export const submitRfq = createAsyncThunk(
       );
 
       console.log("Formdata from backend", response.data);
-      return response.data;
+      console.log("Response Formdata from backend", response);
+      return response;
     } catch (error) {
       console.error(
         "Error submitting RFQ data:",
