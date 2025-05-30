@@ -74,6 +74,9 @@ const RfqReply = () => {
         <div>
           <p><strong>Quote Needed Looking for the best price, availability & lead time.</strong></p>
             <p>--------------</p>
+            <br/>
+            <br/>
+            <br/>
           <p>${initialData.firstName || ""} ${initialData.lastName || ""}</p>
           <p>${initialData?.company?.name || ""}</p>
           <p>${initialData.phoneNumber || ""}</p> 
@@ -629,11 +632,11 @@ const RfqReply = () => {
                     <div>
                       <div className={css.rfqBody_Main_left_addParts_label}>
                         <div>
-                          <label htmlFor="text">part</label>
+                          <label htmlFor="text">Part#</label>
                           <label htmlFor="text">HECI / CLEI</label>
                           <label htmlFor="select">Mfg</label>
                           <label htmlFor="select">Cond</label>
-                          <label htmlFor="number">Qty *</label>
+                          <label htmlFor="number">Qty <span className="text-red-600">*</span></label>
                           <label htmlFor="number">Target Price </label>
                           <label htmlFor="text">Terms</label>
                         </div>
@@ -696,7 +699,7 @@ const RfqReply = () => {
                       </div>
                     </div>
                   </div>
-                  <div className={`${css.rfqBody_Main_left_comments}`} >
+                  <div className={`${css.rfqBody_Main_left_comments}`}>
                     <label htmlFor="" style={{ marginLeft: "50px" }}>
                       Comments
                     </label>
@@ -800,6 +803,9 @@ const RfqReply = () => {
                                   const rfqDetails = selectedRfqs
                                     .map(
                                       (rfq) => `
+                                    <br/>
+                                    <br/>
+                                    <br/>
                                   <p><strong>RFQ initial Details:</strong></p>
                                   <p>Name: ${rfq.from?.firstName || ""} ${
                                         rfq.from?.lastName || ""
@@ -874,6 +880,9 @@ const RfqReply = () => {
                                   const rfqDetails = selectedRfqs
                                     .map(
                                       (rfq) => `
+                                      <br/>
+                                      <br/>
+                                      <br/>
                                       <p><strong>RFQ initial Details:</strong></p>
                                       <p>Name: ${rfq.from?.firstName || ""} ${
                                         rfq.from?.lastName || ""
@@ -909,6 +918,9 @@ const RfqReply = () => {
                                     <p>Partial order quotes are accepted and will be considered.</p>
                                     ${rfqDetails}
                                     <p>--------------</p>
+                                    <br/>
+                                    <br/>
+                                    <br/>
                                     <p>${initialData.firstName || ""} ${
                                     initialData.lastName || ""
                                   }</p>

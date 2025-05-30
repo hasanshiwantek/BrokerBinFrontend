@@ -30,6 +30,9 @@ import SortableTableHeader from "@/components/Tables/SortableHeader";
 import usePagination from "@/components/hooks/usePagination";
 import PaginationControls from "@/components/pagination/PaginationControls";
 import { useSearchParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const RfqTableSent = () => {
   const navigate = useNavigate();
@@ -295,7 +298,7 @@ const RfqTableSent = () => {
 
   const handleForward = () => {
     if (rfqMail.length === 0) {
-      alert("Please select at least one RFQ to forward.");
+      toast.warning("Please select at least one RFQ to forward.");
       return;
     }
 
@@ -309,7 +312,7 @@ const RfqTableSent = () => {
 
   const handleDelete = () => {
     if (rfqMail.length === 0) {
-      alert("Please select at least one RFQ to delete.");
+      toast.warning("Please select at least one RFQ to delete.");
       return;
     }
 
@@ -319,12 +322,12 @@ const RfqTableSent = () => {
     dispatch(deleteArchiveRfq({ token, ids: rfqIdsToDelete }))
       .then(() => {
         console.log("Selected RGQs Deleted");
-        alert("Selected RFQs deleted successfully!");
+        toast.warning("Selected RFQs deleted successfully!");
         dispatch(sentRfq({ token, page: currPage })); // Refresh the data
       })
       .catch((error) => {
         console.error("Error deleting RFQs:", error);
-        alert("Failed to delete RFQs. Please try again.");
+        toast.error("Failed to delete RFQs. Please try again.");
       });
   };
 
@@ -664,6 +667,8 @@ const RfqTableSent = () => {
       {togglePopUpCompany && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUpCompany())} />
       )}
+            <ToastContainer position="top-center" autoClose={2000} />
+      
     </>
   );
 };

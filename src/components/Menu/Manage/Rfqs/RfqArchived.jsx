@@ -157,7 +157,6 @@ const RfqTableSent = () => {
     return item.to?.map((recipient) => recipient.company?.name);
   });
 
-  console.log("Company Names: ", companyData);
 
   console.log("Sent Data Received", sentData);
 
@@ -284,7 +283,7 @@ const RfqTableSent = () => {
 
   const handleReply = () => {
     if (rfqMail.length === 0) {
-      alert("Please select at least one RFQ to reply.");
+      toast.warning("Please select at least one RFQ to reply.");
       return;
     }
 
@@ -293,28 +292,30 @@ const RfqTableSent = () => {
 
   const handleDelete = () => {
     if (rfqMail.length === 0) {
-      alert("Please select at least one RFQ to delete.");
+      toast.warning("Please select at least one RFQ to delete.");
       return;
     }
 
     const rfqIdsToDelete = rfqMail.map((rfq) => rfq.rfqId); // Collect RFQ IDs
     const token = Cookies.get("token"); // Get token
 
-    dispatch(deleteArchiveRfq({ token, ids: rfqIdsToDelete }))
+    const result=dispatch(deleteArchiveRfq({ token, ids: rfqIdsToDelete })).unwrap()
       .then(() => {
+        console.log("Delete RFQ result: ",result);
+        
         console.log("Selected RGQs Deleted");
-        alert("Selected RFQs deleted successfully!");
+        toast.info("Selected RFQs deleted successfully!");
         dispatch(getRfqArchived({ token, page: currPage })); // Refresh the data
       })
       .catch((error) => {
         console.error("Error deleting RFQs:", error);
-        alert("Failed to delete RFQs. Please try again.");
+        toast.error("Failed to delete RFQs. Please try again.");
       });
   };
 
   const handleForward = () => {
     if (rfqMail.length === 0) {
-      alert("Please select at least one RFQ to forward.");
+      toast.warning("Please select at least one RFQ to forward.");
       return;
     }
 
