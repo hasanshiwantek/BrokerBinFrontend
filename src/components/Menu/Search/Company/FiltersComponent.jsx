@@ -44,7 +44,7 @@ const FiltersComponent = ({
       computers: [],
       other: [],
       mobile: [],
-      show: [],
+      // show: [],
       hasInventory: "No",
       feedbackRating: false,
       sortOrder: "asc",
@@ -65,7 +65,6 @@ const FiltersComponent = ({
 
   const handleFilterChange = (e) => {
   const { name, value, checked } = e.target;
-
   if (name === "show") {
     setFilters((prev) => ({
       ...prev,
