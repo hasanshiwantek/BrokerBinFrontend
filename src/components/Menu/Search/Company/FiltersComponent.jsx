@@ -65,7 +65,6 @@ const FiltersComponent = ({
 
   const handleFilterChange = (e) => {
   const { name, value, checked } = e.target;
-
   if (name === "show") {
     setFilters((prev) => ({
       ...prev,
