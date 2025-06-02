@@ -44,7 +44,7 @@ const FiltersComponent = ({
       computers: [],
       other: [],
       mobile: [],
-      show: [],
+      // show: [],
       hasInventory: "No",
       feedbackRating: false,
       sortOrder: "asc",
