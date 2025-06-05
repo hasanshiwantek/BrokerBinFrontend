@@ -734,11 +734,11 @@ const Header = () => {
                 {/* <li>
                   <BsFillTelephonePlusFill />
                 </li> */}
-                {/* <li>
+                <li>
                   <Link to={"/cartpart"}>
                     <BsCartFill />
                   </Link>
-                </li> */}
+                </li>
                 {/* <li >
                   <Link to={"/venprice"}>
                     <BsDatabaseFill />

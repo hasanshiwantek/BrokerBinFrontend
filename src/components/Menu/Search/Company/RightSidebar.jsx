@@ -553,7 +553,6 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
                   onClick={() => handleAddVendor(comp.id)}
                 >
                   <span>
-                    {" "}
                     <img
                       className="w-7 h-7 "
                       src={addVendorIcon}
