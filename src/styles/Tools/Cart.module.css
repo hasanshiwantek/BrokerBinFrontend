@@ -36,7 +36,7 @@ h1 {
         margin: 0 0.5rem;
         background: var(--primary-color);
         padding: 0.5rem;
-        font-size: 1.5rem;
+        font-size: 1.3rem;
       }
     }
   }
@@ -62,7 +62,9 @@ h1 {
         color: red;
         text-align: center;
         background: #ffa6a6ff;
-        padding: 0.5rem;
+        padding: 0.2rem;
+        font-size: 8pt;
+        font-weight: 600;
       }
     }
   }
@@ -71,7 +73,7 @@ h1 {
     flex-direction: column;
     align-items: center;
     &_select {
-      padding: 0.5rem;
+      padding: 0.3rem;
       border: 1px solid black;
     }
   }
@@ -98,7 +100,7 @@ h1 {
     display: flex;
     background: var(--table-bg-color);
     button {
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       color: white;
       background: var(--primary-color);
       padding: 0.5rem;
@@ -115,6 +117,7 @@ h1 {
     }
     select {
       margin-right: 5rem;
+      padding: 4px;
     }
   }
   &_info {
@@ -123,9 +126,38 @@ h1 {
       margin-left: 5rem;
     }
     &_btn {
-      font-size: 1.8rem;
+      font-size: 1.5rem;
       background: transparent;
-      color: violet;
+      color: var(--primary-color);
     }
   }
+}
+
+
+
+
+
+.cartList_key_details span{
+font-size: 8pt;
+}
+
+.cartList_action p,select{
+  font-size: 8pt;
+}
+
+.cartList_parts_scroll table td,th{
+  font-size: 8pt;
+}
+
+.cartLayout_info p,ol li {
+  font-size: 8pt;
+
+}
+
+.cartLayout_info strong{
+  font-size: 9pt;
+  font-weight: 450;
+}
+.cartLayout_info strong span{
+  margin: 2px;
 }

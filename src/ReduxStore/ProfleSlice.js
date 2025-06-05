@@ -420,10 +420,9 @@ export const submitCompanyreturnPolicy = createAsyncThunk(
   }
 );
 
-
 export const submitCompanyPhotos = createAsyncThunk(
-  "profile/submitCompanyPhotos",
-  async ({ token, files, imageUrls}, { rejectWithValue }) => {
+  "profileStore/submitCompanyPhotos",
+  async ({ token, files, imageUrls }, { rejectWithValue }) => {
     try {
       const formData = new FormData();
 
@@ -462,6 +461,33 @@ export const submitCompanyPhotos = createAsyncThunk(
   }
 );
 
+export const createUser = createAsyncThunk(
+  "profileStore/createUser",
+  async ({ formData, token }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`${brokerAPI}user/create`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const responseData = {
+        data: response.data,
+        message: response.data.message || "Account created successfully",
+      };
+
+      console.log("✅ Redux Thunk Response:", responseData);
+      return responseData;
+    } catch (error) {
+      const err =
+        error.response?.data?.message || error.message || "Request failed";
+
+      console.error("❌ Error in createUser thunk:", err);
+      return rejectWithValue(err);
+    }
+  }
+); 
 
 const initialState = {
   user: JSON.parse(localStorage.getItem("user")),

@@ -155,13 +155,11 @@ const CompanyDetails = ({ closeModal }) => {
 
   const ratings = parseFloat(feedbackData?.rating?.averageRating || 5);
 
-
-  
   useEffect(() => {
     const handleClickOutside = (event) => {
       const modal = document.querySelector(`.${css.Popup_Info}`);
       if (modal && !modal.contains(event.target)) {
-        closeModal(); 
+        closeModal();
       }
     };
 
@@ -322,7 +320,7 @@ const CompanyDetails = ({ closeModal }) => {
   return (
     <>
       <div className={css.Popup}>
-        <div className={css.Popup_Info}>
+        <div className={css.Popup_Info} onClick={(e) => e.stopPropagation()}>
           <div className={css.Popup_Info_height}>
             <div className={css.Popup_Info_header}>
               <h1>{companyContactData.data?.company?.name}</h1>
@@ -624,7 +622,11 @@ const CompanyDetails = ({ closeModal }) => {
                     <strong className="font-semibold">
                       Product Categories:
                     </strong>
-                    <p>{companyContactData.data?.company?.categories}</p>
+                    <p className="ml-1">
+                      {companyContactData.data?.company?.categories?.join(
+                        " , "
+                      )}
+                    </p>
                   </div>
                   <div>
                     <strong className="font-semibold">Mfg(s) We Carry:</strong>
