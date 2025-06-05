@@ -15,7 +15,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { IoPersonAdd } from "react-icons/io5";
 import Cookies from "js-cookie";
-const Accordion = ({ groupedData, onSelectionChange }) => {
+
+const Accordion = ({ groupedData, selectedParts, setSelectedParts }) => {
   const theme = createTheme({
     components: {
       MuiTooltip: {
@@ -35,17 +36,24 @@ const Accordion = ({ groupedData, onSelectionChange }) => {
   });
 
   const [activePanel, setActivePanel] = useState([]);
-  const [checkedItems, setCheckedItems] = useState([]);
-
-  console.log("Checked Items: ",checkedItems);
-  
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const togglePanel = (index) => {
     setActivePanel((prev) =>
       prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
     );
   };
+
+  const handleToggle = (item) => {
+  setSelectedParts((prev) =>
+    prev.some((i) => i.id === item.id)
+      ? prev.filter((i) => i.id !== item.id)
+      : [...prev, item]
+  );
+};
+
+  const dispatch = useDispatch();
+  // const navigate = useNavigate();
 
   // const country = groupedData[company][0]?.company_country || "Unknown";
 
@@ -166,11 +174,10 @@ const Accordion = ({ groupedData, onSelectionChange }) => {
                           handleBlockVendor(companyId, effectiveStatus)
                         }
                         className="cursor-pointer"
-                        title={`${
-                          effectiveStatus === 1
+                        title={`${effectiveStatus === 1
                             ? "Unblock Vendor"
                             : "Block Vendor"
-                        }`}
+                          }`}
                       >
                         <FaUserXmark size={18} />
                       </span>
@@ -206,19 +213,8 @@ const Accordion = ({ groupedData, onSelectionChange }) => {
                         <td>
                           <input
                             type="checkbox"
-                            checked={checkedItems.some((i) => i.id === item.id)}
-                            onChange={(e) => {
-                              let updated;
-                              if (e.target.checked) {
-                                updated = [...checkedItems, item];
-                              } else {
-                                updated = checkedItems.filter(
-                                  (i) => i.id !== item.id
-                                );
-                              }
-                              setCheckedItems(updated);
-                              onSelectionChange(updated); // <== MISSING LINE
-                            }}
+                            checked={selectedParts.some((p) => p.id === item.id)}
+                            onChange={() => handleToggle(item)}
                           />
                         </td>
                         <td

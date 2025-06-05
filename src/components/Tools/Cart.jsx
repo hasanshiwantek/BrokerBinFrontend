@@ -4,20 +4,19 @@ import Accordion from "../Accordion";
 import LearnMore from "./LearnMore";
 import { useDispatch, useSelector } from "react-redux";
 import Tick from "../../svgs/Tick";
+import { setSelectedProducts } from "@/ReduxStore/SearchProductSlice";
+import { useNavigate } from "react-router-dom";
+import { setSelectedProductsForCart } from "@/ReduxStore/SearchProductSlice";
 import Note from "../partCart/Note";
 const Cart = () => {
+  const [selectedParts, setSelectedParts] = useState([]);
+
   const selectedProducts = useSelector(
     (state) => state.searchProductStore.selectedProductsForCart
   );
-  const [selectedPartsForNote, setSelectedPartsForNote] = useState([]);
-  const [showNoteModal, setShowNoteModal] = useState(false);
 
-  // const groupedByCompany = selectedProducts.reduce((acc, item) => {
-  // const company = item.companyName || "Unknown Company";
-  // if (!acc[company]) acc[company] = [];
-  // acc[company].push(item);
-  // return acc;
-  // }, {});
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const groupedByCompany = selectedProducts.reduce((acc, item) => {
     const company = item?.addedBy?.company?.name || "Unknown Company";
@@ -26,18 +25,40 @@ const Cart = () => {
     return acc;
   }, {});
 
+  const handleClear = () => {
+    dispatch(setSelectedProductsForCart([]));
+    setSelectedParts([]);
+  };
+
+  const handleRemove = () => {
+    const updated = selectedProducts.filter(
+      (item) => !selectedParts.some((p) => p.id === item.id)
+    );
+    dispatch(setSelectedProductsForCart(updated));
+    setSelectedParts([]);
+  };
+
+  const createRfq = () => {
+    if (!selectedParts.length) {
+      alert("You must select at least one part!");
+      return;
+    }
+    navigate("/rfq/create", { state: { selectedRows: selectedParts } });
+  };
+
   console.log("SelectedCartProduct", selectedProducts);
-  console.log("selectedPartsForNote", selectedPartsForNote);
+  console.log("Selected Parts: ", selectedParts);
+  const [showNoteModal, setShowNoteModal] = useState(false);
 
   return (
-    <>
+    <div>
       <div className={css.mainLayout}>
         <div className={css.cartListLayout}>
           <a href="#">part list</a>
           <a href="#">Saved list(s)</a>
           <div className={css.cartList}>
             <div className={css.cartList_list}>
-              <h1>Part List (110 items listed)</h1>
+              <h1>Part List ({selectedProducts.length} items listed)</h1>
               <span className={css.cartList_list_btn}>
                 <button type="button">PDF</button>
                 <button type="button">save</button>
@@ -144,14 +165,16 @@ const Cart = () => {
         <div className={css.cartLay}>
           <div className={css.cartLayout}>
             <div className={css.cartLayout_options}>
-              <button type="button">remove</button>
-              <button type="button">create RQF</button>
+              <button type="button" onClick={handleRemove}>
+                remove
+              </button>
+              <button type="button" onClick={createRfq}>
+                create RQF
+              </button>
               <button
                 type="button"
-                onClick={() => {
-                  setShowNoteModal(true);
-                }}
-                disabled={selectedPartsForNote.length === 0}
+                onClick={() => setShowNoteModal(true)}
+                disabled={selectedParts.length === 0}
               >
                 add note
               </button>
@@ -169,25 +192,25 @@ const Cart = () => {
               </div>
               <button type="button">PDF</button>
               <button type="button">export</button>
-              <button type="button">clear all</button>
+              <button type="button" onClick={handleClear}>
+                clear all
+              </button>
             </div>
             <Accordion
               groupedData={groupedByCompany}
-              onSelectionChange={setSelectedPartsForNote}
+              selectedParts={selectedParts}
+              setSelectedParts={setSelectedParts}
             />
             <div className={css.cartLayout_options}>
               <button type="button">remove</button>
               <button type="button">create RQF</button>
               <button
                 type="button"
-                onClick={() => {
-                  setShowNoteModal(true);
-                }}
-                disabled={selectedPartsForNote.length === 0}
+                onClick={() => setShowNoteModal(true)}
+                disabled={selectedParts.length === 0}
               >
                 add note
               </button>
-
               <div className={css.cartLayout_filter}>
                 <h1> Sort By:</h1>
                 <select>
@@ -208,13 +231,14 @@ const Cart = () => {
           <LearnMore />
         </div>
       </div>
+
       {showNoteModal && (
         <Note
-          selectedParts={selectedPartsForNote}
+          selectedParts={selectedParts}
           onClose={() => setShowNoteModal(false)}
         />
       )}
-    </>
+    </div>
   );
 };
 
