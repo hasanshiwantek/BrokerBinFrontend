@@ -7,7 +7,7 @@ import { setSelectedProductsForCart } from "@/ReduxStore/SearchProductSlice";
 import MyRFQNew from "../Popups/MyRFQNew";
 
 const ProductTableBtn = React.memo(() => {
-        console.log("Rendered From PrdouctTableDetail...");
+  console.log("Rendered From PrdouctTableDetail...");
     
   const { popUpRfq } = useSelector((store) => store.searchProductStore);
   const selectedProducts = useSelector(state => state.searchProductStore.selectedProducts);

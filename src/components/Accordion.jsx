@@ -1,15 +1,29 @@
 import React, { useState } from "react";
 import css from "../styles/Accordion.module.css";
 import { BiSolidDownArrow } from "react-icons/bi";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-const Accordion = ({ groupedData }) => {
+const Accordion = ({ groupedData, setSelectedParts, selectedParts }) => {
   const [activePanel, setActivePanel] = useState([]);
+  const [selectedIds, setSelectedIds] = useState([]);
 
  const togglePanel = (index) => {
   setActivePanel((prev) =>
     prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
   );
 };
+
+const handleToggle = (item) => {
+  setSelectedParts((prev) =>
+    prev.find((i) => i.id === item.id)
+      ? prev.filter((i) => i.id !== item.id)
+      : [...prev, item]
+  );
+};
+
+const dispatch = useDispatch();
+const navigate = useNavigate();
 
   // const country = groupedData[company][0]?.company_country || "Unknown";
 
@@ -59,7 +73,11 @@ const Accordion = ({ groupedData }) => {
                 {groupedData[company].map((item, i) => (
                   <tr key={i}>
                     <td>
-                      <input type="checkbox" />
+                      <input 
+                      type="checkbox"
+                      checked={selectedParts.some((p) => p.id === item.id)}
+                      onChange={() => handleToggle(item)}
+                      />
                     </td>
                     <td>{item.addedBy.company.name}</td>
                     <td>{item.partModel}</td>
