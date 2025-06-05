@@ -33,9 +33,6 @@ const ProductTableDetail = React.memo(
   }) => {
     console.log("RENDERED PRODUCTTABLEDETAIL")
 
-    
-    
-
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -378,7 +375,6 @@ const ProductTableDetail = React.memo(
       navigate(url, { replace: true });
     };
     
-
     return (
       <div className={css.productTableDetail}>
         <div className={css.tableContainer}>

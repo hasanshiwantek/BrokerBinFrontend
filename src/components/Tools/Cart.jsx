@@ -39,36 +39,40 @@ const Cart = () => {
                 <div>
                   <div>
                     <Tick />
+                    <span>
                     RFQ sent
+                    </span>
                   </div>
                   <span>(0)</span>
                 </div>
                 <div>
                   <div>
                     <Tick />
-                    broadcast sent
+                    <span>
+                    Broadcast Sent
+                    </span>
                   </div>
                   <span>(0)</span>
                 </div>
                 <div>
                   <div>
                     <Tick />
-                    action needed
+                    <span>
+                    Action Needed
+                    </span>
                   </div>
                   <span>(110)</span>
                 </div>
               </div>
               <div className={css.cartList_key_details_pp}>Problem Parts</div>
             </div>
-            <h1>action</h1>
+            <h1>Action</h1>
             <div className={css.cartList_action}>
-              {/* <div> */}
               <p>with selected</p>
               <select className={css.cartList_action_select}>
                 <option value="" defaultValue="Choose an action">
                   Choose an action
                 </option>
-                <option value="newbom">New BOM</option>
                 <option value="partsearch">Part# Search</option>
                 <option value="remove">Remove Selected</option>
                 <option value="onlythese">Remove Non-Selected</option>
@@ -76,7 +80,7 @@ const Cart = () => {
               {/* </div> */}
             </div>
             <div className={css.cartList_parts}>
-              <h1>parts</h1>
+              <h1>Parts</h1>
               <div className={css.cartList_parts_scroll}>
                 <table>
                   <thead>
@@ -97,6 +101,7 @@ const Cart = () => {
                               type="checkbox"
                               name="addToCart"
                               id="addToCart"
+                              className="h-4 w-4"
                               // defaultValue={false}
                             />
 
@@ -115,7 +120,7 @@ const Cart = () => {
                 </table>
               </div>
             </div>
-            <h1>action</h1>
+            <h1>Action</h1>
             <div className={css.cartList_action}>
               {/* <div> */}
               <p>with selected</p>
@@ -123,7 +128,6 @@ const Cart = () => {
                 <option value="" defaultValue="Choose an action">
                   Choose an action
                 </option>
-                <option value="newbom">New BOM</option>
                 <option value="partsearch">Part# Search</option>
                 <option value="remove">Remove Selected</option>
                 <option value="onlythese">Remove Non-Selected</option>
@@ -146,7 +150,6 @@ const Cart = () => {
                     Max Parts
                   </option>
                   <option value="cnt_ASC">Min Parts</option>
-                  <option value="shield">Shield of Quality</option>
                   <option value="bestmatch">** Best Match</option>
                   <option value="maxprice">Highest Price</option>
                   <option value="lowestprice">Lowest Price</option>
@@ -162,13 +165,12 @@ const Cart = () => {
               <button type="button">create RQF</button>
               <button type="button">add note</button>
               <div className={css.cartLayout_filter}>
-                <h1> Filter By:</h1>
+                <h1> Sort By:</h1>
                 <select>
                   <option value="cnt_DESC" defaultValue="Max Parts">
                     Max Parts
                   </option>
                   <option value="cnt_ASC">Min Parts</option>
-                  <option value="shield">Shield of Quality</option>
                   <option value="bestmatch">** Best Match</option>
                   <option value="maxprice">Highest Price</option>
                   <option value="lowestprice">Lowest Price</option>

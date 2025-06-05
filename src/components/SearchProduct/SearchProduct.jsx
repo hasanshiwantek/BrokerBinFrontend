@@ -168,6 +168,7 @@ const SearchProduct = () => {
       break; // Stop after finding the first 'price' key
     }
   }
+  
   console.log("Key:", priceKey);
   const sortPage = 1;
   const sortPageSize = 20;

@@ -197,20 +197,16 @@ const Home = () => {
                   <div className={`${css.manageDropdown} ${css.mgDrop}`}>
                     <ul>
                       <Link to={"/inventory"}>
-                        {" "}
                         <li>Inventory</li>
                       </Link>
                       <Link to={"/rfq"}>
-                        {" "}
                         <li>My RFQs</li>
                       </Link>
                       {/* <Link> <li>My BOM</li></Link> */}
                       <Link to={"/myprofile"}>
-                        {" "}
                         <li>My Profile</li>
                       </Link>
                       <Link to={"/mycompany"}>
-                        {" "}
                         <li>My Company</li>
                       </Link>
                       {/* <Link to={"/manage/my-services"}> <li>My Services</li></Link> */}
