@@ -45,12 +45,12 @@ const Accordion = ({ groupedData, selectedParts, setSelectedParts }) => {
   };
 
   const handleToggle = (item) => {
-  setSelectedParts((prev) =>
-    prev.some((i) => i.id === item.id)
-      ? prev.filter((i) => i.id !== item.id)
-      : [...prev, item]
-  );
-};
+    setSelectedParts((prev) =>
+      prev.some((i) => i.id === item.id)
+        ? prev.filter((i) => i.id !== item.id)
+        : [...prev, item]
+    );
+  };
 
   const dispatch = useDispatch();
   // const navigate = useNavigate();
@@ -162,25 +162,43 @@ const Accordion = ({ groupedData, selectedParts, setSelectedParts }) => {
                       aria-expanded={activePanel.includes(index)}
                     />
                     <div className="flex items-center gap-4">
-                      <span
-                        onClick={() => handleAddVendor(companyId)}
-                        className="cursor-pointer"
-                        title="Add Vendor"
-                      >
-                        <IoPersonAdd size={18} />
-                      </span>
-                      <span
-                        onClick={() =>
-                          handleBlockVendor(companyId, effectiveStatus)
-                        }
-                        className="cursor-pointer"
-                        title={`${effectiveStatus === 1
-                            ? "Unblock Vendor"
-                            : "Block Vendor"
-                          }`}
-                      >
-                        <FaUserXmark size={18} />
-                      </span>
+                      <ThemeProvider theme={theme}>
+                        <Tooltip title="Add to MyVendors" arrow>
+                          <span
+                            onClick={() => handleAddVendor(companyId)}
+                            className="cursor-pointer"
+                            title="Add Vendor"
+                          >
+                            <IoPersonAdd size={18} />
+                          </span>
+                        </Tooltip>
+                      </ThemeProvider>
+                      <ThemeProvider theme={theme}>
+                        <Tooltip
+                          title={
+                            effectiveStatus === 1
+                              ? "Unblock Vendor"
+                              : "Block this vendor from viewing my inventory"
+                          }
+                          arrow
+                        >
+                          <span
+                            onClick={() =>
+                              handleBlockVendor(companyId, effectiveStatus)
+                            }
+                            className="cursor-pointer"
+                          >
+                            {effectiveStatus === 1 ? (
+                              <FaUserCheck
+                                size={18}
+                                className
+                              />
+                            ) : (
+                              <FaUserXmark size={18}  />
+                            )}
+                          </span>
+                        </Tooltip>
+                      </ThemeProvider>
                     </div>
                   </button>
                 </h2>
@@ -213,7 +231,9 @@ const Accordion = ({ groupedData, selectedParts, setSelectedParts }) => {
                         <td>
                           <input
                             type="checkbox"
-                            checked={selectedParts.some((p) => p.id === item.id)}
+                            checked={selectedParts.some(
+                              (p) => p.id === item.id
+                            )}
                             onChange={() => handleToggle(item)}
                           />
                         </td>
