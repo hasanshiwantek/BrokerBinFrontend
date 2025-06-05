@@ -16,7 +16,7 @@ import { ToastContainer } from "react-toastify";
 import { IoPersonAdd } from "react-icons/io5";
 import Cookies from "js-cookie";
 
-const Accordion = ({ groupedData }) => {
+const Accordion = ({ groupedData, selectedParts, setSelectedParts }) => {
   const theme = createTheme({
     components: {
       MuiTooltip: {
@@ -44,16 +44,16 @@ const Accordion = ({ groupedData }) => {
     );
   };
 
-const handleToggle = (item) => {
+  const handleToggle = (item) => {
   setSelectedParts((prev) =>
-    prev.find((i) => i.id === item.id)
+    prev.some((i) => i.id === item.id)
       ? prev.filter((i) => i.id !== item.id)
       : [...prev, item]
   );
 };
 
-const dispatch = useDispatch();
-// const navigate = useNavigate();
+  const dispatch = useDispatch();
+  // const navigate = useNavigate();
 
   // const country = groupedData[company][0]?.company_country || "Unknown";
 
@@ -174,11 +174,10 @@ const dispatch = useDispatch();
                           handleBlockVendor(companyId, effectiveStatus)
                         }
                         className="cursor-pointer"
-                        title={`${
-                          effectiveStatus === 1
+                        title={`${effectiveStatus === 1
                             ? "Unblock Vendor"
                             : "Block Vendor"
-                        }`}
+                          }`}
                       >
                         <FaUserXmark size={18} />
                       </span>
@@ -212,7 +211,11 @@ const dispatch = useDispatch();
                     {groupedData[company].map((item, i) => (
                       <tr key={i}>
                         <td>
-                          <input type="checkbox" />
+                          <input
+                            type="checkbox"
+                            checked={selectedParts.some((p) => p.id === item.id)}
+                            onChange={() => handleToggle(item)}
+                          />
                         </td>
                         <td
                           className="cursor-pointer"
