@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState} from "react";
 import css from "../styles/Accordion.module.css";
 import { BiSolidDownArrow } from "react-icons/bi";
 import { setTogglePopUp } from "@/ReduxStore/SearchProductSlice";
@@ -16,7 +16,7 @@ import { ToastContainer } from "react-toastify";
 import { IoPersonAdd } from "react-icons/io5";
 import Cookies from "js-cookie";
 
-const Accordion = ({ groupedData, selectedParts, setSelectedParts }) => {
+const Accordion = ({ groupedData, selectedParts, setSelectedParts, pdfRef }) => {
   const theme = createTheme({
     components: {
       MuiTooltip: {
@@ -121,7 +121,7 @@ const Accordion = ({ groupedData, selectedParts, setSelectedParts }) => {
         style: { fontSize: "16px" },
       });
     }
-  };
+    };
 
   return (
     <>
@@ -141,7 +141,7 @@ const Accordion = ({ groupedData, selectedParts, setSelectedParts }) => {
 
           return (
             <div className={css.accordionPanel} key={index}>
-              <div>
+              <div ref={pdfRef}>
                 <h2 id={`panel${index + 1}-title`}>
                   <button
                     className={css.accordionTrigger}
