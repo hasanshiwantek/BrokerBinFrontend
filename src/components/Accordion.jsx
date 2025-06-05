@@ -11,6 +11,8 @@ const Accordion = ({ groupedData }) => {
   );
 };
 
+  // const country = groupedData[company][0]?.company_country || "Unknown";
+
   const companies = Object.keys(groupedData);
 
   return (
@@ -23,7 +25,8 @@ const Accordion = ({ groupedData }) => {
               aria-controls={`panel${index + 1}-content`}
               onClick={() => togglePanel(index)}
             >
-              {company}
+              {`${groupedData[company].length} parts with ${groupedData[company].length} results - ${groupedData[company][0]?.company_country} - ${company}`}
+
               <BiSolidDownArrow
                 className={css.accordionBtnToggle}
                 aria-expanded={activePanel.includes(index)}
