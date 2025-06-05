@@ -2,17 +2,32 @@ import React, { useState } from "react";
 import css from "../../styles/Tools/Cart.module.css";
 import Accordion from "../Accordion";
 import LearnMore from "./LearnMore";
-import {
-  organizedByCountry,
-  organizedByCountryAndCompany,
-  panels,
-  partList,
-} from "../../data/tableData";
+import { useDispatch, useSelector } from "react-redux";
 import Tick from "../../svgs/Tick";
 
 const Cart = () => {
+
+  const selectedProducts = useSelector((state) => state.searchProductStore.selectedProductsForCart);
+
+  // const groupedByCompany = selectedProducts.reduce((acc, item) => {
+  // const company = item.companyName || "Unknown Company";
+  // if (!acc[company]) acc[company] = [];
+  // acc[company].push(item);
+  // return acc;
+  // }, {});
+
+  const groupedByCompany = selectedProducts.reduce((acc, item) => {
+  const company = item?.addedBy?.company?.name || "Unknown Company";
+  if (!acc[company]) acc[company] = [];
+  acc[company].push(item);
+  return acc;
+}, {});
+
+
+  console.log("SelectedCartProduct", selectedProducts);
+  
   return (
-    <>
+    
       <div className={css.mainLayout}>
         <div className={css.cartListLayout}>
           <a href="#">part list</a>
@@ -85,7 +100,7 @@ const Cart = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {partList.map((e, i) => {
+                    {selectedProducts.map((e, i) => {
                       return (
                         <tr className="tableData" key={i}>
                           <td>
@@ -97,7 +112,7 @@ const Cart = () => {
                               // defaultValue={false}
                             />
 
-                            {e.model}
+                            {e.partModel}
                           </td>
 
                           <td>{e.mfg}</td>
@@ -151,12 +166,7 @@ const Cart = () => {
               <button type="button">export</button>
               <button type="button">clear all</button>
             </div>
-            <Accordion
-              panels={panels}
-              partList={partList}
-              organizedByCountry={organizedByCountry}
-              organizedByCountryAndCompany={organizedByCountryAndCompany}
-            />
+            <Accordion groupedData={groupedByCompany} />
             <div className={css.cartLayout_options}>
               <button type="button">remove</button>
               <button type="button">create RQF</button>
@@ -181,7 +191,6 @@ const Cart = () => {
           <LearnMore />
         </div>
       </div>
-    </>
   );
 };
 

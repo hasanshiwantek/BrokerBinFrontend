@@ -71,7 +71,6 @@ const Badges = () => {
   }, [initialData.id, token]);
 
   return (
-    <>
       <main>
         <nav className="menu-bar">
           <div className={css.profileInfo_links}>
@@ -324,7 +323,6 @@ const Badges = () => {
           </div>
         </div>
       </main>
-    </>
   );
 };
 

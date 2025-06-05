@@ -20,6 +20,7 @@ import CompanyDetails from "../../Popups/CompanyDetails/CompanyDetails";
 import { setPopupCompanyDetail } from "../../../ReduxStore/SearchProductSlice";
 import { useLocation } from "react-router-dom";
 import FeedbackModal from "@/components/Popups/FeedBackModal";
+import { toggleButtonClasses } from "@mui/material";
 const FeedBackRating = () => {
   const location = useLocation();
   const companyId = location.state?.companyId;
@@ -136,7 +137,6 @@ const FeedBackRating = () => {
             <span>{initialData?.company?.name}</span>
           </h2>
         </div>
-
         <div className={styles.feedbackRatingSection}>
           <h3>
             Feedback Rating: <br /> <span>{companyRatingsPer}% </span>

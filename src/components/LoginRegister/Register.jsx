@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import css from "../../styles/LoginRegister/Register.module.css";
-import { useNavigate } from "react-router-dom";
 import brokerLogo from "../../imgs/logo/BrokerCell Logo.svg";
-import { FaFacebookF, FaGooglePlusG, FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { countriesList, statesList } from "@/data/services";
@@ -16,7 +15,6 @@ const Register = () => {
     },
   });
 
-  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false); // 🔹 Loading state for button
   const [isPlainInput, setIsPlainInput] = useState(false);
   const [formPassword, setFormPassword] = useState({
@@ -98,7 +96,6 @@ const Register = () => {
     return isValid;
   };
 
-
   const handleRegister = async (e) => {
     setShowModal(true);
     if (validate()) {
@@ -165,7 +162,7 @@ const Register = () => {
   const arrow = "<"
 
   return responseOk ? (
-    <>
+    <div>
       <div className={css.responseOk}>
         {/* Modal inside conditional statement */}
         {showModal && (
@@ -178,7 +175,7 @@ const Register = () => {
           </div>
         )}
       </div>
-    </>
+    </div>
   ) : (
     <div className={css.body}>
       <div className={css.layout}>

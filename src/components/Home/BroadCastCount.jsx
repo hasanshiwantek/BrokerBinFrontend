@@ -28,6 +28,7 @@ const BroadcastCount = ({ setBroadcastData }) => {
           setLoading(false);
         })
         .catch(() => {
+          console.error("Broadcast fetch failed:", err);
           setLoading(false);
         });
     }

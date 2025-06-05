@@ -1,49 +1,33 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import css from "../../styles/Home/Home.module.css";
 import person from "../../imgs/logo/shadow.png";
-import spares from "../../imgs/logo/spares.png";
-import { MdContactPage, MdHandshake, MdManageAccounts } from "react-icons/md";
-import { BsStarFill } from "react-icons/bs";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import ToggleStats from "./ToggleStats";
 import HoverPieChart from "./HoverPieChart";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserData } from "../../ReduxStore/ProfleSlice";
 import LoadingState from "../../LoadingState";
-import ErrorStatus from "../Error/ErrorStatus";
 import Cookies from "js-cookie";
-import {
-  searchProductHistory,
-  searchProductQuery,
-  setSelectedProducts,
-} from "../../ReduxStore/SearchProductSlice";
+import { setSelectedProducts } from "../../ReduxStore/SearchProductSlice";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { fetchBroadCastCount } from "../../ReduxStore/BroadCast";
 import { setTogglePopUp } from "../../ReduxStore/SearchProductSlice";
 import CompanyDetails from "../Popups/CompanyDetails/CompanyDetails";
 import { setPopupCompanyDetail } from "../../ReduxStore/SearchProductSlice";
-import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import {
-  FaStar,
-  FaStarHalfAlt,
-  FaRegStar,
-  FaAddressBook,
-  FaHandshake,
-} from "react-icons/fa";
+import { FaStar, FaStarHalfAlt, FaRegStar, FaAddressBook, FaHandshake } from "react-icons/fa";
 
 const Home = () => {
   const token = Cookies.get("token");
   const user_id = Cookies.get("user_id");
   const navigate = useNavigate();
-  const { blurWhileLoading, initialData, user, error } = useSelector(
+  const { blurWhileLoading, initialData, user } = useSelector(
     (state) => state.profileStore
   );
 
   console.log("Initial Data ", initialData);
-  const { page, pageSize } = useSelector((store) => store.searchProductStore);
   const { broadcastCount, loading } = useSelector(
     (state) => state.broadcastStore
   );
@@ -62,56 +46,14 @@ const Home = () => {
   }, []);
 
   const bomFileRef = useRef(null);
-  // <----------------------------------------------------- Access uploaded file name ------------------------------------------------------->
+  
   const handleFileChange = (e) => {
     console.log(e.target.files[0].name);
   };
   const handleBOMButtonClick = (e) => {
     bomFileRef.current.click();
   };
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  // if (error) {
-  //   return <ErrorStatus error={error} />;
-  // }
-
-  // const searchProduct = (event) => {
-  //   event.preventDefault();
-
-  //   const form = new FormData(event.target);
-  //   const formData = Object.fromEntries(form.entries());
-
-  //   let searchString = formData.searchStrings.trim(); // User's search input
-  //   const searchBy = formData.searchBy; // Selected search type (part, heciClei, keyword)
-
-  //   if (!searchString) {
-  //     alert("Blank search is not allowed");
-  //     return;
-  //   }
-
-  //   // Replace spaces with commas
-  //   searchString = searchString.replace(/\s+/g, ",");
-
-  //   // Build the correct URL based on searchBy
-  //   let url = '/inventory/search?page=1';
-  //   if (searchBy === 'part' || searchBy === 'heciClei') {
-  //     // Use `query` for 'Part#' and 'HECI / CLEI'
-  //     url += `&query=${encodeURIComponent(searchString)}`;
-  //   } else if (searchBy === 'keyword') {
-  //     // Use `partModel` for 'Keyword'
-  //     url += `&partModel=${encodeURIComponent(searchString)}`;
-  //   }
-
-  //   // Clear selected products before navigating
-  //   dispatch(setSelectedProducts([]));
-
-  //   // Navigate to the SearchProduct page with the constructed URL
-  //   navigate(url, { replace: true });
-
-  //   console.log("Navigated to URL:", url); // Debug log to verify the URL
-  // };
-
-  // State for search input and selected searchBy option
+ 
   const [searchString, setSearchString] = useState("");
   const [searchBy, setSearchBy] = useState("part"); // Default: "Part#"
 
@@ -238,7 +180,7 @@ const Home = () => {
   };
 
   return (
-    <>
+    <div>
       {!blurWhileLoading ? (
         <LoadingState />
       ) : (
@@ -315,34 +257,6 @@ const Home = () => {
 
                 <div className={css.gridHome1_MemberDetail_list}>
                   <ul>
-                    {/* <li className={css.gridHome1_MemberDetail_list_options}>
-                      <a href="#">MYH</a>
-                      <ul>
-                        <li className={css.gridHome1_MemberDetail_list_numbers}>
-                          <a href="#">
-                            {(11)
-                              .toLocaleString("en-US")
-                              .toString()
-                              .padStart(2, "0")}
-                            /
-                          </a>
-                          <a href="#">
-                            {(25)
-                              .toLocaleString("en-US")
-                              .toString()
-                              .padStart(2, "0")}
-                            /
-                          </a>
-                          <a href="#">
-                            {(7)
-                              .toLocaleString("en-US")
-                              .toString()
-                              .padStart(2, "0")}
-                          </a>
-                        </li>
-                      </ul>
-                    </li> */}
-
                     <li className={css.gridHome1_MemberDetail_list_options}>
                       <a href="/rfq">RFQ</a>
                       <ul>
@@ -434,33 +348,6 @@ const Home = () => {
                         </li>
                       </ul>
                     </li>
-
-                    {/* <li className={css.gridHome1_MemberDetail_list_options}>
-                      <Link to="/feedback">my contacts</Link>
-                      <ul>
-                        <li className={css.gridHome1_MemberDetail_list_numbers}>
-                          <a href="#">
-                            {(51)
-                              .toLocaleString("en-US")
-                              .toString()
-                              .padStart(2, "0")}
-                          </a>
-                        </li>
-                      </ul>
-                    </li>
-                    <li className={css.gridHome1_MemberDetail_list_options}>
-                      <Link to="/myprofile/MyVendors">my vendors</Link>
-                      <ul>
-                        <li className={css.gridHome1_MemberDetail_list_numbers}>
-                          <a href="#">
-                            {(6)
-                              .toLocaleString("en-US")
-                              .toString()
-                              .padStart(2, "0")}
-                          </a>
-                        </li>
-                      </ul>
-                    </li> */}
                     <li className={css.gridHome1_MemberDetail_list_options}>
                       <Link to="/hotlist/view">Hot List</Link>
                       <ul>
@@ -527,21 +414,6 @@ const Home = () => {
                       {companyRatingsPer}%
                     </li>
                   </div>
-
-                  {/* <div className={css.gridHome1_MemberDetail_reviews_watchList}>
-                    <a href="#">
-                      Watch List Companies{" "}
-                      <span className={css.newW}>
-                        (
-                        {(3)
-                          .toLocaleString("en-US")
-                          .toString()
-                          .padStart(2, "0")}{" "}
-                        New)
-                      </span>
-                    </a>
-                  </div> */}
-                  {/* </div> */}
                   <div className={css.gridHome1_MemberDetail_comments}>
                     <li
                       // to={"/feedbackprofile"}
@@ -555,57 +427,12 @@ const Home = () => {
                     >
                       Comments <span>{ratingCount}</span>
                     </li>
-
-                    {/* <a href="#" className={css.newW}>
-                      New
-                      <span>
-                        {(0)
-                          .toLocaleString("en-US")
-                          .toString()
-                          .padStart(2, "0")}
-                      </span>
-                    </a>
-                    <a href="#">
-                      Who's New:{" "}
-                      <span>
-                        {(43)
-                          .toLocaleString("en-US")
-                          .toString()
-                          .padStart(2, "0")}
-                      </span>
-                    </a> */}
                   </div>
                 </div>
               </div>
             </div>
             <div className={css.gridHome2}>
               <div className={css.gridHome2_Bar}>
-                {/* <div >
-                  <MdMail />
-                  <p>manage</p>
-                  <BiDotsHorizontalRounded />
-                </div> */}
-
-                {/* <div className={`mailSection ${css.mailSection}`}>
-                  <MdManageAccounts />
-                  <p>Manage</p>
-                  <div style={{ color: "var(--primary-color)" }}>
-                    <BiDotsHorizontalRounded />
-                  </div>
-                  <div className={`${css.manageDropdown} ${css.mgDrop}`}>
-                    <ul>
-                      <Link to={"/inventory"}> <li>Inventory</li></Link>
-                      <Link to={"/rfq"}> <li>My RFQs</li></Link>
-                       <Link> <li>My BOM</li></Link>
-                      <Link to={"/myprofile"}> <li>My Profile</li></Link>
-                      <Link to={"/mycompany"}> <li>My Company</li></Link>
-                       <Link to={"/manage/my-services"}> <li>My Services</li></Link>
-                      <Link to={"/venprice"}> <li>Vendor Pricing</li></Link>
-
-                    </ul>
-                  </div>
-                </div> */}
-
                 <div className={`mailSection ${css.mailSection}`}>
                   <FaHandshake />
                   <Link to={"/safe_trading"}>
@@ -690,26 +517,6 @@ const Home = () => {
                         </div>
                       </form>
                     </div>
-                    {/* <div className={css.gridHome2_Details_Upper_Right_Bom}>
-                      <div>
-                        <h3>BOM Utility</h3>
-                        <p>(Bill of Materials)</p>
-                      </div>
-                      <div>
-                        <input
-                          type="file"
-                          name="bomFile"
-                          id="uploadBomFile"
-                          hidden
-                          ref={bomFileRef}
-                          onChange={handleFileChange}
-                        />
-                        <button type="file" onClick={handleBOMButtonClick}>
-                          LOAD BOM FILE
-                        </button>
-                        <a href="#">Load test file .xls</a>
-                      </div>
-                    </div> */}
                   </div>
                 </div>
                 <div className={css.gridHome2_Details_Bottom}>
@@ -729,7 +536,7 @@ const Home = () => {
       {togglePopUp && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
-    </>
+    </div>
   );
 };
 

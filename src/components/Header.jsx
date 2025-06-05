@@ -181,7 +181,6 @@ const Header = () => {
   };
 
   return (
-    <>
     <div className="h-[9rem]">
 
         <div className={`${css.headerFixed} ${css.noPrint}`}>
@@ -839,8 +838,6 @@ const Header = () => {
           </nav>
         </div>
     </div>
-
-    </>
   );
 };
 

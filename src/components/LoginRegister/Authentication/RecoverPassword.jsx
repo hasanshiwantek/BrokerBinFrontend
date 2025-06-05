@@ -1,13 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import css from "../../../styles/LoginRegister/Login.module.css";
-import { FaFacebookF, FaGooglePlusG, FaEye, FaEyeSlash } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
-import Cookies from "js-cookie";
-import { useDispatch } from "react-redux";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import brokerLogo from "../../../imgs/logo/BrokerCell Logo.svg";
 import { NavLink } from "react-router-dom";
-import { IoIosArrowBack } from "react-icons/io";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
@@ -16,19 +12,15 @@ import { brokerAPI } from "@/components/api/BrokerEndpoint";
 
 const RecoverPassword = () => {
 
-
     const [passwordShown, setPasswordShown] = useState({
         newPassword: false,
         confirmPassword: false
     });
 
     const [errorMessage, setErrorMessage] = useState("");
-    const [forgotPassword, setForgotPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
-    const popUpRef = useRef();
-    const dispatch = useDispatch();
 
     const togglePasswordVisibility = (field) => {
         setPasswordShown(prevState => ({

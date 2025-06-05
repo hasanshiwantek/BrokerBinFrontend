@@ -303,6 +303,7 @@ const initialState = {
   popupCompanyDetail: [],
   hoverCompanyDetail: [],
   selectedProducts: [],
+  selectedProductsForCart: [],
   searchHistory: [],
   companyContactData: [],
   filteredSearchResponse: {},
@@ -396,6 +397,10 @@ const searchProductSlice = createSlice({
     setSearchPartType: (state, action) => {
       state.searchType = action.payload;
     },
+    setSelectedProductsForCart: (state, action) => {
+    state.selectedProductsForCart = action.payload;
+    },
+
   },
   extraReducers: (builder) => {
     builder
@@ -595,6 +600,7 @@ export const {
   clearSearchResponseMatched,
   setAppliedFilters,
   setSearchPartType,
+  setSelectedProductsForCart,
 } = searchProductSlice.actions;
 
 export default searchProductSlice.reducer;

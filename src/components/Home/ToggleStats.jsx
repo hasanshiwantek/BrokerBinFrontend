@@ -36,7 +36,6 @@ const ToggleStats = ({ data }) => {
   };
 
 
-
   return (
     <div className={css.gridHome2_Details_Bottom_Stats}>
       <div className={css.gridHome2_Details_Bottom_Stats_toggle}>
