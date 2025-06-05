@@ -3,9 +3,13 @@ import css from "../styles/Accordion.module.css";
 import { BiSolidDownArrow } from "react-icons/bi";
 
 const Accordion = ({ groupedData }) => {
-  const [activePanel, setActivePanel] = useState(null);
-  const togglePanel = (index) =>
-    setActivePanel(activePanel === index ? null : index);
+  const [activePanel, setActivePanel] = useState([]);
+
+ const togglePanel = (index) => {
+  setActivePanel((prev) =>
+    prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
+  );
+};
 
   const companies = Object.keys(groupedData);
 
@@ -22,7 +26,7 @@ const Accordion = ({ groupedData }) => {
               {company}
               <BiSolidDownArrow
                 className={css.accordionBtnToggle}
-                aria-expanded={activePanel === index}
+                aria-expanded={activePanel.includes(index)}
               />
             </button>
           </h2>
@@ -30,15 +34,17 @@ const Accordion = ({ groupedData }) => {
             className={css.accordionContent}
             role="region"
             aria-labelledby={`panel${index + 1}-title`}
-            aria-hidden={activePanel !== index}
+            aria-hidden={!activePanel.includes(index)}
             id={`panel${index + 1}-content`}
           >
             <table>
               <thead>
                 <tr>
                   <th>cart</th>
+                  <th>Company</th>
                   <th>part#</th>
-                  <th>mfg</th>
+                  <th>HECI/CLEI</th>
+                  <th>Mfg</th>
                   <th>cond</th>
                   <th>price</th>
                   <th>qty</th>
@@ -52,13 +58,15 @@ const Accordion = ({ groupedData }) => {
                     <td>
                       <input type="checkbox" />
                     </td>
+                    <td>{item.addedBy.company.name}</td>
                     <td>{item.partModel}</td>
+                    <td>{item.heciClei}</td>
                     <td>{item.mfg}</td>
                     <td>{item.cond}</td>
-                    {/* <td>{item.price?.toFixed(2)}</td> */}
+                    <td>{item.price}</td>
                     <td>{item.quantity}</td>
                     <td>{item.age}</td>
-                    <td>{item.description}</td>
+                    <td>{item.productDescription}</td>
                   </tr>
                 ))}
               </tbody>
@@ -69,6 +77,5 @@ const Accordion = ({ groupedData }) => {
     </div>
   );
 };
-
 
 export default Accordion;

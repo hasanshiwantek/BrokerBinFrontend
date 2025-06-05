@@ -9,12 +9,19 @@ const Cart = () => {
 
   const selectedProducts = useSelector((state) => state.searchProductStore.selectedProductsForCart);
 
+  // const groupedByCompany = selectedProducts.reduce((acc, item) => {
+  // const company = item.companyName || "Unknown Company";
+  // if (!acc[company]) acc[company] = [];
+  // acc[company].push(item);
+  // return acc;
+  // }, {});
+
   const groupedByCompany = selectedProducts.reduce((acc, item) => {
-  const company = item.companyName || "Unknown Company";
+  const company = item?.addedBy?.company?.name || "Unknown Company";
   if (!acc[company]) acc[company] = [];
   acc[company].push(item);
   return acc;
-  }, {});
+}, {});
 
 
   console.log("SelectedCartProduct", selectedProducts);
