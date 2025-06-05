@@ -244,6 +244,7 @@ const Accordion = ({ groupedData, selectedParts, setSelectedParts, pdfRef }) => 
       {togglePopUp && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
+
       <ToastContainer position="top-center" autoClose={2000} />
     </>
   );
