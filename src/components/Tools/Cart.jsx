@@ -4,10 +4,13 @@ import Accordion from "../Accordion";
 import LearnMore from "./LearnMore";
 import { useDispatch, useSelector } from "react-redux";
 import Tick from "../../svgs/Tick";
-
+import Note from "../partCart/Note";
 const Cart = () => {
-
-  const selectedProducts = useSelector((state) => state.searchProductStore.selectedProductsForCart);
+  const selectedProducts = useSelector(
+    (state) => state.searchProductStore.selectedProductsForCart
+  );
+  const [selectedPartsForNote, setSelectedPartsForNote] = useState([]);
+  const [showNoteModal, setShowNoteModal] = useState(false);
 
   // const groupedByCompany = selectedProducts.reduce((acc, item) => {
   // const company = item.companyName || "Unknown Company";
@@ -17,17 +20,17 @@ const Cart = () => {
   // }, {});
 
   const groupedByCompany = selectedProducts.reduce((acc, item) => {
-  const company = item?.addedBy?.company?.name || "Unknown Company";
-  if (!acc[company]) acc[company] = [];
-  acc[company].push(item);
-  return acc;
-}, {});
-
+    const company = item?.addedBy?.company?.name || "Unknown Company";
+    if (!acc[company]) acc[company] = [];
+    acc[company].push(item);
+    return acc;
+  }, {});
 
   console.log("SelectedCartProduct", selectedProducts);
-  
+  console.log("selectedPartsForNote", selectedPartsForNote);
+
   return (
-    
+    <>
       <div className={css.mainLayout}>
         <div className={css.cartListLayout}>
           <a href="#">part list</a>
@@ -46,27 +49,21 @@ const Cart = () => {
                 <div>
                   <div>
                     <Tick />
-                    <span>
-                    RFQ sent
-                    </span>
+                    <span>RFQ sent</span>
                   </div>
                   <span>(0)</span>
                 </div>
                 <div>
                   <div>
                     <Tick />
-                    <span>
-                    Broadcast Sent
-                    </span>
+                    <span>Broadcast Sent</span>
                   </div>
                   <span>(0)</span>
                 </div>
                 <div>
                   <div>
                     <Tick />
-                    <span>
-                    Action Needed
-                    </span>
+                    <span>Action Needed</span>
                   </div>
                   <span>(110)</span>
                 </div>
@@ -149,7 +146,15 @@ const Cart = () => {
             <div className={css.cartLayout_options}>
               <button type="button">remove</button>
               <button type="button">create RQF</button>
-              <button type="button">add note</button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowNoteModal(true);
+                }}
+                disabled={selectedPartsForNote.length === 0}
+              >
+                add note
+              </button>
               <div className={css.cartLayout_filter}>
                 <h1> Filter By:</h1>
                 <select>
@@ -166,11 +171,23 @@ const Cart = () => {
               <button type="button">export</button>
               <button type="button">clear all</button>
             </div>
-            <Accordion groupedData={groupedByCompany} />
+            <Accordion
+              groupedData={groupedByCompany}
+              onSelectionChange={setSelectedPartsForNote}
+            />
             <div className={css.cartLayout_options}>
               <button type="button">remove</button>
               <button type="button">create RQF</button>
-              <button type="button">add note</button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowNoteModal(true);
+                }}
+                disabled={selectedPartsForNote.length === 0}
+              >
+                add note
+              </button>
+
               <div className={css.cartLayout_filter}>
                 <h1> Sort By:</h1>
                 <select>
@@ -191,6 +208,13 @@ const Cart = () => {
           <LearnMore />
         </div>
       </div>
+      {showNoteModal && (
+        <Note
+          selectedParts={selectedPartsForNote}
+          onClose={() => setShowNoteModal(false)}
+        />
+      )}
+    </>
   );
 };
 

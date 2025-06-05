@@ -15,7 +15,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { IoPersonAdd } from "react-icons/io5";
 import Cookies from "js-cookie";
-const Accordion = ({ groupedData }) => {
+const Accordion = ({ groupedData, onSelectionChange }) => {
   const theme = createTheme({
     components: {
       MuiTooltip: {
@@ -35,6 +35,10 @@ const Accordion = ({ groupedData }) => {
   });
 
   const [activePanel, setActivePanel] = useState([]);
+  const [checkedItems, setCheckedItems] = useState([]);
+
+  console.log("Checked Items: ",checkedItems);
+  
   const dispatch = useDispatch();
 
   const togglePanel = (index) => {
@@ -200,7 +204,22 @@ const Accordion = ({ groupedData }) => {
                     {groupedData[company].map((item, i) => (
                       <tr key={i}>
                         <td>
-                          <input type="checkbox" />
+                          <input
+                            type="checkbox"
+                            checked={checkedItems.some((i) => i.id === item.id)}
+                            onChange={(e) => {
+                              let updated;
+                              if (e.target.checked) {
+                                updated = [...checkedItems, item];
+                              } else {
+                                updated = checkedItems.filter(
+                                  (i) => i.id !== item.id
+                                );
+                              }
+                              setCheckedItems(updated);
+                              onSelectionChange(updated); // <== MISSING LINE
+                            }}
+                          />
                         </td>
                         <td
                           className="cursor-pointer"
@@ -229,6 +248,7 @@ const Accordion = ({ groupedData }) => {
       {togglePopUp && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
+
       <ToastContainer position="top-center" autoClose={2000} />
     </>
   );
