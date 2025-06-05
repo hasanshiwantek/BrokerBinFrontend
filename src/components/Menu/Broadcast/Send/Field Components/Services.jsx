@@ -3,7 +3,7 @@ import css from "../Send.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { setServiceSelection } from "../../../../../ReduxStore/BroadCast";
 
-const Services = ({handleServiceChange}) => {
+const Services = ({ handleServiceChange }) => {
     const [isExpanded, setIsExpanded] = useState(false); // State to track visibility
 
     const services = [
@@ -74,19 +74,16 @@ const Services = ({handleServiceChange}) => {
     };
 
     return (
-        <>
+        <div className={`${css.toggleFieldsLayoutService} ${isExpanded ? css.expanded : ''}`}>
 
+            <p onClick={toggleExpandCollapse}>
+                {isExpanded ? "Collapse Services" : "Expand Services"}
+            </p>
 
-<div className={`${css.toggleFieldsLayoutService} ${isExpanded ? css.expanded : ''}`}>
-
-                <p onClick={toggleExpandCollapse}>
-                    {isExpanded ? "Collapse Services" : "Expand Services"  }
-                </p>
-
-                {isExpanded && (
-                    <div  className={css.servicesGrid}>
-                        {services.map((service) => (
-                            <div className={css.serviceItem} key={service}>
+            {isExpanded && (
+                <div className={css.servicesGrid}>
+                    {services.map((service) => (
+                        <div className={css.serviceItem} key={service}>
                             <span key={service}>
                                 <label htmlFor={service}>{service}</label>
                                 <input
@@ -95,16 +92,15 @@ const Services = ({handleServiceChange}) => {
                                     id={service}
                                     value={service}
                                     onChange={() => handleServiceSelection(service)} // Update selection
-                                    checked={serviceData.includes(service)} 
+                                    checked={serviceData.includes(service)}
                                 />
                             </span>
-                            </div>
+                        </div>
 
-                        ))}
-                    </div>
-                )}
-            </div>
-        </>
+                    ))}
+                </div>
+            )}
+        </div>
 
     );
 };

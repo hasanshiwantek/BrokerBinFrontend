@@ -77,6 +77,7 @@ const InventorySearch = () => {
         params.append("page", updatedFormData.page);
 
         navigate(`/inventorysearch?${params.toString()}`, {
+          replace: true,
           state: {
             searchResults: result,
             pagination,

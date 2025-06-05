@@ -474,7 +474,6 @@ const RfqReply = () => {
 
   return (
     <>
-      <Header />
       <div className={`${css.rfqcontainer} `}>
         <form>
           <div

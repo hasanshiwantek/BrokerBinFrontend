@@ -193,14 +193,8 @@ const ReplyBroad = () => {
     console.log("Reply To Broadcast: ", broadcast);
   }, []);
 
-  // useEffect(() => {
-  //     return () => {
-  //         localStorage.removeItem("broadcastData");
-  //     };
-  // }, []);
-
   return (
-    <>
+    <div>
       <main className={myProfile.profileInfo}>
         <nav className="menu-bar">
           <ul>
@@ -306,7 +300,7 @@ const ReplyBroad = () => {
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
       <ToastContainer position="top-center" autoClose={2000} />
-    </>
+    </div>
   );
 };
 

@@ -2,7 +2,6 @@ import React from 'react';
 import "./BroadcastTerm.css"
 const BroadCast = () => {
     return (
-        <>
             <div style={{ padding: "15px" }} id='broadcast'>
                 <h5>
                     BroadCast Terms
@@ -30,7 +29,6 @@ const BroadCast = () => {
                     </div>
                 </div>
             </div>
-        </>
     );
 }
 

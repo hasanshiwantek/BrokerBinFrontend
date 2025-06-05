@@ -546,7 +546,6 @@ const BroadCast = () => {
   };
 
   return (
-    <>
       <main className={styles.mainSec}>
         <nav className="menu-bar !text-sm">
           <div className={`${myProfile.profileInfo_links} !text-sm`}>
@@ -892,7 +891,6 @@ const BroadCast = () => {
           handleReply={handleReplyClick}
         />
       </main>
-    </>
   );
 };
 

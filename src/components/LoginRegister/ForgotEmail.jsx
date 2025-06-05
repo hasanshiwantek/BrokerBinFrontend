@@ -1,27 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useRef } from "react";
 import css from "../../styles/LoginRegister/Login.module.css";
-import { FaFacebookF, FaGooglePlusG, FaEye, FaEyeSlash } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
-import Cookies from "js-cookie";
-import { useDispatch } from "react-redux";
 import brokerLogo from "../../imgs/logo/BrokerCell Logo.svg";
 import { NavLink } from "react-router-dom";
-import { IoIosArrowBack } from "react-icons/io";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { brokerAPI } from "../api/BrokerEndpoint";
 
 const ForgotEmail = () => {
-    const [passwordShown, setPasswordShown] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-    const [forgotPassword, setForgotPassword] = useState(false);
     const [loading, setLoading] = useState(false);
-
-    const navigate = useNavigate();
-    const popUpRef = useRef();
-    const dispatch = useDispatch();
 
     const handleSubmit = async (e) => {
         e.preventDefault();

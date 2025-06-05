@@ -7,7 +7,6 @@ import FiltersSearchCompanyInventory from "@/components/Menu/Reports/FiltersSear
 // import OmitSearchCompany from "@/components/Menu/Reports/OmitSearchCompany";
 const Companies = () => {
   return (
-    <>
       <div>
         <div className="flex justify-start items-center ">
           <FiltersSearchCompanyInventory />
@@ -51,7 +50,6 @@ const Companies = () => {
           </div>
         </div> */}
       </div>
-    </>
   );
 };
 

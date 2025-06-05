@@ -190,7 +190,7 @@ const BroadCastHistory = () => {
   };
 
   return (
-    <>
+    <div>
       <div className={`${css.container}`}>
         {/* Tabs */}
         <div className={`${myProfile.profileInfo_links}`}>
@@ -364,7 +364,7 @@ const BroadCastHistory = () => {
         handleReply={handleReplyClick}
       />
       <ToastContainer position="top-center" autoClose={1000} />
-    </>
+    </div>
   );
 };
 
