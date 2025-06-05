@@ -5,6 +5,9 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { setFilterToggle, setPopUpRfq } from "@/ReduxStore/SearchProductSlice";
 import { setSelectedProductsForCart } from "@/ReduxStore/SearchProductSlice";
 import MyRFQNew from "../Popups/MyRFQNew";
+import Cookies from "js-cookie";
+import { addToCart } from "@/ReduxStore/SearchProductSlice";
+
 
 const ProductTableBtn = React.memo(() => {
   console.log("Rendered From PrdouctTableDetail...");
@@ -15,6 +18,7 @@ const ProductTableBtn = React.memo(() => {
   console.log("POPUP RFQ",popUpRfq)
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const token = Cookies.get("token");
 
   const handleShowPopupMyRFQNew = React.useCallback(
     (event) => {
@@ -24,14 +28,29 @@ const ProductTableBtn = React.memo(() => {
     [dispatch]
   );
 
+  // const handleCartClick = () => {
+  //   if (selectedProducts.length > 0) {
+  //     dispatch(setSelectedProductsForCart(selectedProducts)); // Store in Redux
+  //     navigate("/cartpart"); // Navigate to cart page
+  //   } else {
+  //     alert("Please select products to add to cart.");
+  //   }
+  // };
+
   const handleCartClick = () => {
-    if (selectedProducts.length > 0) {
-      dispatch(setSelectedProductsForCart(selectedProducts)); // Store in Redux
-      navigate("/cartpart"); // Navigate to cart page
-    } else {
-      alert("Please select products to add to cart.");
-    }
-  };
+  
+    const inventoryIds = selectedProducts.map(item => item.id);
+    
+    dispatch(addToCart({ token, inventoryIds }))
+      .then(() => {
+        dispatch(setSelectedProductsForCart(selectedProducts));
+        navigate("/cartpart");
+      })
+      .catch(() => {
+        alert("Failed to add items to cart.");
+      });
+ 
+};
 
   return (
     <div className={css.productTableBtn}>

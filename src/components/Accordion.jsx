@@ -35,6 +35,8 @@ const Accordion = ({ groupedData, selectedParts, setSelectedParts, pdfRef }) => 
     },
   });
 
+  // if (!groupedData || Object.keys(groupedData).length === 0) return null;
+
   const [activePanel, setActivePanel] = useState([]);
   // const dispatch = useDispatch();
 
@@ -127,7 +129,7 @@ const Accordion = ({ groupedData, selectedParts, setSelectedParts, pdfRef }) => 
     <>
       <div className={css.accordion}>
         {companies.map((company, index) => {
-          const companyObj = groupedData[company][0]?.addedBy?.company;
+          const companyObj = groupedData[company][0]?.inventory?.addedBy?.company;
           console.log(companyObj);
 
           const companyId = companyObj?.id;
@@ -219,18 +221,18 @@ const Accordion = ({ groupedData, selectedParts, setSelectedParts, pdfRef }) => 
                         </td>
                         <td
                           className="cursor-pointer"
-                          onClick={() => openCompanyModal(item.addedBy.company)}
+                          onClick={() => openCompanyModal(item.inventory?.addedBy?.company)}
                         >
-                          {item.addedBy.company.name}
+                          {item.inventory?.addedBy.company.name}
                         </td>
-                        <td>{item.partModel}</td>
-                        <td>{item.heciClei}</td>
-                        <td>{item.mfg}</td>
-                        <td>{item.cond}</td>
-                        <td>{item.price}</td>
-                        <td>{item.quantity}</td>
-                        <td>{item.age}</td>
-                        <td>{item.productDescription}</td>
+                        <td>{item.inventory?.partModel}</td>
+                        <td>{item.inventory?.heciClei}</td>
+                        <td>{item.inventory?.mfg}</td>
+                        <td>{item.inventory?.cond}</td>
+                        <td>{item.inventory?.price}</td>
+                        <td>{item.inventory?.quantity}</td>
+                        <td>{item.inventory?.age}</td>
+                        <td>{item.inventory?.productDescription}</td>
                       </tr>
                     ))}
                   </tbody>

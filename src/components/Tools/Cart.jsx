@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import css from "../../styles/Tools/Cart.module.css";
 import Accordion from "../Accordion";
 import LearnMore from "./LearnMore";
@@ -6,10 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 import Tick from "../../svgs/Tick";
 import { setSelectedProducts } from "@/ReduxStore/SearchProductSlice";
 import { useNavigate } from "react-router-dom";
-import { setSelectedProductsForCart } from "@/ReduxStore/SearchProductSlice";
+import { setSelectedProductsForCart, fetchCartItems } from "@/ReduxStore/SearchProductSlice";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import Note from "../partCart/Note";
+import Cookies from "js-cookie";
+
 
 const Cart = () => {
   const [selectedParts, setSelectedParts] = useState([]);
@@ -20,7 +22,8 @@ const Cart = () => {
   const pdfRef = useRef();
 
   const groupedByCompany = selectedProducts.reduce((acc, item) => {
-    const company = item?.addedBy?.company?.name || "Unknown Company";
+    const company = item?.inventory?.addedBy?.company?.name || "Unknown Company";
+    console.log("companyfrom cart", company);
     if (!acc[company]) acc[company] = [];
     acc[company].push(item);
     return acc;
@@ -54,10 +57,8 @@ const Cart = () => {
 const handlePdfExport = () => {
   const doc = new jsPDF();
   let currentY = 10;
-
   Object.entries(groupedByCompany).forEach(([company, parts]) => {
     doc.text(`${company}`, 14, currentY);
-
     const rows = parts.map((item) => [
       item.partModel,
       item.mfg,
@@ -67,7 +68,6 @@ const handlePdfExport = () => {
       item.age,
       item.productDescription || "",
     ]);
-
     autoTable(doc, {
       head: [["Part#", "Mfg", "Cond", "Price", "Qty", "Age", "Description"]],
       body: rows,
@@ -78,10 +78,28 @@ const handlePdfExport = () => {
       },
     });
   });
-
   const pdfBlobUrl = doc.output("bloburl");
   window.open(pdfBlobUrl); // Opens PDF preview
 };
+
+useEffect(() => {
+  const token = Cookies.get("token");
+
+  const initCart = async () => {
+    if (selectedParts.length > 0) {
+      const ids = selectedParts.map((item) => item.id);
+      await dispatch(addToCart({ token, inventoryIds: ids }));
+    }
+
+    const result = await dispatch(fetchCartItems({ token }));
+    if (fetchCartItems.fulfilled.match(result)) {
+      dispatch(setSelectedProductsForCart(result.payload));
+    }
+  };
+
+  initCart();
+}, []);
+
 
   console.log("SelectedCartProduct", selectedProducts);
   console.log("Selected Parts: ", selectedParts);
