@@ -9,39 +9,12 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-// Define the AsyncThunk
-
-export const createUser = createAsyncThunk(
-  "createUser",
-  async (formData, { rejectWithValue }) => {
-    try {
-      const token = Cookies.get("token");
-      if (!token) {
-        throw new Error("Authentication token is missing");
-      }
-
-      const response = await fetch(`${brokerAPI}user/create`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        const errorMessage = await response.text(); // Get error message from backend
-        throw new Error(errorMessage || "Failed to create account");
-      }
-
-      return await response.json();
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
+import { createUser } from "@/ReduxStore/ProfleSlice";
 
 const CreateAccount = () => {
+  const token = Cookies.get("token");
+  console.log(token);
+  
   const [showPassword, setShowPassword] = useState(false);
   const [showRetype, setShowRetype] = useState(false);
 
@@ -80,7 +53,7 @@ const CreateAccount = () => {
 
     setFormData((prevFormData) => {
       // For `imScreenNames` nested updates
-      if (["skype", "whatsapp", "trillian"].includes(name)) {
+      if (["skype", "whatsapp", "trillian","teams"].includes(name)) {
         return {
           ...prevFormData,
           imScreenNames: {
@@ -114,13 +87,11 @@ const CreateAccount = () => {
     }
 
     try {
-      const result = await dispatch(createUser(formData));
+      const result = await dispatch(createUser({formData, token}));
       if (createUser.fulfilled.match(result)) {
-        // alert('Account created successfully!');
-        // ✅ Show success toast with light blue color
-        toast.info("Account Created Successfully", {
-          style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
-        });
+      toast.info(result.payload.message || "Account Created Successfully", {
+        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+      });  ;
         // Reset formData to initial values
         setFormData({
           userId: "",
@@ -149,10 +120,12 @@ const CreateAccount = () => {
           retypePassword: "",
           preferredUse: "",
         });
-        console.log(result.payload);
+      console.log("✅ User created:", result.payload.data);
       } else {
-        alert(`Error creating account: ${result.payload}`);
-      }
+      toast.error(result.payload || "Error creating account", {
+        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+      });
+    }
     } catch (error) {
       // alert('Unexpected error occurred!');
       toast.error(error || "Error Creating Account.Please Try Again.", {
@@ -208,9 +181,7 @@ const CreateAccount = () => {
                 <NavLink
                   to="/mycompany/References"
                   end
-                  className={({ isActive }) =>
-                    isActive ? css.active : ""
-                  }
+                  className={({ isActive }) => (isActive ? css.active : "")}
                 >
                   <span>Ref</span>
                 </NavLink>
