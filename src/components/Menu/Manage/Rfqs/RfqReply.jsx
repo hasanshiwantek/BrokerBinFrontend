@@ -27,6 +27,7 @@ import { ToastContainer } from "react-toastify";
 import Header from "@/components/Header";
 import myProfile from "../../../../styles/Menu/Manage/MyProfile.module.css";
 import { NavLink } from "react-router-dom";
+
 const RfqReply = () => {
   const location = useLocation(); // To get data passed via navigate
   // const selectedRfqs = location.state?.selectedRfqs || [];
