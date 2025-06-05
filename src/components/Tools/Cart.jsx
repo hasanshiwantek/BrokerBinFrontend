@@ -38,22 +38,23 @@ const Cart = () => {
   };
 
   const createRfq = () => {
-    // dispatch(setSelectedProducts(selectedParts));
-    navigate("/rfq/create", { state: { selectedRows: selectedParts } });
-  };
-
+  if (!selectedParts.length) {
+    alert("You must select at least one part!");
+    return;
+  }
+  navigate("/rfq/create", { state: { selectedRows: selectedParts } });
+};
 
   console.log("SelectedCartProduct", selectedProducts);
 
   return (
-
     <div className={css.mainLayout}>
       <div className={css.cartListLayout}>
         <a href="#">part list</a>
         <a href="#">Saved list(s)</a>
         <div className={css.cartList}>
           <div className={css.cartList_list}>
-            <h1>Part List (110 items listed)</h1>
+            <h1>Part List ({selectedProducts.length} items listed)</h1>
             <span className={css.cartList_list_btn}>
               <button type="button">PDF</button>
               <button type="button">save</button>
