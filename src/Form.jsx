@@ -29,7 +29,7 @@ const Form = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    formData.signature = textAreaContent.split("\n");
+    setFormData(prev => ({ ...prev, signature: textAreaContent.split("\n") }));
     console.log(formData);
   };
 

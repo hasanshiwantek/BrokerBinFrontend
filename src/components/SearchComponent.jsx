@@ -69,7 +69,7 @@ const SearchComponent = ({ onSearch, resetTrigger, isSent }) => {
   };
 
   return (
-    <>
+    <div>
       <button
         type="button"
         onClick={() => setToggleRfqSearch((prev) => !prev)}
@@ -242,7 +242,7 @@ const SearchComponent = ({ onSearch, resetTrigger, isSent }) => {
           </form>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

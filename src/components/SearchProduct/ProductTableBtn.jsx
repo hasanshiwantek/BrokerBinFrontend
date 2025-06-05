@@ -1,16 +1,20 @@
 import React from "react";
 import css from "@/styles/SearchProducts.module.css";
-import { useDispatch, useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
-
+import { useDispatch, useSelector, } from "react-redux";
+import { NavLink, useNavigate } from "react-router-dom";
 import { setFilterToggle, setPopUpRfq } from "@/ReduxStore/SearchProductSlice";
+import { setSelectedProductsForCart } from "@/ReduxStore/SearchProductSlice";
 import MyRFQNew from "../Popups/MyRFQNew";
 
 const ProductTableBtn = React.memo(() => {
         console.log("Rendered From PrdouctTableDetail...");
     
   const { popUpRfq } = useSelector((store) => store.searchProductStore);
+  const selectedProducts = useSelector(state => state.searchProductStore.selectedProducts);
+
+  console.log("POPUP RFQ",popUpRfq)
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleShowPopupMyRFQNew = React.useCallback(
     (event) => {
@@ -19,6 +23,15 @@ const ProductTableBtn = React.memo(() => {
     },
     [dispatch]
   );
+
+  const handleCartClick = () => {
+    if (selectedProducts.length > 0) {
+      dispatch(setSelectedProductsForCart(selectedProducts)); // Store in Redux
+      navigate("/cartpart"); // Navigate to cart page
+    } else {
+      alert("Please select products to add to cart.");
+    }
+  };
 
   return (
     <div className={css.productTableBtn}>
@@ -31,8 +44,9 @@ const ProductTableBtn = React.memo(() => {
           Add
         </NavLink>
       </button>
-      <button>
-        <a href="/cartpart" style={{ fontSize: "1em", color: "#444" }}>Cart</a>
+      <button onClick={handleCartClick}>
+        {/* <a href="/cartpart" style={{ fontSize: "1em", color: "#444" }}>Cart</a> */}
+        Cart
       </button>
       <button type="button" onClick={() => dispatch(setFilterToggle())}>
         Filters

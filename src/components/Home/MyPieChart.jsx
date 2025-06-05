@@ -5,6 +5,7 @@ import { Doughnut } from "react-chartjs-2";
 Chart.register(Tooltip, ArcElement, Title);
 
 function MyPieChart({ chartData }) {
+  
   const chartRef = useRef(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
 

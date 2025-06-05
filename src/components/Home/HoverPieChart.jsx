@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import { pieChartData } from "../../data/tableData";
 import css from "../../styles/Home/Home.module.css";
 import MyPieChart from "./MyPieChart";
 import { FaRegCircle } from "react-icons/fa";
-import zIndex from "@mui/material/styles/zIndex";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
+
 const HoverPieChart = ({ data }) => {
   // Transform backend data into the required structure
   const transformedData = {

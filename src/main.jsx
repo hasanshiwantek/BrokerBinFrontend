@@ -592,9 +592,9 @@ const router = createBrowserRouter([
         path: "/rfq/create",
         element: (
           <Suspense fallback={<LoadingState />}>
-            {/* <Header /> */}
+            <Header />
             <RfqReply />
-            {/* <Footer /> */}
+            <Footer />
           </Suspense>
         ),
       },
