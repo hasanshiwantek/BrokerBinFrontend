@@ -79,7 +79,7 @@ h1 {
   }
   &_parts {
     &_scroll {
-      height: 10rem;
+      height: 30rem;
       overflow: hidden;
       overflow-y: scroll;
       table {
