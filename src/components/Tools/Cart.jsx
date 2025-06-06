@@ -162,6 +162,10 @@ const Cart = () => {
   };
 
   const handlePdfExport = async () => {
+     if (selectedProducts.length === 0) {
+  alert("No parts available to export.");
+  return;
+}
     try {
       const response = await axios.get(`${brokerAPI}part-cart/pdf`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -175,6 +179,25 @@ const Cart = () => {
       console.error("Failed to export PDF:", error);
     }
   };
+
+  const handleCartPdfExport = async () => {
+    if (selectedProducts.length === 0) {
+  alert("No parts available to export.");
+  return;
+}
+  try {
+    const response = await axios.get(`${brokerAPI}part-cart/pdf?isNotes=true`, {
+      headers: { Authorization: `Bearer ${token}` },
+      responseType: "blob",
+    });
+
+    const blob = new Blob([response.data], { type: "application/pdf" });
+    const url = window.URL.createObjectURL(blob);
+    window.open(url);
+  } catch (error) {
+    console.error("Failed to export cart table PDF:", error);
+  }
+};
 
   useEffect(() => {
     const initCart = async () => {
@@ -321,7 +344,7 @@ const Cart = () => {
             <div className={css.cartList_list}>
               <h1>Part List ({selectedProducts.length} items listed)</h1>
               <span className={css.cartList_list_btn}>
-                <button type="button">PDF</button>
+                <button type="button" onClick={handleCartPdfExport}>PDF</button>
                 <button type="button">save</button>
               </span>
             </div>
@@ -567,14 +590,16 @@ const Cart = () => {
       )}
 
       {showExportModal && (
-  <Export
-    onClose={() => setShowExportModal(false)}
-    onSend={(data) => {
-      console.log("Export Data:", data);
-      setShowExportModal(false);
-    }}
-  />
-)}
+        <Export
+          selectedProducts={selectedProducts}
+          onClose={() => setShowExportModal(false)}
+          onSend={(exportData) => {
+            console.log("Export Info:", exportData);
+            console.log("Selected Products:", selectedProducts);
+            setShowExportModal(false);
+          }}
+        />
+      )}
 
       <ToastContainer position="top-center" autoClose={2000} />
     </div>
