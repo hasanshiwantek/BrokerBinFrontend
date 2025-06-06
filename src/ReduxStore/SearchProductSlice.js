@@ -173,7 +173,6 @@ export const getCompanyContact = createAsyncThunk(
   }
 );
 
-
 // export const applyFilters = (filters) => (dispatch, getState) => {
 //   const { searchResponseMatched, page, pageSize } = getState().searchProductStore;
 //   const filteredData = {};
@@ -220,7 +219,6 @@ export const sortInventory = createAsyncThunk(
   }
 );
 
-
 export const deleteCompanyContact = createAsyncThunk(
   "toolsStore/deleteCompanyContact",
   async ({ token, ids }) => {
@@ -246,20 +244,20 @@ export const deleteCompanyContact = createAsyncThunk(
   }
 );
 
-
-
-
-
 export const updateCompanyPrimaryInfo = createAsyncThunk(
   "profile/updateCompanyPrimaryInfo",
   async ({ token, data, companyId }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`${brokerAPI}company/companyUpdate/${companyId}`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await axios.put(
+        `${brokerAPI}company/companyUpdate/${companyId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -302,8 +300,8 @@ export const partCartNotes = createAsyncThunk(
           },
         }
       );
-      console.log("Response From Redux: ",response.data);
-      
+      console.log("Response From Redux: ", response.data);
+
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -342,6 +340,24 @@ export const fetchCartItems = createAsyncThunk(
         },
       });
       return response.data.data; // Make sure API returns items array
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+export const deleteCartItems = createAsyncThunk(
+  "toolstore/deleteCartItems",
+  async ({ token }, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete(`${brokerAPI}part-cart/clear`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("All Cart delete response From Redux: ", response.data);
+
+      return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
     }
@@ -454,9 +470,8 @@ const searchProductSlice = createSlice({
       state.searchType = action.payload;
     },
     setSelectedProductsForCart: (state, action) => {
-    state.selectedProductsForCart = action.payload;
+      state.selectedProductsForCart = action.payload;
     },
-
   },
   extraReducers: (builder) => {
     builder
@@ -621,6 +636,20 @@ const searchProductSlice = createSlice({
       })
 
       .addCase(deleteCompanyContact.rejected, (state, action) => {
+        state.error = action.error.message;
+        console.error(action.error.message);
+      })
+
+      .addCase(deleteCartItems.pending, (state) => {
+        console.log("DELETING....");
+      })
+      .addCase(deleteCartItems.fulfilled, (state, action) => {
+        state.selectedProductsForCart = state.selectedProductsForCart.filter(
+          (item) => item.id != action.payload
+        );
+      })
+
+      .addCase(deleteCartItems.rejected, (state, action) => {
         state.error = action.error.message;
         console.error(action.error.message);
       })

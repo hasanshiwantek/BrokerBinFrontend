@@ -177,7 +177,7 @@ const Accordion = ({
                     aria-controls={`panel${index + 1}-content`}
                     onClick={() => togglePanel(index)}
                   >
-                    {`${groupedData[company].length} parts with ${groupedData[company].length} results - ${groupedData[company][0]?.company_country || " "}`}
+                    {`${groupedData[company].length} parts with ${groupedData[company].length} results - ${groupedData[company][0]?.inventory?.addedBy?.country || " "}`}
                     <span
                       onClick={() => openCompanyModal(company)}
                       className="text-[8pt]"

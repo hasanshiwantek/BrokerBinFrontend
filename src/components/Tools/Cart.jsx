@@ -6,39 +6,66 @@ import { useDispatch, useSelector } from "react-redux";
 import Tick from "../../svgs/Tick";
 import { setSelectedProducts } from "@/ReduxStore/SearchProductSlice";
 import { useNavigate } from "react-router-dom";
-import { setSelectedProductsForCart, fetchCartItems } from "@/ReduxStore/SearchProductSlice";
+import {
+  setSelectedProductsForCart,
+  fetchCartItems,
+  deleteCartItems,
+} from "@/ReduxStore/SearchProductSlice";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import Note from "../partCart/Note";
 import Cookies from "js-cookie";
-
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 const Cart = () => {
   const [selectedParts, setSelectedParts] = useState([]);
-  const selectedProducts = useSelector((state) => state.searchProductStore.selectedProductsForCart);
+  const selectedProducts = useSelector(
+    (state) => state.searchProductStore.selectedProductsForCart
+  );
+  const token = Cookies.get("token");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const pdfRef = useRef();
 
   const groupedByCompany = selectedProducts.reduce((acc, item) => {
-    const company = item?.inventory?.addedBy?.company?.name || "Unknown Company";
+    const company =
+      item?.inventory?.addedBy?.company?.name || "Unknown Company";
     console.log("companyfrom cart", company);
     if (!acc[company]) acc[company] = [];
     acc[company].push(item);
     return acc;
   }, {});
 
-  const handleClear = () => {
-    dispatch(setSelectedProductsForCart([]));
-    setSelectedParts([]);
+  const handleClear = async () => {
+    try {
+      const result = await dispatch(deleteCartItems({ token })).unwrap();
+
+      if (result?.status) {
+        toast.success(result?.message || "Cart cleared successfully!", {
+          style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+        });
+        window.location.reload(200)
+        // Optional: refresh UI or state if needed
+      } else {
+        toast.warning("Cart clear action didn't succeed.", {
+          style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+        });
+      }
+    } catch (error) {
+      console.error("Failed to clear cart:", error);
+      toast.error( error?.message ||  "Failed to clear cart. Please try again.", {
+        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+      });
+    }
   };
 
   const handleRemove = () => {
-     if (!selectedParts.length) {
-    alert("You must select at least one part!");
-    return;
-  }
+    if (!selectedParts.length) {
+      alert("You must select at least one part!");
+      return;
+    }
     const updated = selectedProducts.filter(
       (item) => !selectedParts.some((p) => p.id === item.id)
     );
@@ -54,52 +81,49 @@ const Cart = () => {
     navigate("/rfq/create", { state: { selectedRows: selectedParts } });
   };
 
-const handlePdfExport = () => {
-  const doc = new jsPDF();
-  let currentY = 10;
-  Object.entries(groupedByCompany).forEach(([company, parts]) => {
-    doc.text(`${company}`, 14, currentY);
-    const rows = parts.map((item) => [
-      item.partModel,
-      item.mfg,
-      item.cond,
-      item.price,
-      item.quantity,
-      item.age,
-      item.productDescription || "",
-    ]);
-    autoTable(doc, {
-      head: [["Part#", "Mfg", "Cond", "Price", "Qty", "Age", "Description"]],
-      body: rows,
-      startY: currentY + 5,
-      styles: { fontSize: 10 },
-      didDrawPage: (data) => {
-        currentY = data.cursor.y + 10; // update Y for next table
-      },
+  const handlePdfExport = () => {
+    const doc = new jsPDF();
+    let currentY = 10;
+    Object.entries(groupedByCompany).forEach(([company, parts]) => {
+      doc.text(`${company}`, 14, currentY);
+      const rows = parts.map((item) => [
+        item.partModel,
+        item.mfg,
+        item.cond,
+        item.price,
+        item.quantity,
+        item.age,
+        item.productDescription || "",
+      ]);
+      autoTable(doc, {
+        head: [["Part#", "Mfg", "Cond", "Price", "Qty", "Age", "Description"]],
+        body: rows,
+        startY: currentY + 5,
+        styles: { fontSize: 10 },
+        didDrawPage: (data) => {
+          currentY = data.cursor.y + 10; // update Y for next table
+        },
+      });
     });
-  });
-  const pdfBlobUrl = doc.output("bloburl");
-  window.open(pdfBlobUrl); // Opens PDF preview
-};
-
-useEffect(() => {
-  const token = Cookies.get("token");
-
-  const initCart = async () => {
-    if (selectedParts.length > 0) {
-      const ids = selectedParts.map((item) => item.id);
-      await dispatch(addToCart({ token, inventoryIds: ids }));
-    }
-
-    const result = await dispatch(fetchCartItems({ token }));
-    if (fetchCartItems.fulfilled.match(result)) {
-      dispatch(setSelectedProductsForCart(result.payload));
-    }
+    const pdfBlobUrl = doc.output("bloburl");
+    window.open(pdfBlobUrl); // Opens PDF preview
   };
 
-  initCart();
-}, []);
+  useEffect(() => {
+    const initCart = async () => {
+      if (selectedParts.length > 0) {
+        const ids = selectedParts.map((item) => item.id);
+        await dispatch(addToCart({ token, inventoryIds: ids }));
+      }
 
+      const result = await dispatch(fetchCartItems({ token }));
+      if (fetchCartItems.fulfilled.match(result)) {
+        dispatch(setSelectedProductsForCart(result.payload));
+      }
+    };
+
+    initCart();
+  }, []);
 
   console.log("SelectedCartProduct", selectedProducts);
   console.log("Selected Parts: ", selectedParts);
@@ -185,14 +209,14 @@ useEffect(() => {
                               // defaultValue={false}
                             />
 
-                            {e.partModel}
+                            {e.inventory?.partModel}
                           </td>
 
-                          <td>{e.mfg}</td>
-                          <td>{e.cond}</td>
+                          <td>{e.inventory?.mfg}</td>
+                          <td>{e.inventory?.cond}</td>
 
-                          <td>{e.quantity}</td>
-                          <td>{e.age}</td>
+                          <td>{e.inventory?.quantity}</td>
+                          <td>{e.inventory?.age}</td>
                         </tr>
                       );
                     })}
@@ -280,13 +304,14 @@ useEffect(() => {
               </div>
               <button type="button">PDF</button>
               <button type="button">export</button>
-              <button type="button">clear all</button>
+              <button type="button" onClick={handleClear}>
+                clear all
+              </button>
             </div>
           </div>
           <LearnMore />
         </div>
       </div>
-
 
       {showNoteModal && (
         <Note
@@ -294,6 +319,7 @@ useEffect(() => {
           onClose={() => setShowNoteModal(false)}
         />
       )}
+      <ToastContainer position="top-center" autoClose={2000} />
     </div>
   );
 };
