@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import css from "../styles/Accordion.module.css";
 import { BiSolidDownArrow } from "react-icons/bi";
 import { setTogglePopUp } from "@/ReduxStore/SearchProductSlice";
@@ -16,7 +16,12 @@ import { ToastContainer } from "react-toastify";
 import { IoPersonAdd } from "react-icons/io5";
 import Cookies from "js-cookie";
 
-const Accordion = ({ groupedData, selectedParts, setSelectedParts, pdfRef }) => {
+const Accordion = ({
+  groupedData,
+  selectedParts,
+  setSelectedParts,
+  pdfRef,
+}) => {
   const theme = createTheme({
     components: {
       MuiTooltip: {
@@ -89,14 +94,17 @@ const Accordion = ({ groupedData, selectedParts, setSelectedParts, pdfRef }) => 
         ...prev,
         [companyId]: newStatus,
       }));
-      toast.success(
+
+      toast.info(
         `Vendor ${newStatus === 1 ? "blocked" : "unblocked"} successfully!`,
-        { style: { fontSize: "16px" } }
+        {
+          style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
+        }
       );
     } catch (error) {
       console.error("Error toggling vendor status", error);
       toast.error("Failed to update vendor status.", {
-        style: { fontSize: "16px" },
+        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
       });
     }
   };
@@ -110,8 +118,8 @@ const Accordion = ({ groupedData, selectedParts, setSelectedParts, pdfRef }) => 
       ).unwrap();
 
       // Show backend message
-      toast.success(response.message || "Vendor updated successfully!", {
-        style: { fontSize: "16px" },
+      toast.info(response.message || "Vendor updated successfully!", {
+        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
       });
 
       console.log("Add Vendor Response:", response);
@@ -121,11 +129,30 @@ const Accordion = ({ groupedData, selectedParts, setSelectedParts, pdfRef }) => 
         style: { fontSize: "16px" },
       });
     }
-    };
+  };
 
   return (
     <>
       <div className={css.accordion}>
+        {companies.length > 0 && (
+          <div className=" px-4 py-2">
+            <button
+              onClick={() =>
+                setActivePanel(
+                  activePanel.length === companies.length
+                    ? [] // Collapse all
+                    : companies.map((_, idx) => idx) // Expand all
+                )
+              }
+              className="text-black  text-[9pt] px-3 py-1 border border-gray-300 rounded hover:bg-gray-100"
+            >
+              {activePanel.length === companies.length
+                ? "Collapse All"
+                : "Expand All"}
+            </button>
+          </div>
+        )}
+
         {companies.map((company, index) => {
           const companyObj = groupedData[company][0]?.addedBy?.company;
           console.log(companyObj);
@@ -167,7 +194,6 @@ const Accordion = ({ groupedData, selectedParts, setSelectedParts, pdfRef }) => 
                           <span
                             onClick={() => handleAddVendor(companyId)}
                             className="cursor-pointer"
-                            title="Add Vendor"
                           >
                             <IoPersonAdd size={18} />
                           </span>
@@ -189,12 +215,9 @@ const Accordion = ({ groupedData, selectedParts, setSelectedParts, pdfRef }) => 
                             className="cursor-pointer"
                           >
                             {effectiveStatus === 1 ? (
-                              <FaUserCheck
-                                size={18}
-                                className
-                              />
+                              <FaUserCheck size={18} className />
                             ) : (
-                              <FaUserXmark size={18}  />
+                              <FaUserXmark size={18} />
                             )}
                           </span>
                         </Tooltip>
@@ -259,6 +282,24 @@ const Accordion = ({ groupedData, selectedParts, setSelectedParts, pdfRef }) => 
             </div>
           );
         })}
+        {companies.length > 0 && (
+          <div className=" px-4 py-2">
+            <button
+              onClick={() =>
+                setActivePanel(
+                  activePanel.length === companies.length
+                    ? [] // Collapse all
+                    : companies.map((_, idx) => idx) // Expand all
+                )
+              }
+              className="text-black text-[9pt] px-3 py-1 border border-gray-300 rounded hover:bg-gray-100"
+            >
+              {activePanel.length === companies.length
+                ? "Collapse All"
+                : "Expand All"}
+            </button>
+          </div>
+        )}
       </div>
 
       {togglePopUp && (

@@ -268,76 +268,7 @@ const handlePdfExport = () => {
           <LearnMore />
         </div>
       </div>
-      <div className={css.cartLay}>
-        <div className={css.cartLayout}>
-          <div className={css.cartLayout_options}>
-            <button
-              type="button"
-              onClick={handleRemove}
-            >
-              remove
-            </button>
-            <button
-              type="button"
-              onClick={createRfq}
-            >
-              create RQF
-            </button>
-            <button type="button">add note</button>
-            <div className={css.cartLayout_filter}>
-              <h1> Filter By:</h1>
-              <select>
-                <option value="cnt_DESC" defaultValue="Max Parts">
-                  Max Parts
-                </option>
-                <option value="cnt_ASC">Min Parts</option>
-                <option value="bestmatch">** Best Match</option>
-                <option value="maxprice">Highest Price</option>
-                <option value="lowestprice">Lowest Price</option>
-              </select>
-            </div>
-            <button 
-            type="button"
-            onClick={handlePdfExport}
-            >
-              PDF
-            </button>
-            <button type="button">export</button>
-            <button
-              type="button"
-              onClick={handleClear}
-            >
-              clear all</button>
-          </div>
-          <Accordion
-            groupedData={groupedByCompany}
-            selectedParts={selectedParts}
-            setSelectedParts={setSelectedParts}
-            pdfRef={pdfRef}
-          />
-          <div className={css.cartLayout_options}>
-            <button type="button">remove</button>
-            <button type="button">create RQF</button>
-            <button type="button">add note</button>
-            <div className={css.cartLayout_filter}>
-              <h1> Sort By:</h1>
-              <select>
-                <option value="cnt_DESC" defaultValue="Max Parts">
-                  Max Parts
-                </option>
-                <option value="cnt_ASC">Min Parts</option>
-                <option value="bestmatch">** Best Match</option>
-                <option value="maxprice">Highest Price</option>
-                <option value="lowestprice">Lowest Price</option>
-              </select>
-            </div>
-            <button type="button">PDF</button>
-            <button type="button">export</button>
-            <button type="button">clear all</button>
-          </div>
-        </div>
-        <LearnMore />
-      </div>
+
 
       {showNoteModal && (
         <Note
