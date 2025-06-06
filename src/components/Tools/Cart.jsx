@@ -16,6 +16,7 @@ import {
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import Note from "../partCart/Note";
+import Export from "../partCart/Export"
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -29,6 +30,7 @@ import { setPopupCompanyDetail } from "@/ReduxStore/SearchProductSlice";
 const Cart = () => {
   const [selectedParts, setSelectedParts] = useState([]);
   const [filterOption, setFilterOption] = useState("cnt_DESC");
+  const [showExportModal, setShowExportModal] = useState(false);
   const selectedProducts = useSelector(
     (state) => state.searchProductStore.selectedProductsForCart
   );
@@ -345,7 +347,7 @@ const Cart = () => {
                     <Tick />
                     <span>Action Needed</span>
                   </div>
-                  <span>(110)</span>
+                  <span>(0)</span>
                 </div>
               </div>
               <div className={css.cartList_key_details_pp}>Problem Parts</div>
@@ -503,7 +505,7 @@ const Cart = () => {
               <button type="button" onClick={handlePdfExport}>
                 PDF
               </button>
-              <button type="button">export</button>
+              <button type="button" onClick={() => setShowExportModal(true)}>export</button>
               <button type="button" onClick={handleClear}>
                 clear all
               </button>
@@ -563,6 +565,16 @@ const Cart = () => {
           onClose={() => setShowNoteModal(false)}
         />
       )}
+
+      {showExportModal && (
+  <Export
+    onClose={() => setShowExportModal(false)}
+    onSend={(data) => {
+      console.log("Export Data:", data);
+      setShowExportModal(false);
+    }}
+  />
+)}
 
       <ToastContainer position="top-center" autoClose={2000} />
     </div>
