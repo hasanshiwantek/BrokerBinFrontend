@@ -290,11 +290,11 @@ export const updateCompanyBio = createAsyncThunk(
 
 export const partCartNotes = createAsyncThunk(
   "toolstore/partCartNotes",
-  async ({ token, body }, { rejectWithValue }) => {
+  async ({ token, notes }, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `${brokerAPI}part-cart/2/notes`,
-        { body },
+        `${brokerAPI}part-cart/note/add`,
+        { notes },
         {
           headers: {
             Authorization: `Bearer ${token}`,

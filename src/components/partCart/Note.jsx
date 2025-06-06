@@ -7,7 +7,8 @@ import { toast } from "react-toastify";
 const Note = ({ selectedParts, onClose }) => {
   const dispatch = useDispatch();
   const token = Cookies.get("token");
-console.log(token);
+  console.log(token);
+  const [loading, setLoading] = useState(false);
 
   // Group by company name
   const grouped = useMemo(() => {
@@ -27,7 +28,7 @@ console.log(token);
       initial[part.id] = {
         id: part.id,
         partModel: part.partModel,
-        reqQty: 0,
+        quantity: 0,
         note: "",
       };
     });
@@ -56,9 +57,9 @@ console.log(token);
     try {
       const payload = {
         token,
-        body: finalNotes, // Make sure backend expects an array
+        notes: finalNotes, // Make sure backend expects an array
       };
-
+      setLoading(true);
       const result = await dispatch(partCartNotes(payload)).unwrap();
       console.log("Saved Notes to Backend:", result);
 
@@ -72,6 +73,8 @@ console.log(token);
       toast.error(error?.message || "Failed to save notes.", {
         style: { fontSize: "16px" },
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -119,9 +122,9 @@ console.log(token);
                           <input
                             type="number"
                             className="border px-2 py-1 w-16 text-[8pt] rounded"
-                            value={noteData[item.id]?.reqQty}
+                            value={noteData[item.id]?.quantity}
                             onChange={(e) =>
-                              handleChange(item.id, "reqQty", e.target.value)
+                              handleChange(item.id, "quantity", e.target.value)
                             }
                           />
                         </td>
@@ -148,9 +151,14 @@ console.log(token);
         <div className="text-right">
           <button
             onClick={handleSave}
-            className="bg-[#2c83ec] text-white px-5 py-1.5 rounded "
+            disabled={loading}
+            className={`px-5 py-1.5 rounded text-white transition-all duration-150 ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-[#2c83ec] hover:bg-[#1c6dd0]"
+            }`}
           >
-            Save
+            {loading ? "Saving..." : "Save"}
           </button>
         </div>
       </div>
