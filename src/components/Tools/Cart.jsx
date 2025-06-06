@@ -16,7 +16,7 @@ import {
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import Note from "../partCart/Note";
-import Export from "../partCart/Export"
+import Export from "../partCart/Export";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -455,7 +455,7 @@ const Cart = () => {
                                             handleNoteUpdate(
                                               note.id, // partCartId
                                               ev.target.value, // newNote
-                                              note.quantity, // quantity
+                                              note.quantity // quantity
                                             )
                                           }
                                         />
@@ -528,7 +528,9 @@ const Cart = () => {
               <button type="button" onClick={handlePdfExport}>
                 PDF
               </button>
-              <button type="button" onClick={() => setShowExportModal(true)}>export</button>
+              <button type="button" onClick={() => setShowExportModal(true)}>
+                export
+              </button>
               <button type="button" onClick={handleClear}>
                 clear all
               </button>
