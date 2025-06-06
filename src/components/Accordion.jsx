@@ -21,6 +21,7 @@ const Accordion = ({
   selectedParts,
   setSelectedParts,
   pdfRef,
+  filterOption
 }) => {
   const theme = createTheme({
     components: {
@@ -39,8 +40,6 @@ const Accordion = ({
       },
     },
   });
-
-  // if (!groupedData || Object.keys(groupedData).length === 0) return null;
 
   const [activePanel, setActivePanel] = useState([]);
   // const dispatch = useDispatch();
@@ -64,7 +63,27 @@ const Accordion = ({
 
   // const country = groupedData[company][0]?.company_country || "Unknown";
 
-  const companies = Object.keys(groupedData);
+  const companies = Object.entries(groupedData)
+  .sort((a, b) => {
+    const aParts = a[1];
+    const bParts = b[1];
+
+    switch (filterOption) {
+      case "cnt_ASC":
+        return aParts.length - bParts.length;
+      case "cnt_DESC":
+        return bParts.length - aParts.length;
+      case "maxprice":
+        return Math.max(...bParts.map(p => p.price || 0)) - Math.max(...aParts.map(p => p.price || 0));
+      case "lowestprice":
+        return Math.min(...aParts.map(p => p.price || 0)) - Math.min(...bParts.map(p => p.price || 0));
+      case "bestmatch":  
+      default:
+        return 0;
+    }
+  })
+  .map(([company]) => company);
+
   console.log("Companies: ", companies);
 
   console.log("Grouped Data: ", groupedData);
@@ -132,6 +151,21 @@ const Accordion = ({
       });
     }
   };
+
+  const sortParts = (parts) => {
+  switch (filterOption) {
+    case "cnt_ASC":
+      return [...parts].sort((a, b) => a.quantity - b.quantity);
+    case "cnt_DESC":
+      return [...parts].sort((a, b) => b.quantity - a.quantity);
+    case "maxprice":
+      return [...parts].sort((a, b) => b.price - a.price);
+    case "lowestprice":
+      return [...parts].sort((a, b) => a.price - b.price);
+    default:
+      return parts; // bestmatch or unknown, no sorting
+  }
+};
 
   return (
     <>
@@ -251,7 +285,7 @@ const Accordion = ({
                     </tr>
                   </thead>
                   <tbody>
-                    {groupedData[company].map((item, i) => (
+                    {sortParts(groupedData[company]).map((item, i) => (
                       <tr key={i}>
                         <td>
                           <input

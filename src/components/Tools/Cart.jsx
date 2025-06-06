@@ -19,8 +19,12 @@ import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import axios from "axios";
+import { brokerAPI } from "../api/BrokerEndpoint";
+
 const Cart = () => {
   const [selectedParts, setSelectedParts] = useState([]);
+  const [filterOption, setFilterOption] = useState("cnt_DESC");
   const selectedProducts = useSelector(
     (state) => state.searchProductStore.selectedProductsForCart
   );
@@ -72,7 +76,6 @@ const Cart = () => {
       });
       return;
     }
-
     try {
       const updated = selectedProducts.filter(
         (item) => !selectedParts.some((p) => p.id === item.id)
@@ -123,32 +126,46 @@ const Cart = () => {
     navigate("/rfq/create", { state: { selectedRows: selectedParts } });
   };
 
-  const handlePdfExport = () => {
-    const doc = new jsPDF();
-    let currentY = 10;
-    Object.entries(groupedByCompany).forEach(([company, parts]) => {
-      doc.text(`${company}`, 14, currentY);
-      const rows = parts.map((item) => [
-        item.inventory?.partModel,
-        item.inventory?.mfg,
-        item.inventory?.cond,
-        item.inventory?.price,
-        item.inventory?.quantity,
-        item.inventory?.age,
-        item.inventory?.productDescription || "",
-      ]);
-      autoTable(doc, {
-        head: [["Part#", "Mfg", "Cond", "Price", "Qty", "Age", "Description"]],
-        body: rows,
-        startY: currentY + 5,
-        styles: { fontSize: 10 },
-        didDrawPage: (data) => {
-          currentY = data.cursor.y + 10; // update Y for next table
-        },
+  // const handlePdfExport = () => {
+  //   const doc = new jsPDF();
+  //   let currentY = 10;
+  //   Object.entries(groupedByCompany).forEach(([company, parts]) => {
+  //     doc.text(`${company}`, 14, currentY);
+  //     const rows = parts.map((item) => [
+  //       item.inventory?.partModel,
+  //       item.inventory?.mfg,
+  //       item.inventory?.cond,
+  //       item.inventory?.price,
+  //       item.inventory?.quantity,
+  //       item.inventory?.age,
+  //       item.inventory?.productDescription || "",
+  //     ]);
+  //     autoTable(doc, {
+  //       head: [["Part#", "Mfg", "Cond", "Price", "Qty", "Age", "Description"]],
+  //       body: rows,
+  //       startY: currentY + 5,
+  //       styles: { fontSize: 10 },
+  //       didDrawPage: (data) => {
+  //         currentY = data.cursor.y + 10; // update Y for next table
+  //       },
+  //     });
+  //   });
+  //   const pdfBlobUrl = doc.output("bloburl");
+  //   window.open(pdfBlobUrl); // Opens PDF preview
+  // };
+
+  const handlePdfExport = async () => {
+    try {
+      const response = await axios.get(`${brokerAPI}part-cart/pdf`, {
+        headers: { Authorization: `Bearer ${token}` },
+        responseType: "blob", // Important for PDF
       });
-    });
-    const pdfBlobUrl = doc.output("bloburl");
-    window.open(pdfBlobUrl); // Opens PDF preview
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      window.open(url); // Open PDF in new tab
+    } catch (error) {
+      console.error("Failed to export PDF:", error);
+    }
   };
 
   useEffect(() => {
@@ -370,22 +387,30 @@ const Cart = () => {
         <div className={css.cartLay}>
           <div className={css.cartLayout}>
             <div className={css.cartLayout_options}>
-              <button type="button" onClick={handleRemove}>
+              <button
+                type="button"
+                onClick={handleRemove}>
                 remove
               </button>
-              <button type="button" onClick={createRfq}>
+              <button
+                type="button" onClick={createRfq}>
                 create RQF
               </button>
               <button
                 type="button"
-                onClick={() => setShowNoteModal(true)}
-                disabled={selectedParts.length === 0}
+                onClick={() => {
+                  if (selectedParts.length === 0) {
+                    alert("You must select a part!");
+                    return;
+                  }
+                  setShowNoteModal(true);
+                }}
               >
                 add note
               </button>
               <div className={css.cartLayout_filter}>
                 <h1> Filter By:</h1>
-                <select>
+                <select onChange={(e) => setFilterOption(e.target.value)}>
                   <option value="cnt_DESC" defaultValue="Max Parts">
                     Max Parts
                   </option>
@@ -395,7 +420,12 @@ const Cart = () => {
                   <option value="lowestprice">Lowest Price</option>
                 </select>
               </div>
-              <button type="button">PDF</button>
+              <button
+                type="button"
+                onClick={handlePdfExport}
+              >
+                PDF
+              </button>
               <button type="button">export</button>
               <button type="button" onClick={handleClear}>
                 clear all
@@ -405,20 +435,31 @@ const Cart = () => {
               groupedData={groupedByCompany}
               selectedParts={selectedParts}
               setSelectedParts={setSelectedParts}
+              filterOption={filterOption}
             />
             <div className={css.cartLayout_options}>
-              <button type="button">remove</button>
-              <button type="button">create RQF</button>
               <button
                 type="button"
-                onClick={() => setShowNoteModal(true)}
-                disabled={selectedParts.length === 0}
+                onClick={handleRemove}
+              >
+                remove
+              </button>
+              <button type="button" onClick={createRfq}>create RQF</button>
+              <button
+                type="button"
+                onClick={() => {
+                  if (selectedParts.length === 0) {
+                    alert("You must select a part!");
+                    return;
+                  }
+                  setShowNoteModal(true);
+                }}
               >
                 add note
               </button>
               <div className={css.cartLayout_filter}>
                 <h1> Sort By:</h1>
-                <select>
+                <select onChange={(e) => setFilterOption(e.target.value)}>
                   <option value="cnt_DESC" defaultValue="Max Parts">
                     Max Parts
                   </option>
@@ -428,7 +469,9 @@ const Cart = () => {
                   <option value="lowestprice">Lowest Price</option>
                 </select>
               </div>
-              <button type="button" onClick={handlePdfExport}>
+              <button
+                type="button"
+                onClick={handlePdfExport}>
                 PDF
               </button>
               <button type="button">export</button>
@@ -440,7 +483,6 @@ const Cart = () => {
           <LearnMore />
         </div>
       </div>
-
       {showNoteModal && (
         <Note
           selectedParts={selectedParts}
