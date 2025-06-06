@@ -77,7 +77,6 @@ const CompanyDetails = ({ closeModal }) => {
   // Handle empty company array or error
   if (!company || !companyId) {
     return <h2>No company data available.</h2>; 
-
   }
 
   useEffect(() => {
