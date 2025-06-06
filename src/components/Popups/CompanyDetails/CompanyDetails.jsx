@@ -75,10 +75,9 @@ const CompanyDetails = ({ closeModal }) => {
   console.log("COMPANY CONTACT DATA FROM FRONTEND", companyContactData);
 
   // Handle empty company array or error
-  // if (!company || !companyId) {
-  //   return <h2>No company data available.</h2>; 
-
-  // }
+  if (!company || !companyId) {
+    return <h2>No company data available.</h2>; 
+  }
 
   useEffect(() => {
     if (companyId && token) {
