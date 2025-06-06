@@ -173,7 +173,6 @@ export const getCompanyContact = createAsyncThunk(
   }
 );
 
-
 // export const applyFilters = (filters) => (dispatch, getState) => {
 //   const { searchResponseMatched, page, pageSize } = getState().searchProductStore;
 //   const filteredData = {};
@@ -220,7 +219,6 @@ export const sortInventory = createAsyncThunk(
   }
 );
 
-
 export const deleteCompanyContact = createAsyncThunk(
   "toolsStore/deleteCompanyContact",
   async ({ token, ids }) => {
@@ -245,10 +243,6 @@ export const deleteCompanyContact = createAsyncThunk(
     }
   }
 );
-
-
-
-
 
 export const updateCompanyPrimaryInfo = createAsyncThunk(
   "profile/updateCompanyPrimaryInfo",

@@ -62,13 +62,13 @@ const handlePdfExport = () => {
   Object.entries(groupedByCompany).forEach(([company, parts]) => {
     doc.text(`${company}`, 14, currentY);
     const rows = parts.map((item) => [
-      item.partModel,
-      item.mfg,
-      item.cond,
-      item.price,
-      item.quantity,
-      item.age,
-      item.productDescription || "",
+      item.inventory?.partModel,
+      item.inventory?.mfg,
+      item.inventory?.cond,
+      item.inventory?.price,
+      item.inventory?.quantity,
+      item.inventory?.age,
+      item.inventory?.productDescription || "",
     ]);
     autoTable(doc, {
       head: [["Part#", "Mfg", "Cond", "Price", "Qty", "Age", "Description"]],
@@ -277,7 +277,12 @@ useEffect(() => {
                   <option value="lowestprice">Lowest Price</option>
                 </select>
               </div>
-              <button type="button">PDF</button>
+              <button 
+              type="button"
+              onClick={handlePdfExport}
+              >
+                PDF
+              </button>
               <button type="button">export</button>
               <button type="button">clear all</button>
             </div>
@@ -285,7 +290,6 @@ useEffect(() => {
           <LearnMore />
         </div>
       </div>
-
 
       {showNoteModal && (
         <Note
