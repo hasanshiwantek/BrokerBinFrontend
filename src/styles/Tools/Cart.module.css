@@ -165,7 +165,17 @@ ol li {
 }
 
 .cartLayout_options button:focus {
-  outline: 2px solid #2c83ec;
-  outline-offset: 2px;
+  outline: 1px solid #2c83ec;
+  outline-offset: 1px;
+  box-shadow: 0 0 0 3px rgba(44, 131, 236, 0.4); /* blue glow */
+}
+
+.cartList_list_btn button:hover {
+  background-color: #1c6dd0; /* slightly darker for hover */
+}
+
+.cartList_list_btn button:focus {
+  outline: 1px solid #2c83ec;
+  outline-offset: 1px;
   box-shadow: 0 0 0 3px rgba(44, 131, 236, 0.4); /* blue glow */
 }

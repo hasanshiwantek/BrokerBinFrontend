@@ -205,6 +205,8 @@ const Accordion = ({
           return (
             <div className={css.accordionPanel} key={index}>
               <div ref={pdfRef}>
+
+                
                 <h2 id={`panel${index + 1}-title`}>
                   <button
                     className={css.accordionTrigger}
@@ -260,6 +262,8 @@ const Accordion = ({
                       </ThemeProvider>
                     </div>
                   </button>
+
+
                 </h2>
               </div>
               <div
