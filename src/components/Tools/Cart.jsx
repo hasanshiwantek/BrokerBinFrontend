@@ -16,6 +16,8 @@ import Cookies from "js-cookie";
 const Cart = () => {
   const [selectedParts, setSelectedParts] = useState([]);
   const selectedProducts = useSelector((state) => state.searchProductStore.selectedProductsForCart);
+  console.log("SELECTEDPRODUCTS", selectedProducts);
+  
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -86,10 +88,10 @@ useEffect(() => {
   const token = Cookies.get("token");
 
   const initCart = async () => {
-    if (selectedParts.length > 0) {
-      const ids = selectedParts.map((item) => item.id);
-      await dispatch(addToCart({ token, inventoryIds: ids }));
-    }
+    // if (selectedParts.length > 0) {
+    //   const ids = selectedParts.map((item) => item.id);
+    //   await dispatch(addToCart({ token, inventoryIds: ids }));
+    // }
 
     const result = await dispatch(fetchCartItems({ token }));
     if (fetchCartItems.fulfilled.match(result)) {
@@ -99,7 +101,6 @@ useEffect(() => {
 
   initCart();
 }, []);
-
 
   console.log("SelectedCartProduct", selectedProducts);
   console.log("Selected Parts: ", selectedParts);
@@ -185,14 +186,12 @@ useEffect(() => {
                               // defaultValue={false}
                             />
 
-                            {e.partModel}
+                            {e.inventory?.partModel}
                           </td>
-
-                          <td>{e.mfg}</td>
-                          <td>{e.cond}</td>
-
-                          <td>{e.quantity}</td>
-                          <td>{e.age}</td>
+                          <td>{e.inventory?.mfg}</td>
+                          <td>{e.inventory?.cond}</td>
+                          <td>{e.inventory?.quantity}</td>
+                          <td>{e.inventory?.age}</td>
                         </tr>
                       );
                     })}
