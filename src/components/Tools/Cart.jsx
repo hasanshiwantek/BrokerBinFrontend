@@ -414,28 +414,30 @@ const Cart = () => {
                               </tr>
 
                               {/* Note Row */}
-                              {e.notes?.length > 0 && (
-                                <tr className=" text-gray-800 ">
-                                  <td colSpan="6" className="pl-10 ">
-                                    <div className="flex items-center gap-2 p-1">
-                                      <span>Note:</span>
-                                      <input
-                                        type="text"
-                                        defaultValue={e.notes[0].note || ""}
-                                        className="text-[10px] border rounded px-3 py-2 w-full max-w-xs"
-                                        onBlur={(ev) =>
-                                          handleNoteUpdate(
-                                            e.id,
-                                            ev.target.value,
-                                            e.notes[0].quantity,
-                                            e.notes[0].id
-                                          )
-                                        }
-                                      />
-                                    </div>
-                                  </td>
-                                </tr>
-                              )}
+                              {e.notes?.length > 0 &&
+                                e.notes.map((note) => (
+                                  <tr key={note.id}>
+                                    <td colSpan="6" className="pl-10">
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-[10px]">
+                                          Note:
+                                        </span>
+                                        <input
+                                          type="text"
+                                          defaultValue={note.note}
+                                          className="text-[10px] border px-2 py-1 rounded m-1 w-full max-w-xs"
+                                          onBlur={(ev) =>
+                                            handleNoteUpdate(
+                                              note.id, // partCartId
+                                              ev.target.value, // newNote
+                                              note.quantity, // quantity
+                                            )
+                                          }
+                                        />
+                                      </div>
+                                    </td>
+                                  </tr>
+                                ))}
                             </React.Fragment>
                           ))}
                         </React.Fragment>
