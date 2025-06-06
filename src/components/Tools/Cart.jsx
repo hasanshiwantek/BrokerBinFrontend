@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Tick from "../../svgs/Tick";
 import { setSelectedProducts } from "@/ReduxStore/SearchProductSlice";
 import { useNavigate } from "react-router-dom";
-import { setSelectedProductsForCart, fetchCartItems } from "@/ReduxStore/SearchProductSlice";
+import { setSelectedProductsForCart, fetchCartItems, deleteCartItem } from "@/ReduxStore/SearchProductSlice";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import Note from "../partCart/Note";
@@ -16,10 +16,12 @@ import Cookies from "js-cookie";
 const Cart = () => {
   const [selectedParts, setSelectedParts] = useState([]);
   const selectedProducts = useSelector((state) => state.searchProductStore.selectedProductsForCart);
+  console.log("SELECTEDPRODUCTS", selectedProducts);
+  
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const pdfRef = useRef();
+  const token = Cookies.get("token");
 
   const groupedByCompany = selectedProducts.reduce((acc, item) => {
     const company = item?.inventory?.addedBy?.company?.name || "Unknown Company";
@@ -43,7 +45,8 @@ const Cart = () => {
       (item) => !selectedParts.some((p) => p.id === item.id)
     );
     dispatch(setSelectedProductsForCart(updated));
-    setSelectedParts([]);
+    const ids = selectedParts.map((item) => item.id);
+    dispatch(deleteCartItem({ token, ids }));
   };
 
   const createRfq = () => {
@@ -60,13 +63,13 @@ const handlePdfExport = () => {
   Object.entries(groupedByCompany).forEach(([company, parts]) => {
     doc.text(`${company}`, 14, currentY);
     const rows = parts.map((item) => [
-      item.partModel,
-      item.mfg,
-      item.cond,
-      item.price,
-      item.quantity,
-      item.age,
-      item.productDescription || "",
+      item.inventory?.partModel,
+      item.inventory?.mfg,
+      item.inventory?.cond,
+      item.inventory?.price,
+      item.inventory?.quantity,
+      item.inventory?.age,
+      item.inventory?.productDescription || "",
     ]);
     autoTable(doc, {
       head: [["Part#", "Mfg", "Cond", "Price", "Qty", "Age", "Description"]],
@@ -86,10 +89,10 @@ useEffect(() => {
   const token = Cookies.get("token");
 
   const initCart = async () => {
-    if (selectedParts.length > 0) {
-      const ids = selectedParts.map((item) => item.id);
-      await dispatch(addToCart({ token, inventoryIds: ids }));
-    }
+    // if (selectedParts.length > 0) {
+    //   const ids = selectedParts.map((item) => item.id);
+    //   await dispatch(addToCart({ token, inventoryIds: ids }));
+    // }
 
     const result = await dispatch(fetchCartItems({ token }));
     if (fetchCartItems.fulfilled.match(result)) {
@@ -99,7 +102,6 @@ useEffect(() => {
 
   initCart();
 }, []);
-
 
   console.log("SelectedCartProduct", selectedProducts);
   console.log("Selected Parts: ", selectedParts);
@@ -185,14 +187,12 @@ useEffect(() => {
                               // defaultValue={false}
                             />
 
-                            {e.partModel}
+                            {e.inventory?.partModel}
                           </td>
-
-                          <td>{e.mfg}</td>
-                          <td>{e.cond}</td>
-
-                          <td>{e.quantity}</td>
-                          <td>{e.age}</td>
+                          <td>{e.inventory?.mfg}</td>
+                          <td>{e.inventory?.cond}</td>
+                          <td>{e.inventory?.quantity}</td>
+                          <td>{e.inventory?.age}</td>
                         </tr>
                       );
                     })}
@@ -278,7 +278,12 @@ useEffect(() => {
                   <option value="lowestprice">Lowest Price</option>
                 </select>
               </div>
-              <button type="button">PDF</button>
+              <button 
+              type="button"
+              onClick={handlePdfExport}
+              >
+                PDF
+              </button>
               <button type="button">export</button>
               <button type="button">clear all</button>
             </div>
@@ -286,7 +291,6 @@ useEffect(() => {
           <LearnMore />
         </div>
       </div>
-
 
       {showNoteModal && (
         <Note
