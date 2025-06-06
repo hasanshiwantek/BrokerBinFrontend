@@ -72,8 +72,8 @@ const Note = ({ selectedParts, onClose }) => {
       toast.info(result?.message || "Notes saved successfully!", {
          style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, 
       });
-
       onClose();
+      window.location.reload(500)
     } catch (error) {
       console.error("Note save error:", error);
       toast.error(error?.message || "Failed to save notes.", {
