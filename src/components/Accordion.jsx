@@ -308,7 +308,7 @@ const Accordion = ({
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
 
-      <ToastContainer position="top-center" autoClose={2000} />
+      {/* <ToastContainer position="top-center" autoClose={2000} /> */}
     </>
   );
 };

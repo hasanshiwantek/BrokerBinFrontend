@@ -10,6 +10,7 @@ import {
   setSelectedProductsForCart,
   fetchCartItems,
   deleteCartItem,
+  clearCartItems,
 } from "@/ReduxStore/SearchProductSlice";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -39,7 +40,7 @@ const Cart = () => {
 
   const handleClear = async () => {
     try {
-      const result = await dispatch(deleteCartItems({ token })).unwrap();
+      const result = await dispatch(clearCartItems({ token })).unwrap();
 
       if (result?.status) {
         toast.success(result?.message || "Cart cleared successfully!", {
@@ -63,7 +64,11 @@ const Cart = () => {
   const handleRemove = async () => {
     if (!selectedParts.length) {
       toast.warning("You must select at least one part!", {
-        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+        style: {
+          fontSize: "12px",
+          marginTop: "-10px",
+          fontWeight: "bold",
+        },
       });
       return;
     }
@@ -72,28 +77,44 @@ const Cart = () => {
       const updated = selectedProducts.filter(
         (item) => !selectedParts.some((p) => p.id === item.id)
       );
-
       dispatch(setSelectedProductsForCart(updated));
 
       const ids = selectedParts.map((item) => item.id);
+
+      if (!ids.length) return;
+
       const result = await dispatch(deleteCartItem({ token, ids })).unwrap();
-      console.log("Result: ",result);
+      console.log("Delete result:", result);
+
       if (result?.status) {
         toast.info("Selected parts removed from cart!", {
-          style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+          style: {
+            fontSize: "12px",
+            marginTop: "-10px",
+            fontWeight: "bold",
+          },
         });
       } else {
         toast.warning("Some parts may not have been removed.", {
-          style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+          style: {
+            fontSize: "12px",
+            marginTop: "-10px",
+            fontWeight: "bold",
+          },
         });
       }
     } catch (error) {
       console.error("Error while removing parts:", error);
       toast.error("Failed to remove selected parts. Please try again.", {
-        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+        style: {
+          fontSize: "12px",
+          marginTop: "-10px",
+          fontWeight: "bold",
+        },
       });
     }
   };
+
   const createRfq = () => {
     if (!selectedParts.length) {
       alert("You must select at least one part!");
@@ -145,6 +166,89 @@ const Cart = () => {
   console.log("Selected Parts: ", selectedParts);
   const [showNoteModal, setShowNoteModal] = useState(false);
 
+  const handleToggle = (item) => {
+    setSelectedParts((prev) =>
+      prev.some((i) => i.id === item.id)
+        ? prev.filter((i) => i.id !== item.id)
+        : [...prev, item]
+    );
+  };
+
+  const handleAction = async (e) => {
+    const action = e.target.value;
+
+    if (action === "remove") {
+      await handleRemove();
+    }
+
+    if (action === "onlythese") {
+      await handleRemoveNonSelected();
+    }
+
+    // Reset dropdown to default
+    e.target.value = "";
+  };
+
+  const handleRemoveNonSelected = async () => {
+    if (selectedParts.length === selectedProducts.length) {
+      toast.info("All parts are selected, nothing to remove.", {
+        style: {
+          fontSize: "12px",
+          marginTop: "-10px",
+          fontWeight: "bold",
+        },
+      });
+      return;
+    }
+
+    try {
+      // Remove items that are *not* selected
+      const updated = selectedProducts.filter((item) =>
+        selectedParts.some((p) => p.id === item.id)
+      );
+
+      dispatch(setSelectedProductsForCart(updated));
+
+      const idsToRemove = selectedProducts
+        .filter((item) => !selectedParts.some((p) => p.id === item.id))
+        .map((item) => item.id);
+
+      if (!idsToRemove.length) return;
+
+      const result = await dispatch(
+        deleteCartItem({ token, ids: idsToRemove })
+      ).unwrap();
+      console.log("Delete non-selected result:", result);
+
+      if (result?.status) {
+        toast.info("Non-selected parts removed from cart!", {
+          style: {
+            fontSize: "12px",
+            marginTop: "-10px",
+            fontWeight: "bold",
+          },
+        });
+      } else {
+        toast.warning("Some parts may not have been removed.", {
+          style: {
+            fontSize: "12px",
+            marginTop: "-10px",
+            fontWeight: "bold",
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Error while removing non-selected parts:", error);
+      toast.error("Failed to remove non-selected parts.", {
+        style: {
+          fontSize: "12px",
+          marginTop: "-10px",
+          fontWeight: "bold",
+        },
+      });
+    }
+  };
+
   return (
     <div>
       <div className={css.mainLayout}>
@@ -189,7 +293,10 @@ const Cart = () => {
             <h1>Action</h1>
             <div className={css.cartList_action}>
               <p>with selected</p>
-              <select className={css.cartList_action_select}>
+              <select
+                className={css.cartList_action_select}
+                onChange={handleAction}
+              >
                 <option value="" defaultValue="Choose an action">
                   Choose an action
                 </option>
@@ -222,6 +329,8 @@ const Cart = () => {
                               name="addToCart"
                               id="addToCart"
                               className="h-4 w-4"
+                              checked={selectedParts.some((p) => p.id === e.id)}
+                              onChange={() => handleToggle(e)}
                               // defaultValue={false}
                             />
 
@@ -242,7 +351,10 @@ const Cart = () => {
             <div className={css.cartList_action}>
               {/* <div> */}
               <p>with selected</p>
-              <select className={css.cartList_action_select}>
+              <select
+                className={css.cartList_action_select}
+                onChange={handleAction}
+              >
                 <option value="" defaultValue="Choose an action">
                   Choose an action
                 </option>

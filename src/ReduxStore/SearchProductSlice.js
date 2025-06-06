@@ -346,8 +346,8 @@ export const fetchCartItems = createAsyncThunk(
   }
 );
 
-export const deleteCartItems = createAsyncThunk(
-  "toolstore/deleteCartItems",
+export const clearCartItems = createAsyncThunk(
+  "toolstore/clearCartItems",
   async ({ token }, { rejectWithValue }) => {
     try {
       const response = await axios.delete(`${brokerAPI}part-cart/clear`, {
@@ -664,16 +664,16 @@ const searchProductSlice = createSlice({
         console.error(action.error.message);
       })
 
-      .addCase(deleteCartItems.pending, (state) => {
+      .addCase(clearCartItems.pending, (state) => {
         console.log("DELETING....");
       })
-      .addCase(deleteCartItems.fulfilled, (state, action) => {
+      .addCase(clearCartItems.fulfilled, (state, action) => {
         state.selectedProductsForCart = state.selectedProductsForCart.filter(
           (item) => item.id != action.payload
         );
       })
 
-      .addCase(deleteCartItems.rejected, (state, action) => {
+      .addCase(clearCartItems.rejected, (state, action) => {
         state.error = action.error.message;
         console.error(action.error.message);
       })
