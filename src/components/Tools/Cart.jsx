@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Tick from "../../svgs/Tick";
 import { setSelectedProducts } from "@/ReduxStore/SearchProductSlice";
 import { useNavigate } from "react-router-dom";
-import { setSelectedProductsForCart, fetchCartItems } from "@/ReduxStore/SearchProductSlice";
+import { setSelectedProductsForCart, fetchCartItems, deleteCartItem } from "@/ReduxStore/SearchProductSlice";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import Note from "../partCart/Note";
@@ -21,7 +21,7 @@ const Cart = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const pdfRef = useRef();
+  const token = Cookies.get("token");
 
   const groupedByCompany = selectedProducts.reduce((acc, item) => {
     const company = item?.inventory?.addedBy?.company?.name || "Unknown Company";
@@ -45,7 +45,8 @@ const Cart = () => {
       (item) => !selectedParts.some((p) => p.id === item.id)
     );
     dispatch(setSelectedProductsForCart(updated));
-    setSelectedParts([]);
+    const ids = selectedParts.map((item) => item.id);
+    dispatch(deleteCartItem({ token, ids }));
   };
 
   const createRfq = () => {

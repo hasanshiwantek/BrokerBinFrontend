@@ -173,6 +173,7 @@ export const getCompanyContact = createAsyncThunk(
   }
 );
 
+
 // export const applyFilters = (filters) => (dispatch, getState) => {
 //   const { searchResponseMatched, page, pageSize } = getState().searchProductStore;
 //   const filteredData = {};
@@ -243,6 +244,7 @@ export const deleteCompanyContact = createAsyncThunk(
     }
   }
 );
+
 
 export const updateCompanyPrimaryInfo = createAsyncThunk(
   "profile/updateCompanyPrimaryInfo",
@@ -338,6 +340,31 @@ export const fetchCartItems = createAsyncThunk(
       return response.data.data; // Make sure API returns items array
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+export const deleteCartItem = createAsyncThunk(
+  "toolsStore/deleteCartItem",
+  async ({ token, ids }) => {
+    try {
+      const response = await axios.delete(
+        `${brokerAPI}part-cart/delete`, // Assuming the route
+        {
+          data: {ids},
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("✅ Deleted Contacts Response:", response.data);
+      return response.data; // Should include back the `ids` array for cleanup
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        "An error occurred while deleting contacts.";
+      throw new Error(message);
     }
   }
 );
