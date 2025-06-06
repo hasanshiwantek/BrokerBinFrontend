@@ -267,7 +267,6 @@ export const updateCompanyPrimaryInfo = createAsyncThunk(
   }
 );
 
-
 export const updateCompanyBio = createAsyncThunk(
   "toolstore/updateCompanyBio",
   async ({ token, company_id, description }, { rejectWithValue }) => {
@@ -288,8 +287,6 @@ export const updateCompanyBio = createAsyncThunk(
     }
   }
 );
-
-
 
 export const partCartNotes = createAsyncThunk(
   "toolstore/partCartNotes",
@@ -314,7 +311,42 @@ export const partCartNotes = createAsyncThunk(
   }
 );
 
+export const addToCart = createAsyncThunk(
+  "toolstore/addToCart",
+  async ({ token, inventoryIds }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `${brokerAPI}part-cart`, // update URL as needed
+        { inventory_id: inventoryIds }, // API expects an array or single ID
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
 
+export const fetchCartItems = createAsyncThunk(
+  "toolstore/fetchCartItems",
+  async ({ token }, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${brokerAPI}part-cart`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data.data; // Make sure API returns items array
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
 
 const initialState = {
   companiesListingParts: true,
