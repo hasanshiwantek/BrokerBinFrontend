@@ -388,6 +388,29 @@ export const deleteCartItem = createAsyncThunk(
   }
 );
 
+export const updatePartcartNote = createAsyncThunk(
+  "toolstore/updatePartcartNote",
+  async ({ token, id, note, quantity }, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(
+        `${brokerAPI}part-cart/notes/${id}?note=${note}&quantity=${quantity}`,
+        null, // ✅ no body needed since all data is in query params
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("Updated note response from redux: ",response.data);
+      
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
 const initialState = {
   companiesListingParts: true,
   graphToggle: false,

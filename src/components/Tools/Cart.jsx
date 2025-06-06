@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import css from "../../styles/Tools/Cart.module.css";
 import Accordion from "../Accordion";
 import LearnMore from "./LearnMore";
@@ -11,6 +11,7 @@ import {
   fetchCartItems,
   deleteCartItem,
   clearCartItems,
+  updatePartcartNote,
 } from "@/ReduxStore/SearchProductSlice";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -21,6 +22,9 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import axios from "axios";
 import { brokerAPI } from "../api/BrokerEndpoint";
+import { setTogglePopUp } from "@/ReduxStore/SearchProductSlice";
+import CompanyDetails from "../Popups/CompanyDetails/CompanyDetails";
+import { setPopupCompanyDetail } from "@/ReduxStore/SearchProductSlice";
 
 const Cart = () => {
   const [selectedParts, setSelectedParts] = useState([]);
@@ -33,6 +37,17 @@ const Cart = () => {
   const navigate = useNavigate();
   const token = Cookies.get("token");
 
+  // MODAL COMPANY LOGIC
+  const { togglePopUp, popupCompanyDetail } = useSelector(
+    (state) => state.searchProductStore
+  );
+
+  // Company Modal Logic
+  const openCompanyModal = (company) => {
+    dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
+    dispatch(setTogglePopUp()); // Show company modal
+  };
+
   const groupedByCompany = selectedProducts.reduce((acc, item) => {
     const company =
       item?.inventory?.addedBy?.company?.name || "Unknown Company";
@@ -43,25 +58,31 @@ const Cart = () => {
   }, {});
 
   const handleClear = async () => {
-    try {
-      const result = await dispatch(clearCartItems({ token })).unwrap();
+    const isConfirmed = window.confirm("Confirm Cart Deletion?");
+    if (isConfirmed) {
+      try {
+        const result = await dispatch(clearCartItems({ token })).unwrap();
 
-      if (result?.status) {
-        toast.success(result?.message || "Cart cleared successfully!", {
-          style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
-        });
-        window.location.reload(300);
-        // Optional: refresh UI or state if needed
-      } else {
-        toast.warning("Cart clear action didn't succeed.", {
-          style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
-        });
+        if (result?.status) {
+          toast.success(result?.message || "Cart cleared successfully!", {
+            style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+          });
+          window.location.reload(300);
+          // Optional: refresh UI or state if needed
+        } else {
+          toast.warning("Cart clear action didn't succeed.", {
+            style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+          });
+        }
+      } catch (error) {
+        console.error("Failed to clear cart:", error);
+        toast.error(
+          error?.message || "Failed to clear cart. Please try again.",
+          {
+            style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+          }
+        );
       }
-    } catch (error) {
-      console.error("Failed to clear cart:", error);
-      toast.error(error?.message || "Failed to clear cart. Please try again.", {
-        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
-      });
     }
   };
 
@@ -137,34 +158,6 @@ const Cart = () => {
       state: { selectedRows: normalizedParts },
     });
   };
-
-  // const handlePdfExport = () => {
-  //   const doc = new jsPDF();
-  //   let currentY = 10;
-  //   Object.entries(groupedByCompany).forEach(([company, parts]) => {
-  //     doc.text(`${company}`, 14, currentY);
-  //     const rows = parts.map((item) => [
-  //       item.inventory?.partModel,
-  //       item.inventory?.mfg,
-  //       item.inventory?.cond,
-  //       item.inventory?.price,
-  //       item.inventory?.quantity,
-  //       item.inventory?.age,
-  //       item.inventory?.productDescription || "",
-  //     ]);
-  //     autoTable(doc, {
-  //       head: [["Part#", "Mfg", "Cond", "Price", "Qty", "Age", "Description"]],
-  //       body: rows,
-  //       startY: currentY + 5,
-  //       styles: { fontSize: 10 },
-  //       didDrawPage: (data) => {
-  //         currentY = data.cursor.y + 10; // update Y for next table
-  //       },
-  //     });
-  //   });
-  //   const pdfBlobUrl = doc.output("bloburl");
-  //   window.open(pdfBlobUrl); // Opens PDF preview
-  // };
 
   const handlePdfExport = async () => {
     try {
@@ -278,6 +271,44 @@ const Cart = () => {
     }
   };
 
+  const groupedProducts = useMemo(() => {
+    const map = {};
+    selectedProducts.forEach((item) => {
+      const companyName = item.inventory?.addedBy?.company?.name || "Unknown";
+      if (!map[companyName]) map[companyName] = [];
+      map[companyName].push(item);
+    });
+    return map;
+  }, [selectedProducts]);
+
+  const handleNoteUpdate = (partCartId, newNote, quantity) => {
+    const trimmedNote = newNote.trim();
+
+    const payload = {
+      token,
+      id: partCartId,
+      note: trimmedNote,
+      quantity: quantity || 0,
+    };
+
+    console.log("🔄 Updating Note with Payload:", payload);
+
+    dispatch(updatePartcartNote(payload))
+      .unwrap()
+      .then((res) => {
+        console.log("✅ Note update response:", res);
+        // toast.success("Note updated!", {
+        //   style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+        // });
+      })
+      .catch((err) => {
+        console.error("❌ Note update error:", err);
+        // toast.error("Failed to update note.", {
+        //   style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+        // });
+      });
+  };
+
   return (
     <div>
       <div className={css.mainLayout}>
@@ -349,29 +380,67 @@ const Cart = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {selectedProducts.map((e, i) => {
-                      return (
-                        <tr className="tableData" key={i}>
-                          <td>
-                            <input
-                              type="checkbox"
-                              name="addToCart"
-                              id="addToCart"
-                              className="h-4 w-4"
-                              checked={selectedParts.some((p) => p.id === e.id)}
-                              onChange={() => handleToggle(e)}
-                              // defaultValue={false}
-                            />
+                    {Object.entries(groupedProducts).map(
+                      ([companyName, parts]) => (
+                        <React.Fragment key={companyName}>
+                          {/* Company Header Row */}
+                          <tr className="bg-gray-200 text-left ">
+                            <td
+                              colSpan="6"
+                              className="font-bold !text-[9pt] px-2 py-1 text-blue-600 "
+                            >
+                              Company: {companyName}
+                            </td>
+                          </tr>
 
-                            {e.inventory?.partModel}
-                          </td>
-                          <td>{e.inventory?.mfg}</td>
-                          <td>{e.inventory?.cond}</td>
-                          <td>{e.inventory?.quantity}</td>
-                          <td>{e.inventory?.age}</td>
-                        </tr>
-                      );
-                    })}
+                          {parts.map((e) => (
+                            <React.Fragment key={e.id}>
+                              <tr className="tableData">
+                                <td>
+                                  <input
+                                    type="checkbox"
+                                    checked={selectedParts.some(
+                                      (p) => p.id === e.id
+                                    )}
+                                    onChange={() => handleToggle(e)}
+                                    className="h-4 w-4"
+                                  />
+                                  {e.inventory?.partModel}
+                                </td>
+                                <td>{e.inventory?.mfg}</td>
+                                <td>{e.inventory?.cond}</td>
+                                <td>{e.inventory?.quantity}</td>
+                                <td>{e.inventory?.age}</td>
+                              </tr>
+
+                              {/* Note Row */}
+                              {e.notes?.length > 0 && (
+                                <tr className=" text-gray-800 ">
+                                  <td colSpan="6" className="pl-10 ">
+                                    <div className="flex items-center gap-2 p-1">
+                                      <span>Note:</span>
+                                      <input
+                                        type="text"
+                                        defaultValue={e.notes[0].note || ""}
+                                        className="text-[10px] border rounded px-3 py-2 w-full max-w-xs"
+                                        onBlur={(ev) =>
+                                          handleNoteUpdate(
+                                            e.id,
+                                            ev.target.value,
+                                            e.notes[0].quantity,
+                                            e.notes[0].id
+                                          )
+                                        }
+                                      />
+                                    </div>
+                                  </td>
+                                </tr>
+                              )}
+                            </React.Fragment>
+                          ))}
+                        </React.Fragment>
+                      )
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -399,13 +468,10 @@ const Cart = () => {
         <div className={css.cartLay}>
           <div className={css.cartLayout}>
             <div className={css.cartLayout_options}>
-              <button
-                type="button"
-                onClick={handleRemove}>
+              <button type="button" onClick={handleRemove}>
                 remove
               </button>
-              <button
-                type="button" onClick={createRfq}>
+              <button type="button" onClick={createRfq}>
                 create RQF
               </button>
               <button
@@ -432,10 +498,7 @@ const Cart = () => {
                   <option value="lowestprice">Lowest Price</option>
                 </select>
               </div>
-              <button
-                type="button"
-                onClick={handlePdfExport}
-              >
+              <button type="button" onClick={handlePdfExport}>
                 PDF
               </button>
               <button type="button">export</button>
@@ -450,13 +513,12 @@ const Cart = () => {
               filterOption={filterOption}
             />
             <div className={css.cartLayout_options}>
-              <button
-                type="button"
-                onClick={handleRemove}
-              >
+              <button type="button" onClick={handleRemove}>
                 remove
               </button>
-              <button type="button" onClick={createRfq}>create RQF</button>
+              <button type="button" onClick={createRfq}>
+                create RQF
+              </button>
               <button
                 type="button"
                 onClick={() => {
@@ -481,9 +543,7 @@ const Cart = () => {
                   <option value="lowestprice">Lowest Price</option>
                 </select>
               </div>
-              <button
-                type="button"
-                onClick={handlePdfExport}>
+              <button type="button" onClick={handlePdfExport}>
                 PDF
               </button>
               <button type="button">export</button>
@@ -501,6 +561,7 @@ const Cart = () => {
           onClose={() => setShowNoteModal(false)}
         />
       )}
+
       <ToastContainer position="top-center" autoClose={2000} />
     </div>
   );
