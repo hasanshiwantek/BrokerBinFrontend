@@ -6,49 +6,94 @@ import { useDispatch, useSelector } from "react-redux";
 import Tick from "../../svgs/Tick";
 import { setSelectedProducts } from "@/ReduxStore/SearchProductSlice";
 import { useNavigate } from "react-router-dom";
-import { setSelectedProductsForCart, fetchCartItems, deleteCartItem } from "@/ReduxStore/SearchProductSlice";
+import {
+  setSelectedProductsForCart,
+  fetchCartItems,
+  deleteCartItem,
+} from "@/ReduxStore/SearchProductSlice";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import Note from "../partCart/Note";
 import Cookies from "js-cookie";
-
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 const Cart = () => {
   const [selectedParts, setSelectedParts] = useState([]);
-  const selectedProducts = useSelector((state) => state.searchProductStore.selectedProductsForCart);
-  console.log("SELECTEDPRODUCTS", selectedProducts);
-  
+  const selectedProducts = useSelector(
+    (state) => state.searchProductStore.selectedProductsForCart
+  );
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = Cookies.get("token");
 
   const groupedByCompany = selectedProducts.reduce((acc, item) => {
-    const company = item?.inventory?.addedBy?.company?.name || "Unknown Company";
+    const company =
+      item?.inventory?.addedBy?.company?.name || "Unknown Company";
     console.log("companyfrom cart", company);
     if (!acc[company]) acc[company] = [];
     acc[company].push(item);
     return acc;
   }, {});
 
-  const handleClear = () => {
-    dispatch(setSelectedProductsForCart([]));
-    setSelectedParts([]);
+  const handleClear = async () => {
+    try {
+      const result = await dispatch(deleteCartItems({ token })).unwrap();
+
+      if (result?.status) {
+        toast.success(result?.message || "Cart cleared successfully!", {
+          style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+        });
+        window.location.reload(300);
+        // Optional: refresh UI or state if needed
+      } else {
+        toast.warning("Cart clear action didn't succeed.", {
+          style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+        });
+      }
+    } catch (error) {
+      console.error("Failed to clear cart:", error);
+      toast.error(error?.message || "Failed to clear cart. Please try again.", {
+        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+      });
+    }
   };
 
-  const handleRemove = () => {
-     if (!selectedParts.length) {
-    alert("You must select at least one part!");
-    return;
-  }
-    const updated = selectedProducts.filter(
-      (item) => !selectedParts.some((p) => p.id === item.id)
-    );
-    dispatch(setSelectedProductsForCart(updated));
-    const ids = selectedParts.map((item) => item.id);
-    dispatch(deleteCartItem({ token, ids }));
-  };
+  const handleRemove = async () => {
+    if (!selectedParts.length) {
+      toast.warning("You must select at least one part!", {
+        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+      });
+      return;
+    }
 
+    try {
+      const updated = selectedProducts.filter(
+        (item) => !selectedParts.some((p) => p.id === item.id)
+      );
+
+      dispatch(setSelectedProductsForCart(updated));
+
+      const ids = selectedParts.map((item) => item.id);
+      const result = await dispatch(deleteCartItem({ token, ids })).unwrap();
+      console.log("Result: ",result);
+      if (result?.status) {
+        toast.info("Selected parts removed from cart!", {
+          style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+        });
+      } else {
+        toast.warning("Some parts may not have been removed.", {
+          style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+        });
+      }
+    } catch (error) {
+      console.error("Error while removing parts:", error);
+      toast.error("Failed to remove selected parts. Please try again.", {
+        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+      });
+    }
+  };
   const createRfq = () => {
     if (!selectedParts.length) {
       alert("You must select at least one part!");
@@ -57,46 +102,44 @@ const Cart = () => {
     navigate("/rfq/create", { state: { selectedRows: selectedParts } });
   };
 
-const handlePdfExport = () => {
-  const doc = new jsPDF();
-  let currentY = 10;
-  Object.entries(groupedByCompany).forEach(([company, parts]) => {
-    doc.text(`${company}`, 14, currentY);
-    const rows = parts.map((item) => [
-      item.inventory?.partModel,
-      item.inventory?.mfg,
-      item.inventory?.cond,
-      item.inventory?.price,
-      item.inventory?.quantity,
-      item.inventory?.age,
-      item.inventory?.productDescription || "",
-    ]);
-    autoTable(doc, {
-      head: [["Part#", "Mfg", "Cond", "Price", "Qty", "Age", "Description"]],
-      body: rows,
-      startY: currentY + 5,
-      styles: { fontSize: 10 },
-      didDrawPage: (data) => {
-        currentY = data.cursor.y + 10; // update Y for next table
-      },
+  const handlePdfExport = () => {
+    const doc = new jsPDF();
+    let currentY = 10;
+    Object.entries(groupedByCompany).forEach(([company, parts]) => {
+      doc.text(`${company}`, 14, currentY);
+      const rows = parts.map((item) => [
+        item.inventory?.partModel,
+        item.inventory?.mfg,
+        item.inventory?.cond,
+        item.inventory?.price,
+        item.inventory?.quantity,
+        item.inventory?.age,
+        item.inventory?.productDescription || "",
+      ]);
+      autoTable(doc, {
+        head: [["Part#", "Mfg", "Cond", "Price", "Qty", "Age", "Description"]],
+        body: rows,
+        startY: currentY + 5,
+        styles: { fontSize: 10 },
+        didDrawPage: (data) => {
+          currentY = data.cursor.y + 10; // update Y for next table
+        },
+      });
     });
-  });
-  const pdfBlobUrl = doc.output("bloburl");
-  window.open(pdfBlobUrl); // Opens PDF preview
-};
-
-useEffect(() => {
-  const token = Cookies.get("token");
-
-  const initCart = async () => {
-
-    const result = await dispatch(fetchCartItems({ token }));
-    if (fetchCartItems.fulfilled.match(result)) {
-      dispatch(setSelectedProductsForCart(result.payload));
-    }
+    const pdfBlobUrl = doc.output("bloburl");
+    window.open(pdfBlobUrl); // Opens PDF preview
   };
-  initCart();
-}, []);
+
+  useEffect(() => {
+    const initCart = async () => {
+      const result = await dispatch(fetchCartItems({ token }));
+      if (fetchCartItems.fulfilled.match(result)) {
+        dispatch(setSelectedProductsForCart(result.payload));
+      }
+    };
+
+    initCart();
+  }, []);
 
   console.log("SelectedCartProduct", selectedProducts);
   console.log("Selected Parts: ", selectedParts);
@@ -273,14 +316,13 @@ useEffect(() => {
                   <option value="lowestprice">Lowest Price</option>
                 </select>
               </div>
-              <button 
-              type="button"
-              onClick={handlePdfExport}
-              >
+              <button type="button" onClick={handlePdfExport}>
                 PDF
               </button>
               <button type="button">export</button>
-              <button type="button">clear all</button>
+              <button type="button" onClick={handleClear}>
+                clear all
+              </button>
             </div>
           </div>
           <LearnMore />
@@ -293,6 +335,7 @@ useEffect(() => {
           onClose={() => setShowNoteModal(false)}
         />
       )}
+      <ToastContainer position="top-center" autoClose={2000} />
     </div>
   );
 };
