@@ -160,8 +160,9 @@ const Cart = () => {
         headers: { Authorization: `Bearer ${token}` },
         responseType: "blob", // Important for PDF
       });
-
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+      // const url = window.URL.createObjectURL(new Blob([response.data]));
+      const blob = new Blob([response.data], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
       window.open(url); // Open PDF in new tab
     } catch (error) {
       console.error("Failed to export PDF:", error);
@@ -175,7 +176,6 @@ const Cart = () => {
         dispatch(setSelectedProductsForCart(result.payload));
       }
     };
-
     initCart();
   }, []);
 
