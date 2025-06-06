@@ -377,12 +377,12 @@ export const deleteCartItem = createAsyncThunk(
           },
         }
       );
-      console.log("✅ Deleted Contacts Response:", response.data);
+      console.log("✅ Deleted Part Cart Items Response:", response.data);
       return response.data; // Should include back the `ids` array for cleanup
     } catch (error) {
       const message =
         error.response?.data?.message ||
-        "An error occurred while deleting contacts.";
+        "An error occurred while deleting part cart items.";
       throw new Error(message);
     }
   }

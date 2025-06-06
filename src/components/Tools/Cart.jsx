@@ -45,7 +45,7 @@ const Cart = () => {
         toast.success(result?.message || "Cart cleared successfully!", {
           style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
         });
-        window.location.reload(200);
+        window.location.reload(300);
         // Optional: refresh UI or state if needed
       } else {
         toast.warning("Cart clear action didn't succeed.", {
@@ -60,19 +60,40 @@ const Cart = () => {
     }
   };
 
-  const handleRemove = () => {
+  const handleRemove = async () => {
     if (!selectedParts.length) {
-      alert("You must select at least one part!");
+      toast.warning("You must select at least one part!", {
+        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+      });
       return;
     }
-    const updated = selectedProducts.filter(
-      (item) => !selectedParts.some((p) => p.id === item.id)
-    );
-    dispatch(setSelectedProductsForCart(updated));
-    const ids = selectedParts.map((item) => item.id);
-    dispatch(deleteCartItem({ token, ids }));
-  };
 
+    try {
+      const updated = selectedProducts.filter(
+        (item) => !selectedParts.some((p) => p.id === item.id)
+      );
+
+      dispatch(setSelectedProductsForCart(updated));
+
+      const ids = selectedParts.map((item) => item.id);
+      const result = await dispatch(deleteCartItem({ token, ids })).unwrap();
+      console.log("Result: ",result);
+      if (result?.status) {
+        toast.info("Selected parts removed from cart!", {
+          style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+        });
+      } else {
+        toast.warning("Some parts may not have been removed.", {
+          style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+        });
+      }
+    } catch (error) {
+      console.error("Error while removing parts:", error);
+      toast.error("Failed to remove selected parts. Please try again.", {
+        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+      });
+    }
+  };
   const createRfq = () => {
     if (!selectedParts.length) {
       alert("You must select at least one part!");
