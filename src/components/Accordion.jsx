@@ -298,7 +298,7 @@ const Accordion = ({
                         </td>
                         <td
                           className="cursor-pointer"
-                          onClick={() => openCompanyModal(item.inventory?.addedBy?.company)}
+                          onClick={() => openCompanyModal(item?.inventory?.addedBy?.company)}
                         >
                           {item.inventory?.addedBy.company.name}
                         </td>
@@ -342,7 +342,7 @@ const Accordion = ({
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
 
-      {/* <ToastContainer position="top-center" autoClose={2000} /> */}
+      <ToastContainer position="top-center" autoClose={2000} />
     </>
   );
 };
