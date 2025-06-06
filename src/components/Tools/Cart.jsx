@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import {
   setSelectedProductsForCart,
   fetchCartItems,
-  deleteCartItems,
+  deleteCartItem,
 } from "@/ReduxStore/SearchProductSlice";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -23,11 +23,10 @@ const Cart = () => {
   const selectedProducts = useSelector(
     (state) => state.searchProductStore.selectedProductsForCart
   );
-  const token = Cookies.get("token");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const pdfRef = useRef();
+  const token = Cookies.get("token");
 
   const groupedByCompany = selectedProducts.reduce((acc, item) => {
     const company =
@@ -46,7 +45,7 @@ const Cart = () => {
         toast.success(result?.message || "Cart cleared successfully!", {
           style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
         });
-        window.location.reload(200)
+        window.location.reload(200);
         // Optional: refresh UI or state if needed
       } else {
         toast.warning("Cart clear action didn't succeed.", {
@@ -55,7 +54,7 @@ const Cart = () => {
       }
     } catch (error) {
       console.error("Failed to clear cart:", error);
-      toast.error( error?.message ||  "Failed to clear cart. Please try again.", {
+      toast.error(error?.message || "Failed to clear cart. Please try again.", {
         style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
       });
     }
@@ -70,7 +69,8 @@ const Cart = () => {
       (item) => !selectedParts.some((p) => p.id === item.id)
     );
     dispatch(setSelectedProductsForCart(updated));
-    setSelectedParts([]);
+    const ids = selectedParts.map((item) => item.id);
+    dispatch(deleteCartItem({ token, ids }));
   };
 
   const createRfq = () => {
@@ -87,13 +87,13 @@ const Cart = () => {
     Object.entries(groupedByCompany).forEach(([company, parts]) => {
       doc.text(`${company}`, 14, currentY);
       const rows = parts.map((item) => [
-        item.partModel,
-        item.mfg,
-        item.cond,
-        item.price,
-        item.quantity,
-        item.age,
-        item.productDescription || "",
+        item.inventory?.partModel,
+        item.inventory?.mfg,
+        item.inventory?.cond,
+        item.inventory?.price,
+        item.inventory?.quantity,
+        item.inventory?.age,
+        item.inventory?.productDescription || "",
       ]);
       autoTable(doc, {
         head: [["Part#", "Mfg", "Cond", "Price", "Qty", "Age", "Description"]],
@@ -111,11 +111,6 @@ const Cart = () => {
 
   useEffect(() => {
     const initCart = async () => {
-      if (selectedParts.length > 0) {
-        const ids = selectedParts.map((item) => item.id);
-        await dispatch(addToCart({ token, inventoryIds: ids }));
-      }
-
       const result = await dispatch(fetchCartItems({ token }));
       if (fetchCartItems.fulfilled.match(result)) {
         dispatch(setSelectedProductsForCart(result.payload));
@@ -211,10 +206,8 @@ const Cart = () => {
 
                             {e.inventory?.partModel}
                           </td>
-
                           <td>{e.inventory?.mfg}</td>
                           <td>{e.inventory?.cond}</td>
-
                           <td>{e.inventory?.quantity}</td>
                           <td>{e.inventory?.age}</td>
                         </tr>
@@ -302,7 +295,9 @@ const Cart = () => {
                   <option value="lowestprice">Lowest Price</option>
                 </select>
               </div>
-              <button type="button">PDF</button>
+              <button type="button" onClick={handlePdfExport}>
+                PDF
+              </button>
               <button type="button">export</button>
               <button type="button" onClick={handleClear}>
                 clear all
