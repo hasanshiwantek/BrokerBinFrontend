@@ -89,17 +89,12 @@ useEffect(() => {
   const token = Cookies.get("token");
 
   const initCart = async () => {
-    // if (selectedParts.length > 0) {
-    //   const ids = selectedParts.map((item) => item.id);
-    //   await dispatch(addToCart({ token, inventoryIds: ids }));
-    // }
 
     const result = await dispatch(fetchCartItems({ token }));
     if (fetchCartItems.fulfilled.match(result)) {
       dispatch(setSelectedProductsForCart(result.payload));
     }
   };
-
   initCart();
 }, []);
 
