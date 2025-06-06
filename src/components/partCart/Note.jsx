@@ -9,27 +9,30 @@ const Note = ({ selectedParts, onClose }) => {
   const token = Cookies.get("token");
   console.log(token);
   const [loading, setLoading] = useState(false);
+  console.log("Selected parts from Notes page: ", selectedParts);
 
   // Group by company name
   const grouped = useMemo(() => {
     const map = {};
     selectedParts.forEach((part) => {
-      const companyName = part.addedBy?.company?.name || "Unknown";
+      const companyName = part.inventory?.addedBy?.company?.name || "Unknown";
       if (!map[companyName]) map[companyName] = [];
       map[companyName].push(part);
     });
     return map;
   }, [selectedParts]);
 
+  console.log(grouped);
+
   // State to track notes/qty by part id
   const [noteData, setNoteData] = useState(() => {
     const initial = {};
     selectedParts.forEach((part) => {
-      initial[part.id] = {
-        id: part.id,
-        partModel: part.partModel,
+      const partId = part.id; // correct ID
+      initial[partId] = {
+        id: partId,
         quantity: 0,
-        note: "",
+        note:"",
       };
     });
     return initial;
@@ -46,6 +49,7 @@ const Note = ({ selectedParts, onClose }) => {
   };
   const handleSave = async () => {
     const finalNotes = Object.values(noteData);
+    
 
     if (finalNotes.length === 0) {
       toast.warning("No parts selected to save notes.", {
@@ -59,19 +63,21 @@ const Note = ({ selectedParts, onClose }) => {
         token,
         notes: finalNotes, // Make sure backend expects an array
       };
+      console.log("Payload: ",payload);
+      
       setLoading(true);
       const result = await dispatch(partCartNotes(payload)).unwrap();
       console.log("Saved Notes to Backend:", result);
 
-      toast.success(result?.message || "Notes saved successfully!", {
-        style: { fontSize: "16px" },
+      toast.info(result?.message || "Notes saved successfully!", {
+         style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, 
       });
 
       onClose();
     } catch (error) {
       console.error("Note save error:", error);
       toast.error(error?.message || "Failed to save notes.", {
-        style: { fontSize: "16px" },
+        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
       });
     } finally {
       setLoading(false);
@@ -94,7 +100,8 @@ const Note = ({ selectedParts, onClose }) => {
 
         {/* Loop company-wise */}
         {Object.entries(grouped).map(([companyName, parts]) => {
-          const company = parts[0]?.addedBy || {};
+          const company = parts[0]?.inventory?.addedBy || {};
+
           return (
             <div key={companyName} className="mb-6 border rounded">
               <div className="bg-gray-100 px-4 py-2">
@@ -117,14 +124,20 @@ const Note = ({ selectedParts, onClose }) => {
                   <tbody>
                     {parts.map((item) => (
                       <tr key={item.id}>
-                        <td className="border px-2 py-1">{item.partModel}</td>
+                        <td className="border px-2 py-1">
+                          {item.inventory?.partModel}
+                        </td>
                         <td className="border px-2 py-1">
                           <input
                             type="number"
                             className="border px-2 py-1 w-16 text-[8pt] rounded"
-                            value={noteData[item.id]?.quantity}
+                            value={noteData[item.id]?.quantity || 0}
                             onChange={(e) =>
-                              handleChange(item.id, "quantity", e.target.value)
+                              handleChange(
+                                item.id,
+                                "quantity",
+                                e.target.value
+                              )
                             }
                           />
                         </td>
@@ -134,7 +147,11 @@ const Note = ({ selectedParts, onClose }) => {
                             className="border px-2 py-3 w-full rounded text-[8pt]"
                             value={noteData[item.id]?.note}
                             onChange={(e) =>
-                              handleChange(item.id, "note", e.target.value)
+                              handleChange(
+                                item.id,
+                                "note",
+                                e.target.value
+                              )
                             }
                           />
                         </td>
