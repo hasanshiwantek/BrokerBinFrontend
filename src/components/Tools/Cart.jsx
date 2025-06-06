@@ -314,7 +314,7 @@ const Cart = () => {
                     <Tick />
                     <span>Action Needed</span>
                   </div>
-                  <span>(110)</span>
+                  <span>(0)</span>
                 </div>
               </div>
               <div className={css.cartList_key_details_pp}>Problem Parts</div>
