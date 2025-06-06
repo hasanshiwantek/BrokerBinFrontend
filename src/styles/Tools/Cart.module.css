@@ -133,31 +133,39 @@ h1 {
   }
 }
 
-
-
-
-
-.cartList_key_details span{
-font-size: 8pt;
-}
-
-.cartList_action p,select{
+.cartList_key_details span {
   font-size: 8pt;
 }
 
-.cartList_parts_scroll table td,th{
+.cartList_action p,
+select {
   font-size: 8pt;
 }
 
-.cartLayout_info p,ol li {
+.cartList_parts_scroll table td,
+th {
   font-size: 8pt;
-
 }
 
-.cartLayout_info strong{
+.cartLayout_info p,
+ol li {
+  font-size: 8pt;
+}
+
+.cartLayout_info strong {
   font-size: 9pt;
   font-weight: 450;
 }
-.cartLayout_info strong span{
+.cartLayout_info strong span {
   margin: 2px;
+}
+
+.cartLayout_options button:hover {
+  background-color: #1c6dd0; /* slightly darker for hover */
+}
+
+.cartLayout_options button:focus {
+  outline: 2px solid #2c83ec;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(44, 131, 236, 0.4); /* blue glow */
 }
