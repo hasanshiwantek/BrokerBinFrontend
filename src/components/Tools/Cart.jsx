@@ -123,7 +123,19 @@ const Cart = () => {
       alert("You must select at least one part!");
       return;
     }
-    navigate("/rfq/create", { state: { selectedRows: selectedParts } });
+    const normalizedParts = selectedParts.map((item) => ({
+      id: item.inventory.id,
+      partModel: item.inventory.partModel,
+      heciClei: item.inventory.heciClei || "",
+      mfg: item.inventory.mfg || "",
+      cond: item.inventory.cond || "",
+      quantity: item.inventory.quantity || "",
+      price: item.inventory.price || "",
+      addedBy: item.inventory.addedBy,
+    }));
+    navigate("/rfq/create", {
+      state: { selectedRows: normalizedParts },
+    });
   };
 
   // const handlePdfExport = () => {
@@ -160,8 +172,9 @@ const Cart = () => {
         headers: { Authorization: `Bearer ${token}` },
         responseType: "blob", // Important for PDF
       });
-
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+      // const url = window.URL.createObjectURL(new Blob([response.data]));
+      const blob = new Blob([response.data], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
       window.open(url); // Open PDF in new tab
     } catch (error) {
       console.error("Failed to export PDF:", error);
@@ -175,7 +188,6 @@ const Cart = () => {
         dispatch(setSelectedProductsForCart(result.payload));
       }
     };
-
     initCart();
   }, []);
 
