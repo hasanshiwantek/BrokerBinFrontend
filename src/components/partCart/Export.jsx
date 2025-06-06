@@ -9,7 +9,7 @@ const ExportModal = ({ onClose, onSend }) => {
     fileType: "excel",
     sortBy: "cnt_DESC",
     sendCopyTo: userEmail,
-    subject: "Part List – 2025",
+    subject: "BrokerCell.com Part List – 2025",
   });
 
   const handleChange = (key, value) => {
