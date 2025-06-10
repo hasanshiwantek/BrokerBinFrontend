@@ -42,9 +42,9 @@
   width: 50%;
 }
 
-.companyStock td {
+/* .companyStock td {
   color: red;
-}
+} */
 
 .supplyAndDemand button {
   background-color: var(--primary-color);

@@ -41,7 +41,7 @@ const SupplyAndDemand = () => {
           </div>
         </div>
       </div>
-        <hr className="border-[2px] border-gray-300 " />
+      <hr className="border-[2px] border-gray-300 " />
       {/* Recent Searches Section */}
 
       <div className={css.recentSearches}>
@@ -88,22 +88,21 @@ const SupplyAndDemand = () => {
                     style={{ cursor: "pointer", fontWeight: "600" }}
                     // onClick={() => navigate("/reports/detailed", { state: { partModel: inventory.partModel } })}
                     onClick={() =>
-                      navigate("/reports/Detailed", {
-                        state: { partModel: inventory.partModel, cond: inventory.cond, mfg: inventory.mfg },
+                      navigate(`/reports/detailed?partModel=${encodeURIComponent(inventory.partModel)}`, {
+                        state: { cond: inventory.cond, mfg: inventory.mfg },
                       })
                     }
                   >
                     Detailed
                   </td>
-
                   <td>{inventory.mfg}</td>
                   <td>{inventory.cond}</td>
                   <td>{inventory.heciClei}</td>
                   <td>{inventory.quantity}</td>
 
-                  <td>{supplyAndDemandData.price_stats.low}</td>
-                  <td>{supplyAndDemandData.price_stats.average}</td>
-                  <td>{supplyAndDemandData.price_stats.high}</td>
+                  <td>{inventory.price_stats?.low}</td>
+                  <td>{inventory.price_stats?.average}</td>
+                  <td>{inventory.price_stats?.high}</td>
                 </tr>
               );
             })}
@@ -129,8 +128,8 @@ const SupplyAndDemand = () => {
             </tr>
           </thead>
           <tbody>
-            {supplyAndDemandData?.inventory?.map((inventory) => {
-              return (
+            {supplyAndDemandData?.inventory?.length > 0 ? (
+              supplyAndDemandData.inventory.map((inventory) => (
                 <tr key={inventory.id}>
                   <td>Detailed</td>
                   <td>{inventory.mfg}</td>
@@ -142,9 +141,16 @@ const SupplyAndDemand = () => {
                   <td>{supplyAndDemandData.price_stats.average}</td>
                   <td>{supplyAndDemandData.price_stats.high}</td>
                 </tr>
-              );
-            })}
+              ))
+            ) : (
+              <tr>
+                <td colSpan="9" style={{ textAlign: "center", color: "red" }}>
+                  Part not found in your company inventory!
+                </td>
+              </tr>
+            )}
           </tbody>
+
         </table>
       </div>
     </div>

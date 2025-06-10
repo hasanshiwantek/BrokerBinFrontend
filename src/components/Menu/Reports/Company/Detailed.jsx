@@ -11,6 +11,8 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { useSelector,useDispatch } from "react-redux";
+import SearchProduct from "@/components/SearchProduct/SearchProduct";
+
 // const Detailed = () => {
 
 //     const data = [
@@ -189,7 +191,10 @@ import { useSelector,useDispatch } from "react-redux";
 const Detailed = () => {
   const token = Cookies.get("token");
   const location = useLocation();
-  const partModel = location.state?.partModel || ""; // Passed from navigation
+  const state = location.state || {};
+  const queryParams = new URLSearchParams(location.search);
+  // const partModel = location.state?.partModel || ""; // Passed from navigation
+  const partModel = queryParams.get("partModel");
   const dispatch=useDispatch()
 
   const regionsList = [
@@ -207,25 +212,26 @@ const Detailed = () => {
 
   // Simulated fetch — replace with real API call later
   useEffect(() => {
-    if (!partModel) return;
+      if (partModel && state.mfg && state.cond) {
+    // Call your detailed API here
+  }
 
-    // TODO: Replace this with API call using `partModel`
-    const mockData = [
-      {
-        partmodel: partModel,
-        mfg: "HP",
-        cond: "REF",
-        Clei: "CTS Point Inc.",
-        Price: "185",
-        qty: 2,
-        age: "0 Hrs",
-        description: "Good Model",
-        D: 71,
-        W: 258,
-      },
-    ];
-    setTableData(mockData);
-  }, [partModel]);
+    // const mockData = [
+    //   {
+    //     partmodel: partModel,
+    //     mfg: "HP",
+    //     cond: "REF",
+    //     Clei: "CTS Point Inc.",
+    //     Price: "185",
+    //     qty: 2,
+    //     age: "0 Hrs",
+    //     description: "Good Model",
+    //     D: 71,
+    //     W: 258,
+    //   },
+    // ];
+    // setTableData(mockData);
+  }, [partModel, state.mfg, state.cond]);
 
   // COMPANY MODAL LOGIC
   const { togglePopUp, popupCompanyDetail } = useSelector(
@@ -408,6 +414,10 @@ const Detailed = () => {
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
       <ToastContainer position="top-center" autoClose={2000} /> */}
+      {/* <Detailed/> */}
+      {/* Render search result for the partModel.. */}
+      <p>Part Search Results</p>
+      <SearchProduct />
     </>
   );
 };
