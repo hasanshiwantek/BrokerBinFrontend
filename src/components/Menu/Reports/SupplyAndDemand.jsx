@@ -88,8 +88,8 @@ const SupplyAndDemand = () => {
                   <td
                     style={{ cursor: "pointer", fontWeight: "600" }}
                     onClick={() =>
-                      navigate("/reports/Detailed", {
-                        state: { inventoryId: inventory.id },
+                      navigate(`/reports/detailed?partModel=${encodeURIComponent(inventory.partModel)}`, {
+                        state: { cond: inventory.cond, mfg: inventory.mfg },
                       })
                     }
                   >
@@ -99,9 +99,10 @@ const SupplyAndDemand = () => {
                   <td>{inventory.cond}</td>
                   <td>{inventory.heciClei}</td>
                   <td>{inventory.quantity}</td>
-                  <td>{supplyAndDemandData.price_stats.low}</td>
-                  <td>{supplyAndDemandData.price_stats.average}</td>
-                  <td>{supplyAndDemandData.price_stats.high}</td>
+
+                  <td>{inventory.price_stats?.low}</td>
+                  <td>{inventory.price_stats?.average}</td>
+                  <td>{inventory.price_stats?.high}</td>
                 </tr>
               ))
             ) : (
@@ -152,15 +153,13 @@ const SupplyAndDemand = () => {
               ))
             ) : (
               <tr>
-                <td
-                  colSpan="9"
-                  className="text-center text-red-600 font-semibold"
-                >
-                  No company stock found for this part.
+                <td colSpan="9" style={{ textAlign: "center", color: "red" }}>
+                  Part not found in your company inventory!
                 </td>
               </tr>
             )}
           </tbody>
+
         </table>
       </div>
     </div>
