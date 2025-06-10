@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import css from "../../../styles/Menu/Reports/SupplyAndDemand.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -10,6 +10,7 @@ const SupplyAndDemand = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [inputPart, setInputPart] = useState("");
   const { supplyAndDemandData, loading, error } = useSelector(
     (store) => store.reports
   );
@@ -20,6 +21,12 @@ const SupplyAndDemand = () => {
   const searchString = queryParams.get("query") || "";
   const supplyAndDemandQuery = { partModel: searchString };
   //   console.log(supplyAndDemandData);
+
+  const handleSearch = () => {
+    if (inputPart.trim()) {
+      navigate(`/reports/supplyanddemand?query=${encodeURIComponent(inputPart.trim())}`);
+    }
+  };
 
   useEffect(() => {
     dispatch(getSupplyAndDemand({ token, supplyAndDemandQuery }));
@@ -48,8 +55,14 @@ const SupplyAndDemand = () => {
         </div>
         <div>
           <div className="flex justify-start items-center gap-4">
-            <input type="text" placeholder="Enter Part #" />
-            <button>Search</button>
+            <input
+              type="text"
+              value={inputPart}
+              onChange={(e) => setInputPart(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+              placeholder="Enter Part #"
+            />
+            <button onClick={handleSearch}>Search</button>
           </div>
         </div>
       </div>

@@ -220,8 +220,8 @@ const Detailed = () => {
 
       {/* Render search result for the partModel.. */}
       <div>
-        <p className="ml-20 !text-[9pt] text-[#444]">Part Search Results</p>
-        <hr className=" border-gray-600 " />
+        <p className="ml-20  !text-[9pt] text-[#444]">Part Search Results</p>
+        <hr className=" border-gray-600 -mb-[2.8vw]" />
 
         <SearchProduct />
       </div>

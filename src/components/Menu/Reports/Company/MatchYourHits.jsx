@@ -14,25 +14,6 @@ const MatchYourHits = () => {
   const { matchYourHits, loading, error } = useSelector(
     (store) => store.reports
   );
-  
-  // const data = [
-  //   {
-  //     detailed: "Detailed",
-  //     D: 71,
-  //     W: 258,
-  //     partmodel: "P00330-B21",
-  //     age: "0 Hrs",
-  //     cond: "REF",
-  //     Clei: "CTS Point Inc.",
-  //     Price: "185",
-  //     Low: "185",
-  //     Heigh: "185",
-  //     Avg: "185", 
-  //     mfg: "HP",
-  //     qty: 2,
-  //     description: "Good Model"
-  //   }
-  // ];
 
   const data = matchYourHits || [];
   console.log(data)
