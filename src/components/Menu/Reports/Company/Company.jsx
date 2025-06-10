@@ -19,32 +19,25 @@ const Company = () => {
   const navigate = useNavigate();
 
   const searchProduct = (event) => {
-    event.preventDefault();
+  event.preventDefault();
+  const form = new FormData(event.target);
+  const formData = Object.fromEntries(form.entries());
+  if (!formData.searchStrings.trim()) {
+    alert("Blank search is not allowed");
+    return;
+  }
+  // ✅ Clean input: split by newline, trim each line, remove blanks
 
-    const form = new FormData(event.target);
-    const formData = Object.fromEntries(form.entries());
-
-    // split by " " and turn into array of string.
-
-    if (formData.searchStrings.trim() === "") {
-      alert("Blank search is not allowed");
-      return;
-    }
-
-    const searchString = formData.searchStrings.split("\n").join(",");
-
-    // Clear selected products
-    dispatch(setSelectedProducts([]));
-
-    // Search products history.
-    dispatch(searchProductHistory({ token }));
-
-    // Navigate to the search results page with 'page' and 'search' parameters
-    const url = `/inventory/search?page=1&search=${encodeURIComponent(
-      searchString
-    )}`;
-    navigate(url, { replace: true });
-  };
+  const searchString = formData.searchStrings.trim().split(/\s+/).join(" ");
+  if (!searchString) {
+  alert("Please enter at least one valid part.");
+  return;
+}
+  dispatch(setSelectedProducts([]));
+  dispatch(searchProductHistory({ token }));
+  const url = `/inventory/search?page=1&query=${encodeURIComponent(searchString)}`;
+  navigate(url, { replace: true });
+};
 
   const goToMatchYourHits = () => {
     dispatch(getMatchYourHits({ token }));
