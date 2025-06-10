@@ -75,8 +75,8 @@ const SupplyAndDemand = () => {
                 <tr key={inventory.id}>
                   <td
                     style={{ cursor: "pointer" }}
-                    // onClick={() => navigate("/reports/detailed", { state: { partModel: inventory.partModel } })}
-                    onClick={() => navigate("/reports/Detailed", { state: { inventoryId: inventory.id } })}
+                    onClick={() => navigate("/reports/detailed", { state: { partModel: inventory.partModel, mfg: inventory.mfg, cond: inventory.cond } })}
+                    // onClick={() => navigate("/reports/Detailed", { state: { inventoryId: inventory.id } })}
                   >
                     Detailed
                   </td>
