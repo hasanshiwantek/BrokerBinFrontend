@@ -30,7 +30,18 @@ const SupplyAndDemand = () => {
 
   return (
     <div className={css.supplyAndDemand}>
-      <h1>Supply And Demand</h1>
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-[#2c83ec]">Supply And Demand</h1>
+        </div>
+        <div>
+          <div className="flex justify-start items-center gap-4">
+            <input type="text" placeholder="Enter Part #" />
+            <button>Search</button>
+          </div>
+        </div>
+      </div>
+        <hr className="border-[2px] border-gray-300 " />
       {/* Recent Searches Section */}
 
       <div className={css.recentSearches}>
@@ -74,9 +85,13 @@ const SupplyAndDemand = () => {
               return (
                 <tr key={inventory.id}>
                   <td
-                    style={{ cursor: "pointer" }}
+                    style={{ cursor: "pointer", fontWeight: "600" }}
                     // onClick={() => navigate("/reports/detailed", { state: { partModel: inventory.partModel } })}
-                    onClick={() => navigate("/reports/Detailed", { state: { inventoryId: inventory.id } })}
+                    onClick={() =>
+                      navigate("/reports/Detailed", {
+                        state: { inventoryId: inventory.id },
+                      })
+                    }
                   >
                     Detailed
                   </td>
@@ -132,7 +147,6 @@ const SupplyAndDemand = () => {
           </tbody>
         </table>
       </div>
-
     </div>
   );
 };

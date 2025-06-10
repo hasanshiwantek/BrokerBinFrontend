@@ -2,13 +2,14 @@
   margin: 5rem;
   display: flex;
   flex-direction: column;
-  gap: 5rem;
+  gap: 0.5rem;
   > h1 {
-    color: red;
-    font-size: 3rem;
+    color: var(--primary-color);
+    font-size: 2rem;
   }
   h3 {
-    font-size: 2rem;
+    font-size: 1.5rem;
+    font-weight: 500;
   }
 }
 
@@ -25,21 +26,40 @@
 .supplyAndDemand th,
 .supplyAndDemand td {
   border: 1px solid #ddd;
-  padding: 8px;
+  padding: 2px;
   text-align: center;
+  font-size: 8pt;
 }
 
 .supplyAndDemand th {
-  background-color: #616161;
+  background-color: #44565b;
   color: white;
 }
 
 .recentSearches table,
 .siteStock table,
 .companyStock table {
-  width: 80%;
+  width: 50%;
 }
 
 .companyStock td {
   color: red;
+}
+
+.supplyAndDemand button {
+  background-color: var(--primary-color);
+  border: none;
+  color: white;
+  padding: 5px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+.supplyAndDemand button:hover {
+  background-color: #196dc7;
+}
+
+.supplyAndDemand input{
+  padding: 5px;
+
 }
