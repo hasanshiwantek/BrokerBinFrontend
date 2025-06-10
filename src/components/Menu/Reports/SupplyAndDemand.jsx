@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import css from "../../../styles/Menu/Reports/SupplyAndDemand.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { getSupplyAndDemand } from "../../../ReduxStore/Reports";
 
@@ -9,6 +9,7 @@ const SupplyAndDemand = () => {
   const token = Cookies.get("token");
   const location = useLocation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { supplyAndDemandData, loading, error } = useSelector(
     (store) => store.reports
   );
@@ -31,7 +32,7 @@ const SupplyAndDemand = () => {
     <div className={css.supplyAndDemand}>
       <h1>Supply And Demand</h1>
       {/* Recent Searches Section */}
-      
+
       <div className={css.recentSearches}>
         <h3>Recent Searches:</h3>
         <table>
@@ -72,7 +73,14 @@ const SupplyAndDemand = () => {
             {supplyAndDemandData?.vendor_inventories?.map((inventory) => {
               return (
                 <tr key={inventory.id}>
-                  <td>Detailed</td>
+                  <td
+                    style={{ cursor: "pointer" }}
+                    // onClick={() => navigate("/reports/detailed", { state: { partModel: inventory.partModel } })}
+                    onClick={() => navigate("/reports/Detailed", { state: { inventoryId: inventory.id } })}
+                  >
+                    Detailed
+                  </td>
+
                   <td>{inventory.mfg}</td>
                   <td>{inventory.cond}</td>
                   <td>{inventory.heciClei}</td>
