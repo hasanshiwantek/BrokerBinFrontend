@@ -37,25 +37,9 @@ const Detailed = () => {
 
   // Simulated fetch — replace with real API call later
   useEffect(() => {
-    if (partModel && state.mfg && state.cond) {
-      // Call your detailed API here
-    }
-
-    // const mockData = [
-    //   {
-    //     partmodel: partModel,
-    //     mfg: "HP",
-    //     cond: "REF",
-    //     Clei: "CTS Point Inc.",
-    //     Price: "185",
-    //     qty: 2,
-    //     age: "0 Hrs",
-    //     description: "Good Model",
-    //     D: 71,
-    //     W: 258,
-    //   },
-    // ];
-    // setTableData(mockData);
+      if (partModel && state.mfg && state.cond) {
+    // Call your detailed API here
+  }
   }, [partModel, state.mfg, state.cond]);
 
   // COMPANY MODAL LOGIC
@@ -236,8 +220,8 @@ const Detailed = () => {
 
       {/* Render search result for the partModel.. */}
       <div>
-        <p className="ml-20 !text-[9pt] text-[#444]">Part Search Results</p>
-        <hr className=" border-gray-600 " />
+        <p className="ml-20  !text-[9pt] text-[#444]">Part Search Results</p>
+        <hr className=" border-gray-600 -mb-[2.8vw]" />
 
         <SearchProduct />
       </div>
