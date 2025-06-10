@@ -28,19 +28,22 @@ const ProductTableBtn = React.memo(() => {
     [dispatch]
   );
 
-  // const handleCartClick = () => {
-  //   if (selectedProducts.length > 0) {
-  //     dispatch(setSelectedProductsForCart(selectedProducts)); // Store in Redux
-  //     navigate("/cartpart"); // Navigate to cart page
-  //   } else {
-  //     alert("Please select products to add to cart.");
-  //   }
-  // };
+//   const handleCartClick = () => {
+//     const inventoryIds = selectedProducts.map(item => item.id);
+//     dispatch(addToCart({ token, inventoryIds }))
+//       .then(() => {
+//         dispatch(setSelectedProductsForCart(selectedProducts));
+//         navigate("/cartpart");
+//       })
+//       .catch(() => {
+//         alert("Failed to add items to cart.");
+//       });
+// };
 
-  const handleCartClick = () => {
-  
-    const inventoryIds = selectedProducts.map(item => item.id);
-    
+const handleCartClick = () => {
+  const inventoryIds = selectedProducts.map(item => item.id);
+
+  if (inventoryIds.length > 0) {
     dispatch(addToCart({ token, inventoryIds }))
       .then(() => {
         dispatch(setSelectedProductsForCart(selectedProducts));
@@ -48,8 +51,11 @@ const ProductTableBtn = React.memo(() => {
       })
       .catch(() => {
         alert("Failed to add items to cart.");
+        navigate("/cartpart");
       });
- 
+  } else {
+    navigate("/cartpart");
+  }
 };
 
   return (

@@ -222,19 +222,39 @@ const Cart = () => {
   };
 
   const handleAction = async (e) => {
-    const action = e.target.value;
+  const action = e.target.value;
 
-    if (action === "remove") {
-      await handleRemove();
+  if (action === "remove") {
+    await handleRemove();
+  }
+
+  if (action === "onlythese") {
+    await handleRemoveNonSelected();
+  }
+
+  if (action === "partsearch") {
+    if (!selectedParts.length) {
+      alert("Please select at least one part to search.");
+    } else {
+      const partModels = selectedParts
+        .map((p) => p.partModel || p.inventory?.partModel)
+        .filter(Boolean);
+
+      if (partModels.length === 0) {
+        alert("No valid part numbers found.");
+      } else {
+        const searchString = partModels.join(",");
+        const url = `/inventory/search?page=1&partModel=${encodeURIComponent(
+          searchString
+        )}`;
+        navigate(url, { replace: true });
+      }
     }
+  }
 
-    if (action === "onlythese") {
-      await handleRemoveNonSelected();
-    }
+  e.target.value = ""; // Reset dropdown
+};
 
-    // Reset dropdown to default
-    e.target.value = "";
-  };
 
   const handleRemoveNonSelected = async () => {
     if (selectedParts.length === selectedProducts.length) {
@@ -333,6 +353,27 @@ const Cart = () => {
         // });
       });
   };
+
+  const handlePartSearchFromCart = () => {
+  if (!selectedParts.length) {
+    alert("Please select at least one part to search.");
+    return;
+  }
+
+  const partModels = selectedParts
+    .map((p) => p.partModel || p.inventory?.partModel)
+    .filter(Boolean);
+
+  if (partModels.length === 0) {
+    alert("No valid part numbers found.");
+    return;
+  }
+
+  const searchString = partModels.join(",");
+  const url = `/inventory/search?page=1&partModel=${encodeURIComponent(searchString)}`;
+  navigate(url, { replace: true });
+};
+
 
   return (
     <div>
@@ -495,7 +536,9 @@ const Cart = () => {
         <div className={css.cartLay}>
           <div className={css.cartLayout}>
             <div className={css.cartLayout_options}>
-              <button type="button" onClick={handleRemove}>
+              <button type="button" onClick={(e) => {
+                e.currentTarget.blur();
+                handleRemove()}}>
                 remove
               </button>
               <button type="button" onClick={createRfq}>

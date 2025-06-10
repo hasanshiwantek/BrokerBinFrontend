@@ -351,7 +351,7 @@ const ProductTableDetail = React.memo(
       // 🔍 Determine what to search
       const searchKey = keyWordPartModel || searchString;
       const searchArray = searchKey
-        ? searchKey.split(",").map((s) => s.trim())
+        ? searchKey.trim().split(/[,\s]+/).map((s) => s.trim())
         : keys;
     
       // 🔀 Build payload for sorting API
