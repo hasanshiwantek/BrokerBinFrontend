@@ -152,7 +152,7 @@ const MatchYourHits = () => {
               <tr>
                 <td
                   colSpan="15"
-                  className="text-center text-red-600 font-semibold py-4"
+                  className="!text-center !text-red-600 !font-semibold !py-4"
                 >
                   Part not in your inventory, please try our Site Wide Supply
                   And Demand!
