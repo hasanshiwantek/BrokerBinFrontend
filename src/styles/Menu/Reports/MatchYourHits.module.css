@@ -67,10 +67,54 @@
   white-space: nowrap;
 }
 
-
-.searchSec{
+.searchSec {
   display: flex;
   justify-content: space-between;
   align-self: center;
-  padding: 15px 15px;
+  padding: 10px;
+  align-items: center;
+}
+
+.searchSec h2,
+label {
+  color: white;
+  font-size: 9pt;
+}
+
+.searchBar {
+  background-color: #bfbfbf;
+}
+
+.myhInfo {
+  margin-left: 10%;
+}
+
+.myhInfo ul {
+  display: flex;
+  flex-direction: column;
+  padding: 2px;
+}
+
+.myhInfo ul li {
+  font-size: 8pt;
+  font-weight: 500;
+}
+
+.buttonSec {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.buttonSec button {
+  background-color: var(--primary-color);
+  border: none;
+  color: white;
+  padding: 8px 10px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+.buttonSec button:hover {
+  background-color: #196dc7;
 }
