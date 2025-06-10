@@ -395,7 +395,7 @@ const Cart = () => {
               <h1>Parts</h1>
               <div className={css.cartList_parts_scroll}>
                 <table>
-                  <thead>
+                  <thead className="bg-gray-600 text-white">
                     <tr>
                       <th>Part#</th>
                       <th>Mfg</th>
