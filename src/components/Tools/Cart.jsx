@@ -162,10 +162,10 @@ const Cart = () => {
   };
 
   const handlePdfExport = async () => {
-     if (selectedProducts.length === 0) {
-  alert("No parts available to export.");
-  return;
-}
+    if (selectedProducts.length === 0) {
+      alert("No parts available to export.");
+      return;
+    }
     try {
       const response = await axios.get(`${brokerAPI}part-cart/pdf`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -182,22 +182,25 @@ const Cart = () => {
 
   const handleCartPdfExport = async () => {
     if (selectedProducts.length === 0) {
-  alert("No parts available to export.");
-  return;
-}
-  try {
-    const response = await axios.get(`${brokerAPI}part-cart/pdf?isNotes=true`, {
-      headers: { Authorization: `Bearer ${token}` },
-      responseType: "blob",
-    });
+      alert("No parts available to export.");
+      return;
+    }
+    try {
+      const response = await axios.get(
+        `${brokerAPI}part-cart/pdf?isNotes=true`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          responseType: "blob",
+        }
+      );
 
-    const blob = new Blob([response.data], { type: "application/pdf" });
-    const url = window.URL.createObjectURL(blob);
-    window.open(url);
-  } catch (error) {
-    console.error("Failed to export cart table PDF:", error);
-  }
-};
+      const blob = new Blob([response.data], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(blob);
+      window.open(url);
+    } catch (error) {
+      console.error("Failed to export cart table PDF:", error);
+    }
+  };
 
   useEffect(() => {
     const initCart = async () => {
@@ -222,39 +225,38 @@ const Cart = () => {
   };
 
   const handleAction = async (e) => {
-  const action = e.target.value;
+    const action = e.target.value;
 
-  if (action === "remove") {
-    await handleRemove();
-  }
+    if (action === "remove") {
+      await handleRemove();
+    }
 
-  if (action === "onlythese") {
-    await handleRemoveNonSelected();
-  }
+    if (action === "onlythese") {
+      await handleRemoveNonSelected();
+    }
 
-  if (action === "partsearch") {
-    if (!selectedParts.length) {
-      alert("Please select at least one part to search.");
-    } else {
-      const partModels = selectedParts
-        .map((p) => p.partModel || p.inventory?.partModel)
-        .filter(Boolean);
-
-      if (partModels.length === 0) {
-        alert("No valid part numbers found.");
+    if (action === "partsearch") {
+      if (!selectedParts.length) {
+        alert("Please select at least one part to search.");
       } else {
-        const searchString = partModels.join(",");
-        const url = `/inventory/search?page=1&partModel=${encodeURIComponent(
-          searchString
-        )}`;
-        navigate(url, { replace: true });
+        const partModels = selectedParts
+          .map((p) => p.partModel || p.inventory?.partModel)
+          .filter(Boolean);
+
+        if (partModels.length === 0) {
+          alert("No valid part numbers found.");
+        } else {
+          const searchString = partModels.join(",");
+          const url = `/inventory/search?page=1&partModel=${encodeURIComponent(
+            searchString
+          )}`;
+          navigate(url, { replace: true });
+        }
       }
     }
-  }
 
-  e.target.value = ""; // Reset dropdown
-};
-
+    e.target.value = ""; // Reset dropdown
+  };
 
   const handleRemoveNonSelected = async () => {
     if (selectedParts.length === selectedProducts.length) {
@@ -355,25 +357,26 @@ const Cart = () => {
   };
 
   const handlePartSearchFromCart = () => {
-  if (!selectedParts.length) {
-    alert("Please select at least one part to search.");
-    return;
-  }
+    if (!selectedParts.length) {
+      alert("Please select at least one part to search.");
+      return;
+    }
 
-  const partModels = selectedParts
-    .map((p) => p.partModel || p.inventory?.partModel)
-    .filter(Boolean);
+    const partModels = selectedParts
+      .map((p) => p.partModel || p.inventory?.partModel)
+      .filter(Boolean);
 
-  if (partModels.length === 0) {
-    alert("No valid part numbers found.");
-    return;
-  }
+    if (partModels.length === 0) {
+      alert("No valid part numbers found.");
+      return;
+    }
 
-  const searchString = partModels.join(",");
-  const url = `/inventory/search?page=1&partModel=${encodeURIComponent(searchString)}`;
-  navigate(url, { replace: true });
-};
-
+    const searchString = partModels.join(",");
+    const url = `/inventory/search?page=1&partModel=${encodeURIComponent(
+      searchString
+    )}`;
+    navigate(url, { replace: true });
+  };
 
   return (
     <div>
@@ -385,7 +388,9 @@ const Cart = () => {
             <div className={css.cartList_list}>
               <h1>Part List ({selectedProducts.length} items listed)</h1>
               <span className={css.cartList_list_btn}>
-                <button type="button" onClick={handleCartPdfExport}>PDF</button>
+                <button type="button" onClick={handleCartPdfExport}>
+                  PDF
+                </button>
                 <button type="button">save</button>
               </span>
             </div>
@@ -536,9 +541,13 @@ const Cart = () => {
         <div className={css.cartLay}>
           <div className={css.cartLayout}>
             <div className={css.cartLayout_options}>
-              <button type="button" onClick={(e) => {
-                e.currentTarget.blur();
-                handleRemove()}}>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.currentTarget.blur();
+                  handleRemove();
+                }}
+              >
                 remove
               </button>
               <button type="button" onClick={createRfq}>
@@ -618,7 +627,9 @@ const Cart = () => {
               <button type="button" onClick={handlePdfExport}>
                 PDF
               </button>
-              <button type="button">export</button>
+              <button type="button" onClick={() => setShowExportModal(true)}>
+                export
+              </button>
               <button type="button" onClick={handleClear}>
                 clear all
               </button>

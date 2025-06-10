@@ -21,7 +21,7 @@ const Accordion = ({
   selectedParts,
   setSelectedParts,
   pdfRef,
-  filterOption
+  filterOption,
 }) => {
   const theme = createTheme({
     components: {
@@ -64,25 +64,31 @@ const Accordion = ({
   // const country = groupedData[company][0]?.company_country || "Unknown";
 
   const companies = Object.entries(groupedData)
-  .sort((a, b) => {
-    const aParts = a[1];
-    const bParts = b[1];
+    .sort((a, b) => {
+      const aParts = a[1];
+      const bParts = b[1];
 
-    switch (filterOption) {
-      case "cnt_ASC":
-        return aParts.length - bParts.length;
-      case "cnt_DESC":
-        return bParts.length - aParts.length;
-      case "maxprice":
-        return Math.max(...bParts.map(p => p.price || 0)) - Math.max(...aParts.map(p => p.price || 0));
-      case "lowestprice":
-        return Math.min(...aParts.map(p => p.price || 0)) - Math.min(...bParts.map(p => p.price || 0));
-      case "bestmatch":  
-      default:
-        return 0;
-    }
-  })
-  .map(([company]) => company);
+      switch (filterOption) {
+        case "cnt_ASC":
+          return aParts.length - bParts.length;
+        case "cnt_DESC":
+          return bParts.length - aParts.length;
+        case "maxprice":
+          return (
+            Math.max(...bParts.map((p) => p.price || 0)) -
+            Math.max(...aParts.map((p) => p.price || 0))
+          );
+        case "lowestprice":
+          return (
+            Math.min(...aParts.map((p) => p.price || 0)) -
+            Math.min(...bParts.map((p) => p.price || 0))
+          );
+        case "bestmatch":
+        default:
+          return 0;
+      }
+    })
+    .map(([company]) => company);
 
   console.log("Companies: ", companies);
 
@@ -153,19 +159,19 @@ const Accordion = ({
   };
 
   const sortParts = (parts) => {
-  switch (filterOption) {
-    case "cnt_ASC":
-      return [...parts].sort((a, b) => a.quantity - b.quantity);
-    case "cnt_DESC":
-      return [...parts].sort((a, b) => b.quantity - a.quantity);
-    case "maxprice":
-      return [...parts].sort((a, b) => b.price - a.price);
-    case "lowestprice":
-      return [...parts].sort((a, b) => a.price - b.price);
-    default:
-      return parts; // bestmatch or unknown, no sorting
-  }
-};
+    switch (filterOption) {
+      case "cnt_ASC":
+        return [...parts].sort((a, b) => a.quantity - b.quantity);
+      case "cnt_DESC":
+        return [...parts].sort((a, b) => b.quantity - a.quantity);
+      case "maxprice":
+        return [...parts].sort((a, b) => b.price - a.price);
+      case "lowestprice":
+        return [...parts].sort((a, b) => a.price - b.price);
+      default:
+        return parts; // bestmatch or unknown, no sorting
+    }
+  };
 
   return (
     <>
@@ -190,7 +196,8 @@ const Accordion = ({
         )}
 
         {companies.map((company, index) => {
-          const companyObj = groupedData[company][0]?.inventory?.addedBy?.company;
+          const companyObj =
+            groupedData[company][0]?.inventory?.addedBy?.company;
           console.log(companyObj);
 
           const companyId = companyObj?.id;
@@ -205,25 +212,29 @@ const Accordion = ({
           return (
             <div className={css.accordionPanel} key={index}>
               <div ref={pdfRef}>
-
-                
                 <h2 id={`panel${index + 1}-title`}>
                   <button
                     className={css.accordionTrigger}
                     aria-controls={`panel${index + 1}-content`}
                     onClick={() => togglePanel(index)}
                   >
-                    {`${groupedData[company].length} parts with ${groupedData[company].length} results - ${groupedData[company][0]?.inventory?.addedBy?.country || " "}`}
+                    <span className="!text-[8pt]">
+                      {`${groupedData[company].length} parts with ${
+                        groupedData[company].length
+                      } results - ${
+                        groupedData[company][0]?.inventory?.addedBy?.country ||
+                        " "
+                      }`}
+                    </span>
                     <span
                       onClick={() => openCompanyModal(company)}
                       className="text-[8pt]"
                     >
                       {company}
                     </span>
-                    <div></div>
 
                     <BiSolidDownArrow
-                      className={css.accordionBtnToggle}
+                      className={`${css.accordionBtnToggle} `}
                       aria-expanded={activePanel.includes(index)}
                     />
                     <div className="flex items-center gap-4">
@@ -262,8 +273,6 @@ const Accordion = ({
                       </ThemeProvider>
                     </div>
                   </button>
-
-
                 </h2>
               </div>
               <div
@@ -302,7 +311,9 @@ const Accordion = ({
                         </td>
                         <td
                           className="cursor-pointer"
-                          onClick={() => openCompanyModal(item?.inventory?.addedBy?.company)}
+                          onClick={() =>
+                            openCompanyModal(item?.inventory?.addedBy?.company)
+                          }
                         >
                           {item.inventory?.addedBy.company.name}
                         </td>

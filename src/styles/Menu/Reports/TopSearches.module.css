@@ -9,7 +9,7 @@
 .topSearches {
   background: #bfbfbf;
   > h3 {
-    padding: 1rem 0;
+    padding:  5px;
     color: white;
   }
   > table {
@@ -19,7 +19,7 @@
     thead,
     tfoot {
       th {
-        background-color: #454545;
+        background-color: #44565b;
         color: white;
       }
     }
@@ -29,8 +29,10 @@
       th,
       td {
         border: 1px solid #ddd;
-        padding: 1px;
+        padding: 3px;
         text-align: left;
+        text-transform: capitalize;
+        font-size: 8pt;
       }
       td {
         background: white;

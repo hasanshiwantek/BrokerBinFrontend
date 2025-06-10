@@ -1,16 +1,27 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import css from "../../../styles/Menu/Reports/TopSearches.module.css";
 import style from "../../../styles/Menu/Reports/Company.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { getCompanyInventory, getTopSearch } from "../../../ReduxStore/Reports";
 import Cookies from "js-cookie";
+import styles from "@/styles/Menu/Manage/MyProfile.module.css";
+import PaginationControls from "@/components/pagination/PaginationControls";
+import { addToCart } from "../../../ReduxStore/SearchProductSlice";
+import { setTogglePopUp } from "../../../ReduxStore/SearchProductSlice";
+import CompanyDetails from "../../Popups/CompanyDetails/CompanyDetails";
+import { setPopupCompanyDetail } from "../../../ReduxStore/SearchProductSlice";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const CompanyInventory = () => {
   const token = Cookies.get("token");
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
+
+  const [selectedProducts, setSelectedProducts] = useState([]);
   const { searchedCompanyInventory, pageSize, totalCount, loading, error } =
     useSelector((store) => store.reports);
 
@@ -23,125 +34,241 @@ const CompanyInventory = () => {
   console.log("Page: " + page);
   console.log("Total pages: " + totalPages);
 
+  const visibleRange = 10;
+  const halfRange = Math.floor(visibleRange / 2);
+
+  let start = Math.max(1, page - halfRange);
+  let end = Math.min(totalPages, start + visibleRange - 1);
+
+  // Adjust start again if end is at the max
+  if (end - start < visibleRange - 1) {
+    start = Math.max(1, end - visibleRange + 1);
+  }
+
+  const visiblePages = [start, end];
+
   // Fetch data whenever 'page' or 'searchString' changes
   useEffect(() => {
     dispatch(getCompanyInventory({ token, id, page }));
   }, [token, page, dispatch]);
 
   // Handle pagination
+
+  const handlePageChange = (selectedPage) => {
+    const url = `/reports/companyInventory?id=${id}&page=${selectedPage}`;
+    navigate(url, { replace: true });
+  };
+
   const handlePrevPage = () => {
-    const newPage = page - 1;
-    const url = `/reports/companyInventory?id=${id}&page=${newPage}`;
-    navigate(url, {
-      replace: true,
-    });
+    if (page > 1) {
+      handlePageChange(page - 1);
+    }
   };
 
   const handleNextPage = () => {
-    const newPage = page + 1;
-    const url = `/reports/companyInventory?id=${id}&page=${newPage}`;
-    navigate(url, {
-      replace: true,
+    if (page < totalPages) {
+      handlePageChange(page + 1);
+    }
+  };
+
+  // COMPANY MODAL LOGIC
+  const { togglePopUp, popupCompanyDetail } = useSelector(
+    (state) => state.searchProductStore
+  );
+  const openCompanyModal = (company) => {
+    console.log("Opening Company Modal with Company:", company);
+    dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
+    dispatch(setTogglePopUp()); // Show company modal
+  };
+
+  // HANDLE CART FUNCTION
+
+  const handleCheckboxChange = (item) => {
+    setSelectedProducts((prev) => {
+      const isSelected = prev.some((p) => p.id === item.id);
+      if (isSelected) {
+        return prev.filter((p) => p.id !== item.id);
+      } else {
+        return [...prev, item];
+      }
     });
+  };
+  const handleCartClick = async () => {
+    const inventoryIds = selectedProducts.map((item) => item.id);
+    console.log(inventoryIds);
+
+    if (inventoryIds.length === 0) {
+      toast.warning("Please select at least one part.", {
+        style: {
+          fontSize: "12px",
+          marginTop: "-10px",
+          fontWeight: "bold",
+        },
+      });
+      return;
+    }
+
+    try {
+      await dispatch(addToCart({ token, inventoryIds })).unwrap();
+      dispatch(setSelectedProducts(selectedProducts));
+      navigate("/cartpart");
+    } catch (error) {
+      console.error("Add to cart failed:", error);
+      toast.error("Failed to add items to cart.", {
+        style: {
+          fontSize: "12px",
+          marginTop: "-10px",
+          fontWeight: "bold",
+        },
+      });
+      navigate("/cartpart");
+    }
   };
 
   if (loading) return <p>Loading...</p>;
 
-  if (error) return <p>Error: {error.message}</p>;
-
   return (
-    <div className={css.container} style={{ margin: "1rem" }}>
-      <div className={style.navTabs}>
-        <ul>
-          <li>
-            <Link to={"/reports/Company"}>Company</Link>
-          </li>
-          <li>
-            <Link to={"/reports/sitewide"}>Site Wide</Link>
-          </li>
-          <li>
-            <Link to={"/reports/email"}>Email</Link>
-          </li>
-          <li>
-            <Link to={"/reports/serviceStats"}>Stats</Link>
-          </li>
-        </ul>
-      </div>
-      {/* Recent Searches Section */}
-      <div className={css.topSearches}>
-        <h3>Company Inventory</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>cart</th>
-              <th>Part/Model</th>
-              <th>Company</th>
-              <th>Cond</th>
-              <th>Price</th>
-              <th>Qty</th>
-              <th>Mfg</th>
-              <th>Age</th>
-              <th>Description/Notes</th>
-            </tr>
-          </thead>
-          <tbody>
-            {searchedCompanyInventory.map((item, i) => {
-              return (
-                <tr key={item.id}>
-                  <td>
-                    <input type="checkbox" name={item.id} id={item.id} />
-                  </td>
-                  <td>{item.partModel}</td>
-                  <td>{item.addedBy.company.name}</td>
-                  <td>{item.cond}</td>
-                  <td>{item.price}</td>
-                  <td>{item.quantity}</td>
-                  <td>{item.mfg}</td>
-                  <td>{item.age}</td>
-                  <td>{item.productDescription}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-          <tfoot>
-            <tr>
-              <th>cart</th>
-              <th>Part/Model</th>
-              <th>Company</th>
-              <th>Cond</th>
-              <th>Price</th>
-              <th>Qty</th>
-              <th>Mfg</th>
-              <th>Age</th>
-              <th>Description/Notes</th>
-            </tr>
-          </tfoot>
-        </table>
-        <div className={css.topSearchButtons}>
-          <button type="button" className={style.basicButton}>
-            Add To Part Cart
-          </button>
-          <button type="button" className={style.basicButton}>
-            View Part Cart
-          </button>
+    <>
+      <div className={css.container} style={{ margin: "4rem" }}>
+        <div className={styles.profileInfo_links}>
+          <ul>
+            <li>
+              <NavLink
+                to={"/reports/Company"}
+                end // This ensures the exact match for /myprofile
+                className="text-[#2c83ec]"
+              >
+                <span>Company</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to={"/reports/sitewide"}
+                className={({ isActive }) => (isActive ? css.active : "")}
+              >
+                <span>Site Wide</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to={"/reports/email"}
+                className={({ isActive }) => (isActive ? css.active : "")}
+              >
+                <span>Email</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to={"/reports/serviceStats"}
+                className={({ isActive }) => (isActive ? css.active : "")}
+              >
+                <span>Stats</span>
+              </NavLink>
+            </li>
+          </ul>
+        </div>
+
+        {/* Recent Searches Section */}
+        <div className={css.topSearches}>
+          <h3>Inventory</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>cart</th>
+                <th>Part/Model</th>
+                <th>Company</th>
+                <th>Cond</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Mfg</th>
+                <th>Age</th>
+                <th>Description/Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              {searchedCompanyInventory.map((item, i) => {
+                return (
+                  <tr key={item.id}>
+                    <td>
+                      <input
+                        type="checkbox"
+                        name={item.id}
+                        id={`checkbox-${item.id}`}
+                        checked={selectedProducts.some((p) => p.id === item.id)}
+                        onChange={() => handleCheckboxChange(item)}
+                      />
+                    </td>
+                    <td>{item.partModel}</td>
+                    <td
+                      className="font-medium cursor-pointer"
+                      onClick={() => openCompanyModal(item.addedBy.company)}
+                    >
+                      {item.addedBy.company.name}
+                    </td>
+                    <td className="!uppercase">{item.cond}</td>
+                    <td className="!uppercase">{item.price}</td>
+                    <td>{item.quantity}</td>
+                    <td>{item.mfg}</td>
+                    <td>{item.age}</td>
+                    <td>{item.productDescription}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+            <tfoot>
+              <tr>
+                <th>cart</th>
+                <th>Part/Model</th>
+                <th>Company</th>
+                <th>Cond</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Mfg</th>
+                <th>Age</th>
+                <th>Description/Notes</th>
+              </tr>
+            </tfoot>
+          </table>
+
+          <div className={css.topSearchButtons}>
+            <button
+              type="button"
+              className={style.basicButton}
+              onClick={handleCartClick}
+            >
+              Add To Part Cart
+            </button>
+            <NavLink to={"/cartpart"}>
+              <button type="button" className={style.basicButton}>
+                View Part Cart
+              </button>
+            </NavLink>
+          </div>
+        </div>
+        <div className={css.tablePagination}>
+          <PaginationControls
+            currPage={page}
+            totalPages={totalPages}
+            visiblePages={visiblePages}
+            onPageChange={handlePageChange}
+            onPrev={handlePrevPage}
+            onNext={handleNextPage}
+          />
         </div>
       </div>
-      <div className={css.tablePagination}>
-        <button type="button" onClick={handlePrevPage} disabled={page === 1}>
-          ⬅️
-        </button>
-        <span>
-          {page}/{totalPages}
+      <div className="ml-20">
+        <span className="font-semibold underline">
+          Questions or Misuse?{" "}
+          <NavLink to={"/feedback"} className={"font-bold"}>
+            Click Here!
+          </NavLink>
         </span>
-        <button
-          type="button"
-          onClick={handleNextPage}
-          disabled={page === totalPages}
-        >
-          ➡️
-        </button>
       </div>
-    </div>
+      {togglePopUp && (
+        <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
+      )}
+      <ToastContainer position="top-center" autoClose={2000} />
+    </>
   );
 };
 
