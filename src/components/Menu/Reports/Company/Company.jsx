@@ -143,7 +143,7 @@ const Company = () => {
             <h3>Supply And Demand</h3>
             <form onSubmit={goToSupplyAndDemand}>
               <div className="flex justify-start items-center gap-5">
-                <label htmlFor="partModel">
+                <label htmlFor="partModel" className="!text-[#444]">
                   Search <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -166,7 +166,7 @@ const Company = () => {
             <h3>Multiple Part Search</h3>
             <form onSubmit={searchProduct}>
               <div className="flex justify-start items-center gap-5">
-                <label htmlFor="searchStrings">
+                <label htmlFor="searchStrings" className="!text-[#444]">
                   Search <span className="text-red-500">**</span>
                 </label>
                 <textarea

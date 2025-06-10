@@ -99,9 +99,9 @@ const SupplyAndDemand = () => {
                   <td>{inventory.cond}</td>
                   <td>{inventory.heciClei}</td>
                   <td>{inventory.quantity}</td>
-                  <td>{supplyAndDemandData.price_stats.low}</td>
-                  <td>{supplyAndDemandData.price_stats.average}</td>
-                  <td>{supplyAndDemandData.price_stats.high}</td>
+                  <td>{supplyAndDemandData.price_stats?.low}</td>
+                  <td>{supplyAndDemandData.price_stats?.average}</td>
+                  <td>{supplyAndDemandData.price_stats?.high}</td>
                 </tr>
               ))
             ) : (
@@ -145,9 +145,9 @@ const SupplyAndDemand = () => {
                   <td>{inventory.heciClei}</td>
                   <td>{inventory.quantity}</td>
                   <td>{inventory.price}</td>
-                  <td>{supplyAndDemandData.price_stats.low}</td>
-                  <td>{supplyAndDemandData.price_stats.average}</td>
-                  <td>{supplyAndDemandData.price_stats.high}</td>
+                  <td>{supplyAndDemandData.price_stats?.low}</td>
+                  <td>{supplyAndDemandData.price_stats?.average}</td>
+                  <td>{supplyAndDemandData.price_stats?.high}</td>
                 </tr>
               ))
             ) : (
