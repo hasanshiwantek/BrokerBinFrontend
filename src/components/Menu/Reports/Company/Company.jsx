@@ -1,6 +1,6 @@
 import React from "react";
 import css from "../../../../styles/Menu/Reports/Company.module.css";
-import { Link, useNavigate,NavLink } from "react-router-dom";
+import { Link, useNavigate, NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
   searchProductHistory,
@@ -19,31 +19,31 @@ const Company = () => {
   const navigate = useNavigate();
 
   const searchProduct = (event) => {
-  event.preventDefault();
-  const form = new FormData(event.target);
-  const formData = Object.fromEntries(form.entries());
-  if (!formData.searchStrings.trim()) {
-    alert("Blank search is not allowed");
-    return;
-  }
-  // ✅ Clean input: split by newline, trim each line, remove blanks
+    event.preventDefault();
+    const form = new FormData(event.target);
+    const formData = Object.fromEntries(form.entries());
+    if (!formData.searchStrings.trim()) {
+      alert("Blank search is not allowed");
+      return;
+    }
+    // ✅ Clean input: split by newline, trim each line, remove blanks
 
-  const searchString = formData.searchStrings.trim().split(/\s+/).join(" ");
-  if (!searchString) {
-  alert("Please enter at least one valid part.");
-  return;
-}
-  dispatch(setSelectedProducts([]));
-  dispatch(searchProductHistory({ token }));
-  const url = `/inventory/search?page=1&query=${encodeURIComponent(searchString)}`;
-  navigate(url, { replace: true });
-};
+    const searchString = formData.searchStrings.trim().split(/\s+/).join(" ");
+    if (!searchString) {
+      alert("Please enter at least one valid part.");
+      return;
+    }
+    dispatch(setSelectedProducts([]));
+    dispatch(searchProductHistory({ token }));
+    const url = `/inventory/search?page=1&query=${encodeURIComponent(searchString)}`;
+    navigate(url, { replace: true });
+  };
 
   const goToMatchYourHits = () => {
     dispatch(getMatchYourHits({ token }));
     navigate("/reports/MatchYourHits", { replace: true });
   };
-  
+
   const goToSupplyAndDemand = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -59,32 +59,32 @@ const Company = () => {
     <div className={css.container}>
       {/* Navigation Tabs */}
       <div className={myProfile.profileInfo_links}>
-            <ul>
-              <li>
-                <NavLink
-                  to="/reports/Company"
-                  className={({ isActive }) => (isActive ? myProfile.active : '')}
-                >
-                  <span>Company</span>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/reports/sitewide"
-                  className={({ isActive }) => (isActive ? myProfile.active : '')}
-                >
-                  <span>Site Wide</span>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/reports/email"
-                  className={({ isActive }) => (isActive ? myProfile.active : '')}
-                >
-                  <span>Email</span>
-                </NavLink>
-              </li>
-              {/* <li>
+        <ul>
+          <li>
+            <NavLink
+              to="/reports/Company"
+              className={({ isActive }) => (isActive ? myProfile.active : '')}
+            >
+              <span>Company</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/reports/sitewide"
+              className={({ isActive }) => (isActive ? myProfile.active : '')}
+            >
+              <span>Site Wide</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/reports/email"
+              className={({ isActive }) => (isActive ? myProfile.active : '')}
+            >
+              <span>Email</span>
+            </NavLink>
+          </li>
+          {/* <li>
                 <NavLink
                   to="/reports/serviceStats"
                   className={({ isActive }) => (isActive ? myProfile.active : '')}
@@ -92,8 +92,8 @@ const Company = () => {
                   <span>Stats</span>
                 </NavLink>
               </li> */}
-            </ul>
-          </div>
+        </ul>
+      </div>
       {/* Overview Section */}
       <div className={css.mainBody}>
         <div className={css.overview}>
