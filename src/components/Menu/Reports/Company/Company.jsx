@@ -35,7 +35,9 @@ const Company = () => {
     }
     dispatch(setSelectedProducts([]));
     dispatch(searchProductHistory({ token }));
-    const url = `/inventory/search?page=1&query=${encodeURIComponent(searchString)}`;
+    const url = `/inventory/search?page=1&query=${encodeURIComponent(
+      searchString
+    )}`;
     navigate(url, { replace: true });
   };
 
@@ -56,35 +58,36 @@ const Company = () => {
   };
 
   return (
-    <div className={css.container}>
-      {/* Navigation Tabs */}
-      <div className={myProfile.profileInfo_links}>
-        <ul>
-          <li>
-            <NavLink
-              to="/reports/Company"
-              className={({ isActive }) => (isActive ? myProfile.active : '')}
-            >
-              <span>Company</span>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/reports/sitewide"
-              className={({ isActive }) => (isActive ? myProfile.active : '')}
-            >
-              <span>Site Wide</span>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/reports/email"
-              className={({ isActive }) => (isActive ? myProfile.active : '')}
-            >
-              <span>Email</span>
-            </NavLink>
-          </li>
-          {/* <li>
+    <div>
+      <div className={css.container}>
+        {/* Navigation Tabs */}
+        <div className={myProfile.profileInfo_links}>
+          <ul>
+            <li>
+              <NavLink
+                to="/reports/Company"
+                className={({ isActive }) => (isActive ? myProfile.active : "")}
+              >
+                <span>Company</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/reports/sitewide"
+                className={({ isActive }) => (isActive ? myProfile.active : "")}
+              >
+                <span>Site Wide</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/reports/email"
+                className={({ isActive }) => (isActive ? myProfile.active : "")}
+              >
+                <span>Email</span>
+              </NavLink>
+            </li>
+            {/* <li>
                 <NavLink
                   to="/reports/serviceStats"
                   className={({ isActive }) => (isActive ? myProfile.active : '')}
@@ -92,85 +95,116 @@ const Company = () => {
                   <span>Stats</span>
                 </NavLink>
               </li> */}
-        </ul>
+          </ul>
+        </div>
+        {/* Overview Section */}
+        <div className={css.mainBody}>
+          <h3>Overview</h3>
+          <div className={css.overview}>
+            <div className={css.overviewItem}>
+              <ul>
+                <li>Our Inventory Count: 0</li>
+                <li>Last Uploaded: Today</li>
+                <li>Will Expire In: 9 Days</li>
+                <li>Want To Sell: 0</li>
+                <li>Want To Buy: 0</li>
+              </ul>
+            </div>
+            <div className={css.overviewItem}>
+              <ul>
+                <li>Inventory Count: 0</li>
+                <li>Last Uploaded: Today</li>
+                <li>Will Expire In: 9 Days</li>
+                <li>Want To Sell: 0</li>
+                <li>Want To Buy: 0</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Match Your Hits Section */}
+          <div className={css.matchHits}>
+            <h3>Match Your Hits</h3>
+            <div>
+              <Link to={"/reports/MatchYourHits"}>
+                <button className={css.basicButton} onClick={goToMatchYourHits}>
+                  Basic
+                </button>
+              </Link>
+              <Link to={"/reports/MatchYourHits"}>
+                <button className={css.basicButton} onClick={goToMatchYourHits}>
+                  Detailed
+                </button>
+              </Link>
+            </div>
+          </div>
+
+          {/* Supply and Demand Section */}
+          <div className={css.supplyDemand}>
+            <h3>Supply And Demand</h3>
+            <form onSubmit={goToSupplyAndDemand}>
+              <div className="flex justify-start items-center gap-5">
+                <label htmlFor="partModel">
+                  Search <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="partModel"
+                  name="partModel"
+                  placeholder="Exact Matches Only"
+                />
+              </div>
+              <div className="text-right">
+                <button className={css.submitButton} type="submit">
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+
+          {/* Multiple Part Search Section */}
+          <div className={css.multiplePartSearch}>
+            <h3>Multiple Part Search</h3>
+            <form onSubmit={searchProduct}>
+              <div className="flex justify-start items-center gap-5">
+                <label htmlFor="searchStrings">
+                  Search <span className="text-red-500">**</span>
+                </label>
+                <textarea
+                  name="searchStrings"
+                  id="searchStrings"
+                  rows="2"
+                ></textarea>
+              </div>
+              <div></div>
+              <div className="text-right">
+                <button className={css.submitButton} type="submit">
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+
+          {/* My Vendors Section */}
+          <div className={css.myVendors}>
+            <h3>My Vendors</h3>
+            <Link to={"/myprofile/MyVendors"}>Show My Vendors</Link>
+          </div>
+        </div>
       </div>
-      {/* Overview Section */}
-      <div className={css.mainBody}>
-        <div className={css.overview}>
-          <div className={css.overviewItem}>
-            <h3>Overview</h3>
-            <p>Our Inventory Count: 0</p>
-            <p>Last Uploaded: Today</p>
-            <p>Will Expire In: 9 Days</p>
-            <p>Want To Sell: 0</p>
-            <p>Want To Buy: 0</p>
-          </div>
-          <div className={css.overviewItem}>
-            <h3>My Inventory</h3>
-            <p>My Inventory: 0</p>
-            <p>Last Uploaded: Today</p>
-            <p>Will Expire In: 9 Days</p>
-            <p>Want To Sell: 0</p>
-            <p>Want To Buy: 0</p>
-          </div>
-        </div>
 
-        {/* Match Your Hits Section */}
-        <div className={css.matchHits}>
-          <h3>Match Your Hits</h3>
-          <div>
-            <Link to={"/reports/MatchYourHits"}>
-              <button className={css.basicButton} onClick={goToMatchYourHits}>
-                Basic
-              </button>
-            </Link>
-            <Link to={"/reports/MatchYourHits"}>
-              <button className={css.basicButton} onClick={goToMatchYourHits}>
-                Detailed
-              </button>
-            </Link>
-          </div>
-        </div>
-
-        {/* Supply and Demand Section */}
-        <div className={css.supplyDemand}>
-          <h3>Supply And Demand</h3>
-          <form onSubmit={goToSupplyAndDemand}>
-            <div>
-              <label htmlFor="partModel">Search*</label>
-              <input
-                type="text"
-                id="partModel"
-                name="partModel"
-                placeholder="Exact Matches Only"
-              />
-            </div>
-            <button className={css.submitButton} type="submit">
-              Submit
-            </button>
-          </form>
-        </div>
-
-        {/* Multiple Part Search Section */}
-        <div className={css.multiplePartSearch}>
-          <h3>Multiple Part Search</h3>
-          <form onSubmit={searchProduct}>
-            <div>
-              <label htmlFor="searchStrings">Search**</label>
-              <textarea
-                name="searchStrings"
-                id="searchStrings"
-                rows={2}
-              ></textarea>
-            </div>
-            <input type="submit" className={css.submitButton} value="Submit" />
-          </form>
-        </div>
-
-        {/* My Vendors Section */}
-        <div className={css.myVendors}>
-          <h3>My Vendors</h3>
-          <Link to={"/myprofile/MyVendors"}>Show My Vendors</Link>
+      <div>
+        <div className={css.companyInfo}>
+          <ul>
+            <li>
+              <span className="text-red-600">*</span> Displays hit count, qty,
+              search, and members searching for a particular Part #
+            </li>
+            <li>
+              <span className="text-red-600"> ** </span> Cut and paste multiple
+              part numbers out of Excel or enter manually with a space between
+              part numbers.
+            </li>
+          </ul>
         </div>
       </div>
     </div>

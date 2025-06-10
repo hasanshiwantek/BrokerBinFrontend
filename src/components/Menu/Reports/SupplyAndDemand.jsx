@@ -13,6 +13,7 @@ const SupplyAndDemand = () => {
   const { supplyAndDemandData, loading, error } = useSelector(
     (store) => store.reports
   );
+  console.log("Supply and Demand Data: ", supplyAndDemandData);
 
   // Extract 'page' and 'searchString' from URL
   const queryParams = new URLSearchParams(location.search);
@@ -24,9 +25,9 @@ const SupplyAndDemand = () => {
     dispatch(getSupplyAndDemand({ token, supplyAndDemandQuery }));
   }, [token, searchString]);
 
-  if (loading) return <p>Loading...</p>;
+  // if (loading) return <p>Loading...</p>;
 
-  if (error) return <p>Error: {error.message}</p>;
+  // if (error) return <p>Error: {error.message}</p>;
 
   return (
     <div className={css.supplyAndDemand}>
@@ -41,7 +42,7 @@ const SupplyAndDemand = () => {
           </div>
         </div>
       </div>
-        <hr className="border-[2px] border-gray-300 " />
+      <hr className="border-[2px] border-gray-300 " />
       {/* Recent Searches Section */}
 
       <div className={css.recentSearches}>
@@ -81,12 +82,11 @@ const SupplyAndDemand = () => {
             </tr>
           </thead>
           <tbody>
-            {supplyAndDemandData?.vendor_inventories?.map((inventory) => {
-              return (
+            {supplyAndDemandData?.vendor_inventories?.length > 0 ? (
+              supplyAndDemandData.vendor_inventories.map((inventory) => (
                 <tr key={inventory.id}>
                   <td
                     style={{ cursor: "pointer", fontWeight: "600" }}
-                    // onClick={() => navigate("/reports/detailed", { state: { partModel: inventory.partModel } })}
                     onClick={() =>
                       navigate("/reports/Detailed", {
                         state: { inventoryId: inventory.id },
@@ -95,18 +95,25 @@ const SupplyAndDemand = () => {
                   >
                     Detailed
                   </td>
-
                   <td>{inventory.mfg}</td>
                   <td>{inventory.cond}</td>
                   <td>{inventory.heciClei}</td>
                   <td>{inventory.quantity}</td>
-
                   <td>{supplyAndDemandData.price_stats.low}</td>
                   <td>{supplyAndDemandData.price_stats.average}</td>
                   <td>{supplyAndDemandData.price_stats.high}</td>
                 </tr>
-              );
-            })}
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan="8"
+                  className="!text-center !text-red-600 !font-semibold"
+                >
+                  Part not found, please try another Part!
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
@@ -129,8 +136,8 @@ const SupplyAndDemand = () => {
             </tr>
           </thead>
           <tbody>
-            {supplyAndDemandData?.inventory?.map((inventory) => {
-              return (
+            {supplyAndDemandData?.inventory?.length > 0 ? (
+              supplyAndDemandData.inventory.map((inventory) => (
                 <tr key={inventory.id}>
                   <td>Detailed</td>
                   <td>{inventory.mfg}</td>
@@ -142,8 +149,17 @@ const SupplyAndDemand = () => {
                   <td>{supplyAndDemandData.price_stats.average}</td>
                   <td>{supplyAndDemandData.price_stats.high}</td>
                 </tr>
-              );
-            })}
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan="9"
+                  className="text-center text-red-600 font-semibold"
+                >
+                  No company stock found for this part.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
