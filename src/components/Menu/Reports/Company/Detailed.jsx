@@ -10,7 +10,7 @@ import { setPopupCompanyDetail } from "@/ReduxStore/SearchProductSlice";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import SearchProduct from "@/components/SearchProduct/SearchProduct";
 
 const Detailed = () => {
@@ -20,7 +20,7 @@ const Detailed = () => {
   const queryParams = new URLSearchParams(location.search);
   // const partModel = location.state?.partModel || ""; // Passed from navigation
   const partModel = queryParams.get("partModel");
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
 
   const regionsList = [
     { label: "All Regions", value: "All Regions", id: "All Regions" },
@@ -54,7 +54,7 @@ const Detailed = () => {
 
   return (
     <>
-      <div className={css.container}>
+      <div className={`${css.container} `}>
         {/* Navigation Tabs */}
 
         <div className={style.profileInfo_links}>
@@ -188,7 +188,7 @@ const Detailed = () => {
                 <td>{item.D}</td>
                 <td>{item.W}</td>
                 <td>—</td>
-                <td >{item.partmodel}</td>
+                <td>{item.partmodel}</td>
                 <td>{item.Clei}</td>
                 <td>{item.cond}</td>
                 <td>{item.Price}</td>
@@ -216,16 +216,21 @@ const Detailed = () => {
             <button type="button">Check All</button>
           </div>
         </div>
-
       </div>
+
+      {/* Render search result for the partModel.. */}
+      <div>
+        <p className="ml-20 !text-[9pt] text-[#444]">Part Search Results</p>
+        <hr className=" border-gray-600 " />
+
+        <SearchProduct />
+      </div>
+
       {/* {togglePopUp && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
       <ToastContainer position="top-center" autoClose={2000} /> */}
-      
-      {/* Render search result for the partModel.. */}
-      <p>Part Search Results</p>
-      <SearchProduct />
+      {/* <Detailed/> */}
     </>
   );
 };
