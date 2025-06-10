@@ -146,9 +146,9 @@ const SupplyAndDemand = () => {
                   <td>{inventory.heciClei}</td>
                   <td>{inventory.quantity}</td>
                   <td>{inventory.price}</td>
-                  <td>{supplyAndDemandData.price_stats.low}</td>
-                  <td>{supplyAndDemandData.price_stats.average}</td>
-                  <td>{supplyAndDemandData.price_stats.high}</td>
+                  <td>{inventory.price_stats.low}</td>
+                  <td>{inventory.price_stats.average}</td>
+                  <td>{inventory.price_stats.high}</td>
                 </tr>
               ))
             ) : (
