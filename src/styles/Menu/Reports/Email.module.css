@@ -84,11 +84,13 @@ form{
   }
   
   .section button {
-    padding: 10px 20px;
-    background-color: #f45900;
-    border: 2px solid #f45900;
-    border-radius: 4px;
-    cursor: pointer;
+  background-color: var(--primary-color);
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
   }
   
   /* button:hover {
