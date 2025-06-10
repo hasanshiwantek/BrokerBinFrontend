@@ -107,12 +107,13 @@
   padding: 10px 15px;
   margin-right: 10px;
   cursor: pointer;
+  transition: all 0.3s ease-in-out;
 }
 
 .basicButton:hover,
 .detailedButton:hover,
 .submitButton:hover {
-  background-color: darkorange;
+  background-color: #196dc7;
 }
 
 .supplyDemand input,
