@@ -21,7 +21,7 @@ const SupplyAndDemand = () => {
 
   useEffect(() => {
     dispatch(getSupplyAndDemand({ token, supplyAndDemandQuery }));
-  }, []);
+  }, [token, searchString]);
 
   if (loading) return <p>Loading...</p>;
 
@@ -31,6 +31,7 @@ const SupplyAndDemand = () => {
     <div className={css.supplyAndDemand}>
       <h1>Supply And Demand</h1>
       {/* Recent Searches Section */}
+      
       <div className={css.recentSearches}>
         <h3>Recent Searches:</h3>
         <table>
@@ -123,6 +124,7 @@ const SupplyAndDemand = () => {
           </tbody>
         </table>
       </div>
+
     </div>
   );
 };

@@ -9,14 +9,15 @@ import styles from "../../../Menu/Broadcast/BroadCast.module.css"
 const MatchYourHits = () => {
   const token = Cookies.get("token");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { matchYourHits, loading, error } = useSelector(
     (store) => store.reports
   );
   const data = [
     {
-      detailed:"Detailed",
-      D:71,
-      W:258,
+      detailed: "Detailed",
+      D: 71,
+      W: 258,
       partmodel: "P00330-B21",
       age: "0 Hrs",
       cond: "REF",
@@ -25,9 +26,9 @@ const MatchYourHits = () => {
       Low: "185",
       Heigh: "185",
       Avg: "185",
-      mfg:"HP",
+      mfg: "HP",
       qty: 2,
-      description:"Good Model"
+      description: "Good Model"
     }
   ];
   console.log(data)
@@ -43,7 +44,7 @@ const MatchYourHits = () => {
     <div className={css.container}>
       {/* Navigation Tabs */}
 
-      
+
       <div className={css.navTabs}>
         <ul>
           <li>
@@ -64,83 +65,92 @@ const MatchYourHits = () => {
 
       <div className={css.searchBar}  >
         <div className={css.searchSec}>
-        <h2>Match Your Hits Basic</h2>
-        <div>
-          <label className="p-4" htmlFor="search" id="search">Search By Manufacturer</label>
-          <input type="text" id="search" className="p-2" />
-        </div>
+          <h2>Match Your Hits Basic</h2>
+          <div>
+            <label className="p-4" htmlFor="search" id="search">Search By Manufacturer</label>
+            <input type="text" id="search" className="p-2" />
+          </div>
 
         </div>
 
       </div>
       <table className={styles.table}>
-          <thead>
-            <tr>
+        <thead>
+          <tr>
 
-              <th>Detailed</th>
-              <th>D</th>
-              <th>W</th>
-              <th>M</th>
-              <th>Part#HECLI</th>
-              <th>Cond</th>
-              <th>Clei</th>
-              <th>Price</th>
-              <th>Low</th>
-              <th>Avg</th>
-              <th>High</th>
-              <th>Qty </th>
-              <th>Mfg</th>
-              <th>Age</th>
-              <th>Product Description</th>
-
-            </tr>
-          </thead>
-          <tbody>
-           {
-              data.map((item, index) => (
-               
-                  <tr key={index} >
-                    <td>{item.detailed}</td>
-                    <td>{item.D}</td>
-                    <td>{item.W}</td>
-                    <td>{item.M}</td>
-                    <td>{item.partmodel}</td>
-                    <td>{item.Clei}</td>
-                    <td>{item.cond}</td>
-                    <td>{item.Price}</td>
-                    <td>{item.Low}</td>
-                    <td>{item.Avg}</td>
-                    <td>{item.Heigh}</td>
-                    <td>{item.qty}</td>
-                    <td>{item.mfg}</td>
-                    <td>{item.age}</td>
-                    <td>{item.description}</td>
-                  </tr>
-               
-              ))
-      
-            }
-          </tbody>
-          <thead>
-            <tr>
             <th>Detailed</th>
-              <th>D</th>
-              <th>W</th>
-              <th>M</th>
-              <th>Part#HECLI</th>
-              <th>Cond</th>
-              <th>Clei</th>
-              <th>Price</th>
-              <th>Low</th>
-              <th>Avg</th>
-              <th>High</th>
-              <th>Qty </th>
-              <th>Mfg</th>
-              <th>Age</th>
-              <th>Product Description</th>
-            </tr>
-          </thead>
-        </table>
+            <th>D</th>
+            <th>W</th>
+            <th>M</th>
+            <th>Part#HECLI</th>
+            <th>Cond</th>
+            <th>Clei</th>
+            <th>Price</th>
+            <th>Low</th>
+            <th>Avg</th>
+            <th>High</th>
+            <th>Qty </th>
+            <th>Mfg</th>
+            <th>Age</th>
+            <th>Product Description</th>
+
+          </tr>
+        </thead>
+        <tbody>
+          {
+            data.map((item, index) => (
+
+              <tr key={index} >
+                <td
+                  style={{ cursor: "pointer",  }}
+                  onClick={() =>
+                    navigate("/reports/detailed", {
+                      state: { partModel: item.partmodel }
+                    })
+                  }
+                >
+                  Detailed
+                </td>
+                <td>{item.D}</td>
+                <td>{item.W}</td>
+                <td>{item.M}</td>
+                <td>{item.partmodel}</td>
+                <td>{item.Clei}</td>
+                <td>{item.cond}</td>
+                <td>{item.Price}</td>
+                <td>{item.Low}</td>
+                <td>{item.Avg}</td>
+                <td>{item.Heigh}</td>
+                <td>{item.qty}</td>
+                <td>{item.mfg}</td>
+                <td>{item.age}</td>
+                <td>{item.description}</td>
+              </tr>
+
+            ))
+
+          }
+        </tbody>
+        <thead>
+          <tr>
+            <th>Detailed</th>
+            <th>D</th>
+            <th>W</th>
+            <th>M</th>
+            <th>Part#HECLI</th>
+            <th>Cond</th>
+            <th>Clei</th>
+            <th>Price</th>
+            <th>Low</th>
+            <th>Avg</th>
+            <th>High</th>
+            <th>Qty </th>
+            <th>Mfg</th>
+            <th>Age</th>
+            <th>Product Description</th>
+          </tr>
+        </thead>
+      </table>
     </div>
   );
 };
