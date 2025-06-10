@@ -12,7 +12,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import SearchProduct from "@/components/SearchProduct/SearchProduct";
-
 const Detailed = () => {
   const token = Cookies.get("token");
   const location = useLocation();
