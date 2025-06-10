@@ -25,7 +25,16 @@ const SupplyAndDemand = () => {
     dispatch(getSupplyAndDemand({ token, supplyAndDemandQuery }));
   }, [token, searchString]);
 
-  // if (loading) return <p>Loading...</p>;
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center py-20">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
+        <span className="ml-4 text-blue-600 text-lg font-medium">
+          Loading Supply & Demand Data...
+        </span>
+      </div>
+    );
+  }
 
   // if (error) return <p>Error: {error.message}</p>;
 
@@ -33,7 +42,9 @@ const SupplyAndDemand = () => {
     <div className={css.supplyAndDemand}>
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-[#2c83ec]">Supply And Demand</h1>
+          <h1 className="text-[#2c83ec] text-[1.8rem] font-semibold">
+            Supply And Demand
+          </h1>
         </div>
         <div>
           <div className="flex justify-start items-center gap-4">
@@ -88,9 +99,14 @@ const SupplyAndDemand = () => {
                   <td
                     style={{ cursor: "pointer", fontWeight: "600" }}
                     onClick={() =>
-                      navigate(`/reports/detailed?partModel=${encodeURIComponent(inventory.partModel)}`, {
-                        state: { cond: inventory.cond, mfg: inventory.mfg },
-                      })
+                      navigate(
+                        `/reports/detailed?partModel=${encodeURIComponent(
+                          inventory.partModel
+                        )}`,
+                        {
+                          state: { cond: inventory.cond, mfg: inventory.mfg },
+                        }
+                      )
                     }
                   >
                     Detailed
@@ -99,10 +115,9 @@ const SupplyAndDemand = () => {
                   <td>{inventory.cond}</td>
                   <td>{inventory.heciClei}</td>
                   <td>{inventory.quantity}</td>
-
-                  <td>{inventory.price_stats?.low}</td>
-                  <td>{inventory.price_stats?.average}</td>
-                  <td>{inventory.price_stats?.high}</td>
+                  <td>{supplyAndDemandData.price_stats?.low}</td>
+                  <td>{supplyAndDemandData.price_stats?.average}</td>
+                  <td>{supplyAndDemandData.price_stats?.high}</td>
                 </tr>
               ))
             ) : (
@@ -146,9 +161,9 @@ const SupplyAndDemand = () => {
                   <td>{inventory.heciClei}</td>
                   <td>{inventory.quantity}</td>
                   <td>{inventory.price}</td>
-                  <td>{supplyAndDemandData.price_stats.low}</td>
-                  <td>{supplyAndDemandData.price_stats.average}</td>
-                  <td>{supplyAndDemandData.price_stats.high}</td>
+                  <td>{supplyAndDemandData.price_stats?.low}</td>
+                  <td>{supplyAndDemandData.price_stats?.average}</td>
+                  <td>{supplyAndDemandData.price_stats?.high}</td>
                 </tr>
               ))
             ) : (
@@ -159,7 +174,6 @@ const SupplyAndDemand = () => {
               </tr>
             )}
           </tbody>
-
         </table>
       </div>
     </div>
