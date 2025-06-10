@@ -149,7 +149,7 @@ const SearchCompanyInventory = () => {
       </div>
       <div className={css.Searchbutton}>
         <button
-          className={css.orangeButton}
+          className={`${css.orangeButton} !m-5`}
           onClick={(e) => goToCompanyInventory(e)}
         >
           Submit
