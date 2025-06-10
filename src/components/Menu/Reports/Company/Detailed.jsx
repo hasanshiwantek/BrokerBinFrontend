@@ -12,15 +12,17 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import SearchProduct from "@/components/SearchProduct/SearchProduct";
+import { getDetailedInventory } from "@/ReduxStore/Reports";
 
 const Detailed = () => {
   const token = Cookies.get("token");
+  const dispatch = useDispatch();
   const location = useLocation();
   const state = location.state || {};
   const queryParams = new URLSearchParams(location.search);
-  // const partModel = location.state?.partModel || ""; // Passed from navigation
   const partModel = queryParams.get("partModel");
-  const dispatch = useDispatch();
+  const { mfg, cond } = location.state || {};
+  const { detailedInventory, loading } = useSelector((state) => state.reports);
 
   const regionsList = [
     { label: "All Regions", value: "All Regions", id: "All Regions" },
@@ -33,14 +35,47 @@ const Detailed = () => {
     { label: "Asia", value: "Asia", id: "Asia" },
   ];
 
-  const [tableData, setTableData] = useState([]);
+  const [filters, setFilters] = useState({
+    viewStocked: "",
+    viewRegions: "",
+  });
 
   // Simulated fetch — replace with real API call later
+  // useEffect(() => {
+  //   if (partModel && mfg && cond) {
+  //     dispatch(getDetailedInventory({ token, payload: { partModel, mfg, cond, viewStocked: "", viewRegions: "" } }));
+  //   }
+  // }, [partModel, mfg, cond]);
+
+  // useEffect(() => {
+  //   if (partModel && mfg && cond) {
+  //     dispatch(getDetailedInventory({
+  //       token,
+  //       payload: {
+  //         partModel,
+  //         mfg,
+  //         cond,
+  //         viewStocked,
+  //         viewRegions,
+  //         partSearch,
+  //       },
+  //     }));
+  //   }
+  // }, [partModel, mfg, cond, viewStocked, viewRegions, partSearch]);
+
   useEffect(() => {
-      if (partModel && state.mfg && state.cond) {
-    // Call your detailed API here
+  if (partModel && mfg && cond) {
+    dispatch(getDetailedInventory({
+      token,
+      payload: {
+        partModel,
+        mfg,
+        cond,
+        ...filters,
+      },
+    }));
   }
-  }, [partModel, state.mfg, state.cond]);
+}, [partModel, mfg, cond, filters]);
 
   // COMPANY MODAL LOGIC
   const { togglePopUp, popupCompanyDetail } = useSelector(
@@ -51,6 +86,20 @@ const Detailed = () => {
     dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
     dispatch(setTogglePopUp()); // Show company modal
   };
+
+  const handleChange = (e) => {
+  const { name, value } = e.target;
+  setFilters((prev) => ({
+    ...prev,
+    [name]: value
+  }));
+};
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+  dispatch(getDetailedInventory({ token, payload: filters }));
+};
+
 
   return (
     <>
@@ -103,8 +152,12 @@ const Detailed = () => {
                 <label className="p-4" htmlFor="manufacturer">
                   View Stocked:
                 </label>
-                <select id="manufacturer" className="p-2">
-                  <option value="any">Any</option>
+                <select
+                  id="manufacturer"
+                  className="p-2"
+                  onChange={(e) => setFilters({ ...filters, viewStocked: e.target.value })}
+                >
+                  <option value="">Any</option>
                   <option value="yes">Yes</option>
                   <option value="no">No</option>
                 </select>
@@ -114,11 +167,13 @@ const Detailed = () => {
                   View:
                 </label>
 
-                <select id="product" className="p-2">
+                <select
+                  id="product"
+                  className="p-2"
+                  onChange={(e) => setFilters({ ...filters, viewRegions: e.target.value })}
+                >
                   {regionsList.map((region) => (
-                    <option key={region.id} value={region.value}>
-                      {region.label}
-                    </option>
+                    <option key={region.id} value={region.value}>{region.label}</option>
                   ))}
                 </select>
               </div>
@@ -126,7 +181,14 @@ const Detailed = () => {
                 <label className="p-4" htmlFor="search">
                   Part Search
                 </label>
-                <input type="text" id="search" className="p-2" />
+                <input 
+                type="text" 
+                id="search" 
+                className="p-2"
+                value={filters.partModel}
+                onChange={handleChange}
+                />
+                <button onClick={handleSubmit}>Submit</button>
               </div>
             </div>
           </div>
@@ -148,7 +210,7 @@ const Detailed = () => {
             </tr>
           </thead>
           <tbody className="bg-white">
-            {tableData.map((item, index) => (
+            {detailedInventory.map((item, index) => (
               <tr key={`main-${index}`}>
                 <td></td>
                 <td>{item.partmodel}</td>
@@ -180,7 +242,7 @@ const Detailed = () => {
             </tr>
           </thead>
           <tbody className="bg-white">
-            {tableData.map((item, index) => (
+            {detailedInventory.map((item, index) => (
               <tr key={`contact-${index}`}>
                 <td>
                   <input type="checkbox" />
