@@ -13,6 +13,7 @@ const SupplyAndDemand = () => {
   const { supplyAndDemandData, loading, error } = useSelector(
     (store) => store.reports
   );
+  console.log("Supply and Demand Data: ", supplyAndDemandData);
 
   // Extract 'page' and 'searchString' from URL
   const queryParams = new URLSearchParams(location.search);
@@ -24,9 +25,9 @@ const SupplyAndDemand = () => {
     dispatch(getSupplyAndDemand({ token, supplyAndDemandQuery }));
   }, [token, searchString]);
 
-  if (loading) return <p>Loading...</p>;
+  // if (loading) return <p>Loading...</p>;
 
-  if (error) return <p>Error: {error.message}</p>;
+  // if (error) return <p>Error: {error.message}</p>;
 
   return (
     <div className={css.supplyAndDemand}>
@@ -81,12 +82,11 @@ const SupplyAndDemand = () => {
             </tr>
           </thead>
           <tbody>
-            {supplyAndDemandData?.vendor_inventories?.map((inventory) => {
-              return (
+            {supplyAndDemandData?.vendor_inventories?.length > 0 ? (
+              supplyAndDemandData.vendor_inventories.map((inventory) => (
                 <tr key={inventory.id}>
                   <td
                     style={{ cursor: "pointer", fontWeight: "600" }}
-                    // onClick={() => navigate("/reports/detailed", { state: { partModel: inventory.partModel } })}
                     onClick={() =>
                       navigate(`/reports/detailed?partModel=${encodeURIComponent(inventory.partModel)}`, {
                         state: { cond: inventory.cond, mfg: inventory.mfg },
@@ -104,8 +104,17 @@ const SupplyAndDemand = () => {
                   <td>{inventory.price_stats?.average}</td>
                   <td>{inventory.price_stats?.high}</td>
                 </tr>
-              );
-            })}
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan="8"
+                  className="!text-center !text-red-600 !font-semibold"
+                >
+                  Part not found, please try another Part!
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
