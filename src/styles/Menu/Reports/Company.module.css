@@ -6,7 +6,9 @@
   padding: 1rem;
   font-family: Arial, sans-serif;
   h3 {
-    font-size: 2rem;
+    font-size: 1.3em;
+    font-weight: 700;
+    color: #444;
   }
 }
 
@@ -42,6 +44,12 @@
 
 .overviewItem {
   width: 45%;
+
+}
+.overviewItem li{
+  color: #444;
+  font-size: 9pt;
+  font-weight: 700;
 }
 
 .overviewItem h3 {
@@ -67,10 +75,9 @@
     margin-left: auto;
   }
 }
-.multiplePartSearch {
+/* .multiplePartSearch {
   form {
     > div {
-      display: flex;
       align-items: center;
       justify-content: center;
       gap: 1rem;
@@ -83,13 +90,13 @@
       margin-left: auto;
     }
   }
-}
+} */
 
 .matchHits,
 .supplyDemand,
 .multiplePartSearch,
 .myVendors {
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .matchHits h3,
@@ -116,9 +123,15 @@
   background-color: #196dc7;
 }
 
-.supplyDemand input,
+.supplyDemand input {
+  width: 50%;
+  padding:5px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+}
+
 .multiplePartSearch textarea {
-  width: 100%;
+  width: 50%;
   padding: 10px;
   margin: 10px 0;
   border: 1px solid #ccc;
@@ -127,10 +140,29 @@
 .myVendors a {
   display: inline-block;
   margin-top: 20px;
-  color: #007bff;
+  color: black;
   text-decoration: none;
+  font-weight: 700;
+  font-size: 9pt;
 }
 
 .myVendors a:hover {
   text-decoration: underline;
+}
+
+
+.companyInfo {
+  margin-left: 30%;
+}
+
+.companyInfo ul {
+  display: flex;
+  flex-direction: column;
+  padding: 2px;
+}
+
+.companyInfo ul li {
+  font-size: 8pt;
+  font-weight: 500;
+  width: 50rem;
 }
