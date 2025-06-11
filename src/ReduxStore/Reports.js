@@ -146,13 +146,13 @@ export const getDetailedInventory = createAsyncThunk(
   "reports/getDetailedInventory",
   async ({ token, payload }) => {
     try {
-      const response = await axios.post(`${brokerAPI}report/detailed_inventory`, payload, {
+      const response = await axios.post(`${brokerAPI}report/detailed`, payload, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
-      return response.data.data;
+      return response.data;
     } catch (error) {
       console.error(error);
       throw new Error("Failed to fetch detailed inventory");
@@ -165,7 +165,7 @@ const initialState = {
   matchYourHits: [],
   supplyAndDemandQuery: null,
   supplyAndDemandData: [],
-  detailedInventory: [],
+  detailedInventory: {},
   topSearchData: [],
   searchCompanyData: [],
   searchedCompanyInventory: [],
