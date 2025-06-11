@@ -21,7 +21,10 @@ const Detailed = () => {
   const state = location.state || {};
   const queryParams = new URLSearchParams(location.search);
   const partModel = queryParams.get("partModel");
-  const { mfg, cond } = location.state || {};
+  const mfg = queryParams.get("mfg");
+  const cond = queryParams.get("cond");
+  // const { mfg, cond } = location.state || {};
+  // const partModel = location.state?.partModel || queryParams.get("partModel");
 
   const { detailedInventory, loading } = useSelector((state) => state.reports);
   console.log("DETAILEDINVENTORY", detailedInventory);
@@ -57,7 +60,7 @@ const Detailed = () => {
         })
       );
     }
-  }, [partModel, mfg, cond, filters]);
+  }, [partModel, mfg, cond, token, filters]);
 
   // COMPANY MODAL LOGIC
   const { togglePopUp, popupCompanyDetail } = useSelector(
@@ -264,7 +267,7 @@ const handleSubmit = (e) => {
                 <td>{item.user.phoneNumber}</td>
                 <td>{item.user.phoneNumber}</td>
                 <td>{item.user.faxNumber}</td>
-                <td>{item.user.qty}</td>
+                <td>{item.qty}</td>
               </tr>
             ))}
           </tbody>

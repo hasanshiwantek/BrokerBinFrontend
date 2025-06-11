@@ -19,7 +19,7 @@ const SupplyAndDemand = () => {
   // Extract 'page' and 'searchString' from URL
   const queryParams = new URLSearchParams(location.search);
   const searchString = queryParams.get("query") || "";
-  const supplyAndDemandQuery = { partModel: searchString };
+  const supplyAndDemandQuery = { partModel: searchString,  };
   //   console.log(supplyAndDemandData);
 
   const handleSearch = () => {
@@ -113,11 +113,9 @@ const SupplyAndDemand = () => {
                     style={{ cursor: "pointer", fontWeight: "600" }}
                     onClick={() =>
                       navigate(
-                        `/reports/detailed?partModel=${encodeURIComponent(
-                          inventory.partModel
-                        )}`,
+                       `/reports/detailed?partModel=${encodeURIComponent(inventory.partModel)}&cond=${inventory.cond}&mfg=${inventory.mfg}`,
                         {
-                          state: { cond: inventory.cond, mfg: inventory.mfg },
+                          state: { partModel: inventory.partModel, cond: inventory.cond, mfg: inventory.mfg },
                         }
                       )
                     }
