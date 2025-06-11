@@ -300,12 +300,6 @@ const handleSubmit = (e) => {
 
         <SearchProduct />
       </div>
-
-      {/* {togglePopUp && (
-        <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
-      )}
-      <ToastContainer position="top-center" autoClose={2000} /> */}
-      {/* <Detailed/> */}
     </>
   );
 };
