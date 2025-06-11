@@ -55,7 +55,7 @@ export const searchCompany = createAsyncThunk(
     console.log(name, token);
     try {
       const response = await axios.post(
-        `${brokerAPI}company/search`,{ name },
+        `${brokerAPI}company/search`, { name },
         {
           headers: {
             "Content-Type": "application/json",
@@ -142,10 +142,30 @@ export const getTopSearchByManufacturer = createAsyncThunk(
   }
 );
 
+export const getDetailedInventory = createAsyncThunk(
+  "reports/getDetailedInventory",
+  async ({ token, payload }) => {
+    try {
+      const response = await axios.post(`${brokerAPI}report/detailed`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw new Error("Failed to fetch detailed inventory");
+    }
+  }
+);
+
+
 const initialState = {
   matchYourHits: [],
   supplyAndDemandQuery: null,
   supplyAndDemandData: [],
+  detailedInventory: {},
   topSearchData: [],
   searchCompanyData: [],
   searchedCompanyInventory: [],
@@ -191,6 +211,18 @@ const Reports = createSlice({
         state.loading = false;
         state.error = action.error.message;
       })
+      .addCase(getDetailedInventory.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getDetailedInventory.fulfilled, (state, action) => {
+        state.detailedInventory = action.payload;
+        state.loading = false;
+      })
+      .addCase(getDetailedInventory.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+
       .addCase(getTopSearch.pending, (state) => {
         state.loading = true;
       })
@@ -252,7 +284,7 @@ const Reports = createSlice({
   },
 });
 
-export const { setSupplyAndDemandQuery, setSearchCompanyData} =
+export const { setSupplyAndDemandQuery, setSearchCompanyData } =
   Reports.actions;
 
 export default Reports.reducer;
