@@ -1,10 +1,15 @@
 import { useState } from "react";
 import { IoClose } from "react-icons/io5";
-
+import { exportPartcart } from "@/ReduxStore/SearchProductSlice";
+import Cookies from "js-cookie";
+import { useDispatch } from "react-redux";
 const ExportModal = ({ onClose, onSend }) => {
+  const dispatch=useDispatch()
   const user = JSON.parse(localStorage.getItem("user"));
   const userEmail = user.user.email;
+  const token = Cookies.get("token");
   console.log("User Email: ", userEmail);
+  const [loading, setLoading] = useState(false);
   const [exportData, setExportData] = useState({
     fileType: "excel",
     sortBy: "cnt_DESC",
@@ -17,6 +22,28 @@ const ExportModal = ({ onClose, onSend }) => {
       ...prev,
       [key]: value,
     }));
+  };
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      const body = exportData;
+
+      const result = await dispatch(exportPartcart({ token, body })).unwrap();
+
+      toast.success(result?.message || "Export request sent!", {
+        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+      });
+      console.log("Export result: ",result);
+      onClose();
+    } catch (error) {
+      console.error("Export error:", error);
+      toast.error(error?.message || "Failed to export part cart.", {
+        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -99,13 +126,18 @@ const ExportModal = ({ onClose, onSend }) => {
         {/* Submit Button */}
         <div className="text-right">
           <button
-            onClick={() => {
-              onSend(exportData);
-              onClose();
-            }}
-            className={`w-40  px-5 py-1.5 rounded text-white transition-all duration-150 bg-[#2c83ec] hover:bg-[#1c6dd0]`}
+            onClick={handleSubmit}
+            disabled={loading}
+            className="w-40 px-5 py-1.5 rounded text-white transition-all duration-150 bg-[#2c83ec] hover:bg-[#1c6dd0] disabled:opacity-60"
           >
-            Send
+            {loading ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
+                Sending...
+              </span>
+            ) : (
+              "Send"
+            )}
           </button>
         </div>
       </div>
