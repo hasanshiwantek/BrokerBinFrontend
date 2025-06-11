@@ -268,7 +268,7 @@ const CompanyInventory = () => {
       </div>
       <div className="ml-20">
         <span className="font-semibold underline">
-          Questions or Misuse?{" "}
+          Questions or Misuse?
           <NavLink to={"/feedback"} className={"font-bold"}>
             Click Here!
           </NavLink>
