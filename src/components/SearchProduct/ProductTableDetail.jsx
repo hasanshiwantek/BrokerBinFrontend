@@ -364,14 +364,18 @@ const ProductTableDetail = React.memo(
         type: searchType === "keyword" ? "keyword" : "",
       };
     
-      // 🚀 Dispatch sorting API
       dispatch(sortInventory({ token, payload }));
     
-      // 🌐 Update URL to reflect sort state (needed for parent & pagination)
-      const url = currentQuery
-        ? `/inventory/search?page=1&query=${encodeURIComponent(currentQuery)}&sortBy=${column}&sortOrder=${newSortOrder}`
-        : `/inventory/search?page=1&partModel=${encodeURIComponent(currentPartModel)}&sortBy=${column}&sortOrder=${newSortOrder}`;
+      // const url = currentQuery
+      //   ? `/inventory/search?page=1&query=${encodeURIComponent(currentQuery)}&sortBy=${column}&sortOrder=${newSortOrder}`
+      //   : `/inventory/search?page=1&partModel=${encodeURIComponent(currentPartModel)}&sortBy=${column}&sortOrder=${newSortOrder}`;
     
+      // navigate(url, { 
+      //   replace: true,
+      //   state: location.state || {},
+      // });
+
+      const url = `${location.pathname}?page=1&${currentQuery ? `query=${currentQuery}` : `partModel=${currentPartModel}`}&sortBy=${column}&sortOrder=${newSortOrder}`;
       navigate(url, { replace: true });
     };
     

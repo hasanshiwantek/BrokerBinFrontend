@@ -63,7 +63,7 @@ const Detailed = () => {
   const { togglePopUp, popupCompanyDetail } = useSelector(
     (state) => state.searchProductStore
   );
-  
+
   const openCompanyModal = (company) => {
     console.log("Opening Company Modal with Company:", company);
     dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
