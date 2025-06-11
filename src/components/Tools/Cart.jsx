@@ -632,7 +632,13 @@ const Cart = () => {
                     type="button"
                     onClick={() => {
                       if (selectedParts.length === 0) {
-                        alert("You must select a part!");
+                        toast.warning("You must select at least one part.", {
+                          style: {
+                            fontSize: "12px",
+                            marginTop: "-10px",
+                            fontWeight: "bold",
+                          },
+                        });
                         return;
                       }
                       setShowNoteModal(true);

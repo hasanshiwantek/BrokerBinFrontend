@@ -36,7 +36,7 @@ const ExportModal = ({ onClose, onSend }) => {
           style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
         });
         console.log("Export result: ", result);
-        onClose();
+        setTimeout(() => onClose(), 3000);
       }
     } catch (error) {
       console.error("Export error:", error);

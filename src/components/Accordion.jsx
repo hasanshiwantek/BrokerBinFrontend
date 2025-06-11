@@ -227,7 +227,6 @@ const Accordion = ({
                       }`}
                     </span>
                     <span
-                      onClick={() => openCompanyModal(company)}
                       className="text-[8pt]"
                     >
                       {company}
