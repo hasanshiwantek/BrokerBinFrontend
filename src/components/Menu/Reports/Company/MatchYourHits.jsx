@@ -20,7 +20,7 @@ const MatchYourHits = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredMFGs, setFilteredMFGs] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  console.log(data);
+  console.log("Match your hits data: ",data);
   useEffect(() => {
     dispatch(getMatchYourHits({ token }));
   }, []);
@@ -38,11 +38,13 @@ const MatchYourHits = () => {
       );
       setFilteredMFGs(matches.slice(0, 10)); // show top 10
       setShowSuggestions(true);
+      console.log("Mfgs: ",filteredMFGs);
+      
     }
   };
 
   const handleSuggestionClick = (mfg) => {
-    setSearchTerm(mfg);
+    setSearchTerm(mfg); 
     setShowSuggestions(false);
     // Optionally: trigger filter, fetch data etc.
   };
