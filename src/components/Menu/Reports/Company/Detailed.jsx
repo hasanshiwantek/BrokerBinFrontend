@@ -43,29 +43,6 @@ const Detailed = () => {
     { label: "Asia", value: "Asia", id: "Asia" },
   ];
 
-  // Simulated fetch — replace with real API call later
-  // useEffect(() => {
-  //   if (partModel && mfg && cond) {
-  //     dispatch(getDetailedInventory({ token, payload: { partModel, mfg, cond, viewStocked: "", viewRegions: "" } }));
-  //   }
-  // }, [partModel, mfg, cond]);
-
-  // useEffect(() => {
-  //   if (partModel && mfg && cond) {
-  //     dispatch(getDetailedInventory({
-  //       token,
-  //       payload: {
-  //         partModel,
-  //         mfg,
-  //         cond,
-  //         viewStocked,
-  //         viewRegions,
-  //         partSearch,
-  //       },
-  //     }));
-  //   }
-  // }, [partModel, mfg, cond, viewStocked, viewRegions, partSearch]);
-
   useEffect(() => {
     if (partModel && mfg && cond) {
       dispatch(
@@ -86,37 +63,30 @@ const Detailed = () => {
   const { togglePopUp, popupCompanyDetail } = useSelector(
     (state) => state.searchProductStore
   );
+
   const openCompanyModal = (company) => {
     console.log("Opening Company Modal with Company:", company);
     dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
     dispatch(setTogglePopUp()); // Show company modal
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFilters((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (partSearch && mfg && cond) {
-      dispatch(
-        getDetailedInventory({
-          token,
-          payload: {
-            partModel: partSearch,
-            mfg,
-            cond,
-            viewStocked: "",
-            viewRegions: "",
-          },
-        })
-      );
-    }
-  };
+const handleSubmit = (e) => {
+  e.preventDefault();
+  if (partSearch && mfg && cond) {
+    dispatch(
+      getDetailedInventory({
+        token,
+        payload: {
+          partModel: partSearch,
+          mfg,
+          cond,
+          viewStocked: "",
+          viewRegions: ""
+        }
+      })
+    );
+  }
+};
 
   if (loading) {
     return (
@@ -183,9 +153,8 @@ const Detailed = () => {
                 <select
                   id="manufacturer"
                   className="p-2"
-                  onChange={(e) =>
-                    setFilters({ ...filters, viewStocked: e.target.value })
-                  }
+                  value={filters.viewStocked}
+                  onChange={(e) => setFilters({ ...filters, viewStocked: e.target.value })}
                 >
                   <option value="">Any</option>
                   <option value="yes">Yes</option>
@@ -200,9 +169,8 @@ const Detailed = () => {
                 <select
                   id="product"
                   className="p-2"
-                  onChange={(e) =>
-                    setFilters({ ...filters, viewRegions: e.target.value })
-                  }
+                  value={filters.viewRegions}
+                  onChange={(e) => setFilters({ ...filters, viewRegions: e.target.value })}
                 >
                   {regionsList?.map((region) => (
                     <option key={region.id} value={region.value}>
