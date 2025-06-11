@@ -675,19 +675,18 @@ const Cart = () => {
               onClose={() => setShowNoteModal(false)}
             />
           )}
-
-          {showExportModal && (
-            <Export
-              selectedProducts={selectedProducts}
-              onClose={() => setShowExportModal(false)}
-              onSend={(exportData) => {
-                console.log("Export Info:", exportData);
-                console.log("Selected Products:", selectedProducts);
-                setShowExportModal(false);
-              }}
-            />
-          )}
         </div>
+      )}
+      {showExportModal && (
+        <Export
+          selectedProducts={selectedProducts}
+          onClose={() => setShowExportModal(false)}
+          onSend={(exportData) => {
+            console.log("Export Info:", exportData);
+            console.log("Selected Products:", selectedProducts);
+            setShowExportModal(false);
+          }}
+        />
       )}
       <ToastContainer position="top-center" autoClose={2000} />
     </>

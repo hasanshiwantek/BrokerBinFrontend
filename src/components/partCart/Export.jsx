@@ -3,15 +3,16 @@ import { IoClose } from "react-icons/io5";
 import { exportPartcart } from "@/ReduxStore/SearchProductSlice";
 import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 const ExportModal = ({ onClose, onSend }) => {
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem("user"));
   const userEmail = user.user.email;
   const token = Cookies.get("token");
   console.log("User Email: ", userEmail);
   const [loading, setLoading] = useState(false);
   const [exportData, setExportData] = useState({
-    fileType: "excel",
+    format: "excel",
     sortBy: "cnt_DESC",
     sendCopyTo: userEmail,
     subject: "Brokercell.com Part List – 2025",
@@ -27,15 +28,16 @@ const ExportModal = ({ onClose, onSend }) => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const body = exportData;
-
-      const result = await dispatch(exportPartcart({ token, body })).unwrap();
-
-      toast.success(result?.message || "Export request sent!", {
-        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
-      });
-      console.log("Export result: ",result);
-      onClose();
+      const result = await dispatch(
+        exportPartcart({ token, body: exportData })
+      ).unwrap();
+      if (result?.status) {
+        toast.info(result?.message || "Export request sent!", {
+          style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+        });
+        console.log("Export result: ", result);
+        onClose();
+      }
     } catch (error) {
       console.error("Export error:", error);
       toast.error(error?.message || "Failed to export part cart.", {
@@ -67,10 +69,10 @@ const ExportModal = ({ onClose, onSend }) => {
                 <label key={type}>
                   <input
                     type="radio"
-                    name="fileType"
+                    name="format"
                     value={type}
-                    checked={exportData.fileType === type}
-                    onChange={() => handleChange("fileType", type)}
+                    checked={exportData.format === type}
+                    onChange={() => handleChange("format", type)}
                   />
                   <span className="ml-2 uppercase text-[8pt]">{type}</span>
                 </label>
