@@ -34,41 +34,40 @@
   }
 }
 
-.display label{
-      width: 13rem;
+.display label {
+  width: 13rem;
 }
 .orangeButton {
   background-color: var(--primary-color);
   border: none;
   color: white;
-  padding: 10px 15px;
+  padding: 7px 8px;
+  border-radius: 4px;
   margin-right: 10px;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
-
 }
 
 .orangeButton:hover {
   background-color: #196dc7;
 }
 
-
-.footerlinks{
+.footerlinks {
   display: flex;
   justify-content: center;
   gap: 10px;
   flex-wrap: wrap;
   margin-bottom: 20px;
 }
-.footerlinks li{
+.footerlinks li {
   list-style: none;
-  color: #3A57AB;;
+  color: #3a57ab;
 }
-.footerlinks li a{
+.footerlinks li a {
   font-size: 11px;
 }
 
-.section_qualities p{
+.section_qualities p {
   font-size: 9pt;
   font-weight: 600;
 }
