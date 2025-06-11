@@ -20,7 +20,8 @@ const MatchYourHits = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredMFGs, setFilteredMFGs] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  console.log("Match your hits data: ",data);
+  const myhData = data?.inventory;
+  console.log("Match your hits data: ", myhData);
   useEffect(() => {
     dispatch(getMatchYourHits({ token }));
   }, []);
@@ -38,13 +39,12 @@ const MatchYourHits = () => {
       );
       setFilteredMFGs(matches.slice(0, 10)); // show top 10
       setShowSuggestions(true);
-      console.log("Mfgs: ",filteredMFGs);
-      
+      console.log("Mfgs: ", filteredMFGs);
     }
   };
 
   const handleSuggestionClick = (mfg) => {
-    setSearchTerm(mfg); 
+    setSearchTerm(mfg);
     setShowSuggestions(false);
     // Optionally: trigger filter, fetch data etc.
   };
@@ -168,15 +168,29 @@ const MatchYourHits = () => {
             </tr>
           </thead>
           <tbody className="bg-white">
-            {data.length > 0 ? (
-              data.map((item, index) => (
+            {myhData?.length > 0 ? (
+              myhData?.map((item, index) => (
                 <tr key={index}>
                   <td
                     style={{ cursor: "pointer" }}
+                    // onClick={() =>
+                    //   navigate("/reports/detailed", {
+                    //     state: { partModel: item.partmodel },
+                    //   })
+                    // }
                     onClick={() =>
-                      navigate("/reports/detailed", {
-                        state: { partModel: item.partmodel },
-                      })
+                      navigate(
+                        `/reports/detailed?partModel=${encodeURIComponent(
+                          item?.partModel
+                        )}&cond=${item?.cond}&mfg=${item?.mfg}`,
+                        {
+                          state: {
+                            partModel: item?.partModel,
+                            cond: item?.cond,
+                            mfg: item?.mfg,
+                          },
+                        }
+                      )
                     }
                   >
                     Detailed
@@ -186,15 +200,15 @@ const MatchYourHits = () => {
                   <td>{item.M}</td>
                   <td>{item.partmodel}</td>
                   <td>{item.cond}</td>
-                  <td>{item.Clei}</td>
-                  <td>{item.Price}</td>
-                  <td>{item.Low}</td>
-                  <td>{item.Avg}</td>
-                  <td>{item.Heigh}</td>
-                  <td>{item.qty}</td>
+                  <td>{item.heciClei}</td>
+                  <td>{item.price}</td>
+                  <td>{item.price_stats?.low}</td>
+                  <td>{item.price_stats?.average}</td>
+                  <td>{item.price_stats?.high}</td>
+                  <td>{item.quantity}</td>
                   <td>{item.mfg}</td>
                   <td>{item.age}</td>
-                  <td>{item.description}</td>
+                  <td>{item.productDescription}</td>
                 </tr>
               ))
             ) : (

@@ -120,7 +120,7 @@ const TopSearchWithManufacturer = () => {
       <div className={css.topSearches}>
              <div className="flex justify-between items-center">
                <div>
-                 <h3 className="text-[10pt] text-white font-semibold">Top 200 Searches {parameter}:</h3>
+                 <h3 className="text-[10pt] text-white font-semibold">Top 200 {mfg} Searches  {parameter}:</h3>
                </div>
                <div className="flex justify-start gap-2 items-center">
                  <label htmlFor="manufacturer" className="text-[8pt]">Manufacturer:</label>
