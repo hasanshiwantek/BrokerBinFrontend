@@ -417,7 +417,7 @@ export const exportPartcart = createAsyncThunk(
     try {
       const response = await axios.post(
         `${brokerAPI}part-cart/export`,
-        { body }, // API expects an object
+        body , // API expects an object
         {
           headers: {
             Authorization: `Bearer ${token}`,

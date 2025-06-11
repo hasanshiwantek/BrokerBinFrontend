@@ -632,7 +632,13 @@ const Cart = () => {
                     type="button"
                     onClick={() => {
                       if (selectedParts.length === 0) {
-                        alert("You must select a part!");
+                        toast.warning("You must select at least one part.", {
+                          style: {
+                            fontSize: "12px",
+                            marginTop: "-10px",
+                            fontWeight: "bold",
+                          },
+                        });
                         return;
                       }
                       setShowNoteModal(true);
@@ -675,19 +681,18 @@ const Cart = () => {
               onClose={() => setShowNoteModal(false)}
             />
           )}
-
-          {showExportModal && (
-            <Export
-              selectedProducts={selectedProducts}
-              onClose={() => setShowExportModal(false)}
-              onSend={(exportData) => {
-                console.log("Export Info:", exportData);
-                console.log("Selected Products:", selectedProducts);
-                setShowExportModal(false);
-              }}
-            />
-          )}
         </div>
+      )}
+      {showExportModal && (
+        <Export
+          selectedProducts={selectedProducts}
+          onClose={() => setShowExportModal(false)}
+          onSend={(exportData) => {
+            console.log("Export Info:", exportData);
+            console.log("Selected Products:", selectedProducts);
+            setShowExportModal(false);
+          }}
+        />
       )}
       <ToastContainer position="top-center" autoClose={2000} />
     </>
