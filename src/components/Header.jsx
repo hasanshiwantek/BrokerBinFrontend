@@ -787,7 +787,7 @@ const Header = () => {
                 <ThemeProvider theme={theme}>
                   <Tooltip title="Upload Inventory" arrow placement="bottom">
                     <li>
-                      <Link to={"/inventory"} className="w-7">
+                      <Link to={"/inventory/Upload"} className="w-7">
                         <img src={inventoryIcon} alt="Vendor logo" />
                       </Link>
                     </li>

@@ -322,7 +322,7 @@ const RfqTableSent = () => {
     dispatch(deleteArchiveRfq({ token, ids: rfqIdsToDelete }))
       .then(() => {
         console.log("Selected RGQs Deleted");
-        toast.warning("Selected RFQs deleted successfully!");
+        toast.info("Selected RFQs deleted successfully!");
         dispatch(sentRfq({ token, page: currPage })); // Refresh the data
       })
       .catch((error) => {
@@ -332,6 +332,14 @@ const RfqTableSent = () => {
   };
 
   console.log("rfqMail:", rfqMail);
+
+  useEffect(() => {
+    if (sentData.length > 0) {
+      setFilteredData(sentData);
+      dispatch(setRfqMail([])); // Clear selected
+      dispatch(setRfqMailCheckAll(false)); // Uncheck all
+    }
+  }, [sentData]);
 
   // QUERY PARAMS LOGIC
   const [searchParams, setSearchParams] = useSearchParams();
@@ -667,8 +675,7 @@ const RfqTableSent = () => {
       {togglePopUpCompany && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUpCompany())} />
       )}
-            <ToastContainer position="top-center" autoClose={2000} />
-      
+      <ToastContainer position="top-center" autoClose={2000} />
     </>
   );
 };

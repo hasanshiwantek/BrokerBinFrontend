@@ -119,6 +119,7 @@ const SearchCompanyInventory = () => {
             onFocus={handleFocus}
             onBlur={handleBlur}
             required
+            className="p-2"
           />
           <div className={css.compnaySearch} ref={listRef}>
             {showList && (

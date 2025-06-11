@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect } from "react";
 import css from "../../../styles/Menu/Reports/Email.module.css";
-import { Link,NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import myProfile from "../../../styles/Menu/Manage/MyProfile.module.css";
-
+import MFGFilter from "../Manage/BroadcastFilter/MFGFilter";
 
 const Email = () => {
   // State to store checkbox selections
@@ -105,7 +104,7 @@ const Email = () => {
             <li>
               <NavLink
                 to="/reports/Company"
-                className={({ isActive }) => (isActive ? myProfile.active : '')}
+                className={({ isActive }) => (isActive ? myProfile.active : "")}
               >
                 <span>Company</span>
               </NavLink>
@@ -113,7 +112,7 @@ const Email = () => {
             <li>
               <NavLink
                 to="/reports/sitewide"
-                className={({ isActive }) => (isActive ? myProfile.active : '')}
+                className={({ isActive }) => (isActive ? myProfile.active : "")}
               >
                 <span>Site Wide</span>
               </NavLink>
@@ -121,7 +120,7 @@ const Email = () => {
             <li>
               <NavLink
                 to="/reports/email"
-                className={({ isActive }) => (isActive ? myProfile.active : '')}
+                className={({ isActive }) => (isActive ? myProfile.active : "")}
               >
                 <span>Email</span>
               </NavLink>
@@ -150,7 +149,9 @@ const Email = () => {
                 <label>Send</label>
                 <select
                   value={checkboxes.dailyBroadcast}
-                  onChange={(e) => handleSelectChange("dailyBroadcast", e.target.value)}
+                  onChange={(e) =>
+                    handleSelectChange("dailyBroadcast", e.target.value)
+                  }
                 >
                   <option value="Normal">Normal</option>
                   <option value="Off">Off</option>
@@ -165,15 +166,21 @@ const Email = () => {
                     <input
                       type="checkbox"
                       checked={checkboxes.matchYourHits.hourly}
-                      onChange={() => handleCheckboxChange("matchYourHits", "hourly")}
-                    /> Hourly
+                      onChange={() =>
+                        handleCheckboxChange("matchYourHits", "hourly")
+                      }
+                    />{" "}
+                    Hourly
                   </label>
                   <label>
                     <input
                       type="checkbox"
                       checked={checkboxes.matchYourHits.daily}
-                      onChange={() => handleCheckboxChange("matchYourHits", "daily")}
-                    /> Daily
+                      onChange={() =>
+                        handleCheckboxChange("matchYourHits", "daily")
+                      }
+                    />{" "}
+                    Daily
                   </label>
                 </div>
               </div>
@@ -186,22 +193,31 @@ const Email = () => {
                     <input
                       type="checkbox"
                       checked={checkboxes.hotListUpdates.hourlyMyh}
-                      onChange={() => handleCheckboxChange("hotListUpdates", "hourlyMyh")}
-                    /> Hourly <span style={{ color: "#900" }}>MYH</span>
+                      onChange={() =>
+                        handleCheckboxChange("hotListUpdates", "hourlyMyh")
+                      }
+                    />{" "}
+                    Hourly <span style={{ color: "#900" }}>MYH</span>
                   </label>
                   <label>
                     <input
                       type="checkbox"
                       checked={checkboxes.hotListUpdates.dailyMyh}
-                      onChange={() => handleCheckboxChange("hotListUpdates", "dailyMyh")}
-                    /> Daily <span style={{ color: "#900" }}>MYH</span>
+                      onChange={() =>
+                        handleCheckboxChange("hotListUpdates", "dailyMyh")
+                      }
+                    />{" "}
+                    Daily <span style={{ color: "#900" }}>MYH</span>
                   </label>
                   <label>
                     <input
                       type="checkbox"
                       checked={checkboxes.hotListUpdates.dailySd}
-                      onChange={() => handleCheckboxChange("hotListUpdates", "dailySd")}
-                    /> Daily <span style={{ color: "#900" }}>S&D</span>
+                      onChange={() =>
+                        handleCheckboxChange("hotListUpdates", "dailySd")
+                      }
+                    />{" "}
+                    Daily <span style={{ color: "#900" }}>S&D</span>
                   </label>
                 </div>
               </div>
@@ -214,22 +230,31 @@ const Email = () => {
                     <input
                       type="checkbox"
                       checked={checkboxes.broadcastAlerts.wtb}
-                      onChange={() => handleCheckboxChange("broadcastAlerts", "wtb")}
-                    /> WTB
+                      onChange={() =>
+                        handleCheckboxChange("broadcastAlerts", "wtb")
+                      }
+                    />{" "}
+                    WTB
                   </label>
                   <label>
                     <input
                       type="checkbox"
                       checked={checkboxes.broadcastAlerts.rfq}
-                      onChange={() => handleCheckboxChange("broadcastAlerts", "rfq")}
-                    /> RFQ
+                      onChange={() =>
+                        handleCheckboxChange("broadcastAlerts", "rfq")
+                      }
+                    />{" "}
+                    RFQ
                   </label>
                   <label>
                     <input
                       type="checkbox"
                       checked={checkboxes.broadcastAlerts.wts}
-                      onChange={() => handleCheckboxChange("broadcastAlerts", "wts")}
-                    /> WTS
+                      onChange={() =>
+                        handleCheckboxChange("broadcastAlerts", "wts")
+                      }
+                    />{" "}
+                    WTS
                   </label>
                 </div>
               </div>
@@ -240,7 +265,12 @@ const Email = () => {
                 <label>Type</label>
                 <select
                   value={checkboxes.rfqSummaries.type}
-                  onChange={(e) => handleSelectChange("rfqSummaries", { ...checkboxes.rfqSummaries, type: e.target.value })}
+                  onChange={(e) =>
+                    handleSelectChange("rfqSummaries", {
+                      ...checkboxes.rfqSummaries,
+                      type: e.target.value,
+                    })
+                  }
                 >
                   <option value="Off">Off</option>
                   <option value="Basic">Basic</option>
@@ -249,7 +279,12 @@ const Email = () => {
                 <label>Occurrence</label>
                 <select
                   value={checkboxes.rfqSummaries.occurrence}
-                  onChange={(e) => handleSelectChange("rfqSummaries", { ...checkboxes.rfqSummaries, occurrence: e.target.value })}
+                  onChange={(e) =>
+                    handleSelectChange("rfqSummaries", {
+                      ...checkboxes.rfqSummaries,
+                      occurrence: e.target.value,
+                    })
+                  }
                 >
                   <option value="Off">Off</option>
                   <option value="Daily">Daily</option>
@@ -264,7 +299,9 @@ const Email = () => {
                 <label>Send</label>
                 <select
                   value={checkboxes.serviceDirectoryStats}
-                  onChange={(e) => handleSelectChange("serviceDirectoryStats", e.target.value)}
+                  onChange={(e) =>
+                    handleSelectChange("serviceDirectoryStats", e.target.value)
+                  }
                 >
                   <option value="Never">Never</option>
                   <option value="Daily">Daily</option>
@@ -280,22 +317,31 @@ const Email = () => {
                     <input
                       type="checkbox"
                       checked={checkboxes.top200Items.daily}
-                      onChange={() => handleCheckboxChange("top200Items", "daily")}
-                    /> Daily
+                      onChange={() =>
+                        handleCheckboxChange("top200Items", "daily")
+                      }
+                    />{" "}
+                    Daily
                   </label>
                   <label>
                     <input
                       type="checkbox"
                       checked={checkboxes.top200Items.weekly}
-                      onChange={() => handleCheckboxChange("top200Items", "weekly")}
-                    /> Weekly
+                      onChange={() =>
+                        handleCheckboxChange("top200Items", "weekly")
+                      }
+                    />{" "}
+                    Weekly
                   </label>
                   <label>
                     <input
                       type="checkbox"
                       checked={checkboxes.top200Items.monthly}
-                      onChange={() => handleCheckboxChange("top200Items", "monthly")}
-                    /> Monthly
+                      onChange={() =>
+                        handleCheckboxChange("top200Items", "monthly")
+                      }
+                    />{" "}
+                    Monthly
                   </label>
                 </div>
               </div>
@@ -308,28 +354,40 @@ const Email = () => {
                     <input
                       type="checkbox"
                       checked={checkboxes.top200Searches.daily}
-                      onChange={() => handleCheckboxChange("top200Searches", "daily")}
-                    /> Daily
+                      onChange={() =>
+                        handleCheckboxChange("top200Searches", "daily")
+                      }
+                    />{" "}
+                    Daily
                   </label>
                   <label>
                     <input
                       type="checkbox"
                       checked={checkboxes.top200Searches.weekly}
-                      onChange={() => handleCheckboxChange("top200Searches", "weekly")}
-                    /> Weekly
+                      onChange={() =>
+                        handleCheckboxChange("top200Searches", "weekly")
+                      }
+                    />{" "}
+                    Weekly
                   </label>
                   <label>
                     <input
                       type="checkbox"
                       checked={checkboxes.top200Searches.monthly}
-                      onChange={() => handleCheckboxChange("top200Searches", "monthly")}
-                    /> Monthly
+                      onChange={() =>
+                        handleCheckboxChange("top200Searches", "monthly")
+                      }
+                    />{" "}
+                    Monthly
                   </label>
                 </div>
               </div>
 
               {/* Top 200 Searches Per Manufacturer Section */}
-              <div className={css.section} style={{ border: "1px solid black" }}>
+              <div
+                className={css.section}
+                style={{ border: "1px solid black" }}
+              >
                 <h1>Top 200 Searches Per Manufacturer</h1>
                 <h1>Send Emails</h1>
                 <div className={css.checkboxGroup}>
@@ -337,22 +395,31 @@ const Email = () => {
                     <input
                       type="checkbox"
                       checked={checkboxes.top200PerManufacturer.daily}
-                      onChange={() => handleCheckboxChange("top200PerManufacturer", "daily")}
-                    /> Daily
+                      onChange={() =>
+                        handleCheckboxChange("top200PerManufacturer", "daily")
+                      }
+                    />{" "}
+                    Daily
                   </label>
                   <label>
                     <input
                       type="checkbox"
                       checked={checkboxes.top200PerManufacturer.weekly}
-                      onChange={() => handleCheckboxChange("top200PerManufacturer", "weekly")}
-                    /> Weekly
+                      onChange={() =>
+                        handleCheckboxChange("top200PerManufacturer", "weekly")
+                      }
+                    />{" "}
+                    Weekly
                   </label>
                   <label>
                     <input
                       type="checkbox"
                       checked={checkboxes.top200PerManufacturer.monthly}
-                      onChange={() => handleCheckboxChange("top200PerManufacturer", "monthly")}
-                    /> Monthly
+                      onChange={() =>
+                        handleCheckboxChange("top200PerManufacturer", "monthly")
+                      }
+                    />{" "}
+                    Monthly
                   </label>
                 </div>
                 {/* Include MFG's Section */}
@@ -373,8 +440,6 @@ const Email = () => {
                   </select>
                 </div>
               </div>
-
-
 
               {/* Save Changes Button */}
               <div className={css.section}>
