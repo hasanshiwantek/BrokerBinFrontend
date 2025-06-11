@@ -223,7 +223,7 @@ const Accordion = ({
                         groupedData[company].length
                       } results - ${
                         groupedData[company][0]?.inventory?.addedBy?.country ||
-                        " "
+                        ""
                       }`}
                     </span>
                     <span

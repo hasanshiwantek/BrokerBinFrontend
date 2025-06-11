@@ -186,8 +186,8 @@ const CompanyInventory = () => {
               </tr>
             </thead>
             <tbody>
-              {searchedCompanyInventory.map((item, i) => {
-                return (
+              {searchedCompanyInventory.length > 0 ? (
+                searchedCompanyInventory.map((item, i) => (
                   <tr key={item.id}>
                     <td>
                       <input
@@ -212,9 +212,19 @@ const CompanyInventory = () => {
                     <td>{item.age}</td>
                     <td>{item.productDescription}</td>
                   </tr>
-                );
-              })}
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan="9"
+                    className="!text-center !text-red-600 !font-bold !py-1"
+                  >
+                    No results found.
+                  </td>
+                </tr>
+              )}
             </tbody>
+
             <tfoot>
               <tr>
                 <th>cart</th>
