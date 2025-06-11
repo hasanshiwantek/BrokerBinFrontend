@@ -22,7 +22,15 @@ const Detailed = () => {
   const queryParams = new URLSearchParams(location.search);
   const partModel = queryParams.get("partModel");
   const { mfg, cond } = location.state || {};
+
   const { detailedInventory, loading } = useSelector((state) => state.reports);
+  console.log("DETAILEDINVENTORY", detailedInventory);
+  
+  const [partSearch, setPartSearch] = useState(partModel || "");
+   const [filters, setFilters] = useState({
+    viewStocked: "",
+    viewRegions: "",
+  });
 
   const regionsList = [
     { label: "All Regions", value: "All Regions", id: "All Regions" },
@@ -35,10 +43,6 @@ const Detailed = () => {
     { label: "Asia", value: "Asia", id: "Asia" },
   ];
 
-  const [filters, setFilters] = useState({
-    viewStocked: "",
-    viewRegions: "",
-  });
 
   // Simulated fetch — replace with real API call later
   // useEffect(() => {
@@ -97,9 +101,32 @@ const Detailed = () => {
 
 const handleSubmit = (e) => {
   e.preventDefault();
-  dispatch(getDetailedInventory({ token, payload: filters }));
+  if (partSearch && mfg && cond) {
+    dispatch(
+      getDetailedInventory({
+        token,
+        payload: {
+          partModel: partSearch,
+          mfg,
+          cond,
+          viewStocked: "",
+          viewRegions: ""
+        }
+      })
+    );
+  }
 };
 
+ if (loading) {
+    return (
+      <div className="flex justify-center items-center py-20">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
+        <span className="ml-4 text-blue-600 text-lg font-medium">
+          Loading Detailed Data..
+        </span>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -172,7 +199,7 @@ const handleSubmit = (e) => {
                   className="p-2"
                   onChange={(e) => setFilters({ ...filters, viewRegions: e.target.value })}
                 >
-                  {regionsList.map((region) => (
+                  {regionsList?.map((region) => (
                     <option key={region.id} value={region.value}>{region.label}</option>
                   ))}
                 </select>
@@ -185,8 +212,8 @@ const handleSubmit = (e) => {
                 type="text" 
                 id="search" 
                 className="p-2"
-                value={filters.partModel}
-                onChange={handleChange}
+                value={partSearch}
+                onChange={(e) => setPartSearch(e.target.value)}
                 />
                 <button onClick={handleSubmit}>Submit</button>
               </div>
@@ -210,19 +237,17 @@ const handleSubmit = (e) => {
             </tr>
           </thead>
           <tbody className="bg-white">
-            {detailedInventory.map((item, index) => (
-              <tr key={`main-${index}`}>
-                <td></td>
-                <td>{item.partmodel}</td>
-                <td>{item.mfg}</td>
-                <td>{item.cond}</td>
-                <td>{item.Clei}</td>
-                <td>{item.Price}</td>
-                <td>{item.qty}</td>
-                <td>{item.age}</td>
-                <td>{item.description}</td>
+              <tr>
+                <td>{detailedInventory?.part?.totalHits}</td>
+                <td>{detailedInventory?.part?.partModel}</td>
+                <td>{detailedInventory?.part?.mfg}</td>
+                <td>{detailedInventory?.part?.cond}</td>
+                <td>{detailedInventory?.part?.heciClei}</td>
+                <td>{detailedInventory?.part?.price}</td>
+                <td>{detailedInventory?.part?.qty}</td>
+                <td>{detailedInventory?.part?.age}</td>
+                <td>{detailedInventory?.part?.productDescription || ""}</td>
               </tr>
-            ))}
           </tbody>
         </table>
 
@@ -242,19 +267,19 @@ const handleSubmit = (e) => {
             </tr>
           </thead>
           <tbody className="bg-white">
-            {detailedInventory.map((item, index) => (
+            {detailedInventory.searches?.map((item, index) => (
               <tr key={`contact-${index}`}>
                 <td>
                   <input type="checkbox" />
                 </td>
-                <td>{item.D}</td>
-                <td>{item.W}</td>
-                <td>—</td>
-                <td>{item.partmodel}</td>
-                <td>{item.Clei}</td>
-                <td>{item.cond}</td>
-                <td>{item.Price}</td>
-                <td>{item.qty}</td>
+                <td>{item.age}</td>
+                <td>{detailedInventory.part.partModel}</td>
+                <td>{item.user.firstName} {item.user.lastName}</td>
+                <td>{item.user.company.name}</td>
+                <td>{item.user.phoneNumber}</td>
+                <td>{item.user.phoneNumber}</td>
+                <td>{item.user.fax}</td>
+                <td>{item.user.qty}</td>
               </tr>
             ))}
           </tbody>
