@@ -331,30 +331,71 @@ const ProductTableDetail = React.memo(
     //   dispatch(sortInventory({ token, payload }));
     // };
 
+    // const handleSort = (column) => {
+    //   const queryParams = new URLSearchParams(location.search);
+    //   const currentQuery = queryParams.get("query");
+    //   const currentPartModel = queryParams.get("partModel");
+    //   const currentSortBy = queryParams.get("sortBy");
+    //   const currentSortOrder = queryParams.get("sortOrder") || "desc";
+    
+    //   // 🔁 Toggle or set sortOrder
+    //   const newSortOrder =
+    //     currentSortBy === column
+    //       ? currentSortOrder === "asc"
+    //         ? "desc"
+    //         : "asc"
+    //       : column === "price"
+    //       ? "asc"
+    //       : "desc";
+    
+    //   // 🔍 Determine what to search
+    //   const searchKey = keyWordPartModel || searchString;
+    //   const searchArray = searchKey
+    //     ? searchKey.trim().split(/[,\s]+/).map((s) => s.trim())
+    //     : keys;
+    
+    //   // 🔀 Build payload for sorting API
+    //   const payload = {
+    //     search: searchArray,
+    //     sortBy: column,
+    //     sortOrder: newSortOrder,
+    //     page: 1,
+    //     pageSize: 20,
+    //     type: searchType === "keyword" ? "keyword" : "",
+    //   };
+    //   dispatch(sortInventory({ token, payload }));
+    //   // const url = currentQuery
+    //   //   ? `/inventory/search?page=1&query=${encodeURIComponent(currentQuery)}&sortBy=${column}&sortOrder=${newSortOrder}`
+    //   //   : `/inventory/search?page=1&partModel=${encodeURIComponent(currentPartModel)}&sortBy=${column}&sortOrder=${newSortOrder}`;
+    
+    //   // navigate(url, { 
+    //   //   replace: true,
+    //   //   state: location.state || {},
+    //   // });
+    //   const url = `${location.pathname}?page=1&${currentQuery ? `query=${currentQuery}` : `partModel=${currentPartModel}`}&sortBy=${column}&sortOrder=${newSortOrder}`;
+    //   navigate(url, { replace: true });
+    // };
+
     const handleSort = (column) => {
       const queryParams = new URLSearchParams(location.search);
-      const currentQuery = queryParams.get("query");
-      const currentPartModel = queryParams.get("partModel");
+
       const currentSortBy = queryParams.get("sortBy");
       const currentSortOrder = queryParams.get("sortOrder") || "desc";
-    
-      // 🔁 Toggle or set sortOrder
+
       const newSortOrder =
         currentSortBy === column
           ? currentSortOrder === "asc"
             ? "desc"
             : "asc"
           : column === "price"
-          ? "asc"
-          : "desc";
-    
-      // 🔍 Determine what to search
+            ? "asc"
+            : "desc";
+
       const searchKey = keyWordPartModel || searchString;
       const searchArray = searchKey
         ? searchKey.trim().split(/[,\s]+/).map((s) => s.trim())
         : keys;
-    
-      // 🔀 Build payload for sorting API
+
       const payload = {
         search: searchArray,
         sortBy: column,
@@ -363,22 +404,19 @@ const ProductTableDetail = React.memo(
         pageSize: 20,
         type: searchType === "keyword" ? "keyword" : "",
       };
-    
-      dispatch(sortInventory({ token, payload }));
-    
-      // const url = currentQuery
-      //   ? `/inventory/search?page=1&query=${encodeURIComponent(currentQuery)}&sortBy=${column}&sortOrder=${newSortOrder}`
-      //   : `/inventory/search?page=1&partModel=${encodeURIComponent(currentPartModel)}&sortBy=${column}&sortOrder=${newSortOrder}`;
-    
-      // navigate(url, { 
-      //   replace: true,
-      //   state: location.state || {},
-      // });
 
-      const url = `${location.pathname}?page=1&${currentQuery ? `query=${currentQuery}` : `partModel=${currentPartModel}`}&sortBy=${column}&sortOrder=${newSortOrder}`;
-      navigate(url, { replace: true });
+      dispatch(sortInventory({ token, payload }));
+
+      // ✅ Update query params while keeping current path intact
+      queryParams.set("sortBy", column);
+      queryParams.set("sortOrder", newSortOrder);
+      queryParams.set("page", 1); // reset to first page on sort
+
+      navigate(`${location.pathname}?${queryParams.toString()}`, {
+        replace: true,
+      });
     };
-    
+
     return (
       <div className={css.productTableDetail}>
         <div className={css.tableContainer}>
