@@ -43,30 +43,6 @@ const Detailed = () => {
     { label: "Asia", value: "Asia", id: "Asia" },
   ];
 
-
-  // Simulated fetch — replace with real API call later
-  // useEffect(() => {
-  //   if (partModel && mfg && cond) {
-  //     dispatch(getDetailedInventory({ token, payload: { partModel, mfg, cond, viewStocked: "", viewRegions: "" } }));
-  //   }
-  // }, [partModel, mfg, cond]);
-
-  // useEffect(() => {
-  //   if (partModel && mfg && cond) {
-  //     dispatch(getDetailedInventory({
-  //       token,
-  //       payload: {
-  //         partModel,
-  //         mfg,
-  //         cond,
-  //         viewStocked,
-  //         viewRegions,
-  //         partSearch,
-  //       },
-  //     }));
-  //   }
-  // }, [partModel, mfg, cond, viewStocked, viewRegions, partSearch]);
-
   useEffect(() => {
   if (partModel && mfg && cond) {
     dispatch(getDetailedInventory({
@@ -90,14 +66,6 @@ const Detailed = () => {
     dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
     dispatch(setTogglePopUp()); // Show company modal
   };
-
-  const handleChange = (e) => {
-  const { name, value } = e.target;
-  setFilters((prev) => ({
-    ...prev,
-    [name]: value
-  }));
-};
 
 const handleSubmit = (e) => {
   e.preventDefault();
@@ -182,6 +150,7 @@ const handleSubmit = (e) => {
                 <select
                   id="manufacturer"
                   className="p-2"
+                  value={filters.viewStocked}
                   onChange={(e) => setFilters({ ...filters, viewStocked: e.target.value })}
                 >
                   <option value="">Any</option>
@@ -197,6 +166,7 @@ const handleSubmit = (e) => {
                 <select
                   id="product"
                   className="p-2"
+                  value={filters.viewRegions}
                   onChange={(e) => setFilters({ ...filters, viewRegions: e.target.value })}
                 >
                   {regionsList?.map((region) => (
@@ -278,7 +248,7 @@ const handleSubmit = (e) => {
                 <td>{item.user.company.name}</td>
                 <td>{item.user.phoneNumber}</td>
                 <td>{item.user.phoneNumber}</td>
-                <td>{item.user.fax}</td>
+                <td>{item.user.faxNumber}</td>
                 <td>{item.user.qty}</td>
               </tr>
             ))}
