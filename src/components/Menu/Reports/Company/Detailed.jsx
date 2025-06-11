@@ -25,9 +25,9 @@ const Detailed = () => {
 
   const { detailedInventory, loading } = useSelector((state) => state.reports);
   console.log("DETAILEDINVENTORY", detailedInventory);
-  
+
   const [partSearch, setPartSearch] = useState(partModel || "");
-   const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState({
     viewStocked: "",
     viewRegions: "",
   });
@@ -44,23 +44,26 @@ const Detailed = () => {
   ];
 
   useEffect(() => {
-  if (partModel && mfg && cond) {
-    dispatch(getDetailedInventory({
-      token,
-      payload: {
-        partModel,
-        mfg,
-        cond,
-        ...filters,
-      },
-    }));
-  }
-}, [partModel, mfg, cond, filters]);
+    if (partModel && mfg && cond) {
+      dispatch(
+        getDetailedInventory({
+          token,
+          payload: {
+            partModel,
+            mfg,
+            cond,
+            ...filters,
+          },
+        })
+      );
+    }
+  }, [partModel, mfg, cond, filters]);
 
   // COMPANY MODAL LOGIC
   const { togglePopUp, popupCompanyDetail } = useSelector(
     (state) => state.searchProductStore
   );
+  
   const openCompanyModal = (company) => {
     console.log("Opening Company Modal with Company:", company);
     dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
@@ -85,7 +88,7 @@ const handleSubmit = (e) => {
   }
 };
 
- if (loading) {
+  if (loading) {
     return (
       <div className="flex justify-center items-center py-20">
         <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
@@ -143,7 +146,7 @@ const handleSubmit = (e) => {
           <div className={css.searchSec}>
             <h2>Match Your Hits Detailed</h2>
             <div className="flex">
-              <div>
+              <div className="flex justify-start gap-2 items-center">
                 <label className="p-4" htmlFor="manufacturer">
                   View Stocked:
                 </label>
@@ -158,7 +161,7 @@ const handleSubmit = (e) => {
                   <option value="no">No</option>
                 </select>
               </div>
-              <div>
+              <div className="flex justify-start gap-2 items-center">
                 <label className="p-4" htmlFor="product">
                   View:
                 </label>
@@ -170,22 +173,30 @@ const handleSubmit = (e) => {
                   onChange={(e) => setFilters({ ...filters, viewRegions: e.target.value })}
                 >
                   {regionsList?.map((region) => (
-                    <option key={region.id} value={region.value}>{region.label}</option>
+                    <option key={region.id} value={region.value}>
+                      {region.label}
+                    </option>
                   ))}
                 </select>
               </div>
-              <div>
+              <div className="flex justify-start gap-2 items-center">
                 <label className="p-4" htmlFor="search">
                   Part Search
                 </label>
-                <input 
-                type="text" 
-                id="search" 
-                className="p-2"
-                value={partSearch}
-                onChange={(e) => setPartSearch(e.target.value)}
+                <input
+                  type="text"
+                  id="search"
+                  className="p-2"
+                  value={partSearch}
+                  onChange={(e) => setPartSearch(e.target.value)}
                 />
-                <button onClick={handleSubmit}>Submit</button>
+
+                <button
+                  onClick={handleSubmit}
+                  className="bg-[var(--primary-color)] p-2 rounded-sm"
+                >
+                  Submit
+                </button>
               </div>
             </div>
           </div>
@@ -207,17 +218,17 @@ const handleSubmit = (e) => {
             </tr>
           </thead>
           <tbody className="bg-white">
-              <tr>
-                <td>{detailedInventory?.part?.totalHits}</td>
-                <td>{detailedInventory?.part?.partModel}</td>
-                <td>{detailedInventory?.part?.mfg}</td>
-                <td>{detailedInventory?.part?.cond}</td>
-                <td>{detailedInventory?.part?.heciClei}</td>
-                <td>{detailedInventory?.part?.price}</td>
-                <td>{detailedInventory?.part?.qty}</td>
-                <td>{detailedInventory?.part?.age}</td>
-                <td>{detailedInventory?.part?.productDescription || ""}</td>
-              </tr>
+            <tr>
+              <td>{detailedInventory?.part?.totalHits}</td>
+              <td>{detailedInventory?.part?.partModel}</td>
+              <td>{detailedInventory?.part?.mfg}</td>
+              <td>{detailedInventory?.part?.cond}</td>
+              <td>{detailedInventory?.part?.heciClei}</td>
+              <td>{detailedInventory?.part?.price}</td>
+              <td>{detailedInventory?.part?.qty}</td>
+              <td>{detailedInventory?.part?.age}</td>
+              <td>{detailedInventory?.part?.productDescription || ""}</td>
+            </tr>
           </tbody>
         </table>
 
@@ -244,8 +255,12 @@ const handleSubmit = (e) => {
                 </td>
                 <td>{item.age}</td>
                 <td>{detailedInventory.part.partModel}</td>
-                <td>{item.user.firstName} {item.user.lastName}</td>
-                <td>{item.user.company.name}</td>
+                <td>
+                  {item.user.firstName} {item.user.lastName}
+                </td>
+                <td onClick={() => openCompanyModal(item?.user?.company)}>
+                  {item.user.company.name}
+                </td>
                 <td>{item.user.phoneNumber}</td>
                 <td>{item.user.phoneNumber}</td>
                 <td>{item.user.faxNumber}</td>
