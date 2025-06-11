@@ -402,8 +402,31 @@ export const updatePartcartNote = createAsyncThunk(
           },
         }
       );
-      console.log("Updated note response from redux: ",response.data);
-      
+      console.log("Updated note response from redux: ", response.data);
+
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+export const exportPartcart = createAsyncThunk(
+  "toolstore/exportPartcart",
+  async ({ token, body }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `${brokerAPI}part-cart/export`,
+        { body }, // API expects an object
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("Export Partcart Response from redux: ", response.data);
+
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);

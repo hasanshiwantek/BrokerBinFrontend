@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import css from "../../../../styles/Menu/Reports/MatchYourHits.module.css";
 import { Link, useNavigate, NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,9 +6,10 @@ import { getMatchYourHits } from "../../../../ReduxStore/Reports";
 import Cookies from "js-cookie";
 import styles from "../../../Menu/Broadcast/BroadCast.module.css";
 import style from "@/styles/Menu/Manage/MyProfile.module.css";
-
+import { initialMFGs } from "@/data/services";
 const MatchYourHits = () => {
   const token = Cookies.get("token");
+  const wrapperRef = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { matchYourHits, loading, error } = useSelector(
@@ -16,9 +17,47 @@ const MatchYourHits = () => {
   );
 
   const data = matchYourHits || [];
-  console.log(data)
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredMFGs, setFilteredMFGs] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  console.log(data);
   useEffect(() => {
     dispatch(getMatchYourHits({ token }));
+  }, []);
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+
+    if (value.trim() === "") {
+      setFilteredMFGs([]);
+      setShowSuggestions(false);
+    } else {
+      const matches = initialMFGs.filter((mfg) =>
+        mfg.toLowerCase().includes(value.toLowerCase())
+      );
+      setFilteredMFGs(matches.slice(0, 10)); // show top 10
+      setShowSuggestions(true);
+    }
+  };
+
+  const handleSuggestionClick = (mfg) => {
+    setSearchTerm(mfg);
+    setShowSuggestions(false);
+    // Optionally: trigger filter, fetch data etc.
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   if (loading) return <p>Loading...</p>;
@@ -72,13 +111,40 @@ const MatchYourHits = () => {
           <div className={css.searchSec}>
             <h2>Match Your Hits Basic</h2>
             <div>
-              <label className="p-4" htmlFor="search" id="search">
-                Search By Manufacturer
-              </label>
-              <input type="text" id="search" className="p-2" />
+              <div className="flex items-start gap-2 w-full max-w-lg">
+                <label className="whitespace-nowrap pt-2" htmlFor="search">
+                  Search By Manufacturer
+                </label>
+
+                <div ref={wrapperRef} className="relative w-full">
+                  <input
+                    type="text"
+                    id="search"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    className="p-2 border border-gray-300 rounded w-full"
+                    autoComplete="off"
+                  />
+
+                  {showSuggestions && filteredMFGs.length > 0 && (
+                    <ul className="absolute left-0 z-10 w-full bg-white border border-gray-300 max-h-60 overflow-y-auto rounded shadow-md">
+                      {filteredMFGs.map((mfg, index) => (
+                        <li
+                          key={index}
+                          onClick={() => handleSuggestionClick(mfg)}
+                          className="px-4 py-2 cursor-pointer hover:bg-blue-600 hover:text-white text-[8pt]"
+                        >
+                          {mfg}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>
+
         <table className={styles.table}>
           <thead>
             <tr>
