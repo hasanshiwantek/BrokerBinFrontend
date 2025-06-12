@@ -259,6 +259,16 @@ const Email = () => {
                 </div>
               </div>
 
+              {/* Broadcast Alerts Section */}
+              <div className={css.section}>
+                <h1>My Vendors</h1>
+                <div className="text-center">
+                  <NavLink to={"/reports/emailVendorList"}>
+                    <p className="text-[8.5pt] font-bold " >Email My Vendor Inventory Updates</p>
+                  </NavLink>
+                </div>
+              </div>
+
               {/* RFQ Summaries Section */}
               <div className={css.section}>
                 <h1>RFQ Summaries</h1>
@@ -429,7 +439,10 @@ const Email = () => {
                     multiple
                     value={checkboxes.includeMFGs}
                     onChange={(e) => {
-                      const selectedOptions = Array.from(e.target.selectedOptions, (option) => option.value);
+                      const selectedOptions = Array.from(
+                        e.target.selectedOptions,
+                        (option) => option.value
+                      );
                       handleSelectChange("includeMFGs", selectedOptions);
                     }}
                   >
