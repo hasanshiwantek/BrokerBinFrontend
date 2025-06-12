@@ -51,6 +51,8 @@ const SearchProduct = () => {
     keywordTotalCount,
   } = useSelector((store) => store.searchProductStore);
 
+  console.log("SEARCHRESPONSEMATCHED", searchResponseMatched);
+  
   const isFilterActive = !!(
     filteredSearchResponse &&
     searchResponseMatched &&

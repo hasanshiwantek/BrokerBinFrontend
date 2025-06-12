@@ -48,54 +48,56 @@ const Detailed = () => {
     { label: "Asia", value: "Asia", id: "Asia" },
   ];
 
+  // useEffect(() => {
+  //   if (partModel && mfg && cond) {
+  //     dispatch(
+  //       getDetailedInventory({
+  //         token,
+  //         payload: {
+  //           partModel,
+  //           mfg,
+  //           cond,
+  //           ...filters,
+  //         },
+  //       })
+  //     );
+  //   }
+  // }, [partModel, mfg, cond, token, filters]);
+
   useEffect(() => {
-    if (partModel && mfg && cond) {
+  const queryParams = new URLSearchParams(location.search);
+  const sortBy = queryParams.get("sortBy");
+  const sortOrder = queryParams.get("sortOrder") || "desc";
+  const searchString = queryParams.get("query") || "";
+
+  if (partModel && mfg && cond) {
+    // 1. Always fetch detailed stats
+    dispatch(
+      getDetailedInventory({
+        token,
+        payload: { partModel, mfg, cond, ...filters },
+      })
+    );
+
+    // 2. If sorting exists, also fetch sorted product table
+    if (sortBy && sortOrder) {
       dispatch(
-        getDetailedInventory({
+        sortInventory({
           token,
           payload: {
-            partModel,
-            mfg,
-            cond,
-            ...filters,
+            search: [partModel],
+            sortBy,
+            sortOrder,
+            page: 1,
+            pageSize: 20,
+            type: searchType === "keyword" ? "keyword" : "",
+            // type: partModel && !searchString ? "keyword" : "",
           },
         })
       );
     }
-  }, [partModel, mfg, cond, token, filters]);
-
-//   useEffect(() => {
-//   const queryParams = new URLSearchParams(location.search);
-//   const sortBy = queryParams.get("sortBy");
-//   const sortOrder = queryParams.get("sortOrder") || "desc";
-
-//   if (partModel && mfg && cond) {
-//     // 1. Always fetch detailed stats
-//     dispatch(
-//       getDetailedInventory({
-//         token,
-//         payload: { partModel, mfg, cond, ...filters },
-//       })
-//     );
-
-//     // 2. If sorting exists, also fetch sorted product table
-//     if (sortBy && sortOrder) {
-//       dispatch(
-//         sortInventory({
-//           token,
-//           payload: {
-//             search: [partModel],
-//             sortBy,
-//             sortOrder,
-//             page: 1,
-//             pageSize: 20,
-//             type: searchType === "keyword" ? "keyword" : "",
-//           },
-//         })
-//       );
-//     }
-//   }
-// }, [token, partModel, mfg, cond, filters]);
+  }
+}, [token, partModel, mfg, cond, filters]);
 
 
   // COMPANY MODAL LOGIC
