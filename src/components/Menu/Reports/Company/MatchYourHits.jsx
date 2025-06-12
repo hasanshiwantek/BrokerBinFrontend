@@ -2,7 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import css from "../../../../styles/Menu/Reports/MatchYourHits.module.css";
 import { Link, useNavigate, NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getMatchYourHits } from "../../../../ReduxStore/Reports";
+import {
+  getMatchYourHits,
+  getMatchYourMfgHits,
+} from "../../../../ReduxStore/Reports";
 import Cookies from "js-cookie";
 import styles from "../../../Menu/Broadcast/BroadCast.module.css";
 import style from "@/styles/Menu/Manage/MyProfile.module.css";
@@ -15,6 +18,7 @@ const MatchYourHits = () => {
   const { matchYourHits, loading, error } = useSelector(
     (store) => store.reports
   );
+  console.log("Matcch Your Hits Data from Frontend: ", matchYourHits);
 
   const data = matchYourHits || [];
   const [searchTerm, setSearchTerm] = useState("");
@@ -47,6 +51,9 @@ const MatchYourHits = () => {
     setSearchTerm(mfg);
     setShowSuggestions(false);
     // Optionally: trigger filter, fetch data etc.
+    dispatch(getMatchYourMfgHits({ token, mfg: mfg }));
+    // Update the URL with mfg query param
+    navigate(`/reports/MatchYourHits?mfg=${encodeURIComponent(mfg)}`);
   };
 
   useEffect(() => {
@@ -61,7 +68,7 @@ const MatchYourHits = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  
+
   if (loading) {
     return (
       <div className="flex justify-center items-center py-20">
@@ -107,14 +114,14 @@ const MatchYourHits = () => {
                 <span>Email</span>
               </NavLink>
             </li>
-            <li>
+            {/* <li>
               <NavLink
                 to={"/reports/serviceStats"}
                 className={({ isActive }) => (isActive ? css.active : "")}
               >
                 <span>Stats</span>
               </NavLink>
-            </li>
+            </li> */}
           </ul>
         </div>
 
@@ -136,7 +143,6 @@ const MatchYourHits = () => {
                     className="p-2 border border-gray-300 rounded w-full"
                     autoComplete="off"
                   />
-
                   {showSuggestions && filteredMFGs.length > 0 && (
                     <ul className="absolute left-0 z-10 w-full bg-white border border-gray-300 max-h-60 overflow-y-auto rounded shadow-md">
                       {filteredMFGs.map((mfg, index) => (
@@ -163,7 +169,7 @@ const MatchYourHits = () => {
               <th>D</th>
               <th>W</th>
               <th>M</th>
-              <th>Part#HECLI</th>
+              <th>Part#HECI</th>
               <th>Cond</th>
               <th>Clei</th>
               <th>Price</th>
@@ -199,11 +205,11 @@ const MatchYourHits = () => {
                   >
                     Detailed
                   </td>
-                  <td>{item.D}</td>
-                  <td>{item.W}</td>
-                  <td>{item.M}</td>
-                  <td>{item.partmodel}</td>
-                  <td>{item.cond}</td>
+                  <td>{item.search_stats?.dayCount}</td>
+                  <td>{item.search_stats?.weekCount}</td>
+                  <td>{item.search_stats?.monthCount}</td>
+                  <td>{item.partModel}</td>
+                  <td className="uppercase">{item.cond}</td>
                   <td>{item.heciClei}</td>
                   <td>{item.price}</td>
                   <td>{item.price_stats?.low}</td>

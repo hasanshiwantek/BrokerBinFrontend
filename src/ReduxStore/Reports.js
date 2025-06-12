@@ -25,6 +25,32 @@ export const getMatchYourHits = createAsyncThunk(
   }
 );
 
+export const getMatchYourMfgHits = createAsyncThunk(
+  "reports/getMatchYourMfgHits",
+  async ({ token, mfg }) => {
+    try {
+      const response = await axios.post(
+        `${brokerAPI}report/match_hits`,
+        { mfg },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(
+        "Match your hits data with selected MFG: ",
+        response.data.data
+      );
+      return response.data.data;
+    } catch (error) {
+      console.error(error);
+      throw new Error("Failed to get match your hits with selected Mfgs");
+    }
+  }
+);
+
 export const getSupplyAndDemand = createAsyncThunk(
   "reports/supplyAndDemand",
   async ({ token, supplyAndDemandQuery }) => {
@@ -55,7 +81,8 @@ export const searchCompany = createAsyncThunk(
     console.log(name, token);
     try {
       const response = await axios.post(
-        `${brokerAPI}company/search`, { name },
+        `${brokerAPI}company/search`,
+        { name },
         {
           headers: {
             "Content-Type": "application/json",
@@ -95,12 +122,12 @@ export const getCompanyInventory = createAsyncThunk(
 
 export const getTopSearch = createAsyncThunk(
   "reports/getTopSearch",
-  async ({ token, parameter }) => {
-    console.log(parameter);
+  async ({ token, range, mfg }) => {
+    console.log(range);
     try {
       const response = await axios.post(
         `${brokerAPI}report/topsearch`,
-        {},
+        { range, mfg },
         {
           headers: {
             "Content-Type": "application/json",
@@ -109,7 +136,7 @@ export const getTopSearch = createAsyncThunk(
         }
       );
       console.log(response.data.data);
-      return response.data.data[parameter];
+      return response.data.data;
     } catch (error) {
       console.error(error);
       throw new Error("Failed to get match your hits");
@@ -119,12 +146,12 @@ export const getTopSearch = createAsyncThunk(
 
 export const getTopSearchByManufacturer = createAsyncThunk(
   "reports/getTopSearchByManufacturer",
-  async ({ token, parameter, mfg }) => {
-    console.log(token, parameter, mfg);
+  async ({ token, range, mfg }) => {
+    console.log(token, range, mfg);
     try {
       const response = await axios.post(
         `${brokerAPI}report/mfg_filter`,
-        { mfg },
+        {  mfg,range },
         {
           headers: {
             "Content-Type": "application/json",
@@ -146,12 +173,16 @@ export const getDetailedInventory = createAsyncThunk(
   "reports/getDetailedInventory",
   async ({ token, payload }) => {
     try {
-      const response = await axios.post(`${brokerAPI}report/detailed`, payload, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await axios.post(
+        `${brokerAPI}report/detailed`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
       return response.data;
     } catch (error) {
       console.error(error);
@@ -160,13 +191,13 @@ export const getDetailedInventory = createAsyncThunk(
   }
 );
 
-
 const initialState = {
   matchYourHits: [],
   supplyAndDemandQuery: null,
   supplyAndDemandData: [],
   detailedInventory: {},
   topSearchData: [],
+  topSearchMfgData: [],
   searchCompanyData: [],
   searchedCompanyInventory: [],
   loading: false,
@@ -195,6 +226,18 @@ const Reports = createSlice({
         state.loading = false;
       })
       .addCase(getMatchYourHits.rejected, (state, action) => {
+        console.error("Error fetching matchYourHits:", action.error.message);
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(getMatchYourMfgHits.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getMatchYourMfgHits.fulfilled, (state, action) => {
+        state.matchYourHits = action.payload;
+        state.loading = false;
+      })
+      .addCase(getMatchYourMfgHits.rejected, (state, action) => {
         console.error("Error fetching matchYourHits:", action.error.message);
         state.loading = false;
         state.error = action.error.message;
@@ -270,7 +313,7 @@ const Reports = createSlice({
         state.loading = true;
       })
       .addCase(getTopSearchByManufacturer.fulfilled, (state, action) => {
-        state.topSearchData = action.payload;
+        state.topSearchMfgData = action.payload;
         state.loading = false;
       })
       .addCase(getTopSearchByManufacturer.rejected, (state, action) => {

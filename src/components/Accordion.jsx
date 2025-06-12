@@ -223,14 +223,10 @@ const Accordion = ({
                         groupedData[company].length
                       } results - ${
                         groupedData[company][0]?.inventory?.addedBy?.country ||
-                        ""
+                        "-"
                       }`}
                     </span>
-                    <span
-                      className="text-[8pt]"
-                    >
-                      {company}
-                    </span>
+                    <span className="text-[8pt]">{company}</span>
 
                     <BiSolidDownArrow
                       className={`${css.accordionBtnToggle} `}
@@ -332,6 +328,7 @@ const Accordion = ({
             </div>
           );
         })}
+
         {companies.length > 0 && (
           <div className=" px-4 py-2">
             <button
