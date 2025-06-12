@@ -5,6 +5,15 @@ import myProfile from "../../../styles/Menu/Manage/MyProfile.module.css";
 import MFGFilter from "../Manage/BroadcastFilter/MFGFilter";
 
 const Email = () => {
+  const [mfg, setIncludedMFGs] = useState([]);
+
+  // Handler to update the included manufacturers
+  const handleIncludedMFGsChange = (newIncludedMFGs) => {
+    setIncludedMFGs(newIncludedMFGs);
+  };
+  const filteredIncludedMFGs = mfg.filter((mfg) => mfg !== "-ALL MFG's-");
+  console.log("MFGS: ", filteredIncludedMFGs);
+
   // State to store checkbox selections
   const [checkboxes, setCheckboxes] = useState({
     dailyBroadcast: "Normal",
@@ -42,7 +51,6 @@ const Email = () => {
       weekly: false,
       monthly: false,
     },
-    includeMFGs: ["3COM", "IBM"], // Example default MFGs
   });
 
   // On component mount, retrieve data from local storage
@@ -86,7 +94,11 @@ const Email = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Simulate an API call to save the data
-    console.log("Updated settings:", checkboxes);
+    const payload = {
+      ...checkboxes,
+      mfg,
+    };
+    console.log("Payload:", payload);
 
     // Dispatch the form data to your API
     // dispatch(postApiCall(checkboxes)); // Example API call
@@ -144,7 +156,7 @@ const Email = () => {
 
             <form onSubmit={handleSubmit}>
               {/* Daily Broadcast Summary Section */}
-              <div className={css.section}>
+              <div className={` ${css.section}`}>
                 <h1>Daily Broadcast Summary</h1>
                 <label>Send</label>
                 <select
@@ -264,7 +276,9 @@ const Email = () => {
                 <h1>My Vendors</h1>
                 <div className="text-center">
                   <NavLink to={"/reports/emailVendorList"}>
-                    <p className="text-[8.5pt] font-bold " >Email My Vendor Inventory Updates</p>
+                    <p className="text-[8.5pt] font-bold ">
+                      Email My Vendor Inventory Updates
+                    </p>
                   </NavLink>
                 </div>
               </div>
@@ -395,8 +409,8 @@ const Email = () => {
 
               {/* Top 200 Searches Per Manufacturer Section */}
               <div
-                className={css.section}
-                style={{ border: "1px solid black" }}
+                className={`${css.section} border-gray-400 border-[1px]`}
+                style={{ padding: "8px 5px" }}
               >
                 <h1>Top 200 Searches Per Manufacturer</h1>
                 <h1>Send Emails</h1>
@@ -433,8 +447,8 @@ const Email = () => {
                   </label>
                 </div>
                 {/* Include MFG's Section */}
-                <div className={css.section}>
-                  <h1>Include These MFG's</h1>
+                <div className="px-1 py-3">
+                  {/* <h1>Include These MFG's</h1>
                   <select
                     multiple
                     value={checkboxes.includeMFGs}
@@ -450,7 +464,13 @@ const Email = () => {
                     <option value="IBM">IBM</option>
                     <option value="3rd PARTY">3rd PARTY</option>
                     <option value="JUNIPER">JUNIPER</option>
-                  </select>
+                  </select> */}
+
+                  <div>
+                    <MFGFilter
+                      onIncludedMFGsChange={handleIncludedMFGsChange}
+                    />
+                  </div>
                 </div>
               </div>
 

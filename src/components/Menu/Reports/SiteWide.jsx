@@ -31,7 +31,7 @@ const SiteWide = () => {
   };
 
   const goToTopSearches = (e, parameter) => {
-    console.log("Why Im Running?", e, parameter);
+    console.log("Top searches Data?", e, parameter);
     e.preventDefault();
     // console.log(parameter)
     dispatch(getTopSearch({ token, parameter }));
@@ -121,7 +121,7 @@ const SiteWide = () => {
               </button>
               <button
                 className={css.orangeButton}
-                onClick={(e) => goToTopSearches(e, "last_month")}
+                onClick={(e) => goToTopSearches(e, "last_30_days")}
               >
                 Last 30 Days
               </button>
@@ -165,7 +165,7 @@ const SiteWide = () => {
               <button
                 className={css.orangeButton}
                 onClick={(e) =>
-                  goToTopSearchesWithManufacturer(e, "last_month")
+                  goToTopSearchesWithManufacturer(e, "last_30_days")
                 }
               >
                 Last 30 Days
@@ -197,21 +197,25 @@ const SiteWide = () => {
           {/* Quantities */}
           <div className={css.section}>
             <h3>Quantities</h3>
-            <div className={css.section_qualities}>
+            <div className={`${css.section_qualities}`}>
               <span>
-                <p>Want To Buy:</p>
+                <NavLink to={"/broadcasts?type=wtb"}>
+                  <p className="w-56 ">Want To Buy:</p>
+                </NavLink>
                 <p>0</p>
               </span>
               <span>
-                <p>Want To Sell:</p>
+                <NavLink to={"/broadcasts?type=wts"}>
+                  <p className="w-56">Want To Sell:</p>
+                </NavLink>
                 <p>0</p>
               </span>
               <span>
-                <p>Total Brokercell Items Listed:</p>
+                <p className="w-56 ">Total Brokercell Items Listed:</p>
                 <p>0</p>
               </span>
               <span>
-                <p>Total Members Listed:</p>
+                <p className="w-56">Total Members Listed:</p>
                 <p>0</p>
               </span>
             </div>
