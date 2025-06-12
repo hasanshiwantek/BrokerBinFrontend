@@ -13,6 +13,7 @@ import { ToastContainer } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import SearchProduct from "@/components/SearchProduct/SearchProduct";
 import { getDetailedInventory } from "@/ReduxStore/Reports";
+import { sortInventory } from "@/ReduxStore/SearchProductSlice";
 
 const Detailed = () => {
   const token = Cookies.get("token");
@@ -27,6 +28,7 @@ const Detailed = () => {
   // const partModel = location.state?.partModel || queryParams.get("partModel");
 
   const { detailedInventory, loading } = useSelector((state) => state.reports);
+  const {searchType} = useSelector((store) => store.searchProductStore);
   console.log("DETAILEDINVENTORY", detailedInventory);
 
   const [partSearch, setPartSearch] = useState(partModel || "");
@@ -46,21 +48,57 @@ const Detailed = () => {
     { label: "Asia", value: "Asia", id: "Asia" },
   ];
 
+  // useEffect(() => {
+  //   if (partModel && mfg && cond) {
+  //     dispatch(
+  //       getDetailedInventory({
+  //         token,
+  //         payload: {
+  //           partModel,
+  //           mfg,
+  //           cond,
+  //           ...filters,
+  //         },
+  //       })
+  //     );
+  //   }
+  // }, [partModel, mfg, cond, token, filters]);
+
   useEffect(() => {
-    if (partModel && mfg && cond) {
+  const queryParams = new URLSearchParams(location.search);
+  const sortBy = queryParams.get("sortBy");
+  const sortOrder = queryParams.get("sortOrder") || "desc";
+  const searchString = queryParams.get("query") || "";
+
+  if (partModel && mfg && cond) {
+    // 1. Always fetch detailed stats
+    dispatch(
+      getDetailedInventory({
+        token,
+        payload: { partModel, mfg, cond, ...filters },
+      })
+    );
+
+    // 2. If sorting exists, also fetch sorted product table
+    if (sortBy && sortOrder) {
       dispatch(
-        getDetailedInventory({
+        sortInventory({
           token,
           payload: {
-            partModel,
-            mfg,
-            cond,
-            ...filters,
+            search: [partModel],
+            sortBy,
+            sortOrder,
+            page: 1,
+            pageSize: 20,
+            type: searchType === "keyword" ? "keyword" : "",
+            // type: partModel && !searchString ? "keyword" : "",
           },
         })
       );
     }
-  }, [partModel, mfg, cond, token, filters]);
+  }
+}, [token, partModel, mfg, cond, filters]);
+
 
   // COMPANY MODAL LOGIC
   const { togglePopUp, popupCompanyDetail } = useSelector(
