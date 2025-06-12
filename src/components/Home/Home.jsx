@@ -335,7 +335,7 @@ const Home = () => {
                             <Tooltip title="My Contacts" arrow placement="top">
                               <a
                                 onClick={() =>
-                                  handleNavigation("/myprofile/MyContacts")
+                                  handleNavigation("/myprofile/MyContact")
                                 }
                               >
                                 {(broadcastCount?.data?.myContacts || 0)
