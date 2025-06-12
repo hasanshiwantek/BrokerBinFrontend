@@ -175,17 +175,17 @@ const TopSearchWithManufacturer = () => {
             </tr>
           </thead>
           <tbody>
-            {dummyData.length > 0 ? (
-              dummyData.map((item, i) => {
+            {topSearchMfgData.length > 0 ? (
+              topSearchMfgData.map((item, i) => {
                 return (
                   <tr key={item.id}>
-                    <td>{i + 1}</td>
-                    <td>{item.search_count}</td>
+                    <td>{item.rank}</td>
+                    <td>{item.hits}</td>
                     <td>{item.partModel}</td>
                     <td>{item.mfg}</td>
-                    <td>{item.quantity}</td>
-                    <td>{item.price}</td>
-                    <td>{item.productDescription}</td>
+                    <td>{item.qty_available}</td>
+                    <td>{item.avg_price}</td>
+                    <td>{item.description}</td>
                   </tr>
                 );
               })
