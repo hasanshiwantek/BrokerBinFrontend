@@ -149,6 +149,7 @@ const Company = lazy(() =>
 );
 const SiteWide = lazy(() => import("./components/Menu/Reports/SiteWide.jsx"));
 const Email = lazy(() => import("./components/Menu/Reports/Email.jsx"));
+const EmailVendorList = lazy(() => import("./components/Menu/Reports/EmailVendorList.jsx"));
 const ServiceStats = lazy(() =>
   import("./components/Menu/Reports/ServiceStats.jsx")
 );
@@ -832,6 +833,16 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <Email />
+            <Footer />
+          </Suspense>
+        ),
+      },
+            {
+        path: "/reports/emailVendorList",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <EmailVendorList />
             <Footer />
           </Suspense>
         ),
