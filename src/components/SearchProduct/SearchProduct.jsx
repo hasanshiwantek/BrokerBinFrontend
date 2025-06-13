@@ -1,18 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import css from "@/styles/SearchProducts.module.css";
 import ProductsPieChart from "../ProductsPieChart";
 import CompanyDetails from "../Popups/CompanyDetails/CompanyDetails";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
-import { useLocation, useNavigate } from "react-router-dom";
-import {
-  searchProductQuery,
-  setTogglePopUp,
-  searchProductHistory,
-  searchByKeyword,
-  // setSearchResponse,
-  clearSearchResponseMatched,
-} from "@/ReduxStore/SearchProductSlice";
+import { useLocation } from "react-router-dom";
 import LoadingState from "@/LoadingState";
 import ErrorStatus from "../Error/ErrorStatus";
 import AddToHotList from "./AddToHotlist";
@@ -20,90 +12,46 @@ import ProductTableBtn from "./ProductTableBtn";
 import ProductTableDetail from "./ProductTableDetail";
 import Filter from "./Filter";
 import CompanyListingTable from "./Table";
+import { searchProductQuery, setTogglePopUp, searchProductHistory, searchByKeyword, clearSearchResponseMatched } from "@/ReduxStore/SearchProductSlice";
 
 const SearchProduct = () => {
   const token = Cookies.get("token");
   const location = useLocation();
   const dispatch = useDispatch();
 
-  // Extract 'page' and 'searchString' from URL
   const queryParams = new URLSearchParams(location.search);
-  const sortBy = queryParams.get("sortBy") || null;
-  const sortOrder = queryParams.get("sortOrder") || null;
+  const sortBy = queryParams.get("sortBy") || "";
+  const sortOrder = queryParams.get("sortOrder") || "";
   const page = parseInt(queryParams.get("page")) || 1;
   const searchString = queryParams.get("query") || "";
   const partModel = queryParams.get("partModel") || "";
-  console.log("SearchString" + searchString);
-  console.log("PartModel keyword " + partModel);
+
   const {
     searchResponseMatched,
-    searchResponseNotMatched,
     gettingProducts,
     gettingHistory,
     error,
     filterToggle,
     graphToggle,
-    companiesListingParts,
     togglePopUp,
-    keywordPage,
-    keywordPageSize,
-    keywordTotalCount,
+    appliedFilters,
   } = useSelector((store) => store.searchProductStore);
 
   console.log("SEARCHRESPONSEMATCHED", searchResponseMatched);
 
-  if (searchResponseMatched) {
-    Object.entries(searchResponseMatched || {}).forEach(
-      ([partModel, details]) => {}
-    );
-  }
-
   useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const searchString = queryParams.get("query") || ""; // Multi-part search
-    const partModel = queryParams.get("partModel") || ""; // Single part
-    // const sortBy = queryParams.get("sortBy") || null;
-    // const sortOrder = queryParams.get("sortOrder") || "desc";
-    const partModelArr = [];
-    partModelArr.push(partModel);
-    console.log("PARTMODEL ARRAY:", partModelArr);
-    if (!sortBy || page > 1) {
-      // ✅ If a new search query or partModel is detected, clear previous filters
-      if (searchString || partModel) {
-        dispatch(clearSearchResponseMatched());
-        // dispatch(setSearchResponse({}));
-      }
-      // ✅ If a search query exists, dispatch searchProductQuery for each part
-      if (searchString) {
-        const parts = searchString.split(" ");
-        parts.forEach((part) => {
-          console.log("sortBy:", sortBy);
-          console.log("sortOrder:", sortOrder);
-          dispatch(
-            searchProductQuery({
-              token,
-              page: page,
-              sortBy,
-              sortOrder,
-              search: part,
-            })
-          ).then((result) => console.log("searchProductQuery result:", result));
-        });
-      }
-      // ✅ If a single part model is searched, dispatch searchByKeyword
-      if (partModel) {
-        dispatch(
-          searchByKeyword({ token, page: page, sortBy, sortOrder, partModel })
-        ).then((result) => console.log("searchByKeyword result:", result));
-      }
+    dispatch(clearSearchResponseMatched());
+    if (searchString) {
+      const parts = searchString.split(" ");
+      parts.forEach((part) => {
+        dispatch(searchProductQuery({ token, page, sortBy, sortOrder, search: part, filters: appliedFilters || {} }));
+      });
     }
-
-    // ✅ Fetch search history
-    dispatch(searchProductHistory({ token })).then((result) =>
-      console.log("searchProductHistory result:", result)
-    );
-    console.log("Effect triggered:", { searchString, partModel, token });
-  }, [location.search, dispatch, token]); // 🔹 Only trigger when URL params change
+    if (partModel) {
+      dispatch(searchByKeyword({ token, page, sortBy, sortOrder, partModel, filters: appliedFilters || {} }));
+    }
+    dispatch(searchProductHistory({ token }));
+  }, [location.search, dispatch, token, appliedFilters]);
 
   const [currentQuery, setCurrentQuery] = useState(searchString || partModel);
 
@@ -128,27 +76,10 @@ const SearchProduct = () => {
   }
 
   const partModels = [];
-  partModels.push(searchString);
-  console.log("Searched PartModels ", partModels);
-
-  // Extracting all prices
-  let priceKey = null;
-
-  for (const key in searchResponseMatched) {
-    const dataArray = searchResponseMatched[key].data;
-    if (dataArray && dataArray.length > 0) {
-      priceKey = Object.keys(dataArray[0]).find((k) => k === "price");
-      break; // Stop after finding the first 'price' key
-    }
-  }
-  
-  console.log("Key:", priceKey);
   const sortPage = 1;
   const sortPageSize = 20;
-
-  const isKeywordSearch = Boolean(partModel);
-  const isQuerySearch = Boolean(searchString);
-  console.log("SEARCH RESPONSE MATCH", searchResponseMatched);
+  // const isKeywordSearch = Boolean(partModel);
+  const isKeywordSearch = Boolean(partModel) && !!searchResponseMatched?.foundItems;
 
   return (
     <div className={`${css.layout}`}>
@@ -169,11 +100,10 @@ const SearchProduct = () => {
       >
         {isKeywordSearch ? (
           (!searchResponseMatched?.foundItems || searchResponseMatched?.foundItems.length === 0) ? (
-
-          <div className="">
-            <AddToHotList item={searchString || partModel} />
-          </div>
-        ) : (
+            <div className="">
+              <AddToHotList item={searchString || partModel} />
+            </div>
+          ) : (
             <div className={css.tableArea}>
               {graphToggle && <ProductsPieChart />}
               <div className={css.productTable}>
@@ -191,6 +121,7 @@ const SearchProduct = () => {
                 />
               </div>
             </div>
+          )
         ) : (
           // Multiple tables for `searchProductQuery`
           Object.entries(searchResponseMatched || {})
@@ -228,6 +159,15 @@ const SearchProduct = () => {
             ))
         )}
 
+        {isKeywordSearch && searchResponseMatched?.foundItems?.length > 0 && (
+          <CompanyListingTable
+            entries={
+              isKeywordSearch
+                ? [["foundItems", { data: searchResponseMatched.foundItems }]] // ✅ wrap in { data: ... }
+                : Object.entries(searchResponseMatched)
+            }
+          />
+        )}
         {Object.keys(searchResponseMatched || {}).filter(
           (key) => key !== "filters"
         ).length === 1 &&
