@@ -148,11 +148,8 @@ const ProductTableDetail = React.memo(
     };
 
     const [searchSource, setSearchSource] = useState("search"); // "search" or "keyword"
-    const totalCount = searchResponseMatched[partModel]?.totalCount;
-    const pageSize = searchResponseMatched[partModel]?.pageSize;
-    console.log("Total Count:", totalCount);
-    console.log("Page Size:", pageSize);
-
+    const totalCount = searchResponseMatched[partModel]?.totalCount || searchResponseMatched?.totalCount;
+    const pageSize = searchResponseMatched[partModel]?.pageSize || searchResponseMatched?.pageSize;
     const totalPages = Math.ceil(totalCount / pageSize);
 
     console.log("Total Pages:", totalPages);

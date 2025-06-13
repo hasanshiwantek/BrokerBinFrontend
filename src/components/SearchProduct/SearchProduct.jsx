@@ -116,6 +116,7 @@ const SearchProduct = () => {
                   searchString={searchString}
                   sortBy={sortBy}
                   sortOrder={sortOrder}
+                  
                 />
               </div>
             </div>
