@@ -3,7 +3,7 @@ import css from "../../../styles/Menu/Reports/TopSearches.module.css";
 import style from "../../../styles/Menu/Reports/Company.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { getCompanyInventory, getTopSearch } from "../../../ReduxStore/Reports";
+import { getCompanyInventory, getTopSearch,getSortCompanyInventory } from "../../../ReduxStore/Reports";
 import Cookies from "js-cookie";
 import styles from "@/styles/Menu/Manage/MyProfile.module.css";
 import PaginationControls from "@/components/pagination/PaginationControls";
@@ -14,6 +14,8 @@ import { setPopupCompanyDetail } from "../../../ReduxStore/SearchProductSlice";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import { useSearchParams } from "react-router-dom";
+import SortableTableHeader from "@/components/Tables/SortableHeader";
 
 const CompanyInventory = () => {
   const token = Cookies.get("token");
@@ -125,12 +127,50 @@ const CompanyInventory = () => {
     }
   };
 
+  // SORTING LOGIC
+  const [isSorted, setIsSorted] = useState(false);
+  const [sortBy, setSortBy] = useState("");
+  const [sortOrder, setSortOrder] = useState("asc");
+
+  const headers = [
+    { key: "cart", label: "Cart", sortable: false },
+    { key: "partModel", label: "Part / Model", sortable: true },
+    { key: "company", label: "Company", sortable: false },
+    { key: "cond", label: "Cond", sortable: true },
+    { key: "price", label: "Price", sortable: true },
+    { key: "quantity", label: "Quantity", sortable: true },
+    { key: "mfg", label: "Mfg", sortable: true },
+    { key: "age", label: "Age", sortable: true },
+    { key: "description", label: "Product Description", sortable: true },
+  ];
+
+  // =======================
+  // HANDLE SORT
+  // =======================
+  const handleSort = (columnKey) => {
+    const newSortOrder =
+      sortBy === columnKey && sortOrder === "asc" ? "desc" : "asc";
+
+    setSortBy(columnKey);
+    setSortOrder(newSortOrder);
+    setIsSorted(true);
+
+    dispatch(
+      getSortCompanyInventory({
+        token,
+        id,
+        page,
+        sortBy: columnKey,
+        sortOrder: newSortOrder,
+      })
+    );
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center py-20">
         <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
-        <span className="ml-4 text-blue-600 text-lg font-medium">
-        </span>
+        <span className="ml-4 text-blue-600 text-lg font-medium"></span>
       </div>
     );
   }
@@ -180,19 +220,13 @@ const CompanyInventory = () => {
         <div className={css.topSearches}>
           <h3>Inventory</h3>
           <table>
-            <thead>
-              <tr>
-                <th>cart</th>
-                <th>Part/Model</th>
-                <th>Company</th>
-                <th>Cond</th>
-                <th>Price</th>
-                <th>Qty</th>
-                <th>Mfg</th>
-                <th>Age</th>
-                <th>Description/Notes</th>
-              </tr>
-            </thead>
+            <SortableTableHeader
+              headers={headers}
+              sortBy={sortBy}
+              sortOrder={sortOrder}
+              onSort={handleSort}
+            />
+
             <tbody>
               {searchedCompanyInventory.length > 0 ? (
                 searchedCompanyInventory.map((item, i) => (
@@ -232,20 +266,12 @@ const CompanyInventory = () => {
                 </tr>
               )}
             </tbody>
-
-            <tfoot>
-              <tr>
-                <th>cart</th>
-                <th>Part/Model</th>
-                <th>Company</th>
-                <th>Cond</th>
-                <th>Price</th>
-                <th>Qty</th>
-                <th>Mfg</th>
-                <th>Age</th>
-                <th>Description/Notes</th>
-              </tr>
-            </tfoot>
+            <SortableTableHeader
+              headers={headers}
+              sortBy={sortBy}
+              sortOrder={sortOrder}
+              onSort={handleSort}
+            />
           </table>
 
           <div className={css.topSearchButtons}>
@@ -263,7 +289,9 @@ const CompanyInventory = () => {
             </NavLink>
           </div>
         </div>
-        <div className={`${css.tablePagination} flex justify-between items-center `}>
+        <div
+          className={`${css.tablePagination} flex justify-between items-center `}
+        >
           <PaginationControls
             currPage={page}
             totalPages={totalPages}
@@ -274,7 +302,7 @@ const CompanyInventory = () => {
           />
           <div>
             <p className="text-[var(--primary-color)]">
-            Page  <span className="text-blue-700">{page}</span> of {totalPages}
+              Page <span className="text-blue-700">{page}</span> of {totalPages}
             </p>
           </div>
         </div>
