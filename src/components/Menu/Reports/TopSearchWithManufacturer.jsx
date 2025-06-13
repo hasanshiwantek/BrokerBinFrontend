@@ -24,6 +24,7 @@ const TopSearchWithManufacturer = () => {
   const queryParams = new URLSearchParams(location.search);
   const parameter = queryParams.get("query") || "";
   const mfg = queryParams.get("manufacturer") || "";
+  const stateMfg=mfg
   console.log(parameter, mfg);
   console.log("Top search MFG data: ", topSearchMfgData);
 
@@ -52,27 +53,6 @@ const TopSearchWithManufacturer = () => {
       { replace: true }
     );
   };
-
-  const dummyData = [
-    {
-      id: 1,
-      search_count: 245,
-      partModel: "HX8357C",
-      mfg: "Samsung",
-      quantity: 320,
-      price: "$5.40",
-      productDescription: "7-inch TFT Display Driver",
-    },
-    {
-      id: 2,
-      search_count: 198,
-      partModel: "STM32F407",
-      mfg: "STMicroelectronics",
-      quantity: 150,
-      price: "$3.75",
-      productDescription: "ARM Cortex M4 MCU",
-    },
-  ];
 
   if (loading) {
     return (
@@ -144,16 +124,22 @@ const TopSearchWithManufacturer = () => {
               onChange={(e) => {
                 const mfg = e.target.value;
                 setSelectedMFG(mfg);
-                dispatch(
-                  getTopSearchByManufacturer({
-                    token,
-                    range: parameter,
-                    mfg: mfg,
-                  })
-                );
+                try{
+
+                  dispatch(
+                    getTopSearchByManufacturer({
+                      token,
+                      range: parameter,
+                      mfg: mfg,
+                    })
+                  );
+                }catch(error){
+                  console.log("Error Fetching mfgs: ",error);
+                  
+                }
               }}
             >
-              <option value="Show All">Show All</option>
+              <option value="mfg">{mfg}</option>
               {initialMFGs?.map((mfg) => (
                 <option key={mfg} value={mfg}>
                   {mfg}
@@ -191,7 +177,7 @@ const TopSearchWithManufacturer = () => {
               })
             ) : (
               <tr>
-                <td colSpan="7" style={{ textAlign: "center" }}>
+                <td colSpan="7" className="!text-center !text-red-600 !font-semibold">
                   No data found for this manufacturer.
                 </td>
               </tr>
@@ -220,7 +206,7 @@ const TopSearchWithManufacturer = () => {
           <button
             type="button"
             className={style.basicButton}
-            onClick={(e) => goToTopSearchesWithManufacturer(e, "7days")}
+            onClick={(e) => goToTopSearchesWithManufacturer(e, "last_7_days")}
           >
             Last 7 Days
           </button>

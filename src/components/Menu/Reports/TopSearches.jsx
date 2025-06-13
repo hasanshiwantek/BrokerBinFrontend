@@ -1,9 +1,13 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import css from "../../../styles/Menu/Reports/TopSearches.module.css";
 import style from "../../../styles/Menu/Reports/Company.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate, NavLink } from "react-router-dom";
-import { getTopSearch,getTopSearchByManufacturer } from "../../../ReduxStore/Reports";
+import {
+  getTopSearch,
+  getTopSearchByManufacturer,
+  getTopSearchByMfg,
+} from "../../../ReduxStore/Reports";
 import Cookies from "js-cookie";
 import myProfile from "../../../styles/Menu/Manage/MyProfile.module.css";
 import { initialMFGs } from "@/data/services";
@@ -29,7 +33,6 @@ const TopSearches = () => {
 
   const goToTopSearches = (e, parameter) => {
     e.preventDefault();
-    // console.log(parameter)
     dispatch(getTopSearch({ token, range: parameter }));
     navigate(`/reports/topSearches?query=${parameter}`, {
       replace: true,
@@ -106,10 +109,12 @@ const TopSearches = () => {
               onChange={(e) => {
                 const mfg = e.target.value;
                 setSelectedMFG(mfg);
-                dispatch(getTopSearch({ token, range: parameter, mfg: mfg }));
+                dispatch(
+                  getTopSearchByMfg({ token, range: parameter, mfg: mfg })
+                );
               }}
             >
-              <option value="Show All">Show All</option>
+              <option value="showall">Show All</option>
               {initialMFGs?.map((mfg) => (
                 <option key={mfg} value={mfg}>
                   {mfg}
@@ -132,19 +137,30 @@ const TopSearches = () => {
             </tr>
           </thead>
           <tbody>
-            {topSearchData?.map((item, i) => {
-              return (
-                <tr key={item.id}>
-                  <td>{item.rank}</td>
-                  <td>{item.hits}</td>
-                  <td>{item.partModel}</td>
-                  <td>{item.mfg}</td>
-                  <td>{item.qty_available}</td>
-                  <td>{item.avg_price}</td>
-                  <td>{item.description}</td>
-                </tr>
-              );
-            })}
+            {topSearchData.length > 0 ? (
+              topSearchData.map((item, i) => {
+                return (
+                  <tr key={item.id}>
+                    <td>{item.rank}</td>
+                    <td>{item.hits}</td>
+                    <td>{item.partModel}</td>
+                    <td>{item.mfg}</td>
+                    <td>{item.qty_available}</td>
+                    <td>{item.avg_price}</td>
+                    <td>{item.description}</td>
+                  </tr>
+                );
+              })
+            ) : (
+              <tr>
+                <td
+                  colSpan="7"
+                  className="!text-center !text-red-600 !font-semibold"
+                >
+                  No results found.
+                </td>
+              </tr>
+            )}
           </tbody>
           <tfoot>
             <tr>
