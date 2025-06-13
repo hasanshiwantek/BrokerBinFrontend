@@ -729,8 +729,7 @@ const ToolsSlice = createSlice({
       })
       .addCase(showSortHotListItem.fulfilled, (state, action) => {
         state.myHotListItems = action.payload;
-        console.log("|Sorted Hotlist| ",action.payload);
-        
+        console.log("|Sorted Hotlist| ", action.payload);
       })
       .addCase(showSortHotListItem.rejected, (state, action) => {
         console.error("Error Fetching Sorted Hotlist", action.error);
@@ -769,24 +768,30 @@ const ToolsSlice = createSlice({
         console.error("Error Sumbitting Contacts Data", action.error);
       })
       .addCase(fetchMyContacts.pending, (state) => {
+        state.loading = true;
         console.log("FETCHIG  CONTACTS....");
       })
       .addCase(fetchMyContacts.fulfilled, (state, action) => {
         state.myContactsData = action.payload;
         console.log("REQUEST FULFILLED: ", action.payload);
+        state.loading = false;
       })
       .addCase(fetchMyContacts.rejected, (state, action) => {
         console.error("Error Fetching Contact Data", action.error);
+        state.loading = true;
       })
       .addCase(fetchMyViewByContacts.pending, (state) => {
+        state.loading = true;
         console.log("FETCHIG VIEW BY CONTACTS....");
       })
       .addCase(fetchMyViewByContacts.fulfilled, (state, action) => {
         state.myContactsData = action.payload;
         console.log("REQUEST FULFILLED: ", action.payload);
+        state.loading = false;
       })
       .addCase(fetchMyViewByContacts.rejected, (state, action) => {
         console.error("Error Fetching ViewBy Contact Data", action.error);
+        state.loading = true;
       })
       .addCase(searchMyFavouriteContacts.pending, (state) => {
         console.log("SEARCHING  CONTACTS....");
