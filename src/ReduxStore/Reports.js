@@ -144,6 +144,31 @@ export const getTopSearch = createAsyncThunk(
   }
 );
 
+export const getTopSearchByMfg = createAsyncThunk(
+  "reports/getTopSearchByMfg",
+  async ({ token, range, mfg }) => {
+    console.log(token, range, mfg);
+    try {
+      const response = await axios.post(
+        `${brokerAPI}report/mfg_filter`,
+        { mfg, range },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // Adjust the data extraction based on the API's response structure
+      console.log(response.data);
+      return response.data.data;
+    } catch (error) {
+      console.error(error);
+      throw new Error("Failed to get top searches by manufacturer");
+    }
+  }
+);
+
 export const getTopSearchByManufacturer = createAsyncThunk(
   "reports/getTopSearchByManufacturer",
   async ({ token, range, mfg }) => {
@@ -151,7 +176,7 @@ export const getTopSearchByManufacturer = createAsyncThunk(
     try {
       const response = await axios.post(
         `${brokerAPI}report/mfg_filter`,
-        {  mfg,range },
+        { mfg, range },
         {
           headers: {
             "Content-Type": "application/json",
@@ -191,6 +216,55 @@ export const getDetailedInventory = createAsyncThunk(
   }
 );
 
+export const submitEmailReportSettings = createAsyncThunk(
+  "reports/submitEmailReportSettings",
+  async ({ payload, token }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `${brokerAPI}emailoption/email-option`,
+        payload, // ✅ send raw payload directly
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("✅ Email Submission Response From Redux:", response.data);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Something went wrong"
+      );
+    }
+  }
+);
+
+// Replace with your actual endpoint
+export const fetchEmailReportSettings = createAsyncThunk(
+  "reports/fetchEmailReportSettings",
+  async (token, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `${brokerAPI}emailoption/get-email-option`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("✅Fetching Email Response From Redux: ", response.data);
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch email report settings"
+      );
+    }
+  }
+);
+
 const initialState = {
   matchYourHits: [],
   supplyAndDemandQuery: null,
@@ -200,6 +274,8 @@ const initialState = {
   topSearchMfgData: [],
   searchCompanyData: [],
   searchedCompanyInventory: [],
+  vendorListData: {},
+  emailSettingsData: {},
   loading: false,
   pageSize: 20,
   totalCount: 0,
@@ -214,6 +290,9 @@ const Reports = createSlice({
     },
     setSearchCompanyData(state, action) {
       state.searchCompanyData = [];
+    },
+    setVendorListData(state, action) {
+      state.vendorListData = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -278,6 +357,20 @@ const Reports = createSlice({
         state.loading = false;
         state.error = action.error.message;
       })
+
+      .addCase(getTopSearchByMfg.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getTopSearchByMfg.fulfilled, (state, action) => {
+        state.topSearchData = action.payload;
+        state.loading = false;
+      })
+      .addCase(getTopSearchByMfg.rejected, (state, action) => {
+        console.error("Error fetching topSearch:", action.error.message);
+        state.loading = false;
+        state.error = action.error.message;
+      })
+
       .addCase(searchCompany.pending, (state) => {
         state.loading = true;
       })
@@ -323,11 +416,26 @@ const Reports = createSlice({
         );
         state.loading = false;
         state.error = action.error.message;
+      })
+      .addCase(fetchEmailReportSettings.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchEmailReportSettings.fulfilled, (state, action) => {
+        state.emailSettingsData = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchEmailReportSettings.rejected, (state, action) => {
+        console.error("Error Email Settings Data: ", action.error.message);
+        state.loading = false;
+        state.error = action.error.message;
       });
   },
 });
 
-export const { setSupplyAndDemandQuery, setSearchCompanyData } =
-  Reports.actions;
+export const {
+  setSupplyAndDemandQuery,
+  setSearchCompanyData,
+  setVendorListData,
+} = Reports.actions;
 
 export default Reports.reducer;

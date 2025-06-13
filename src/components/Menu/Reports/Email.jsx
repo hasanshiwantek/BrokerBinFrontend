@@ -3,16 +3,33 @@ import css from "../../../styles/Menu/Reports/Email.module.css";
 import { Link, NavLink } from "react-router-dom";
 import myProfile from "../../../styles/Menu/Manage/MyProfile.module.css";
 import MFGFilter from "../Manage/BroadcastFilter/MFGFilter";
-
+import EmailMfg from "./EmailMfg";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  submitEmailReportSettings,
+  fetchEmailReportSettings,
+} from "@/ReduxStore/Reports";
+import Cookies from "js-cookie";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 const Email = () => {
   const [mfg, setIncludedMFGs] = useState([]);
+  const { vendorListData, loading, error, emailSettingsData } = useSelector(
+    (state) => state.reports
+  );
+  console.log("Email Settings Data From Frontend: ", emailSettingsData);
+
+  const dispatch = useDispatch();
+  console.log("Vendor List Data From Email Page: ", vendorListData);
+  const token = Cookies.get("token");
+  const [loader, setLoading] = useState(false);
 
   // Handler to update the included manufacturers
   const handleIncludedMFGsChange = (newIncludedMFGs) => {
     setIncludedMFGs(newIncludedMFGs);
   };
   const filteredIncludedMFGs = mfg.filter((mfg) => mfg !== "-ALL MFG's-");
-  console.log("MFGS: ", filteredIncludedMFGs);
 
   // State to store checkbox selections
   const [checkboxes, setCheckboxes] = useState({
@@ -54,12 +71,12 @@ const Email = () => {
   });
 
   // On component mount, retrieve data from local storage
-  useEffect(() => {
-    const storedData = localStorage.getItem("checkboxSettings");
-    if (storedData) {
-      setCheckboxes(JSON.parse(storedData)); // Populate state from local storage if available
-    }
-  }, []);
+  // useEffect(() => {
+  //   // const storedData = localStorage.getItem("checkboxSettings");
+  //   if (storedData) {
+  //     setCheckboxes(JSON.parse(storedData)); // Populate state from local storage if available
+  //   }
+  // }, []);
 
   // Handle checkbox changes
   const handleCheckboxChange = (section, key) => {
@@ -71,8 +88,6 @@ const Email = () => {
           [key]: !prevState[section][key],
         },
       };
-      // Store updated state in local storage
-      localStorage.setItem("checkboxSettings", JSON.stringify(updatedState));
       return updatedState;
     });
   };
@@ -84,28 +99,112 @@ const Email = () => {
         ...prevState,
         [section]: value,
       };
-      // Store updated state in local storage
-      localStorage.setItem("checkboxSettings", JSON.stringify(updatedState));
       return updatedState;
     });
   };
 
   // Handle form submission to save changes (also dispatch to API)
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Simulate an API call to save the data
     const payload = {
       ...checkboxes,
       mfg,
+      vendorListData,
     };
     console.log("Payload:", payload);
 
-    // Dispatch the form data to your API
-    // dispatch(postApiCall(checkboxes)); // Example API call
+    try {
+      setLoading(true);
+      const res = await dispatch(
+        submitEmailReportSettings({ payload, token })
+      ).unwrap();
 
-    // Ensure the state is also stored in local storage
-    localStorage.setItem("checkboxSettings", JSON.stringify(checkboxes));
+      if (res?.status) {
+        console.log("✅ Success:", res);
+        toast.info(
+          res?.message || "Email report settings updated successfully!",
+          {
+            style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+          }
+        );
+      } else {
+        console.warn("⚠️ Unexpected response format:", res?.message);
+        toast.warning("Something went wrong, please try again."),
+          {
+            style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+          };
+      }
+    } catch (err) {
+      console.error("❌ Submission failed:", err);
+      toast.error("Failed to update email report settings."),
+        {
+          style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+        };
+    } finally {
+      setLoading(false);
+    }
   };
+
+  // FETCH EMAIL SETTINGS DATA
+
+  useEffect(() => {
+    if (token) {
+      dispatch(fetchEmailReportSettings(token));
+    }
+  }, [dispatch, token]);
+
+  useEffect(() => {
+    if (emailSettingsData?.emailOptions) {
+      const {
+        dailyBroadcast,
+        matchYourHits,
+        hotListUpdates,
+        broadcastAlerts,
+        rfqSummaries,
+        serviceDirectoryStats,
+        top200Items,
+        top200Searches,
+        top200PerManufacturer,
+        mfg,
+      } = emailSettingsData.emailOptions;
+
+      // ✅ Update checkboxes
+      setCheckboxes({
+        dailyBroadcast: dailyBroadcast || "Normal",
+        matchYourHits: matchYourHits || { hourly: false, daily: false },
+        hotListUpdates: hotListUpdates || {
+          hourlyMyh: false,
+          dailyMyh: false,
+          dailySd: false,
+        },
+        broadcastAlerts: broadcastAlerts || {
+          wtb: false,
+          rfq: false,
+          wts: false,
+        },
+        rfqSummaries: rfqSummaries || { type: "Off", occurrence: "Off" },
+        serviceDirectoryStats: serviceDirectoryStats || "Never",
+        top200Items: top200Items || {
+          daily: false,
+          weekly: false,
+          monthly: false,
+        },
+        top200Searches: top200Searches || {
+          daily: false,
+          weekly: false,
+          monthly: false,
+        },
+        top200PerManufacturer: top200PerManufacturer || {
+          daily: false,
+          weekly: false,
+          monthly: false,
+        },
+      });
+
+      // ✅ Update mfg
+      setIncludedMFGs(mfg || []);
+    }
+  }, [emailSettingsData]);
 
   return (
     <>
@@ -448,26 +547,9 @@ const Email = () => {
                 </div>
                 {/* Include MFG's Section */}
                 <div className="px-1 py-3">
-                  {/* <h1>Include These MFG's</h1>
-                  <select
-                    multiple
-                    value={checkboxes.includeMFGs}
-                    onChange={(e) => {
-                      const selectedOptions = Array.from(
-                        e.target.selectedOptions,
-                        (option) => option.value
-                      );
-                      handleSelectChange("includeMFGs", selectedOptions);
-                    }}
-                  >
-                    <option value="3COM">3COM</option>
-                    <option value="IBM">IBM</option>
-                    <option value="3rd PARTY">3rd PARTY</option>
-                    <option value="JUNIPER">JUNIPER</option>
-                  </select> */}
-
                   <div>
-                    <MFGFilter
+                    <EmailMfg
+                      defaultValue={mfg}
                       onIncludedMFGsChange={handleIncludedMFGsChange}
                     />
                   </div>
@@ -476,12 +558,47 @@ const Email = () => {
 
               {/* Save Changes Button */}
               <div className={css.section}>
-                <button type="submit">Save Changes</button>
+                <button
+                  className={`!bg-[#2c83ec] !h-[1.5vw] items-center flex justify-center !rounded-[.2vw] !px-4 !py-6 text-white font-semibold transition-all duration-150 ${
+                    loader ? "opacity-60 cursor-not-allowed" : ""
+                  }`}
+                  type="submit"
+                  disabled={loader}
+                >
+                  {loader ? (
+                    <span className="flex items-center gap-2">
+                      <svg
+                        className="animate-spin h-4 w-4 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v8H4z"
+                        ></path>
+                      </svg>
+                      Saving...
+                    </span>
+                  ) : (
+                    "Save Changes"
+                  )}
+                </button>
               </div>
             </form>
           </div>
         </div>
       </div>
+      <ToastContainer position="top-center" autoClose={2000} />
     </>
   );
 };
