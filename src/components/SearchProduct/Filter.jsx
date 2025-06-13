@@ -1,20 +1,19 @@
-import React, { useState, memo } from "react";
+import React, { useState, memo, useEffect } from "react";
 import css from "@/styles/Filter.module.css";
 import { partVariance } from "@/data/tableData";
 import { FaWindowClose } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import {
-  searchProductFilter,
   setFilterToggle,
   setAppliedFilters,
   clearSearchResponseMatched,
   searchProductQuery,
-  // applyFilters
 } from "@/ReduxStore/SearchProductSlice";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
 const Filter = ({ currentQuery }) => {
+
   const [collapsedSections, setCollapsedSections] = useState({
     manufacturer: false,
     condition: false,
@@ -24,16 +23,23 @@ const Filter = ({ currentQuery }) => {
     partVariance: false,
   });
 
+  const [filters, setFilters] = useState({
+  mfg: [],
+  cond: [],
+  country: [],
+  region: [],
+});
+
   const token = Cookies.get("token");
   const location = useLocation();
   // const searchString = location.state || {};
-  const { searchResponseMatched, searchHistory } = useSelector(
+  const { searchResponseMatched, searchHistory, appliedFilters } = useSelector(
     (store) => store.searchProductStore
   );
 
-  // useEffect(() => {
-  //   console.log("Updated searchResponseMatched in Filter:", searchResponseMatched);
-  // }, [searchResponseMatched]);
+  console.log("searchfrom filters",searchResponseMatched);
+  
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -45,112 +51,74 @@ const Filter = ({ currentQuery }) => {
     }));
   };
 
-
     // ✅ Merge `data` and `foundItems` to handle both cases correctly
   const allItems = [
     ...(searchResponseMatched?.test?.data || []),
     ...(searchResponseMatched?.foundItems || []),
   ];
   console.log("ALL ITEMS: ",allItems);
-  
 
-  const manufacturerCount = {};
-
-  Object.values(searchResponseMatched || []).forEach((item) => {
-    // Check if item contains an array under 'data'
-    const dataItems = Array.isArray(item?.data) ? item?.data : [item]; // If it's not an array, treat the item as a single object
-    console.log("DATA-ITEMS: ", dataItems);
-
-    dataItems?.forEach((subItem) => {
-      const manufacturer = subItem?.mfg;
-      console.log("Item in Filter:", subItem);
-      console.log("Manufacturer in Filter:", manufacturer);
-
-      if (manufacturer) {
-        manufacturerCount[manufacturer] =
-          (manufacturerCount[manufacturer] || 0) + 1;
-      }
-    });
-  });
-
-  // Condition Count
-  const conditionCount = {};
-  Object.values(searchResponseMatched || {})
-    .flatMap((item) => (item?.data ? item.data : [item]))
-    .forEach((item) => {
-      const condition = item?.cond;
-      console.log("Condition in Filter:", condition);
-      conditionCount[condition] = (conditionCount[condition] || 0) + 1;
-      console.log("conditionCount", conditionCount);
-    });
-
-  // Region Count
-  const regionCount = {};
-  Object.values(searchResponseMatched || {})
-    .flatMap((item) => (item?.data ? item.data : [item]))
-    .forEach((item) => {
-      const region = item?.company_region;
-      // console.log("region ",region)
-      regionCount[region] = (regionCount[region] || 0) + 1;
-      // console.log("Region in Filter:", region + " RegionCount: " + regionCount[region]);
-    });
-
-  // Country Count
-  const countryCount = {};
-  Object.values(searchResponseMatched || {})
-    .flatMap((item) => (item?.data ? item.data : [item]))
-    .forEach((item) => {
-      const country = item?.company_country;
-      console.log("country ", country);
-      countryCount[country] = (countryCount[country] || 0) + 1;
-      console.log(
-        "Country in Filter:",
-        country + " CountryCount: " + countryCount[country]
-      );
-    });
-
-  // const { searchString, partModel } = useSelector((store) => store.searchProductStore);
-  // console.log("partModel from Props:", partModel);
-
-  const submitProductFilter = (event) => {
-    event.preventDefault();
-    let filters = {};
-    const formData = new FormData(event.target);
-
-    formData.forEach((value, key) => {
-      if (filters[key]) {
-        filters[key].push(value);
-      } else {
-        filters[key] = [value];
-      }
-    });
-
-    for (let key in filters) {
-      if (Array.isArray(filters[key])) {
-        filters[key] = filters[key].join(",");
-      }
-    }
-    const partModels = Object.keys(searchResponseMatched || {});
-    filters.partModel = partModels.join(",");
-
-    console.log("filters ", filters);
-    console.log("Filters Before Dispatch:", filters);
-    // dispatch(searchProductFilter({ token, filters }));
-    dispatch(setAppliedFilters(filters));
-    dispatch(searchProductFilter({ token, filters }));
-    // dispatch(applyFilters(filters));
-    // console.log("Filters Applied:", filters);
+  const applyFilters = () => {
+  const queryParams = new URLSearchParams(location.search);
+  const searchString = queryParams.get("query") || "";
+  const partModel = queryParams.get("partModel") || "";
+  const sortBy = queryParams.get("sortBy") || "";
+  const sortOrder = queryParams.get("sortOrder") || "";
+  dispatch(setAppliedFilters(filters));
+  const payload = {
+    token,
+    page: 1,
+    filters,
+    sortBy,
+    sortOrder,
   };
+  if (searchString) {
+    dispatch(searchProductQuery({ ...payload, search: searchString }));
+  } else if (partModel) {
+    dispatch(searchByKeyword({ ...payload, partModel }));
+  }
+};
+
+useEffect(() => {
+  if (appliedFilters && Object.keys(appliedFilters).length > 0) {
+    setFilters(appliedFilters);
+  }
+}, []);
 
   const handleClearFilters = (event) => {
     event.preventDefault();
     dispatch(clearSearchResponseMatched());
-    dispatch(setAppliedFilters({})); // Clear filters
+    dispatch(setAppliedFilters({})); // reset Filters..
     navigate(
       `/inventory/search?page=1&query=${encodeURIComponent(currentQuery)}`
     ); // Reset to initial query
     dispatch(searchProductQuery({ token, page: 1, search: currentQuery })); // Fetch initial query data
   };
+
+  const handleCheckboxChange = (key, value) => {
+  setFilters((prev) => {
+    const alreadySelected = prev[key].includes(value);
+    return {
+      ...prev,
+      [key]: alreadySelected
+        ? prev[key].filter((v) => v !== value)
+        : [...prev[key], value],
+    };
+  });
+};
+
+const filtersFromApi = searchResponseMatched?.filters || {};
+
+console.log("Filters partmodel", filtersFromApi);
+
+
+const {
+  manufacturers = {},
+  conditions = {},
+  regions = {},
+  countries = {},
+} = filtersFromApi
+
   return (
     <div className={css.filterSection}>
       <div id={css.advancedFilters}>
@@ -171,7 +139,7 @@ const Filter = ({ currentQuery }) => {
             </button>
           </div> */}
       </div>
-      <form onSubmit={submitProductFilter}>
+      <>
         {/* Manufacturer Section */}
         <div className={css.interSection}>
           <div>
@@ -182,11 +150,18 @@ const Filter = ({ currentQuery }) => {
           </div>
           {!collapsedSections.manufacturer && (
             <div>
-              {Object.entries(manufacturerCount).map(([mfg, count]) => (
-                <div key={mfg}>
-                  <input type="checkbox" name="mfg" value={mfg} id={mfg} />
-                  <label htmlFor={mfg}>
-                    {mfg} ({count})
+              {Object.entries(manufacturers).map(([label, count]) => (
+                <div key={label}>
+                  <input
+                    type="checkbox"
+                    name="mfg"
+                    value={label}
+                    id={label}
+                    checked={filters.mfg.includes(label)}
+                    onChange={() => handleCheckboxChange("mfg", label)}
+                  />
+                  <label htmlFor={label}>
+                    {label} ({count})
                   </label>
                 </div>
               ))}
@@ -204,11 +179,18 @@ const Filter = ({ currentQuery }) => {
           </div>
           {!collapsedSections.condition && (
             <div>
-              {Object.entries(conditionCount).map(([cond, count]) => (
-                <div key={cond}>
-                  <input type="checkbox" name="cond" value={cond} id={cond} />
-                  <label htmlFor={cond}>
-                    {cond} ({count})
+              {Object.entries(conditions).map(([label, count]) => (
+                <div key={label}>
+                  <input 
+                  type="checkbox" 
+                  name="cond"
+                  value={label} 
+                  id={label}
+                  checked={filters.cond.includes(label)}
+                  onChange={() => handleCheckboxChange("cond", label)}  
+                  />
+                  <label htmlFor={label}>
+                    {label} ({count})
                   </label>
                 </div>
               ))}
@@ -225,16 +207,18 @@ const Filter = ({ currentQuery }) => {
           </div>
           {!collapsedSections.region && (
             <div>
-              {Object.entries(regionCount).map(([region, count]) => (
-                <div key={region}>
+              {Object.entries(regions).map(([label, count]) => (
+                <div key={label}>
                   <input
                     type="checkbox"
-                    name="company_region"
-                    value={region}
-                    id={region}
+                    name="region"
+                    value={label}
+                    id={label}
+                    checked={filters.region.includes(label)}
+                    onChange={() => handleCheckboxChange("region", label)}
                   />
-                  <label htmlFor={region}>
-                    {region} ({count})
+                  <label htmlFor={label}>
+                    {label} ({count})
                   </label>
                 </div>
               ))}
@@ -252,16 +236,18 @@ const Filter = ({ currentQuery }) => {
           </div>
           {!collapsedSections.country && (
             <div>
-              {Object.entries(countryCount).map(([country, count]) => (
-                <div key={country}>
+              {Object.entries(countries).map(([label, count]) => (
+                <div key={countries}>
                   <input
                     type="checkbox"
-                    name="company_country"
-                    value={country}
-                    id={country}
+                    name="country"
+                    value={label}
+                    id={countries}
+                    checked={filters.country.includes(label)}
+                    onChange={() => handleCheckboxChange("country", label)}
                   />
-                  <label htmlFor={country}>
-                    {country} ({count})
+                  <label htmlFor={label}>
+                    {label} ({count})
                   </label>
                 </div>
               ))}
@@ -274,11 +260,12 @@ const Filter = ({ currentQuery }) => {
           id={css.applyFilter}
           value="Apply Filters"
           className={css.applyFilterBtn}
+          onClick={applyFilters}
         />
-        {/* <button 
+        <button 
           className={`${css.applyFilterBtn}   !bg-[#f06622] !rounded`}
-          onClick={handleClearFilters}>Clear filters</button> */}
-      </form>
+          onClick={handleClearFilters}>Clear filters</button>
+      </>
 
       {/* Search History Section */}
       <div className={css.interSection}>
