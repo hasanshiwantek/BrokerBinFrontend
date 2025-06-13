@@ -144,6 +144,31 @@ export const getTopSearch = createAsyncThunk(
   }
 );
 
+export const getTopSearchByMfg = createAsyncThunk(
+  "reports/getTopSearchByMfg",
+  async ({ token, range, mfg }) => {
+    console.log(token, range, mfg);
+    try {
+      const response = await axios.post(
+        `${brokerAPI}report/mfg_filter`,
+        { mfg, range },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // Adjust the data extraction based on the API's response structure
+      console.log(response.data);
+      return response.data.data;
+    } catch (error) {
+      console.error(error);
+      throw new Error("Failed to get top searches by manufacturer");
+    }
+  }
+);
+
 export const getTopSearchByManufacturer = createAsyncThunk(
   "reports/getTopSearchByManufacturer",
   async ({ token, range, mfg }) => {
@@ -151,7 +176,7 @@ export const getTopSearchByManufacturer = createAsyncThunk(
     try {
       const response = await axios.post(
         `${brokerAPI}report/mfg_filter`,
-        {  mfg,range },
+        { mfg, range },
         {
           headers: {
             "Content-Type": "application/json",
@@ -278,6 +303,20 @@ const Reports = createSlice({
         state.loading = false;
         state.error = action.error.message;
       })
+
+      .addCase(getTopSearchByMfg.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getTopSearchByMfg.fulfilled, (state, action) => {
+        state.topSearchData = action.payload;
+        state.loading = false;
+      })
+      .addCase(getTopSearchByMfg.rejected, (state, action) => {
+        console.error("Error fetching topSearch:", action.error.message);
+        state.loading = false;
+        state.error = action.error.message;
+      })
+
       .addCase(searchCompany.pending, (state) => {
         state.loading = true;
       })
