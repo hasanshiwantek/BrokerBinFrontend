@@ -18,14 +18,13 @@ import {
 import { FaEye, FaShieldAlt } from "react-icons/fa";
 import { BiBlock } from "react-icons/bi";
 import { IoCheckmarkCircle } from "react-icons/io5";
-import { sortInventory } from "@/ReduxStore/SearchProductSlice";
+import { searchProductQuery, searchByKeyword } from "@/ReduxStore/SearchProductSlice";
 
 const ProductTableDetail = React.memo(
   ({
     partModel,
     partData,
     partModels,
-    isFilterActive,
     searchString,
     keyWordPartModel,
     // sortBy,
@@ -45,7 +44,6 @@ const ProductTableDetail = React.memo(
     const {
       selectedProducts,
       searchResponseMatched,
-      filteredSearchResponse,
       hoverCompanyDetail,
       appliedFilters,
       searchType,
@@ -59,15 +57,6 @@ const ProductTableDetail = React.memo(
     console.log("SearchType From Redux", searchType);
     console.log("PartData", partData);
 
-    // const [type,setType]=useState("")
-    // if(partModel){
-    //   setType("keyword")
-    // }else{
-    //   setType("")
-    // }
-
-    // console.log("TYPE: ",type)
-
     const user_id = Cookies.get("user_id");
     const { initialData, user } = useSelector((state) => state.profileStore);
 
@@ -78,12 +67,6 @@ const ProductTableDetail = React.memo(
     const loggedInUserCompany = initialData?.company?.name;
     console.log("LoggedIn User Company ", loggedInUserCompany);
 
-    // useEffect(() => {
-    //   console.log(id);
-    //   dispatch(fetchUserData({ id, token }));
-    // }, []);
-
-    // Extract all company names safely
     const companyNames = Object.values(searchResponseMatched)
       .flatMap((response) => response?.data || []) // Ensure response.data exists
       .map((item) => item?.addedBy?.company?.name) // Safely access `addedBy.company.name`
@@ -96,7 +79,6 @@ const ProductTableDetail = React.memo(
       console.log("ITEM: ", item)
     );
     console.log("DATA........", data)
-
 
 
     const handleShowPopupCompanyDetails = (event, companyId) => {
@@ -181,17 +163,10 @@ const ProductTableDetail = React.memo(
       (state) => state.searchProductStore
     );
     const keywordTotalPages = Math.ceil(keywordTotalCount, keywordPageSize);
-    console.log("Keyword Page From Frontend: ", keywordPage);
-    console.log("Keyword PageSize From Frontend: ", keywordPageSize);
-    console.log("Keyword totalCount From Frontend: ", keywordTotalCount);
-    console.log("Keyword TotalPages: ", keywordTotalPages);
 
     // Check if searchString or partModel is present
     const isSearchPagination = Boolean(searchString);
     const isKeywordPagination = Boolean(partModel);
-
-    console.log("isKeywordPgination " + isKeywordPagination);
-    console.log("isSearchPagination " + isSearchPagination);
 
     // Determine totalPages and currentPage based on the condition
     const totalPagess = isSearchPagination
@@ -206,8 +181,6 @@ const ProductTableDetail = React.memo(
       "Pagination Source:",
       isSearchPagination ? "Search" : "Keyword"
     );
-    console.log("Total Pages:", totalPagess);
-    console.log("Current Page:", currentPage);
 
     const [visiblePages, setVisiblePages] = useState([1, 10]); // Initially showing pages 1-10
 
@@ -219,15 +192,14 @@ const ProductTableDetail = React.memo(
       const currentPartModel = queryParams.get("partModel");
       const sortBy = queryParams.get("sortBy");
       const sortOrder = queryParams.get("sortOrder");
-      if (isFilterActive) {
-        const filters = {
-          ...appliedFilters,
-          partModel: partModel,
-          page: newPage,
-          pageSize: 20,
-        };
-        // dispatch(searchProductFilter({ token, filters }));
-      }
+      // if (isFilterActive) {
+      //   const filters = {
+      //     ...appliedFilters,
+      //     partModel: partModel,
+      //     page: newPage,
+      //     pageSize: 20,
+      //   };
+      // }
       const url = currentQuery
         ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(currentQuery)}&sortBy=${sortBy}&sortOrder=${sortOrder}`
         : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(currentPartModel)}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
@@ -249,15 +221,14 @@ const ProductTableDetail = React.memo(
       const currentPartModel = queryParams.get("partModel");
       const sortBy = queryParams.get("sortBy");
       const sortOrder = queryParams.get("sortOrder");
-      if (isFilterActive) {
-        const filters = {
-          ...appliedFilters,
-          partModel: partModel,
-          page: newPage,
-          pageSize: 20,
-        };
-        // dispatch(searchProductFilter({ token, filters }));
-      }
+      // if (isFilterActive) {
+      //   const filters = {
+      //     ...appliedFilters,
+      //     partModel: partModel,
+      //     page: newPage,
+      //     pageSize: 20,
+      //   };
+      // }
       const url = currentQuery
         ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(currentQuery)}&sortBy=${sortBy}&sortOrder=${sortOrder}`
         : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(currentPartModel)}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
@@ -291,127 +262,31 @@ const ProductTableDetail = React.memo(
       }
     };
 
-    console.log("Vsible Pages: ", visiblePages);
-
-    // const [sortBy, setSortBy] = useState(null); // Initially no column is sorted
-    // const [sortOrder, setSortOrder] = useState("desc"); // Default to "desc"
-
-    // console.log("Payload from ProductTable Page", payload)
-    console.log("token", token);
-
-    // const handleSort = (column) => {
-    //   if (sortBy === column) {
-    //     // If the same column is clicked again, toggle the sortOrder
-    //     setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
-    //   } else {
-    //     // For a new column, reset sortBy to the column and adjust the sortOrder:
-    //     // Start in ascending order only for the 'price' column, otherwise start in descending
-    //     setSortBy(column);
-    //     setSortOrder(column === "price" ? "asc" : "desc");
-    //   }
-
-    //   const searchKey = keyWordPartModel || searchString;
-    //   console.log("SearchKey: ", searchKey);
-    //   const searchArray = searchKey
-    //     ? searchKey.split(",").map((s) => s.trim())
-    //     : keys; // ✅ Splits into an array
-    //   console.log("Search Array: ", searchArray);
-
-    //   // Create the payload for dispatch
-    //   const payload = {
-    //     search: searchArray, // Use searchKey if available
-    //     sortBy: column,
-    //     sortOrder: column === "price" && sortBy !== "price" ? "asc" : sortOrder,
-    //     page: 1, // Reset to the first page
-    //     pageSize: 20, // Adjust page size if needed
-    //     type: searchType === "keyword" ? "keyword" : "",
-    //   };
-
-    //   console.log("Sorting Payload:", payload);
-    //   dispatch(sortInventory({ token, payload }));
-    // };
-
-    // const handleSort = (column) => {
-    //   const queryParams = new URLSearchParams(location.search);
-    //   const currentQuery = queryParams.get("query");
-    //   const currentPartModel = queryParams.get("partModel");
-    //   const currentSortBy = queryParams.get("sortBy");
-    //   const currentSortOrder = queryParams.get("sortOrder") || "desc";
-    
-    //   // 🔁 Toggle or set sortOrder
-    //   const newSortOrder =
-    //     currentSortBy === column
-    //       ? currentSortOrder === "asc"
-    //         ? "desc"
-    //         : "asc"
-    //       : column === "price"
-    //       ? "asc"
-    //       : "desc";
-    
-    //   // 🔍 Determine what to search
-    //   const searchKey = keyWordPartModel || searchString;
-    //   const searchArray = searchKey
-    //     ? searchKey.trim().split(/[,\s]+/).map((s) => s.trim())
-    //     : keys;
-    
-    //   // 🔀 Build payload for sorting API
-    //   const payload = {
-    //     search: searchArray,
-    //     sortBy: column,
-    //     sortOrder: newSortOrder,
-    //     page: 1,
-    //     pageSize: 20,
-    //     type: searchType === "keyword" ? "keyword" : "",
-    //   };
-    //   dispatch(sortInventory({ token, payload }));
-    //   // const url = currentQuery
-    //   //   ? `/inventory/search?page=1&query=${encodeURIComponent(currentQuery)}&sortBy=${column}&sortOrder=${newSortOrder}`
-    //   //   : `/inventory/search?page=1&partModel=${encodeURIComponent(currentPartModel)}&sortBy=${column}&sortOrder=${newSortOrder}`;
-    
-    //   // navigate(url, { 
-    //   //   replace: true,
-    //   //   state: location.state || {},
-    //   // });
-    //   const url = `${location.pathname}?page=1&${currentQuery ? `query=${currentQuery}` : `partModel=${currentPartModel}`}&sortBy=${column}&sortOrder=${newSortOrder}`;
-    //   navigate(url, { replace: true });
-    // };
-
     const handleSort = (column) => {
       const queryParams = new URLSearchParams(location.search);
-
+      const searchString = queryParams.get("query");
+      const partModel = queryParams.get("partModel");
       const currentSortBy = queryParams.get("sortBy");
       const currentSortOrder = queryParams.get("sortOrder") || "desc";
-
       const newSortOrder =
         currentSortBy === column
-          ? currentSortOrder === "asc"
-            ? "desc"
-            : "asc"
-          : column === "price"
-            ? "asc"
-            : "desc";
-
-      const searchKey = keyWordPartModel || searchString;
-      const searchArray = searchKey
-        ? searchKey.trim().split(/[,\s]+/).map((s) => s.trim())
-        : keys;
-
+          ? currentSortOrder === "asc" ? "desc" : "asc"
+          : column === "price" ? "asc" : "desc";
       const payload = {
-        search: searchArray,
+        token,
+        page: 1,
         sortBy: column,
         sortOrder: newSortOrder,
-        page: 1,
-        pageSize: 20,
-        type: searchType === "keyword" ? "keyword" : "",
+        filters: appliedFilters || {},
       };
-
-      dispatch(sortInventory({ token, payload }));
-
-      // ✅ Update query params while keeping current path intact
+      if (searchString) {
+        dispatch(searchProductQuery({ ...payload, search: searchString }));
+      } else if (partModel) {
+        dispatch(searchByKeyword({ ...payload, partModel }));
+      }
       queryParams.set("sortBy", column);
       queryParams.set("sortOrder", newSortOrder);
-      queryParams.set("page", 1); // reset to first page on sort
-
+      queryParams.set("page", 1);
       navigate(`${location.pathname}?${queryParams.toString()}`, {
         replace: true,
       });

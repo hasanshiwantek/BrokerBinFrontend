@@ -24,7 +24,6 @@ export const searchProductQuery = createAsyncThunk(
           },
         }
       );
-
       return response.data;
     } catch (error) {
       console.error(
@@ -197,28 +196,6 @@ export const getCompanyContact = createAsyncThunk(
 //   dispatch(setFilteredSearchResponse(filteredData)); // Update Redux state
 //   console.log("Filtered Data:", filteredData);
 // };
-
-export const sortInventory = createAsyncThunk(
-  "inventoryStore/sortInventory",
-  async ({ token, payload }) => {
-    try {
-      const response = await axios.post(`${brokerAPI}inventory/sort`, payload, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-      console.log("Response From AsyncThunk: " + response.data);
-      return response.data;
-    } catch (error) {
-      console.error(
-        "Error Sorting Inventory",
-        error.response?.data || error.message
-      );
-      throw error.response?.data || error;
-    }
-  }
-);
 
 export const deleteCompanyContact = createAsyncThunk(
   "toolsStore/deleteCompanyContact",
@@ -495,16 +472,7 @@ const searchProductSlice = createSlice({
     },
     setSearchResponse: (state, action) => {
       state.searchResponseMatched = action.payload.data;
-      if (Object.keys(state.filteredSearchResponse || {}).length === 0) {
-        state.filteredSearchResponse = action.payload.data; // Default filtered data
-      }
     },
-    //   setSearchResponse: (state, action) => {
-    //     state.searchResponseMatched = action.payload.data;
-    //     if (!state.filteredSearchResponse || Object.keys(state.filteredSearchResponse).length === 0) {
-    //         state.filteredSearchResponse = action.payload.data; // Set only if it's initially empty
-    //     }
-    // },
     setPopupCompanyDetail: (state, action) => {
       state.popupCompanyDetail = action.payload;
       console.log("CompanyDetails", action.payload);
@@ -527,12 +495,8 @@ const searchProductSlice = createSlice({
     setHoverCompanyDetail: (state, action) => {
       state.hoverCompanyDetail = [action.payload];
     },
-    setFilteredSearchResponse: (state, action) => {
-      state.filteredSearchResponse = action.payload;
-    },
     clearSearchResponseMatched: (state) => {
       state.searchResponseMatched = {};
-      state.filteredSearchResponse = {}; // Optional: Clear filtered data as well
     },
     setAppliedFilters: (state, action) => {
       state.appliedFilters = action.payload; // Save filters
@@ -577,43 +541,7 @@ const searchProductSlice = createSlice({
         state.error = null;
       })
       .addCase(searchByKeyword.fulfilled, (state, action) => {
-        console.log("Payload from searchByKeyword:", action.payload);
-        state.keywordPage = action.payload.page;
-        state.keywordPageSize = action.payload.pageSize;
-        state.keywordTotalCount = action.payload.totalCount;
-        console.log(
-          "Page from Keyword: ",
-          state.keywordPage +
-            " " +
-            "Page Size from Keyword: " +
-            state.keywordPageSize +
-            " " +
-            "keyword TotalCount: " +
-            state.keywordTotalCount
-        );
-        const foundItems = action.payload.foundItems;
-        const structuredResponse = foundItems.reduce((acc, item) => {
-          const { partModel } = item;
-          if (!acc[partModel]) {
-            acc[partModel] = { data: [] };
-          }
-          acc[partModel].data.push(item);
-          return acc;
-        }, {});
-
-        state.searchResponseMatched = structuredResponse;
-
-        state.searchResponseNotMatched =
-          action.payload.notFoundPartModels || [];
-        state.totalCount = Object.values(structuredResponse).reduce(
-          (acc, part) => acc + part.data.length,
-          0
-        );
-
-        console.log(
-          "Updated searchResponseMatched From Redux:",
-          state.searchResponseMatched
-        );
+        state.searchResponseMatched = action.payload;
         state.gettingProducts = false;
       })
       .addCase(searchByKeyword.rejected, (state, action) => {
@@ -624,31 +552,6 @@ const searchProductSlice = createSlice({
         );
         state.gettingProducts = false; // Set to false if the fetch fails
       })
-      // .addCase(searchProductFilter.pending, (state) => {
-      //   state.gettingProducts = true; // Set to true when starting the fetch
-      //   state.error = null;
-      // })
-      // .addCase(searchProductFilter.fulfilled, (state, action) => {
-      //   console.log("Filter data from Redux ",action.payload);
-      //   // state.searchResponseMatched = action.payload;
-      //   state.filteredSearchResponse = action.payload;
-      //   // state.searchResponseMatched = action.payload
-      //   state.gettingProducts = false; // Set to false after fetching is done
-      // })
-      // .addCase(searchProductFilter.fulfilled, (state, action) => {
-      //   state.filteredSearchResponse = action.payload;
-      //   // state.searchResponseMatched=action.payload
-      //   state.page = action.meta.arg.filters.page;
-      //   // state.page = action.payload.page; // Current page
-      //   state.pageSize = action.payload.pageSize; // Items per page
-      //   state.totalCount = action.payload.totalCount; // Total items
-      //   state.gettingProducts = false;
-      // })
-      // .addCase(searchProductFilter.rejected, (state, action) => {
-      //   state.error = action.error.message;
-      //   console.error("Error while filtering:", action.error.message);
-      //   state.gettingProducts = false; // Set to false if the fetch fails
-      // })
       .addCase(searchProductHistory.pending, (state) => {
         state.gettingHistory = true; // Set to true when starting the fetch
         state.error = null;
@@ -724,18 +627,6 @@ const searchProductSlice = createSlice({
         state.error = action.error.message;
         console.error(action.error.message);
       })
-
-      .addCase(sortInventory.pending, (state) => {
-        console.log("PENDING!!!!!");
-      })
-      .addCase(sortInventory.fulfilled, (state, action) => {
-        state.searchResponseMatched = action.payload;
-
-        console.log("Payload of Sorting from Redux", action.payload);
-      })
-      .addCase(sortInventory.rejected, (state, action) => {
-        console.error("ERROR FETCHING SORTED INVENTORY DATA", action.error);
-      });
   },
 });
 

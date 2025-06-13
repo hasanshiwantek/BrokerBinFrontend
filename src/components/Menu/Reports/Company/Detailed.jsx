@@ -13,7 +13,6 @@ import { ToastContainer } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import SearchProduct from "@/components/SearchProduct/SearchProduct";
 import { getDetailedInventory } from "@/ReduxStore/Reports";
-import { sortInventory } from "@/ReduxStore/SearchProductSlice";
 
 const Detailed = () => {
   const token = Cookies.get("token");

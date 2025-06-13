@@ -37,6 +37,9 @@ const Filter = ({ currentQuery }) => {
     (store) => store.searchProductStore
   );
 
+  console.log("searchfrom filters",searchResponseMatched);
+  
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -59,14 +62,15 @@ const Filter = ({ currentQuery }) => {
   const queryParams = new URLSearchParams(location.search);
   const searchString = queryParams.get("query") || "";
   const partModel = queryParams.get("partModel") || "";
+  const sortBy = queryParams.get("sortBy") || "";
+  const sortOrder = queryParams.get("sortOrder") || "";
   dispatch(setAppliedFilters(filters));
-
   const payload = {
     token,
     page: 1,
     filters,
-    sortBy: queryParams.get("sortBy") || "",
-    sortOrder: queryParams.get("sortOrder") || "",
+    sortBy,
+    sortOrder,
   };
   if (searchString) {
     dispatch(searchProductQuery({ ...payload, search: searchString }));
@@ -104,6 +108,9 @@ useEffect(() => {
 };
 
 const filtersFromApi = searchResponseMatched?.filters || {};
+
+console.log("Filters partmodel", filtersFromApi);
+
 
 const {
   manufacturers = {},
