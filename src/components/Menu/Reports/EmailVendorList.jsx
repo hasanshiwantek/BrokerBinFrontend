@@ -1,19 +1,25 @@
 import React, { useState, useEffect } from "react";
 import css from "../../../styles/Menu/Reports/Email.module.css";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import myProfile from "../../../styles/Menu/Manage/MyProfile.module.css";
 import { getMyVendors } from "@/ReduxStore/ToolsSlice";
 import Cookies from "js-cookie";
 import { useSelector, useDispatch } from "react-redux";
+import { setVendorListData } from "@/ReduxStore/Reports";
+import { fetchEmailReportSettings } from "@/ReduxStore/Reports";
 const EmailVendorList = () => {
   const token = Cookies.get("token");
   const dispatch = useDispatch();
   const { myVendor, loading, vendorNoteData } = useSelector(
     (store) => store.toolsStore
   );
+  const { vendorListData, emailSettingsData } = useSelector(
+    (state) => state.reports
+  );
+  console.log("Email Settings Data From Frontend: ", emailSettingsData);
+  const navigate = useNavigate();
   const [selectedVendors, setSelectedVendors] = useState([]);
   const [receiveEmails, setReceiveEmails] = useState("");
-  console.log("MY Vendors", myVendor);
   useEffect(() => {
     dispatch(getMyVendors({ token }));
   }, []);
@@ -30,7 +36,39 @@ const EmailVendorList = () => {
     e.preventDefault();
     console.log("Receive Emails:", receiveEmails);
     console.log("Selected Vendors:", selectedVendors);
+    const vendorList = { receiveEmails, selectedVendors };
+    console.log("Vendor List: ", vendorList);
+    dispatch(setVendorListData(vendorList));
+    setTimeout(() => {
+      navigate("/reports/email");
+    }, 1000);
   };
+
+  // FETCH EMAIL SETTINGS DATA
+
+  useEffect(() => {
+    if (token) {
+      dispatch(fetchEmailReportSettings(token));
+    }
+  }, [dispatch, token]);
+
+  useEffect(() => {
+    if (emailSettingsData?.emailOptions?.vendorListData) {
+      const { receiveEmails, selectedVendors } =
+        emailSettingsData.emailOptions.vendorListData;
+
+      setReceiveEmails(receiveEmails || "");
+      setSelectedVendors(selectedVendors || []);
+    }
+  }, [emailSettingsData]);
+
+  useEffect(() => {
+    if (emailSettingsData?.emailOptions?.vendorListData) {
+      dispatch(
+        setVendorListData(emailSettingsData.emailOptions.vendorListData)
+      );
+    }
+  }, [emailSettingsData]);
 
   return (
     <>

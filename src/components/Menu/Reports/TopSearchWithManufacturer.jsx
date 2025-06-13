@@ -24,7 +24,7 @@ const TopSearchWithManufacturer = () => {
   const queryParams = new URLSearchParams(location.search);
   const parameter = queryParams.get("query") || "";
   const mfg = queryParams.get("manufacturer") || "";
-  const stateMfg=mfg
+  const stateMfg = mfg;
   console.log(parameter, mfg);
   console.log("Top search MFG data: ", topSearchMfgData);
 
@@ -32,7 +32,7 @@ const TopSearchWithManufacturer = () => {
     dispatch(
       getTopSearchByManufacturer({
         token,
-        range:parameter,
+        range: parameter,
         mfg: mfg,
       })
     );
@@ -43,7 +43,7 @@ const TopSearchWithManufacturer = () => {
     // console.log(parameter)
     getTopSearchByManufacturer({
       token,
-      range:parameter,
+      range: parameter,
       mfg: mfg,
     });
     navigate(
@@ -124,8 +124,7 @@ const TopSearchWithManufacturer = () => {
               onChange={(e) => {
                 const mfg = e.target.value;
                 setSelectedMFG(mfg);
-                try{
-
+                try {
                   dispatch(
                     getTopSearchByManufacturer({
                       token,
@@ -133,9 +132,8 @@ const TopSearchWithManufacturer = () => {
                       mfg: mfg,
                     })
                   );
-                }catch(error){
-                  console.log("Error Fetching mfgs: ",error);
-                  
+                } catch (error) {
+                  console.log("Error Fetching mfgs: ", error);
                 }
               }}
             >
@@ -167,7 +165,25 @@ const TopSearchWithManufacturer = () => {
                   <tr key={item.id}>
                     <td>{item.rank}</td>
                     <td>{item.hits}</td>
-                    <td>{item.partModel}</td>
+                    <td
+                      style={{ cursor: "pointer" }}
+                      onClick={() =>
+                        navigate(
+                          `/reports/detailed?partModel=${encodeURIComponent(
+                            item?.partModel
+                          )}&cond=${item?.cond}&mfg=${item?.mfg}`,
+                          {
+                            state: {
+                              partModel: item?.partModel,
+                              cond: item?.cond,
+                              mfg: item?.mfg,
+                            },
+                          }
+                        )
+                      }
+                    >
+                      {item.partModel}
+                    </td>
                     <td>{item.mfg}</td>
                     <td>{item.qty_available}</td>
                     <td>{item.avg_price}</td>
@@ -177,7 +193,10 @@ const TopSearchWithManufacturer = () => {
               })
             ) : (
               <tr>
-                <td colSpan="7" className="!text-center !text-red-600 !font-semibold">
+                <td
+                  colSpan="7"
+                  className="!text-center !text-red-600 !font-semibold"
+                >
                   No data found for this manufacturer.
                 </td>
               </tr>

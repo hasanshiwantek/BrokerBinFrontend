@@ -143,7 +143,25 @@ const TopSearches = () => {
                   <tr key={item.id}>
                     <td>{item.rank}</td>
                     <td>{item.hits}</td>
-                    <td>{item.partModel}</td>
+                    <td
+                      style={{ cursor: "pointer" }}
+                      onClick={() =>
+                        navigate(
+                          `/reports/detailed?partModel=${encodeURIComponent(
+                            item?.partModel
+                          )}&cond=${item?.cond}&mfg=${item?.mfg}`,
+                          {
+                            state: {
+                              partModel: item?.partModel,
+                              cond: item?.cond,
+                              mfg: item?.mfg,
+                            },
+                          }
+                        )
+                      }
+                    >
+                      {item.partModel}
+                    </td>
                     <td>{item.mfg}</td>
                     <td>{item.qty_available}</td>
                     <td>{item.avg_price}</td>
@@ -157,7 +175,7 @@ const TopSearches = () => {
                   colSpan="7"
                   className="!text-center !text-red-600 !font-semibold"
                 >
-                  No results found.
+                  No results found.Try Another Search
                 </td>
               </tr>
             )}
