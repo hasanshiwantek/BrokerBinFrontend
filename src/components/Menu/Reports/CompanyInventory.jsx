@@ -263,7 +263,7 @@ const CompanyInventory = () => {
             </NavLink>
           </div>
         </div>
-        <div className={css.tablePagination}>
+        <div className={`${css.tablePagination} flex justify-between items-center `}>
           <PaginationControls
             currPage={page}
             totalPages={totalPages}
@@ -272,6 +272,11 @@ const CompanyInventory = () => {
             onPrev={handlePrevPage}
             onNext={handleNextPage}
           />
+          <div>
+            <p className="text-[var(--primary-color)]">
+            Page  <span className="text-blue-700">{page}</span> of {totalPages}
+            </p>
+          </div>
         </div>
       </div>
       <div className="ml-20">
