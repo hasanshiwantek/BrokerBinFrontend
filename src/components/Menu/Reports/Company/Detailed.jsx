@@ -13,7 +13,6 @@ import { ToastContainer } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import SearchProduct from "@/components/SearchProduct/SearchProduct";
 import { getDetailedInventory } from "@/ReduxStore/Reports";
-import { sortInventory } from "@/ReduxStore/SearchProductSlice";
 
 const Detailed = () => {
   const token = Cookies.get("token");
@@ -28,7 +27,6 @@ const Detailed = () => {
   // const partModel = location.state?.partModel || queryParams.get("partModel");
 
   const { detailedInventory, loading } = useSelector((state) => state.reports);
-  const { searchType } = useSelector((store) => store.searchProductStore);
   console.log("DETAILEDINVENTORY", detailedInventory);
 
   const [partSearch, setPartSearch] = useState(partModel || "");
@@ -48,56 +46,21 @@ const Detailed = () => {
     { label: "Asia", value: "Asia", id: "Asia" },
   ];
 
-  // useEffect(() => {
-  //   if (partModel && mfg && cond) {
-  //     dispatch(
-  //       getDetailedInventory({
-  //         token,
-  //         payload: {
-  //           partModel,
-  //           mfg,
-  //           cond,
-  //           ...filters,
-  //         },
-  //       })
-  //     );
-  //   }
-  // }, [partModel, mfg, cond, token, filters]);
-
   useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const sortBy = queryParams.get("sortBy");
-    const sortOrder = queryParams.get("sortOrder") || "desc";
-    const searchString = queryParams.get("query") || "";
-
     if (partModel && mfg && cond) {
-      // 1. Always fetch detailed stats
       dispatch(
         getDetailedInventory({
           token,
-          payload: { partModel, mfg, cond, ...filters },
+          payload: {
+            partModel,
+            mfg,
+            cond,
+            ...filters,
+          },
         })
       );
-
-      // 2. If sorting exists, also fetch sorted product table
-      if (sortBy && sortOrder) {
-        dispatch(
-          sortInventory({
-            token,
-            payload: {
-              search: [partModel],
-              sortBy,
-              sortOrder,
-              page: 1,
-              pageSize: 20,
-              // type: searchType === "keyword" ? "keyword" : "",
-              type: "keyword",
-            },
-          })
-        );
-      }
     }
-  }, [token, partModel, mfg, cond, filters]);
+  }, [partModel, mfg, cond, token, filters]);
 
   // COMPANY MODAL LOGIC
   const { togglePopUp, popupCompanyDetail } = useSelector(
@@ -110,23 +73,23 @@ const Detailed = () => {
     dispatch(setTogglePopUp()); // Show company modal
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (partSearch && mfg && cond) {
-      dispatch(
-        getDetailedInventory({
-          token,
-          payload: {
-            partModel: partSearch,
-            mfg,
-            cond,
-            viewStocked: "",
-            viewRegions: "",
-          },
-        })
-      );
-    }
-  };
+const handleSubmit = (e) => {
+  e.preventDefault();
+  if (partSearch && mfg && cond) {
+    dispatch(
+      getDetailedInventory({
+        token,
+        payload: {
+          partModel: partSearch,
+          mfg,
+          cond,
+          viewStocked: "",
+          viewRegions: ""
+        }
+      })
+    );
+  }
+};
 
   if (loading) {
     return (
@@ -194,9 +157,7 @@ const Detailed = () => {
                   id="manufacturer"
                   className="p-2"
                   value={filters.viewStocked}
-                  onChange={(e) =>
-                    setFilters({ ...filters, viewStocked: e.target.value })
-                  }
+                  onChange={(e) => setFilters({ ...filters, viewStocked: e.target.value })}
                 >
                   <option value="">Any</option>
                   <option value="yes">Yes</option>
@@ -212,9 +173,7 @@ const Detailed = () => {
                   id="product"
                   className="p-2"
                   value={filters.viewRegions}
-                  onChange={(e) =>
-                    setFilters({ ...filters, viewRegions: e.target.value })
-                  }
+                  onChange={(e) => setFilters({ ...filters, viewRegions: e.target.value })}
                 >
                   {regionsList?.map((region) => (
                     <option key={region.id} value={region.value}>
@@ -281,9 +240,7 @@ const Detailed = () => {
           <thead>
             <tr>
               <th></th>
-              <th>
-                Age<span className="text-red-600">*</span>
-              </th>
+              <th>Age</th>
               <th>Query</th>
               <th>Contact</th>
               <th>Company</th>
@@ -304,36 +261,9 @@ const Detailed = () => {
                 <td>
                   {item.user.firstName} {item.user.lastName}
                 </td>
-                <td className="relative cursor-pointer">
-                  <span
-                    className="flex justify-start items-center gap-4 !text-[8pt]"
-                    onClick={() => openCompanyModal(item?.user?.company)}
-                  >
-                    <i className="group relative">
-                      <img
-                        src="https://static.brokerbin.com/version/v8.4.1/images/seller.png"
-                        alt="companyImg"
-                      />
-
-                      {/* Hover Popup */}
-                      <div className="absolute hidden group-hover:flex flex-col bg-white border border-gray-300 shadow-xl rounded-md z-50 top-full left-0 w-fit">
-                        <a
-                          href={`mailto:${
-                            item.user.company?.primaryContact?.email ||
-                            "info@example.com"
-                          }`}
-                          className="p-2 text-sm hover:bg-gray-100 text-left text-black"
-                        >
-                          Contact Person <br />
-                          {item.user.firstName} {item.user.lastName}
-                        </a>
-                      </div>
-                    </i>
-
-                    {item.user.company.name}
-                  </span>
+                <td onClick={() => openCompanyModal(item?.user?.company)}>
+                  {item.user.company.name}
                 </td>
-
                 <td>{item.user.phoneNumber}</td>
                 <td>{item.user.phoneNumber}</td>
                 <td>{item.user.faxNumber}</td>
@@ -344,10 +274,7 @@ const Detailed = () => {
           <thead>
             <tr>
               <th></th>
-              <th>
-                Age<span className="text-red-600">*</span>
-              </th>
-
+              <th>Age</th>
               <th>Query</th>
               <th>Contact</th>
               <th>Company</th>
