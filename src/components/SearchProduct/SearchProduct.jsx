@@ -78,12 +78,10 @@ const SearchProduct = () => {
   const partModels = [];
   const sortPage = 1;
   const sortPageSize = 20;
-  // const isKeywordSearch = Boolean(partModel);
   const isKeywordSearch = Boolean(partModel) && !!searchResponseMatched?.foundItems;
 
   return (
     <div className={`${css.layout}`}>
-      {/* ✅ Show Filter only if there are search results */}
       {filterToggle &&
         Object.values(searchResponseMatched).some(
           (part) => part?.data?.length || part?.length > 0
@@ -150,7 +148,6 @@ const SearchProduct = () => {
                     </div>
                   </div>
                 ) : (
-                  // ✅ Show Hotlist only for unavailable parts
                   <div key={`hotlist-${partModel}`}>
                     <AddToHotList item={partModel} />
                   </div>
