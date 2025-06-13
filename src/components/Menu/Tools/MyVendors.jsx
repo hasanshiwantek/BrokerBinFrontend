@@ -11,7 +11,7 @@ import {
   fetchMyVendorNotes,
   fetchMyViewByVendors,
   blockMyVendor,
-  addToMyVendorsBadge
+  addToMyVendorsBadge,
 } from "../../../ReduxStore/ToolsSlice";
 import Cookies from "js-cookie";
 import { fetchUserData } from "../../../ReduxStore/ProfleSlice";
@@ -63,27 +63,27 @@ const MyVendors = () => {
 
   const companyId = initialData?.company?.id;
 
- useEffect(() => {
-  const params = new URLSearchParams(window.location.search);
-  const cid = params.get("cid");
-  if (cid) {
-    const decodedId = atob(cid); // your decode logic
-    dispatch(addToMyVendorsBadge({ company_id: decodedId, token }));
-    console.log("CID", decodedId)
-  }
-}, []);
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const cid = params.get("cid");
+    if (cid) {
+      const decodedId = atob(cid); // your decode logic
+      dispatch(addToMyVendorsBadge({ company_id: decodedId, token }));
+      console.log("CID", decodedId);
+    }
+  }, []);
 
   const [feedbackData, setFeedbackData] = useState(null);
   const [headingWord, setHeadingWord] = useState("Company:");
   const [clicked, setClicked] = useState(false);
 
-const vendorList = Array.isArray(myVendor?.data) ? myVendor.data : [];
+  const vendorList = Array.isArray(myVendor?.data) ? myVendor.data : [];
 
-const companyRatings = vendorList.map((vendor) => vendor?.company?.rating);
-console.log("Company Ratings", companyRatings);
+  const companyRatings = vendorList.map((vendor) => vendor?.company?.rating);
+  console.log("Company Ratings", companyRatings);
 
-const ratingCounts = vendorList.map((vendor) => vendor?.company?.ratingCount);
-console.log("Rating Counts", ratingCounts);
+  const ratingCounts = vendorList.map((vendor) => vendor?.company?.ratingCount);
+  console.log("Rating Counts", ratingCounts);
 
   const handleHover = (index) => {
     // Tooltip logic
@@ -317,7 +317,12 @@ console.log("Rating Counts", ratingCounts);
   };
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="flex justify-center items-center py-20">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
+        <span className="ml-4 text-blue-600 text-lg font-medium"></span>
+      </div>
+    );
   }
 
   return (

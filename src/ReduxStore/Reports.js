@@ -120,6 +120,27 @@ export const getCompanyInventory = createAsyncThunk(
   }
 );
 
+export const getSortCompanyInventory = createAsyncThunk(
+  "reports/getSortCompanyInventory ",
+  async ({ token, id, page, sortBy, sortOrder }) => {
+    try {
+      const response = await axios.get(
+        `${brokerAPI}inventory/company/${id}?page=${page}&sortBy=${sortBy}&sortOrder=${sortOrder}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      throw new Error("Error Sorting company Inventory");
+    }
+  }
+);
+
 export const getTopSearch = createAsyncThunk(
   "reports/getTopSearch",
   async ({ token, range, mfg }) => {
@@ -402,6 +423,24 @@ const Reports = createSlice({
         state.loading = false;
         state.error = action.error.message;
       })
+
+      .addCase(getSortCompanyInventory.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getSortCompanyInventory.fulfilled, (state, action) => {
+        state.searchedCompanyInventory = action.payload.data;
+        state.totalCount = action.payload.pagination.total;
+        state.loading = false;
+      })
+      .addCase(getSortCompanyInventory.rejected, (state, action) => {
+        console.error(
+          "Error searching company inventory:",
+          action.error.message
+        );
+        state.loading = false;
+        state.error = action.error.message;
+      })
+
       .addCase(getTopSearchByManufacturer.pending, (state) => {
         state.loading = true;
       })

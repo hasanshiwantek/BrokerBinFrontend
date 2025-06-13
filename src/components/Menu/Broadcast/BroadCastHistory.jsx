@@ -90,10 +90,12 @@ const BroadCastHistory = () => {
       setSelectedBroadcasts([]); // Clear selections after dispatch
       // ✅ Show success toast with light blue color
       toast.info("Broadcast Deleted Successfully!", {
-        style: { fontSize: "15px", marginTop: "-10px", fontWeight: "bold" }, //
+        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
       });
     } else {
-      alert("Select Broadcast for Deletion");
+       toast.warning("Select broadcast for Deletion", {
+        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
+      });
     }
   };
 
