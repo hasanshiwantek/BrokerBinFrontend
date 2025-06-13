@@ -12,7 +12,7 @@ import {
   setTogglePopUp,
   setPopupCompanyDetail,
   setHoverCompanyDetail,
-  searchProductFilter,
+  // searchProductFilter,
   // setSearchResponseMatched
 } from "@/ReduxStore/SearchProductSlice";
 import { FaEye, FaShieldAlt } from "react-icons/fa";
@@ -226,7 +226,7 @@ const ProductTableDetail = React.memo(
           page: newPage,
           pageSize: 20,
         };
-        dispatch(searchProductFilter({ token, filters }));
+        // dispatch(searchProductFilter({ token, filters }));
       }
       const url = currentQuery
         ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(currentQuery)}&sortBy=${sortBy}&sortOrder=${sortOrder}`
@@ -256,7 +256,7 @@ const ProductTableDetail = React.memo(
           page: newPage,
           pageSize: 20,
         };
-        dispatch(searchProductFilter({ token, filters }));
+        // dispatch(searchProductFilter({ token, filters }));
       }
       const url = currentQuery
         ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(currentQuery)}&sortBy=${sortBy}&sortOrder=${sortOrder}`

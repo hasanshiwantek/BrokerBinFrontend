@@ -5,7 +5,7 @@ import { act } from "react";
 
 export const searchProductQuery = createAsyncThunk(
   "searchProductStore/searchProductQuery",
-  async ({ token, page, search, sortBy, sortOrder }) => {
+  async ({ token, page, search, sortBy, sortOrder, filters }) => {
     console.log(search);
     try {
       const response = await axios.post(
@@ -15,6 +15,7 @@ export const searchProductQuery = createAsyncThunk(
           search, // Send 'search' in the request body
           sortBy,
           sortOrder,
+          filters,
         },
         {
           headers: {
@@ -67,37 +68,37 @@ export const searchByKeyword = createAsyncThunk(
   }
 );
 
-export const searchProductFilter = createAsyncThunk(
-  "searchProductStore/searchProductFilter",
-  async ({ token, filters }) => {
-    console.log("Thunk Execution Started"); // Add this line
-    // debugger;
-    console.log(filters); // Debug filters
-    try {
-      const response = await axios.post(
-        `${brokerAPI}inventory/fetch`,
-        filters,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+// export const searchProductFilter = createAsyncThunk(
+//   "searchProductStore/searchProductFilter",
+//   async ({ token, filters }) => {
+//     console.log("Thunk Execution Started"); // Add this line
+//     // debugger;
+//     console.log(filters); // Debug filters
+//     try {
+//       const response = await axios.post(
+//         `${brokerAPI}inventory/fetch`,
+//         filters,
+//         {
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//             "Content-Type": "application/json",
+//           },
+//         }
+//       );
 
-      // console.log("RESPONSE.DATA",response.data.data);
-      console.log("RESPONSE.Data", response.data);
-      return response.data;
-    } catch (error) {
-      console.log(error);
-      console.error(
-        "Error while searching product:",
-        error.response?.data || error.message
-      );
-      throw error.response?.data || error.message;
-    }
-  }
-);
+//       // console.log("RESPONSE.DATA",response.data.data);
+//       console.log("RESPONSE.Data", response.data);
+//       return response.data;
+//     } catch (error) {
+//       console.log(error);
+//       console.error(
+//         "Error while searching product:",
+//         error.response?.data || error.message
+//       );
+//       throw error.response?.data || error.message;
+//     }
+//   }
+// );
 
 export const searchProductHistory = createAsyncThunk(
   "searchProductStore/searchProductHistory",
@@ -448,7 +449,7 @@ const initialState = {
   selectedProductsForCart: [],
   searchHistory: [],
   companyContactData: [],
-  filteredSearchResponse: {},
+  // filteredSearchResponse: {},
   appliedFilters: {},
   error: null,
   page: 1,
@@ -623,10 +624,10 @@ const searchProductSlice = createSlice({
         );
         state.gettingProducts = false; // Set to false if the fetch fails
       })
-      .addCase(searchProductFilter.pending, (state) => {
-        state.gettingProducts = true; // Set to true when starting the fetch
-        state.error = null;
-      })
+      // .addCase(searchProductFilter.pending, (state) => {
+      //   state.gettingProducts = true; // Set to true when starting the fetch
+      //   state.error = null;
+      // })
       // .addCase(searchProductFilter.fulfilled, (state, action) => {
       //   console.log("Filter data from Redux ",action.payload);
       //   // state.searchResponseMatched = action.payload;
@@ -634,20 +635,20 @@ const searchProductSlice = createSlice({
       //   // state.searchResponseMatched = action.payload
       //   state.gettingProducts = false; // Set to false after fetching is done
       // })
-      .addCase(searchProductFilter.fulfilled, (state, action) => {
-        state.filteredSearchResponse = action.payload;
-        // state.searchResponseMatched=action.payload
-        state.page = action.meta.arg.filters.page;
-        // state.page = action.payload.page; // Current page
-        state.pageSize = action.payload.pageSize; // Items per page
-        state.totalCount = action.payload.totalCount; // Total items
-        state.gettingProducts = false;
-      })
-      .addCase(searchProductFilter.rejected, (state, action) => {
-        state.error = action.error.message;
-        console.error("Error while filtering:", action.error.message);
-        state.gettingProducts = false; // Set to false if the fetch fails
-      })
+      // .addCase(searchProductFilter.fulfilled, (state, action) => {
+      //   state.filteredSearchResponse = action.payload;
+      //   // state.searchResponseMatched=action.payload
+      //   state.page = action.meta.arg.filters.page;
+      //   // state.page = action.payload.page; // Current page
+      //   state.pageSize = action.payload.pageSize; // Items per page
+      //   state.totalCount = action.payload.totalCount; // Total items
+      //   state.gettingProducts = false;
+      // })
+      // .addCase(searchProductFilter.rejected, (state, action) => {
+      //   state.error = action.error.message;
+      //   console.error("Error while filtering:", action.error.message);
+      //   state.gettingProducts = false; // Set to false if the fetch fails
+      // })
       .addCase(searchProductHistory.pending, (state) => {
         state.gettingHistory = true; // Set to true when starting the fetch
         state.error = null;
@@ -751,7 +752,7 @@ export const {
   setCurrentPage,
   setPopupCompanyDetail,
   setHoverCompanyDetail,
-  setFilteredSearchResponse,
+  // setFilteredSearchResponse,
   clearSearchResponseMatched,
   setAppliedFilters,
   setSearchPartType,
