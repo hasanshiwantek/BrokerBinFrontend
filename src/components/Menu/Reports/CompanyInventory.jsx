@@ -141,7 +141,7 @@ const CompanyInventory = () => {
     { key: "quantity", label: "Quantity", sortable: true },
     { key: "mfg", label: "Mfg", sortable: true },
     { key: "age", label: "Age", sortable: true },
-    { key: "description", label: "Product Description", sortable: true },
+    { key: "productDescription", label: "Product Description", sortable: true },
   ];
 
   // =======================
