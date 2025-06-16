@@ -85,15 +85,15 @@ useEffect(() => {
   }
 }, []);
 
-  const handleClearFilters = (event) => {
-    event.preventDefault();
-    dispatch(clearSearchResponseMatched());
-    dispatch(setAppliedFilters({})); // reset Filters..
-    navigate(
-      `/inventory/search?page=1&query=${encodeURIComponent(currentQuery)}`
-    ); // Reset to initial query
-    dispatch(searchProductQuery({ token, page: 1, search: currentQuery })); // Fetch initial query data
-  };
+  // const handleClearFilters = (event) => {
+  //   event.preventDefault();
+  //   dispatch(clearSearchResponseMatched());
+  //   dispatch(setAppliedFilters({})); // reset Filters..
+  //   navigate(
+  //     `/inventory/search?page=1&query=${encodeURIComponent(currentQuery)}`
+  //   ); // Reset to initial query
+  //   dispatch(searchProductQuery({ token, page: 1, search: currentQuery })); // Fetch initial query data
+  // };
 
   const handleCheckboxChange = (key, value) => {
   setFilters((prev) => {
@@ -262,9 +262,9 @@ const {
           className={css.applyFilterBtn}
           onClick={applyFilters}
         />
-        <button 
+        {/* <button 
           className={`${css.applyFilterBtn}   !bg-[#f06622] !rounded`}
-          onClick={handleClearFilters}>Clear filters</button>
+          onClick={handleClearFilters}>Clear filters</button> */}
       </>
 
       {/* Search History Section */}
