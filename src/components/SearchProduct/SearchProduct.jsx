@@ -116,6 +116,8 @@ const SearchProduct = () => {
                   searchString={searchString}
                   sortBy={sortBy}
                   sortOrder={sortOrder}
+                  // sortPage={sortPage}
+                  // sortPageSize={sortPageSize}
                   
                 />
               </div>

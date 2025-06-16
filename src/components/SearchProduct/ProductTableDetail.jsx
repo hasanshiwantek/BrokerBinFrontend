@@ -78,7 +78,7 @@ const ProductTableDetail = React.memo(
     const data = Object.values(searchResponseMatched).flatMap((item) =>
       console.log("ITEM: ", item)
     );
-    console.log("DATA........", data)
+    // console.log("DATA........", data)
 
 
     const handleShowPopupCompanyDetails = (event, companyId) => {
@@ -147,7 +147,6 @@ const ProductTableDetail = React.memo(
       return selectedProducts.some((product) => product.id === id);
     };
 
-    const [searchSource, setSearchSource] = useState("search"); // "search" or "keyword"
     const totalCount = searchResponseMatched[partModel]?.totalCount || searchResponseMatched?.totalCount;
     const pageSize = searchResponseMatched[partModel]?.pageSize || searchResponseMatched?.pageSize;
     const totalPages = Math.ceil(totalCount / pageSize);
@@ -156,23 +155,30 @@ const ProductTableDetail = React.memo(
 
     const token = Cookies.get("token");
 
-    const { keywordPage, keywordPageSize, keywordTotalCount } = useSelector(
-      (state) => state.searchProductStore
-    );
-    const keywordTotalPages = Math.ceil(keywordTotalCount, keywordPageSize);
+    const keywordPage = parseInt(queryParams.get("page")) || 1;
+    const keywordPageSize = searchResponseMatched?.pageSize || 20;
+    const keywordTotalCount = searchResponseMatched?.totalCount || 0;
+    const keywordTotalPages = Math.ceil(keywordTotalCount / keywordPageSize);
 
-    // Check if searchString or partModel is present
+    // const { keywordPage, keywordPageSize, keywordTotalCount } = useSelector(
+    //   (state) => state.searchProductStore
+    // );
+    // const keywordTotalPages = Math.ceil(keywordTotalCount, keywordPageSize);
+
     const isSearchPagination = Boolean(searchString);
-    const isKeywordPagination = Boolean(partModel);
 
-    // Determine totalPages and currentPage based on the condition
-    const totalPagess = isSearchPagination
-      ? Math.ceil(totalCount / pageSize) // Use search pagination
-      : isKeywordPagination
-        ? Math.ceil(keywordTotalCount / keywordPageSize) // Use keyword pagination
-        : 1; // Default to 1 if no condition is met
+    // const totalPagess = isSearchPagination
+    //   ? Math.ceil(totalCount / pageSize)
+    //   : isKeywordPagination
+    //     ? Math.ceil(keywordTotalCount / keywordPageSize)
+    //     : 1; 
+    // const currentPage = isSearchPagination ? page : keywordPage;
 
-    const currentPage = isSearchPagination ? page : keywordPage;
+    const totalPagess = isSearchPagination 
+    ? Math.ceil(totalCount / pageSize)
+    : keywordTotalPages;
+
+    const currentPage = isSearchPagination ? page : keywordPage
 
     console.log(
       "Pagination Source:",
@@ -183,6 +189,7 @@ const ProductTableDetail = React.memo(
 
     const handlePrevPage = () => {
       const newPage = page - 1;
+      // const newPage = currentPage - 1;
       if (newPage < 1) return;
       const queryParams = new URLSearchParams(location.search);
       const currentQuery = queryParams.get("query");
@@ -211,7 +218,8 @@ const ProductTableDetail = React.memo(
     };
 
     const handleNextPage = () => {
-      const newPage = page + 1;
+      const newPage = currentPage + 1;
+      // const newPage = page + 1;
       if (newPage > totalPagess) return;
       const queryParams = new URLSearchParams(location.search);
       const currentQuery = queryParams.get("query");
@@ -288,6 +296,13 @@ const ProductTableDetail = React.memo(
         replace: true,
       });
     };
+
+    useEffect(() => {
+  const start = Math.floor((currentPage - 1) / 10) * 10 + 1;
+  const end = Math.min(start + 9, totalPagess);
+  setVisiblePages([start, end]);
+}, [currentPage, totalPagess]);
+
 
     return (
       <div className={css.productTableDetail}>

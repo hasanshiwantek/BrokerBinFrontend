@@ -37,7 +37,7 @@ export const searchProductQuery = createAsyncThunk(
 
 export const searchByKeyword = createAsyncThunk(
   "searchProductStore/searchByKeyword",
-  async ({ token, page, partModel, sortBy, sortOrder }) => {
+  async ({ token, page, partModel, sortBy, sortOrder, filters }) => {
     console.log(partModel);
     try {
       const response = await axios.post(
@@ -47,6 +47,7 @@ export const searchByKeyword = createAsyncThunk(
           partModel, // Send 'partModel' in the request body
           sortOrder,
           sortBy,
+          filters,
         },
         {
           headers: {
