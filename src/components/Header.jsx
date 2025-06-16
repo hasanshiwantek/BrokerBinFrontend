@@ -547,9 +547,9 @@ const Header = () => {
                   <Link to={"/rfq"}>
                     <li>My RFQs</li>
                   </Link>
-                  {/* <Link>
+                  <Link>
                     <li>My BOM</li>
-                  </Link> */}
+                  </Link>
                   <Link to={"/myprofile"}>
                     <li>My Profile</li>
                   </Link>

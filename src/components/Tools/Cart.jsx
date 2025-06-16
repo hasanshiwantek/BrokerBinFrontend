@@ -13,10 +13,9 @@ import {
   clearCartItems,
   updatePartcartNote,
 } from "@/ReduxStore/SearchProductSlice";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
 import Note from "../partCart/Note";
 import Export from "../partCart/Export";
+import SaveListModal from "../partCart/SaveListModal";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -24,7 +23,6 @@ import { ToastContainer } from "react-toastify";
 import axios from "axios";
 import { brokerAPI } from "../api/BrokerEndpoint";
 import { setTogglePopUp } from "@/ReduxStore/SearchProductSlice";
-import CompanyDetails from "../Popups/CompanyDetails/CompanyDetails";
 import { setPopupCompanyDetail } from "@/ReduxStore/SearchProductSlice";
 
 const Cart = () => {
@@ -32,6 +30,7 @@ const Cart = () => {
   const [filterOption, setFilterOption] = useState("cnt_DESC");
   const [showExportModal, setShowExportModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showSaveListModal, setShowSaveListModal] = useState(false);
 
   const selectedProducts = useSelector(
     (state) => state.searchProductStore.selectedProductsForCart
@@ -414,7 +413,19 @@ const Cart = () => {
                     <button type="button" onClick={handleCartPdfExport}>
                       PDF
                     </button>
-                    <button type="button">save</button>
+                    <button 
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if(!selectedParts.length){
+                        alert("Please select atleast one part to save a list")
+                        return;
+                      }
+                      setShowSaveListModal(true);
+                    }}
+                    >
+                      save
+                    </button>
                   </span>
                 </div>
                 <div className={css.cartList_key}>
@@ -560,6 +571,7 @@ const Cart = () => {
                   </select>
                   {/* </div> */}
                 </div>
+                
                 <div className={css.cartList_action}></div>
               </div>
             </div>
@@ -692,6 +704,13 @@ const Cart = () => {
             console.log("Selected Products:", selectedProducts);
             setShowExportModal(false);
           }}
+        />
+      )}
+
+      {showSaveListModal && (
+        <SaveListModal
+          selectedParts={selectedParts} // ✅ pass the data you need
+          onClose={() => setShowSaveListModal(false)}
         />
       )}
       <ToastContainer position="top-center" autoClose={2000} />
