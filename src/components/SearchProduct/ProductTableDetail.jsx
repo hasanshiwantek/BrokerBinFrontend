@@ -1,36 +1,22 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import css from "@/styles/SearchProducts.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { useLocation, useNavigate } from "react-router-dom";
 import shieldImage from "@/assets/shield-img.png";
 import { countriesList } from "@/data/services";
-import { fetchUserData } from "@/ReduxStore/ProfleSlice";
-
-import {
-  setSelectedProducts,
-  setTogglePopUp,
-  setPopupCompanyDetail,
-  setHoverCompanyDetail,
-  // searchProductFilter,
-  // setSearchResponseMatched
-} from "@/ReduxStore/SearchProductSlice";
-import { FaEye, FaShieldAlt } from "react-icons/fa";
+import { FaEye } from "react-icons/fa";
 import { BiBlock } from "react-icons/bi";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { searchProductQuery, searchByKeyword } from "@/ReduxStore/SearchProductSlice";
+import { setSelectedProducts, setTogglePopUp, setPopupCompanyDetail, setHoverCompanyDetail, } from "@/ReduxStore/SearchProductSlice";
 
 const ProductTableDetail = React.memo(
   ({
     partModel,
     partData,
-    partModels,
     searchString,
-    keyWordPartModel,
-    // sortBy,
-    // sortOrder,
   }) => {
-    console.log("RENDERED PRODUCTTABLEDETAIL")
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -44,42 +30,15 @@ const ProductTableDetail = React.memo(
     const {
       selectedProducts,
       searchResponseMatched,
-      hoverCompanyDetail,
+      // hoverCompanyDetail,
       appliedFilters,
-      searchType,
     } = useSelector((store) => store.searchProductStore);
-
-    useEffect(() => {
-      console.log("Updated searchResponseMatched:", searchResponseMatched);
-    }, [searchResponseMatched]);
-
-    console.log("SearchResponse From UI ", searchResponseMatched);
-    console.log("SearchType From Redux", searchType);
-    console.log("PartData", partData);
-
-    const user_id = Cookies.get("user_id");
     const { initialData, user } = useSelector((state) => state.profileStore);
 
+    const user_id = Cookies.get("user_id");
     const id = user?.user?.id || user_id;
-
-    console.log("Logged In User Data from Search Product Page ", initialData);
-
+    const token = Cookies.get("token");
     const loggedInUserCompany = initialData?.company?.name;
-    console.log("LoggedIn User Company ", loggedInUserCompany);
-
-    const companyNames = Object.values(searchResponseMatched)
-      .flatMap((response) => response?.data || []) // Ensure response.data exists
-      .map((item) => item?.addedBy?.company?.name) // Safely access `addedBy.company.name`
-      .filter(Boolean); // Remove undefined or null names
-
-    const keys = Object.keys(searchResponseMatched);
-    console.log(keys); // Output: ["001NFM", "002CR", "003442U"]
-
-    const data = Object.values(searchResponseMatched).flatMap((item) =>
-      console.log("ITEM: ", item)
-    );
-    // console.log("DATA........", data)
-
 
     const handleShowPopupCompanyDetails = (event, companyId) => {
       event.stopPropagation();
@@ -149,41 +108,17 @@ const ProductTableDetail = React.memo(
 
     const totalCount = searchResponseMatched[partModel]?.totalCount || searchResponseMatched?.totalCount;
     const pageSize = searchResponseMatched[partModel]?.pageSize || searchResponseMatched?.pageSize;
-    const totalPages = Math.ceil(totalCount / pageSize);
-
-    console.log("Total Pages:", totalPages);
-
-    const token = Cookies.get("token");
-
     const keywordPage = parseInt(queryParams.get("page")) || 1;
     const keywordPageSize = searchResponseMatched?.pageSize || 20;
     const keywordTotalCount = searchResponseMatched?.totalCount || 0;
     const keywordTotalPages = Math.ceil(keywordTotalCount / keywordPageSize);
-
-    // const { keywordPage, keywordPageSize, keywordTotalCount } = useSelector(
-    //   (state) => state.searchProductStore
-    // );
-    // const keywordTotalPages = Math.ceil(keywordTotalCount, keywordPageSize);
-
     const isSearchPagination = Boolean(searchString);
 
-    // const totalPagess = isSearchPagination
-    //   ? Math.ceil(totalCount / pageSize)
-    //   : isKeywordPagination
-    //     ? Math.ceil(keywordTotalCount / keywordPageSize)
-    //     : 1; 
-    // const currentPage = isSearchPagination ? page : keywordPage;
-
-    const totalPagess = isSearchPagination 
-    ? Math.ceil(totalCount / pageSize)
-    : keywordTotalPages;
+    const totalPagess = isSearchPagination
+      ? Math.ceil(totalCount / pageSize)
+      : keywordTotalPages;
 
     const currentPage = isSearchPagination ? page : keywordPage
-
-    console.log(
-      "Pagination Source:",
-      isSearchPagination ? "Search" : "Keyword"
-    );
 
     const [visiblePages, setVisiblePages] = useState([1, 10]); // Initially showing pages 1-10
 
@@ -196,14 +131,6 @@ const ProductTableDetail = React.memo(
       const currentPartModel = queryParams.get("partModel");
       const sortBy = queryParams.get("sortBy");
       const sortOrder = queryParams.get("sortOrder");
-      // if (isFilterActive) {
-      //   const filters = {
-      //     ...appliedFilters,
-      //     partModel: partModel,
-      //     page: newPage,
-      //     pageSize: 20,
-      //   };
-      // }
       const url = currentQuery
         ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(currentQuery)}&sortBy=${sortBy}&sortOrder=${sortOrder}`
         : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(currentPartModel)}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
@@ -226,14 +153,6 @@ const ProductTableDetail = React.memo(
       const currentPartModel = queryParams.get("partModel");
       const sortBy = queryParams.get("sortBy");
       const sortOrder = queryParams.get("sortOrder");
-      // if (isFilterActive) {
-      //   const filters = {
-      //     ...appliedFilters,
-      //     partModel: partModel,
-      //     page: newPage,
-      //     pageSize: 20,
-      //   };
-      // }
       const url = currentQuery
         ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(currentQuery)}&sortBy=${sortBy}&sortOrder=${sortOrder}`
         : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(currentPartModel)}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
@@ -298,10 +217,10 @@ const ProductTableDetail = React.memo(
     };
 
     useEffect(() => {
-  const start = Math.floor((currentPage - 1) / 10) * 10 + 1;
-  const end = Math.min(start + 9, totalPagess);
-  setVisiblePages([start, end]);
-}, [currentPage, totalPagess]);
+      const start = Math.floor((currentPage - 1) / 10) * 10 + 1;
+      const end = Math.min(start + 9, totalPagess);
+      setVisiblePages([start, end]);
+    }, [currentPage, totalPagess]);
 
 
     return (
@@ -309,211 +228,211 @@ const ProductTableDetail = React.memo(
         <div className={css.tableContainer}>
           <h3>Results for: {partModel}</h3>
           <div>
-          <table  className="">
-            <thead>
-              <tr>
-                <th>Cart</th>
-                <th>
-                  <img
-                    src={shieldImage}
-                    alt=""
-                    style={{ width: "18px", fontWeight: "bold" }}
-                  />
-                </th>
-                <th>Company</th>
-                <th>PVR</th>
-                <th>Ctry</th>
-                <th>Part / Model</th>
-                <th>History</th>
-                <th>TS</th>
-                <th
-                  onClick={() => handleSort("heciClei")}
-                  style={{ cursor: "pointer" }}
-                >
-                  HECI / CLEI{" "}
-                  {sortBy === "heciClei" && (sortOrder === "asc" ? "↑" : "↓")}{" "}
-                </th>
-                <th
-                  onClick={() => handleSort("mfg")}
-                  style={{ cursor: "pointer" }}
-                >
-                  Mfg {sortBy === "mfg" && (sortOrder === "asc" ? "↑" : "↓")}
-                </th>
-
-                <th
-                  onClick={() => handleSort("cond")}
-                  style={{ cursor: "pointer" }}
-                >
-                  Cond{sortBy === "cond" && (sortOrder === "asc" ? "↑" : "↓")}
-                </th>
-
-                <th
-                  onClick={() => handleSort("price")}
-                  style={{ cursor: "pointer" }}
-                >
-                  Price{" "}
-                  {sortBy === "price" && (sortOrder === "asc" ? "↑" : "↓")}
-                </th>
-                <th
-                  onClick={() => handleSort("quantity")}
-                  style={{ cursor: "pointer" }}
-                >
-                  Quantity{" "}
-                  {sortBy === "quantity" && (sortOrder === "asc" ? "↑" : "↓")}
-                </th>
-
-                <th>Age </th>
-                <th>Product Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              {(partData || searchResponseMatched?.data || []) 
-                ?.slice() // Create a shallow copy of partData to avoid mutating the original array
-                .sort((a, b) => {
-                  // Check if the company matches the logged-in user's company
-                  const isAUserCompany =
-                    a.addedBy?.company?.name?.toLowerCase() ===
-                    loggedInUserCompany?.toLowerCase();
-                  const isBUserCompany =
-                    b.addedBy?.company?.name?.toLowerCase() ===
-                    loggedInUserCompany?.toLowerCase();
-
-                  // Sort to prioritize logged-in user's company
-                  if (isAUserCompany && !isBUserCompany) return -1; // a comes before b
-                  if (!isAUserCompany && isBUserCompany) return 1; // b comes before a
-                  return 0; // Keep the same order for others
-                })
-                ?.map((e, i) => (
-                  <tr
-                    key={i}
-                    style={
-                      e?.addedBy?.company?.name?.toLowerCase() ===
-                        loggedInUserCompany?.toLowerCase()
-                        ? { backgroundColor: "#ffb" } // Highlight if the company matches
-                        : null
-                    }
+            <table className="">
+              <thead>
+                <tr>
+                  <th>Cart</th>
+                  <th>
+                    <img
+                      src={shieldImage}
+                      alt=""
+                      style={{ width: "18px", fontWeight: "bold" }}
+                    />
+                  </th>
+                  <th>Company</th>
+                  <th>PVR</th>
+                  <th>Ctry</th>
+                  <th>Part / Model</th>
+                  <th>History</th>
+                  <th>TS</th>
+                  <th
+                    onClick={() => handleSort("heciClei")}
+                    style={{ cursor: "pointer" }}
                   >
-                    <td>
-                      <input
-                        type="checkbox"
-                        checked={isSelected(e?.id)}
-                        onChange={() => selectProduct(e?.id)}
-                        style={{ cursor: "pointer" }}
-                      />
-                    </td>
-                    <td></td>
-                    <td>
-                      <a
-                        style={{ color: "#428bca", fontWeight: "500" }}
-                        onClick={(event) =>
-                          handleShowPopupCompanyDetails(
-                            event,
-                            e?.addedBy?.company?.id
-                          )
-                        }
-                        onMouseEnter={(event) =>
-                          handleHoverCompanyDetail(event, e.id)
-                        }
-                      >
-                        {e?.addedBy?.company?.name}
-                      </a>
-                    </td>
-                    <td>
-                      <FaEye />
-                    </td>
-                    <td>
-                      {countriesList.find(
-                        (country) =>
-                          country.label.toLowerCase().trim() ===
-                          e?.addedBy?.company?.country?.toLowerCase().trim()
-                      )?.value ||
-                        e?.addedBy?.company?.country ||
-                        "N/A"}
-                    </td>
-                    <td>{e?.partModel}</td>
-                    <td>
-                      <img
-                        src="https://static.brokerbin.com/version/v8.3.2/images/nohistory_icon.png"
-                        alt="Stats"
-                      />
-                    </td>
-                    <td>
-                      {e?.ts ? (
-                        <IoCheckmarkCircle style={{ color: "red" }} />
-                      ) : (
-                        <BiBlock style={{ color: "red" }} />
-                      )}
-                    </td>
-                    <td>{e?.heciClei}</td>
-                    <td>{e?.mfg}</td>
-                    <td>{e?.cond}</td>
-                    <td>{e?.price}</td>
-                    <td>{e?.quantity}</td>
-                    <td>{e?.age}</td>
-                    <td>{e?.productDescription}</td>
-                  </tr>
-                ))}
-            </tbody>
+                    HECI / CLEI{" "}
+                    {sortBy === "heciClei" && (sortOrder === "asc" ? "↑" : "↓")}{" "}
+                  </th>
+                  <th
+                    onClick={() => handleSort("mfg")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Mfg {sortBy === "mfg" && (sortOrder === "asc" ? "↑" : "↓")}
+                  </th>
 
-            <tfoot>
-              <tr>
-                <th>Cart</th>
-                <th>
-                  <img
-                    src={shieldImage}
-                    alt=""
-                    style={{ width: "18px", fontWeight: "bold" }}
-                  />
-                </th>
-                <th>Company</th>
-                <th>PVR</th>
-                <th>Ctry</th>
-                <th>Part / Model</th>
-                <th>History</th>
-                <th>TS</th>
-                <th
-                  onClick={() => handleSort("heciClei")}
-                  style={{ cursor: "pointer" }}
-                >
-                  HECI / CLEI{" "}
-                  {sortBy === "heciClei" && (sortOrder === "asc" ? "↑" : "↓")}{" "}
-                </th>
+                  <th
+                    onClick={() => handleSort("cond")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Cond{sortBy === "cond" && (sortOrder === "asc" ? "↑" : "↓")}
+                  </th>
 
-                <th
-                  onClick={() => handleSort("mfg")}
-                  style={{ cursor: "pointer" }}
-                >
-                  Mfg {sortBy === "mfg" && (sortOrder === "asc" ? "↑" : "↓")}
-                </th>
+                  <th
+                    onClick={() => handleSort("price")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Price{" "}
+                    {sortBy === "price" && (sortOrder === "asc" ? "↑" : "↓")}
+                  </th>
+                  <th
+                    onClick={() => handleSort("quantity")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Quantity{" "}
+                    {sortBy === "quantity" && (sortOrder === "asc" ? "↑" : "↓")}
+                  </th>
 
-                <th
-                  onClick={() => handleSort("cond")}
-                  style={{ cursor: "pointer" }}
-                >
-                  Cond{sortBy === "cond" && (sortOrder === "asc" ? "↑" : "↓")}
-                </th>
+                  <th>Age </th>
+                  <th>Product Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(partData || searchResponseMatched?.data || [])
+                  ?.slice() // Create a shallow copy of partData to avoid mutating the original array
+                  .sort((a, b) => {
+                    // Check if the company matches the logged-in user's company
+                    const isAUserCompany =
+                      a.addedBy?.company?.name?.toLowerCase() ===
+                      loggedInUserCompany?.toLowerCase();
+                    const isBUserCompany =
+                      b.addedBy?.company?.name?.toLowerCase() ===
+                      loggedInUserCompany?.toLowerCase();
 
-                <th
-                  onClick={() => handleSort("price")}
-                  style={{ cursor: "pointer" }}
-                >
-                  Price{" "}
-                  {sortBy === "price" && (sortOrder === "asc" ? "↑" : "↓")}
-                </th>
+                    // Sort to prioritize logged-in user's company
+                    if (isAUserCompany && !isBUserCompany) return -1; // a comes before b
+                    if (!isAUserCompany && isBUserCompany) return 1; // b comes before a
+                    return 0; // Keep the same order for others
+                  })
+                  ?.map((e, i) => (
+                    <tr
+                      key={i}
+                      style={
+                        e?.addedBy?.company?.name?.toLowerCase() ===
+                          loggedInUserCompany?.toLowerCase()
+                          ? { backgroundColor: "#ffb" } // Highlight if the company matches
+                          : null
+                      }
+                    >
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={isSelected(e?.id)}
+                          onChange={() => selectProduct(e?.id)}
+                          style={{ cursor: "pointer" }}
+                        />
+                      </td>
+                      <td></td>
+                      <td>
+                        <a
+                          style={{ color: "#428bca", fontWeight: "500" }}
+                          onClick={(event) =>
+                            handleShowPopupCompanyDetails(
+                              event,
+                              e?.addedBy?.company?.id
+                            )
+                          }
+                          onMouseEnter={(event) =>
+                            handleHoverCompanyDetail(event, e.id)
+                          }
+                        >
+                          {e?.addedBy?.company?.name}
+                        </a>
+                      </td>
+                      <td>
+                        <FaEye />
+                      </td>
+                      <td>
+                        {countriesList.find(
+                          (country) =>
+                            country.label.toLowerCase().trim() ===
+                            e?.addedBy?.company?.country?.toLowerCase().trim()
+                        )?.value ||
+                          e?.addedBy?.company?.country ||
+                          "N/A"}
+                      </td>
+                      <td>{e?.partModel}</td>
+                      <td>
+                        <img
+                          src="https://static.brokerbin.com/version/v8.3.2/images/nohistory_icon.png"
+                          alt="Stats"
+                        />
+                      </td>
+                      <td>
+                        {e?.ts ? (
+                          <IoCheckmarkCircle style={{ color: "red" }} />
+                        ) : (
+                          <BiBlock style={{ color: "red" }} />
+                        )}
+                      </td>
+                      <td>{e?.heciClei}</td>
+                      <td>{e?.mfg}</td>
+                      <td>{e?.cond}</td>
+                      <td>{e?.price}</td>
+                      <td>{e?.quantity}</td>
+                      <td>{e?.age}</td>
+                      <td>{e?.productDescription}</td>
+                    </tr>
+                  ))}
+              </tbody>
 
-                <th
-                  onClick={() => handleSort("quantity")}
-                  style={{ cursor: "pointer" }}
-                >
-                  Quantity{" "}
-                  {sortBy === "quantity" && (sortOrder === "asc" ? "↑" : "↓")}
-                </th>
-                <th>Age</th>
-                <th>Product Description</th>
-              </tr>
-            </tfoot>
-          </table>
-          </div> 
+              <tfoot>
+                <tr>
+                  <th>Cart</th>
+                  <th>
+                    <img
+                      src={shieldImage}
+                      alt=""
+                      style={{ width: "18px", fontWeight: "bold" }}
+                    />
+                  </th>
+                  <th>Company</th>
+                  <th>PVR</th>
+                  <th>Ctry</th>
+                  <th>Part / Model</th>
+                  <th>History</th>
+                  <th>TS</th>
+                  <th
+                    onClick={() => handleSort("heciClei")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    HECI / CLEI{" "}
+                    {sortBy === "heciClei" && (sortOrder === "asc" ? "↑" : "↓")}{" "}
+                  </th>
+
+                  <th
+                    onClick={() => handleSort("mfg")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Mfg {sortBy === "mfg" && (sortOrder === "asc" ? "↑" : "↓")}
+                  </th>
+
+                  <th
+                    onClick={() => handleSort("cond")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Cond{sortBy === "cond" && (sortOrder === "asc" ? "↑" : "↓")}
+                  </th>
+
+                  <th
+                    onClick={() => handleSort("price")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Price{" "}
+                    {sortBy === "price" && (sortOrder === "asc" ? "↑" : "↓")}
+                  </th>
+
+                  <th
+                    onClick={() => handleSort("quantity")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Quantity{" "}
+                    {sortBy === "quantity" && (sortOrder === "asc" ? "↑" : "↓")}
+                  </th>
+                  <th>Age</th>
+                  <th>Product Description</th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
 
           <div className="flex justify-between items-center p-1">
             <div className="flex space-x-2 text-lg font-semibold text-gray-700">
@@ -534,8 +453,6 @@ const ProductTableDetail = React.memo(
                 Previous
               </button>
 
-              {/* Dynamic Page Numbers (1-10 initially, then updates) */}
-              {/* Dynamic Page Numbers (1-10 initially, then updates) */}
               {Array.from({ length: Math.max(totalPagess, 1) }, (_, i) => i + 1)
                 .filter(
                   (page) => page >= visiblePages[0] && page <= visiblePages[1]

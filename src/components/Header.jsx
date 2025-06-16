@@ -2,56 +2,22 @@ import { memo, useEffect, useState, useRef } from "react";
 import React from "react";
 import css from "../styles/Header.module.css";
 import logo from "../imgs/logo/BrokerCell Logo.svg";
-import { AiFillFile, AiOutlineMail, AiOutlinePlus } from "react-icons/ai";
-import {
-  BsCartFill,
-  BsClockFill,
-  BsFillTelephonePlusFill,
-  BsPersonFill,
-  BsStarFill,
-  BsToggleOff,
-  BsToggleOn,
-  BsTools,
-  BsDatabaseFill,
-  BsPeopleFill,
-  // FaCoins,
-} from "react-icons/bs";
-import {
-  setHoverCompanyDetail,
-  setSearchPartType,
-} from "../ReduxStore/SearchProductSlice";
-import { MdFileUpload } from "react-icons/md";
+import { BsCartFill, BsToggleOff, BsToggleOn, } from "react-icons/bs";
+import { setAppliedFilters, setHoverCompanyDetail, setSearchPartType, } from "../ReduxStore/SearchProductSlice";
 import { FiTarget } from "react-icons/fi";
-import { BiLogOut, BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
-import { MdKeyboardArrowDown } from "react-icons/md";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setMobileNavToggle,
-  setDropdownOpen,
-  setToolToggle,
-} from "../ReduxStore/HomeSlice";
+import { setMobileNavToggle, setDropdownOpen, setToolToggle, } from "../ReduxStore/HomeSlice";
 import { clearUserDetails } from "../ReduxStore/UserSlice";
 import { resetProfileState } from "../ReduxStore/ProfleSlice";
-import {
-  searchProductHistory,
-  searchProductQuery,
-  setSelectedProducts,
-} from "../ReduxStore/SearchProductSlice";
+import { setSelectedProducts, } from "../ReduxStore/SearchProductSlice";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import dp1 from "../assets/drop-down1.svg";
 import vendorIcon from "../assets/My-Vendors Icon.svg";
-import vendorIcon2 from "../assets/Untitled-3.svg";
-import dp2 from "../assets/drop-down-2.svg";
-import dp3 from "../assets/drop-down3.svg";
-import dp4 from "../assets/drop-down4.svg";
-import dp5 from "../assets/drop-down5.svg";
-import dp6 from "../assets/drop-down6.svg";
 import { Tooltip } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import feedbackIcon from "../assets/icon 2.svg";
@@ -61,13 +27,9 @@ import reportsIcon from "../assets/reportsIcon.svg";
 import broadcastHistoryIcon from "../assets/ICON 6.svg";
 import EmailIcon from "../assets/Email Icon.svg";
 import { FaTools, FaSignOutAlt } from "react-icons/fa";
-import {
-  setPopupCompanyDetail,
-  setTogglePopUp,
-} from "../ReduxStore/SearchProductSlice";
+import { setPopupCompanyDetail, setTogglePopUp, } from "../ReduxStore/SearchProductSlice";
 import { FaRegAddressCard } from "react-icons/fa";
 import { resetSearchFocus } from "@/ReduxStore/focusSlice";
-// import vendorIcon from "../assets/vendor-pricing.svg"
 
 const Header = () => {
   const token = Cookies.get("token");
@@ -100,28 +62,19 @@ const Header = () => {
 
   const searchProduct = (event) => {
     event.preventDefault();
+    dispatch(setAppliedFilters({}));
     const form = new FormData(event.target);
     const formData = Object.fromEntries(form.entries());
-
     if (formData.searchStrings.trim() === "") {
       alert("Blank search is not allowed");
       return;
     }
-
     const searchString = formData.searchStrings
       .split(" ")
       .filter(Boolean)
       .join(",");
-
-    console.log("Search String from Home Page ", searchString);
-    console.log("Search Type from Home Page ", searchType);
-    // Clear selected products
     dispatch(setSelectedProducts([]));
     dispatch(setSearchPartType(searchType));
-    // Search products history.
-    // dispatch(searchProductHistory({ token }));
-
-    // Navigate to the search results page with 'page' and 'search' or 'keyword' parameters
     if (searchType === "search") {
       const url = `/inventory/search?page=1&query=${encodeURIComponent(
         searchString
@@ -133,18 +86,14 @@ const Header = () => {
       )}`;
       navigate(url, { replace: true });
     }
-
-    // ✅ Empty the input field after submitting
     event.target.searchStrings.value = "";
   };
 
-  // Clear hoverCompanyDetail when navigating to a new page
   useEffect(() => {
-    // Reset hoverCompanyDetail on route change
     return () => {
-      dispatch(setHoverCompanyDetail(null)); // Reset hoverCompanyDetail to null
+      dispatch(setHoverCompanyDetail(null)); 
     };
-  }, [location, dispatch]); // Trigger effect on location changes
+  }, [location, dispatch]);
 
   const theme = createTheme({
     components: {
@@ -183,20 +132,20 @@ const Header = () => {
   return (
     <div className="h-[9rem]">
 
-        <div className={`${css.headerFixed} ${css.noPrint}`}>
-          <header className={css.header}>
-            <Link to={"/"} id={css.logo}>
-              <img src={logo} alt="logo" />
-            </Link>
-            <div className={css.search_container}>
-              <form onSubmit={searchProduct}>
-                <input
-                  type="search"
-                  name="searchStrings"
-                  id={css.search}
-                  placeholder="What are you looking for?"
-                  ref={searchInputRef}
-                />
+      <div className={`${css.headerFixed} ${css.noPrint}`}>
+        <header className={css.header}>
+          <Link to={"/"} id={css.logo}>
+            <img src={logo} alt="logo" />
+          </Link>
+          <div className={css.search_container}>
+            <form onSubmit={searchProduct}>
+              <input
+                type="search"
+                name="searchStrings"
+                id={css.search}
+                placeholder="What are you looking for?"
+                ref={searchInputRef}
+              />
 
               <button
                 type="submit"
@@ -832,11 +781,11 @@ const Header = () => {
                     }}
                   />
                 </li> */}
-                </>
-              )}
-            </ul>
-          </nav>
-        </div>
+              </>
+            )}
+          </ul>
+        </nav>
+      </div>
     </div>
   );
 };
