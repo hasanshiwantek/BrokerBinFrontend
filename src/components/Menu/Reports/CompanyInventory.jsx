@@ -3,7 +3,11 @@ import css from "../../../styles/Menu/Reports/TopSearches.module.css";
 import style from "../../../styles/Menu/Reports/Company.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { getCompanyInventory, getTopSearch,getSortCompanyInventory } from "../../../ReduxStore/Reports";
+import {
+  getCompanyInventory,
+  getTopSearch,
+  getSortCompanyInventory,
+} from "../../../ReduxStore/Reports";
 import Cookies from "js-cookie";
 import styles from "@/styles/Menu/Manage/MyProfile.module.css";
 import PaginationControls from "@/components/pagination/PaginationControls";
@@ -31,6 +35,8 @@ const CompanyInventory = () => {
   const queryParams = new URLSearchParams(location.search);
   const id = parseInt(queryParams.get("id")) || "";
   const page = parseInt(queryParams.get("page")) || 1;
+
+
   const totalPages = Math.ceil(totalCount / pageSize);
   console.log("Id: " + id);
   console.log("Page: " + page);
@@ -49,17 +55,7 @@ const CompanyInventory = () => {
 
   const visiblePages = [start, end];
 
-  // Fetch data whenever 'page' or 'searchString' changes
-  useEffect(() => {
-    dispatch(getCompanyInventory({ token, id, page }));
-  }, [token, page, dispatch]);
 
-  // Handle pagination
-
-  const handlePageChange = (selectedPage) => {
-    const url = `/reports/companyInventory?id=${id}&page=${selectedPage}`;
-    navigate(url, { replace: true });
-  };
 
   const handlePrevPage = () => {
     if (page > 1) {
@@ -126,11 +122,13 @@ const CompanyInventory = () => {
       navigate("/cartpart");
     }
   };
-
+  const urlSortBy = queryParams.get("sortBy") || "";
+  const urlSortOrder = queryParams.get("sortOrder") || "asc";
+  const urlIsSorted = queryParams.get("isSorted") === "true";
   // SORTING LOGIC
-  const [isSorted, setIsSorted] = useState(false);
-  const [sortBy, setSortBy] = useState("");
-  const [sortOrder, setSortOrder] = useState("asc");
+  const [sortBy, setSortBy] = useState(urlSortBy);
+  const [sortOrder, setSortOrder] = useState(urlSortOrder);
+  const [isSorted, setIsSorted] = useState(urlIsSorted);
 
   const headers = [
     { key: "cart", label: "Cart", sortable: false },
@@ -155,15 +153,50 @@ const CompanyInventory = () => {
     setSortOrder(newSortOrder);
     setIsSorted(true);
 
-    dispatch(
-      getSortCompanyInventory({
-        token,
-        id,
-        page,
-        sortBy: columnKey,
-        sortOrder: newSortOrder,
-      })
-    );
+    const params = new URLSearchParams({
+      id,
+      page: 1,
+      sortBy: columnKey,
+      sortOrder: newSortOrder,
+      isSorted: true,
+    });
+
+    navigate(`/reports/companyInventory?${params.toString()}`, {
+      replace: true,
+    });
+  };
+
+
+  
+  // Fetch data whenever 'page' or 'searchString' changes
+  useEffect(() => {
+    if (isSorted && sortBy) {
+      dispatch(
+        getSortCompanyInventory({
+          token,
+          id,
+          page,
+          sortBy,
+          sortOrder,
+        })
+      );
+    } else {
+      dispatch(getCompanyInventory({ token, id, page }));
+    }
+  }, [token, page, id, isSorted, sortBy, sortOrder, dispatch]);
+
+
+    // Handle pagination
+
+  const handlePageChange = (selectedPage) => {
+    const params = new URLSearchParams({
+      id,
+      page: selectedPage,
+      ...(isSorted && sortBy ? { sortBy, sortOrder, isSorted: true } : {}),
+    });
+
+    const url = `/reports/companyInventory?${params.toString()}`;
+    navigate(url, { replace: true });
   };
 
   if (loading) {
