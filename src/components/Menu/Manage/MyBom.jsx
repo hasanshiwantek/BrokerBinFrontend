@@ -81,7 +81,11 @@ const SavedList = () => {
                                 type="text"
                                 placeholder=""
                                 className="p-2 rounded-sm text-md"
-                                onChange={(e) => setSearchInput(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        setSearchInput(e.target.value);
+                                    }
+                                }}
                             />
                         </div>
                     </div>
