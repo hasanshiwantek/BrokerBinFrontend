@@ -5,7 +5,7 @@ import LearnMore from "./LearnMore";
 import { useDispatch, useSelector } from "react-redux";
 import Tick from "../../svgs/Tick";
 import { setSelectedProducts } from "@/ReduxStore/SearchProductSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   setSelectedProductsForCart,
   fetchCartItems,
@@ -224,8 +224,6 @@ const Cart = () => {
     initCart();
   }, []);
 
-  console.log("SelectedCartProduct", selectedProducts);
-  console.log("Selected Parts: ", selectedParts);
   const [showNoteModal, setShowNoteModal] = useState(false);
 
   const handleToggle = (item) => {
@@ -238,15 +236,12 @@ const Cart = () => {
 
   const handleAction = async (e) => {
     const action = e.target.value;
-
     if (action === "remove") {
       await handleRemove();
     }
-
     if (action === "onlythese") {
       await handleRemoveNonSelected();
     }
-
     if (action === "partsearch") {
       if (!selectedParts.length) {
         alert("Please select at least one part to search.");
@@ -266,7 +261,6 @@ const Cart = () => {
         }
       }
     }
-
     e.target.value = ""; // Reset dropdown
   };
 
@@ -282,26 +276,20 @@ const Cart = () => {
       return;
     }
     setLoading(true);
-
     try {
       // Remove items that are *not* selected
       const updated = selectedProducts.filter((item) =>
         selectedParts.some((p) => p.id === item.id)
       );
-
       dispatch(setSelectedProductsForCart(updated));
-
       const idsToRemove = selectedProducts
         .filter((item) => !selectedParts.some((p) => p.id === item.id))
         .map((item) => item.id);
-
       if (!idsToRemove.length) return;
-
       const result = await dispatch(
         deleteCartItem({ token, ids: idsToRemove })
       ).unwrap();
       console.log("Delete non-selected result:", result);
-
       if (result?.status) {
         toast.info("Non-selected parts removed from cart!", {
           style: {
@@ -405,7 +393,8 @@ const Cart = () => {
           <div className={css.mainLayout}>
             <div className={css.cartListLayout}>
               <a href="#">part list</a>
-              <a href="#">Saved list(s)</a>
+              {/* <a href="/bomarchive/list">Saved list(s)</a> */}
+              <Link to="/bomarchive/list">Saved list(s)</Link>
               <div className={css.cartList}>
                 <div className={css.cartList_list}>
                   <h1>Part List ({selectedProducts.length} items listed)</h1>
@@ -482,8 +471,8 @@ const Cart = () => {
                           <th>Part#</th>
                           <th>Mfg</th>
                           <th>Cond</th>
-                          <th>Qty</th>
-                          <th>Age</th>
+                          <th>RQ</th>
+                          <th>TQ</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -494,7 +483,7 @@ const Cart = () => {
                               <tr className="bg-gray-200 text-left ">
                                 <td
                                   colSpan="6"
-                                  className="font-bold !text-[9pt] px-2 py-1 text-blue-600 "
+                                  className="font-bold !text-[9pt]  py-1 text-blue-600 "
                                 >
                                   Company: {companyName}
                                 </td>
@@ -503,21 +492,21 @@ const Cart = () => {
                               {parts.map((e) => (
                                 <React.Fragment key={e.id}>
                                   <tr className="tableData">
-                                    <td>
+                                    <td className="!gap-2 flex items-center">
                                       <input
                                         type="checkbox"
                                         checked={selectedParts.some(
                                           (p) => p.id === e.id
                                         )}
                                         onChange={() => handleToggle(e)}
-                                        className="h-4 w-4"
+                                        className="h-4 w-4 ga-"
                                       />
                                       {e.inventory?.partModel}
                                     </td>
                                     <td>{e.inventory?.mfg}</td>
                                     <td>{e.inventory?.cond}</td>
+                                    <td>{e.notes?.map(note => note.quantity).join(", ")}</td>
                                     <td>{e.inventory?.quantity}</td>
-                                    <td>{e.inventory?.age}</td>
                                   </tr>
 
                                   {/* Note Row */}

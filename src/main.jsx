@@ -29,8 +29,8 @@ const Cart = lazy(() => import("./components/Tools/Cart.jsx"));
 const SearchProduct = lazy(() =>
   import("./components/SearchProduct/SearchProduct.jsx")
 );
-
 const MyProfile = lazy(() => import("./components/Menu/Manage/MyProfile.jsx"));
+const SavedList = lazy(() => import("./components/Menu/Manage/MyBom.jsx"))
 const CompanyProfile = lazy(() =>
   import("./components/Menu/Manage/Mycompany/CompanyProfile.jsx")
 );
@@ -293,6 +293,16 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <MyProfile />
+            <Footer />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/bomarchive/list",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <SavedList />
             <Footer />
           </Suspense>
         ),

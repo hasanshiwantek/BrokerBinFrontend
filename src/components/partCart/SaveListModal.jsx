@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import axios from "axios";
+import { brokerAPI } from "../api/BrokerEndpoint";
 
-const SaveListModal = ({ onClose, onSave, selectedParts }) => {
+const SaveListModal = ({ onClose, selectedParts }) => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -14,7 +16,7 @@ const SaveListModal = ({ onClose, onSave, selectedParts }) => {
         name: "",
         poInHand: false,
         oemQuote: false,
-        dueDate: new Date().toISOString().slice(0, 10), // yyyy-mm-dd
+        dueDate: new Date().toISOString().slice(0, 10),
     });
 
     const handleChange = (field, value) => {
@@ -27,20 +29,18 @@ const SaveListModal = ({ onClose, onSave, selectedParts }) => {
             poInHand: formData.poInHand,
             oemQuote: formData.oemQuote,
             dueDate: formData.dueDate,
-            parts: selectedParts, // passed via props
+            parts: selectedParts,
         };
-
-        console.log("📦 Final Payload to API:", payload);
         try {
-            // Replace this with your actual API call
-            // const response = await axios.post('/api/save-list', payload);
-            // console.log("✅ API Success:", response.data);
-
-            // Navigate to list view page
-            navigate("/saved-lists");
+            const response = await axios.post(`${brokerAPI}part-cart/saveList`, payload, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            console.log("Mock response:", response.data);
+            navigate("/bomarchive/list");
         } catch (error) {
-            console.error("❌ Failed to save list:", error);
-            // Optionally show a toast or alert
+            console.error("Mock submit failed:", error);
         }
     };
 
