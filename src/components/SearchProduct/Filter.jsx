@@ -108,9 +108,7 @@ useEffect(() => {
 };
 
 const filtersFromApi = searchResponseMatched?.filters || {};
-
 console.log("Filters partmodel", filtersFromApi);
-
 
 const {
   manufacturers = {},

@@ -49,26 +49,21 @@ const Note = ({ selectedParts, onClose }) => {
   };
   const handleSave = async () => {
     const finalNotes = Object.values(noteData);
-    
-
     if (finalNotes.length === 0) {
       toast.warning("No parts selected to save notes.", {
         style: { fontSize: "16px" },
       });
       return;
     }
-
     try {
       const payload = {
         token,
         notes: finalNotes, // Make sure backend expects an array
       };
-      console.log("Payload: ",payload);
-      
+      console.log("Payload: ",payload); 
       setLoading(true);
       const result = await dispatch(partCartNotes(payload)).unwrap();
       console.log("Saved Notes to Backend:", result);
-
       toast.info(result?.message || "Notes saved successfully!", {
          style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, 
       });
