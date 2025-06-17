@@ -23,28 +23,47 @@ const SavedList = () => {
     const [activeList, setActiveList] = useState(null)
     const [showExportModal, setShowExportModal] = useState(false);
 
-    console.log("SELECTEDROWID", selectedRowId)
+    // useEffect(() => {
+    //     const fetchSavedLists = async () => {
+    //         try {
+    //             const response = await axios.get(`${brokerAPI}part-cart/get-list`, {
+    //                 params: {
+    //                     name: searchInput,
+    //                     sortBy,
+    //                     sortOrder,
+    //                 },
+    //                 headers: {
+    //                     Authorization: `Bearer ${token}`,
+    //                 },
+    //             });
 
+    //             setSavedLists(response.data.data); // ✅ store response
+    //         } catch (err) {
+    //             console.error("Failed to fetch saved lists:", err);
+    //         }
+    //     };
+    //     fetchSavedLists();
+    // }, [searchInput, sortBy, sortOrder]);
+
+    const fetchSavedLists = async () => {
+        try {
+            const response = await axios.get(`${brokerAPI}part-cart/get-list`, {
+                params: {
+                    name: searchInput,
+                    sortBy,
+                    sortOrder,
+                },
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setSavedLists(response.data.data);
+        } catch (err) {
+            console.error("Failed to fetch saved lists:", err);
+        }
+    };
 
     useEffect(() => {
-        const fetchSavedLists = async () => {
-            try {
-                const response = await axios.get(`${brokerAPI}part-cart/get-list`, {
-                    params: {
-                        name: searchInput,
-                        sortBy,
-                        sortOrder,
-                    },
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-
-                setSavedLists(response.data.data); // ✅ store response
-            } catch (err) {
-                console.error("Failed to fetch saved lists:", err);
-            }
-        };
         fetchSavedLists();
     }, [searchInput, sortBy, sortOrder]);
 
@@ -56,6 +75,29 @@ const SavedList = () => {
             setSortOrder("asc");
         }
 
+    };
+
+    const handleDeleteList = async () => {
+        if (!selectedRowId) {
+            alert("Please select a list to delete.");
+            return;
+        }
+        const confirmDelete = window.confirm("Are you sure you want to delete this saved list?");
+        if (!confirmDelete) return;
+        try {
+            await axios.delete(`${brokerAPI}part-cart/delete-partlist/${selectedRowId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            toast.success("List deleted successfully.");
+            setSelectedRowId(null);
+            fetchSavedLists();
+            window.location.reload();
+        } catch (error) {
+            console.error("❌ Failed to delete list:", error);
+            toast.error("Failed to delete the list.");
+        }
     };
 
     const handlePdfExport = async () => {
@@ -202,7 +244,7 @@ const SavedList = () => {
                     <div className=" flex items-center gap-2">
                         <button
                             type="button"
-                            onClick={""}
+                            onClick={handleDeleteList}
                             className="!text-[0.98vw] !flex !justify-start !gap-8 !py-[0.6rem] !px-4 !bg-blue-500 !text-white !capitalize"
                         >
                             Delete List
@@ -236,9 +278,9 @@ const SavedList = () => {
             )}
             {showExportModal && (
                 <SavedListExportModal
-                savedLists={savedLists}
-                selectedRowId={selectedRowId}
-                onClose={() => setShowExportModal(false)}
+                    savedLists={savedLists}
+                    selectedRowId={selectedRowId}
+                    onClose={() => setShowExportModal(false)}
                 />
             )}
         </div>
