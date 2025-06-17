@@ -413,6 +413,26 @@ export const exportPartcart = createAsyncThunk(
   }
 );
 
+export const deletePartCartNotes = createAsyncThunk(
+  "toolsStore/deletePartCartNotes",
+  async ({ token, ids }) => {
+    try {
+      const response = await axios.delete(`${brokerAPI}part-cart/note/delete`, {
+        data: { note_ids: ids },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || "Failed to delete notes."
+      );
+    }
+  }
+);
+
 const initialState = {
   companiesListingParts: true,
   graphToggle: false,

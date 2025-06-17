@@ -4,7 +4,8 @@ import { exportPartcart } from "@/ReduxStore/SearchProductSlice";
 import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-const ExportModal = ({ onClose, onSend }) => {
+
+const ExportModal = ({ onClose }) => {
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem("user"));
   const userEmail = user.user.email;

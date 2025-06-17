@@ -12,6 +12,7 @@ import {
   deleteCartItem,
   clearCartItems,
   updatePartcartNote,
+  deletePartCartNotes,
 } from "@/ReduxStore/SearchProductSlice";
 import Note from "../partCart/Note";
 import Export from "../partCart/Export";
@@ -24,6 +25,7 @@ import axios from "axios";
 import { brokerAPI } from "../api/BrokerEndpoint";
 import { setTogglePopUp } from "@/ReduxStore/SearchProductSlice";
 import { setPopupCompanyDetail } from "@/ReduxStore/SearchProductSlice";
+import { AiOutlineClose } from "react-icons/ai";
 
 const Cart = () => {
   const [selectedParts, setSelectedParts] = useState([]);
@@ -381,6 +383,18 @@ const Cart = () => {
     navigate(url, { replace: true });
   };
 
+ const handleNotesDelete = async (noteId) => {
+  if (!noteId) return;
+  const confirmDelete = window.confirm("Are you sure you want to delete this note?");
+  if (!confirmDelete) return;
+  try {
+    await dispatch(deletePartCartNotes({ token, ids: [noteId] })).unwrap();
+    window.location.reload();
+  } catch (error) {
+    console.error("Deletion failed:", error);
+  }
+};
+
   return (
     <>
       {loading ? (
@@ -402,16 +416,16 @@ const Cart = () => {
                     <button type="button" onClick={handleCartPdfExport}>
                       PDF
                     </button>
-                    <button 
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if(!selectedParts.length){
-                        alert("Please select atleast one part to save a list")
-                        return;
-                      }
-                      setShowSaveListModal(true);
-                    }}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (!selectedParts.length) {
+                          alert("Please select atleast one part to save a list")
+                          return;
+                        }
+                        setShowSaveListModal(true);
+                      }}
                     >
                       save
                     </button>
@@ -515,8 +529,11 @@ const Cart = () => {
                                       <tr key={note.id}>
                                         <td colSpan="6" className="pl-10">
                                           <div className="flex items-center gap-2">
-                                            <span className="text-[10px]">
-                                              Note:
+                                            <span
+                                              onClick={() => handleNotesDelete(note.id)}
+                                              className="text-[10px] text-red-500 cursor-pointer ml-2"
+                                            >
+                                               <AiOutlineClose />
                                             </span>
                                             <input
                                               type="text"
@@ -560,7 +577,7 @@ const Cart = () => {
                   </select>
                   {/* </div> */}
                 </div>
-                
+
                 <div className={css.cartList_action}></div>
               </div>
             </div>

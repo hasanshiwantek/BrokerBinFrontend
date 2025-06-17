@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { brokerAPI } from "@/components/api/BrokerEndpoint";
 import ListDetailModal from "@/components/partCart/ListDetailModal";
+import SavedListExportModal from "@/components/partCart/SavedListExportModal"
 
 const SavedList = () => {
     const { togglePopUp } = useSelector((store) => store.searchProductStore);
@@ -20,6 +21,10 @@ const SavedList = () => {
     const [savedLists, setSavedLists] = useState([]);
     const [searchInput, setSearchInput] = useState("");
     const [activeList, setActiveList] = useState(null)
+    const [showExportModal, setShowExportModal] = useState(false);
+
+    console.log("SELECTEDROWID", selectedRowId)
+
 
     useEffect(() => {
         const fetchSavedLists = async () => {
@@ -40,9 +45,44 @@ const SavedList = () => {
                 console.error("Failed to fetch saved lists:", err);
             }
         };
-
         fetchSavedLists();
     }, [searchInput, sortBy, sortOrder]);
+
+    const handleSort = (field) => {
+        if (sortBy === field) {
+            setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+        } else {
+            setSortBy(field);
+            setSortOrder("asc");
+        }
+
+    };
+
+    const handlePdfExport = async () => {
+        if (!selectedRowId) {
+            alert("No list selected to export.");
+            return;
+        }
+        // setLoading(true);
+        try {
+            const response = await axios.get(`${brokerAPI}part-cart/download-saved-partlist-pdf`, {
+                params: { list_id: selectedRowId }, // assuming list_id is expected
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                responseType: "blob",
+            });
+
+            const blob = new Blob([response.data], { type: "application/pdf" });
+            const url = URL.createObjectURL(blob);
+            window.open(url); // open PDF in new tab
+        } catch (error) {
+            console.error("❌ PDF export failed:", error);
+            alert("Failed to export PDF.");
+        } finally {
+            // setLoading(false);
+        }
+    };
 
     return (
         <div className="justify-center flex">
@@ -95,38 +135,37 @@ const SavedList = () => {
                             <tr>
                                 <th></th>
                                 <th>%</th>
-                                <th>Name</th>
-                                <th>Date</th>
-                                <th>PO in Hand</th>
-                                <th>OEM Quote</th>
-                                <th>Due Date</th>
-                                <th>Items</th>
-                                <th>Total Parts</th>
+                                <th onClick={() => handleSort("name")}>Name</th>
+                                <th onClick={() => handleSort("date")}>Date</th>
+                                <th onClick={() => handleSort("po_in_hand")}>PO in Hand</th>
+                                <th onClick={() => handleSort("oem_quote")}>OEM Quote</th>
+                                <th onClick={() => handleSort("due_date")}>Due Date</th>
+                                <th >Items</th>
+                                <th >Total Parts</th>
                             </tr>
                         </thead>
-
                         <tbody>
                             {savedLists?.length > 0 ? (
-                                savedLists.map((list, index) => (
-                                    <tr key={index} className="!whitespace-normal">
+                                savedLists.map((list) => (
+                                    <tr key={list.list_id} className="!whitespace-normal">
                                         <td>
                                             <input
                                                 type="radio"
                                                 name="savedListRadio"
-                                                checked={selectedRowId === index}
-                                                onChange={() => setSelectedRowId(index)}
+                                                checked={selectedRowId === list.list_id}
+                                                onChange={() => setSelectedRowId(list.list_id)}
                                             />
                                         </td>
                                         <td></td>
                                         <td>
                                             <a
                                                 onClick={() => setActiveList(list)}
-                                                className="text-blue-600 font-semibold cursor-pointer"
+                                                className="!text-[#444] !text-[8pt]"
                                             >
                                                 {list.name}
                                             </a>
                                         </td>
-                                        <td>{list.date || ""}</td>
+                                        <td>{list.created_at || ""}</td>
                                         <td>{list.po_in_hand ? "Yes" : "No"}</td>
                                         <td>{list.oem_quote ? "Yes" : "No"}</td>
                                         <td>{list.due_date}</td>
@@ -177,14 +216,14 @@ const SavedList = () => {
                         </button>
                         <button
                             type="button"
-                            onClick={""}
+                            onClick={handlePdfExport}
                             className="!text-[0.98vw] !flex !justify-start !gap-8 !py-[0.6rem] !px-4 !bg-blue-500 !text-white !capitalize"
                         >
                             PDF
                         </button>
                         <button
                             type="button"
-                            onClick={""}
+                            onClick={() => setShowExportModal(true)}
                             className="!text-[0.98vw] !flex !justify-start !gap-8 !py-[0.6rem] !px-4 !bg-blue-500 !text-white !capitalize"
                         >
                             Export List
@@ -194,6 +233,13 @@ const SavedList = () => {
             </div>
             {activeList && (
                 <ListDetailModal list={activeList} onClose={() => setActiveList(null)} />
+            )}
+            {showExportModal && (
+                <SavedListExportModal
+                savedLists={savedLists}
+                selectedRowId={selectedRowId}
+                onClose={() => setShowExportModal(false)}
+                />
             )}
         </div>
     );
