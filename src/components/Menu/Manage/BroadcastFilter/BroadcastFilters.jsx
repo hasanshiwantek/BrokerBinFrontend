@@ -359,8 +359,8 @@ const Options = () => {
     <>
       <div className={myProfile.profileLayout}>
         <form onSubmit={submitBroadcastFilters}>
-          <div className={`fixed ${myProfile.profileBtn}`}>
-            <h1>My Profile</h1>
+          <div className={`fixed ${myProfile.profileBtn} !gap-y-[0px]`}>
+            <h1 className="!text-[#444] !text-[0.97vw]">My Profile</h1>
             <span>
               <input
                 type="submit"
@@ -387,14 +387,14 @@ const Options = () => {
                     <span>Personal Info</span>
                   </NavLink>
                 </li>
-                {/* <li>
+                <li>
                   <NavLink
                     to="/myprofile/Options"
                     className={({ isActive }) => (isActive ? myProfile.active : '')}
                   >
                     <span>Options</span>
                   </NavLink>
-                </li> */}
+                </li>
                 <li>
                   <NavLink
                     to="/myprofile/MyVendors"
@@ -412,7 +412,7 @@ const Options = () => {
                       isActive ? myProfile.active : ""
                     }
                   >
-                    <span>My Contact</span>
+                    <span>My Contacts</span>
                   </NavLink>
                 </li>
                 <li>

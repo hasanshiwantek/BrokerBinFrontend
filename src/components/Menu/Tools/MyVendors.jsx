@@ -347,14 +347,14 @@ const MyVendors = () => {
                   <span>Personal Info</span>
                 </NavLink>
               </li>
-              {/* <li>
+              <li>
                   <NavLink
                     to="/myprofile/Options"
                     className={({ isActive }) => (isActive ? myProfile.active : '')}
                   >
                     <span>Options</span>
                   </NavLink>
-                </li> */}
+                </li>
               <li>
                 <NavLink
                   to="/myprofile/MyVendors"
