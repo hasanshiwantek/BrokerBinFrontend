@@ -175,6 +175,7 @@ const Accordion = ({
 
   return (
     <>
+
       <div className={css.accordion}>
         {companies.length > 0 && (
           <div className=" px-4 py-2">
@@ -210,29 +211,40 @@ const Accordion = ({
           console.log(effectiveStatus);
 
           return (
+            
+            
             <div className={css.accordionPanel} key={index}>
+
               <div ref={pdfRef}>
                 <h2 id={`panel${index + 1}-title`}>
                   <button
-                    className={css.accordionTrigger}
+                    className={`${css.accordionTrigger} flex justify-between items-center w-full`}
                     aria-controls={`panel${index + 1}-content`}
                     onClick={() => togglePanel(index)}
                   >
-                    <span className="!text-[8pt]">
-                      {`${groupedData[company].length} parts with ${
-                        groupedData[company].length
-                      } results - ${
-                        groupedData[company][0]?.inventory?.addedBy?.country ||
-                        "-"
-                      }`}
-                    </span>
-                    <span className="text-[8pt]">{company}</span>
+                    {/* Left Section: Count + Country + Company */}
+                    <div className="flex flex-col items-start text-left gap-1">
+                      <span className="text-[8pt] font-medium">
+                        {`${groupedData[company].length} Parts With ${
+                          groupedData[company].length
+                        } Results - ${
+                          groupedData[company][0]?.inventory?.addedBy
+                            ?.country || "N/A"
+                        }`}
+                      </span>
+                      <span className="text-[8pt] font-semibold">
+                        {company}
+                      </span>
+                    </div>
 
+                    {/* Middle: Arrow Icon */}
                     <BiSolidDownArrow
-                      className={`${css.accordionBtnToggle} `}
+                      className={`${css.accordionBtnToggle} ml-2`}
                       aria-expanded={activePanel.includes(index)}
                     />
-                    <div className="flex items-center gap-4">
+
+                    {/* Right: Vendor Icons */}
+                    <div className="flex items-center gap-4 ml-4">
                       <ThemeProvider theme={theme}>
                         <Tooltip title="Add to MyVendors" arrow>
                           <span
@@ -259,7 +271,7 @@ const Accordion = ({
                             className="cursor-pointer"
                           >
                             {effectiveStatus === 1 ? (
-                              <FaUserCheck size={18} className />
+                              <FaUserCheck size={18} />
                             ) : (
                               <FaUserXmark size={18} />
                             )}

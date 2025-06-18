@@ -142,6 +142,14 @@ select {
   font-size: 8pt;
 }
 
+
+
+
+
+.cartList_parts_scroll{
+  transition: all 0.5s ease-in-out;
+}
+
 .cartList_parts_scroll table td,
 th {
   font-size: 8pt;
