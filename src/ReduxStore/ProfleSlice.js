@@ -550,7 +550,7 @@ const initialState = {
     showDetails: false,
     forceDescriptions: false,
     doubleVision: false,
-    showHistoryGraphs: true,
+    showHistoryGraphs: false,
     preferredBrokercell: "",
     receiveRFQEmails: "1",
     fontSize: "8",

@@ -14,14 +14,14 @@ const LearnMore = () => {
       </button>
       {infoToggle && (
         <div className={css.cartLayout_info}>
-          <strong>
+          <strong className="!font-bold">
             <span>*</span> What is the Part Cart / BOM Utility?
           </strong>
           <p>
             The Part Cart / BOM Utility is a Search Summary/ System
             Configuration Utility.
           </p>
-          <strong>
+          <strong className="!font-bold">
             <span>*</span>How to use the Part Cart?
           </strong>
           <ol>
@@ -32,7 +32,7 @@ const LearnMore = () => {
               more items!
             </li>
           </ol>
-          <strong>
+          <strong className="!font-bold">
             <span>*</span>How to use the BOM Utility
           </strong>
           <ol>
