@@ -93,7 +93,7 @@
   /* display: inline-block !important; */
   margin: 0 5px;
   padding: 8px;
-  background-color: #bfbfbf;
+  background-color: #bfbfbf ;
   border: 1px solid #bfbfbf;
   font-weight: 700;
 }
@@ -115,7 +115,7 @@
   border-bottom: 3px solid lightgray;
 
   button {
-    background: var(--primary-color);
+    background: lightgray;
     padding: 0.7rem;
   }
 }
