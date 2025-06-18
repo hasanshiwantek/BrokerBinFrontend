@@ -280,8 +280,8 @@ const MyContact = () => {
   return (
     <>
       <div className={css.inventory}>
-        <div className={css.vendor_vanLink}>
-          <div className={myProfile.profileInfo_links}>
+        <div className={`${css.vendor_vanLink}`}>
+          <div className={`${myProfile.profileInfo_links}`}>
             <ul>
               <li>
                 <NavLink
@@ -294,14 +294,14 @@ const MyContact = () => {
                   <span>Personal Info</span>
                 </NavLink>
               </li>
-              {/* <li>
+              <li>
                   <NavLink
                     to="/myprofile/Options"
                     className={({ isActive }) => (isActive ? myProfile.active : '')}
                   >
                     <span>Options</span>
                   </NavLink>
-                </li> */}
+                </li>
               <li>
                 <NavLink
                   to="/myprofile/MyVendors"

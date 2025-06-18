@@ -30,9 +30,8 @@ const SaveListModal = ({ onClose, selectedParts }) => {
     cond: p.inventory?.cond,
     quantity: p.inventory?.quantity,
     price: p.inventory?.price,
-    notes: p.notes,
+    note: p.notes,
   }));
-
 
   const handleSubmit = async () => {
     const payload = {
