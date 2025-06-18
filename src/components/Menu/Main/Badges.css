@@ -75,7 +75,7 @@ main {
 
 .inv-column {
   display: flex;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
   align-content: stretch;
   /* justify-content: center; */
   justify-content: space-between;

@@ -498,6 +498,9 @@ const Cart = () => {
                       <img
                         src="https://static.brokerbin.com/version/v8.4.1/images/arrow_down.gif"
                         alt="showParts"
+                        className={`cursor-pointer transition-transform duration-300 relative group ${
+                          showParts ? "rotate-180" : ""
+                        }`}
                       />
 
                       {/* Tailwind tooltip on hover */}
@@ -574,7 +577,10 @@ const Cart = () => {
                                                   }
                                                   className="text-[10px] text-red-500 cursor-pointer ml-2"
                                                 >
-                                                  <AiOutlineClose />
+                                                  <img
+                                                    src="https://static.brokerbin.com/version/v8.4.1/images/DeleteRedX.png"
+                                                    alt="deleteNote"
+                                                  />
                                                 </span>
                                                 <input
                                                   type="text"
@@ -602,6 +608,7 @@ const Cart = () => {
                       </div>
                     </div>
                   )}
+                  <hr />
                 </div>
                 <h1>Action</h1>
                 <div className={css.cartList_action}>
