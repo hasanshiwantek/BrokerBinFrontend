@@ -10,8 +10,6 @@ import {
 } from "../../../ReduxStore/ProfleSlice";
 import { Link, NavLink } from "react-router-dom";
 import Cookies from "js-cookie";
-import Footer from "../../Footer/Footer";
-
 const Options = () => {
   const { optionFormData } = useSelector((state) => state.profileStore);
   const dispatch = useDispatch();
@@ -94,6 +92,9 @@ const Options = () => {
     console.log("FormData:", optionFormData);
     // You can send the formData to your backend here.
   };
+
+
+
   return (
     <>
       <div className={myProfile.profileLayout}>

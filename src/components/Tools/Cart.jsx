@@ -33,6 +33,7 @@ const Cart = () => {
   const [showExportModal, setShowExportModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showSaveListModal, setShowSaveListModal] = useState(false);
+  const [showParts, setShowParts] = useState(false);
 
   const selectedProducts = useSelector(
     (state) => state.searchProductStore.selectedProductsForCart
@@ -383,17 +384,19 @@ const Cart = () => {
     navigate(url, { replace: true });
   };
 
- const handleNotesDelete = async (noteId) => {
-  if (!noteId) return;
-  const confirmDelete = window.confirm("Are you sure you want to delete this note?");
-  if (!confirmDelete) return;
-  try {
-    await dispatch(deletePartCartNotes({ token, ids: [noteId] })).unwrap();
-    window.location.reload();
-  } catch (error) {
-    console.error("Deletion failed:", error);
-  }
-};
+  const handleNotesDelete = async (noteId) => {
+    if (!noteId) return;
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this note?"
+    );
+    if (!confirmDelete) return;
+    try {
+      await dispatch(deletePartCartNotes({ token, ids: [noteId] })).unwrap();
+      window.location.reload();
+    } catch (error) {
+      console.error("Deletion failed:", error);
+    }
+  };
 
   return (
     <>
@@ -421,7 +424,16 @@ const Cart = () => {
                       onClick={(e) => {
                         e.preventDefault();
                         if (!selectedParts.length) {
-                          alert("Please select atleast one part to save a list")
+                          toast.warning(
+                            "Please select atleast one part to save a list.",
+                            {
+                              style: {
+                                fontSize: "12px",
+                                marginTop: "-10px",
+                                fontWeight: "bold",
+                              },
+                            }
+                          );
                           return;
                         }
                         setShowSaveListModal(true);
@@ -477,88 +489,119 @@ const Cart = () => {
                   {/* </div> */}
                 </div>
                 <div className={css.cartList_parts}>
-                  <h1>Parts</h1>
-                  <div className={css.cartList_parts_scroll}>
-                    <table>
-                      <thead className="bg-gray-600 text-white">
-                        <tr>
-                          <th>Part#</th>
-                          <th>Mfg</th>
-                          <th>Cond</th>
-                          <th>RQ</th>
-                          <th>TQ</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {Object.entries(groupedProducts).map(
-                          ([companyName, parts]) => (
-                            <React.Fragment key={companyName}>
-                              {/* Company Header Row */}
-                              <tr className="bg-gray-200 text-left ">
-                                <td
-                                  colSpan="6"
-                                  className="font-bold !text-[9pt]  py-1 text-blue-600 "
-                                >
-                                  Company: {companyName}
-                                </td>
-                              </tr>
+                  <div className="flex justify-start items-center gap-5">
+                    <h1>Parts</h1>
+                    <i
+                      className={`cursor-pointer transition-transform duration-300 relative group `}
+                      onClick={() => setShowParts((prev) => !prev)}
+                    >
+                      <img
+                        src="https://static.brokerbin.com/version/v8.4.1/images/arrow_down.gif"
+                        alt="showParts"
+                      />
 
-                              {parts.map((e) => (
-                                <React.Fragment key={e.id}>
-                                  <tr className="tableData">
-                                    <td className="!gap-2 flex items-center">
-                                      <input
-                                        type="checkbox"
-                                        checked={selectedParts.some(
-                                          (p) => p.id === e.id
-                                        )}
-                                        onChange={() => handleToggle(e)}
-                                        className="h-4 w-4 ga-"
-                                      />
-                                      {e.inventory?.partModel}
+                      {/* Tailwind tooltip on hover */}
+                      <span className="absolute top-4 left-28 -translate-x-1/2 z-10 px-2 py-1 bg-black text-white text-xl rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        Expand/Collapse Part List
+                      </span>
+                    </i>
+                  </div>
+
+                  {showParts && (
+                    <div
+                      className={`transition-max-height duration-500 ease-in-out overflow-hidden ${
+                        showParts ? "max-h-[1000px]" : "max-h-0"
+                      }`}
+                    >
+                      <div className={css.cartList_parts_scroll}>
+                        <table>
+                          <thead className="bg-gray-600 text-white">
+                            <tr>
+                              <th>Part#</th>
+                              <th>Mfg</th>
+                              <th>Cond</th>
+                              <th>RQ</th>
+                              <th>TQ</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {Object.entries(groupedProducts).map(
+                              ([companyName, parts]) => (
+                                <React.Fragment key={companyName}>
+                                  {/* Company Header Row */}
+                                  <tr className="bg-gray-200 text-left ">
+                                    <td
+                                      colSpan="6"
+                                      className="font-bold !text-[9pt]  py-1 text-blue-600 "
+                                    >
+                                      Company: {companyName}
                                     </td>
-                                    <td>{e.inventory?.mfg}</td>
-                                    <td>{e.inventory?.cond}</td>
-                                    <td>{e.notes?.map(note => note.quantity).join(", ")}</td>
-                                    <td>{e.inventory?.quantity}</td>
                                   </tr>
 
-                                  {/* Note Row */}
-                                  {e.notes?.length > 0 &&
-                                    e.notes.map((note) => (
-                                      <tr key={note.id}>
-                                        <td colSpan="6" className="pl-10">
-                                          <div className="flex items-center gap-2">
-                                            <span
-                                              onClick={() => handleNotesDelete(note.id)}
-                                              className="text-[10px] text-red-500 cursor-pointer ml-2"
-                                            >
-                                               <AiOutlineClose />
-                                            </span>
-                                            <input
-                                              type="text"
-                                              defaultValue={note.note}
-                                              className="text-[10px] border px-2 py-1 rounded m-1 w-full max-w-xs"
-                                              onBlur={(ev) =>
-                                                handleNoteUpdate(
-                                                  note.id, // partCartId
-                                                  ev.target.value, // newNote
-                                                  note.quantity // quantity
-                                                )
-                                              }
-                                            />
-                                          </div>
+                                  {parts.map((e) => (
+                                    <React.Fragment key={e.id}>
+                                      <tr className="tableData">
+                                        <td className="!gap-2 flex items-center">
+                                          <input
+                                            type="checkbox"
+                                            checked={selectedParts.some(
+                                              (p) => p.id === e.id
+                                            )}
+                                            onChange={() => handleToggle(e)}
+                                            className="h-4 w-4 ga-"
+                                          />
+                                          {e.inventory?.partModel}
                                         </td>
+                                        <td>{e.inventory?.mfg}</td>
+                                        <td>{e.inventory?.cond}</td>
+                                        <td>
+                                          {e.notes
+                                            ?.map((note) => note.quantity)
+                                            .join(", ")}
+                                        </td>
+                                        <td>{e.inventory?.quantity}</td>
                                       </tr>
-                                    ))}
+
+                                      {/* Note Row */}
+                                      {e.notes?.length > 0 &&
+                                        e.notes.map((note) => (
+                                          <tr key={note.id}>
+                                            <td colSpan="6" className="pl-10">
+                                              <div className="flex items-center gap-2">
+                                                <span
+                                                  onClick={() =>
+                                                    handleNotesDelete(note.id)
+                                                  }
+                                                  className="text-[10px] text-red-500 cursor-pointer ml-2"
+                                                >
+                                                  <AiOutlineClose />
+                                                </span>
+                                                <input
+                                                  type="text"
+                                                  defaultValue={note.note}
+                                                  className="text-[10px] border px-2 py-1 rounded m-1 w-full max-w-xs"
+                                                  onBlur={(ev) =>
+                                                    handleNoteUpdate(
+                                                      note.id, // partCartId
+                                                      ev.target.value, // newNote
+                                                      note.quantity // quantity
+                                                    )
+                                                  }
+                                                />
+                                              </div>
+                                            </td>
+                                          </tr>
+                                        ))}
+                                    </React.Fragment>
+                                  ))}
                                 </React.Fragment>
-                              ))}
-                            </React.Fragment>
-                          )
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
+                              )
+                            )}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <h1>Action</h1>
                 <div className={css.cartList_action}>
@@ -583,6 +626,7 @@ const Cart = () => {
             </div>
             <div className={css.cartLay}>
               <div className={css.cartLayout}>
+                {/* <h1 className="text-[#444] text-2xl text-center">Part Cart / BOM Utility</h1> */}
                 <div className={css.cartLayout_options}>
                   <button
                     type="button"
