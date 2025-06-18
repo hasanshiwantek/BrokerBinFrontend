@@ -23,14 +23,15 @@ const SaveListModal = ({ onClose, selectedParts }) => {
         setFormData((prev) => ({ ...prev, [field]: value }));
     };
 
-    // const trimmedParts = selectedParts.map(p => ({
-    //     id: p.id,
-    //     partModel: p.inventory?.partModel,
-    //     mfg: p.inventory?.mfg,
-    //     cond: p.inventory?.cond,
-    //     quantity: p.inventory?.quantity,
-    //     price: p.inventory?.price,
-    // }));
+    const trimmedParts = selectedParts.map(p => ({
+        id: p.id,
+        partModel: p.inventory?.partModel,
+        mfg: p.inventory?.mfg,
+        cond: p.inventory?.cond,
+        quantity: p.inventory?.quantity,
+        price: p.inventory?.price,
+        notes: p.notes,
+    }));
 
     const handleSubmit = async () => {
         const payload = {
@@ -38,8 +39,8 @@ const SaveListModal = ({ onClose, selectedParts }) => {
             poInHand: formData.poInHand,
             oemQuote: formData.oemQuote,
             dueDate: formData.dueDate,
-            parts: selectedParts,
-            // parts: trimmedParts,
+            // parts: selectedParts,
+            parts: trimmedParts,
         };
         try {
             const response = await axios.post(`${brokerAPI}part-cart/saveList`, payload, {
@@ -47,7 +48,6 @@ const SaveListModal = ({ onClose, selectedParts }) => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log("Mock response:", response.data);
             navigate("/bomarchive/list");
         } catch (error) {
             console.error("Mock submit failed:", error);

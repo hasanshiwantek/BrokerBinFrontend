@@ -23,28 +23,6 @@ const SavedList = () => {
     const [activeList, setActiveList] = useState(null)
     const [showExportModal, setShowExportModal] = useState(false);
 
-    // useEffect(() => {
-    //     const fetchSavedLists = async () => {
-    //         try {
-    //             const response = await axios.get(`${brokerAPI}part-cart/get-list`, {
-    //                 params: {
-    //                     name: searchInput,
-    //                     sortBy,
-    //                     sortOrder,
-    //                 },
-    //                 headers: {
-    //                     Authorization: `Bearer ${token}`,
-    //                 },
-    //             });
-
-    //             setSavedLists(response.data.data); // ✅ store response
-    //         } catch (err) {
-    //             console.error("Failed to fetch saved lists:", err);
-    //         }
-    //     };
-    //     fetchSavedLists();
-    // }, [searchInput, sortBy, sortOrder]);
-
     const fetchSavedLists = async () => {
         try {
             const response = await axios.get(`${brokerAPI}part-cart/get-list`, {
@@ -74,7 +52,6 @@ const SavedList = () => {
             setSortBy(field);
             setSortOrder("asc");
         }
-
     };
 
     const handleDeleteList = async () => {
@@ -93,36 +70,32 @@ const SavedList = () => {
             toast.success("List deleted successfully.");
             setSelectedRowId(null);
             fetchSavedLists();
-            window.location.reload();
         } catch (error) {
             console.error("❌ Failed to delete list:", error);
             toast.error("Failed to delete the list.");
         }
     };
 
-    const handlePdfExport = async () => {
+    const handlePdf = async () => {
         if (!selectedRowId) {
             alert("No list selected to export.");
             return;
         }
-        // setLoading(true);
         try {
             const response = await axios.get(`${brokerAPI}part-cart/download-saved-partlist-pdf`, {
-                params: { list_id: selectedRowId }, // assuming list_id is expected
+                params: { list_id: selectedRowId },
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
                 responseType: "blob",
             });
-
             const blob = new Blob([response.data], { type: "application/pdf" });
             const url = URL.createObjectURL(blob);
-            window.open(url); // open PDF in new tab
+            window.open(url);
         } catch (error) {
             console.error("❌ PDF export failed:", error);
             alert("Failed to export PDF.");
         } finally {
-            // setLoading(false);
         }
     };
 
@@ -258,7 +231,7 @@ const SavedList = () => {
                         </button>
                         <button
                             type="button"
-                            onClick={handlePdfExport}
+                            onClick={handlePdf}
                             className="!text-[0.98vw] !flex !justify-start !gap-8 !py-[0.6rem] !px-4 !bg-blue-500 !text-white !capitalize"
                         >
                             PDF
