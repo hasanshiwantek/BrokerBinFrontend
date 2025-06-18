@@ -202,11 +202,11 @@ const SavedList = () => {
                             <tr>
                                 <th></th>
                                 <th>%</th>
-                                <th>Name</th>
-                                <th>Date</th>
-                                <th>PO in Hand</th>
-                                <th>OEM Quote</th>
-                                <th>Due Date</th>
+                                <th onClick={() => handleSort("name")}>Name</th>
+                                <th onClick={() => handleSort("date")}>Date</th>
+                                <th onClick={() => handleSort("po_in_hand")}>PO in Hand</th>
+                                <th onClick={() => handleSort("oem_quote")}>OEM Quote</th>
+                                <th onClick={() => handleSort("due_date")}>Due Date</th>
                                 <th>Items</th>
                                 <th>Total Parts</th>
                             </tr>
