@@ -119,6 +119,11 @@ const MyVendors = () => {
   };
 
   const removeFromMyVendors = async (id) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to remove this vendor from your favorites?"
+    );
+    if (!confirmed) return;
+
     try {
       const companyId = { company_id: id };
       console.log(companyId);
@@ -130,10 +135,10 @@ const MyVendors = () => {
       if (result?.success) {
         toast.info(result?.message || "Vendor Removed From Favourites!");
       } else {
-        toast.info(result?.message || "Failed to remove contact.");
+        toast.info(result?.message || "Failed to remove vendor.");
       }
     } catch (err) {
-      toast.error("Error removing Vendor: " + err.message);
+      toast.error("Error removing vendor: " + err.message);
     }
   };
 
@@ -645,7 +650,7 @@ const MyVendors = () => {
                                   </span>
                                   <span>
                                     <p>Ship by:</p>
-                                    <p>{vendor.company.shipBy}</p>
+                                    <p>{vendor.company.shipping_deadline}</p>
                                   </span>
                                 </div>
 

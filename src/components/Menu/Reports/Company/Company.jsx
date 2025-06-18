@@ -26,9 +26,13 @@ const Company = () => {
       alert("Blank search is not allowed");
       return;
     }
+    const rawInput = formData.searchStrings || "";
     // ✅ Clean input: split by newline, trim each line, remove blanks
-
-    const searchString = formData.searchStrings.trim().split(/\s+/).join(" ");
+    const searchString = rawInput
+      .trim()
+      .split(/[\s\n]+/)
+      .filter(Boolean)
+      .join(",");
     if (!searchString) {
       alert("Please enter at least one valid part.");
       return;

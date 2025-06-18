@@ -98,6 +98,7 @@ const SearchMyContact = () => {
           onFocus={handleFocus}
           onBlur={handleBlur}
           required
+          className="p-1 "
         />
         <div className={css.compnaySearch} ref={listRef}>
           {showList && (
