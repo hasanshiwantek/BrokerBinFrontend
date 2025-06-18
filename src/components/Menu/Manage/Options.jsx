@@ -4,7 +4,10 @@ import css from "../../../styles/Menu/Manage/Options.module.css";
 import OnlyReceiveMatch from "./OnlyReceiveMatch";
 import OnlyDisplay from "./OnlyDisplay";
 import { useDispatch, useSelector } from "react-redux";
-import { setOptionFormData, submitUserOptions } from "../../../ReduxStore/ProfleSlice";
+import {
+  setOptionFormData,
+  submitUserOptions,
+} from "../../../ReduxStore/ProfleSlice";
 import { Link, NavLink } from "react-router-dom";
 import Cookies from "js-cookie";
 import Footer from "../../Footer/Footer";
@@ -13,8 +16,47 @@ const Options = () => {
   const { optionFormData } = useSelector((state) => state.profileStore);
   const dispatch = useDispatch();
 
-  // State to manage the entire form
-  // console.log(optionFormData);
+  // const initialOptionFormData = {
+  //   hourly: false,
+  //   daily: false,
+  //   my_regions_filter: [],
+  //   my_countries_filter: [],
+  //   my_states_filter: [],
+  //   regions_filter: [],
+  //   countries_filter: [],
+  //   states_filter: [],
+  //   language: "english",
+  //   sortPreferences: [
+  //     { sortBy: "", sortOrder: "ASC" },
+  //     { sortBy: "", sortOrder: "ASC" },
+  //     { sortBy: "", sortOrder: "ASC" },
+  //   ],
+  //   sortLock: "0",
+  //   multiplePartSearch: "1",
+  //   itemsPerPage: "20",
+  //   alternateRowColors: false,
+  //   showBorders: false,
+  //   showFilters: "2",
+  //   displayFiltersPosition: "2",
+  //   showDetails: false,
+  //   forceDescriptions: false,
+  //   doubleVision: false,
+  //   showHistoryGraphs: true,
+  //   preferredBrokercell: "1",
+  //   receiveRFQEmails: "1",
+  //   fontSize: "8",
+  //   extendedCompanyInfo: "1",
+  //   contactMethod: "1",
+  //   showContactInfo: "1",
+  //   receiveSiteEmails: "0",
+  //   receiveUpdates: "0",
+  //   cfilterfNEW: false,
+  //   cfilterfASIS: false,
+  // };
+
+  // const [optionFormData, setOptionFormData] = useState(initialOptionFormData);
+
+  // Handler for sorting changes
 
   // Handler for sorting changes
   const handleSortingChange = (index, field, value) => {
@@ -37,7 +79,7 @@ const Options = () => {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
-    // For checkboxes, use `checked` value, otherwise use `value`
+    // For checkboxes, use checked value, otherwise use value
     dispatch(
       setOptionFormData({
         ...optionFormData,
@@ -50,17 +92,21 @@ const Options = () => {
   const submitMyProfileOptions = (event) => {
     event.preventDefault();
     console.log("FormData:", optionFormData);
-    // You can send the `formData` to your backend here.
+    // You can send the formData to your backend here.
   };
-
   return (
     <>
       <div className={myProfile.profileLayout}>
         <form onSubmit={submitMyProfileOptions}>
-          <div className={myProfile.profileBtn}>
-            <p>my profile</p>
+          <div className={`${myProfile.profileBtn} fixed`}>
+            <h4 className="font-semibold">My Profile</h4>
+
             <span>
-              <input type="submit" value="submit changes" />
+              <input
+                type="submit"
+                value="Submit Changes"
+                className="!text-white !capitalize !font-[400]"
+              />
               <button type="button">view profile</button>
             </span>
           </div>
@@ -70,8 +116,10 @@ const Options = () => {
                 <li>
                   <NavLink
                     to="/myprofile"
-                    end  // This ensures the exact match for /myprofile
-                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                    end // This ensures the exact match for /myprofile
+                    className={({ isActive }) =>
+                      isActive ? myProfile.active : ""
+                    }
                   >
                     <span>Personal Info</span>
                   </NavLink>
@@ -79,7 +127,9 @@ const Options = () => {
                 <li>
                   <NavLink
                     to="/myprofile/Options"
-                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                    className={({ isActive }) =>
+                      isActive ? myProfile.active : ""
+                    }
                   >
                     <span>Options</span>
                   </NavLink>
@@ -87,7 +137,9 @@ const Options = () => {
                 <li>
                   <NavLink
                     to="/myprofile/MyVendors"
-                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                    className={({ isActive }) =>
+                      isActive ? myProfile.active : ""
+                    }
                   >
                     <span>My Vendors</span>
                   </NavLink>
@@ -95,7 +147,9 @@ const Options = () => {
                 <li>
                   <NavLink
                     to="/myprofile/MyContact"
-                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                    className={({ isActive }) =>
+                      isActive ? myProfile.active : ""
+                    }
                   >
                     <span>My Contacts</span>
                   </NavLink>
@@ -103,30 +157,35 @@ const Options = () => {
                 <li>
                   <NavLink
                     to="/myprofile/broadcastfilter"
-                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                    className={({ isActive }) =>
+                      isActive ? myProfile.active : ""
+                    }
                   >
                     <span>Broadcast Filters</span>
                   </NavLink>
                 </li>
               </ul>
             </div>
+
             <div className={css.options_form}>
-
-
               <div className={css.optionsBtnGroup}>
                 <div className={css.optionsBtnGroupSec}>
                   <div>
-                    <label>BroadCast</label><Link to={"/myprofile/broadcastfilter"}><button style={{ marginLeft: "25px" }}>Options and Filters</button></Link>
+                    <label>BroadCast</label>
+                    <Link to={"/myprofile/broadcastfilter"}>
+                      <button style={{ marginLeft: "25px" }}>
+                        Options and Filters
+                      </button>
+                    </Link>
                   </div>
                   <div>
-
-                    <label>Email Reports</label><Link to={"/reports/email"}><button>Options and Filters</button></Link>
+                    <label>Email Reports</label>
+                    <Link to={"/reports/email"}>
+                      <button>Options and Filters</button>
+                    </Link>
                   </div>
-
                 </div>
               </div>
-
-
 
               {/* Section: Receive Match Your Hits */}
               <div className={css.receiveMatchYourHits}>
@@ -182,6 +241,7 @@ const Options = () => {
                     </li>
 
                     {/* Sorting Preferences */}
+
                     {optionFormData.sortPreferences.map((pref, index) => (
                       <li key={index}>
                         <label htmlFor={`sortby${index + 1}`}>
@@ -196,19 +256,21 @@ const Options = () => {
                           }
                         >
                           <option value="">Select One</option>
-                          <option value="0">Age</option>
-                          <option value="1">Condition</option>
-                          <option value="2">Company</option>
-                          <option value="3">Country</option>
-                          <option value="4">Description</option>
-                          <option value="5">Manufacturer</option>
-                          <option value="6">My Region</option>
-                          <option value="7">My Vendors</option>
-                          <option value="8">Part / Model</option>
-                          <option value="9">Price</option>
-                          <option value="10">Quantity</option>
-                          <option value="11">Region</option>
-                          <option value="12">Shield of Quality</option>
+                          <option value="age">Age</option>
+                          <option value="condition">Condition</option>
+                          <option value="company">Company</option>
+                          <option value="country">Country</option>
+                          <option value="description">Description</option>
+                          <option value="manufacturer">Manufacturer</option>
+                          <option value="my_region">My Region</option>
+                          <option value="my_vendors">My Vendors</option>
+                          <option value="part_model">Part / Model</option>
+                          <option value="price">Price</option>
+                          <option value="quantity">Quantity</option>
+                          <option value="region">Region</option>
+                          <option value="shield_quality">
+                            Shield of Quality
+                          </option>
                         </select>
                         <select
                           name={`sortord${index + 1}`}
@@ -386,26 +448,40 @@ const Options = () => {
                 <div className={css.preferredBrokerbinUse_fields}>
                   <ul className="checkbox">
                     <li>
-                      <label htmlFor="teleRadio">Telecom</label>
-                      <input
-                        type="radio"
-                        name="preferredBrokerBin"
-                        id="teleRadio"
-                        value="1"
-                        checked={optionFormData.preferredBrokerBin === "1"}
-                        onChange={handleChange}
-                      />
+                      <label
+                        htmlFor="teleRadio"
+                        className="flex items-center gap-2 cursor-pointer"
+                      >
+                        <input
+                          type="radio"
+                          name="preferredBrokercell"
+                          id="teleRadio"
+                          value="Telecom"
+                          checked={
+                            optionFormData.preferredBrokercell === "Telecom"
+                          }
+                          onChange={handleChange}
+                        />
+                        Telecom
+                      </label>
                     </li>
                     <li>
-                      <label htmlFor="compRadio">Computer</label>
-                      <input
-                        type="radio"
-                        name="preferredBrokerBin"
-                        id="compRadio"
-                        value="2"
-                        checked={optionFormData.preferredBrokerBin === "2"}
-                        onChange={handleChange}
-                      />
+                      <label
+                        htmlFor="compRadio"
+                        className="flex items-center gap-2 cursor-pointer"
+                      >
+                        <input
+                          type="radio"
+                          name="preferredBrokercell"
+                          id="compRadio"
+                          value="Computer"
+                          checked={
+                            optionFormData.preferredBrokercell === "Computer"
+                          }
+                          onChange={handleChange}
+                        />
+                        Computer
+                      </label>
                     </li>
                   </ul>
                 </div>
@@ -564,7 +640,7 @@ const Options = () => {
                       </select>
                     </li>
 
-                    <li>
+                    <li className="!flex !justify-center !items-center !-ml-[25rem]">
                       <label htmlFor="security">Access Level</label>
                       <input
                         type="hidden"
@@ -580,28 +656,16 @@ const Options = () => {
 
               <div className={css.btnGroup}>
                 <div className={css.btnGroupSec}>
-                  <button >Reset</button>
-                  <button >Submit Changes</button>
+                  <button>Reset</button>
+                  <button>Submit Changes</button>
                 </div>
               </div>
-
-
-
             </div>
           </div>
         </form>
       </div>
-
-
-
     </>
   );
 };
 
 export default Options;
-
-
-
-
-
-

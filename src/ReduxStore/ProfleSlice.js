@@ -487,7 +487,7 @@ export const createUser = createAsyncThunk(
       return rejectWithValue(err);
     }
   }
-); 
+);
 
 const initialState = {
   user: JSON.parse(localStorage.getItem("user")),
@@ -551,7 +551,7 @@ const initialState = {
     forceDescriptions: false,
     doubleVision: false,
     showHistoryGraphs: true,
-    preferredBrokerBin: "1",
+    preferredBrokercell: "",
     receiveRFQEmails: "1",
     fontSize: "8",
     extendedCompanyInfo: "1",
