@@ -198,7 +198,7 @@ const ProductTableDetail = React.memo(
           : column === "price" ? "asc" : "desc";
       const payload = {
         token,
-        page: 1,
+        page: currentPage,
         sortBy: column,
         sortOrder: newSortOrder,
         filters: appliedFilters || {},
@@ -210,7 +210,7 @@ const ProductTableDetail = React.memo(
       }
       queryParams.set("sortBy", column);
       queryParams.set("sortOrder", newSortOrder);
-      queryParams.set("page", 1);
+      queryParams.set("page", currentPage);
       navigate(`${location.pathname}?${queryParams.toString()}`, {
         replace: true,
       });
