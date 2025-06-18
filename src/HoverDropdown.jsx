@@ -1,27 +1,57 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import Cookies from "js-cookie";
+import { addMyVendors, showFirstVendor, neverShowVendor } from "./ReduxStore/ToolsSlice";
 
 const HoverDropdown = ({ type, id, triggerElement }) => {
   const [show, setShow] = useState(false);
   const [options, setOptions] = useState([]);
 
+  const dispatch = useDispatch();
+  const token = Cookies.get("token")
+
   useEffect(() => {
     if (!type || !id) return;
-
     if (type === "company") {
       setOptions([
-        { label: "Add My Vendors", action: () => openCompanyProfile(id) },
-        { label: "Show First", action: () => openCompanyProfile(id) },
-        { label: "Show Never", action: () => apiWatchCompany(id) },
+        { label: "Add My Vendors", key: "addToMyVendors"},
+        { label: "Show First", key: "showFirst"},
+        { label: "Show Never", key: "neverShow"},
       ]);
     } else if (type === "part") {
       setOptions([
-        { label: "Part Number", action: () => apiAddVendors(id) },
-        { label: "Supply & demand", action: () => apiShowFirst(id) },
-        { label: "Add to Hotlist", action: () => apiWatchPart(id) },
-        { label: "Broadcast", action: () => apiShowNever(id) },
+        { label: "Part Number", key: "partModel" },
+        { label: "Supply & demand", key: "supplyDemand" },
+        { label: "Add to Hotlist", key: "addToHotlist" },
+        { label: "Broadcast", key: "broadcast" },
       ]);
     }
   }, [type, id]);
+
+  const handleAction = (actionKey) => {
+   if (type === "company") {
+    const payload = { company_id: id, token };
+
+    if (actionKey === "addToMyVendors") {
+      dispatch(addMyVendors({ companyId: { company_id: id }, token }));
+    }
+
+    if (actionKey === "showFirst") {
+      dispatch(showFirstVendor({ ...payload, show_first: 1 }));
+    }
+
+    if (actionKey === "neverShow") {
+      dispatch(neverShowVendor({ ...payload, never_show: 1 }));
+    }
+  }
+  if (type === "part") {
+    if (actionKey === "partModel") dispatch(fetchPartNumberDetails(id));
+    if (actionKey === "supplyDemand") dispatch(fetchSupplyDemand(id));
+    if (actionKey === "addToHotlist") dispatch(addToHotlist(id));
+    if (actionKey === "broadcast") dispatch(sendBroadcast(id));
+  }
+
+};
 
   return (
     <div
@@ -38,7 +68,7 @@ const HoverDropdown = ({ type, id, triggerElement }) => {
               key={i}
               onClick={(e) => {
                 e.stopPropagation();
-                opt.action();
+                handleAction(opt.key);
                 setShow(false);
               }}
               className="px-4 py-1 text-[10px] text-gray-700 hover:bg-gray-100 cursor-pointer"
@@ -51,14 +81,4 @@ const HoverDropdown = ({ type, id, triggerElement }) => {
     </div>
   );
 };
-
 export default HoverDropdown;
-
-// Dummy API actions
-const openCompanyProfile = (id) => alert(`Open profile of company ${id}`);
-const apiWatchCompany = (id) => alert(`Watch company ${id}`);
-const apiBlockCompany = (id) => alert(`Block company ${id}`);
-const apiAddVendors = (id) => alert(`Add vendors for part ${id}`);
-const apiShowFirst = (id) => alert(`Show part ${id} first`);
-const apiWatchPart = (id) => alert(`Watch part ${id}`);
-const apiShowNever = (id) => alert(`Show part ${id} never`);

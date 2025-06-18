@@ -71,7 +71,7 @@ const SearchMyContact = () => {
     // dispatch(setMyVendor(company));
     const companyId = { company_id: company.id };
     dispatch(addMyVendors({ companyId, token }));
-    setSearchTerm(company.name); // Optionally, set the search input to the selected company's name
+    setSearchTerm(company.name);
     setShowList(false);
   };
 

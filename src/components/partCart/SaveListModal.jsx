@@ -23,8 +23,10 @@ const SaveListModal = ({ onClose, selectedParts }) => {
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
+
+  console.log("SelectedPARTs", selectedParts)
   const trimmedParts = selectedParts.map((p) => ({
-    id: p.id,
+    // id: p.id,
     partModel: p.inventory?.partModel,
     mfg: p.inventory?.mfg,
     cond: p.inventory?.cond,
@@ -34,11 +36,13 @@ const SaveListModal = ({ onClose, selectedParts }) => {
   }));
 
   const handleSubmit = async () => {
+    const partCartId = selectedParts[0]?.id;
     const payload = {
       name: formData.name,
       poInHand: formData.poInHand,
       oemQuote: formData.oemQuote,
       dueDate: formData.dueDate,
+      part_cart_id: partCartId,
       //   parts: selectedParts,
       parts: trimmedParts,
     };
