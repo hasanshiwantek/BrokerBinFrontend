@@ -45,10 +45,10 @@ const HoverDropdown = ({ type, id, triggerElement }) => {
     }
   }
   if (type === "part") {
-    if (actionKey === "partModel") dispatch(fetchPartNumberDetails(id));
-    if (actionKey === "supplyDemand") dispatch(fetchSupplyDemand(id));
-    if (actionKey === "addToHotlist") dispatch(addToHotlist(id));
-    if (actionKey === "broadcast") dispatch(sendBroadcast(id));
+    if (actionKey === "partModel") dispatch();
+    if (actionKey === "supplyDemand") dispatch();
+    if (actionKey === "addToHotlist") dispatch();
+    if (actionKey === "broadcast") dispatch();
   }
 
 };
