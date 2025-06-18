@@ -2,8 +2,12 @@ import { memo, useEffect, useState, useRef } from "react";
 import React from "react";
 import css from "../styles/Header.module.css";
 import logo from "../imgs/logo/BrokerCell Logo.svg";
-import { BsCartFill, BsToggleOff, BsToggleOn, } from "react-icons/bs";
-import { setAppliedFilters, setHoverCompanyDetail, setSearchPartType, } from "../ReduxStore/SearchProductSlice";
+import { BsCartFill, BsToggleOff, BsToggleOn } from "react-icons/bs";
+import {
+  setAppliedFilters,
+  setHoverCompanyDetail,
+  setSearchPartType,
+} from "../ReduxStore/SearchProductSlice";
 import { FiTarget } from "react-icons/fi";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
@@ -11,10 +15,14 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
-import { setMobileNavToggle, setDropdownOpen, setToolToggle, } from "../ReduxStore/HomeSlice";
+import {
+  setMobileNavToggle,
+  setDropdownOpen,
+  setToolToggle,
+} from "../ReduxStore/HomeSlice";
 import { clearUserDetails } from "../ReduxStore/UserSlice";
 import { resetProfileState } from "../ReduxStore/ProfleSlice";
-import { setSelectedProducts, } from "../ReduxStore/SearchProductSlice";
+import { setSelectedProducts } from "../ReduxStore/SearchProductSlice";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import vendorIcon from "../assets/My-Vendors Icon.svg";
@@ -27,7 +35,10 @@ import reportsIcon from "../assets/reportsIcon.svg";
 import broadcastHistoryIcon from "../assets/ICON 6.svg";
 import EmailIcon from "../assets/Email Icon.svg";
 import { FaTools, FaSignOutAlt } from "react-icons/fa";
-import { setPopupCompanyDetail, setTogglePopUp, } from "../ReduxStore/SearchProductSlice";
+import {
+  setPopupCompanyDetail,
+  setTogglePopUp,
+} from "../ReduxStore/SearchProductSlice";
 import { FaRegAddressCard } from "react-icons/fa";
 import { resetSearchFocus } from "@/ReduxStore/focusSlice";
 
@@ -91,7 +102,7 @@ const Header = () => {
 
   useEffect(() => {
     return () => {
-      dispatch(setHoverCompanyDetail(null)); 
+      dispatch(setHoverCompanyDetail(null));
     };
   }, [location, dispatch]);
 
@@ -131,7 +142,6 @@ const Header = () => {
 
   return (
     <div className="h-[9rem]">
-
       <div className={`${css.headerFixed} ${css.noPrint}`}>
         <header className={css.header}>
           <Link to={"/"} id={css.logo}>
@@ -213,9 +223,7 @@ const Header = () => {
         <nav className={css.nav}>
           <ul className={css.nav_links}>
             <li className={css.nav_links_Hamburger}>
-              <GiHamburgerMenu
-                onClick={() => dispatch(setMobileNavToggle())}
-              />
+              <GiHamburgerMenu onClick={() => dispatch(setMobileNavToggle())} />
 
               {mobileNavToggle && (
                 <div className={css.nav_Mobile_bg}>
@@ -683,11 +691,17 @@ const Header = () => {
                 {/* <li>
                   <BsFillTelephonePlusFill />
                 </li> */}
-                <li>
-                  <Link to={"/cartpart"}>
-                    <BsCartFill />
-                  </Link>
-                </li>
+
+                <ThemeProvider theme={theme}>
+                  <Tooltip title="Part Cart" arrow placement="bottom">
+                    <li>
+                      <Link to={"/cartpart"}>
+                        <BsCartFill />
+                      </Link>
+                    </li>
+                  </Tooltip>
+                </ThemeProvider>
+
                 {/* <li >
                   <Link to={"/venprice"}>
                     <BsDatabaseFill />
