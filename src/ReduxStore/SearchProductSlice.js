@@ -174,30 +174,6 @@ export const getCompanyContact = createAsyncThunk(
   }
 );
 
-// export const applyFilters = (filters) => (dispatch, getState) => {
-//   const { searchResponseMatched, page, pageSize } = getState().searchProductStore;
-//   const filteredData = {};
-
-//   Object.entries(searchResponseMatched).forEach(([partModel, details]) => {
-//     const currentPageData = details.data.slice((page - 1) * pageSize, page * pageSize);
-//     const filteredPartData = currentPageData.filter((item) => {
-//       return Object.entries(filters).every(([key, values]) =>
-//         values.includes(item[key]?.toString())
-//       );
-//     });
-
-//     if (filteredPartData.length > 0) {
-//       filteredData[partModel] = {
-//         ...details,
-//         data: filteredPartData,
-//       };
-//     }
-//   });
-//   console.log("Filtered Data:", filteredData);
-//   dispatch(setFilteredSearchResponse(filteredData)); // Update Redux state
-//   console.log("Filtered Data:", filteredData);
-// };
-
 export const deleteCompanyContact = createAsyncThunk(
   "toolsStore/deleteCompanyContact",
   async ({ token, ids }) => {
@@ -342,6 +318,7 @@ export const clearCartItems = createAsyncThunk(
     }
   }
 );
+
 export const deleteCartItem = createAsyncThunk(
   "toolsStore/deleteCartItem",
   async ({ token, ids }) => {

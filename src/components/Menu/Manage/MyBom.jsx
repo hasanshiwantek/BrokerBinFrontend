@@ -12,6 +12,7 @@ import SavedListExportModal from "@/components/partCart/SavedListExportModal";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+
 const SavedList = () => {
   const { togglePopUp } = useSelector((store) => store.searchProductStore);
   const dispatch = useDispatch();
@@ -113,7 +114,6 @@ const SavedList = () => {
           responseType: "blob",
         }
       );
-
       const blob = new Blob([response.data], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
       window.open(url); // open PDF in new tab

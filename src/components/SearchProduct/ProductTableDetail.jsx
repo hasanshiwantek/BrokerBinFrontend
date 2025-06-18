@@ -9,6 +9,7 @@ import { FaEye } from "react-icons/fa";
 import { BiBlock } from "react-icons/bi";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { searchProductQuery, searchByKeyword } from "@/ReduxStore/SearchProductSlice";
+import HoverDropdown from "@/HoverDropdown";
 import { setSelectedProducts, setTogglePopUp, setPopupCompanyDetail, setHoverCompanyDetail, } from "@/ReduxStore/SearchProductSlice";
 
 const ProductTableDetail = React.memo(
@@ -322,20 +323,23 @@ const ProductTableDetail = React.memo(
                       </td>
                       <td></td>
                       <td>
-                        <a
-                          style={{ color: "#428bca", fontWeight: "500" }}
-                          onClick={(event) =>
-                            handleShowPopupCompanyDetails(
-                              event,
-                              e?.addedBy?.company?.id
-                            )
-                          }
-                          onMouseEnter={(event) =>
-                            handleHoverCompanyDetail(event, e.id)
-                          }
-                        >
-                          {e?.addedBy?.company?.name}
-                        </a>
+                        <HoverDropdown type="company" id={e?.addedBy?.company?.id} triggerElement={
+                          <a
+                            style={{ color: "#428bca", fontWeight: "500" }}
+                            onClick={(event) =>
+                              handleShowPopupCompanyDetails(
+                                event,
+                                e?.addedBy?.company?.id
+                              )
+                            }
+                            onMouseEnter={(event) =>
+                              handleHoverCompanyDetail(event, e.id)
+                            }
+                          >
+                            {e?.addedBy?.company?.name}
+                          </a>
+                        }
+                        />
                       </td>
                       <td>
                         <FaEye />
@@ -349,7 +353,13 @@ const ProductTableDetail = React.memo(
                           e?.addedBy?.company?.country ||
                           "N/A"}
                       </td>
-                      <td>{e?.partModel}</td>
+                      <td className="cursor-pointer">
+                        <HoverDropdown
+                          type="part"
+                          id={e?.id}
+                          triggerElement={<td >{e?.partModel}</td>}
+                        />
+                      </td>
                       <td>
                         <img
                           src="https://static.brokerbin.com/version/v8.3.2/images/nohistory_icon.png"
