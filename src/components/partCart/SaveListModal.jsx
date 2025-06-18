@@ -23,6 +23,15 @@ const SaveListModal = ({ onClose, selectedParts }) => {
         setFormData((prev) => ({ ...prev, [field]: value }));
     };
 
+    // const trimmedParts = selectedParts.map(p => ({
+    //     id: p.id,
+    //     partModel: p.inventory?.partModel,
+    //     mfg: p.inventory?.mfg,
+    //     cond: p.inventory?.cond,
+    //     quantity: p.inventory?.quantity,
+    //     price: p.inventory?.price,
+    // }));
+
     const handleSubmit = async () => {
         const payload = {
             name: formData.name,
@@ -30,6 +39,7 @@ const SaveListModal = ({ onClose, selectedParts }) => {
             oemQuote: formData.oemQuote,
             dueDate: formData.dueDate,
             parts: selectedParts,
+            // parts: trimmedParts,
         };
         try {
             const response = await axios.post(`${brokerAPI}part-cart/saveList`, payload, {
