@@ -256,7 +256,7 @@ const Cart = () => {
           alert("No valid part numbers found.");
         } else {
           const searchString = partModels.join(",");
-          const url = `/inventory/search?page=1&partModel=${encodeURIComponent(
+          const url = `/inventory/search?page=1&query=${encodeURIComponent(
             searchString
           )}`;
           navigate(url, { replace: true });
