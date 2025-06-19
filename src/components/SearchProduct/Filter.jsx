@@ -79,6 +79,13 @@ const Filter = ({ currentQuery }) => {
   }
 };
 
+const handleSearchFromHistory = (partModel) => {
+  dispatch(setAppliedFilters({})); // Optional: clear filters for fresh search
+  navigate(`/inventory/search?page=1&query=${encodeURIComponent(partModel)}`, {
+    replace: true,
+  });
+};
+
 useEffect(() => {
   if (appliedFilters && Object.keys(appliedFilters).length > 0) {
     setFilters(appliedFilters);
@@ -284,7 +291,10 @@ const {
 
               return (
                 <div key={e.id} className={css.querySec}>
-                  <span>{e.query}</span>
+                  <span 
+                  className="cursor-pointer"
+                  onClick={() => handleSearchFromHistory(e.query)}
+                  >{e.query}</span>
                   {isToday && <span>today</span>}
                   {!isToday && <span>{notToday} days ago</span>}
                 </div>
