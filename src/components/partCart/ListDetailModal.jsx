@@ -24,19 +24,17 @@ const ListDetailModal = ({ list, onClose }) => {
                                     Mfg: {part.mfg}
                                     <div className="text-green-600 text-xs mt-1">
                                         {part.rfq_sent || ""}
-                                        {part.notes.map((n)=> n.note || "")}
+                                       <p> Notes: {part.notes.map((n) => n.note || "")}</p>
                                     </div>
                                 </div>
                                 <div>Cond: <span className="uppercase">{part.cond}</span></div>
-                                <div>Req Qty: {part.notes.map((i) => i?.quantity) || 0}</div>
+                                <div>Req Qty: {part.notes.map((q) => q?.quantity) || 0}</div>
                                 <div>Tot Qty: {part.quantity || 0}</div>
                                 <div>Filtered Qty: {part.filtered_quantity || 0}</div>
                             </div>
                         </div>
                     ))}
                 </div>
-
-
             </div>
         </div>
     );
