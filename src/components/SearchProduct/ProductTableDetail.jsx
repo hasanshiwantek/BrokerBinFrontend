@@ -358,6 +358,7 @@ const ProductTableDetail = React.memo(
                           type="part"
                           id={e?.id}
                           triggerElement={<td >{e?.partModel}</td>}
+                          partModel={e?.partModel}
                         />
                       </td>
                       <td>

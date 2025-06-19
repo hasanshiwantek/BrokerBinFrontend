@@ -1,22 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
-import { addMyVendors, showFirstVendor, neverShowVendor } from "./ReduxStore/ToolsSlice";
-
-const HoverDropdown = ({ type, id, triggerElement }) => {
+import {
+  addMyVendors,
+  showFirstVendor,
+  neverShowVendor,
+} from "./ReduxStore/ToolsSlice";
+import { useLocation, useNavigate } from "react-router-dom";
+const HoverDropdown = ({ type, id, triggerElement, partModel }) => {
   const [show, setShow] = useState(false);
   const [options, setOptions] = useState([]);
+  const navigate = useNavigate();
+  console.log();
 
   const dispatch = useDispatch();
-  const token = Cookies.get("token")
+  const token = Cookies.get("token");
 
   useEffect(() => {
     if (!type || !id) return;
     if (type === "company") {
       setOptions([
-        { label: "Add My Vendors", key: "addToMyVendors"},
-        { label: "Show First", key: "showFirst"},
-        { label: "Show Never", key: "neverShow"},
+        { label: "Add My Vendors", key: "addToMyVendors" },
+        { label: "Show First", key: "showFirst" },
+        { label: "Show Never", key: "neverShow" },
       ]);
     } else if (type === "part") {
       setOptions([
@@ -29,29 +35,33 @@ const HoverDropdown = ({ type, id, triggerElement }) => {
   }, [type, id]);
 
   const handleAction = (actionKey) => {
-   if (type === "company") {
-    const payload = { company_id: id, token };
+    if (type === "company") {
+      const payload = { company_id: id, token };
 
-    if (actionKey === "addToMyVendors") {
-      dispatch(addMyVendors({ companyId: { company_id: id }, token }));
+      if (actionKey === "addToMyVendors") {
+        dispatch(addMyVendors({ companyId: { company_id: id }, token }));
+      }
+
+      if (actionKey === "showFirst") {
+        dispatch(showFirstVendor({ ...payload, show_first: 1 }));
+      }
+
+      if (actionKey === "neverShow") {
+        dispatch(neverShowVendor({ ...payload, never_show: 1 }));
+      }
     }
+    if (type === "part") {
+      if (actionKey === "partModel") {
+        navigate(`/inventory/search?page=1&query=${partModel}`, {
+          replace: true,
+        });
+      }
 
-    if (actionKey === "showFirst") {
-      dispatch(showFirstVendor({ ...payload, show_first: 1 }));
+      if (actionKey === "supplyDemand") dispatch();
+      if (actionKey === "addToHotlist") dispatch();
+      if (actionKey === "broadcast") dispatch();
     }
-
-    if (actionKey === "neverShow") {
-      dispatch(neverShowVendor({ ...payload, never_show: 1 }));
-    }
-  }
-  if (type === "part") {
-    if (actionKey === "partModel") dispatch();
-    if (actionKey === "supplyDemand") dispatch();
-    if (actionKey === "addToHotlist") dispatch();
-    if (actionKey === "broadcast") dispatch();
-  }
-
-};
+  };
 
   return (
     <div

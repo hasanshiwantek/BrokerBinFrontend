@@ -1,6 +1,8 @@
 import React from "react";
 
 const ListDetailModal = ({ list, onClose }) => {
+    console.log("List: ",list);
+    
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 ">
             <div className="bg-white w-[52vw] h-[70vh] rounded shadow-lg p-10 relative ">
