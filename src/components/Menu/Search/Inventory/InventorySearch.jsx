@@ -7,7 +7,7 @@ import { inventorySearch } from "../../../../ReduxStore/InventorySlice";
 import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
 import { countriesList, regionsList } from "../../../../data/services";
-
+import CommonCompanySearch from "./CommonCompanySearch";
 const InventorySearch = () => {
   const [buttonText, setButtonText] = useState("Submit");
   const [loading, setLoading] = useState(false);
@@ -196,7 +196,7 @@ const InventorySearch = () => {
           </div>
 
           <div className={styles.formRow}>
-            <CompanySearch setFormData={setFormData} formData={formData} />
+            <CommonCompanySearch setFormData={setFormData} formData={formData} />
           </div>
 
           <div className={styles.formRow}>
@@ -237,7 +237,7 @@ const InventorySearch = () => {
               name="shipDeadline"
               value={formData.shipDeadline}
               onChange={handleChange}
-              className="!w-52"
+              className="!w-36"
             >
               <option value="">Open</option>
               {[...Array(12)].map((_, i) => (
@@ -250,7 +250,7 @@ const InventorySearch = () => {
               name="deadlinePeriod"
               value={formData.deadlinePeriod}
               onChange={handleChange}
-              className="!w-52"
+              className="!w-36"
             >
               <option value="PM">PM</option>
               <option value="AM">AM</option>
