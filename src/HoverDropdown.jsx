@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
-import {
-  addMyVendors,
-  showFirstVendor,
-  neverShowVendor,
-} from "./ReduxStore/ToolsSlice";
-import { useLocation, useNavigate } from "react-router-dom";
-const HoverDropdown = ({ type, id, triggerElement, partModel }) => {
+import { addMyVendors, showFirstVendor, neverShowVendor } from "./ReduxStore/ToolsSlice";
+import { replace, useNavigate } from "react-router-dom";
+import { getSupplyAndDemand } from "./ReduxStore/Reports";
+
+const HoverDropdown = ({ type, id, triggerElement, partModel, company }) => {
   const [show, setShow] = useState(false);
   const [options, setOptions] = useState([]);
   const navigate = useNavigate();
   console.log();
 
   const dispatch = useDispatch();
-  const token = Cookies.get("token");
+  const token = Cookies.get("token")
 
   useEffect(() => {
     if (!type || !id) return;
@@ -40,24 +38,25 @@ const HoverDropdown = ({ type, id, triggerElement, partModel }) => {
 
       if (actionKey === "addToMyVendors") {
         dispatch(addMyVendors({ companyId: { company_id: id }, token }));
+        navigate("/myprofile/MyVendors", {replace: true})
       }
-
       if (actionKey === "showFirst") {
         dispatch(showFirstVendor({ ...payload, show_first: 1 }));
+        navigate("/myprofile/MyVendors", {replace: true})
       }
 
       if (actionKey === "neverShow") {
         dispatch(neverShowVendor({ ...payload, never_show: 1 }));
+        navigate("/myprofile/MyVendors", {replace: true})
       }
     }
     if (type === "part") {
       if (actionKey === "partModel") {
-        navigate(`/inventory/search?page=1&query=${partModel}`, {
-          replace: true,
-        });
+        navigate(`/inventory/search?partModel=${partModel}`, { replace: true });
       }
-
-      if (actionKey === "supplyDemand") dispatch();
+      if (actionKey === "supplyDemand") {
+        navigate(`/reports/supplyanddemand?query=${partModel}`, { replace: true });
+      }
       if (actionKey === "addToHotlist") dispatch();
       if (actionKey === "broadcast") dispatch();
     }

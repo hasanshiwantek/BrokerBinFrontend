@@ -323,7 +323,7 @@ const ProductTableDetail = React.memo(
                       </td>
                       <td></td>
                       <td>
-                        <HoverDropdown type="company" id={e?.addedBy?.company?.id} triggerElement={
+                        <HoverDropdown type="company" id={e?.addedBy?.company?.id} company={e?.addedBy?.company} triggerElement={
                           <a
                             style={{ color: "#428bca", fontWeight: "500" }}
                             onClick={(event) =>
