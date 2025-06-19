@@ -210,8 +210,8 @@ const SavedList = () => {
                       <input
                         type="radio"
                         name="savedListRadio"
-                        checked={selectedRowId === list.parts?.inventory_id}
-                        onChange={() => setSelectedRowId(list.parts?.inventory_id)}
+                        checked={selectedRowId === list.listId}
+                        onChange={() => setSelectedRowId(list.listId)}
                       />
                     </td>
                     <td></td>
@@ -266,7 +266,7 @@ const SavedList = () => {
             </button>
             <button
               type="button"
-              onClick={""}
+              // onClick={""}
               className="!text-[0.98vw] !flex !justify-start !gap-8 !py-[0.6rem] !px-4 !bg-blue-500 !text-white !capitalize"
             >
               ReRun BOM

@@ -35,8 +35,6 @@ const ListDetailModal = ({ list, onClose }) => {
                         </div>
                     ))}
                 </div>
-
-
             </div>
         </div>
     );
