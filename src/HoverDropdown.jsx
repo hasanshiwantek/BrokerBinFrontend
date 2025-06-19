@@ -48,7 +48,7 @@ const HoverDropdown = ({
       ]);
     }
   }, [type, id]);
-
+  
   const handleAction = (actionKey) => {
     if (type === "company") {
       const payload = { company_id: id, token };

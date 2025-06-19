@@ -365,8 +365,8 @@ const ProductTableDetail = React.memo(
                         <HoverDropdown
                           type="part"
                           id={e?.id}
-                          triggerElement={<td >{e?.partModel}</td>}
                           rowData={e}
+                          triggerElement={<td >{e?.partModel}</td>}
                         />
                       </td>
 
