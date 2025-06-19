@@ -42,7 +42,7 @@ const SaveListModal = ({ onClose, selectedParts }) => {
       poInHand: formData.poInHand,
       oemQuote: formData.oemQuote,
       dueDate: formData.dueDate,
-      part_cart_id: partCartIds,
+      part_cart_ids: partCartIds,
       //   parts: selectedParts,
       parts: trimmedParts,
     };

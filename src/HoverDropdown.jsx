@@ -5,14 +5,15 @@ import { addMyVendors, showFirstVendor, neverShowVendor } from "./ReduxStore/Too
 import { replace, useNavigate } from "react-router-dom";
 import { getSupplyAndDemand } from "./ReduxStore/Reports";
 
-const HoverDropdown = ({ type, id, triggerElement, partModel, company }) => {
+const HoverDropdown = ({ type, id, triggerElement, partModel, company, rowData }) => {
   const [show, setShow] = useState(false);
   const [options, setOptions] = useState([]);
 
   const dispatch = useDispatch();
   const token = Cookies.get("token")
   const navigate = useNavigate();
-
+  console.log("rowData", rowData);
+  
   useEffect(() => {
     if (!type || !id) return;
     if (type === "company") {
@@ -30,7 +31,7 @@ const HoverDropdown = ({ type, id, triggerElement, partModel, company }) => {
       ]);
     }
   }, [type, id]);
-
+  
   const handleAction = (actionKey) => {
     if (type === "company") {
       const payload = { company_id: id, token };
