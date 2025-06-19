@@ -5,7 +5,7 @@ import {
   addMyVendors,
   showFirstVendor,
   neverShowVendor,
-  addHotListItem
+  addHotListItem,
 } from "./ReduxStore/ToolsSlice";
 import { replace, useNavigate } from "react-router-dom";
 import { getSupplyAndDemand } from "./ReduxStore/Reports";
@@ -13,23 +13,14 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 
-
-const HoverDropdown = ({
-  type,
-  id,
-  triggerElement,
-  company,
-  rowData
-}) => {
+const HoverDropdown = ({ type, id, triggerElement, company, rowData }) => {
   const [show, setShow] = useState(false);
   const [options, setOptions] = useState([]);
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
   const token = Cookies.get("token");
-  console.log("Selected Row Data: ",rowData);
-  
-  
+  console.log("Selected Row Data: ", rowData);
 
   useEffect(() => {
     if (!type || !id) return;
@@ -44,60 +35,74 @@ const HoverDropdown = ({
         { label: "Part Number", key: "partModel" },
         { label: "Supply & demand", key: "supplyDemand" },
         { label: "Add to Hotlist", key: "addToHotlist" },
-        { label: "Broadcast", key: "broadcast" },
+        // { label: "Broadcast", key: "broadcast" },
       ]);
     }
   }, [type, id]);
-  
+
   const handleAction = (actionKey) => {
     if (type === "company") {
       const payload = { company_id: id, token };
 
       if (actionKey === "addToMyVendors") {
-        const confirm=window.confirm("Update Vendor Status? ")
-        if(!confirm){
+        const confirm = window.confirm("Update Vendor Status? ");
+        if (!confirm) {
           return;
-        }else{
+        } else {
           dispatch(addMyVendors({ companyId: { company_id: id }, token }));
-          window.location.reload()
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
         }
-
-        navigate("/myprofile/MyVendors", { replace: true });
-
       }
       if (actionKey === "showFirst") {
-        dispatch(showFirstVendor({ ...payload, show_first: 1 }));
-        navigate("/myprofile/MyVendors", { replace: true });
+        const confirm = window.confirm("Update Vendor Status? ");
+        if (!confirm) {
+          return;
+        } else {
+          dispatch(showFirstVendor({ ...payload, show_first: 1 }));
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        }
       }
 
       if (actionKey === "neverShow") {
-        dispatch(neverShowVendor({ ...payload, never_show: 1 }));
-        navigate("/myprofile/MyVendors", { replace: true });
+        const confirm = window.confirm("Update Vendor Status? ");
+        if (!confirm) {
+          return;
+        } else {
+          dispatch(neverShowVendor({ ...payload, never_show: 1 }));
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        }
       }
     }
     if (type === "part") {
       if (actionKey === "partModel") {
-        navigate(`/inventory/search?partModel=${rowData?.partModel}`, { replace: true });
+        navigate(`/inventory/search?partModel=${rowData?.partModel}`, {
+          replace: true,
+        });
       }
       if (actionKey === "supplyDemand") {
         navigate(`/reports/supplyanddemand?query=${rowData?.partModel}`, {
           replace: true,
         });
       }
-      if (actionKey === "addToHotlist"){
-        const hotlistPayload=[{
-          partModel: rowData?.partModel,
-          cond: rowData?.cond,
-          heciClei: rowData?.heciClei,
-          description: rowData?.productDescription,
-          mfg: rowData?.mfg
-        }]
-          dispatch(addHotListItem({ hotlists: hotlistPayload, token }))
-          setTimeout(()=>
-            
-            navigate("/hotlist/view"),1000)
-
-      };
+      if (actionKey === "addToHotlist") {
+        const hotlistPayload = [
+          {
+            partModel: rowData?.partModel,
+            cond: rowData?.cond,
+            heciClei: rowData?.heciClei,
+            productDescription: rowData?.productDescription,
+            mfg: rowData?.mfg,
+          },
+        ];
+        dispatch(addHotListItem({ hotlists: hotlistPayload, token }));
+        setTimeout(() => navigate("/hotlist/view"), 1000);
+      }
       if (actionKey === "broadcast") dispatch();
     }
   };
@@ -132,8 +137,7 @@ const HoverDropdown = ({
           </div>
         </div>
       )}
-            <ToastContainer position="top-center" autoClose={2000} />
-      
+      <ToastContainer position="top-center" autoClose={2000} />
     </div>
   );
 };
