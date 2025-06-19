@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import css from "./Send.module.css";
 import ToggleCategories from "./Field Components/ToggleCategories";
 import ToggleFilters from "./Field Components/ToggleFilters";
@@ -17,11 +17,16 @@ import { MdModeEditOutline } from "react-icons/md";
 import { RiNumber2 } from "react-icons/ri";
 import { RiNumber3 } from "react-icons/ri";
 import { FaCheck } from "react-icons/fa6";
+import { useSearchParams } from "react-router-dom";
+
+
 
 const BroadcastForm = () => {
   const token = Cookies.get("token");
   const { user } = JSON.parse(localStorage.getItem("user"));
   const service = useSelector((state) => state.broadcastStore.serviceData);
+  const [params] = useSearchParams();
+
   // console.log(service);
 
   // console.log(user);
@@ -260,6 +265,31 @@ const BroadcastForm = () => {
 
     console.log("Token:", token);
   };
+
+  useEffect(() => {
+  const type = params.get("type");
+  const category = params.get("category");
+  const prefill = {
+    partModel: params.get("partModel") || "",
+    mfg: params.get("mfg") || "",
+    cond: params.get("cond") || "",
+    heciClei: params.get("heciClei") || "",
+    price: params.get("price") || "",
+    quantity: params.get("quantity") || "",
+    description: params.get("description") || "",
+  };
+  if (type && category) {
+    setBroadcastType(type);
+    setCategory(category);
+    setFormData((prev) => ({ ...prev, ...prefill }));
+    setFormTypes((prev) => ({
+      ...prev,
+      [type]: true,
+      hideFormOne: false
+    }));
+  }
+}, []);
+
 
   return (
     <div className={css.outerPadding}>
@@ -629,9 +659,6 @@ const BroadcastForm = () => {
 
                 <div className={css.createABroadcast}>
                   <h3>Create a Broadcast</h3>
-
-                  {category === "multiple parts / items" && (
-                    <>
                       <div>
                         <label htmlFor="description">Description</label>
                         <textarea
@@ -655,36 +682,6 @@ const BroadcastForm = () => {
                           required
                         ></textarea>
                       </div>
-                    </>
-                  )}
-
-                  {category !== "multiple parts / items" && (
-                    <>
-                      <div>
-                        <label htmlFor="description">Description</label>
-                        <textarea
-                          name="description"
-                          value={formData.description}
-                          onChange={handleInputChange}
-                          placeholder="Description"
-                          required
-                        ></textarea>
-                      </div>
-                      <div>
-                        <label htmlFor="additional_comments">Comments</label>
-                        <textarea
-                          type="text"
-                          name="additional_comments"
-                          value={formData.additional_comments}
-                          onChange={handleInputChange}
-                          placeholder="Message , Comments"
-                          cols={10}
-                          rows={5}
-                          required
-                        ></textarea>
-                      </div>
-                    </>
-                  )}
 
                   <div className="!flex !flex-row">
                     <label htmlFor="sendCopy">Send a copy to myself</label>

@@ -35,7 +35,7 @@ const HoverDropdown = ({ type, id, triggerElement, company, rowData }) => {
         { label: "Part Number", key: "partModel" },
         { label: "Supply & demand", key: "supplyDemand" },
         { label: "Add to Hotlist", key: "addToHotlist" },
-        // { label: "Broadcast", key: "broadcast" },
+        { label: "Broadcast", key: "broadcast" },
       ]);
     }
   }, [type, id]);
@@ -103,7 +103,21 @@ const HoverDropdown = ({ type, id, triggerElement, company, rowData }) => {
         dispatch(addHotListItem({ hotlists: hotlistPayload, token }));
         setTimeout(() => navigate("/hotlist/view"), 1000);
       }
-      if (actionKey === "broadcast") dispatch();
+      if (actionKey === "broadcast") {
+        const { partModel, mfg, cond, heciClei, price, quantity, productDescription } = rowData || {};
+        const query = new URLSearchParams({
+          type: "wtb",
+          category: "single part / items",
+          partModel,
+          mfg,
+          cond: cond?.toLowerCase(),
+          heciClei,
+          price: price?.toString().replace("$", ""),
+          quantity,
+          description: productDescription,
+        }).toString();
+        navigate(`/sendbroad?${query}`);
+      }
     }
   };
 
