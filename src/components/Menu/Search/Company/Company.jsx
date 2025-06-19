@@ -11,6 +11,7 @@ import axios from "axios";
 import { brokerAPI } from "@/components/api/BrokerEndpoint";
 import { countriesList, regionsList, statesList } from "@/data/services";
 import "./CompanySearchResults.css"
+import CommonCompanySearch from "../Inventory/CommonCompanySearch";
 
 const SearchCompany = () => {
   const [loading, setLoading] = useState(false); // To track API call status
@@ -151,7 +152,7 @@ const SearchCompany = () => {
           >
             <div className={`${styles.formRow}`}>
               <span>
-                <CompanySearch setFormData={setFormData} formData={formData} />
+                <CommonCompanySearch setFormData={setFormData} formData={formData} />
               </span>
             </div>
 

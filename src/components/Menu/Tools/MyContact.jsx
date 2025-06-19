@@ -79,44 +79,25 @@ const MyContact = () => {
     return index <= rating ? "View Comments" : "";
   };
 
-  // const handleChange = (e) => {
-  //   if (e.target.value === "company") {
-  //     setViewAsCompany(true);
-  //     setViewAsShow(false);
-  //     setViewAsCountry(false);
-  //     setViewAsState(false);
-  //   } else if (e.target.value === "show") {
-  //     setViewAsCompany(false);
-  //     setViewAsShow(true);
-  //     setViewAsCountry(false);
-  //     setViewAsState(false);
-  //   } else if (e.target.value === "country") {
-  //     setViewAsCompany(false);
-  //     setViewAsShow(false);
-  //     setViewAsCountry(true);
-  //     setViewAsState(false);
-  //   } else if (e.target.value === "state") {
-  //     setViewAsCompany(false);
-  //     setViewAsShow(false);
-  //     setViewAsCountry(false);
-  //     setViewAsState(true);
-  //   }
-  // };
-
   const removeFavouriteContacts = async (id) => {
-    try {
-      const resultAction = await dispatch(
-        removeMyFavouriteContacts({ contact_id: id, token })
-      );
-      const result = resultAction.payload;
+    const confirm = window.confirm("Remove from favourites?");
+    if (!confirm) {
+      return;
+    } else {
+      try {
+        const resultAction = await dispatch(
+          removeMyFavouriteContacts({ contact_id: id, token })
+        );
+        const result = resultAction.payload;
 
-      if (result?.success) {
-        toast.info(result?.message || "Contact Removed From Favourites!");
-      } else {
-        toast.info(result?.message || "Failed to remove contact.");
+        if (result?.success) {
+          toast.info(result?.message || "Contact Removed From Favourites!");
+        } else {
+          toast.info(result?.message || "Failed to remove contact.");
+        }
+      } catch (err) {
+        toast.error("Error removing contact: " + err.message);
       }
-    } catch (err) {
-      toast.error("Error removing contact: " + err.message);
     }
   };
 
@@ -295,13 +276,15 @@ const MyContact = () => {
                 </NavLink>
               </li>
               <li>
-                  <NavLink
-                    to="/myprofile/Options"
-                    className={({ isActive }) => (isActive ? myProfile.active : '')}
-                  >
-                    <span>Options</span>
-                  </NavLink>
-                </li>
+                <NavLink
+                  to="/myprofile/Options"
+                  className={({ isActive }) =>
+                    isActive ? myProfile.active : ""
+                  }
+                >
+                  <span>Options</span>
+                </NavLink>
+              </li>
               <li>
                 <NavLink
                   to="/myprofile/MyVendors"
