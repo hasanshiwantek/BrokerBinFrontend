@@ -134,7 +134,7 @@ const HoverDropdown = ({ type, id, triggerElement, company, rowData }) => {
           <div className="ml-6 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-white"></div>
 
           {/* Dropdown Box */}
-          <div className="w-48 bg-white shadow-lg border rounded-md py-3">
+          <div className="w-48 bg-white shadow-lg border border-t-0 rounded-md py-3">
             {options.map((opt, i) => (
               <div
                 key={i}
