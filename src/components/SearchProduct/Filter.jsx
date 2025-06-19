@@ -86,6 +86,13 @@ const handleSearchFromHistory = (partModel) => {
   });
 };
 
+const handleSearchFromVariance = (partModel) => {
+  dispatch(setAppliedFilters({})); // Optional: clear filters for fresh search
+  navigate(`/inventory/search?page=1&partModel=${encodeURIComponent(partModel)}`, {
+    replace: true,
+  });
+};
+
 useEffect(() => {
   if (appliedFilters && Object.keys(appliedFilters).length > 0) {
     setFilters(appliedFilters);
@@ -146,7 +153,7 @@ const {
       </div>
       <>
         {/* Manufacturer Section */}
-        <div className={css.interSection}>
+        <div className={`${css.interSection}`}>
           <div>
             <h6>Manufacturer</h6>
             <button type="button" onClick={() => toggleSection("manufacturer")}>
@@ -315,7 +322,9 @@ const {
         {!collapsedSections.partVariance && (
           <div className={css.searchHistory}>
             {partVariance.map((e, i) => (
-              <div key={i}>{e}</div>
+              <div key={i}>
+                <p>{e}</p>
+                </div>
             ))}
           </div>
         )}
