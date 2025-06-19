@@ -210,8 +210,8 @@ const SavedList = () => {
                       <input
                         type="radio"
                         name="savedListRadio"
-                        checked={selectedRowId === list.partItems?.id}
-                        onChange={() => setSelectedRowId(list.partItems?.id)}
+                        checked={selectedRowId === list.parts?.inventory_id}
+                        onChange={() => setSelectedRowId(list.parts?.inventory_id)}
                       />
                     </td>
                     <td></td>
