@@ -32,7 +32,7 @@ import { FaFileAlt } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import SortableTableHeader from "@/components/Tables/SortableHeader";
-
+import HoverDropdown from "@/HoverDropdown";
 const BroadCast = () => {
   const broadcastItems = useSelector(
     (state) => state.broadcastStore.broadCastData
@@ -546,351 +546,365 @@ const BroadCast = () => {
   };
 
   return (
-      <main className={styles.mainSec}>
-        <nav className="menu-bar !text-sm">
-          <div className={`${myProfile.profileInfo_links} !text-sm`}>
-            <ul className="py-0 !h-[7vh] !text-sm">
-              <li className="!text-[.7.8vw]">
-                <button onClick={handleReplyClick} style={{ color: "black" }}>
-                  Reply
-                </button>
-              </li>
-              <li className="!text-[.7.8vw]">
-                <NavLink
-                  to="/sendbroad"
-                  className={({ isActive }) =>
-                    isActive ? myProfile.active : ""
-                  }
-                >
-                  <span>Send</span>
-                </NavLink>
-              </li>
-              <li className="!text-[.7.8vw]">
-                <NavLink
-                  to="/broadcasts"
-                  className={({ isActive }) =>
-                    isActive ? myProfile.active : ""
-                  }
-                >
-                  <span onClick={() => window.location.reload(200)}>View</span>
-                </NavLink>
-              </li>
-              <li className="!text-[.7.8vw]">
-                <NavLink
-                  to="/myprofile/broadcastfilter"
-                  className={({ isActive }) =>
-                    isActive ? myProfile.active : ""
-                  }
-                >
-                  <span>Set Filters</span>
-                </NavLink>
-              </li>
-              <li className="!text-[.7.8vw]">
-                <NavLink
-                  to="/broadcasthistory"
-                  className={({ isActive }) =>
-                    isActive ? myProfile.active : ""
-                  }
-                >
-                  <span>History</span>
-                </NavLink>
-              </li>
-            </ul>
-          </div>
-        </nav>
+    <main className={styles.mainSec}>
+      <nav className="menu-bar !text-sm">
+        <div className={`${myProfile.profileInfo_links} !text-sm`}>
+          <ul className="py-0 !h-[7vh] !text-sm">
+            <li className="!text-[.7.8vw]">
+              <button onClick={handleReplyClick} style={{ color: "black" }}>
+                Reply
+              </button>
+            </li>
+            <li className="!text-[.7.8vw]">
+              <NavLink
+                to="/sendbroad"
+                className={({ isActive }) => (isActive ? myProfile.active : "")}
+              >
+                <span>Send</span>
+              </NavLink>
+            </li>
+            <li className="!text-[.7.8vw]">
+              <NavLink
+                to="/broadcasts"
+                className={({ isActive }) => (isActive ? myProfile.active : "")}
+              >
+                <span onClick={() => window.location.reload(200)}>View</span>
+              </NavLink>
+            </li>
+            <li className="!text-[.7.8vw]">
+              <NavLink
+                to="/myprofile/broadcastfilter"
+                className={({ isActive }) => (isActive ? myProfile.active : "")}
+              >
+                <span>Set Filters</span>
+              </NavLink>
+            </li>
+            <li className="!text-[.7.8vw]">
+              <NavLink
+                to="/broadcasthistory"
+                className={({ isActive }) => (isActive ? myProfile.active : "")}
+              >
+                <span>History</span>
+              </NavLink>
+            </li>
+          </ul>
+        </div>
+      </nav>
 
-        <div className={styles.headerSec}>
-          <div className={styles.tableWrapper}>
-            <div className={styles.tableHeader}>
-              {/* MFG Dropdown */}
-              <div className={styles.manufacturerDropdown}>
-                <span>Manufacturer:&nbsp;</span>
-                <select
-                  value={selectedMfg}
-                  onChange={(e) => setSelectedMfg(e.target.value)}
-                  className="w-60"
-                >
-                  <option value="all">All Manufacturers</option>
-                  {initialMFGs.map((mfg, index) => (
-                    <option key={index} value={mfg}>
-                      {mfg.toUpperCase()}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              {/* First Dropdown for Category Selection */}
-              <div className={styles.manufacturerDropdown}>
-                <select
-                  value={selectedCategory}
-                  onChange={handleCategoryChange}
-                >
-                  <option value="all">All Categories</option>
-                  <option value="selectedComputer">Computer</option>
-                  <option value="selectedTelecom">Telecom</option>
-                  <option value="selectedMobileDevices">Mobile Devices</option>
-                  <option value="selectedScrap">Scrap/Recycle</option>
+      <div className={styles.headerSec}>
+        <div className={styles.tableWrapper}>
+          <div className={styles.tableHeader}>
+            {/* MFG Dropdown */}
+            <div className={styles.manufacturerDropdown}>
+              <span>Manufacturer:&nbsp;</span>
+              <select
+                value={selectedMfg}
+                onChange={(e) => setSelectedMfg(e.target.value)}
+                className="w-60"
+              >
+                <option value="all">All Manufacturers</option>
+                {initialMFGs.map((mfg, index) => (
+                  <option key={index} value={mfg}>
+                    {mfg.toUpperCase()}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {/* First Dropdown for Category Selection */}
+            <div className={styles.manufacturerDropdown}>
+              <select value={selectedCategory} onChange={handleCategoryChange}>
+                <option value="all">All Categories</option>
+                <option value="selectedComputer">Computer</option>
+                <option value="selectedTelecom">Telecom</option>
+                <option value="selectedMobileDevices">Mobile Devices</option>
+                <option value="selectedScrap">Scrap/Recycle</option>
 
-                  {/* <option value="selectedCompanies">Companies</option> */}
-                  {/* <option value="service">Services</option> */}
-                </select>
-              </div>
+                {/* <option value="selectedCompanies">Companies</option> */}
+                {/* <option value="service">Services</option> */}
+              </select>
+            </div>
 
-              {/* Second Dropdown for Dynamic Options */}
-              <div>
-                <select
-                  value={selectedSubCategory}
-                  onChange={handleSubCategoryChange}
-                >
-                  {selectedCategory === "all" ? (
-                    <option value="">--Choose One--</option>
-                  ) : (
-                    <option value="">Select Subcategory</option>
-                  )}
-                  {options.map((item) => (
-                    <option key={item.id} value={item.value}>
-                      {item.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            {/* Second Dropdown for Dynamic Options */}
+            <div>
+              <select
+                value={selectedSubCategory}
+                onChange={handleSubCategoryChange}
+              >
+                {selectedCategory === "all" ? (
+                  <option value="">--Choose One--</option>
+                ) : (
+                  <option value="">Select Subcategory</option>
+                )}
+                {options.map((item) => (
+                  <option key={item.id} value={item.value}>
+                    {item.label}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-              <div className={styles.manufacturerDropdown}>
-                <select onChange={handleFilterChange}>
-                  <option value="all">Type</option>
-                  <option value="wts">WTS</option>
-                  <option value="wtb">WTB</option>
-                  <option value="rfq">RFQ</option>
-                </select>
-              </div>
-              <div className={styles.manufacturerDropdown}>
-                {/* <label htmlFor="region">Region:&nbsp;</label> */}
-                <select
-                  id="region"
-                  value={selectedRegion}
-                  onChange={handleRegionChange}
-                >
-                  <option value="all">Regions</option>
-                  {Regions.map((region, index) => (
-                    <option key={index} value={region}>
-                      {region}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            <div className={styles.manufacturerDropdown}>
+              <select onChange={handleFilterChange}>
+                <option value="all">Type</option>
+                <option value="wts">WTS</option>
+                <option value="wtb">WTB</option>
+                <option value="rfq">RFQ</option>
+              </select>
+            </div>
+            <div className={styles.manufacturerDropdown}>
+              {/* <label htmlFor="region">Region:&nbsp;</label> */}
+              <select
+                id="region"
+                value={selectedRegion}
+                onChange={handleRegionChange}
+              >
+                <option value="all">Regions</option>
+                {Regions.map((region, index) => (
+                  <option key={index} value={region}>
+                    {region}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-              <div className="flex items-center">
-                <label htmlFor="bulk">Bulk</label>
-                <input
-                  type="checkbox"
-                  name="bulk"
-                  id="bulk"
-                  onChange={handleBuyInChange}
-                />
-              </div>
-              <div className="flex items-center">
-                <label htmlFor="wholeUnit">Whole Unit</label>
-                <input
-                  type="checkbox"
-                  name="wholeUnit"
-                  id="wholeUnit"
-                  onChange={handleBuyInChange}
-                />
-              </div>
-              <div className="flex items-center">
-                <label htmlFor="container">Container</label>
-                <input
-                  type="checkbox"
-                  name="container"
-                  id="container"
-                  onChange={handleBuyInChange}
-                />
-              </div>
-              <div className="flex items-center">
-                <label htmlFor="pallet">Pallet</label>
-                <input
-                  type="checkbox"
-                  name="pallet"
-                  id="pallet"
-                  onChange={handleBuyInChange}
-                />
-              </div>
+            <div className="flex items-center">
+              <label htmlFor="bulk">Bulk</label>
+              <input
+                type="checkbox"
+                name="bulk"
+                id="bulk"
+                onChange={handleBuyInChange}
+              />
+            </div>
+            <div className="flex items-center">
+              <label htmlFor="wholeUnit">Whole Unit</label>
+              <input
+                type="checkbox"
+                name="wholeUnit"
+                id="wholeUnit"
+                onChange={handleBuyInChange}
+              />
+            </div>
+            <div className="flex items-center">
+              <label htmlFor="container">Container</label>
+              <input
+                type="checkbox"
+                name="container"
+                id="container"
+                onChange={handleBuyInChange}
+              />
+            </div>
+            <div className="flex items-center">
+              <label htmlFor="pallet">Pallet</label>
+              <input
+                type="checkbox"
+                name="pallet"
+                id="pallet"
+                onChange={handleBuyInChange}
+              />
+            </div>
 
-              <div className={styles.searchBroadcastSec}>
-                <input
-                  type="text"
-                  placeholder="Search Broadcasts"
-                  value={inputSearchTerm}
-                  onChange={handleInputChange} // Updates input field only
-                  onKeyDown={handleKeyDown}
-                />
-                <button onClick={handleSearchClick}>Search</button>
-              </div>
+            <div className={styles.searchBroadcastSec}>
+              <input
+                type="text"
+                placeholder="Search Broadcasts"
+                value={inputSearchTerm}
+                onChange={handleInputChange} // Updates input field only
+                onKeyDown={handleKeyDown}
+              />
+              <button onClick={handleSearchClick}>Search</button>
             </div>
           </div>
         </div>
-        <table className={styles.table}>
-          <SortableTableHeader
-            headers={headers}
-            sortBy={sortBy}
-            sortOrder={sortOrder}
-            onSort={handleSort}
-            extraIcons={extraIcons}
-          />
-          <tbody>
-            {loading ? (
-              <tr>
-                <td colSpan="14" style={{ textAlign: "center" }}>
-                  Loading broadcasts...
-                </td>
-              </tr>
-            ) : filteredBroadcasts?.length > 0 ? (
-              filteredBroadcasts.map((item, index) =>
-                item && item.id ? (
-                  <tr
-                    key={index}
-                    style={
-                      item.user_id && String(item.user_id.id) === currentUserID
-                        ? { backgroundColor: "#ffb" }
-                        : null
+      </div>
+      <table className={styles.table}>
+        <SortableTableHeader
+          headers={headers}
+          sortBy={sortBy}
+          sortOrder={sortOrder}
+          onSort={handleSort}
+          extraIcons={extraIcons}
+        />
+        <tbody>
+          {loading ? (
+            <tr>
+              <td colSpan="14" style={{ textAlign: "center" }}>
+                Loading broadcasts...
+              </td>
+            </tr>
+          ) : filteredBroadcasts?.length > 0 ? (
+            filteredBroadcasts.map((item, index) =>
+              item && item.id ? (
+                <tr
+                  key={index}
+                  style={
+                    item.user_id && String(item.user_id.id) === currentUserID
+                      ? { backgroundColor: "#ffb" }
+                      : null
+                  }
+                >
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={!!selectedBroadcast[item.id]}
+                      onChange={() => handleCheckboxChange(item)}
+                    />
+                  </td>
+                  <td>{item.created_at}</td>
+                  <td></td>
+                  <td>
+                    <HoverDropdown
+                      type="company"
+                      id={item.user_id.company?.id}
+                      company={item.user_id.company}
+                      triggerElement={
+                        <div className="flex justify-start items-center gap-3 ">
+                          <i>
+                            <img
+                              src="https://static.brokerbin.com/version/v8.4.1/images/seller.png"
+                              alt="company"
+                            />
+                          </i>
+                          <span
+                            onClick={() =>
+                              openCompanyModal(item.user_id.company)
+                            }
+                          >
+                            {item.user_id.company.name}
+                          </span>
+                        </div>
+                      }
+                    />
+                  </td>
+
+                  <td style={{ textTransform: "uppercase" }}>
+                    {item.user_id.company.country}
+                  </td>
+                  <td
+                    className={
+                      item.type === "wtb"
+                        ? styles["type-wtb"]
+                        : item.type === "wts"
+                        ? styles["type-wts"]
+                        : item.type === "rfq"
+                        ? styles["type-rfq"]
+                        : ""
                     }
                   >
-                    <td>
-                      <input
-                        type="checkbox"
-                        checked={!!selectedBroadcast[item.id]}
-                        onChange={() => handleCheckboxChange(item)}
-                      />
-                    </td>
-                    <td>{item.created_at}</td>
-                    <td></td>
-                    <td>
-                      <span
-                        onClick={() => openCompanyModal(item.user_id.company)}
-                      >
-                        {item.user_id.company.name}
-                      </span>
-                    </td>
-                    <td style={{ textTransform: "uppercase" }}>
-                      {item.user_id.company.country}
-                    </td>
-                    <td
-                      className={
-                        item.type === "wtb"
-                          ? styles["type-wtb"]
-                          : item.type === "wts"
-                          ? styles["type-wts"]
-                          : item.type === "rfq"
-                          ? styles["type-rfq"]
-                          : ""
-                      }
-                    >
-                      {item.type}
-                    </td>
-                    <td className="flex">
-                      <img
-                        src={bullImage}
-                        alt=""
-                        onClick={() => openModal(item)}
-                        style={{ width: "18px", fontWeight: "bold" }}
-                      />
-                      {item.file && (
-                        <div className={styles.tooltipWrapper}>
-                          <FaFileAlt
-                            onClick={() => handleFileDownload(item.file)}
-                            style={{ cursor: "pointer", marginLeft: "8px" }}
-                            className={styles.fileIcon}
-                          />
-                          <span className={styles.tooltip}>Download File</span>
-                        </div>
-                      )}
-                    </td>
-                    <td style={{ textTransform: "uppercase" }}>
-                      {item.partModel}
-                    </td>
-                    <td>{item.heciClei}</td>
-                    <td>{item.mfg}</td>
-                    <td>{item.cond}</td>
-                    <td style={{ color: "blue" }}>{item.price}</td>
-                    <td>{item.quantity}</td>
-                    <td>{item.description}</td>
-                  </tr>
-                ) : null
-              )
-            ) : (
-              <tr>
-                <td colSpan="14" style={{ textAlign: "center", color: "red" }}>
-                  No broadcasts found for the selected type.
-                </td>
-              </tr>
-            )}
-          </tbody>
-          <SortableTableHeader
-            headers={headers}
-            sortBy={sortBy}
-            sortOrder={sortOrder}
-            onSort={handleSort}
-            extraIcons={extraIcons}
-          />
-        </table>
-        {/* PAGINATION */}
-        <div className={styles.pagination}>
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1 || loading}
-          >
-            Previous
-          </button>
-
-          {[...Array(pagination.last_page || 1).keys()]
-            .map((page) => page + 1)
-            .filter((page) => {
-              // Display logic for pagination
-              if (currentPage === 1) {
-                return page <= 3; // Show pages 1, 2, 3 when on the first page
-              } else if (currentPage === pagination.last_page) {
-                return page >= pagination.last_page - 2; // Show the last three pages
-              } else {
-                return page >= currentPage - 1 && page <= currentPage + 1; // Show the previous, current, and next page
-              }
-            })
-            .map((page) => (
-              <button
-                key={page}
-                onClick={() => handlePageChange(page)}
-                className={`${styles.pageButton} ${
-                  currentPage === page ? styles.active : ""
-                }`}
-                disabled={loading}
-              >
-                {page}
-              </button>
-            ))}
-
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === pagination.last_page || loading}
-          >
-            Next
-          </button>
-        </div>
-        <div className={styles.replyBtnSec}>
-          <button className={styles.replyBtn} onClick={handleReplyClick}>
-            Reply
-          </button>
-        </div>
-
-        {/* Render CompanyDetails Modal Conditionally */}
-        {isCompanyModalOpen && popupCompanyDetail.length > 0 && (
-          <CompanyDetails closeModal={closeCompanyModal} /> // Pass close function as prop
-        )}
-
-        <BroadcastFileModal
-          isOpen={isModalOpen}
-          onRequestClose={closeModal}
-          broadcast={newselectedBroadcast}
-          handleReply={handleReplyClick}
+                    {item.type}
+                  </td>
+                  <td className="flex">
+                    <img
+                      src={bullImage}
+                      alt=""
+                      onClick={() => openModal(item)}
+                      style={{ width: "15px", height:"22px",ontWeight: "bold" }}
+                    />
+                    {item.file && (
+                      <div className={styles.tooltipWrapper}>
+                        <FaFileAlt
+                          onClick={() => handleFileDownload(item.file)}
+                          style={{ cursor: "pointer", marginLeft: "8px" }}
+                          className={styles.fileIcon}
+                        />
+                        <span className={styles.tooltip}>Download File</span>
+                      </div>
+                    )}
+                  </td>
+                  <td >
+                    <HoverDropdown
+                      type="part"
+                      id={item?.id}
+                      rowData={item}
+                      triggerElement={
+                          <td className="uppercase !border-none">{item.partModel}</td>
+                    }
+                    />
+                  </td>
+                  <td>{item.heciClei}</td>
+                  <td>{item.mfg}</td>
+                  <td>{item.cond}</td>
+                  <td style={{ color: "blue" }}>{item.price}</td>
+                  <td>{item.quantity}</td>
+                  <td>{item.description}</td>
+                </tr>
+              ) : null
+            )
+          ) : (
+            <tr>
+              <td colSpan="14" style={{ textAlign: "center", color: "red" }}>
+                No broadcasts found for the selected type.
+              </td>
+            </tr>
+          )}
+        </tbody>
+        <SortableTableHeader
+          headers={headers}
+          sortBy={sortBy}
+          sortOrder={sortOrder}
+          onSort={handleSort}
+          extraIcons={extraIcons}
         />
-      </main>
+      </table>
+      {/* PAGINATION */}
+      <div className={styles.pagination}>
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1 || loading}
+        >
+          Previous
+        </button>
+
+        {[...Array(pagination.last_page || 1).keys()]
+          .map((page) => page + 1)
+          .filter((page) => {
+            // Display logic for pagination
+            if (currentPage === 1) {
+              return page <= 3; // Show pages 1, 2, 3 when on the first page
+            } else if (currentPage === pagination.last_page) {
+              return page >= pagination.last_page - 2; // Show the last three pages
+            } else {
+              return page >= currentPage - 1 && page <= currentPage + 1; // Show the previous, current, and next page
+            }
+          })
+          .map((page) => (
+            <button
+              key={page}
+              onClick={() => handlePageChange(page)}
+              className={`${styles.pageButton} ${
+                currentPage === page ? styles.active : ""
+              }`}
+              disabled={loading}
+            >
+              {page}
+            </button>
+          ))}
+
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === pagination.last_page || loading}
+        >
+          Next
+        </button>
+      </div>
+      <div className={styles.replyBtnSec}>
+        <button className={styles.replyBtn} onClick={handleReplyClick}>
+          Reply
+        </button>
+      </div>
+
+      {/* Render CompanyDetails Modal Conditionally */}
+      {isCompanyModalOpen && popupCompanyDetail.length > 0 && (
+        <CompanyDetails closeModal={closeCompanyModal} /> // Pass close function as prop
+      )}
+
+      <BroadcastFileModal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        broadcast={newselectedBroadcast}
+        handleReply={handleReplyClick}
+      />
+    </main>
   );
 };
 
