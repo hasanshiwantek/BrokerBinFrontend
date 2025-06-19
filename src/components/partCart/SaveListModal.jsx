@@ -36,13 +36,13 @@ const SaveListModal = ({ onClose, selectedParts }) => {
   }));
 
   const handleSubmit = async () => {
-    const partCartId = selectedParts[0]?.id;
+    const partCartIds = selectedParts.map(p => p.id);
     const payload = {
       name: formData.name,
       poInHand: formData.poInHand,
       oemQuote: formData.oemQuote,
       dueDate: formData.dueDate,
-      part_cart_id: partCartId,
+      part_cart_id: partCartIds,
       //   parts: selectedParts,
       parts: trimmedParts,
     };
