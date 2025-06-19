@@ -2,21 +2,24 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { addMyVendors, showFirstVendor, neverShowVendor } from "./ReduxStore/ToolsSlice";
+import { replace, useNavigate } from "react-router-dom";
+import { getSupplyAndDemand } from "./ReduxStore/Reports";
 
-const HoverDropdown = ({ type, id, triggerElement }) => {
+const HoverDropdown = ({ type, id, triggerElement, partModel, company }) => {
   const [show, setShow] = useState(false);
   const [options, setOptions] = useState([]);
 
   const dispatch = useDispatch();
   const token = Cookies.get("token")
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!type || !id) return;
     if (type === "company") {
       setOptions([
-        { label: "Add My Vendors", key: "addToMyVendors"},
-        { label: "Show First", key: "showFirst"},
-        { label: "Show Never", key: "neverShow"},
+        { label: "Add My Vendors", key: "addToMyVendors" },
+        { label: "Show First", key: "showFirst" },
+        { label: "Show Never", key: "neverShow" },
       ]);
     } else if (type === "part") {
       setOptions([
@@ -29,29 +32,34 @@ const HoverDropdown = ({ type, id, triggerElement }) => {
   }, [type, id]);
 
   const handleAction = (actionKey) => {
-   if (type === "company") {
-    const payload = { company_id: id, token };
+    if (type === "company") {
+      const payload = { company_id: id, token };
 
-    if (actionKey === "addToMyVendors") {
-      dispatch(addMyVendors({ companyId: { company_id: id }, token }));
+      if (actionKey === "addToMyVendors") {
+        dispatch(addMyVendors({ companyId: { company_id: id }, token }));
+        navigate("/myprofile/MyVendors", {replace: true})
+      }
+      if (actionKey === "showFirst") {
+        dispatch(showFirstVendor({ ...payload, show_first: 1 }));
+        navigate("/myprofile/MyVendors", {replace: true})
+      }
+
+      if (actionKey === "neverShow") {
+        dispatch(neverShowVendor({ ...payload, never_show: 1 }));
+        navigate("/myprofile/MyVendors", {replace: true})
+      }
     }
-
-    if (actionKey === "showFirst") {
-      dispatch(showFirstVendor({ ...payload, show_first: 1 }));
+    if (type === "part") {
+      if (actionKey === "partModel") {
+        navigate(`/inventory/search?partModel=${partModel}`, { replace: true });
+      }
+      if (actionKey === "supplyDemand") {
+        navigate(`/reports/supplyanddemand?query=${partModel}`, { replace: true });
+      }
+      if (actionKey === "addToHotlist") dispatch();
+      if (actionKey === "broadcast") dispatch();
     }
-
-    if (actionKey === "neverShow") {
-      dispatch(neverShowVendor({ ...payload, never_show: 1 }));
-    }
-  }
-  if (type === "part") {
-    if (actionKey === "partModel") dispatch();
-    if (actionKey === "supplyDemand") dispatch();
-    if (actionKey === "addToHotlist") dispatch();
-    if (actionKey === "broadcast") dispatch();
-  }
-
-};
+  };
 
   return (
     <div
