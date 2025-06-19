@@ -98,7 +98,7 @@ const SearchMyContact = () => {
           onFocus={handleFocus}
           onBlur={handleBlur}
           required
-          className="p-1 "
+          className="p-1 outline-none focus:border-blue-500"
         />
         <div className={css.compnaySearch} ref={listRef}>
           {showList && (
@@ -112,10 +112,10 @@ const SearchMyContact = () => {
                   >
                     <p>{company.name}</p>
                     {/* {company.state && company.country && ( */}
-                      <p>
-                        <span>{company.state},</span>
-                        <span>{company.country}</span>
-                      </p>
+                    <p>
+                      <span>{company.state},</span>
+                      <span>{company.country}</span>
+                    </p>
                     {/* )} */}
                   </li>
                 ))

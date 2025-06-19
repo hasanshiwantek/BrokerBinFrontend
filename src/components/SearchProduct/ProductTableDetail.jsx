@@ -27,6 +27,7 @@ const ProductTableDetail = React.memo(
     const sortBy = queryParams.get("sortBy");
     const sortOrder = queryParams.get("sortOrder") || "desc";
     const page = parseInt(queryParams.get("page")) || 1;
+    
 
     const {
       selectedProducts,
@@ -35,7 +36,7 @@ const ProductTableDetail = React.memo(
       appliedFilters,
     } = useSelector((store) => store.searchProductStore);
     const { initialData, user } = useSelector((state) => state.profileStore);
-
+ 
     const user_id = Cookies.get("user_id");
     const id = user?.user?.id || user_id;
     const token = Cookies.get("token");
@@ -106,6 +107,12 @@ const ProductTableDetail = React.memo(
     const isSelected = (id) => {
       return selectedProducts.some((product) => product.id === id);
     };
+
+    console.log("Selected Product: ",selectedProducts);
+    
+
+    console.log("Part Data: ",partData);
+
 
     const totalCount = searchResponseMatched[partModel]?.totalCount || searchResponseMatched?.totalCount;
     const pageSize = searchResponseMatched[partModel]?.pageSize || searchResponseMatched?.pageSize;
@@ -353,15 +360,16 @@ const ProductTableDetail = React.memo(
                           e?.addedBy?.company?.country ||
                           "N/A"}
                       </td>
+
                       <td className="cursor-pointer">
                         <HoverDropdown
                           type="part"
                           id={e?.id}
                           rowData={e}
                           triggerElement={<td >{e?.partModel}</td>}
-                          partModel={e?.partModel}
                         />
                       </td>
+
                       <td>
                         <img
                           src="https://static.brokerbin.com/version/v8.3.2/images/nohistory_icon.png"

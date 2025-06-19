@@ -139,6 +139,13 @@
   background-color: #ddd;
 }
 
+.searchBroadcastSec {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 5px;
+}
+
 .searchBroadcastSec button {
   color: white;
   background-color: var(--primary-color);
