@@ -793,32 +793,40 @@ const BroadCast = () => {
                   >
                     {item.type}
                   </td>
-                  <td className="flex">
-                    <img
-                      src={bullImage}
-                      alt=""
-                      onClick={() => openModal(item)}
-                      style={{ width: "15px", height:"22px",ontWeight: "bold" }}
-                    />
-                    {item.file && (
-                      <div className={styles.tooltipWrapper}>
-                        <FaFileAlt
-                          onClick={() => handleFileDownload(item.file)}
-                          style={{ cursor: "pointer", marginLeft: "8px" }}
-                          className={styles.fileIcon}
-                        />
-                        <span className={styles.tooltip}>Download File</span>
-                      </div>
-                    )}
+                  <td>
+                    <div className="flex justify-start items-center">
+                      <img
+                        src={bullImage}
+                        alt=""
+                        onClick={() => openModal(item)}
+                        style={{
+                          width: "15px",
+                          height: "22px",
+                          ontWeight: "bold",
+                        }}
+                      />
+                      {item.file && (
+                        <div className={styles.tooltipWrapper}>
+                          <FaFileAlt
+                            onClick={() => handleFileDownload(item.file)}
+                            style={{ cursor: "pointer", marginLeft: "2px" }}
+                            className={styles.fileIcon}
+                          />
+                          <span className={styles.tooltip}>Download File</span>
+                        </div>
+                      )}
+                    </div>
                   </td>
-                  <td >
+                  <td>
                     <HoverDropdown
                       type="part"
                       id={item?.id}
                       rowData={item}
                       triggerElement={
-                          <td className="uppercase !border-none">{item.partModel}</td>
-                    }
+                        <td className="!uppercase !border-none">
+                          {item.partModel}
+                        </td>
+                      }
                     />
                   </td>
                   <td>{item.heciClei}</td>

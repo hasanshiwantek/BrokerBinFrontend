@@ -66,18 +66,42 @@ export const searchMyVendors = createAsyncThunk(
 
 export const getMyVendors = createAsyncThunk(
   "toolsStore/getMyVendors",
-  async ({ token }) => {
+  async ({ token, page }) => {
     try {
-      const response = await axios.get(`${brokerAPI}vendor/get-vendor`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log(response.data.data);
-      return response.data.data;
+      const response = await axios.get(
+        `${brokerAPI}vendor/get-vendor?page=${page}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response.data);
+      return response.data; // actual vendor list
     } catch (error) {
       throw new Error("Error searching company name");
+    }
+  }
+);
+
+export const fetchMyViewByVendors = createAsyncThunk(
+  "toolsStore/fetchMyViewByVendors",
+  async ({ sortBy, token, page }) => {
+    try {
+      const response = await axios.get(
+        `${brokerAPI}vendor/get-vendor?sortBy=${sortBy}?page=${page}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("View By Vendor Data From Redux: ", response.data.data);
+      return response.data.data;
+    } catch (error) {
+      throw new Error("Error searching Vendor Data");
     }
   }
 );
@@ -434,27 +458,6 @@ export const fetchMyViewByContacts = createAsyncThunk(
   }
 );
 
-export const fetchMyViewByVendors = createAsyncThunk(
-  "toolsStore/fetchMyViewByVendors",
-  async ({ sortBy, token }) => {
-    try {
-      const response = await axios.get(
-        `${brokerAPI}vendor/get-vendor?sortBy=${sortBy}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log("View By Vendor Data From Redux: ", response.data.data);
-      return response.data.data;
-    } catch (error) {
-      throw new Error("Error searching Vendor Data");
-    }
-  }
-);
-
 export const blockMyVendor = createAsyncThunk(
   "toolsStore/blockMyVendor",
   async ({ company_id, status, token }) => {
@@ -572,9 +575,9 @@ export const addToMyVendorsBadge = createAsyncThunk(
 const initialState = {
   tools: [],
   searchCompanies: [],
-  searchMyVendor: [],
+  searchMyVendor: [], 
   myVendor: [],
-
+  vendorPagination:{},
   myHotListItems: [],
   myContactsData: [],
   searchMyContact: [],
@@ -661,8 +664,9 @@ const ToolsSlice = createSlice({
         state.loading = true;
       })
       .addCase(getMyVendors.fulfilled, (state, action) => {
-        console.log(action.payload);
-        state.myVendor = action.payload;
+        console.log("✅CASE FULFILLED", action.payload);
+        state.myVendor = action?.payload?.data;
+        state.vendorPagination=action?.payload?.pagination;
         state.loading = false;
       })
       .addCase(getMyVendors.rejected, (state, action) => {
