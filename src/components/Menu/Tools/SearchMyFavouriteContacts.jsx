@@ -109,6 +109,7 @@ const SearchMyFavouriteContact = () => {
           onFocus={handleFocus}
           onBlur={handleBlur}
           required
+          className="p-1 outline-none focus:border-blue-500"
         />
         <div className={css.compnaySearch} ref={listRef}>
           {showList && (

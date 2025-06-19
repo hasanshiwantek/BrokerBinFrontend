@@ -19,6 +19,8 @@ const SavedList = () => {
   const navigate = useNavigate();
   const token = Cookies.get("token");
   const [selectedRowId, setSelectedRowId] = useState(null);
+  console.log("Selected Row id: ",selectedRowId);
+  
   const [sortBy, setSortBy] = useState("");
   const [sortOrder, setSortOrder] = useState("");
   const [savedLists, setSavedLists] = useState([]);
@@ -27,6 +29,8 @@ const SavedList = () => {
   const [showExportModal, setShowExportModal] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  console.log("Saved Lists: ",savedLists);
+  
   const fetchSavedLists = async () => {
     try {
       setLoading(true);
@@ -200,14 +204,14 @@ const SavedList = () => {
             </thead>
             <tbody>
               {savedLists?.length > 0 ? (
-                savedLists.map((list) => (
-                  <tr key={list.list_id} className="!whitespace-normal">
+                savedLists?.map((list,id) => (
+                  <tr key={id} className="!whitespace-normal">
                     <td>
                       <input
                         type="radio"
                         name="savedListRadio"
-                        checked={selectedRowId === list.list_id}
-                        onChange={() => setSelectedRowId(list.list_id)}
+                        checked={selectedRowId === list.parts?.inventory_id}
+                        onChange={() => setSelectedRowId(list.parts?.inventory_id)}
                       />
                     </td>
                     <td></td>
@@ -219,12 +223,12 @@ const SavedList = () => {
                         {list.name}
                       </a>
                     </td>
-                    <td>{list.created_at || ""}</td>
-                    <td>{list.po_in_hand ? "Yes" : "No"}</td>
-                    <td>{list.oem_quote ? "Yes" : "No"}</td>
-                    <td>{list.due_date}</td>
-                    <td>{list.parts?.filteredQty || ""}</td>
-                    <td>{list.parts.length}</td>
+                    <td>{list?.partItem?.created_at || ""}</td>
+                    <td>{list?.po_in_hand ? "Yes" : "No"}</td>
+                    <td>{list?.oem_quote ? "Yes" : "No"}</td>
+                    <td>{list?.due_date}</td>
+                    <td>{list?.parts?.filteredQty || ""}</td>
+                    <td>{list?.parts?.length}</td>
                   </tr>
                 ))
               ) : (
