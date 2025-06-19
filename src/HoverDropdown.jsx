@@ -104,7 +104,7 @@ const HoverDropdown = ({ type, id, triggerElement, company, rowData }) => {
         setTimeout(() => navigate("/hotlist/view"), 1000);
       }
       if (actionKey === "broadcast") {
-        const { partModel, mfg, cond, heciClei, price, quantity, productDescription } = rowData || {};
+        const { partModel, mfg, cond, heciClei, price, quantity,description,productDescription } = rowData || {};
         const query = new URLSearchParams({
           type: "wtb",
           category: "single part / items",
@@ -114,7 +114,7 @@ const HoverDropdown = ({ type, id, triggerElement, company, rowData }) => {
           heciClei,
           price: price?.toString().replace("$", ""),
           quantity,
-          description: productDescription,
+          description: description || productDescription ,
         }).toString();
         navigate(`/sendbroad?${query}`);
       }
