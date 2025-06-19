@@ -104,6 +104,9 @@
   font-size: 8pt;
   font-weight: 600;
   color: #444;
+  /* height: 20rem;
+  overflow-y: scroll;
+  overflow-x: hidden; */
 }
 
 .interSection button{
