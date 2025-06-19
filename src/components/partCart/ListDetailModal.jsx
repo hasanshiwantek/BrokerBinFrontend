@@ -24,7 +24,7 @@ const ListDetailModal = ({ list, onClose }) => {
                                     Mfg: {part.mfg}
                                     <div className="text-green-600 text-xs mt-1">
                                         {part.rfq_sent || ""}
-                                        {part.notes.map((n)=> n.note || "")}
+                                       <p> Notes: {part.notes.map((n)=> n.note || "")}</p>
                                     </div>
                                 </div>
                                 <div>Cond: <span className="uppercase">{part.cond}</span></div>
