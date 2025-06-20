@@ -15,6 +15,7 @@ import CompanyListingTable from "./Table";
 import { searchProductQuery, setTogglePopUp, searchProductHistory, searchByKeyword, clearSearchResponseMatched } from "@/ReduxStore/SearchProductSlice";
 
 const SearchProduct = () => {
+  console.log("Rendered: searchProduct")
   const token = Cookies.get("token");
   const location = useLocation();
   const dispatch = useDispatch();
@@ -37,7 +38,8 @@ const SearchProduct = () => {
     appliedFilters,
   } = useSelector((store) => store.searchProductStore);
 
-  console.log("SEARCHRESPONSEMATCHED", searchResponseMatched);
+  // console.log("SEARCHRESPONSEMATCHED", searchResponseMatched);
+
 
   useEffect(() => {
     dispatch(clearSearchResponseMatched());
@@ -61,7 +63,7 @@ const SearchProduct = () => {
     }
   }, [searchString, partModel]);
 
-  console.log("Current Query: ", currentQuery);
+  // console.log("Current Query: ", currentQuery);
 
   if (gettingProducts) {
     return <LoadingState />;

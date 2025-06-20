@@ -420,13 +420,13 @@ export const partVariance = createAsyncThunk(
         },
       });
       console.log("RESPONSE VARIANT", response.data.variants);
-      return response.data.variants; // Make sure API returns items array
+      return response.data.variants || []; // Make sure API returns items array
     } catch (error) {
       console.error(error)
+      return [];
     }
   }
 );
-
 
 const initialState = {
   companiesListingParts: true,
@@ -648,8 +648,8 @@ const searchProductSlice = createSlice({
         state.error = null;
       })
       .addCase(partVariance.fulfilled, (state, action) => {
-        state.partVarianceState = action.payload;
         state.gettingProducts = false;
+        state.partVarianceState = action.payload;
       })
       .addCase(partVariance.rejected, (state, action) => {
         state.gettingProducts = false;

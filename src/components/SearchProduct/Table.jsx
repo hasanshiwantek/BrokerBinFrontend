@@ -19,6 +19,7 @@ import { addMyVendors, blockMyVendor } from "@/ReduxStore/ToolsSlice";
 import Cookies from "js-cookie";
 
 const CompanyListingTable = ({ entries }) => {
+  console.log("REndered: table")
   const dispatch = useDispatch();
   const token = Cookies.get("token");
 
@@ -40,20 +41,20 @@ const CompanyListingTable = ({ entries }) => {
       const response = await dispatch(addMyVendors({ companyId, token }));
       const result = response.payload;
       if (response?.error) {
-        console.error("Add vendor error:", result?.message);
+        // console.error("Add vendor error:", result?.message);
         toast.error(result?.message || "Vendor already added.");
       } else {
-        console.log("Vendor Added Successfully", result?.message);
+        // console.log("Vendor Added Successfully", result?.message);
         toast.success(result?.message || "Vendor added successfully.");
       }
     } catch (error) {
-      console.error("Unexpected error adding vendor:", error);
+      // console.error("Unexpected error adding vendor:", error);
       toast.error("Something went wrong. Please try again.");
     }
   };
 
   const [vendorStatus, setVendorStatus] = useState({});
-  console.log("Vendor Status", vendorStatus);
+  // console.log("Vendor Status", vendorStatus);
 
   useEffect(() => {
     if (entries && entries.length > 0) {
@@ -69,19 +70,19 @@ const CompanyListingTable = ({ entries }) => {
             }
           });
         });
-      console.log("Initial Status", initialStatus);
+      // console.log("Initial Status", initialStatus);
       setVendorStatus(initialStatus);
     }
   }, [entries]);
 
   const blockVendorHandler = (companyId) => {
     const currentStatus = vendorStatus[companyId] ?? 1;
-    console.log("Sending Status..", vendorStatus[companyId]);
+    // console.log("Sending Status..", vendorStatus[companyId]);
     const newStatus = currentStatus === 1 ? 0 : 1;
     dispatch(blockMyVendor({ company_id: companyId, status: newStatus, token }))
       .unwrap()
       .then((result) => {
-        console.log("Server Result:", result);
+        // console.log("Server Result:", result);
         if (result?.status === "success") {
           toast.success(result?.message || "Vendor status updated!");
           setVendorStatus((prev) => ({
@@ -93,7 +94,7 @@ const CompanyListingTable = ({ entries }) => {
         }
       })
       .catch((error) => {
-        console.error("Block error:", error);
+        // console.error("Block error:", error);
         toast.error(
           error?.message || "Something went wrong. Please try again."
         );

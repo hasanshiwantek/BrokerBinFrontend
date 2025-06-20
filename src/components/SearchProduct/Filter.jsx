@@ -12,6 +12,7 @@ import {
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
 const Filter = ({ currentQuery }) => {
+  console.log("rendered: Filter")
 
   const [collapsedSections, setCollapsedSections] = useState({
     manufacturer: false,
@@ -32,6 +33,8 @@ const Filter = ({ currentQuery }) => {
   const token = Cookies.get("token");
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
+  const query = queryParams.get("partModel") || queryParams.get("query");
+  // console.log("Current query value:", query);
 
   // const searchString = location.state || {};
   const { searchResponseMatched, searchHistory, appliedFilters } = useSelector(
@@ -42,9 +45,9 @@ const Filter = ({ currentQuery }) => {
   (state) => state.searchProductStore.partVarianceState
 );
 
-console.log("partSearchVarianceState", partVarianceState)
+// console.log("partSearchVarianceState", partVarianceState)
 
-  console.log("searchfrom filters",searchResponseMatched);
+  // console.log("searchfrom filters",searchResponseMatched);
   
 
   const dispatch = useDispatch();
@@ -63,7 +66,7 @@ console.log("partSearchVarianceState", partVarianceState)
     ...(searchResponseMatched?.test?.data || []),
     ...(searchResponseMatched?.foundItems || []),
   ];
-  console.log("ALL ITEMS: ",allItems);
+  // console.log("ALL ITEMS: ",allItems);
 
   const applyFilters = () => {
   const queryParams = new URLSearchParams(location.search);
@@ -100,7 +103,12 @@ const handleSearchFromVariance = (partModel) => {
   });
 };
 
-const query = queryParams.get("partModel") || queryParams.get("query")
+// useEffect(() => {
+//   if (!query || !token) return;
+
+//   console.log("🔁 useEffect fired - Dispatching partVariance with query:", query);
+//   dispatch(partVariance({ token, part: query }));
+// }, [dispatch, token, query]);
 
 useEffect(() => {
   if (appliedFilters && Object.keys(appliedFilters).length > 0) {
@@ -132,7 +140,7 @@ useEffect(() => {
 };
 
 const filtersFromApi = searchResponseMatched?.filters || {};
-console.log("Filters partmodel", filtersFromApi);
+// console.log("Filters partmodel", filtersFromApi);
 
 const {
   manufacturers = {},
