@@ -8,7 +8,6 @@ import {
   addHotListItem,
 } from "./ReduxStore/ToolsSlice";
 import { replace, useNavigate } from "react-router-dom";
-import { getSupplyAndDemand } from "./ReduxStore/Reports";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
@@ -43,7 +42,6 @@ const HoverDropdown = ({ type, id, triggerElement, company, rowData }) => {
   const handleAction = (actionKey) => {
     if (type === "company") {
       const payload = { company_id: id, token };
-
       if (actionKey === "addToMyVendors") {
         const confirm = window.confirm("Update Vendor Status? ");
         if (!confirm) {
@@ -66,7 +64,6 @@ const HoverDropdown = ({ type, id, triggerElement, company, rowData }) => {
           }, 1000);
         }
       }
-
       if (actionKey === "neverShow") {
         const confirm = window.confirm("Update Vendor Status? ");
         if (!confirm) {
@@ -79,6 +76,7 @@ const HoverDropdown = ({ type, id, triggerElement, company, rowData }) => {
         }
       }
     }
+
     if (type === "part") {
       if (actionKey === "partModel") {
         navigate(`/inventory/search?partModel=${rowData?.partModel}`, {

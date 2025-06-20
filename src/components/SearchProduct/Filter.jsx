@@ -1,13 +1,12 @@
 import React, { useState, memo, useEffect } from "react";
 import css from "@/styles/Filter.module.css";
-import { partVariance } from "@/data/tableData";
 import { FaWindowClose } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import {
   setFilterToggle,
   setAppliedFilters,
-  clearSearchResponseMatched,
+  partVariance,
   searchProductQuery,
 } from "@/ReduxStore/SearchProductSlice";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
@@ -32,10 +31,18 @@ const Filter = ({ currentQuery }) => {
 
   const token = Cookies.get("token");
   const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+
   // const searchString = location.state || {};
   const { searchResponseMatched, searchHistory, appliedFilters } = useSelector(
     (store) => store.searchProductStore
   );
+
+  const partVarianceState = useSelector(
+  (state) => state.searchProductStore.partVarianceState
+);
+
+console.log("partSearchVarianceState", partVarianceState)
 
   console.log("searchfrom filters",searchResponseMatched);
   
@@ -93,10 +100,13 @@ const handleSearchFromVariance = (partModel) => {
   });
 };
 
+const query = queryParams.get("partModel") || queryParams.get("query")
+
 useEffect(() => {
   if (appliedFilters && Object.keys(appliedFilters).length > 0) {
     setFilters(appliedFilters);
   }
+  // dispatch(partVariance({token, part: query}))
 }, []);
 
   // const handleClearFilters = (event) => {
@@ -321,7 +331,7 @@ const {
         </div>
         {!collapsedSections.partVariance && (
           <div className={css.searchHistory}>
-            {partVariance.map((e, i) => (
+            {partVarianceState.map((e, i) => (
               <div key={i}>
                 <p>{e}</p>
                 </div>
