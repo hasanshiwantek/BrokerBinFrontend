@@ -38,9 +38,6 @@ const SearchProduct = () => {
     appliedFilters,
   } = useSelector((store) => store.searchProductStore);
 
-  // console.log("SEARCHRESPONSEMATCHED", searchResponseMatched);
-
-
   useEffect(() => {
     dispatch(clearSearchResponseMatched());
     if (searchString) {
@@ -62,8 +59,6 @@ const SearchProduct = () => {
       setCurrentQuery(searchString || partModel); // Update with latest search or partModel
     }
   }, [searchString, partModel]);
-
-  // console.log("Current Query: ", currentQuery);
 
   if (gettingProducts) {
     return <LoadingState />;

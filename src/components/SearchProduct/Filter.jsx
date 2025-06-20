@@ -34,21 +34,15 @@ const Filter = ({ currentQuery }) => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const query = queryParams.get("partModel") || queryParams.get("query");
-  // console.log("Current query value:", query);
 
   // const searchString = location.state || {};
   const { searchResponseMatched, searchHistory, appliedFilters } = useSelector(
     (store) => store.searchProductStore
   );
 
-  const partVarianceState = useSelector(
-  (state) => state.searchProductStore.partVarianceState
-);
+  const {partVarianceState} = useSelector((store) => store.searchProductStore);
 
 // console.log("partSearchVarianceState", partVarianceState)
-
-  // console.log("searchfrom filters",searchResponseMatched);
-  
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -66,7 +60,6 @@ const Filter = ({ currentQuery }) => {
     ...(searchResponseMatched?.test?.data || []),
     ...(searchResponseMatched?.foundItems || []),
   ];
-  // console.log("ALL ITEMS: ",allItems);
 
   const applyFilters = () => {
   const queryParams = new URLSearchParams(location.search);
@@ -103,18 +96,12 @@ const handleSearchFromVariance = (partModel) => {
   });
 };
 
-// useEffect(() => {
-//   if (!query || !token) return;
-
-//   console.log("🔁 useEffect fired - Dispatching partVariance with query:", query);
-//   dispatch(partVariance({ token, part: query }));
-// }, [dispatch, token, query]);
 
 useEffect(() => {
   if (appliedFilters && Object.keys(appliedFilters).length > 0) {
     setFilters(appliedFilters);
   }
-  // dispatch(partVariance({token, part: query}))
+  dispatch(partVariance({token, part: query}))
 }, []);
 
   // const handleClearFilters = (event) => {
@@ -341,7 +328,7 @@ const {
           <div className={css.searchHistory}>
             {partVarianceState.map((e, i) => (
               <div key={i}>
-                <p>{e}</p>
+                <p onClick={handleSearchFromVariance}>{e}</p>
                 </div>
             ))}
           </div>
