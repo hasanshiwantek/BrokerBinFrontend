@@ -159,9 +159,7 @@ const CompanyContacts = () => {
                   <NavLink
                     to="/mycompany/References"
                     end
-                    className={({ isActive }) =>
-                      isActive ? css.active : ""
-                    }
+                    className={({ isActive }) => (isActive ? css.active : "")}
                   >
                     <span>Ref</span>
                   </NavLink>
@@ -170,9 +168,7 @@ const CompanyContacts = () => {
                   <NavLink
                     to="/mycompany/Photos"
                     end
-                    className={({ isActive }) =>
-                      isActive ? css.active : ""
-                    }
+                    className={({ isActive }) => (isActive ? css.active : "")}
                   >
                     <span>Photos</span>
                   </NavLink>
@@ -186,8 +182,10 @@ const CompanyContacts = () => {
               <div className={css.companyListingTable}>
                 <div>
                   {loading ? (
-                    <div className="text-center py-4 text-gray-600">
-                      Loading contacts...
+                    <div className="flex justify-center  items-center py-20">
+                      <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
+                      <span className="ml-4 text-blue-600 text-lg font-medium">
+                      </span>
                     </div>
                   ) : (
                     <table className="border cursor-pointer">

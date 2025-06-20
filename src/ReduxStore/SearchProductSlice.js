@@ -644,15 +644,12 @@ const searchProductSlice = createSlice({
         console.error(action.error.message);
       })
       .addCase(partVariance.pending, (state) => {
-        state.gettingProducts = true; // Set to true when starting the fetch
         state.error = null;
       })
       .addCase(partVariance.fulfilled, (state, action) => {
         state.partVarianceState = action.payload;
-        state.gettingProducts = false;
       })
       .addCase(partVariance.rejected, (state, action) => {
-        state.gettingProducts = false;
         state.error = action.error.message;
       });
   },

@@ -34,13 +34,10 @@ const Filter = ({ currentQuery }) => {
   const queryParams = new URLSearchParams(location.search);
 
   // const searchString = location.state || {};
-  const { searchResponseMatched, searchHistory, appliedFilters } = useSelector(
+  const { searchResponseMatched, searchHistory, appliedFilters,partVarianceState } = useSelector(
     (store) => store.searchProductStore
   );
 
-  const partVarianceState = useSelector(
-  (state) => state.searchProductStore.partVarianceState
-);
 
 console.log("partSearchVarianceState", partVarianceState)
 
@@ -106,8 +103,11 @@ useEffect(() => {
   if (appliedFilters && Object.keys(appliedFilters).length > 0) {
     setFilters(appliedFilters);
   }
-  // dispatch(partVariance({token, part: query}))
 }, []);
+useEffect(()=>{
+  dispatch(partVariance({token, part: query}))
+
+},[])
 
   // const handleClearFilters = (event) => {
   //   event.preventDefault();
@@ -331,7 +331,7 @@ const {
         </div>
         {!collapsedSections.partVariance && (
           <div className={css.searchHistory}>
-            {partVarianceState.map((e, i) => (
+            {partVarianceState?.map((e, i) => (
               <div key={i}>
                 <p>{e}</p>
                 </div>
