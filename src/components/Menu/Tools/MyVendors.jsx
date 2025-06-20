@@ -32,7 +32,7 @@ import { ToastContainer } from "react-toastify";
 import emailIcon from "@/assets/email-icon.svg";
 import webIcon from "@/assets/web.svg";
 import defaultCompanyLogo from "@/assets/defaultComp.png";
-
+import PaginationControls from "@/components/pagination/PaginationControls";
 const MyVendors = () => {
   const token = Cookies.get("token");
   let [viewAsCompany, setViewAsCompany] = useState(true);
@@ -41,10 +41,18 @@ const MyVendors = () => {
   let [viewAsCountry, setViewAsCountry] = useState(false);
   let [viewAsState, setViewAsState] = useState(false);
   const [loadingData, setLoadingData] = useState(false);
-  const { myVendor, loading, vendorNoteData } = useSelector(
+  const { myVendor, loading, vendorNoteData, vendorPagination } = useSelector(
     (store) => store.toolsStore
   );
-  console.log("MY Vendors", myVendor);
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  console.log("My Vendors: ", myVendor);
+  console.log("My Vendor Pagination: ", vendorPagination);
+  const totalCount = vendorPagination?.total;
+  const lastPage = vendorPagination?.lastPage;
+  const totalPages = vendorPagination?.lastPage || 1;
+
   console.log("Vendor Note Data", vendorNoteData);
 
   const dispatch = useDispatch();
@@ -161,11 +169,8 @@ const MyVendors = () => {
   });
 
   useEffect(() => {
-    dispatch(getMyVendors({ token }));
-    // if (myVendor.length === 0) {
-    //   setViewAsCompany(true);
-    // }
-  }, []);
+    dispatch(getMyVendors({ token, page: currentPage }));
+  }, [token, currentPage]);
 
   const { togglePopUp, popupCompanyDetail } = useSelector(
     (state) => state.searchProductStore
@@ -219,6 +224,7 @@ const MyVendors = () => {
         fetchMyViewByVendors({
           token,
           sortBy: viewBy,
+          page: currentPage,
         })
       )
         .unwrap()
@@ -295,7 +301,7 @@ const MyVendors = () => {
   // );
 
   const groupVendorsByKey = (vendors, key) => {
-    return vendors.reduce((acc, vendor) => {
+    return vendors?.reduce((acc, vendor) => {
       let groupKey = "";
 
       switch (key) {
@@ -319,6 +325,11 @@ const MyVendors = () => {
       acc[groupKey].push(vendor);
       return acc;
     }, {});
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    dispatch(getMyVendors({ token, page }));
   };
 
   if (loading) {
@@ -348,13 +359,15 @@ const MyVendors = () => {
                 </NavLink>
               </li>
               <li>
-                  <NavLink
-                    to="/myprofile/Options"
-                    className={({ isActive }) => (isActive ? myProfile.active : '')}
-                  >
-                    <span>Options</span>
-                  </NavLink>
-                </li>
+                <NavLink
+                  to="/myprofile/Options"
+                  className={({ isActive }) =>
+                    isActive ? myProfile.active : ""
+                  }
+                >
+                  <span>Options</span>
+                </NavLink>
+              </li>
               <li>
                 <NavLink
                   to="/myprofile/MyVendors"
@@ -764,6 +777,20 @@ const MyVendors = () => {
               </>
             )}
           </div>
+
+        </div>
+                  {/* PAGINATION */}
+        <div className="flex justify-end ">
+          <PaginationControls
+            currPage={currentPage}
+            totalPages={totalPages}
+            visiblePages={[1, totalPages]}
+            onPageChange={handlePageChange}
+            onPrev={() => handlePageChange(Math.max(1, currentPage - 1))}
+            onNext={() =>
+              handlePageChange(Math.min(totalPages, currentPage + 1))
+            }
+          />
         </div>
       </div>
       {togglePopUp && (

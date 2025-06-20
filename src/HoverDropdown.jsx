@@ -102,7 +102,7 @@ const HoverDropdown = ({ type, id, triggerElement, company, rowData }) => {
         setTimeout(() => navigate("/hotlist/view"), 1000);
       }
       if (actionKey === "broadcast") {
-        const { partModel, mfg, cond, heciClei, price, quantity, productDescription } = rowData || {};
+        const { partModel, mfg, cond, heciClei, price, quantity,description,productDescription } = rowData || {};
         const query = new URLSearchParams({
           type: "wtb",
           category: "single part / items",
@@ -112,7 +112,7 @@ const HoverDropdown = ({ type, id, triggerElement, company, rowData }) => {
           heciClei,
           price: price?.toString().replace("$", ""),
           quantity,
-          description: productDescription,
+          description: description || productDescription ,
         }).toString();
         navigate(`/sendbroad?${query}`);
       }
@@ -132,7 +132,7 @@ const HoverDropdown = ({ type, id, triggerElement, company, rowData }) => {
           <div className="ml-6 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-white"></div>
 
           {/* Dropdown Box */}
-          <div className="w-48 bg-white shadow-lg border rounded-md py-3">
+          <div className="w-48 bg-white shadow-lg border border-t-0 rounded-md py-3">
             {options.map((opt, i) => (
               <div
                 key={i}
