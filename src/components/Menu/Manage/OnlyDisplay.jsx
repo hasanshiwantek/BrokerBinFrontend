@@ -14,18 +14,6 @@ const OnlyDisplay = () => {
     state: false,
   });
 
-  // const toggleOnlyReceiveMatch = (type) => {
-  //   const updatedStates = {
-  //     region: false,
-  //     country: false,
-  //     state: false,
-  //   };
-
-  //   setOnlyReceiveMatch((prev) => ({
-  //     ...updatedStates,
-  //     [type]: true,
-  //   }));
-  // };
 
   const toggleOnlyReceiveMatch = (type) => {
     setOnlyReceiveMatch({
@@ -35,30 +23,33 @@ const OnlyDisplay = () => {
     });
   };
 
+
   const handleCheckboxChange = (category, value) => {
-    // Get the current array of selected items for the category
-    const selectedItems = optionFormData[category];
+    const selectedItems = optionFormData.onlyDisplay[category] || [];
 
-    // Determine if the value is already selected
-    let updatedItems;
-    if (selectedItems.includes(value)) {
-      // If selected, remove it
-      updatedItems = selectedItems.filter((item) => item !== value);
-    } else {
-      // Otherwise, add it
-      updatedItems = [...selectedItems, value];
-    }
+    const updatedItems = selectedItems.includes(value)
+      ? selectedItems.filter((item) => item !== value)
+      : [...selectedItems, value];
 
-    // Dispatch the updated data
-    dispatch(setOptionFormData({ [category]: updatedItems }));
+    dispatch(
+      setOptionFormData({
+        onlyDisplay: {
+          ...optionFormData.onlyDisplay,
+          [category]: updatedItems,
+        },
+      })
+    );
   };
 
   const toggleAllCheckboxes = (category, items, checkAll) => {
-    // Set all checkboxes to checked or unchecked
-    const updatedItems = checkAll ? items : [];
-
-    // Dispatch the updated data
-    dispatch(setOptionFormData({ [category]: updatedItems }));
+    dispatch(
+      setOptionFormData({
+        onlyDisplay: {
+          ...optionFormData.onlyDisplay,
+          [category]: checkAll ? items : [],
+        },
+      })
+    );
   };
 
   const regions = [
@@ -369,139 +360,107 @@ const OnlyDisplay = () => {
   return (
     <div className={css.onlyReceiveMatch}>
       <div className={css.onlyReceiveMatchBtn}>
-        <button type="button" onClick={() => toggleOnlyReceiveMatch("region")}   className={`${css.button} ${onlyReceiveMatch.region ? css.active : ""}`}    >
+        <button
+          type="button"
+          onClick={() => toggleOnlyReceiveMatch("region")}
+          className={`${css.button} ${
+            onlyReceiveMatch.region ? css.active : ""
+          }`}
+        >
           Region
         </button>
-        <button type="button" onClick={() => toggleOnlyReceiveMatch("country")} className={`${css.button} ${onlyReceiveMatch.country ? css.active : ""}`}   >
+        <button
+          type="button"
+          onClick={() => toggleOnlyReceiveMatch("country")}
+          className={`${css.button} ${
+            onlyReceiveMatch.country ? css.active : ""
+          }`}
+        >
           Country
         </button>
-        <button type="button" onClick={() => toggleOnlyReceiveMatch("state")}  className={`${css.button} ${onlyReceiveMatch.state ? css.active : ""}`}  >
+        <button
+          type="button"
+          onClick={() => toggleOnlyReceiveMatch("state")}
+          className={`${css.button} ${
+            onlyReceiveMatch.state ? css.active : ""
+          }`}
+        >
           State
         </button>
       </div>
+
       {onlyReceiveMatch.region && (
-        <div>
-          <div className={css.checkboxContainer}>
-            <ul className={css.checkbox}>
-              {regions.map((region) => (
-                <li key={region}>
-                  <input
-                    type="checkbox"
-                    id={region}
-                    name="regions"
-                    value={region}
-                    checked={optionFormData.regions_filter.includes(region)}
-                    onChange={() =>
-                      handleCheckboxChange("regions_filter", region)
-                    }
-                  />
-                  <label htmlFor={region}>{region}</label>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className={css.checkbox_btn}>
-            <button
-              type="button"
-              onClick={() =>
-                toggleAllCheckboxes("regions_filter", regions, true)
-              }
-            >
-              Check All
-            </button>
-            <button
-              type="button"
-              onClick={() =>
-                toggleAllCheckboxes("regions_filter", regions, false)
-              }
-            >
-              Uncheck All
-            </button>
-          </div>
-        </div>
+        <CheckboxList
+          items={regions}
+          category="regions_filter"
+          selected={optionFormData.onlyDisplay.regions_filter || []}
+          onToggle={handleCheckboxChange}
+          onToggleAll={toggleAllCheckboxes}
+        />
       )}
       {onlyReceiveMatch.country && (
-        <div>
-          <div className={css.checkboxContainer}>
-            <ul className={css.checkbox}>
-              {countryNames.map((country) => (
-                <li key={country}>
-                  <input
-                    type="checkbox"
-                    id={country}
-                    name="countries"
-                    value={country}
-                    checked={optionFormData.countries_filter.includes(country)}
-                    onChange={() =>
-                      handleCheckboxChange("countries_filter", country)
-                    }
-                  />
-                  <label htmlFor={country}>{country}</label>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className={css.checkbox_btn}>
-            <button
-              type="button"
-              onClick={() =>
-                toggleAllCheckboxes("countries_filter", countryNames, true)
-              }
-            >
-              Check All
-            </button>
-            <button
-              type="button"
-              onClick={() =>
-                toggleAllCheckboxes("countries_filter", countryNames, false)
-              }
-            >
-              Uncheck All
-            </button>
-          </div>
-        </div>
+        <CheckboxList
+          items={countryNames}
+          category="countries_filter"
+          selected={optionFormData.onlyDisplay.countries_filter|| []}
+          onToggle={handleCheckboxChange}
+          onToggleAll={toggleAllCheckboxes}
+        />
       )}
       {onlyReceiveMatch.state && (
-        <div>
-          <div className={css.checkboxContainer}>
-            <ul className={css.checkbox}>
-              {states.map((state) => (
-                <li key={state}>
-                  <input
-                    type="checkbox"
-                    id={state}
-                    name="states"
-                    value={state}
-                    checked={optionFormData.states_filter.includes(state)}
-                    onChange={() =>
-                      handleCheckboxChange("states_filter", state)
-                    }
-                  />
-                  <label htmlFor={state}>{state}</label>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className={css.checkbox_btn}>
-            <button
-              type="button"
-              onClick={() => toggleAllCheckboxes("states_filter", states, true)}
-            >
-              Check All
-            </button>
-            <button
-              type="button"
-              onClick={() =>
-                toggleAllCheckboxes("states_filter", states, false)
-              }
-            >
-              Uncheck All
-            </button>
-          </div>
-        </div>
+        <CheckboxList
+          items={states}
+          category="states_filter"
+          selected={optionFormData.onlyDisplay.states_filter || []}
+          onToggle={handleCheckboxChange}
+          onToggleAll={toggleAllCheckboxes}
+        />
       )}
     </div>
   );
 };
+
+
+
+
+  const CheckboxList = ({
+    items,
+    category,
+    selected,
+    onToggle,
+    onToggleAll,
+  }) => (
+    <>
+      <div className={css.checkboxContainer}>
+        <ul className={css.checkbox}>
+          {items.map((val) => (
+            <li key={val}>
+              <input
+                type="checkbox"
+                id={`${category}_${val}`}
+                checked={selected.includes(val)}
+                onChange={() => onToggle(category, val)}
+              />
+              <label htmlFor={`${category}_${val}`}>{val}</label>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className={css.checkbox_btn}>
+        <button
+          type="button"
+          onClick={() => onToggleAll(category, items, true)}
+        >
+          Check All
+        </button>
+        <button
+          type="button"
+          onClick={() => onToggleAll(category, items, false)}
+        >
+          Uncheck All
+        </button>
+      </div>
+    </>
+  );
 
 export default OnlyDisplay;
