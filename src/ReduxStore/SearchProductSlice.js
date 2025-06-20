@@ -410,6 +410,24 @@ export const deletePartCartNotes = createAsyncThunk(
   }
 );
 
+export const partVariance = createAsyncThunk(
+  "searchProductStore/partVariance",
+  async ({ token, part }) => {
+    try {
+      const response = await axios.get(`${brokerAPI}inventory/inventory-variant?query=${part}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("RESPONSE VARIANT", response.data.variants);
+      return response.data.variants; // Make sure API returns items array
+    } catch (error) {
+      console.error(error)
+    }
+  }
+);
+
+
 const initialState = {
   companiesListingParts: true,
   graphToggle: false,
@@ -436,6 +454,7 @@ const initialState = {
   keywordPageSize: null,
   keywordTotalCount: null,
   searchType: null,
+  partVarianceState: [],
 };
 
 const searchProductSlice = createSlice({
@@ -620,11 +639,22 @@ const searchProductSlice = createSlice({
           (item) => item.id != action.payload
         );
       })
-
       .addCase(clearCartItems.rejected, (state, action) => {
         state.error = action.error.message;
         console.error(action.error.message);
       })
+      .addCase(partVariance.pending, (state) => {
+        state.gettingProducts = true; // Set to true when starting the fetch
+        state.error = null;
+      })
+      .addCase(partVariance.fulfilled, (state, action) => {
+        state.partVarianceState = action.payload;
+        state.gettingProducts = false;
+      })
+      .addCase(partVariance.rejected, (state, action) => {
+        state.gettingProducts = false;
+        state.error = action.error.message;
+      });
   },
 });
 
