@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import css from "../../../styles/Menu/Tools/MyVendors.module.css";
+import css from "../../../../styles/Menu/Tools/MyVendors.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import {
   getCompanyInventory,
   searchCompany,
   setSearchCompanyData,
-} from "../../../ReduxStore/Reports";
+} from "../../../../ReduxStore/Reports";
 import { useNavigate } from "react-router-dom";
 
 const SearchCompanyInventory = () => {
@@ -119,6 +119,7 @@ const SearchCompanyInventory = () => {
             onFocus={handleFocus}
             onBlur={handleBlur}
             required
+            className="p-2"
           />
           <div className={css.compnaySearch} ref={listRef}>
             {showList && (
@@ -128,7 +129,7 @@ const SearchCompanyInventory = () => {
                     <li
                       key={company.id}
                       onClick={() => handleCompanySelect(company)}
-                      className={css.companyItem}
+                      className={`${css.companyItem}`}
                     >
                       <p>{company.name}</p>
                       {company.region && company.region && (
@@ -149,7 +150,7 @@ const SearchCompanyInventory = () => {
       </div>
       <div className={css.Searchbutton}>
         <button
-          className={css.orangeButton}
+          className={`${css.orangeButton} !m-5`}
           onClick={(e) => goToCompanyInventory(e)}
         >
           Submit

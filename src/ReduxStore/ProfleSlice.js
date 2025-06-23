@@ -489,9 +489,6 @@ export const createUser = createAsyncThunk(
   }
 );
 
-
-
-
 export const submitUserSettings = createAsyncThunk(
   "profileStore/submitUserSettings",
   async ({  token, optionFormData }) => {
@@ -544,10 +541,6 @@ export const fetchUserSettings = createAsyncThunk(
     }
   }
 );
-
-
-
-
 
 const initialState = {
   user: JSON.parse(localStorage.getItem("user")),
@@ -913,7 +906,7 @@ const profileSlice = createSlice({
       .addCase(updateCompanyUserData.rejected, (state, action) => {
         console.log("REJECTED: ", action.error.message);
       })
-            .addCase(fetchUserSettings.pending, (state) => {
+      .addCase(fetchUserSettings.pending, (state) => {
         console.log("Pending....");
         state.loading=true
       })
