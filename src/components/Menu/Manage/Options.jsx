@@ -10,6 +10,7 @@ import {
   submitUserSettings,
   fetchUserSettings,
   resetOptionData,
+  fetchUserData,
 } from "../../../ReduxStore/ProfleSlice";
 import { Link, NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -17,14 +18,32 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import Cookies from "js-cookie";
 import LoadingState from "@/LoadingState";
+import { setTogglePopUp } from "@/ReduxStore/SearchProductSlice";
+import CompanyDetails from "@/components/Popups/CompanyDetails/CompanyDetails";
+import { setPopupCompanyDetail } from "@/ReduxStore/SearchProductSlice";
+
 const Options = () => {
-  const { optionFormData, loading } = useSelector(
+  const { optionFormData, loading, initialData } = useSelector(
     (state) => state.profileStore
   );
   const [loader, setLoader] = useState(false);
   const dispatch = useDispatch();
   const token = Cookies.get("token");
   console.log("Token: ", token);
+
+  // COMPANY MODAL LOGIC
+  const { togglePopUp, popupCompanyDetail } = useSelector(
+    (state) => state.searchProductStore
+  );
+  const userId = Number(Cookies.get("user_id"));
+  useEffect(() => {
+    dispatch(fetchUserData({ id: userId, token }));
+  }, []);
+  const company = initialData?.company;
+  const openCompanyModal = (company) => {
+    dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
+    dispatch(setTogglePopUp()); // Show company modal
+  };
 
   // Handle sorting field changes inside displaySettings.sortPreferences
   const handleSortingChange = (index, field, value) => {
@@ -128,7 +147,9 @@ const Options = () => {
                 value="Submit Changes"
                 className="!text-white !capitalize !font-[400]"
               />
-              <button type="button">view profile</button>
+              <button type="button" onClick={() => openCompanyModal(company)}>
+                view profile
+              </button>
             </span>
           </div>
           <div className={myProfile.profileInfo}>
@@ -473,10 +494,18 @@ const Options = () => {
                     {[
                       ["cfilterfNEW", "New"],
                       ["cfilterfASIS", "ASIS"],
+                      ["cfilterfEXC", "EXC"],
+                      ["cfilterfF/S", "F/S"],
+                      ["cfilterfNOB", "NOB"],
+                      ["cfilterfREF", "REF"],
+                      ["cfilterfOEMREF", "OEMREF"],
+                      ["cfilterfREP", "REP"],
+                      ["cfilterfUSED", "USED"],
                     ].map(([name, label]) => (
                       <li key={name}>
-                        <label>{label}</label>
+                        <label htmlFor={name}>{label}</label>
                         <input
+                          id={name}
                           type="checkbox"
                           name={name}
                           checked={optionFormData.displayByCondition[name]}
@@ -603,14 +632,16 @@ const Options = () => {
                     </li>
 
                     <li className="!flex !justify-center !items-center !-ml-[25rem]">
-                      <label htmlFor="security">Access Level</label>
+                      <label htmlFor="security">
+                        Access Level <span className="text-red-500">*</span>
+                      </label>
                       <input
                         type="hidden"
                         name="security"
                         id="security"
                         value="2"
                       />
-                      <span>Browse</span>
+                      <span className="text-base ml-[2rem]">Admin</span>
                     </li>
                   </ul>
                 </div>
@@ -621,9 +652,6 @@ const Options = () => {
                   <button type="button" onClick={handleReset}>
                     Reset
                   </button>
-
-                  {/* <button>Submit Changes</button> */}
-
                   <button
                     disabled={loader}
                     className={` text-white transition-all duration-150 ${
@@ -640,6 +668,9 @@ const Options = () => {
           </div>
         </form>
       </div>
+      {togglePopUp && (
+        <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
+      )}
       <ToastContainer position="top-center" autoClose={2000} />
     </>
   );

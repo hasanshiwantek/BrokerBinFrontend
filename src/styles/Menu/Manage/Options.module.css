@@ -12,7 +12,7 @@ fieldset {
 
   select {
     border: 1px solid #8b8b8b;
-    padding: 0.5rem;
+    padding: 0.2rem;
     width: fit-content;
   }
 
@@ -78,7 +78,6 @@ fieldset {
   .otherSettings {
     &_fields {
       display: flex;
-      justify-content: center;
 
       ul {
         display: flex;
@@ -88,9 +87,7 @@ fieldset {
         li {
           display: flex;
           display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 1rem;
-          text-align: right;
+          grid-template-columns: repeat(3, 0.8fr);
           align-items: center;
         }
       }

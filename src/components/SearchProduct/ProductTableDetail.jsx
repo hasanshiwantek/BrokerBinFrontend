@@ -8,18 +8,20 @@ import { countriesList } from "@/data/services";
 import { FaEye } from "react-icons/fa";
 import { BiBlock } from "react-icons/bi";
 import { IoCheckmarkCircle } from "react-icons/io5";
-import { searchProductQuery, searchByKeyword } from "@/ReduxStore/SearchProductSlice";
+import {
+  searchProductQuery,
+  searchByKeyword,
+} from "@/ReduxStore/SearchProductSlice";
 import HoverDropdown from "@/HoverDropdown";
-import { setSelectedProducts, setTogglePopUp, setPopupCompanyDetail, setHoverCompanyDetail, } from "@/ReduxStore/SearchProductSlice";
+import {
+  setSelectedProducts,
+  setTogglePopUp,
+  setPopupCompanyDetail,
+  setHoverCompanyDetail,
+} from "@/ReduxStore/SearchProductSlice";
 
 const ProductTableDetail = React.memo(
-  ({
-    partModel,
-    partData,
-    searchString,
-  }) => {
-
-    console.log("Rendered: ProductTableDetail")
+  ({ partModel, partData, searchString }) => {
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -28,7 +30,6 @@ const ProductTableDetail = React.memo(
     const sortBy = queryParams.get("sortBy");
     const sortOrder = queryParams.get("sortOrder") || "desc";
     const page = parseInt(queryParams.get("page")) || 1;
-    
 
     const {
       selectedProducts,
@@ -37,7 +38,7 @@ const ProductTableDetail = React.memo(
       appliedFilters,
     } = useSelector((store) => store.searchProductStore);
     const { initialData, user } = useSelector((state) => state.profileStore);
- 
+
     const user_id = Cookies.get("user_id");
     const id = user?.user?.id || user_id;
     const token = Cookies.get("token");
@@ -104,14 +105,15 @@ const ProductTableDetail = React.memo(
       return selectedProducts.some((product) => product.id === id);
     };
 
-    // console.log("Selected Product: ",selectedProducts);
-    
+    console.log("Selected Product: ", selectedProducts);
+    console.log("Part Data: ", partData);
 
-    // console.log("Part Data: ",partData);
-
-
-    const totalCount = searchResponseMatched[partModel]?.totalCount || searchResponseMatched?.totalCount;
-    const pageSize = searchResponseMatched[partModel]?.pageSize || searchResponseMatched?.pageSize;
+    const totalCount =
+      searchResponseMatched[partModel]?.totalCount ||
+      searchResponseMatched?.totalCount;
+    const pageSize =
+      searchResponseMatched[partModel]?.pageSize ||
+      searchResponseMatched?.pageSize;
     const keywordPage = parseInt(queryParams.get("page")) || 1;
     const keywordPageSize = searchResponseMatched?.pageSize || 20;
     const keywordTotalCount = searchResponseMatched?.totalCount || 0;
@@ -122,7 +124,7 @@ const ProductTableDetail = React.memo(
       ? Math.ceil(totalCount / pageSize)
       : keywordTotalPages;
 
-    const currentPage = isSearchPagination ? page : keywordPage
+    const currentPage = isSearchPagination ? page : keywordPage;
 
     const [visiblePages, setVisiblePages] = useState([1, 10]); // Initially showing pages 1-10
 
@@ -136,8 +138,12 @@ const ProductTableDetail = React.memo(
       const sortBy = queryParams.get("sortBy");
       const sortOrder = queryParams.get("sortOrder");
       const url = currentQuery
-        ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(currentQuery)}&sortBy=${sortBy}&sortOrder=${sortOrder}`
-        : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(currentPartModel)}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
+        ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(
+            currentQuery
+          )}&sortBy=${sortBy}&sortOrder=${sortOrder}`
+        : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(
+            currentPartModel
+          )}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
       navigate(url, { replace: true });
       // ✅ Ensure pagination range updates when moving to the previous range
       if (newPage < visiblePages[0]) {
@@ -158,8 +164,12 @@ const ProductTableDetail = React.memo(
       const sortBy = queryParams.get("sortBy");
       const sortOrder = queryParams.get("sortOrder");
       const url = currentQuery
-        ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(currentQuery)}&sortBy=${sortBy}&sortOrder=${sortOrder}`
-        : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(currentPartModel)}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
+        ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(
+            currentQuery
+          )}&sortBy=${sortBy}&sortOrder=${sortOrder}`
+        : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(
+            currentPartModel
+          )}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
       navigate(url, { replace: true });
       // ✅ Ensure pagination range updates when reaching the last page in the current range
       if (newPage > visiblePages[1] && newPage <= totalPagess) {
@@ -178,8 +188,12 @@ const ProductTableDetail = React.memo(
         const sortBy = queryParams.get("sortBy");
         const sortOrder = queryParams.get("sortOrder");
         const url = currentQuery
-          ? `/inventory/search?page=${page}&query=${encodeURIComponent(currentQuery)}&sortBy=${sortBy}&sortOrder=${sortOrder}`
-          : `/inventory/search?page=${page}&partModel=${encodeURIComponent(currentPartModel)}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
+          ? `/inventory/search?page=${page}&query=${encodeURIComponent(
+              currentQuery
+            )}&sortBy=${sortBy}&sortOrder=${sortOrder}`
+          : `/inventory/search?page=${page}&partModel=${encodeURIComponent(
+              currentPartModel
+            )}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
         navigate(url, { replace: true });
         // ✅ Ensure visible pagination updates when clicking on a new range
         if (page > visiblePages[1] && page <= totalPagess) {
@@ -198,8 +212,12 @@ const ProductTableDetail = React.memo(
       const currentSortOrder = queryParams.get("sortOrder") || "desc";
       const newSortOrder =
         currentSortBy === column
-          ? currentSortOrder === "asc" ? "desc" : "asc"
-          : column === "price" ? "asc" : "desc";
+          ? currentSortOrder === "asc"
+            ? "desc"
+            : "asc"
+          : column === "price"
+          ? "asc"
+          : "desc";
       const payload = {
         token,
         page: currentPage,
@@ -226,7 +244,6 @@ const ProductTableDetail = React.memo(
       setVisiblePages([start, end]);
     }, [currentPage, totalPagess]);
 
-
     return (
       <div className={css.productTableDetail}>
         <div className={css.tableContainer}>
@@ -243,10 +260,30 @@ const ProductTableDetail = React.memo(
                       style={{ width: "18px", fontWeight: "bold" }}
                     />
                   </th>
-                  <th>Company</th>
+                  <th
+                    onClick={() => handleSort("name")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Company
+                    {sortBy === "name" && (sortOrder === "asc" ? "↑" : "↓")}
+                  </th>
                   <th>PVR</th>
-                  <th>Ctry</th>
-                  <th>Part / Model</th>
+                  <th
+                    onClick={() => handleSort("company_country")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Ctry
+                    {sortBy === "company_country" &&
+                      (sortOrder === "asc" ? "↑" : "↓")}
+                  </th>
+                  <th
+                    onClick={() => handleSort("partModel")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Part / Model
+                    {sortBy === "partModel" &&
+                      (sortOrder === "asc" ? "↑" : "↓")}
+                  </th>
                   <th>History</th>
                   <th>TS</th>
                   <th
@@ -285,8 +322,22 @@ const ProductTableDetail = React.memo(
                     {sortBy === "quantity" && (sortOrder === "asc" ? "↑" : "↓")}
                   </th>
 
-                  <th>Age </th>
-                  <th>Product Description</th>
+                  <th
+                    onClick={() => handleSort("created_at")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Age{" "}
+                    {sortBy === "created_at" &&
+                      (sortOrder === "asc" ? "↑" : "↓")}
+                  </th>
+                  <th
+                    onClick={() => handleSort("productDescription")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Product Description
+                    {sortBy === "productDescription" &&
+                      (sortOrder === "asc" ? "↑" : "↓")}
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -311,7 +362,7 @@ const ProductTableDetail = React.memo(
                       key={i}
                       style={
                         e?.addedBy?.company?.name?.toLowerCase() ===
-                          loggedInUserCompany?.toLowerCase()
+                        loggedInUserCompany?.toLowerCase()
                           ? { backgroundColor: "#ffb" } // Highlight if the company matches
                           : null
                       }
@@ -326,22 +377,26 @@ const ProductTableDetail = React.memo(
                       </td>
                       <td></td>
                       <td>
-                        <HoverDropdown type="company" id={e?.addedBy?.company?.id} company={e?.addedBy?.company} triggerElement={
-                          <a
-                            style={{ color: "#428bca", fontWeight: "500" }}
-                            onClick={(event) =>
-                              handleShowPopupCompanyDetails(
-                                event,
-                                e?.addedBy?.company?.id
-                              )
-                            }
-                            onMouseEnter={(event) =>
-                              handleHoverCompanyDetail(event, e.id)
-                            }
-                          >
-                            {e?.addedBy?.company?.name}
-                          </a>
-                        }
+                        <HoverDropdown
+                          type="company"
+                          id={e?.addedBy?.company?.id}
+                          company={e?.addedBy?.company}
+                          triggerElement={
+                            <a
+                              style={{ color: "#428bca", fontWeight: "500" }}
+                              onClick={(event) =>
+                                handleShowPopupCompanyDetails(
+                                  event,
+                                  e?.addedBy?.company?.id
+                                )
+                              }
+                              onMouseEnter={(event) =>
+                                handleHoverCompanyDetail(event, e.id)
+                              }
+                            >
+                              {e?.addedBy?.company?.name}
+                            </a>
+                          }
                         />
                       </td>
                       <td>
@@ -362,7 +417,7 @@ const ProductTableDetail = React.memo(
                           type="part"
                           id={e?.id}
                           rowData={e}
-                          triggerElement={<td >{e?.partModel}</td>}
+                          triggerElement={<td>{e?.partModel}</td>}
                         />
                       </td>
 
@@ -400,10 +455,30 @@ const ProductTableDetail = React.memo(
                       style={{ width: "18px", fontWeight: "bold" }}
                     />
                   </th>
-                  <th>Company</th>
+                  <th
+                    onClick={() => handleSort("name")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Company
+                    {sortBy === "name" && (sortOrder === "asc" ? "↑" : "↓")}
+                  </th>
                   <th>PVR</th>
-                  <th>Ctry</th>
-                  <th>Part / Model</th>
+                  <th
+                    onClick={() => handleSort("company_country")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Ctry
+                    {sortBy === "company_country" &&
+                      (sortOrder === "asc" ? "↑" : "↓")}
+                  </th>
+                  <th
+                    onClick={() => handleSort("partModel")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Part / Model
+                    {sortBy === "partModel" &&
+                      (sortOrder === "asc" ? "↑" : "↓")}
+                  </th>
                   <th>History</th>
                   <th>TS</th>
                   <th
@@ -413,7 +488,6 @@ const ProductTableDetail = React.memo(
                     HECI / CLEI{" "}
                     {sortBy === "heciClei" && (sortOrder === "asc" ? "↑" : "↓")}{" "}
                   </th>
-
                   <th
                     onClick={() => handleSort("mfg")}
                     style={{ cursor: "pointer" }}
@@ -435,7 +509,6 @@ const ProductTableDetail = React.memo(
                     Price{" "}
                     {sortBy === "price" && (sortOrder === "asc" ? "↑" : "↓")}
                   </th>
-
                   <th
                     onClick={() => handleSort("quantity")}
                     style={{ cursor: "pointer" }}
@@ -443,8 +516,23 @@ const ProductTableDetail = React.memo(
                     Quantity{" "}
                     {sortBy === "quantity" && (sortOrder === "asc" ? "↑" : "↓")}
                   </th>
-                  <th>Age</th>
-                  <th>Product Description</th>
+
+                  <th
+                    onClick={() => handleSort("created_at")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Age{" "}
+                    {sortBy === "created_at" &&
+                      (sortOrder === "asc" ? "↑" : "↓")}
+                  </th>
+                  <th
+                    onClick={() => handleSort("productDescription")}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Product Description
+                    {sortBy === "productDescription" &&
+                      (sortOrder === "asc" ? "↑" : "↓")}
+                  </th>
                 </tr>
               </tfoot>
             </table>
@@ -478,10 +566,11 @@ const ProductTableDetail = React.memo(
                     key={page}
                     onClick={() => handlePageChange(page)}
                     className={`px-4 py-2 border rounded-md transition-all duration-200 
-                    ${currentPage === page
+                    ${
+                      currentPage === page
                         ? "bg-blue-500 text-white"
                         : "bg-gray-100 text-gray-700 hover:bg-gray-300"
-                      }`}
+                    }`}
                   >
                     {page}
                   </button>
@@ -491,10 +580,11 @@ const ProductTableDetail = React.memo(
               <button
                 onClick={handleNextPage}
                 className={`px-4 py-2 border rounded-md bg-blue-500 text-white  hover:bg-blue-600 transition-all duration-200 
-            ${visiblePages[1] === totalPagess
-                    ? "opacity-50 cursor-not-allowed"
-                    : ""
-                  }`}
+            ${
+              visiblePages[1] === totalPagess
+                ? "opacity-50 cursor-not-allowed"
+                : ""
+            }`}
                 disabled={visiblePages[1] === totalPagess}
               >
                 Next
