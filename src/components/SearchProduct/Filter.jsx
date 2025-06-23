@@ -151,12 +151,6 @@ const {
             <FaWindowClose style={{ color: "#444" }} />
           </button>
         </div>
-        {/* <div>
-            <p>Adv</p>
-            <button type="button">
-              <BsToggleOn />
-            </button>
-          </div> */}
       </div>
       <>
         {/* Manufacturer Section */}
@@ -330,7 +324,12 @@ const {
           <div className={css.searchHistory}>
             {partVarianceState?.map((e, i) => (
               <div key={i}>
-                <p onClick={() => handleSearchFromVariance(e)}>{e}</p>
+                <p
+                className="cursor-pointer"
+                onClick={() => handleSearchFromVariance(e)}
+                >
+                  {e}
+                </p>
                 </div>
             ))}
           </div>

@@ -70,14 +70,6 @@ const Email = () => {
     },
   });
 
-  // On component mount, retrieve data from local storage
-  // useEffect(() => {
-  //   // const storedData = localStorage.getItem("checkboxSettings");
-  //   if (storedData) {
-  //     setCheckboxes(JSON.parse(storedData)); // Populate state from local storage if available
-  //   }
-  // }, []);
-
   // Handle checkbox changes
   const handleCheckboxChange = (section, key) => {
     setCheckboxes((prevState) => {
@@ -236,14 +228,6 @@ const Email = () => {
                 <span>Email</span>
               </NavLink>
             </li>
-            {/* <li>
-                <NavLink
-                  to="/reports/serviceStats"
-                  className={({ isActive }) => (isActive ? myProfile.active : '')}
-                >
-                  <span>Stats</span>
-                </NavLink>
-              </li> */}
           </ul>
         </div>
 
@@ -413,22 +397,6 @@ const Email = () => {
                   <option value="Daily">Daily</option>
                   <option value="Weekly">Weekly</option>
                   <option value="Monthly">Monthly</option>
-                </select>
-              </div>
-
-              {/* Service Directory Stats Section */}
-              <div className={css.section}>
-                <h1>Service Directory Stats</h1>
-                <label>Send</label>
-                <select
-                  value={checkboxes.serviceDirectoryStats}
-                  onChange={(e) =>
-                    handleSelectChange("serviceDirectoryStats", e.target.value)
-                  }
-                >
-                  <option value="Never">Never</option>
-                  <option value="Daily">Daily</option>
-                  <option value="Weekly">Weekly</option>
                 </select>
               </div>
 

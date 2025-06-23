@@ -640,7 +640,17 @@ const MyProfile = () => {
                           />
                         </div>
                         <div>
-                          <span className="text-base text-[#444]">Test</span>
+                          <span
+                            className="text-base text-[#444] cursor-pointer hover:underline hover:text-red-500"
+                            onClick={() => {
+                              const name = formData?.socialNetworking?.facebook?.trim();
+                              const base = 'https://www.facebook.com/';
+                              const url = name ? `${base}${encodeURIComponent(name)}` : base;
+                              window.open(url, '_blank');
+                            }}
+                          >
+                            Test
+                          </span>
                         </div>
                       </div>
 
@@ -664,7 +674,17 @@ const MyProfile = () => {
                           />
                         </div>
                         <div>
-                          <span className="text-base text-[#444]">Test</span>
+                          <span
+                            className="text-base text-[#444] cursor-pointer hover:underline hover:text-red-500"
+                            onClick={() => {
+                              const name = formData?.socialNetworking?.twitter?.trim();
+                              const base = 'https://www.x.com/';
+                              const url = name ? `${base}${encodeURIComponent(name)}` : base;
+                              window.open(url, '_blank');
+                            }}
+                          >
+                            Test
+                          </span>
                         </div>
                       </div>
 
@@ -688,7 +708,17 @@ const MyProfile = () => {
                           />
                         </div>
                         <div>
-                          <span className="text-base text-[#444]">Test</span>
+                          <span
+                            className="text-base text-[#444] cursor-pointer hover:underline hover:text-red-500"
+                            onClick={() => {
+                              const name = formData?.socialNetworking?.linkedin?.trim();
+                              const base = 'https://www.linkedin.com/';
+                              const url = name ? `${base}in/${encodeURIComponent(name)}` : base;
+                              window.open(url, '_blank');
+                            }}
+                          >
+                            Test
+                          </span>
                         </div>
                       </div>
                       <input
