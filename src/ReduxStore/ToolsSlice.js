@@ -180,7 +180,29 @@ export const addHotListItem = createAsyncThunk(
 
 export const showHotListItem = createAsyncThunk(
   "toolsStore/addHotListItem",
-  async ({ token, pageNumber,mfg }) => {
+  async ({ token, pageNumber }) => {
+    console.log(token);
+    try {
+      const response = await axios.get(
+        `${brokerAPI}hot-lists?pageNumber=${pageNumber}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("HotListdata:", response.data);
+      return response.data.data;
+    } catch (error) {
+      throw new Error("Error Fetching Hotlists");
+    }
+  }
+);
+
+export const showHotListItemMfg = createAsyncThunk(
+  "toolsStore/addHotListItemMfg",
+  async ({ token, pageNumber, mfg }) => {
     console.log(token);
     try {
       const response = await axios.get(
@@ -575,9 +597,9 @@ export const addToMyVendorsBadge = createAsyncThunk(
 const initialState = {
   tools: [],
   searchCompanies: [],
-  searchMyVendor: [], 
+  searchMyVendor: [],
   myVendor: [],
-  vendorPagination:{},
+  vendorPagination: {},
   myHotListItems: [],
   myContactsData: [],
   searchMyContact: [],
@@ -666,7 +688,7 @@ const ToolsSlice = createSlice({
       .addCase(getMyVendors.fulfilled, (state, action) => {
         console.log("✅CASE FULFILLED", action.payload);
         state.myVendor = action?.payload?.data;
-        state.vendorPagination=action?.payload?.pagination;
+        state.vendorPagination = action?.payload?.pagination;
         state.loading = false;
       })
       .addCase(getMyVendors.rejected, (state, action) => {
@@ -728,6 +750,20 @@ const ToolsSlice = createSlice({
         console.error("Error searching company name", action.error);
         state.loading = true;
       })
+
+      .addCase(showHotListItemMfg.pending, (state) => {
+        console.log("Searching...");
+        state.loading = true;
+      })
+      .addCase(showHotListItemMfg.fulfilled, (state, action) => {
+        console.log(action.payload);
+        state.loading = false;
+        state.myHotListItems = action.payload;
+      })
+      .addCase(showHotListItemMfg.rejected, (state, action) => {
+        state.loading = true;
+      })
+
       .addCase(showSortHotListItem.pending, (state) => {
         console.log("PENDING...");
       })
