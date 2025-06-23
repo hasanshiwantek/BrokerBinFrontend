@@ -13,6 +13,7 @@ import {
   searchByKeyword,
 } from "@/ReduxStore/SearchProductSlice";
 import HoverDropdown from "@/HoverDropdown";
+import EyeDropdown from "@/EyeDropDown";
 import {
   setSelectedProducts,
   setTogglePopUp,
@@ -399,9 +400,18 @@ const ProductTableDetail = React.memo(
                           }
                         />
                       </td>
-                      <td>
-                        <FaEye />
+
+                      <td className="cursor-pointer">
+                        <EyeDropdown
+                          rowData={e}
+                          triggerElement={
+                            <div>
+                              <FaEye />
+                            </div>
+                          }
+                        />
                       </td>
+
                       <td>
                         {countriesList.find(
                           (country) =>

@@ -17,6 +17,8 @@ const HoverDropdown = ({ type, id, triggerElement, company, rowData }) => {
   const [show, setShow] = useState(false);
   const [options, setOptions] = useState([]);
   const navigate = useNavigate();
+  console.log("Row Data: ",rowData);
+  
 
   const dispatch = useDispatch();
   const token = Cookies.get("token");
