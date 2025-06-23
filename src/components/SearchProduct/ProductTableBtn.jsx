@@ -10,12 +10,12 @@ import { addToCart } from "@/ReduxStore/SearchProductSlice";
 
 
 const ProductTableBtn = React.memo(() => {
-  console.log("Rendered From PrdouctTableDetail...");
+  console.log("Rendered From PrdouctTableBtn");
     
   const { popUpRfq } = useSelector((store) => store.searchProductStore);
   const selectedProducts = useSelector(state => state.searchProductStore.selectedProducts);
 
-  console.log("POPUP RFQ",popUpRfq)
+  // console.log("POPUP RFQ",popUpRfq)
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = Cookies.get("token");

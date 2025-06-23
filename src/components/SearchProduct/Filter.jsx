@@ -12,6 +12,7 @@ import {
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
 const Filter = ({ currentQuery }) => {
+  console.log("rendered: Filter")
 
   const [collapsedSections, setCollapsedSections] = useState({
     manufacturer: false,
@@ -32,17 +33,14 @@ const Filter = ({ currentQuery }) => {
   const token = Cookies.get("token");
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
+  const query = queryParams.get("partModel") || queryParams.get("query");
 
   // const searchString = location.state || {};
   const { searchResponseMatched, searchHistory, appliedFilters,partVarianceState } = useSelector(
     (store) => store.searchProductStore
   );
 
-
-console.log("partSearchVarianceState", partVarianceState)
-
-  console.log("searchfrom filters",searchResponseMatched);
-  
+// console.log("partSearchVarianceState", partVarianceState)
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -60,7 +58,6 @@ console.log("partSearchVarianceState", partVarianceState)
     ...(searchResponseMatched?.test?.data || []),
     ...(searchResponseMatched?.foundItems || []),
   ];
-  console.log("ALL ITEMS: ",allItems);
 
   const applyFilters = () => {
   const queryParams = new URLSearchParams(location.search);
@@ -97,13 +94,13 @@ const handleSearchFromVariance = (partModel) => {
   });
 };
 
-const query = queryParams.get("partModel") || queryParams.get("query")
 
 useEffect(() => {
   if (appliedFilters && Object.keys(appliedFilters).length > 0) {
     setFilters(appliedFilters);
   }
 }, []);
+
 useEffect(()=>{
   dispatch(partVariance({token, part: query}))
 
@@ -132,7 +129,7 @@ useEffect(()=>{
 };
 
 const filtersFromApi = searchResponseMatched?.filters || {};
-console.log("Filters partmodel", filtersFromApi);
+// console.log("Filters partmodel", filtersFromApi);
 
 const {
   manufacturers = {},
@@ -333,7 +330,7 @@ const {
           <div className={css.searchHistory}>
             {partVarianceState?.map((e, i) => (
               <div key={i}>
-                <p>{e}</p>
+                <p onClick={() => handleSearchFromVariance(e)}>{e}</p>
                 </div>
             ))}
           </div>

@@ -59,19 +59,14 @@ const ProductTableDetail = React.memo(
         );
       }
 
-      console.log(
-        "COMPANYID:",
-        companyId,
-        "COMPANYDETAIL:",
-        companyDetail || "Not Found in Both Sources"
-      );
+      // console.log("COMPANYID:",companyId,"COMPANYDETAIL:",companyDetail || "Not Found in Both Sources");
 
       // 3️⃣ If company is found, dispatch the correct company data
       if (companyDetail?.addedBy?.company) {
         dispatch(setPopupCompanyDetail([companyDetail.addedBy.company]));
-        console.log("SETPOPUPCOMPANYDETAIL:", companyDetail.addedBy.company);
+        // console.log("SETPOPUPCOMPANYDETAIL:", companyDetail.addedBy.company);
       } else {
-        console.error("Company not found in data or foundItems!");
+        // console.error("Company not found in data or foundItems!");
       }
 
       dispatch(setTogglePopUp());
@@ -96,13 +91,13 @@ const ProductTableDetail = React.memo(
           (e) => e?.id === id
         );
       }
-      console.log("HOVERED COMPANY DETAIL:", companyDetail || "NOT FOUND");
+      // console.log("HOVERED COMPANY DETAIL:", companyDetail || "NOT FOUND");
 
       if (companyDetail?.addedBy?.company) {
         dispatch(setHoverCompanyDetail(companyDetail.addedBy.company));
-        console.log("SET HOVER COMPANY DETAIL:", companyDetail.addedBy.company);
+        // console.log("SET HOVER COMPANY DETAIL:", companyDetail.addedBy.company);
       } else {
-        console.error("Company not found for hover!");
+        // console.error("Company not found for hover!");
       }
     };
 
@@ -111,7 +106,6 @@ const ProductTableDetail = React.memo(
     };
 
     console.log("Selected Product: ", selectedProducts);
-
     console.log("Part Data: ", partData);
 
     const totalCount =

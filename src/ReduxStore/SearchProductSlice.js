@@ -420,13 +420,13 @@ export const partVariance = createAsyncThunk(
         },
       });
       console.log("RESPONSE VARIANT", response.data.variants);
-      return response.data.variants; // Make sure API returns items array
+      return response.data.variants || []; // Make sure API returns items array
     } catch (error) {
       console.error(error)
+      return [];
     }
   }
 );
-
 
 const initialState = {
   companiesListingParts: true,
