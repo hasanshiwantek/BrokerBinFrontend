@@ -58,9 +58,6 @@ const Options = () => {
     servicecast: false,
   });
 
-  // const [dailyBroadcast, setDailyBroadcast] = useState(false);
-  // const [broadcasts, setBroadcasts] = useState(false);
-
   const [onlyReceiveMatch, setOnlyReceiveMatch] = useState({
     computers: true,
     telecom: false,
@@ -748,25 +745,7 @@ const Options = () => {
                   </ul>
                 </div>
                 <div className={css.broadcastFilters_companyFilter}>
-                  <h1>
-                    Company Filters (Max of 25/Overrides My Vendor settings.)
-                  </h1>
-                  {/* <ul>
-                    <li>
-                      <span>
-                        <label htmlFor="companySearch">Company Search</label>
-                        <input
-                          type="search"
-                          id="companySearch"
-                          name="companySearch"
-                          value="companySearch"
-                        />
-                        <button type="button">add</button>
-                      </span>
-                    </li>
-                  </ul> */}
-
-                  {/* View A Company's Inventory */}
+                  <h1> Company Filters (Max of 25/Overrides My Vendor settings.) </h1>
                   <div className={css.section} style={{ margin: "10px" }}>
                     <div className={css.display}>
                       <FiltersSearchCompanyInventory />
