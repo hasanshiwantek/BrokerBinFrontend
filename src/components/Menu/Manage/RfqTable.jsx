@@ -1,6 +1,5 @@
 import React, { memo, useEffect, useState } from "react";
 import css from "../../../styles/Menu/Manage/RfqTable.module.css";
-import { tableData } from "../../../data/tableData";
 import SearchComponent from "../../SearchComponent.jsx";
 import { AiFillMail, AiOutlineMail } from "react-icons/ai";
 import RfqTablePopUp from "../../Popups/RfqTablePopUp.jsx";

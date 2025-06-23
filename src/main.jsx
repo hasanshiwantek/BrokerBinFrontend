@@ -147,7 +147,7 @@ const MyContact = lazy(() => import("./components/Menu/Tools/MyContact.jsx"));
 const Company = lazy(() =>
   import("./components/Menu/Reports/Company/Company.jsx")
 );
-const SiteWide = lazy(() => import("./components/Menu/Reports/SiteWide.jsx"));
+const SiteWide = lazy(() => import("./components/Menu/Reports/Sitewide/SiteWide.jsx"));
 const Email = lazy(() => import("./components/Menu/Reports/Email.jsx"));
 const EmailVendorList = lazy(() => import("./components/Menu/Reports/EmailVendorList.jsx"));
 const ServiceStats = lazy(() =>
@@ -163,13 +163,13 @@ const SupplyAndDemand = lazy(() =>
   import("./components/Menu/Reports/SupplyAndDemand.jsx")
 );
 const TopSearches = lazy(() =>
-  import("./components/Menu/Reports/TopSearches.jsx")
+  import("./components/Menu/Reports/Sitewide/TopSearches.jsx")
 );
 const CompanyInventory = lazy(() =>
-  import("./components/Menu/Reports/CompanyInventory.jsx")
+  import("./components/Menu/Reports/Sitewide/CompanyInventory.jsx")
 );
 const TopSearchWithManufacturer = lazy(() =>
-  import("./components/Menu/Reports/TopSearchWithManufacturer.jsx")
+  import("./components/Menu/Reports/Sitewide/TopSearchWithManufacturer.jsx")
 );
 
 const HotListAdd = lazy(() => import("./components/Menu/Tools/HotListAdd.jsx"));
