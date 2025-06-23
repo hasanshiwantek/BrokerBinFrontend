@@ -623,14 +623,17 @@ const CompanyDetails = ({ closeModal }) => {
                       Product Categories:
                     </strong>
                     <p className="ml-1">
-                      {companyContactData.data?.company?.categories?.join(
-                        " , "
-                      )}
+                      {companyContactData.data?.company?.companyCategories
+                        ? Object.entries(companyContactData.data.company.companyCategories)
+                          .filter(([key]) => key !== "other")        // exclude 'other'
+                          .flatMap(([, values]) => values)           // flatten the arrays
+                          .join(", ")
+                        : ""}
                     </p>
                   </div>
                   <div>
                     <strong className="font-semibold">Mfg(s) We Carry:</strong>
-                    <p>{companyContactData.data?.company?.brands}</p>
+                    <p>{companyContactData.data?.company?.manufacturer?.join(", ")}</p>
                   </div>
                 </div>
                 <div className={css.Popup_Info_Main_right_contact}>
