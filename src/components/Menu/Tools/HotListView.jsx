@@ -77,13 +77,15 @@ const HotListView = () => {
     const payload = selectedIds; // Only send an array of IDs
     console.log("Payload for Backend:", payload);
     toast.info("Hotlists Deleted successfully!", {
-      style: { fontSize: "17px", marginTop: "-10px" }, //
+      style: { fontSize: "15px", marginTop: "-10px" }, //
     });
     dispatch(deleteHotlists({ token, ids: payload }))
       .then(() => {
         console.log("Deletion successful.");
         setSelectedIds([]);
-        dispatch(showHotListItem({ token, pageNumber: currentPage })); // Refresh the list
+        setTimeout(()=>{
+          dispatch(showHotListItem({ token, pageNumber: currentPage })); // Refresh the list
+        },2000)
       })
       .catch((error) => {
         console.error("Error during deletion:", error);

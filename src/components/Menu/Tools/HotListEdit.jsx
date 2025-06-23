@@ -90,7 +90,7 @@ const HotListEdit = () => {
       .then(() => {
         console.log("Hotlist Edit Succesfully");
         toast.info("Hotlists Updated successfully!", {
-          style: { fontSize: "17px", marginTop: "-10px" }, //
+          style: { fontSize: "15px", marginTop: "-10px" }, //
         });
       })
       .catch((error) => {
