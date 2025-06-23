@@ -489,6 +489,66 @@ export const createUser = createAsyncThunk(
   }
 );
 
+
+
+
+export const submitUserSettings = createAsyncThunk(
+  "profileStore/submitUserSettings",
+  async ({  token, optionFormData }) => {
+    try {
+      const response = await axios.post(
+        `${brokerAPI}user-settings/save-user-settings`,
+        {optionFormData},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("✅User Options Submission Response From Redux: ",response?.data);
+      
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error while submitting user Options Settings data:",
+        error.response?.data || error.message
+      );
+      throw "Error while submitting user Options Settings data:" || error;
+    }
+  }
+);
+
+export const fetchUserSettings = createAsyncThunk(
+  "profileStore/fetchUserSettings",
+  async ({  token }) => {
+    try {
+      const response = await axios.get(
+        `${brokerAPI}user-settings/fetch-user-settings`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("✅User Options Fetched From Redux: ",response?.data?.data);
+      
+      return response.data.data;
+    } catch (error) {
+      console.error(
+        "Error while fetching user Options Settings data:",
+        error.response?.data || error.message
+      );
+      throw "Error while fetching user Options Settings data:" || error;
+    }
+  }
+);
+
+
+
+
+
 const initialState = {
   user: JSON.parse(localStorage.getItem("user")),
   formData: {
@@ -526,42 +586,59 @@ const initialState = {
     sigcheckIM: true,
   },
   optionFormData: {
-    hourly: false,
-    daily: false,
-    my_regions_filter: [],
-    my_countries_filter: [],
-    my_states_filter: [],
-    regions_filter: [],
-    countries_filter: [],
-    states_filter: [],
-    language: "english",
-    sortPreferences: [
-      { sortBy: "", sortOrder: "ASC" }, // Default preferences for Sorting 1
-      { sortBy: "", sortOrder: "ASC" }, // Sorting 2
-      { sortBy: "", sortOrder: "ASC" }, // Sorting 3
-    ],
-    sortLock: "0",
-    multiplePartSearch: "1",
-    itemsPerPage: "20",
-    alternateRowColors: false,
-    showBorders: false,
-    showFilters: "2",
-    displayFiltersPosition: "2",
-    showDetails: false,
-    forceDescriptions: false,
-    doubleVision: false,
-    showHistoryGraphs: false,
-    preferredBrokercell: "",
-    receiveRFQEmails: "1",
-    fontSize: "8",
-    extendedCompanyInfo: "1",
-    contactMethod: "1",
-    showContactInfo: "1",
-    receiveSiteEmails: "0",
-    receiveUpdates: "0",
-    cfilterfNEW: false,
-    cfilterfASIS: false,
+    receiveMatchYourHits: {
+      hourly: false,
+      daily: false,
+    },
+    onlyReceiveMatch: {
+      my_regions_filter: [],
+      my_countries_filter: [],
+      my_states_filter: [],
+    },
+    onlyDisplay: {
+      regions_filter: [],
+      countries_filter: [],
+      states_filter: [],
+    },
+    displaySettings: {
+      language: "english",
+      sortPreferences: [
+        { sortBy: "", sortOrder: "ASC" },
+        { sortBy: "", sortOrder: "ASC" },
+        { sortBy: "", sortOrder: "ASC" },
+      ],
+      sortLock: "0",
+      multiplePartSearch: "1",
+      itemsPerPage: "20",
+    },
+    customPartDisplay: {
+      alternateRowColors: false,
+      showBorders: false,
+      showFilters: "2",
+      displayFiltersPosition: "2",
+      showDetails: false,
+      forceDescriptions: false,
+      doubleVision: false,
+      showHistoryGraphs: false,
+    },
+    brokerCell: {
+      preferredBrokercell: "",
+    },
+    displayByCondition: {
+      cfilterfNEW: false,
+      cfilterfASIS: false,
+    },
+    otherSettings: {
+      fontSize: "8",
+      extendedCompanyInfo: "1",
+      contactMethod: "1",
+      showContactInfo: "1",
+      receiveSiteEmails: "0",
+      receiveRFQEmails: "1",
+      receiveUpdates: "0",
+    },
   },
+
   initialData: {},
   blurWhileLoading: false,
   customSignature: true,
@@ -570,6 +647,7 @@ const initialState = {
   companyLogo: null,
   companyFeedbackData: [],
   feedbackGivenData: [],
+    loading: false,
 };
 
 const profileSlice = createSlice({
@@ -598,8 +676,10 @@ const profileSlice = createSlice({
     resetProfileState: (state) => {
       state.user = null;
       state.formData = initialState.formData;
-      state.optionFormData = initialState.optionFormData;
       // Add any other state reset logic here
+    },
+    resetOptionData:(state)=>{
+      state.optionFormData = initialState.optionFormData;
     },
     clearLogo: (state) => {
       state.companyLogo = null;
@@ -832,6 +912,20 @@ const profileSlice = createSlice({
       })
       .addCase(updateCompanyUserData.rejected, (state, action) => {
         console.log("REJECTED: ", action.error.message);
+      })
+            .addCase(fetchUserSettings.pending, (state) => {
+        console.log("Pending....");
+        state.loading=true
+      })
+      .addCase(fetchUserSettings.fulfilled, (state, action) => {
+        console.log("✅Fetched User Settings Fulfilled!: ", action.payload);
+        state.optionFormData=action.payload?.settings;
+        state.loading=false
+      })
+      .addCase(fetchUserSettings.rejected, (state, action) => {
+        console.log("REJECTED: ", action.error.message);
+        state.loading = false;
+
       });
   },
 });
@@ -844,6 +938,7 @@ export const {
   resetProfileState,
   clearLogo,
   restoreInitialData,
+  resetOptionData,
 } = profileSlice.actions;
 
 export default profileSlice.reducer;

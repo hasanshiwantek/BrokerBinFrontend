@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import myProfile from "../../../styles/Menu/Manage/MyProfile.module.css";
 import css from "../../../styles/Menu/Manage/Options.module.css";
 import OnlyReceiveMatch from "./OnlyReceiveMatch";
@@ -7,93 +7,113 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   setOptionFormData,
   submitUserOptions,
+  submitUserSettings,
+  fetchUserSettings,
+  resetOptionData,
 } from "../../../ReduxStore/ProfleSlice";
 import { Link, NavLink } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 import Cookies from "js-cookie";
+import LoadingState from "@/LoadingState";
 const Options = () => {
-  const { optionFormData } = useSelector((state) => state.profileStore);
+  const { optionFormData, loading } = useSelector(
+    (state) => state.profileStore
+  );
+  const [loader, setLoader] = useState(false);
   const dispatch = useDispatch();
+  const token = Cookies.get("token");
+  console.log("Token: ", token);
 
-  // const initialOptionFormData = {
-  //   hourly: false,
-  //   daily: false,
-  //   my_regions_filter: [],
-  //   my_countries_filter: [],
-  //   my_states_filter: [],
-  //   regions_filter: [],
-  //   countries_filter: [],
-  //   states_filter: [],
-  //   language: "english",
-  //   sortPreferences: [
-  //     { sortBy: "", sortOrder: "ASC" },
-  //     { sortBy: "", sortOrder: "ASC" },
-  //     { sortBy: "", sortOrder: "ASC" },
-  //   ],
-  //   sortLock: "0",
-  //   multiplePartSearch: "1",
-  //   itemsPerPage: "20",
-  //   alternateRowColors: false,
-  //   showBorders: false,
-  //   showFilters: "2",
-  //   displayFiltersPosition: "2",
-  //   showDetails: false,
-  //   forceDescriptions: false,
-  //   doubleVision: false,
-  //   showHistoryGraphs: true,
-  //   preferredBrokercell: "1",
-  //   receiveRFQEmails: "1",
-  //   fontSize: "8",
-  //   extendedCompanyInfo: "1",
-  //   contactMethod: "1",
-  //   showContactInfo: "1",
-  //   receiveSiteEmails: "0",
-  //   receiveUpdates: "0",
-  //   cfilterfNEW: false,
-  //   cfilterfASIS: false,
-  // };
-
-  // const [optionFormData, setOptionFormData] = useState(initialOptionFormData);
-
-  // Handler for sorting changes
-
-  // Handler for sorting changes
+  // Handle sorting field changes inside displaySettings.sortPreferences
   const handleSortingChange = (index, field, value) => {
-    // Make a copy of sortPreferences and update the field
-    const updatedSortPreferences = [...optionFormData.sortPreferences];
-    updatedSortPreferences[index] = {
-      ...updatedSortPreferences[index],
-      [field]: value,
-    };
+    const updated = [...optionFormData.displaySettings.sortPreferences];
+    updated[index] = { ...updated[index], [field]: value };
 
-    // Dispatch the updated sortPreferences array
     dispatch(
       setOptionFormData({
-        sortPreferences: updatedSortPreferences,
+        displaySettings: {
+          ...optionFormData.displaySettings,
+          sortPreferences: updated,
+        },
       })
     );
   };
 
-  // General change handler for inputs
-  const handleChange = (e) => {
+  // Generic change handler for nested form fields
+  const handleChange = (e, section) => {
     const { name, value, type, checked } = e.target;
+    const val = type === "checkbox" ? checked : value;
 
-    // For checkboxes, use checked value, otherwise use value
     dispatch(
       setOptionFormData({
-        ...optionFormData,
-        [name]: type === "checkbox" ? checked : value,
+        [section]: {
+          ...optionFormData[section],
+          [name]: val,
+        },
       })
     );
   };
 
-  // Form submit handler
-  const submitMyProfileOptions = (event) => {
-    event.preventDefault();
-    console.log("FormData:", optionFormData);
-    // You can send the formData to your backend here.
+  // Submit form
+  const submitMyProfileOptions = async (e) => {
+    e.preventDefault();
+    const data = optionFormData;
+    console.log("📤 Submitting User Settings Payload:", data);
+
+    try {
+      setLoader(true);
+      const resultAction = await dispatch(
+        submitUserSettings({ token, optionFormData: data })
+      );
+
+      if (submitUserSettings.fulfilled.match(resultAction)) {
+        console.log("✅ Submission Success:", resultAction.payload);
+        toast.info(
+          resultAction?.payload?.message || "User Options Updated Successfully",
+          {
+            style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
+          }
+        );
+      } else {
+        console.error("❌ Submission Failed:", resultAction.error.message);
+        toast.error("Submission Failed.Please Try Again", {
+          style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
+        });
+      }
+    } catch (err) {
+      console.error("🔥 Unexpected Submission Error:", err);
+    } finally {
+      setLoader(false);
+    }
   };
 
+  const handleReset = () => {
+    try {
+      dispatch(resetOptionData());
+      toast.info("Form Reset Successfully", {
+        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
+      });
+    } catch (err) {
+      console.error("🔥 Unexpected Submission Error:", err);
+    }
+  };
 
+  useEffect(() => {
+    dispatch(fetchUserSettings({ token }));
+  }, []);
+
+  if (loading) {
+    return (
+      // <div className="flex justify-center items-center py-20">
+      //   <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
+      //   <span className="ml-4 text-blue-600 text-lg font-medium"></span>
+      // </div>
+
+      <LoadingState />
+    );
+  }
 
   return (
     <>
@@ -198,8 +218,8 @@ const Options = () => {
                       type="checkbox"
                       name="hourly"
                       id="hourly"
-                      checked={optionFormData.hourly}
-                      onChange={handleChange}
+                      checked={optionFormData.receiveMatchYourHits.hourly}
+                      onChange={(e) => handleChange(e, "receiveMatchYourHits")}
                     />
                   </span>
                   <span>
@@ -208,8 +228,8 @@ const Options = () => {
                       type="checkbox"
                       name="daily"
                       id="daily"
-                      checked={optionFormData.daily}
-                      onChange={handleChange}
+                      checked={optionFormData.receiveMatchYourHits.daily}
+                      onChange={(e) => handleChange(e, "receiveMatchYourHits")}
                     />
                   </span>
                 </div>
@@ -234,8 +254,8 @@ const Options = () => {
                       <select
                         name="language"
                         id="language"
-                        value={optionFormData.language}
-                        onChange={handleChange}
+                        value={optionFormData.displaySettings.language}
+                        onChange={(e) => handleChange(e, "displaySettings")}
                       >
                         <option value="english">English</option>
                       </select>
@@ -243,61 +263,67 @@ const Options = () => {
 
                     {/* Sorting Preferences */}
 
-                    {optionFormData.sortPreferences.map((pref, index) => (
-                      <li key={index}>
-                        <label htmlFor={`sortby${index + 1}`}>
-                          Sorting Priority {index + 1}
-                        </label>
-                        <select
-                          name={`sortby${index + 1}`}
-                          id={`sortby${index + 1}`}
-                          value={pref.sortBy}
-                          onChange={(e) =>
-                            handleSortingChange(index, "sortBy", e.target.value)
-                          }
-                        >
-                          <option value="">Select One</option>
-                          <option value="age">Age</option>
-                          <option value="condition">Condition</option>
-                          <option value="company">Company</option>
-                          <option value="country">Country</option>
-                          <option value="description">Description</option>
-                          <option value="manufacturer">Manufacturer</option>
-                          <option value="my_region">My Region</option>
-                          <option value="my_vendors">My Vendors</option>
-                          <option value="part_model">Part / Model</option>
-                          <option value="price">Price</option>
-                          <option value="quantity">Quantity</option>
-                          <option value="region">Region</option>
-                          <option value="shield_quality">
-                            Shield of Quality
-                          </option>
-                        </select>
-                        <select
-                          name={`sortord${index + 1}`}
-                          id={`sortord${index + 1}`}
-                          value={pref.sortOrder}
-                          onChange={(e) =>
-                            handleSortingChange(
-                              index,
-                              "sortOrder",
-                              e.target.value
-                            )
-                          }
-                        >
-                          <option value="ASC">First to Last</option>
-                          <option value="DESC">Last to First</option>
-                        </select>
-                      </li>
-                    ))}
+                    {optionFormData.displaySettings.sortPreferences.map(
+                      (pref, index) => (
+                        <li key={index}>
+                          <label htmlFor={`sortby${index + 1}`}>
+                            Sorting Priority {index + 1}
+                          </label>
+                          <select
+                            name={`sortby${index + 1}`}
+                            id={`sortby${index + 1}`}
+                            value={pref.sortBy}
+                            onChange={(e) =>
+                              handleSortingChange(
+                                index,
+                                "sortBy",
+                                e.target.value
+                              )
+                            }
+                          >
+                            <option value="">Select One</option>
+                            <option value="age">Age</option>
+                            <option value="condition">Condition</option>
+                            <option value="company">Company</option>
+                            <option value="country">Country</option>
+                            <option value="description">Description</option>
+                            <option value="manufacturer">Manufacturer</option>
+                            <option value="my_region">My Region</option>
+                            <option value="my_vendors">My Vendors</option>
+                            <option value="part_model">Part / Model</option>
+                            <option value="price">Price</option>
+                            <option value="quantity">Quantity</option>
+                            <option value="region">Region</option>
+                            <option value="shield_quality">
+                              Shield of Quality
+                            </option>
+                          </select>
+                          <select
+                            name={`sortord${index + 1}`}
+                            id={`sortord${index + 1}`}
+                            value={pref.sortOrder}
+                            onChange={(e) =>
+                              handleSortingChange(
+                                index,
+                                "sortOrder",
+                                e.target.value
+                              )
+                            }
+                          >
+                            <option value="ASC">First to Last</option>
+                            <option value="DESC">Last to First</option>
+                          </select>
+                        </li>
+                      )
+                    )}
 
                     <li>
                       <label htmlFor="sortLock">Preferred Sort Lock</label>
                       <select
                         name="sortLock"
                         id="sortLock"
-                        value={optionFormData.sortLock}
-                        onChange={handleChange}
+                        value={optionFormData.displaySettings.sortLock}
+                        onChange={(e) => handleChange(e, "displaySettings")}
                       >
                         <option value="0">NONE</option>
                         <option value="1">1 Column</option>
@@ -314,8 +340,10 @@ const Options = () => {
                       <select
                         name="multiplePartSearch"
                         id="user_sort_pref"
-                        value={optionFormData.multiplePartSearch}
-                        onChange={handleChange}
+                        value={
+                          optionFormData.displaySettings.multiplePartSearch
+                        }
+                        onChange={(e) => handleChange(e, "displaySettings")}
                       >
                         <option value="0">NO</option>
                         <option value="1">YES</option>
@@ -328,8 +356,8 @@ const Options = () => {
                       <select
                         name="itemsPerPage"
                         id="perp"
-                        value={optionFormData.itemsPerPage}
-                        onChange={handleChange}
+                        value={optionFormData.displaySettings.itemsPerPage}
+                        onChange={(e) => handleChange(e, "displaySettings")}
                       >
                         <option value="15">15</option>
                         <option value="20">20</option>
@@ -352,138 +380,78 @@ const Options = () => {
                 <h1>Custom Part Search Display</h1>
                 <div className={css.customPartSearchDisplay_fields}>
                   <ul>
+                    {[
+                      ["alternateRowColors", "Alternate Row Colors"],
+                      ["showBorders", "Show Borders"],
+                      ["showDetails", "Show Details"],
+                      ["forceDescriptions", "Force Descriptions"],
+                      ["doubleVision", "Double Vision"],
+                      ["showHistoryGraphs", "Show History Graphs"],
+                    ].map(([name, label]) => (
+                      <li key={name}>
+                        <label htmlFor={name}>{label}</label>
+                        <input
+                          type="checkbox"
+                          name={name}
+                          id={name}
+                          checked={optionFormData.customPartDisplay[name]}
+                          onChange={(e) => handleChange(e, "customPartDisplay")}
+                        />
+                      </li>
+                    ))}
+
                     <li>
-                      <label htmlFor="alternateRowColors">
-                        Alternate Row Colors
-                      </label>
-                      <input
-                        type="checkbox"
-                        name="alternateRowColors"
-                        id="alternateRowColors"
-                        checked={optionFormData.alternateRowColors}
-                        onChange={handleChange}
-                      />
-                    </li>
-                    <li>
-                      <label htmlFor="showBorders">Show Borders</label>
-                      <input
-                        type="checkbox"
-                        name="showBorders"
-                        id="showBorders"
-                        checked={optionFormData.showBorders}
-                        onChange={handleChange}
-                      />
-                    </li>
-                    <li>
-                      <label htmlFor="displayFilters">Display Filters</label>
+                      <label htmlFor="showFilters">Display Filters</label>
                       <select
                         name="showFilters"
                         id="display_filters"
-                        value={optionFormData.showFilters}
-                        onChange={handleChange}
+                        value={optionFormData.customPartDisplay.showFilters}
+                        onChange={(e) => handleChange(e, "customPartDisplay")}
                       >
                         <option value="0">Hidden</option>
                         <option value="1">Advanced</option>
+                        <option value="2">Basic</option>
                       </select>
+
                       <select
                         name="displayFiltersPosition"
                         id="table_filter"
-                        value={optionFormData.displayFiltersPosition}
-                        onChange={handleChange}
+                        value={
+                          optionFormData.customPartDisplay
+                            .displayFiltersPosition
+                        }
+                        onChange={(e) => handleChange(e, "customPartDisplay")}
                       >
                         <option value="1">Top</option>
                         <option value="2">Left</option>
                       </select>
-                    </li>
-                    <li>
-                      <label htmlFor="showDetails">Show Details</label>
-                      <input
-                        type="checkbox"
-                        name="showDetails"
-                        id="showDetails"
-                        checked={optionFormData.showDetails}
-                        onChange={handleChange}
-                      />
-                    </li>
-                    <li>
-                      <label htmlFor="forceDescriptions">
-                        Force Descriptions
-                      </label>
-                      <input
-                        type="checkbox"
-                        name="forceDescriptions"
-                        id="forceDescriptions"
-                        checked={optionFormData.forceDescriptions}
-                        onChange={handleChange}
-                      />
-                    </li>
-                    <li>
-                      <label htmlFor="doubleVision">Double Vision</label>
-                      <input
-                        type="checkbox"
-                        name="doubleVision"
-                        id="doubleVision"
-                        checked={optionFormData.doubleVision}
-                        onChange={handleChange}
-                      />
-                    </li>
-                    <li>
-                      <label htmlFor="showHistoryGraphs">
-                        Show History Graphs
-                      </label>
-                      <input
-                        type="checkbox"
-                        name="showHistoryGraphs"
-                        id="showHistoryGraphs"
-                        checked={optionFormData.showHistoryGraphs}
-                        onChange={handleChange}
-                      />
                     </li>
                   </ul>
                 </div>
               </div>
 
               {/* Section: Preferred Brokerbin Use */}
-              <div className={css.preferredBrokerbinUse}>
+              <div className={css.resultsByTheseConditions}>
                 <h1>Preferred Brokercell Use</h1>
-                <div className={css.preferredBrokerbinUse_fields}>
-                  <ul className="checkbox">
-                    <li>
-                      <label
-                        htmlFor="teleRadio"
-                        className="flex items-center gap-2 cursor-pointer"
-                      >
-                        <input
-                          type="radio"
-                          name="preferredBrokercell"
-                          id="teleRadio"
-                          value="Telecom"
-                          checked={
-                            optionFormData.preferredBrokercell === "Telecom"
-                          }
-                          onChange={handleChange}
-                        />
-                        Telecom
-                      </label>
-                    </li>
-                    <li>
-                      <label
-                        htmlFor="compRadio"
-                        className="flex items-center gap-2 cursor-pointer"
-                      >
-                        <input
-                          type="radio"
-                          name="preferredBrokercell"
-                          id="compRadio"
-                          value="Computer"
-                          checked={
-                            optionFormData.preferredBrokercell === "Computer"
-                          }
-                          onChange={handleChange}
-                        />
-                        Computer
-                      </label>
-                    </li>
+                <div className={css.resultsByTheseConditions_fields}>
+                  <ul>
+                    {["Telecom", "Computer"].map((val) => (
+                      <li key={val}>
+                        <label className="flex items-center gap-2">
+                          <input
+                            type="radio"
+                            name="preferredBrokercell"
+                            value={val}
+                            checked={
+                              optionFormData.brokerCell.preferredBrokercell ===
+                              val
+                            }
+                            onChange={(e) => handleChange(e, "brokerCell")}
+                          />
+                          {val}
+                        </label>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>
@@ -502,29 +470,22 @@ const Options = () => {
                 <h1>Only Display Results By These Conditions</h1>
                 <div className={css.resultsByTheseConditions_fields}>
                   <ul>
-                    <li>
-                      <label htmlFor="cfilterfNEW">New</label>
-                      <input
-                        type="checkbox"
-                        name="cfilterfNEW"
-                        id="cfilterfNEW"
-                        value="1"
-                        checked={optionFormData.cfilterfNEW || false}
-                        onChange={handleChange}
-                      />
-                    </li>
-                    <li>
-                      <label htmlFor="cfilterfASIS">ASIS</label>
-                      <input
-                        type="checkbox"
-                        name="cfilterfASIS"
-                        id="cfilterfASIS"
-                        value="2"
-                        checked={optionFormData.cfilterfASIS || false}
-                        onChange={handleChange}
-                      />
-                    </li>
-                    {/* Add similar checkboxes for other conditions like EXC, REF, etc. */}
+                    {[
+                      ["cfilterfNEW", "New"],
+                      ["cfilterfASIS", "ASIS"],
+                    ].map(([name, label]) => (
+                      <li key={name}>
+                        <label>{label}</label>
+                        <input
+                          type="checkbox"
+                          name={name}
+                          checked={optionFormData.displayByCondition[name]}
+                          onChange={(e) =>
+                            handleChange(e, "displayByCondition")
+                          }
+                        />
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>
@@ -539,8 +500,8 @@ const Options = () => {
                       <select
                         name="fontSize"
                         id="fontSize"
-                        value={optionFormData.fontSize}
-                        onChange={handleChange}
+                        value={optionFormData.otherSettings.fontSize}
+                        onChange={(e) => handleChange(e, "otherSettings")}
                       >
                         <option value="8">8 Point</option>
                         <option value="9">9 Point</option>
@@ -556,8 +517,8 @@ const Options = () => {
                       <select
                         name="extendedCompanyInfo"
                         id="extendedCompanyInfo"
-                        value={optionFormData.extendedCompanyInfo}
-                        onChange={handleChange}
+                        value={optionFormData.otherSettings.extendedCompanyInfo}
+                        onChange={(e) => handleChange(e, "otherSettings")}
                       >
                         <option value="0">Off</option>
                         <option value="1">On</option>
@@ -570,8 +531,8 @@ const Options = () => {
                       <select
                         name="contactMethod"
                         id="contactMethod"
-                        value={optionFormData.contactMethod}
-                        onChange={handleChange}
+                        value={optionFormData.otherSettings.contactMethod}
+                        onChange={(e) => handleChange(e, "otherSettings")}
                       >
                         <option value="1">Direct</option>
                         <option value="2">Toll Free</option>
@@ -588,8 +549,8 @@ const Options = () => {
                       <select
                         name="showContactInfo"
                         id="showContactInfo"
-                        value={optionFormData.showContactInfo}
-                        onChange={handleChange}
+                        value={optionFormData.otherSettings.showContactInfo}
+                        onChange={(e) => handleChange(e, "otherSettings")}
                       >
                         <option value="1">YES</option>
                         <option value="0">NO</option>
@@ -603,8 +564,8 @@ const Options = () => {
                       <select
                         name="receiveSiteEmails"
                         id="mailings"
-                        value={optionFormData.receiveSiteEmails}
-                        onChange={handleChange}
+                        value={optionFormData.otherSettings.receiveSiteEmails}
+                        onChange={(e) => handleChange(e, "otherSettings")}
                       >
                         <option value="0">NO</option>
                         <option value="1">YES</option>
@@ -618,8 +579,8 @@ const Options = () => {
                       <select
                         name="receiveRFQEmails"
                         id="rfqemail"
-                        value={optionFormData.receiveRFQEmails}
-                        onChange={handleChange}
+                        value={optionFormData.otherSettings.receiveRFQEmails}
+                        onChange={(e) => handleChange(e, "otherSettings")}
                       >
                         <option value="0">NO</option>
                         <option value="1">YES</option>
@@ -633,8 +594,8 @@ const Options = () => {
                       <select
                         name="receiveUpdates"
                         id="update_emails"
-                        value={optionFormData.receiveUpdates}
-                        onChange={handleChange}
+                        value={optionFormData.otherSettings.receiveUpdates}
+                        onChange={(e) => handleChange(e, "otherSettings")}
                       >
                         <option value="0">NO</option>
                         <option value="1">YES</option>
@@ -657,14 +618,29 @@ const Options = () => {
 
               <div className={css.btnGroup}>
                 <div className={css.btnGroupSec}>
-                  <button>Reset</button>
-                  <button>Submit Changes</button>
+                  <button type="button" onClick={handleReset}>
+                    Reset
+                  </button>
+
+                  {/* <button>Submit Changes</button> */}
+
+                  <button
+                    disabled={loader}
+                    className={` text-white transition-all duration-150 ${
+                      loader
+                        ? "!bg-gray-400 cursor-not-allowed"
+                        : "bg-[#2c83ec] hover:bg-[#1c6dd0]"
+                    }`}
+                  >
+                    {loader ? "Sumbitting..." : " Submit Changes"}
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         </form>
       </div>
+      <ToastContainer position="top-center" autoClose={2000} />
     </>
   );
 };
