@@ -492,15 +492,15 @@ const Options = () => {
                 <div className={css.resultsByTheseConditions_fields}>
                   <ul>
                     {[
-                      ["cfilterfNEW", "New"],
-                      ["cfilterfASIS", "ASIS"],
-                      ["cfilterfEXC", "EXC"],
-                      ["cfilterfF/S", "F/S"],
-                      ["cfilterfNOB", "NOB"],
-                      ["cfilterfREF", "REF"],
-                      ["cfilterfOEMREF", "OEMREF"],
-                      ["cfilterfREP", "REP"],
-                      ["cfilterfUSED", "USED"],
+                      ["NEW", "New"],
+                      ["ASIS", "ASIS"],
+                      ["EXC", "EXC"],
+                      ["F/S", "F/S"],
+                      ["NOB", "NOB"],
+                      ["REF", "REF"],
+                      ["OEMREF", "OEMREF"],
+                      ["REP", "REP"],
+                      ["USED", "USED"],
                     ].map(([name, label]) => (
                       <li key={name}>
                         <label htmlFor={name}>{label}</label>
@@ -581,8 +581,8 @@ const Options = () => {
                         value={optionFormData.otherSettings.showContactInfo}
                         onChange={(e) => handleChange(e, "otherSettings")}
                       >
-                        <option value="1">YES</option>
-                        <option value="0">NO</option>
+                        <option value="show">Show</option>
+                        <option value="hide">Hide</option>
                       </select>
                     </li>
 
