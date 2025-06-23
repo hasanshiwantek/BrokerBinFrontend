@@ -180,11 +180,11 @@ export const addHotListItem = createAsyncThunk(
 
 export const showHotListItem = createAsyncThunk(
   "toolsStore/addHotListItem",
-  async ({ token, pageNumber }) => {
+  async ({ token, pageNumber,mfg }) => {
     console.log(token);
     try {
       const response = await axios.get(
-        `${brokerAPI}hot-lists?pageNumber=${pageNumber}`,
+        `${brokerAPI}hot-lists?pageNumber=${pageNumber}&mfg=${mfg}`,
         {
           headers: {
             "Content-Type": "application/json",
