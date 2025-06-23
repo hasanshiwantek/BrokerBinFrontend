@@ -12,6 +12,7 @@ import SavedListExportModal from "@/components/partCart/SavedListExportModal";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import useDefaultSettings from "@/components/hooks/UseDefaultSettings";
 
 const SavedList = () => {
   const { togglePopUp } = useSelector((store) => store.searchProductStore);
@@ -28,6 +29,7 @@ const SavedList = () => {
   const [activeList, setActiveList] = useState(null);
   const [showExportModal, setShowExportModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { fontSize } = useDefaultSettings();
 
   console.log("Saved Lists: ",savedLists);
   
