@@ -13,7 +13,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import PaginationControls from "@/components/pagination/PaginationControls";
 import SortableTableHeader from "@/components/Tables/SortableHeader";
-
+import { triggerSearchFocus } from "@/ReduxStore/focusSlice";
+import { initialMFGs } from "@/data/services";
 const HotListView = () => {
   // const [selectedItems, setSelectedItems] = useState([]);
   const items = useSelector((state) => state.toolsStore.myHotListItems);
@@ -22,6 +23,10 @@ const HotListView = () => {
   );
   const totalPages = pagination.lastPage || 1;
   const [selectedIds, setSelectedIds] = useState([]);
+
+  const [showClei, setshowClei] = useState(true);
+  const [mfg, setMfg] = useState("showall");
+  console.log("MFG: ", mfg);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
@@ -149,30 +154,56 @@ const HotListView = () => {
 
         {/* Table Section */}
         <div className={css.tableWrapper}>
-          {/* <div className={css.tableHeader}>
-            <div >
-              <button className={css.tabTitle}>Telecom</button>
+          <div className={css.tableHeader}>
+            <div>
+              <button
+                className={css.tabTitle}
+                onClick={() => {
+                  dispatch(triggerSearchFocus());
+                  setshowClei((prev) => !prev);
+                }}
+              >
+                Telecom
+              </button>
               <Link to={"/reports/email"}>
-                <button className={css.subTitle} >Email Reports</button>
+                <button className={css.subTitle}>Email Reports</button>
               </Link>
             </div>
-
-
             <div className={css.manufacturerDropdown}>
               <span> Manufacturer:&nbsp;</span>
-              <select>
-                <option value="all">Show All</option>
-                <option value="hp">HP</option>
-                <option value="dell">Dell</option>
-                <option value="lenovo">Lenovo</option>
+              <select
+                className="p-2"
+                value={mfg}
+                onChange={(e) => {
+                  const mfg=e.target.value
+                  setMfg(mfg);
+                  dispatch(
+                    showHotListItem({
+                      token,
+                      pageNumber: currentPage,
+                      mfg: mfg,
+                    })
+                  );
+                }}
+              >
+                <option value="showall">Show All</option>
+                {initialMFGs?.map((mfgName, ind) => (
+                  <option key={ind} value={mfgName}>
+                    {mfgName}
+                  </option>
+                ))}
               </select>
             </div>
-          </div> */}
+          </div>
 
           {/* Table */}
           <table className={css.table}>
             <SortableTableHeader
-              headers={rfqHeaders}
+              headers={
+                showClei
+                  ? rfqHeaders
+                  : rfqHeaders.filter((header) => header.key !== "heciClei")
+              }
               sortBy={sortBy}
               sortOrder={sortOrder}
               onSort={handleSort}
@@ -193,7 +224,7 @@ const HotListView = () => {
                     <td>{item.week}</td>
                     <td>{item.month}</td>
                     <td>{item.part_model}</td>
-                    <td>{item.heciClei}</td>
+                    {showClei && <td>{item.heciClei}</td>}
                     <td>{item.manufacturer}</td>
                     <td>{item.condition}</td>
                     <td>---</td>
@@ -234,6 +265,11 @@ const HotListView = () => {
               Delete
             </button>
 
+          </div>
+        </div>
+
+        <div className={css.learnMore}>
+          <a href="#hotlist">Learn More</a>
             {/* PAGINATION */}
             <div className="mt-4 ">
               <PaginationControls
@@ -247,11 +283,6 @@ const HotListView = () => {
                 }
               />
             </div>
-          </div>
-        </div>
-
-        <div className={css.learnMore}>
-          <a href="#hotlist">Learn More</a>
         </div>
       </div>
 

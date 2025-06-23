@@ -85,7 +85,7 @@ const SearchProduct = () => {
         ) && <Filter currentQuery={currentQuery} />}
 
       <div
-        className={`${css.layoutTables} !mx-auto`}
+        className={`${css.layoutTables} `}
         style={
           Object.keys(searchResponseMatched || {})
             .length <= 0
