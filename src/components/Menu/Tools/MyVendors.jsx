@@ -477,60 +477,97 @@ const MyVendors = () => {
                   </div>
                 </div>
                 <div className={css.myVendor_company}>
-                  {Object.entries(groupVendorsByKey(myVendor, viewBy))
-                    .sort(([a], [b]) => a.localeCompare(b))
-                    .map(([group, vendors]) => (
-                      <div key={group} id={`letter-${group}`}>
-                        <h2 className="text-2xl font-bold my-4 border-b-2">
-                          {headingWord} {group}
-                        </h2>
+                  {myVendor && myVendor.length > 0 ? (
+                    Object.entries(groupVendorsByKey(myVendor, viewBy))
+                      .sort(([a], [b]) => a.localeCompare(b))
+                      .map(([group, vendors]) => (
+                        <div key={group} id={`letter-${group}`}>
+                          <h2 className="text-2xl font-bold my-4 border-b-2">
+                            {headingWord} {group}
+                          </h2>
 
-                        {vendors.map((vendor) => {
-                          const vendorId = vendor?.company?.id;
-                          const rating = vendor?.company?.rating ?? 0;
-                          const ratingCount = vendor?.company?.ratingCount ?? 0;
-                          const companyNote =
-                            vendorNoteData?.notes?.find(
-                              (n) => n.company?.id === vendorId
-                            )?.note || "";
+                          {vendors.map((vendor) => {
+                            const vendorId = vendor?.company?.id;
+                            const rating = vendor?.company?.rating ?? 0;
+                            const ratingCount =
+                              vendor?.company?.ratingCount ?? 0;
+                            const companyNote =
+                              vendorNoteData?.notes?.find(
+                                (n) => n.company?.id === vendorId
+                              )?.note || "";
 
-                          return (
-                            <div
-                              className={css.myVendor_company_list}
-                              key={vendor.company.id}
-                              id={`letter-${vendor.company.name
-                                .charAt(0)
-                                .toUpperCase()}`}
-                            >
-                              <div className={css.myVendor_company_list_main}>
-                                <div
-                                  className={css.myVendor_company_list_main_img}
-                                >
-                                  <img
-                                    src={
-                                      vendor?.company?.image
-                                        ? vendor?.company?.image
-                                        : defaultCompanyLogo
+                            return (
+                              <div
+                                className={css.myVendor_company_list}
+                                key={vendor.company.id}
+                                id={`letter-${vendor.company.name
+                                  .charAt(0)
+                                  .toUpperCase()}`}
+                              >
+                                <div className={css.myVendor_company_list_main}>
+                                  <div
+                                    className={
+                                      css.myVendor_company_list_main_img
                                     }
-                                    alt="vendor logo"
-                                    className="cursor-pointer"
-                                    onClick={() =>
-                                      openCompanyModal(vendor?.company)
-                                    }
-                                  />
-                                  <span className="!flex !items-center !gap-6 !justify-between">
-                                    <i>
-                                      <a
-                                        href={`mailto:${vendor.company?.primaryContact?.email}`}
+                                  >
+                                    <img
+                                      src={
+                                        vendor?.company?.image
+                                          ? vendor?.company?.image
+                                          : defaultCompanyLogo
+                                      }
+                                      alt="vendor logo"
+                                      className="cursor-pointer"
+                                      onClick={() =>
+                                        openCompanyModal(vendor?.company)
+                                      }
+                                    />
+                                    <span className="!flex !items-center !gap-6 !justify-between">
+                                      <i>
+                                        <a
+                                          href={`mailto:${vendor.company?.primaryContact?.email}`}
+                                        >
+                                          <img
+                                            src={emailIcon}
+                                            alt="email icon"
+                                            className="!border-none w-7 !h-7"
+                                          />
+                                        </a>
+                                      </i>
+                                      <p
+                                        className="cursor-pointer"
+                                        onClick={() =>
+                                          openCompanyModal(vendor?.company)
+                                        }
+                                        onMouseEnter={() =>
+                                          handleHoverCompanyDetail(
+                                            vendor?.company
+                                          )
+                                        }
                                       >
-                                        <img
-                                          src={emailIcon}
-                                          alt="email icon"
-                                          className="!border-none w-7 !h-7"
-                                        />
-                                      </a>
-                                    </i>
-                                    <p
+                                        {vendor.company.name}
+                                      </p>
+                                      <i>
+                                        <a
+                                          href={vendor.company?.website}
+                                          target="_blank"
+                                        >
+                                          <img
+                                            src={webIcon}
+                                            alt="web icon"
+                                            className="!border-none w-7 !h-7"
+                                          />
+                                        </a>
+                                      </i>
+                                    </span>
+                                  </div>
+
+                                  <div
+                                    className={
+                                      css.myVendor_company_list_main_info
+                                    }
+                                  >
+                                    <span
                                       className="cursor-pointer"
                                       onClick={() =>
                                         openCompanyModal(vendor?.company)
@@ -541,245 +578,226 @@ const MyVendors = () => {
                                         )
                                       }
                                     >
-                                      {vendor.company.name}
-                                    </p>
-                                    <i>
-                                      <a
-                                        href={vendor.company?.website}
-                                        target="_blank"
-                                      >
-                                        <img
-                                          src={webIcon}
-                                          alt="web icon"
-                                          className="!border-none w-7 !h-7"
-                                        />
-                                      </a>
-                                    </i>
-                                  </span>
-                                </div>
-
-                                <div
-                                  className={
-                                    css.myVendor_company_list_main_info
-                                  }
-                                >
-                                  <span
-                                    className="cursor-pointer"
-                                    onClick={() =>
-                                      openCompanyModal(vendor?.company)
-                                    }
-                                    onMouseEnter={() =>
-                                      handleHoverCompanyDetail(vendor?.company)
-                                    }
-                                  >
-                                    <p>{vendor.company.name}</p>
-                                    <div
-                                      className={
-                                        css.gridHome1_MemberDetail_reviews_stars
-                                      }
-                                    >
+                                      <p>{vendor.company.name}</p>
                                       <div
-                                        style={{
-                                          display: "flex",
-                                          alignItems: "center",
-                                        }}
-                                      >
-                                        {[...Array(5)].map((_, starIndex) => {
-                                          const isFilled =
-                                            starIndex + 1 <= Math.floor(rating);
-                                          const isPartial =
-                                            starIndex < rating &&
-                                            starIndex + 1 > Math.floor(rating);
-
-                                          return (
-                                            <FaStar
-                                              key={starIndex}
-                                              size={24}
-                                              color={
-                                                isFilled
-                                                  ? "#FFD700"
-                                                  : isPartial
-                                                  ? "rgba(255, 215, 0, 0.5)"
-                                                  : "#CCC"
-                                              }
-                                              style={{
-                                                cursor: "pointer",
-                                                marginRight: 4,
-                                                width: "15px",
-                                                stroke: "black",
-                                                strokeWidth: "10",
-                                              }}
-                                            />
-                                          );
-                                        })}
-                                      </div>
-                                    </div>
-                                  </span>
-
-                                  <span>
-                                    <p
-                                      className="cursor-pointer"
-                                      onClick={() =>
-                                        openCompanyModal(vendor.company)
-                                      }
-                                    >
-                                      Rating:
-                                    </p>
-                                    <p>
-                                      (
-                                      {rating === 0 || isNaN(rating)
-                                        ? "N/A"
-                                        : (
-                                            (Math.min(Math.max(rating, 0), 5) /
-                                              5) *
-                                            100
-                                          ).toFixed(1) + "%"}
-                                      ){" "}
-                                    </p>
-                                  </span>
-
-                                  <span>
-                                    <p>Location:</p>
-                                    <p>
-                                      {vendor.company.city}{" "}
-                                      {vendor.company.state}{" "}
-                                      {vendor.company.country}
-                                    </p>
-                                  </span>
-                                  <span>
-                                    <p>Phone:</p>
-                                    <p>{vendor.company.phone_num}</p>
-                                  </span>
-                                  <span>
-                                    <p>Fax:</p>
-                                    <p>{vendor.company.fax}</p>
-                                  </span>
-                                  <span>
-                                    <p>Hours:</p>
-                                    <p>
-                                      {vendor.company.open_timing} to{" "}
-                                      {vendor.company.close}
-                                    </p>
-                                  </span>
-                                  <span>
-                                    <p>Ship by:</p>
-                                    <p>{vendor.company.shipping_deadline}</p>
-                                  </span>
-                                </div>
-
-                                <div
-                                  className={
-                                    css.myVendor_company_list_main_notesRating
-                                  }
-                                >
-                                  <div
-                                    className={
-                                      css.myVendor_company_list_main_notes
-                                    }
-                                  >
-                                    <span>
-                                      <p>Notes:</p>
-                                    </span>
-                                    <span>
-                                      <textarea
-                                        name="notes"
-                                        id={`notes-${vendorId}`}
-                                        cols={10}
-                                        rows={8}
-                                        placeholder="This section is only visible to you by your log-in. Enter your personal notes about this vendor here."
-                                        className="!w-80 text-[8pt] border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-400 resize-none"
-                                        value={notes[vendorId] ?? companyNote}
-                                        onChange={(e) =>
-                                          setNotes((prevNotes) => ({
-                                            ...prevNotes,
-                                            [vendorId]: e.target.value,
-                                          }))
-                                        }
-                                      />
-                                    </span>
-                                    <span>
-                                      <button
-                                        type="button"
                                         className={
-                                          css.myVendor_company_list_main_notes_btn
+                                          css.gridHome1_MemberDetail_reviews_stars
                                         }
-                                        onClick={() =>
-                                          noteSaveHandler(vendorId)
-                                        }
-                                        title="Save Note"
                                       >
-                                        Save
-                                      </button>
+                                        <div
+                                          style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                          }}
+                                        >
+                                          {[...Array(5)].map((_, starIndex) => {
+                                            const isFilled =
+                                              starIndex + 1 <=
+                                              Math.floor(rating);
+                                            const isPartial =
+                                              starIndex < rating &&
+                                              starIndex + 1 >
+                                                Math.floor(rating);
+
+                                            return (
+                                              <FaStar
+                                                key={starIndex}
+                                                size={24}
+                                                color={
+                                                  isFilled
+                                                    ? "#FFD700"
+                                                    : isPartial
+                                                    ? "rgba(255, 215, 0, 0.5)"
+                                                    : "#CCC"
+                                                }
+                                                style={{
+                                                  cursor: "pointer",
+                                                  marginRight: 4,
+                                                  width: "15px",
+                                                  stroke: "black",
+                                                  strokeWidth: "10",
+                                                }}
+                                              />
+                                            );
+                                          })}
+                                        </div>
+                                      </div>
+                                    </span>
+
+                                    <span>
+                                      <p
+                                        className="cursor-pointer"
+                                        onClick={() =>
+                                          openCompanyModal(vendor.company)
+                                        }
+                                      >
+                                        Rating:
+                                      </p>
+                                      <p>
+                                        (
+                                        {rating === 0 || isNaN(rating)
+                                          ? "N/A"
+                                          : (
+                                              (Math.min(
+                                                Math.max(rating, 0),
+                                                5
+                                              ) /
+                                                5) *
+                                              100
+                                            ).toFixed(1) + "%"}
+                                        ){" "}
+                                      </p>
+                                    </span>
+
+                                    <span>
+                                      <p>Location:</p>
+                                      <p>
+                                        {vendor.company.city}{" "}
+                                        {vendor.company.state}{" "}
+                                        {vendor.company.country}
+                                      </p>
+                                    </span>
+                                    <span>
+                                      <p>Phone:</p>
+                                      <p>{vendor.company.phone_num}</p>
+                                    </span>
+                                    <span>
+                                      <p>Fax:</p>
+                                      <p>{vendor.company.fax}</p>
+                                    </span>
+                                    <span>
+                                      <p>Hours:</p>
+                                      <p>
+                                        {vendor.company.open_timing} to{" "}
+                                        {vendor.company.close}
+                                      </p>
+                                    </span>
+                                    <span>
+                                      <p>Ship by:</p>
+                                      <p>{vendor.company.shipping_deadline}</p>
                                     </span>
                                   </div>
-                                </div>
 
-                                <div
-                                  className={
-                                    css.myVendor_company_list_main_actions
-                                  }
-                                >
-                                  <ThemeProvider theme={theme}>
-                                    <Tooltip
-                                      title="Remove from my vendors"
-                                      arrow
-                                      placement="right"
+                                  <div
+                                    className={
+                                      css.myVendor_company_list_main_notesRating
+                                    }
+                                  >
+                                    <div
+                                      className={
+                                        css.myVendor_company_list_main_notes
+                                      }
                                     >
-                                      <button
-                                        type="button"
-                                        onClick={() =>
-                                          removeFromMyVendors(vendor.company.id)
-                                        }
-                                      >
-                                        X
-                                      </button>
-                                    </Tooltip>
-                                  </ThemeProvider>
-                                </div>
+                                      <span>
+                                        <p>Notes:</p>
+                                      </span>
+                                      <span>
+                                        <textarea
+                                          name="notes"
+                                          id={`notes-${vendorId}`}
+                                          cols={10}
+                                          rows={8}
+                                          placeholder="This section is only visible to you by your log-in. Enter your personal notes about this vendor here."
+                                          className="!w-80 text-[8pt] border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-400 resize-none"
+                                          value={notes[vendorId] ?? companyNote}
+                                          onChange={(e) =>
+                                            setNotes((prevNotes) => ({
+                                              ...prevNotes,
+                                              [vendorId]: e.target.value,
+                                            }))
+                                          }
+                                        />
+                                      </span>
+                                      <span>
+                                        <button
+                                          type="button"
+                                          className={
+                                            css.myVendor_company_list_main_notes_btn
+                                          }
+                                          onClick={() =>
+                                            noteSaveHandler(vendorId)
+                                          }
+                                          title="Save Note"
+                                        >
+                                          Save
+                                        </button>
+                                      </span>
+                                    </div>
+                                  </div>
 
-                                <div className="cursor-pointer">
-                                  <div className="cursor-pointer">
+                                  <div
+                                    className={
+                                      css.myVendor_company_list_main_actions
+                                    }
+                                  >
                                     <ThemeProvider theme={theme}>
                                       <Tooltip
-                                        title={
-                                          vendorStatus[vendor.company.id] === 1
-                                            ? "Unblock this vendor"
-                                            : "Block this vendor from viewing my inventory"
-                                        }
+                                        title="Remove from my vendors"
                                         arrow
                                         placement="right"
                                       >
-                                        <span
+                                        <button
+                                          type="button"
                                           onClick={() =>
-                                            blockVendorHandler(
+                                            removeFromMyVendors(
                                               vendor.company.id
                                             )
                                           }
                                         >
-                                          {vendorStatus[vendor.company.id] ===
-                                          1 ? (
-                                            <AiOutlineUserAdd size={20} />
-                                          ) : (
-                                            <AiOutlineUserDelete size={20} />
-                                          )}
-                                        </span>
+                                          X
+                                        </button>
                                       </Tooltip>
                                     </ThemeProvider>
                                   </div>
+
+                                  <div className="cursor-pointer">
+                                    <div className="cursor-pointer">
+                                      <ThemeProvider theme={theme}>
+                                        <Tooltip
+                                          title={
+                                            vendorStatus[vendor.company.id] ===
+                                            1
+                                              ? "Unblock this vendor"
+                                              : "Block this vendor from viewing my inventory"
+                                          }
+                                          arrow
+                                          placement="right"
+                                        >
+                                          <span
+                                            onClick={() =>
+                                              blockVendorHandler(
+                                                vendor.company.id
+                                              )
+                                            }
+                                          >
+                                            {vendorStatus[vendor.company.id] ===
+                                            1 ? (
+                                              <AiOutlineUserAdd size={20} />
+                                            ) : (
+                                              <AiOutlineUserDelete size={20} />
+                                            )}
+                                          </span>
+                                        </Tooltip>
+                                      </ThemeProvider>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    ))}
+                            );
+                          })}
+                        </div>
+                      ))
+                  ) : (
+                    <div className="text-center text-red-500 text-2xl mt-10">
+                      No vendors found.
+                    </div>
+                  )}
                 </div>
               </>
             )}
           </div>
-
         </div>
-                  {/* PAGINATION */}
+        {/* PAGINATION */}
         <div className="flex justify-end ">
           <PaginationControls
             currPage={currentPage}

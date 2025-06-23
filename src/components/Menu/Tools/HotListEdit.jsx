@@ -5,7 +5,7 @@ import {
   editHotListItem,
   showSortHotListItem,
 } from "../../../ReduxStore/ToolsSlice";
-import { Link,useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
@@ -143,7 +143,7 @@ const HotListEdit = () => {
             <li>
               <Link to={"/hotlist/add"}>Add</Link>
             </li>
-            <li onClick={(()=>window.location.reload(200))}>
+            <li onClick={() => window.location.reload(200)}>
               <Link to={"/hotlist/edit"} className={css.activeTab}>
                 Edit
               </Link>
@@ -177,67 +177,78 @@ const HotListEdit = () => {
                 onSort={handleSort}
               />
               <tbody>
-                {editableItems.map((item, index) => (
-                  <tr key={item.id}>
-                    <td>
-                      <input
-                        type="text"
-                        name={`partModel_${index}`}
-                        value={item.part_model} // Controlled value
-                        onChange={(e) =>
-                          handleChange(index, "part_model", e.target.value)
-                        } // Handle change
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        name={`heciClei_${index}`}
-                        value={item.heciClei} // Controlled value
-                        onChange={(e) =>
-                          handleChange(index, "heciClei", e.target.value)
-                        } // Handle change
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        name={`mfg_${index}`}
-                        value={item.manufacturer} // Controlled value
-                        onChange={(e) =>
-                          handleChange(index, "manufacturer", e.target.value)
-                        } // Handle change
-                      />
-                    </td>
-                    <td >
-                      <select
-                        name={`cond_${index}`}
-                        value={item.condition} // Controlled value
-                        onChange={(e) =>
-                          handleChange(index, "condition", e.target.value)
-                        } 
-                        className="border-2"
-                      >
-                        <option value="New">New</option>
-                        <option value="Used">Used</option>
-                      </select>
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        name={`productDescription_${index}`}
-                        value={item.product_description} // Controlled value
-                        onChange={(e) =>
-                          handleChange(
-                            index,
-                            "product_description",
-                            e.target.value
-                          )
-                        } // Handle change
-                      />
+                {editableItems && editableItems.length > 0 ? (
+                  editableItems.map((item, index) => (
+                    <tr key={item.id}>
+                      <td>
+                        <input
+                          type="text"
+                          name={`partModel_${index}`}
+                          value={item.part_model} // Controlled value
+                          onChange={(e) =>
+                            handleChange(index, "part_model", e.target.value)
+                          } // Handle change
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          name={`heciClei_${index}`}
+                          value={item.heciClei} // Controlled value
+                          onChange={(e) =>
+                            handleChange(index, "heciClei", e.target.value)
+                          } // Handle change
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          name={`mfg_${index}`}
+                          value={item.manufacturer} // Controlled value
+                          onChange={(e) =>
+                            handleChange(index, "manufacturer", e.target.value)
+                          } // Handle change
+                        />
+                      </td>
+                      <td>
+                        <select
+                          name={`cond_${index}`}
+                          value={item.condition} // Controlled value
+                          onChange={(e) =>
+                            handleChange(index, "condition", e.target.value)
+                          }
+                          className="border-2"
+                        >
+                          <option value="New">New</option>
+                          <option value="Used">Used</option>
+                        </select>
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          name={`productDescription_${index}`}
+                          value={item.product_description} // Controlled value
+                          onChange={(e) =>
+                            handleChange(
+                              index,
+                              "product_description",
+                              e.target.value
+                            )
+                          } // Handle change
+                        />
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan="14"
+                      className="text-center text-sm text-red-500"
+                    >
+                      No results found.
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
 

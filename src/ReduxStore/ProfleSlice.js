@@ -491,11 +491,11 @@ export const createUser = createAsyncThunk(
 
 export const submitUserSettings = createAsyncThunk(
   "profileStore/submitUserSettings",
-  async ({  token, optionFormData }) => {
+  async ({ token, optionFormData }) => {
     try {
       const response = await axios.post(
         `${brokerAPI}user-settings/save-user-settings`,
-        {optionFormData},
+        { optionFormData },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -503,8 +503,11 @@ export const submitUserSettings = createAsyncThunk(
           },
         }
       );
-      console.log("✅User Options Submission Response From Redux: ",response?.data);
-      
+      console.log(
+        "✅User Options Submission Response From Redux: ",
+        response?.data
+      );
+
       return response.data;
     } catch (error) {
       console.error(
@@ -518,7 +521,7 @@ export const submitUserSettings = createAsyncThunk(
 
 export const fetchUserSettings = createAsyncThunk(
   "profileStore/fetchUserSettings",
-  async ({  token }) => {
+  async ({ token }) => {
     try {
       const response = await axios.get(
         `${brokerAPI}user-settings/fetch-user-settings`,
@@ -529,8 +532,8 @@ export const fetchUserSettings = createAsyncThunk(
           },
         }
       );
-      console.log("✅User Options Fetched From Redux: ",response?.data?.data);
-      
+      console.log("✅User Options Fetched From Redux: ", response?.data?.data);
+
       return response.data.data;
     } catch (error) {
       console.error(
@@ -618,8 +621,15 @@ const initialState = {
       preferredBrokercell: "",
     },
     displayByCondition: {
-      cfilterfNEW: false,
-      cfilterfASIS: false,
+      NEW: false,
+      ASIS: false,
+      EXC: false,
+      "F/S": false,
+      NOB: false,
+      REF: false,
+      OEMREF: false,
+      REP: false,
+      USED: false,
     },
     otherSettings: {
       fontSize: "8",
@@ -640,7 +650,7 @@ const initialState = {
   companyLogo: null,
   companyFeedbackData: [],
   feedbackGivenData: [],
-    loading: false,
+  loading: false,
 };
 
 const profileSlice = createSlice({
@@ -671,7 +681,7 @@ const profileSlice = createSlice({
       state.formData = initialState.formData;
       // Add any other state reset logic here
     },
-    resetOptionData:(state)=>{
+    resetOptionData: (state) => {
       state.optionFormData = initialState.optionFormData;
     },
     clearLogo: (state) => {
@@ -908,17 +918,16 @@ const profileSlice = createSlice({
       })
       .addCase(fetchUserSettings.pending, (state) => {
         console.log("Pending....");
-        state.loading=true
+        state.loading = true;
       })
       .addCase(fetchUserSettings.fulfilled, (state, action) => {
         console.log("✅Fetched User Settings Fulfilled!: ", action.payload);
-        state.optionFormData=action.payload?.settings;
-        state.loading=false
+        state.optionFormData = action.payload?.settings;
+        state.loading = false;
       })
       .addCase(fetchUserSettings.rejected, (state, action) => {
         console.log("REJECTED: ", action.error.message);
         state.loading = false;
-
       });
   },
 });
