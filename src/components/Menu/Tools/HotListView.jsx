@@ -7,6 +7,7 @@ import {
   showHotListItem,
   deleteHotlists,
   showSortHotListItem,
+  showHotListItemMfg,
 } from "../../../ReduxStore/ToolsSlice";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -18,6 +19,7 @@ import { initialMFGs } from "@/data/services";
 const HotListView = () => {
   // const [selectedItems, setSelectedItems] = useState([]);
   const items = useSelector((state) => state.toolsStore.myHotListItems);
+  const loading = useSelector((state) => state.toolsStore.loading);
   const pagination = useSelector(
     (state) => state.toolsStore.myHotListItems?.pagination || {}
   );
@@ -132,6 +134,15 @@ const HotListView = () => {
     setSearchParams(params);
   };
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center py-20">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
+        <span className="ml-4 text-blue-600 text-lg font-medium"></span>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className={css.container}>
@@ -175,15 +186,19 @@ const HotListView = () => {
                 className="p-2"
                 value={mfg}
                 onChange={(e) => {
-                  const mfg=e.target.value
+                  const mfg = e.target.value;
                   setMfg(mfg);
-                  dispatch(
-                    showHotListItem({
-                      token,
-                      pageNumber: currentPage,
-                      mfg: mfg,
-                    })
-                  );
+                  mfg === "showall"
+                    ? dispatch(
+                        showHotListItem({ token, pageNumber: currentPage })
+                      )
+                    : dispatch(
+                        showHotListItemMfg({
+                          token,
+                          pageNumber: currentPage,
+                          mfg: mfg,
+                        })
+                      );
                 }}
               >
                 <option value="showall">Show All</option>
@@ -264,25 +279,24 @@ const HotListView = () => {
             <button className={css.deleteButton} onClick={handleDelete}>
               Delete
             </button>
-
           </div>
         </div>
 
         <div className={css.learnMore}>
           <a href="#hotlist">Learn More</a>
-            {/* PAGINATION */}
-            <div className="mt-4 ">
-              <PaginationControls
-                currPage={currentPage}
-                totalPages={totalPages}
-                visiblePages={[1, totalPages]}
-                onPageChange={handlePageChange}
-                onPrev={() => handlePageChange(Math.max(1, currentPage - 1))}
-                onNext={() =>
-                  handlePageChange(Math.min(totalPages, currentPage + 1))
-                }
-              />
-            </div>
+          {/* PAGINATION */}
+          <div className="mt-4 ">
+            <PaginationControls
+              currPage={currentPage}
+              totalPages={totalPages}
+              visiblePages={[1, totalPages]}
+              onPageChange={handlePageChange}
+              onPrev={() => handlePageChange(Math.max(1, currentPage - 1))}
+              onNext={() =>
+                handlePageChange(Math.min(totalPages, currentPage + 1))
+              }
+            />
+          </div>
         </div>
       </div>
 

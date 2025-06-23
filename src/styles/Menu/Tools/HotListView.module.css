@@ -65,7 +65,7 @@
 .table th,
 .table td {
     border: 1px solid gray;
-    padding: 3px;
+    padding: 1px 8px;
     text-align: left;
     font-size: 8pt;
     font-weight: 500;
