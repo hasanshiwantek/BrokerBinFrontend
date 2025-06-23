@@ -99,13 +99,6 @@ const SavedList = () => {
   };
 
   const handlePdfExport = async () => {
-    if (!selectedRowId) {
-      toast.warning("No list selected to export.", {
-        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
-      });
-      return;
-    }
-    // setLoading(true);
     try {
       setLoading(true);
       const response = await axios.get(

@@ -262,8 +262,8 @@ const MyProfile = () => {
       });
 
       // Success toast
-      toast.success(message, {
-        style: { fontSize: "17px", marginTop: "-10px" },
+      toast.info(message, {
+        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
       });
 
       if (passwordChanged) {
@@ -286,7 +286,7 @@ const MyProfile = () => {
 
       console.error("❌ Submission error:", errMsg);
       toast.error(errMsg, {
-        style: { backgroundColor: "#FFCCCC", color: "#000" },
+        style: { fontSize: "17px", marginTop: "-10px"  },
       });
     }
   };
