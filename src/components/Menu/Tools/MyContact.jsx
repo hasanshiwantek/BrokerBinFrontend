@@ -400,277 +400,291 @@ const MyContact = () => {
                   </div>
                 </div>
                 <div className={css.myVendor_company}>
-                  {Object.entries(groupContactsByKey(myContactsData, viewBy))
-                    .sort(([a], [b]) => a.localeCompare(b))
-                    .map(([group, contacts]) => (
-                      <div key={group} id={`letter-${group}`}>
-                        <h2 className="text-2xl capitalize font-bold my-4 border-b-2">
-                          {headingWord}: {group}
-                        </h2>
+                  {myContactsData && myContactsData.length > 0 ? (
+                    Object.entries(groupContactsByKey(myContactsData, viewBy))
+                      .sort(([a], [b]) => a.localeCompare(b))
+                      .map(([group, contacts]) => (
+                        <div key={group} id={`letter-${group}`}>
+                          <h2 className="text-2xl capitalize font-bold my-4 border-b-2">
+                            {headingWord}: {group}
+                          </h2>
 
-                        {contacts.map((vendor, index) => {
-                          const contactId = vendor?.contact?.id;
-                          const noteEntry = noteData?.notes?.find(
-                            (n) => n.user?.id === contactId
-                          );
-                          const contactNote = noteEntry?.note || "";
-                          const savedRating = noteEntry?.rating ?? 0;
-                          const firstLetter =
-                            vendor?.contact?.firstName
-                              ?.charAt(0)
-                              ?.toUpperCase() || "X";
+                          {contacts.map((vendor, index) => {
+                            const contactId = vendor?.contact?.id;
+                            const noteEntry = noteData?.notes?.find(
+                              (n) => n.user?.id === contactId
+                            );
+                            const contactNote = noteEntry?.note || "";
+                            const savedRating = noteEntry?.rating ?? 0;
+                            const firstLetter =
+                              vendor?.contact?.firstName
+                                ?.charAt(0)
+                                ?.toUpperCase() || "X";
 
-                          return (
-                            <div
-                              className={css.myVendor_company_list}
-                              key={vendor?.contact?.id}
-                              id={`letter-${firstLetter}`}
-                            >
-                              <div className={css.myVendor_company_list_main}>
-                                <div
-                                  className={css.myVendor_company_list_main_img}
-                                >
-                                  <img
-                                    src={
-                                      vendor?.contact?.profileImage
-                                        ? vendor?.contact?.profileImage
-                                        : shadowImage
+                            return (
+                              <div
+                                className={css.myVendor_company_list}
+                                key={vendor?.contact?.id}
+                                id={`letter-${firstLetter}`}
+                              >
+                                <div className={css.myVendor_company_list_main}>
+                                  <div
+                                    className={
+                                      css.myVendor_company_list_main_img
                                     }
-                                    alt="Contact Person Image"
-                                    className="cursor-pointer"
-                                    onClick={() =>
-                                      openCompanyModal(vendor?.contact?.company)
-                                    }
-                                  />
-                                  <span>
-                                    <p>
-                                      {vendor?.contact?.firstName}{" "}
-                                      {vendor?.contact?.lastName}
-                                    </p>
-                                  </span>
-                                </div>
-                                <div
-                                  className={
-                                    css.myVendor_company_list_main_info
-                                  }
-                                >
-                                  <span>
-                                    <p>{vendor?.contact?.company.name}</p>
-
-                                    <div
-                                      className={
-                                        css.gridHome1_MemberDetail_reviews_stars
+                                  >
+                                    <img
+                                      src={
+                                        vendor?.contact?.profileImage
+                                          ? vendor?.contact?.profileImage
+                                          : shadowImage
                                       }
-                                    >
-                                      <div
-                                        style={{
-                                          display: "flex",
-                                          alignItems: "center",
-                                        }}
-                                      >
-                                        {[...Array(5)].map((_, starIndex) => {
-                                          const rating =
-                                            companyRatings?.[index] || 0;
-                                          const isFilled =
-                                            starIndex + 1 <= Math.floor(rating);
-                                          const isPartial =
-                                            starIndex < rating &&
-                                            starIndex + 1 > Math.floor(rating);
-
-                                          return (
-                                            <FaStar
-                                              key={starIndex}
-                                              size={24}
-                                              color={
-                                                isFilled
-                                                  ? "#FFD700"
-                                                  : isPartial
-                                                  ? "rgba(255, 215, 0, 0.5)"
-                                                  : "#CCC"
-                                              }
-                                              style={{
-                                                cursor: "pointer",
-                                                marginRight: 4,
-                                                width: "15px",
-                                                stroke: "black",
-                                                strokeWidth: "10",
-                                              }}
-                                            />
-                                          );
-                                        })}
-                                      </div>
-                                    </div>
-                                  </span>
-
-                                  <span>
-                                    <p
+                                      alt="Contact Person Image"
                                       className="cursor-pointer"
                                       onClick={() =>
                                         openCompanyModal(
                                           vendor?.contact?.company
                                         )
                                       }
-                                    >
-                                      {vendor?.contact?.company.name}
-                                    </p>
-                                    <p>
-                                      (
-                                      {companyRatings[index] == null ||
-                                      isNaN(companyRatings[index])
-                                        ? "N/A"
-                                        : (
-                                            (Math.min(
-                                              Math.max(
-                                                companyRatings[index],
-                                                0
-                                              ),
-                                              5
-                                            ) /
-                                              5) *
-                                            100
-                                          ).toFixed(1) + "%"}
-                                      )
-                                    </p>
-                                  </span>
-
-                                  <span>
-                                    <p>fax:</p>
-                                    <p>{vendor?.contact?.phone_num}</p>
-                                  </span>
-                                  <span>
-                                    <p>Email:</p>
-                                    <p>{vendor?.contact?.email}</p>
-                                  </span>
-                                  <span>
-                                    <p>phone:</p>
-                                    <p>{vendor?.contact?.phoneNumber}</p>
-                                  </span>
-                                  <span>
-                                    <p>location:</p>
-                                    <p>{vendor?.contact?.company?.address}</p>
-                                  </span>
-                                  <span>
-                                    <p>Country:</p>
-                                    <p>{vendor?.contact?.country}</p>
-                                  </span>
-                                </div>
-
-                                <div
-                                  className={
-                                    css.myVendor_company_list_main_notesRating
-                                  }
-                                >
+                                    />
+                                    <span>
+                                      <p>
+                                        {vendor?.contact?.firstName}{" "}
+                                        {vendor?.contact?.lastName}
+                                      </p>
+                                    </span>
+                                  </div>
                                   <div
                                     className={
-                                      css.myVendor_company_list_main_notes
+                                      css.myVendor_company_list_main_info
                                     }
                                   >
                                     <span>
-                                      <p>Notes:</p>
-                                    </span>
-                                    <span>
-                                      <textarea
-                                        name="notes"
-                                        id={`notes-${contactId}`}
-                                        cols={10}
-                                        rows={8}
-                                        placeholder="Enter notes here..."
-                                        className="!w-80 text-[8pt] border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-400 resize-none"
-                                        value={notes[contactId] ?? contactNote}
-                                        onChange={(e) =>
-                                          setNotes((prevNotes) => ({
-                                            ...prevNotes,
-                                            [contactId]: e.target.value,
-                                          }))
-                                        }
-                                      />
-                                    </span>
-                                    <span>
-                                      <button
-                                        type="button"
+                                      <p>{vendor?.contact?.company.name}</p>
+
+                                      <div
                                         className={
-                                          css.myVendor_company_list_main_notes_btn
+                                          css.gridHome1_MemberDetail_reviews_stars
                                         }
-                                        onClick={() =>
-                                          noteSaveHandler(contactId)
-                                        }
-                                        title="Save Note"
                                       >
-                                        Save
-                                      </button>
+                                        <div
+                                          style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                          }}
+                                        >
+                                          {[...Array(5)].map((_, starIndex) => {
+                                            const rating =
+                                              companyRatings?.[index] || 0;
+                                            const isFilled =
+                                              starIndex + 1 <=
+                                              Math.floor(rating);
+                                            const isPartial =
+                                              starIndex < rating &&
+                                              starIndex + 1 >
+                                                Math.floor(rating);
+
+                                            return (
+                                              <FaStar
+                                                key={starIndex}
+                                                size={24}
+                                                color={
+                                                  isFilled
+                                                    ? "#FFD700"
+                                                    : isPartial
+                                                    ? "rgba(255, 215, 0, 0.5)"
+                                                    : "#CCC"
+                                                }
+                                                style={{
+                                                  cursor: "pointer",
+                                                  marginRight: 4,
+                                                  width: "15px",
+                                                  stroke: "black",
+                                                  strokeWidth: "10",
+                                                }}
+                                              />
+                                            );
+                                          })}
+                                        </div>
+                                      </div>
                                     </span>
-                                  </div>
 
-                                  <div
-                                    className={
-                                      css.myVendor_company_list_main_rating
-                                    }
-                                  >
-                                    <div className={`${css.ratingWrapper}`}>
+                                    <span>
                                       <p
-                                        className={`${css.ratingLabel} p-1 !text-[1.2rem]`}
-                                      >
-                                        My Rating
-                                      </p>
-
-                                      <p
-                                        className={`${css.ratingValue} p-1 font-bold  !text-[1.5rem] text-blue-600`}
-                                      >
-                                        {ratings[contactId] ?? savedRating}
-                                      </p>
-
-                                      <input
-                                        type="range"
-                                        min="0"
-                                        max="10"
-                                        step="0.1"
-                                        className={`${css.slider} p-0`}
-                                        value={
-                                          ratings[contactId] ?? savedRating
-                                        }
-                                        onChange={(e) =>
-                                          setRatings((prev) => ({
-                                            ...prev,
-                                            [contactId]: parseFloat(
-                                              e.target.value
-                                            ),
-                                          }))
-                                        }
-                                      />
-                                    </div>
-                                  </div>
-                                </div>
-
-                                <div
-                                  className={
-                                    css.myVendor_company_list_main_actions
-                                  }
-                                >
-                                  <ThemeProvider theme={theme}>
-                                    <Tooltip
-                                      title="Remove from my Contacts"
-                                      arrow
-                                      placement="bottom"
-                                    >
-                                      <button
-                                        type="button"
+                                        className="cursor-pointer"
                                         onClick={() =>
-                                          removeFavouriteContacts(
-                                            vendor.contact.id
+                                          openCompanyModal(
+                                            vendor?.contact?.company
                                           )
                                         }
                                       >
-                                        X
-                                      </button>
-                                    </Tooltip>
-                                  </ThemeProvider>
+                                        {vendor?.contact?.company.name}
+                                      </p>
+                                      <p>
+                                        (
+                                        {companyRatings[index] == null ||
+                                        isNaN(companyRatings[index])
+                                          ? "N/A"
+                                          : (
+                                              (Math.min(
+                                                Math.max(
+                                                  companyRatings[index],
+                                                  0
+                                                ),
+                                                5
+                                              ) /
+                                                5) *
+                                              100
+                                            ).toFixed(1) + "%"}
+                                        )
+                                      </p>
+                                    </span>
+
+                                    <span>
+                                      <p>fax:</p>
+                                      <p>{vendor?.contact?.phone_num}</p>
+                                    </span>
+                                    <span>
+                                      <p>Email:</p>
+                                      <p>{vendor?.contact?.email}</p>
+                                    </span>
+                                    <span>
+                                      <p>phone:</p>
+                                      <p>{vendor?.contact?.phoneNumber}</p>
+                                    </span>
+                                    <span>
+                                      <p>location:</p>
+                                      <p>{vendor?.contact?.company?.address}</p>
+                                    </span>
+                                    <span>
+                                      <p>Country:</p>
+                                      <p>{vendor?.contact?.country}</p>
+                                    </span>
+                                  </div>
+
+                                  <div
+                                    className={
+                                      css.myVendor_company_list_main_notesRating
+                                    }
+                                  >
+                                    <div
+                                      className={
+                                        css.myVendor_company_list_main_notes
+                                      }
+                                    >
+                                      <span>
+                                        <p>Notes:</p>
+                                      </span>
+                                      <span>
+                                        <textarea
+                                          name="notes"
+                                          id={`notes-${contactId}`}
+                                          cols={10}
+                                          rows={8}
+                                          placeholder="Enter notes here..."
+                                          className="!w-80 text-[8pt] border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-400 resize-none"
+                                          value={
+                                            notes[contactId] ?? contactNote
+                                          }
+                                          onChange={(e) =>
+                                            setNotes((prevNotes) => ({
+                                              ...prevNotes,
+                                              [contactId]: e.target.value,
+                                            }))
+                                          }
+                                        />
+                                      </span>
+                                      <span>
+                                        <button
+                                          type="button"
+                                          className={
+                                            css.myVendor_company_list_main_notes_btn
+                                          }
+                                          onClick={() =>
+                                            noteSaveHandler(contactId)
+                                          }
+                                          title="Save Note"
+                                        >
+                                          Save
+                                        </button>
+                                      </span>
+                                    </div>
+
+                                    <div
+                                      className={
+                                        css.myVendor_company_list_main_rating
+                                      }
+                                    >
+                                      <div className={`${css.ratingWrapper}`}>
+                                        <p
+                                          className={`${css.ratingLabel} p-1 !text-[1.2rem]`}
+                                        >
+                                          My Rating
+                                        </p>
+
+                                        <p
+                                          className={`${css.ratingValue} p-1 font-bold  !text-[1.5rem] text-blue-600`}
+                                        >
+                                          {ratings[contactId] ?? savedRating}
+                                        </p>
+
+                                        <input
+                                          type="range"
+                                          min="0"
+                                          max="10"
+                                          step="0.1"
+                                          className={`${css.slider} p-0`}
+                                          value={
+                                            ratings[contactId] ?? savedRating
+                                          }
+                                          onChange={(e) =>
+                                            setRatings((prev) => ({
+                                              ...prev,
+                                              [contactId]: parseFloat(
+                                                e.target.value
+                                              ),
+                                            }))
+                                          }
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div
+                                    className={
+                                      css.myVendor_company_list_main_actions
+                                    }
+                                  >
+                                    <ThemeProvider theme={theme}>
+                                      <Tooltip
+                                        title="Remove from my Contacts"
+                                        arrow
+                                        placement="bottom"
+                                      >
+                                        <button
+                                          type="button"
+                                          onClick={() =>
+                                            removeFavouriteContacts(
+                                              vendor.contact.id
+                                            )
+                                          }
+                                        >
+                                          X
+                                        </button>
+                                      </Tooltip>
+                                    </ThemeProvider>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    ))}
+                            );
+                          })}
+                        </div>
+                      ))
+                  ) : (
+                    <div className="text-center text-red-500 text-2xl mt-10">
+                      No Contacts found.
+                    </div>
+                  )}
                 </div>
               </>
             )}

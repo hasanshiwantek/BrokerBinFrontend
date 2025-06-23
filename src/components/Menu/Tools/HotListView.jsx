@@ -76,7 +76,7 @@ const HotListView = () => {
       .then(() => {
         console.log("Deletion successful.");
         setSelectedIds([]);
-        dispatch(showHotListItem({ token , pageNumber: currentPage })); // Refresh the list
+        dispatch(showHotListItem({ token, pageNumber: currentPage })); // Refresh the list
       })
       .catch((error) => {
         console.error("Error during deletion:", error);
@@ -133,7 +133,7 @@ const HotListView = () => {
         {/* Tabs */}
         <div className={css.tabs}>
           <ul>
-            <li onClick={(()=>window.location.reload(200))}>
+            <li onClick={() => window.location.reload(200)}>
               <Link to="/hotlist/view" className={css.activeTab}>
                 View
               </Link>
@@ -177,10 +177,11 @@ const HotListView = () => {
               sortOrder={sortOrder}
               onSort={handleSort}
             />
-            {items?.map((item, index) => {
-              return (
-                <tbody key={index}>
-                  <tr>
+
+            {items && items.length > 0 ? (
+              <tbody>
+                {items.map((item, index) => (
+                  <tr key={index}>
                     <td>
                       <input
                         type="checkbox"
@@ -201,16 +202,31 @@ const HotListView = () => {
                     <td>6</td>
                     <td>{item.product_description}</td>
                     <td>
-                      <Link to={"/sendbroad"}>
+                      <Link to="/sendbroad">
                         <button className={css.broadcastButton}>
                           Broadcast
                         </button>
                       </Link>
                     </td>
                   </tr>
-                </tbody>
-              );
-            })}
+                ))}
+              </tbody>
+            ) : (
+              <tbody>
+                <tr>
+                  <td
+                    colSpan="14"
+                    style={{
+                      textAlign: "center",
+                      fontSize: "9pt",
+                      color: "red",
+                    }}
+                  >
+                    No results found.
+                  </td>
+                </tr>
+              </tbody>
+            )}
           </table>
 
           <div className="flex justify-between ">
