@@ -328,7 +328,7 @@ const {
           <div className={css.searchHistory}>
             {partVarianceState.map((e, i) => (
               <div key={i}>
-                <p onClick={handleSearchFromVariance}>{e}</p>
+                <p onClick={() => handleSearchFromVariance(e)}>{e}</p>
                 </div>
             ))}
           </div>
