@@ -640,7 +640,12 @@ const MyProfile = () => {
                           />
                         </div>
                         <div>
-                          <span className="text-base text-[#444]">Test</span>
+                          <span
+                            className="text-base text-[#444] cursor-pointer cursor-pointer hover:underline hover:text-red-500"
+                            onClick={() => window.open('https://facebook.com', '_blank')}
+                          >
+                            Test
+                          </span>
                         </div>
                       </div>
 
@@ -664,7 +669,12 @@ const MyProfile = () => {
                           />
                         </div>
                         <div>
-                          <span className="text-base text-[#444]">Test</span>
+                          <span
+                            className="text-base text-[#444] cursor-pointer cursor-pointer hover:underline hover:text-red-500"
+                            onClick={() => window.open('https://x.com/', '_blank')}
+                          >
+                            Test
+                          </span>
                         </div>
                       </div>
 
@@ -688,7 +698,12 @@ const MyProfile = () => {
                           />
                         </div>
                         <div>
-                          <span className="text-base text-[#444]">Test</span>
+                          <span
+                            className="text-base text-[#444] cursor-pointer cursor-pointer hover:underline hover:text-red-500"
+                            onClick={() => window.open('https://www.linkedin.com/', '_blank')}
+                          >
+                            Test
+                          </span>
                         </div>
                       </div>
                       <input
