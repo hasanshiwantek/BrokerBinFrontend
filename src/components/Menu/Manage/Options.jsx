@@ -652,9 +652,6 @@ const Options = () => {
                   <button type="button" onClick={handleReset}>
                     Reset
                   </button>
-
-                  {/* <button>Submit Changes</button> */}
-
                   <button
                     disabled={loader}
                     className={` text-white transition-all duration-150 ${
