@@ -22,7 +22,7 @@ import {
 import CheckboxList from "./CheckboxList";
 import UniversalSelector from "./UniversalSelector";
 import MFGFilter from "./MFGFilter";
-import SearchCompanyInventory from "../../Reports/SearchCompanyInventory";
+import SearchCompanyInventory from "../../Reports/Sitewide/SearchCompanyInventory";
 import FiltersSearchCompanyInventory from "../../Reports/FiltersSearchCompanyInventory";
 import { setTogglePopUp } from "../../../../ReduxStore/SearchProductSlice";
 import CompanyDetails from "../../../Popups/CompanyDetails/CompanyDetails";
