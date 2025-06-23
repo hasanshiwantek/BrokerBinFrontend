@@ -47,9 +47,11 @@ const EyeDropdown = ({ triggerElement, rowData }) => {
               <span className="text-[8pt]">{neverShowCount} Never Show</span>
             </div>
             {/* Star Rating */}
-            <div className="flex items-center justify-center space-x-1 my-2 mt-4">
+            <div className="flex items-center justify-center  my-2 mt-4">
               {[...Array(5)].map((_, i) => (
                 <FaStar
+                  stroke="black"
+                  strokeWidth={10}
                   key={i}
                   className={
                     i < Math.round(rating) ? "text-yellow-400" : "text-gray-300"
