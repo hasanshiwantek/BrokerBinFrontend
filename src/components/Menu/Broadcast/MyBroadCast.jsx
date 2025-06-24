@@ -685,7 +685,7 @@ const BroadCast = () => {
                 onChange={handleBuyInChange}
               />
             </div>
-            <div className="flex items-center">
+            {/* <div className="flex items-center">
               <label htmlFor="container">Container</label>
               <input
                 type="checkbox"
@@ -702,7 +702,7 @@ const BroadCast = () => {
                 id="pallet"
                 onChange={handleBuyInChange}
               />
-            </div>
+            </div> */}
 
             <div className={styles.searchBroadcastSec}>
               <input
