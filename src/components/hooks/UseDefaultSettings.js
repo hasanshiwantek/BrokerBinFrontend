@@ -1,18 +1,19 @@
 import { useSelector } from 'react-redux';
 
 const useDefaultSettings = () => {
-  const optionFormData = useSelector((state) => state.optionFormData);
+  const profileStore = useSelector((state) => state.profileStore);
+  const user = profileStore.user;
 
   return {
-    fontSize: optionFormData?.otherSettings?.fontSize || '8pt',
-    alternateRowColors: optionFormData?.customPartDisplay?.alternateRowColors,
-    showBorders: optionFormData?.customPartDisplay?.showBorders,
-    showFilters: optionFormData?.customPartDisplay?.showFilters,
-    displayFiltersPosition: optionFormData?.customPartDisplay?.displayFiltersPosition,
-    showDetails: optionFormData?.customPartDisplay?.showDetails,
-    forceDescriptions: optionFormData?.customPartDisplay?.forceDescriptions,
-    doubleVision: optionFormData?.customPartDisplay?.doubleVision,
-    sortPreferences: optionFormData?.displaySettings?.sortPreferences || [],
+    fontSize: user?.userSetting?.settings?.otherSettings?.fontSize || '',
+    alternateRowColors: user?.userSetting?.settings.customPartDisplay?.alternateRowColors,
+    showBorders: user?.userSetting?.settings.customPartDisplay?.showBorders,
+    showFilters: user?.userSetting?.settings.customPartDisplay?.showFilters,
+    displayFiltersPosition: user?.userSetting?.settings.customPartDisplay?.displayFiltersPosition,
+    showDetails: user?.userSetting?.settings.customPartDisplay?.showDetails,
+    forceDescriptions: user?.userSetting?.settings.customPartDisplay?.forceDescriptions,
+    doubleVision: user?.userSetting?.settings.customPartDisplay?.doubleVision,
+    sortPreferences: user?.userSetting?.settings.displaySettings?.sortPreferences || [],
   };
 };
 

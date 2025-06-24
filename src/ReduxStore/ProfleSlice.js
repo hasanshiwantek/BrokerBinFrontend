@@ -757,6 +757,7 @@ const profileSlice = createSlice({
           newPassword: "",
           confirmNewPassword: "",
         };
+        localStorage.setItem("user", JSON.stringify(action.payload));
       })
       .addCase(fetchUserData.rejected, (state, action) => {
         state.blurWhileLoading = true;

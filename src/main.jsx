@@ -8,6 +8,7 @@ import ProtectedRoute from "./components/LoginRegister/Authentication/ProtectedR
 import NotFound from "./components/LoginRegister/Authentication/NotFound.jsx";
 import LoadingState from "./LoadingState.jsx";
 import LoadingState2 from "./LoadingState2.jsx";
+import App from "./App"
 
 // Lazy load components
 const Login = lazy(() => import("./components/LoginRegister/Login.jsx"));
@@ -245,7 +246,9 @@ const router = createBrowserRouter([
   {
     element: (
       <Suspense fallback={<LoadingState />}>
+        <App>
         <ProtectedRoute />
+        </App>
       </Suspense>
     ), // Wrap protected routes in ProtectedRoute
     children: [
