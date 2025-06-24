@@ -204,7 +204,7 @@ fieldset {
   flex-direction: column;
   /* Keeps the rows stacked vertically */
   justify-content: center;
-  margin-left: 50px;
+  /* margin-left: 50px; */
   padding: 10px 12px;
 }
 
