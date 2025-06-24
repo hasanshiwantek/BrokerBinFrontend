@@ -4,7 +4,7 @@ const useDefaultSettings = () => {
   const optionFormData = useSelector((state) => state.optionFormData);
 
   return {
-    fontSize: optionFormData?.otherSettings?.fontSize || '13',
+    fontSize: optionFormData?.otherSettings?.fontSize || '8',
     alternateRowColors: optionFormData?.customPartDisplay?.alternateRowColors,
     showBorders: optionFormData?.customPartDisplay?.showBorders,
     showFilters: optionFormData?.customPartDisplay?.showFilters,

@@ -18,6 +18,12 @@ import { triggerSearchFocus } from "@/ReduxStore/focusSlice";
 import { initialMFGs } from "@/data/services";
 const HotListView = () => {
   // const [selectedItems, setSelectedItems] = useState([]);
+    const {  user } = useSelector(
+      (state) => state.profileStore
+    );
+    console.log("User: ",user);
+    
+  
   const items = useSelector((state) => state.toolsStore.myHotListItems);
   const loading = useSelector((state) => state.toolsStore.loading);
   const pagination = useSelector(

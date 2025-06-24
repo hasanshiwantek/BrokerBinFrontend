@@ -757,6 +757,8 @@ const profileSlice = createSlice({
           newPassword: "",
           confirmNewPassword: "",
         };
+        console.log("👤User formdata:",state.formData);
+        
       })
       .addCase(fetchUserData.rejected, (state, action) => {
         state.blurWhileLoading = true;
