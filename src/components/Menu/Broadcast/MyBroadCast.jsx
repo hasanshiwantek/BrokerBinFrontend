@@ -740,7 +740,7 @@ const BroadCast = () => {
                   style={
                     item.user_id && String(item.user_id.id) === currentUserID
                       ? { backgroundColor: "#ffb" }
-                      : null
+                      : {backgroundColor: index % 2 === 0 ? "#f5f5f5" : "#ffff",}
                   }
                 >
                   <td>
