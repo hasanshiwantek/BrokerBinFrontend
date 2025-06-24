@@ -23,7 +23,8 @@ import { useSearchParams } from "react-router-dom";
 
 const BroadcastForm = () => {
   const token = Cookies.get("token");
-  const { user } = JSON.parse(localStorage.getItem("user"));
+  // const { user } = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user"));
   const service = useSelector((state) => state.broadcastStore.serviceData);
   const [params] = useSearchParams();
 

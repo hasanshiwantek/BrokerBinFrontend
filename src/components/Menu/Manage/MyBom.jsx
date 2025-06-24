@@ -168,7 +168,7 @@ const SavedList = () => {
           </ul>
         </div>
 
-        <div className={`!bg-[#bfbfbf]`}>
+        <div className={` ${css.tableContainer} !bg-[#bfbfbf]`}>
           <div className="flex justify-between items-center px-2 py-0 bg-[#bfbfbf]">
             <h3 className="text-2xl text-white">Saved List(s)</h3>
             <div className="flex items-center gap-2">
@@ -190,7 +190,7 @@ const SavedList = () => {
 
           <table>
             <thead>
-              <tr>
+              <tr >
                 <th></th>
                 <th>%</th>
                 <th onClick={() => handleSort("name")}>Name</th>
@@ -205,7 +205,9 @@ const SavedList = () => {
             <tbody>
               {savedLists?.length > 0 ? (
                 savedLists?.map((list,id) => (
-                  <tr key={id} className="!whitespace-normal">
+                  <tr key={id} className="!whitespace-normal" style={{
+                    backgroundColor: id % 2 === 0 ? "#f5f5f5" : "#ffff",
+                  }}>
                     <td>
                       <input
                         type="radio"

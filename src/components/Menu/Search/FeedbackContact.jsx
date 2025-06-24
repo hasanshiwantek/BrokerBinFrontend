@@ -15,7 +15,8 @@ const Contact = () => {
   const location = useLocation();
   const feedbackData = location.state?.feedbackData;
   console.log("Navigated Feedback Data:", feedbackData);
-  const { user } = JSON.parse(localStorage.getItem("user"));
+  // const { user } = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user"))
   console.log(user);
 
   const [navigatedPayloadData, setNavigatedPayloadData] = useState({
