@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import css from "@/styles/SearchProducts.module.css";
+// import css from "../../styles/searchProducts.module.css"
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -29,7 +30,7 @@ const ProductTableDetail = React.memo(
     const sortBy = queryParams.get("sortBy");
     const sortOrder = queryParams.get("sortOrder") || "desc";
     const page = parseInt(queryParams.get("page")) || 1;
-    const { alternateRowColors } = useDefaultSettings();
+    const { alternateRowColors, showBorders } = useDefaultSettings();
 
     const {
       selectedProducts,
@@ -244,12 +245,14 @@ const ProductTableDetail = React.memo(
       setVisiblePages([start, end]);
     }, [currentPage, totalPagess]);
 
+    console.log("Show Borders:", showBorders);
+
     return (
       <div className={css.productTableDetail}>
         <div className={css.tableContainer}>
           <h3>Results for: {partModel}</h3>
           <div>
-            <table className="">
+            <table  className={showBorders ? css.withBorders : ""}>
               <thead>
                 <tr>
                   <th>Cart</th>

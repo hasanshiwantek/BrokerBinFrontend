@@ -204,10 +204,13 @@
   background-color: #ffb !important; /* Add !important to override any other styles */
 }
 
-
-
-
-
+.withBorders th,
+.withBorders td {
+  border: 1px solid #bfbfbf !important;
+}
+.withBorders {
+  border-collapse: collapse;
+}
 
 .companyListingTable{
   display: flex;
@@ -251,4 +254,4 @@
   .hotlistContainer{
     /* margin-left: 30rem; */
   }
-    } 
+} 
