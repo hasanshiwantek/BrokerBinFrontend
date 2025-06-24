@@ -92,7 +92,7 @@
 
 .tableHeader {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   /* padding: 5px; */
   background-color: lightgray;
@@ -153,6 +153,7 @@
   padding: 4px 4px;
   border-radius: 10px;
   border: 1px solid var(--primary-color);
+  font-size: 9pt;
 }
 
 .searchBroadcastSec button:active {

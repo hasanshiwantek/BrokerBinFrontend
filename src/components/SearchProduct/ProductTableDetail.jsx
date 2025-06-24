@@ -8,10 +8,7 @@ import { countriesList } from "@/data/services";
 import { FaEye } from "react-icons/fa";
 import { BiBlock } from "react-icons/bi";
 import { IoCheckmarkCircle } from "react-icons/io5";
-import {
-  searchProductQuery,
-  searchByKeyword,
-} from "@/ReduxStore/SearchProductSlice";
+import { searchProductQuery,searchByKeyword, } from "@/ReduxStore/SearchProductSlice";
 import HoverDropdown from "@/HoverDropdown";
 import EyeDropdown from "@/EyeDropDown";
 import {
@@ -20,6 +17,7 @@ import {
   setPopupCompanyDetail,
   setHoverCompanyDetail,
 } from "@/ReduxStore/SearchProductSlice";
+import useDefaultSettings from "../hooks/UseDefaultSettings";
 
 const ProductTableDetail = React.memo(
   ({ partModel, partData, searchString }) => {
@@ -31,6 +29,7 @@ const ProductTableDetail = React.memo(
     const sortBy = queryParams.get("sortBy");
     const sortOrder = queryParams.get("sortOrder") || "desc";
     const page = parseInt(queryParams.get("page")) || 1;
+    const { alternateRowColors } = useDefaultSettings();
 
     const {
       selectedProducts,
@@ -362,10 +361,11 @@ const ProductTableDetail = React.memo(
                     <tr
                       key={i}
                       style={
-                        e?.addedBy?.company?.name?.toLowerCase() ===
-                        loggedInUserCompany?.toLowerCase()
-                          ? { backgroundColor: "#ffb" } // Highlight if the company matches
-                          : null
+                        e?.addedBy?.company?.name?.toLowerCase() === loggedInUserCompany?.toLowerCase()
+                          ? { backgroundColor: "#ffb" }
+                          : alternateRowColors & i % 2 === 0
+                          ? {backgroundColor: "#f5f5f5"}
+                          : { backgroundColor: "#ffff"}
                       }
                     >
                       <td>

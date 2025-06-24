@@ -305,19 +305,19 @@ const Options = () => {
                             }
                           >
                             <option value="">Select One</option>
-                            <option value="age">Age</option>
-                            <option value="condition">Condition</option>
-                            <option value="company">Company</option>
-                            <option value="country">Country</option>
-                            <option value="description">Description</option>
-                            <option value="manufacturer">Manufacturer</option>
-                            <option value="my_region">My Region</option>
-                            <option value="my_vendors">My Vendors</option>
-                            <option value="part_model">Part / Model</option>
-                            <option value="price">Price</option>
-                            <option value="quantity">Quantity</option>
-                            <option value="region">Region</option>
-                            <option value="shield_quality">
+                            <option value="Age">Age</option>
+                            <option value="Condition">Condition</option>
+                            <option value="Company">Company</option>
+                            <option value="Country">Country</option>
+                            <option value="Description">Description</option>
+                            <option value="Manufacturer">Manufacturer</option>
+                            <option value="Region">My Region</option>
+                            <option value="My Vendors">My Vendors</option>
+                            <option value="Part_model">Part / Model</option>
+                            <option value="Price">Price</option>
+                            <option value="Quantity">Quantity</option>
+                            <option value="Region">Region</option>
+                            <option value="Shield_quality">
                               Shield of Quality
                             </option>
                           </select>
@@ -409,7 +409,7 @@ const Options = () => {
                       ["showDetails", "Show Details"],
                       ["forceDescriptions", "Force Descriptions"],
                       ["doubleVision", "Double Vision"],
-                      ["showHistoryGraphs", "Show History Graphs"],
+                      // ["showHistoryGraphs", "Show History Graphs"],
                     ].map(([name, label]) => (
                       <li key={name}>
                         <label htmlFor={name}>{label}</label>
@@ -538,7 +538,7 @@ const Options = () => {
                         <option value="9">9 Point</option>
                         <option value="10">10 Point</option>
                         <option value="11">11 Point</option>
-                        <option value="12">12 Point</option>
+                        <option value="11.25">12 Point</option>
                       </select>
                     </li>
                     <li>
