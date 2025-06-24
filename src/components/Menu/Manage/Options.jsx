@@ -538,7 +538,7 @@ const Options = () => {
                         <option value="9">9 Point</option>
                         <option value="10">10 Point</option>
                         <option value="11">11 Point</option>
-                        <option value="12">12 Point</option>
+                        <option value="11.25">12 Point</option>
                       </select>
                     </li>
                     <li>
