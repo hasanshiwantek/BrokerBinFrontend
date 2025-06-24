@@ -74,7 +74,7 @@
     border: 1px solid gray;
     padding: 3px;
     text-align: left;
-    font-size: 8pt !important;
+    /* font-size: 8pt !important; */
     font-weight: 600;
     color: #444;
 }

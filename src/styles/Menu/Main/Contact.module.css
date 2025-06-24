@@ -15,7 +15,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       margin-bottom: 1rem;
-      font-size: 9pt;
+      /* font-size: 9pt; */
       font-weight: 500;
       gap: 1rem;
       align-items: baseline;

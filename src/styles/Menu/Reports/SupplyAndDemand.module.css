@@ -28,7 +28,7 @@
   border: 1px solid #ddd;
   padding: 2px;
   text-align: center;
-  font-size: 8pt;
+  /* font-size: 8pt; */
 }
 
 .supplyAndDemand th {

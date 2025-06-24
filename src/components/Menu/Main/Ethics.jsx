@@ -218,17 +218,17 @@ const Ethics = () => {
                 >
                   <h1 className="font-semibold">Filing an Ethics Complaint</h1>
                   <div>
-                    <p className="text-[8pt] font-[600]">
+                    <p className="font-[600]">
                       To ensure a clear and open process, please observe the
                       required qualifications for our Ethics Committee's review.
                     </p>
-                    <p className="text-[8pt] font-[600] ">
+                    <p className="font-[600] ">
                       It should be noted that only complaints with a
                       transactional basis will be considered by the Ethics
                       Committee. Companies must provide supporting documentation
                       for their claim to enable our committee's evaluation.
                     </p>
-                    <p className="text-[8pt] font-[600]">
+                    <p className="font-[600]">
                       BrokerCell.com enforces a strict no-tolerance stance on
                       counterfeit items. Please submit evidence of counterfeit
                       products through a Testing House or Homeland Security. The

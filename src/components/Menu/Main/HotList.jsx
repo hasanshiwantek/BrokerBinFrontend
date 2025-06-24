@@ -7,7 +7,7 @@ const HotList = () => {
       <div style={{ padding: "15px" }} id="hotlist">
         <h5>HotList</h5>
 
-        <div className="email-sec box " style={{ fontSize: "10px" }}>
+        <div className="email-sec box " >
           <p style={{ color: "#2c83ec" }}>Q: What is the Hot List?</p>
           <p>
             A: The Hot List features comprehensive statistics for specific part

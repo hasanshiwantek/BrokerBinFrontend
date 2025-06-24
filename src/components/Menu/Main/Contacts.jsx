@@ -7,7 +7,7 @@ const Contact = () => {
 
 <h5>My Contacts</h5>
 
-<div className="email-sec box " style={{fontSize:"10px"}}>
+<div className="email-sec box " >
     <p style={{ color: "rgb(218, 63, 24)" }}>Q: What is the My Contacts Page and how do I use it?</p>
     <p> A: The My Contacts Page is where you can add contacts, edit ratings and add notes for specific contacts.<br/>
 1. To add a contact you can use the "Quick Add" (found on My Profile/My Contacts) which will auto populate results as you type or if you are unsure of the full contact name you can use the "Contact Search" to search through the results.<br/>

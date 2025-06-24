@@ -23,7 +23,7 @@
 .dropbtn {
   color: white;
   padding: 10px;
-  font-size: 14px;
+  /* font-size: 14px; */
   border: none;
   cursor: pointer;
 }
@@ -69,7 +69,7 @@
   border: 1px solid #bfbfbf;
   padding: 0px 2px;
   text-align: left;
-  font-size: 8pt !important;
+  /* font-size: 8pt !important; */
   font-weight: 600;
   color: #444;
 }
@@ -234,7 +234,7 @@ textarea {
   outline: none;
   transition: border 0.3s ease;
   /* Smooth transition */
-  font-size: 15px;
+  /* font-size: 15px; */
   font-weight: 400;
 }
 

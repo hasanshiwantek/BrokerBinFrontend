@@ -8,7 +8,7 @@ const PartCart = () => {
 
 <h5>My PartCart</h5>
 
-<div className="email-sec box " style={{fontSize:"10px"}}>
+<div className="email-sec box ">
     <p  style={{ color: "#2c83ec" }}>Q: What is the Part Cart? How do I use it?</p>
     <p> A: The Part Cart is a Search Summary/RFQ Generator/System Configuration Utility.<br/>
 1. Enter part number(s) in the Part # search box.<br/>

@@ -55,7 +55,7 @@
 .feedbackGiven p {
   margin-top: 6px;
   font-weight: 500;
-  font-size: 9pt;
+  /* font-size: 9pt; */
 }
 
 .feedbackPast {
@@ -100,7 +100,7 @@
 }
 .feedbackMainSec p {
   font-weight: 700;
-  font-size: 8pt;
+  /* font-size: 8pt; */
 }
 
 .feedbackPastSec {
@@ -194,7 +194,7 @@
 .feedbackTable td {
   padding: 5px; /* Inner spacing for table cells */
   text-align: left;
-  font-size: 8pt;
+  /* font-size: 8pt; */
 }
 
 .feedbackTable th {

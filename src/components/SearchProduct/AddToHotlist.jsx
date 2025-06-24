@@ -20,7 +20,7 @@ const AddToHotList = ({ item }) => {
     console.log("Item added to hotlist:", item);
     // ✅ Show success toast with light blue color
     toast.info("Item Added to Hotlist!", {
-      style: { fontSize: "17px", marginTop: "-10px" }, // 
+      style: { fontSize: "15px", marginTop: "-10px" }, // 
     });
     const hotlists = [{ partModel: item }]
     dispatch(addToHotList({ token, hotlists }));
