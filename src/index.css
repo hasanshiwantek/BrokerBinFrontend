@@ -97,7 +97,12 @@ table td,th{
   font-size: var(--user-font-size);
 }
 
-ul,ol li{
+ol li{
+  font-size: var(--user-font-size);
+}
+
+
+ul li{
   font-size: var(--user-font-size);
 }
 

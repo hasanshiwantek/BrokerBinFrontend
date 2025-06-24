@@ -51,6 +51,7 @@ button {
       outline: none;
       border: none;
       padding: 2px 5px;
+      font-size: 9pt;
       margin-left: 1rem;
       color: var(--font-color);
       border-radius: 5px;
