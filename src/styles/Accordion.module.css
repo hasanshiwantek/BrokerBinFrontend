@@ -112,7 +112,7 @@
   text-transform: capitalize;
   border: 1px solid #bfbfbf;
   padding: 4px;
-  font-size: 8pt;
+  /* font-size: 8pt; */
   text-align: left;
 }
 

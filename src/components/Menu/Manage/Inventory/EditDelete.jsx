@@ -19,6 +19,11 @@ import SortableTableHeader from "@/components/Tables/SortableHeader";
 import { useSearchParams } from "react-router-dom";
 
 const EditDelete = () => {
+      const {  user } = useSelector(
+        (state) => state.profileStore
+      );
+      console.log("User: ",user);
+      
   const token = Cookies.get("token");
   const dispatch = useDispatch();
   const { inventoryData, filteredInventoryData, fetchFilterBroadcastData } =
@@ -56,63 +61,17 @@ const EditDelete = () => {
 
   useEffect(() => {
     const pageFromURL = parseInt(searchParams.get("page")) || 1;
-    const mfg = searchParams.get("mfg") || "";
-    const partModel = searchParams.get("partModel") || "";
-    const status = searchParams.get("status") || "";
-    const heciClei = searchParams.get("heciClei") || "";
+    const filtersFromURL = {
+      mfg: searchParams.get("mfg") || "",
+      partModel: searchParams.get("partModel") || "",
+      status: searchParams.get("status") || "",
+      heciClei: searchParams.get("heciClei") || "",
+    };
 
     setCurrentPage(pageFromURL);
-    setFilters({ mfg, partModel, status, heciClei });
+    setFilters(filtersFromURL);
+
   }, []);
-
-  useEffect(() => {
-    if (["wts", "wtb", "rfq"].includes(selectedType)) {
-      dispatch(
-        fetchFilterBroadcast({
-          token,
-          user_id: userId,
-          type: selectedType,
-          page: currentPage,
-          pageSize: 20,
-        })
-      )
-        .unwrap()
-        .then((response) => {
-          if (response?.data) {
-            setEditedItems(response.data); // replace or merge based on your logic
-          }
-        })
-        .catch((err) => {
-          console.error("Error fetching broadcast data:", err);
-        });
-    } else {
-      fetchInventoryData(); // fallback for 'inventory'
-    }
-  }, [selectedType, currentPage]);
-
-  const fetchFilteredBroadcastData = () => {
-    setLoading(true);
-    if (["wts", "wtb", "rfq"].includes(selectedType)) {
-      dispatch(
-        fetchFilterBroadcast({
-          token,
-          user_id: userId,
-          type: selectedType,
-          page: currentPage,
-          pageSize: 20,
-        })
-      )
-        .unwrap()
-        .then((response) => {
-          setEditedItems(response?.data || []);
-        })
-        .catch((error) => {
-          console.error("Error fetching Filtered Broadcast data:", error);
-          alert("Failed to fetch filtered broadcast data. Please try again.");
-        })
-        .finally(() => setLoading(false));
-    }
-  };
 
   // Fetch inventory data (default)
   const fetchInventoryData = () => {
@@ -158,20 +117,6 @@ const EditDelete = () => {
   };
   console.log("Payload sent to API:", buildFilterPayload());
 
-  useEffect(() => {
-    if (
-      filters.partModel ||
-      filters.mfg ||
-      filters.status ||
-      filters.heciClei
-    ) {
-      // Fetch filtered data if any filter is applied
-      fetchFilteredData();
-    } else {
-      fetchInventoryData();
-    }
-  }, [currentPage]);
-
   const handleFilterChange = (field, value) => {
     const newFilters = { ...filters, [field]: value };
     setFilters(newFilters);
@@ -181,8 +126,6 @@ const EditDelete = () => {
       [field]: value,
       page: currentPage, // Keep current page
     });
-
-
   };
 
   const handleSearch = () => {
@@ -386,33 +329,46 @@ const EditDelete = () => {
     });
   };
 
-  // Fetch data when currentPage changes
-
   useEffect(() => {
-    console.log("Fetching data for pageNumber:", currentPage);
-    setLoading(true);
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        if (["wtb", "wts", "rfq"].includes(selectedType)) {
+          const res = await dispatch(
+            fetchFilterBroadcast({
+              token,
+              user_id: userId,
+              type: selectedType,
+              page: currentPage,
+              pageSize: 20,
+            })
+          ).unwrap();
+          setEditedItems(res?.data || []);
+        } else {
+          const hasFilters = Object.values(filters).some((v) => v);
+          const action = hasFilters
+            ? getFilterInventories(buildFilterPayload())
+            : isSorted
+            ? getSortedInventoryData({
+                token,
+                sortBy,
+                sortOrder,
+                page: currentPage,
+              })
+            : getInventoryData({ token, page: currentPage });
 
-    const action = isSorted
-      ? getSortedInventoryData({
-          token,
-          sortBy,
-          sortOrder,
-          page: currentPage,
-        })
-      : getInventoryData({ token, page: currentPage });
-
-    dispatch(action)
-      .unwrap()
-      .then((response) => {
-        // Put the result into editedItems (this is what you're displaying)
-        setEditedItems(response?.data || []);
-      })
-      .catch((err) => {
+          const res = await dispatch(action).unwrap();
+          setEditedItems(res?.inventories || res?.data || []);
+        }
+      } catch (err) {
         console.error("Fetch error:", err);
-        alert("Failed to fetch data. Please try again.");
-      })
-      .finally(() => setLoading(false));
-  }, [dispatch, token, currentPage, sortBy, sortOrder, isSorted]);
+        alert("Failed to fetch data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [selectedType, currentPage, sortBy, sortOrder, isSorted]);
 
   return (
     <div className={`${inventory.inventory} !min-w-fit`}>
@@ -643,10 +599,24 @@ const EditDelete = () => {
             </button>
             <button
               type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                window.location.reload();
+              onClick={() => {
+                // Reset filters and page
+                setFilters({
+                  partModel: "",
+                  mfg: "",
+                  status: "",
+                  heciClei: "",
+                });
+                setCurrentPage(1);
+                setSortBy("");
+                setSortOrder("asc");
+                setIsSorted(false);
+                setSelectedInventories([]);
+                setVisiblePages([1, 10]);
+                setSearchParams({ page: "1" }); // Reset query params to page 1
+                window.location.reload()
               }}
+              
               className="transform active:scale-90 transition-all duration-100"
             >
               Refresh

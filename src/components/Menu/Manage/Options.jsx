@@ -105,6 +105,8 @@ const Options = () => {
       console.error("🔥 Unexpected Submission Error:", err);
     } finally {
       setLoader(false);
+      window.location.reload()
+      dispatch(fetchUserData({ id: userId, token }));
     }
   };
 

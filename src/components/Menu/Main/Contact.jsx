@@ -13,7 +13,6 @@ import { ToastContainer } from "react-toastify";
 const Contact = () => {
   const token = Cookies.get("token");
   const user_id = Cookies.get("user_id");
-  // const { user } = JSON.parse(localStorage.getItem("user"));
   const user = JSON.parse(localStorage.getItem("user"))
   console.log(user);
   const [formData, setFormData] = useState({

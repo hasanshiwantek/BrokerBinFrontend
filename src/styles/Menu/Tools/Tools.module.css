@@ -71,7 +71,7 @@
   margin-bottom: 5px;
   cursor: pointer;
   color: #000;
-  font-size: 9pt;
+  /* font-size: 9pt; */
 }
 
 .toolCard ul li:hover {

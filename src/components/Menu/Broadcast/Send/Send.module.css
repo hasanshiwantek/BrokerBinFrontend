@@ -7,7 +7,7 @@
   flex-direction: column;
   gap: 2rem;
   color: #444;
-  font-size: 8pt;
+  /* font-size: 8pt; */
   padding: 5rem;
 
   h1 {
@@ -136,7 +136,7 @@
 .actions button,
 input {
   padding: 10px 20px;
-  font-size: 9pt;
+  /* font-size: 9pt; */
   font-weight: 500;
 
 }
@@ -193,7 +193,7 @@ input {
       border: 1px solid black;
       width: 50%;
       padding: 1rem;
-      font-size: 8pt;
+      /* font-size: 8pt; */
       font-weight: 700;
       border-radius: 5px;
 
@@ -337,7 +337,7 @@ input {
   &Format {
     padding: 1rem 5rem;
     color: #444;
-    font-size: 8pt;
+    /* font-size: 8pt; */
     font-weight: 500;
 
 
@@ -404,7 +404,7 @@ input {
 
 .serviceItem label {
   padding: 4px;
-  font-size: 9pt;
+  /* font-size: 9pt; */
   color: #444;
   white-space: nowrap;
 }

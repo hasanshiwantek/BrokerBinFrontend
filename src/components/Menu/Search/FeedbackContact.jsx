@@ -15,14 +15,13 @@ const Contact = () => {
   const location = useLocation();
   const feedbackData = location.state?.feedbackData;
   console.log("Navigated Feedback Data:", feedbackData);
-  // const { user } = JSON.parse(localStorage.getItem("user"));
-  const user = JSON.parse(localStorage.getItem("user"))
+    const user = JSON.parse(localStorage.getItem("user"))
   console.log(user);
 
   const [navigatedPayloadData, setNavigatedPayloadData] = useState({
-    companyName: user.firstName,
-    email: user.email,
-    phoneNumber: user.phoneNumber,
+    companyName: user?.firstName,
+    email: user?.email,
+    phoneNumber: user?.phoneNumber,
     contact_method: "email",
     subject: feedbackData?.feedbackIssue || "Banner Ads",
     comments: feedbackData?.feedbackPost || "",

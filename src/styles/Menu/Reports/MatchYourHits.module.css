@@ -75,10 +75,13 @@
   align-items: center;
 }
 
-.searchSec h2,
+.searchSec h2{
+  font-size: 9pt;
+  color: white;
+
+}
 .searchSec label {
   color: white;
-  font-size: 9pt;
 }
 
 .searchBar {
@@ -97,7 +100,7 @@
 }
 
 .myhInfo ul li {
-  font-size: 8pt;
+  /* font-size: 8pt; */
   font-weight: 500;
 }
 

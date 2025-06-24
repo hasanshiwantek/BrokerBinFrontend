@@ -134,7 +134,7 @@
   padding: 1px 8px ;
   margin-left: 10px;
   text-align: left;
-  /* font-size: 8pt; */
+  /* font-size: inherit; */
   font-weight: 500;
   color: #444;
   /* white-space: nowrap;
@@ -148,7 +148,7 @@
   /* border: 1px solid #ddd; */
   padding: 0px 9px;
   text-align: left;
-  /* font-size: 8pt; */
+  /* font-size: inherit; */
   font-weight: 700;
   white-space: nowrap;
 }
@@ -194,7 +194,7 @@
   border-radius: 4px;
 }
 .searchProductAddToHotList_main_bg span , label{
-  font-size: 9pt;
+  /* font-size: 9pt; */
   font-weight: 500;
   padding: 3px;
 }
@@ -217,7 +217,7 @@
 
 .companyListingTable table tbody td{
   font-weight: 500;
-  font-size: 8pt;
+  /* font-size: 8pt; */
   color: #444;
   white-space: nowrap;
 }
@@ -228,7 +228,7 @@
 
 .companyListingTable table thead th{
   font-weight: 600;
-  font-size: 8pt;
+  /* font-size: 8pt; */
   white-space: nowrap;
 }
 

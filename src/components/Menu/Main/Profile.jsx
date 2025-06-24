@@ -7,7 +7,7 @@ const Profile = () => {
       <div style={{ padding: "15px" }} id="profile">
         <h5>My Profile</h5>
 
-        <div className="email-sec box " style={{ fontSize: "11px" }}>
+        <div className="email-sec box " >
           <p style={{ color: "#2c83ec" }}>
             Q: How can I stop receiving emails from within the site?
           </p>

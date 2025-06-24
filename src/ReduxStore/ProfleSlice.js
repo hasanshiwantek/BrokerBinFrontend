@@ -757,6 +757,8 @@ const profileSlice = createSlice({
           newPassword: "",
           confirmNewPassword: "",
         };
+        console.log("👤User formdata:",state.formData);
+        
         localStorage.setItem("user", JSON.stringify(action.payload));
       })
       .addCase(fetchUserData.rejected, (state, action) => {

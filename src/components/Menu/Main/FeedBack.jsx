@@ -7,7 +7,7 @@ const FeedBack = () => {
       <div style={{ padding: "15px" }} id="feedback">
         <h5>Member Feedback System</h5>
 
-        <div className="email-sec box " style={{ fontSize: "10px" }}>
+        <div className="email-sec box ">
           <p style={{ color: "#2c83ec" }}>
             Q: How can I view feedback for my company?
           </p>

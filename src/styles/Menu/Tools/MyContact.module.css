@@ -475,7 +475,7 @@
 
 .myVendor_company_list_main_info span p{
   font-weight: 600 !important;
-  font-size: 8pt !important;
+  /* font-size: 8pt !important; */
   color: #444 !important;
 }
 
