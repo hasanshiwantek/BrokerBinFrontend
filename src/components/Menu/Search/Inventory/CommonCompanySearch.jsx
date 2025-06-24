@@ -46,7 +46,7 @@ const CommonCompanySearch = ({ formData, setFormData }) => {
         id="specialty"
         onChange={(e) => setFormData({ ...formData, company: e.target.value })}
         value={formData.company || ""}
-        className="!w-[17.7rem]"
+        className="!w-[19rem]"
       />
       {dropdownVisible && (
         <div

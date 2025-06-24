@@ -155,6 +155,7 @@ const Header = () => {
                 id={css.search}
                 placeholder="What are you looking for?"
                 ref={searchInputRef}
+                className="text-[9pt]"
               />
 
               <button

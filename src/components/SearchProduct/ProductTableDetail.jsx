@@ -384,7 +384,7 @@ const ProductTableDetail = React.memo(
                           company={e?.addedBy?.company}
                           triggerElement={
                             <a
-                              style={{ color: "#428bca", fontWeight: "500" }}
+                              style={{ color: "#428bca", fontWeight: "600" }}
                               onClick={(event) =>
                                 handleShowPopupCompanyDetails(
                                   event,
