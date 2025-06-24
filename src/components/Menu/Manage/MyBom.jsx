@@ -12,6 +12,7 @@ import SavedListExportModal from "@/components/partCart/SavedListExportModal";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import useDefaultSettings from "@/components/hooks/UseDefaultSettings";
 
 const SavedList = () => {
   const { togglePopUp } = useSelector((store) => store.searchProductStore);
@@ -28,7 +29,13 @@ const SavedList = () => {
   const [activeList, setActiveList] = useState(null);
   const [showExportModal, setShowExportModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { fontSize } = useDefaultSettings();
 
+  const { blurWhileLoading, initialData, user, optionFormData } = useSelector(
+      (state) => state.profileStore
+    );
+  
+  console.log("USER", user, "initialData", initialData,)
   console.log("Saved Lists: ",savedLists);
   
   const fetchSavedLists = async () => {
@@ -161,7 +168,7 @@ const SavedList = () => {
           </ul>
         </div>
 
-        <div className={`${css.tableContainer} !bg-[#bfbfbf]`}>
+        <div className={`!bg-[#bfbfbf]`}>
           <div className="flex justify-between items-center px-2 py-0 bg-[#bfbfbf]">
             <h3 className="text-2xl text-white">Saved List(s)</h3>
             <div className="flex items-center gap-2">
@@ -211,7 +218,7 @@ const SavedList = () => {
                     <td>
                       <a
                         onClick={() => setActiveList(list)}
-                        className="!text-[#444] !text-[8pt]"
+                        className="!text-[#444] "
                       >
                         {list.name}
                       </a>

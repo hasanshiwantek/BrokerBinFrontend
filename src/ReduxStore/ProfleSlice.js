@@ -759,6 +759,7 @@ const profileSlice = createSlice({
         };
         console.log("👤User formdata:",state.formData);
         
+        localStorage.setItem("user", JSON.stringify(action.payload));
       })
       .addCase(fetchUserData.rejected, (state, action) => {
         state.blurWhileLoading = true;
