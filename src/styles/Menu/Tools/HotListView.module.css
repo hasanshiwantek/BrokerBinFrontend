@@ -30,6 +30,12 @@
     padding: 8px 16px;
 } */
 
+
+.tabs ul li a {
+  font-size: 9pt;
+}
+
+
 .tabs ul li a:hover {
     color: blue;
 }
@@ -67,7 +73,7 @@
     border: 1px solid gray;
     padding: 1px 8px;
     text-align: left;
-    font-size: 8pt;
+    /* font-size: 8pt; */
     font-weight: 500;
 }
 .table th {
@@ -170,7 +176,7 @@
 .instructions ul, .instructions ol {
     list-style-type: none;
     padding: 0;
-    font-size: 8pt;
+    /* font-size: 8pt; */
 }
 
 .instructions li {

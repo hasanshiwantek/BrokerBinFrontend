@@ -89,19 +89,19 @@
 
 
 .filterSection label{
-  font-size: 8pt;
+  /* font-size: 8pt; */
   font-weight: 600;
   color: #444;
   margin-top: 7px;
 }
 
 .querySec{
-  font-size: 8pt;
+  /* font-size: 8pt; */
   font-weight: 600;
   color: #444;
 }
 .interSection{
-  font-size: 8pt;
+  /* font-size: 8pt; */
   font-weight: 600;
   color: #444;
   /* height: 20rem;
@@ -119,7 +119,7 @@
 
 
 .querySec span{
-  font-size: 8pt;
+  /* font-size: 8pt; */
   font-weight: 600;
 }
 

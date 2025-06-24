@@ -34,7 +34,7 @@
         padding: 2px;
         text-align: left;
         text-transform: capitalize;
-        font-size: 8pt;
+        /* font-size: 8pt; */
       }
       td {
         background: white;

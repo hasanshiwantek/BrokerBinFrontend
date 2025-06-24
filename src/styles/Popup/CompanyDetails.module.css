@@ -246,7 +246,7 @@
                 input {
                   width: 30%;
                   padding: 1rem 2rem;
-                  font-size: 8pt !important;
+                  /* font-size: 8pt !important; */
                   font-weight: 400;
                 }
               }
@@ -326,7 +326,7 @@
                       height: 11rem;
                       width: 100%;
                       resize: none;
-                      font-size: 8pt !important;
+                      /* font-size: 8pt !important; */
                       font-weight: 400;
                       padding: 1rem;
                     }
@@ -455,21 +455,30 @@
 
 .Popup_Info_Main_left_companySideInformation_tabs ul li {
 
-  font-size: 9pt !important;
+  /* font-size: 9pt !important; */
   font-weight: 500;
   color: #444;
 
+}
+
+
+
+.Popup_Info_Main_left_companySideInformation .Popup_Info_Main_right_tabs_contact_right_companies_list_details h2,
+strong{
+    font-size: 8pt !important;
+  font-weight: 500;
+  color: #444;
 }
 
 
 .Popup_Info_Main_left_companySideInformation .Popup_Info_Main_right_tabs_contact_right_companies_list_details h2,
 strong,
 p {
-  font-size: 8pt !important;
   font-weight: 500;
   color: #444;
 
 }
+
 
 
 

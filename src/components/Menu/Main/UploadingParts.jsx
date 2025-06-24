@@ -7,7 +7,7 @@ const UploadingParts = () => {
 
                 <h5>Uploading Parts</h5>
 
-                <div className="email-sec box " style={{ fontSize: "11px" }}>
+                <div className="email-sec box " >
                     <p style={{ color: "#2c83ec" }}>Q: How many parts can I upload at once?</p>
                     <p>A: You can list as many parts as you have available. Our Platinum service allows for unlimited listings, while our Standard service allows up to 100 items.
                     </p>

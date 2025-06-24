@@ -44,7 +44,7 @@
     border-top-right-radius: 5px;
     p {
       font-weight: bold;
-      font-size: 8pt !important;
+      /* font-size: 8pt !important; */
       border-bottom: 1px solid black;
     }
   }
@@ -68,14 +68,14 @@
         tr {
           td {
             padding: 0 1rem;
-            font-size: 9pt !important;
+            /* font-size: 9pt !important; */
             font-weight: 500;
           }
           th {
             padding: 0 1rem;
-            font-size: 9pt !important;
+            /* font-size: 9pt !important; */
             color: #444;
-            font-size: 700;
+            /* font-size: 700; */
           }
         }
       }

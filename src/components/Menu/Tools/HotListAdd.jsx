@@ -40,7 +40,7 @@ const HotListAdd = () => {
     dispatch(addHotListItem({ hotlists, token }))
       .then(() => {
         toast.info("Hotlists Added successfully!", {
-          style: { fontSize: "17px", marginTop: "-10px" }, //
+          style: { fontSize: "15px", marginTop: "-10px" }, //
         });
         console.log("Hotlist Saved SuccesFully");
 

@@ -939,7 +939,6 @@ const MyProfile = () => {
                           name="customSignature"
                           id="customSignature"
                           defaultValue={customTextAreaContent}
-                          className="text-[8pt]"
                           rows="5"
                         ></textarea>
                       ) : (
@@ -948,7 +947,6 @@ const MyProfile = () => {
                           id="signature"
                           readOnly
                           value={textAreaContent}
-                          className="text-[8pt]"
                           rows="5"
                         ></textarea>
                       )}

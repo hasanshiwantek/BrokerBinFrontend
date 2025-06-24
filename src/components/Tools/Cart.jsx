@@ -512,7 +512,7 @@ const Cart = () => {
 
                   {showParts && (
                     <div
-                      className={`transition-max-height duration-500 ease-in-out overflow-hidden ${
+                      className={`transition-max-height duration-500 ease-in-out overflow-hidden mt-8 ${
                         showParts ? "max-h-[1000px]" : "max-h-0"
                       }`}
                     >

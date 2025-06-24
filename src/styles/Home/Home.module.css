@@ -95,6 +95,8 @@
 
         a {
           border-bottom: 2px solid transparent;
+          font-size: 9pt;
+
         }
 
         a:hover {
@@ -105,6 +107,7 @@
       &_numbers {
         a {
           color: var(--primary-color);
+          font-size: 9pt;
         }
 
         a:hover {

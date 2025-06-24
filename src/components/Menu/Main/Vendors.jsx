@@ -9,7 +9,7 @@ const Vendors = () => {
         <div
           className="email-sec box "
           id="vendors"
-          style={{ fontSize: "11px" }}
+          
         >
           <p style={{ color: "#2c83ec" }}>
             Q: What is the MyVendors Page and how do I use it?

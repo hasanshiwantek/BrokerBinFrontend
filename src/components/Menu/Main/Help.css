@@ -22,7 +22,7 @@ h5{
 
 .box{
   border: 1px solid black;
-  font-size: 8pt;
+  /* font-size: 8pt; */
   font-weight: 500;
   padding: 13px 15%;
   width: 90%;

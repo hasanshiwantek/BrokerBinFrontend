@@ -67,7 +67,7 @@
 
 
 .sections ul li{
-    font-size: 9pt;
+    /* font-size: 9pt; */
     font-weight: 600;
     white-space: nowrap;
 }

@@ -63,7 +63,7 @@ form{
   
   .section label {
     margin: 5px 5px;
-    font-size: 13px;
+    /* font-size: 13px; */
   }
   
   .checkboxGroup label {
@@ -163,7 +163,7 @@ form{
   padding: 5px ;
   border: 1px solid #ddd;
   text-align: left;
-  font-size: 8pt;
+  /* font-size: 8pt; */
   color: white;
 }
 

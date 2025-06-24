@@ -152,12 +152,12 @@ select {
 
 .cartList_parts_scroll table td,
 th {
-  font-size: 8pt;
+  /* font-size: 8pt; */
 }
 
 .cartLayout_info p,
 ol li {
-  font-size: 8pt;
+  /* font-size: 8pt; */
 }
 
 .cartLayout_info strong {
