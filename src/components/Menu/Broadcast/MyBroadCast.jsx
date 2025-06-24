@@ -13,26 +13,17 @@ import {
 import Cookies from "js-cookie";
 import shieldImage from "../../../assets/shield-img.png";
 import bullImage from "../../../assets/bullhornn.png";
-import {
-  computers,
-  telecom,
-  mobileDevice,
-  servicesList,
-  initialMFGs,
-  scrap,
-} from "../../../data/services";
+import { initialMFGs } from "../../../data/services";
 import { useNavigate } from "react-router-dom";
 import BroadcastFileModal from "./Send/Field Components/BroadcastFileModal";
 import CompanyDetails from "../../Popups/CompanyDetails/CompanyDetails";
-import {
-  setPopupCompanyDetail,
-  setTogglePopUp,
-} from "../../../ReduxStore/SearchProductSlice";
+import { setPopupCompanyDetail } from "../../../ReduxStore/SearchProductSlice";
 import { FaFileAlt } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import SortableTableHeader from "@/components/Tables/SortableHeader";
 import HoverDropdown from "@/HoverDropdown";
+
 const BroadCast = () => {
   const broadcastItems = useSelector(
     (state) => state.broadcastStore.broadCastData
