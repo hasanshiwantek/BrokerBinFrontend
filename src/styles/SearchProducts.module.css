@@ -130,7 +130,6 @@
   }
 }
 
-
  .productTableDetail table td {
   padding: 1px 8px ;
   margin-left: 10px;
@@ -181,7 +180,7 @@
 } */
 
 .productTableDetail table tr{
-  background-color: #ffffff;
+  /* background-color: #ffffff; */
   border-bottom: 1px solid rgb(228, 225, 225);
   white-space: nowrap;
 }
