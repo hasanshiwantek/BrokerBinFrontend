@@ -58,9 +58,6 @@ const ProductTableDetail = React.memo(
           (e) => e?.addedBy?.company?.id === companyId
         );
       }
-
-      // console.log("COMPANYID:",companyId,"COMPANYDETAIL:",companyDetail || "Not Found in Both Sources");
-
       // 3️⃣ If company is found, dispatch the correct company data
       if (companyDetail?.addedBy?.company) {
         dispatch(setPopupCompanyDetail([companyDetail.addedBy.company]));
@@ -68,7 +65,6 @@ const ProductTableDetail = React.memo(
       } else {
         // console.error("Company not found in data or foundItems!");
       }
-
       dispatch(setTogglePopUp());
     };
 
@@ -91,13 +87,9 @@ const ProductTableDetail = React.memo(
           (e) => e?.id === id
         );
       }
-      // console.log("HOVERED COMPANY DETAIL:", companyDetail || "NOT FOUND");
-
       if (companyDetail?.addedBy?.company) {
         dispatch(setHoverCompanyDetail(companyDetail.addedBy.company));
-        // console.log("SET HOVER COMPANY DETAIL:", companyDetail.addedBy.company);
       } else {
-        // console.error("Company not found for hover!");
       }
     };
 
@@ -255,90 +247,45 @@ const ProductTableDetail = React.memo(
               <thead>
                 <tr>
                   <th>Cart</th>
-                  {/* <th>
-                    <img
-                      src={shieldImage}
-                      alt=""
-                      style={{ width: "18px", fontWeight: "bold" }}
-                    />
-                  </th> */}
-                  <th
-                    onClick={() => handleSort("name")}
-                    style={{ cursor: "pointer" }}
-                  >
+                  <th onClick={() => handleSort("name")} style={{ cursor: "pointer" }} >
                     Company
                     {sortBy === "name" && (sortOrder === "asc" ? "↑" : "↓")}
                   </th>
                   <th>PVR</th>
-                  <th
-                    onClick={() => handleSort("company_country")}
-                    style={{ cursor: "pointer" }}
-                  >
+                  <th onClick={() => handleSort("company_country")} style={{ cursor: "pointer" }} >
                     Ctry
-                    {sortBy === "company_country" &&
-                      (sortOrder === "asc" ? "↑" : "↓")}
+                    {sortBy === "company_country" && (sortOrder === "asc" ? "↑" : "↓")}
                   </th>
-                  <th
-                    onClick={() => handleSort("partModel")}
-                    style={{ cursor: "pointer" }}
-                  >
+                  <th onClick={() => handleSort("partModel")} style={{ cursor: "pointer" }}>
                     Part / Model
-                    {sortBy === "partModel" &&
-                      (sortOrder === "asc" ? "↑" : "↓")}
+                    {sortBy === "partModel" && (sortOrder === "asc" ? "↑" : "↓")}
                   </th>
-                  {/* <th>History</th> */}
                   <th>TS</th>
-                  <th
-                    onClick={() => handleSort("heciClei")}
-                    style={{ cursor: "pointer" }}
-                  >
+                  <th onClick={() => handleSort("heciClei")} style={{ cursor: "pointer" }} >
                     HECI / CLEI{" "}
                     {sortBy === "heciClei" && (sortOrder === "asc" ? "↑" : "↓")}{" "}
                   </th>
-                  <th
-                    onClick={() => handleSort("mfg")}
-                    style={{ cursor: "pointer" }}
-                  >
+                  <th onClick={() => handleSort("mfg")} style={{ cursor: "pointer" }} >
                     Mfg {sortBy === "mfg" && (sortOrder === "asc" ? "↑" : "↓")}
                   </th>
-
-                  <th
-                    onClick={() => handleSort("cond")}
-                    style={{ cursor: "pointer" }}
-                  >
+                  <th onClick={() => handleSort("cond")} style={{ cursor: "pointer" }} >
                     Cond{sortBy === "cond" && (sortOrder === "asc" ? "↑" : "↓")}
                   </th>
-
-                  <th
-                    onClick={() => handleSort("price")}
-                    style={{ cursor: "pointer" }}
-                  >
+                  <th onClick={() => handleSort("price")} style={{ cursor: "pointer" }} >
                     Price{" "}
                     {sortBy === "price" && (sortOrder === "asc" ? "↑" : "↓")}
                   </th>
-                  <th
-                    onClick={() => handleSort("quantity")}
-                    style={{ cursor: "pointer" }}
-                  >
+                  <th onClick={() => handleSort("quantity")} style={{ cursor: "pointer" }} >
                     Qty{" "}
                     {sortBy === "quantity" && (sortOrder === "asc" ? "↑" : "↓")}
                   </th>
-
-                  <th
-                    onClick={() => handleSort("created_at")}
-                    style={{ cursor: "pointer" }}
-                  >
+                  <th onClick={() => handleSort("created_at")} style={{ cursor: "pointer" }} >
                     Age{" "}
-                    {sortBy === "created_at" &&
-                      (sortOrder === "asc" ? "↑" : "↓")}
+                    {sortBy === "created_at" && (sortOrder === "asc" ? "↑" : "↓")}
                   </th>
-                  <th
-                    onClick={() => handleSort("productDescription")}
-                    style={{ cursor: "pointer" }}
-                  >
+                  <th onClick={() => handleSort("productDescription")} style={{ cursor: "pointer" }} >
                     Product Description
-                    {sortBy === "productDescription" &&
-                      (sortOrder === "asc" ? "↑" : "↓")}
+                    {sortBy === "productDescription" && (sortOrder === "asc" ? "↑" : "↓")}
                   </th>
                 </tr>
               </thead>
@@ -346,7 +293,6 @@ const ProductTableDetail = React.memo(
                 {(partData || searchResponseMatched?.data || [])
                   ?.slice() // Create a shallow copy of partData to avoid mutating the original array
                   .sort((a, b) => {
-                    // Check if the company matches the logged-in user's company
                     const isAUserCompany =
                       a.addedBy?.company?.name?.toLowerCase() ===
                       loggedInUserCompany?.toLowerCase();
@@ -378,7 +324,6 @@ const ProductTableDetail = React.memo(
                           style={{ cursor: "pointer" }}
                         />
                       </td>
-                      {/* <td></td> */}
                       <td>
                         <HoverDropdown
                           type="company"
@@ -432,13 +377,6 @@ const ProductTableDetail = React.memo(
                           triggerElement={<div>{e?.partModel}</div>}
                         />
                       </td>
-
-                      {/* <td>
-                        <img
-                          src="https://static.brokerbin.com/version/v8.3.2/images/nohistory_icon.png"
-                          alt="Stats"
-                        />
-                      </td> */}
                       <td>
                         {e?.ts ? (
                           <IoCheckmarkCircle style={{ color: "red" }} />
@@ -460,90 +398,45 @@ const ProductTableDetail = React.memo(
               <tfoot>
                 <tr>
                   <th>Cart</th>
-                  {/* <th>
-                    <img
-                      src={shieldImage}
-                      alt=""
-                      style={{ width: "18px", fontWeight: "bold" }}
-                    />
-                  </th> */}
-                  <th
-                    onClick={() => handleSort("name")}
-                    style={{ cursor: "pointer" }}
-                  >
+                  <th onClick={() => handleSort("name")} style={{ cursor: "pointer" }} >
                     Company
                     {sortBy === "name" && (sortOrder === "asc" ? "↑" : "↓")}
                   </th>
                   <th>PVR</th>
-                  <th
-                    onClick={() => handleSort("company_country")}
-                    style={{ cursor: "pointer" }}
-                  >
+                  <th onClick={() => handleSort("company_country")} style={{ cursor: "pointer" }} >
                     Ctry
-                    {sortBy === "company_country" &&
-                      (sortOrder === "asc" ? "↑" : "↓")}
+                    {sortBy === "company_country" && (sortOrder === "asc" ? "↑" : "↓")}
                   </th>
-                  <th
-                    onClick={() => handleSort("partModel")}
-                    style={{ cursor: "pointer" }}
-                  >
+                  <th onClick={() => handleSort("partModel")} style={{ cursor: "pointer" }} >
                     Part / Model
-                    {sortBy === "partModel" &&
-                      (sortOrder === "asc" ? "↑" : "↓")}
+                    {sortBy === "partModel" && (sortOrder === "asc" ? "↑" : "↓")}
                   </th>
-                  {/* <th>History</th> */}
                   <th>TS</th>
-                  <th
-                    onClick={() => handleSort("heciClei")}
-                    style={{ cursor: "pointer" }}
-                  >
+                  <th onClick={() => handleSort("heciClei")} style={{ cursor: "pointer" }} >
                     HECI / CLEI{" "}
                     {sortBy === "heciClei" && (sortOrder === "asc" ? "↑" : "↓")}{" "}
                   </th>
-                  <th
-                    onClick={() => handleSort("mfg")}
-                    style={{ cursor: "pointer" }}
-                  >
+                  <th onClick={() => handleSort("mfg")} style={{ cursor: "pointer" }} >
                     Mfg {sortBy === "mfg" && (sortOrder === "asc" ? "↑" : "↓")}
                   </th>
-
-                  <th
-                    onClick={() => handleSort("cond")}
-                    style={{ cursor: "pointer" }}
-                  >
+                  <th onClick={() => handleSort("cond")} style={{ cursor: "pointer" }} >
                     Cond{sortBy === "cond" && (sortOrder === "asc" ? "↑" : "↓")}
                   </th>
-
-                  <th
-                    onClick={() => handleSort("price")}
-                    style={{ cursor: "pointer" }}
-                  >
+                  <th onClick={() => handleSort("price")} style={{ cursor: "pointer" }} >
                     Price{" "}
                     {sortBy === "price" && (sortOrder === "asc" ? "↑" : "↓")}
                   </th>
-                  <th
-                    onClick={() => handleSort("quantity")}
-                    style={{ cursor: "pointer" }}
-                  >
+                  <th onClick={() => handleSort("quantity")} style={{ cursor: "pointer" }} >
                     Qty{" "}
                     {sortBy === "quantity" && (sortOrder === "asc" ? "↑" : "↓")}
                   </th>
-
-                  <th
-                    onClick={() => handleSort("created_at")}
-                    style={{ cursor: "pointer" }}
-                  >
+                  <th onClick={() => handleSort("created_at")} style={{ cursor: "pointer" }} >
                     Age{" "}
-                    {sortBy === "created_at" &&
-                      (sortOrder === "asc" ? "↑" : "↓")}
+                    {sortBy === "created_at" && (sortOrder === "asc" ? "↑" : "↓")}
                   </th>
-                  <th
-                    onClick={() => handleSort("productDescription")}
-                    style={{ cursor: "pointer" }}
-                  >
+                  <th onClick={() => handleSort("productDescription")} style={{ cursor: "pointer" }} >
                     Product Description
-                    {sortBy === "productDescription" &&
-                      (sortOrder === "asc" ? "↑" : "↓")}
+                    {sortBy === "productDescription" && (sortOrder === "asc" ? "↑" : "↓")}
                   </th>
                 </tr>
               </tfoot>
