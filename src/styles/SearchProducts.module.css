@@ -22,7 +22,7 @@
 }
 
 .productTableDetail {
-  padding: 1rem;
+  /* padding: 1rem; */
   background: var(--table-bg-color);
 
   /* width: 115%; */
