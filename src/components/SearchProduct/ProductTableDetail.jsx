@@ -255,13 +255,13 @@ const ProductTableDetail = React.memo(
               <thead>
                 <tr>
                   <th>Cart</th>
-                  <th>
+                  {/* <th>
                     <img
                       src={shieldImage}
                       alt=""
                       style={{ width: "18px", fontWeight: "bold" }}
                     />
-                  </th>
+                  </th> */}
                   <th
                     onClick={() => handleSort("name")}
                     style={{ cursor: "pointer" }}
@@ -286,7 +286,7 @@ const ProductTableDetail = React.memo(
                     {sortBy === "partModel" &&
                       (sortOrder === "asc" ? "↑" : "↓")}
                   </th>
-                  <th>History</th>
+                  {/* <th>History</th> */}
                   <th>TS</th>
                   <th
                     onClick={() => handleSort("heciClei")}
@@ -320,7 +320,7 @@ const ProductTableDetail = React.memo(
                     onClick={() => handleSort("quantity")}
                     style={{ cursor: "pointer" }}
                   >
-                    Quantity{" "}
+                    Qty{" "}
                     {sortBy === "quantity" && (sortOrder === "asc" ? "↑" : "↓")}
                   </th>
 
@@ -378,7 +378,7 @@ const ProductTableDetail = React.memo(
                           style={{ cursor: "pointer" }}
                         />
                       </td>
-                      <td></td>
+                      {/* <td></td> */}
                       <td>
                         <HoverDropdown
                           type="company"
@@ -429,16 +429,16 @@ const ProductTableDetail = React.memo(
                           type="part"
                           id={e?.id}
                           rowData={e}
-                          triggerElement={<td>{e?.partModel}</td>}
+                          triggerElement={<div>{e?.partModel}</div>}
                         />
                       </td>
 
-                      <td>
+                      {/* <td>
                         <img
                           src="https://static.brokerbin.com/version/v8.3.2/images/nohistory_icon.png"
                           alt="Stats"
                         />
-                      </td>
+                      </td> */}
                       <td>
                         {e?.ts ? (
                           <IoCheckmarkCircle style={{ color: "red" }} />
@@ -460,13 +460,13 @@ const ProductTableDetail = React.memo(
               <tfoot>
                 <tr>
                   <th>Cart</th>
-                  <th>
+                  {/* <th>
                     <img
                       src={shieldImage}
                       alt=""
                       style={{ width: "18px", fontWeight: "bold" }}
                     />
-                  </th>
+                  </th> */}
                   <th
                     onClick={() => handleSort("name")}
                     style={{ cursor: "pointer" }}
@@ -491,7 +491,7 @@ const ProductTableDetail = React.memo(
                     {sortBy === "partModel" &&
                       (sortOrder === "asc" ? "↑" : "↓")}
                   </th>
-                  <th>History</th>
+                  {/* <th>History</th> */}
                   <th>TS</th>
                   <th
                     onClick={() => handleSort("heciClei")}
@@ -525,7 +525,7 @@ const ProductTableDetail = React.memo(
                     onClick={() => handleSort("quantity")}
                     style={{ cursor: "pointer" }}
                   >
-                    Quantity{" "}
+                    Qty{" "}
                     {sortBy === "quantity" && (sortOrder === "asc" ? "↑" : "↓")}
                   </th>
 
