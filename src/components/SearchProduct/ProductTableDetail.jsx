@@ -8,7 +8,7 @@ import { countriesList } from "@/data/services";
 import { FaEye } from "react-icons/fa";
 import { BiBlock } from "react-icons/bi";
 import { IoCheckmarkCircle } from "react-icons/io5";
-import { searchProductQuery,searchByKeyword, } from "@/ReduxStore/SearchProductSlice";
+import { searchProductQuery, searchByKeyword, } from "@/ReduxStore/SearchProductSlice";
 import HoverDropdown from "@/HoverDropdown";
 import EyeDropdown from "@/EyeDropDown";
 import {
@@ -29,7 +29,7 @@ const ProductTableDetail = React.memo(
     const sortBy = queryParams.get("sortBy");
     const sortOrder = queryParams.get("sortOrder") || "desc";
     const page = parseInt(queryParams.get("page")) || 1;
-    const { alternateRowColors, showBorders } = useDefaultSettings();
+    const { alternateRowColors, showBorders, doubleVision, itemsPerPage } = useDefaultSettings();
 
     const {
       selectedProducts,
@@ -131,11 +131,11 @@ const ProductTableDetail = React.memo(
       const sortOrder = queryParams.get("sortOrder");
       const url = currentQuery
         ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(
-            currentQuery
-          )}&sortBy=${sortBy}&sortOrder=${sortOrder}`
+          currentQuery
+        )}&sortBy=${sortBy}&sortOrder=${sortOrder}`
         : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(
-            currentPartModel
-          )}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
+          currentPartModel
+        )}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
       navigate(url, { replace: true });
       // ✅ Ensure pagination range updates when moving to the previous range
       if (newPage < visiblePages[0]) {
@@ -157,11 +157,11 @@ const ProductTableDetail = React.memo(
       const sortOrder = queryParams.get("sortOrder");
       const url = currentQuery
         ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(
-            currentQuery
-          )}&sortBy=${sortBy}&sortOrder=${sortOrder}`
+          currentQuery
+        )}&sortBy=${sortBy}&sortOrder=${sortOrder}`
         : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(
-            currentPartModel
-          )}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
+          currentPartModel
+        )}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
       navigate(url, { replace: true });
       // ✅ Ensure pagination range updates when reaching the last page in the current range
       if (newPage > visiblePages[1] && newPage <= totalPagess) {
@@ -181,11 +181,11 @@ const ProductTableDetail = React.memo(
         const sortOrder = queryParams.get("sortOrder");
         const url = currentQuery
           ? `/inventory/search?page=${page}&query=${encodeURIComponent(
-              currentQuery
-            )}&sortBy=${sortBy}&sortOrder=${sortOrder}`
+            currentQuery
+          )}&sortBy=${sortBy}&sortOrder=${sortOrder}`
           : `/inventory/search?page=${page}&partModel=${encodeURIComponent(
-              currentPartModel
-            )}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
+            currentPartModel
+          )}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
         navigate(url, { replace: true });
         // ✅ Ensure visible pagination updates when clicking on a new range
         if (page > visiblePages[1] && page <= totalPagess) {
@@ -208,8 +208,8 @@ const ProductTableDetail = React.memo(
             ? "desc"
             : "asc"
           : column === "price"
-          ? "asc"
-          : "desc";
+            ? "asc"
+            : "desc";
       const payload = {
         token,
         page: currentPage,
@@ -241,9 +241,20 @@ const ProductTableDetail = React.memo(
     return (
       <div className={css.productTableDetail}>
         <div className={css.tableContainer}>
-          <h3>Results for: {partModel}</h3>
+          <div className={`flex justify-between items-center`}>
+            <h3>Results for: {partModel}</h3>
+            <div>
+              <select value={itemsPerPage}  className="border !text-[.90vw] rounded text-black">
+                {[20, 30, 40, 50, 60].map((val) => (
+                  <option key={val} value={val}>
+                    {val}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
           <div>
-            <table  className={showBorders ? css.withBorders : ""}>
+            <table className={showBorders ? css.withBorders : ""}>
               <thead>
                 <tr>
                   <th>Cart</th>
@@ -312,8 +323,8 @@ const ProductTableDetail = React.memo(
                         e?.addedBy?.company?.name?.toLowerCase() === loggedInUserCompany?.toLowerCase()
                           ? { backgroundColor: "#ffb" }
                           : alternateRowColors & i % 2 === 0
-                          ? {backgroundColor: "#f5f5f5"}
-                          : { backgroundColor: "#ffff"}
+                            ? { backgroundColor: "#f5f5f5" }
+                            : { backgroundColor: "#ffff" }
                       }
                     >
                       <td>
@@ -471,11 +482,10 @@ const ProductTableDetail = React.memo(
                     key={page}
                     onClick={() => handlePageChange(page)}
                     className={`px-4 py-2 border rounded-md transition-all duration-200 
-                    ${
-                      currentPage === page
+                    ${currentPage === page
                         ? "bg-blue-500 text-white"
                         : "bg-gray-100 text-gray-700 hover:bg-gray-300"
-                    }`}
+                      }`}
                   >
                     {page}
                   </button>
@@ -485,11 +495,10 @@ const ProductTableDetail = React.memo(
               <button
                 onClick={handleNextPage}
                 className={`px-4 py-2 border rounded-md bg-blue-500 text-white  hover:bg-blue-600 transition-all duration-200 
-            ${
-              visiblePages[1] === totalPagess
-                ? "opacity-50 cursor-not-allowed"
-                : ""
-            }`}
+            ${visiblePages[1] === totalPagess
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                  }`}
                 disabled={visiblePages[1] === totalPagess}
               >
                 Next

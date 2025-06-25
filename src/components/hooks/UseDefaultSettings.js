@@ -14,6 +14,7 @@ const useDefaultSettings = () => {
     forceDescriptions: user?.userSetting?.settings.customPartDisplay?.forceDescriptions,
     doubleVision: user?.userSetting?.settings.customPartDisplay?.doubleVision,
     sortPreferences: user?.userSetting?.settings.displaySettings?.sortPreferences || [],
+    itemsPerPage: user?.userSetting?.settings.displaySettings?.itemsPerPage,
   };
 };
 
