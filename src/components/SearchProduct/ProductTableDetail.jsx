@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import css from "@/styles/SearchProducts.module.css";
-// import css from "../../styles/searchProducts.module.css"
+import css from "../../styles/SearchProducts.module.css"
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { useLocation, useNavigate } from "react-router-dom";
