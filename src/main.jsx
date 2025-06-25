@@ -246,9 +246,9 @@ const router = createBrowserRouter([
   {
     element: (
       <Suspense fallback={<LoadingState />}>
-        <App>
+        {/* <App> */}
         <ProtectedRoute />
-        </App>
+        {/* </App> */}
       </Suspense>
     ), // Wrap protected routes in ProtectedRoute
     children: [
