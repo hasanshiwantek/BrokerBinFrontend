@@ -23,7 +23,7 @@ const ProductTable = ({
   countriesList,
   alternateRowColors,
   showBorders,
-  itemsPerPage,
+  // itemsPerPage,
   doubleVision,
   itemsPerPage
 }) => {
