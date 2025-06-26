@@ -24,6 +24,7 @@ const ProductTable = ({
   alternateRowColors,
   showBorders,
   doubleVision,
+  itemsPerPage
 }) => {
 
   const dispatch = useDispatch();
@@ -124,13 +125,6 @@ const ProductTable = ({
           >
             Age {sortBy === "created_at" && (sortOrder === "asc" ? "↑" : "↓")}
           </th>
-          {/* <th
-            onClick={() => handleSort("productDescription")}
-            style={{ cursor: "pointer" }}
-          >
-            Product Description
-            {sortBy === "productDescription" && (sortOrder === "asc" ? "↑" : "↓")}
-          </th> */}
           {!doubleVision && (
             <th onClick={() => handleSort("productDescription")} style={{ cursor: "pointer" }}>
               Product Description

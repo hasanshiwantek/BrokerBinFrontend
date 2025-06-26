@@ -194,6 +194,13 @@ const UploadInventoryContent = () => {
                                   "product description",
                                   "descrip",
                                 ],
+                                [
+                                  "heci/clei",
+                                  "Heci/Clei",
+                                  "heci/Clei",
+                                  "Heci/clei",
+                                  "HECI/CLEI",
+                                ],
                               ].map((options, idx) => (
                                 <td key={idx} className="border p-2">
                                   <select className="w-full border rounded p-1">
@@ -215,6 +222,7 @@ const UploadInventoryContent = () => {
                                 "450",
                                 "23",
                                 "36.4 GB HD U3",
+                                "176496B21",
                               ],
                               [
                                 "176496-B22",
@@ -223,6 +231,7 @@ const UploadInventoryContent = () => {
                                 "495.95",
                                 "11",
                                 "36.4 GB HD U3",
+                                "176496-B22",
                               ],
                             ].map((row, idx) => (
                               <tr key={idx} className="">
