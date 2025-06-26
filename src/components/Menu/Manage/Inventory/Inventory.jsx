@@ -28,7 +28,7 @@ const Inventory = () => {
   // Component state for actual files
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [currentUploads, setCurrentUploads] = useState({})
+  const [currentUploads, setCurrentUploads] = useState({});
 
   // ✅ Create a reference to multiple file inputs
   const fileInputRefs = useRef([]);
@@ -84,14 +84,21 @@ const Inventory = () => {
       ).unwrap();
 
       console.log("✅ Upload success:", response);
-      toast.success(response.message || "✔ Files uploaded successfully!");
+      toast.info(response.message || " Files uploaded successfully!", {
+        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
+      });
 
       // ✅ Clear both Redux and local state
       setSelectedFiles([]);
       dispatch(resetFiles());
     } catch (error) {
       console.error("❌ Upload failed:", error);
-      toast.error(error.message || "Failed to upload files. Please try again.");
+      toast.error(
+        error.message || "Failed to upload files. Please try again.",
+        {
+          style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
+        }
+      );
     } finally {
       setLoading(false);
       // ✅ Reset all file input fields dynamically
@@ -108,21 +115,23 @@ const Inventory = () => {
 
   const fetchCurrentUploadsData = async () => {
     try {
-      const response = await dispatch(fetchCurrentUploads({ token, userId })).unwrap();
+      const response = await dispatch(
+        fetchCurrentUploads({ token, userId })
+      ).unwrap();
       setCurrentUploads(response);
       console.log("📥 Current Uploads:", response);
-      console.log("CURRENTUPLOADSDATA", currentUploads)
+      console.log("CURRENTUPLOADSDATA", currentUploads);
     } catch (error) {
       console.error("❌ Error fetching current uploads:", error);
       toast.error("Failed to fetch current uploads.");
     }
-  }
+  };
 
   useEffect(() => {
     if (userId) {
       fetchCurrentUploadsData();
     }
-  }, [])
+  }, []);
 
   return (
     <>
@@ -170,9 +179,11 @@ const Inventory = () => {
             <button
               type="submit"
               disabled={loading}
-              className={`${css.inventory_main_submitBtn
-                } !p-3 border rounded-lg transform active:scale-90 transition-all duration-100 ${loading ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+              className={`${
+                css.inventory_main_submitBtn
+              } !p-3 border rounded-lg transform active:scale-90 transition-all duration-100 ${
+                loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             >
               {loading ? "Sending..." : "Send File"}
             </button>

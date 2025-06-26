@@ -456,13 +456,6 @@ const Cart = () => {
                     <div>
                       <div>
                         <Tick />
-                        <span>Broadcast Sent</span>
-                      </div>
-                      <span>(0)</span>
-                    </div>
-                    <div>
-                      <div>
-                        <Tick />
                         <span>Action Needed</span>
                       </div>
                       <span>(0)</span>

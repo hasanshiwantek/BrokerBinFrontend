@@ -114,6 +114,7 @@
   padding: 4px;
   /* font-size: 8pt; */
   text-align: left;
+  white-space: nowrap;
 }
 
 .accordionContent table td:has(input) {

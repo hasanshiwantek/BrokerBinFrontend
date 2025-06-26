@@ -177,15 +177,7 @@ const CreateAccount = () => {
                   <span>Company Info</span>
                 </NavLink>
               </li>
-              <li>
-                <NavLink
-                  to="/mycompany/References"
-                  end
-                  className={({ isActive }) => (isActive ? css.active : "")}
-                >
-                  <span>Ref</span>
-                </NavLink>
-              </li>
+
             </ul>
           </div>
 

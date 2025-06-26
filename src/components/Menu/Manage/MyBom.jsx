@@ -192,7 +192,6 @@ const SavedList = () => {
             <thead>
               <tr >
                 <th></th>
-                <th>%</th>
                 <th onClick={() => handleSort("name")}>Name</th>
                 <th onClick={() => handleSort("date")}>Date</th>
                 <th onClick={() => handleSort("po_in_hand")}>PO in Hand</th>
@@ -216,7 +215,6 @@ const SavedList = () => {
                         onChange={() => setSelectedRowId(list.listId)}
                       />
                     </td>
-                    <td></td>
                     <td>
                       <a
                         onClick={() => setActiveList(list)}
@@ -225,7 +223,7 @@ const SavedList = () => {
                         {list.name}
                       </a>
                     </td>
-                    <td>{list?.partItem?.created_at || ""}</td>
+                    <td>{list?.created_at || ""}</td>
                     <td>{list?.po_in_hand ? "Yes" : "No"}</td>
                     <td>{list?.oem_quote ? "Yes" : "No"}</td>
                     <td>{list?.due_date}</td>
@@ -246,7 +244,6 @@ const SavedList = () => {
             <thead>
               <tr>
                 <th></th>
-                <th>%</th>
                 <th onClick={() => handleSort("name")}>Name</th>
                 <th onClick={() => handleSort("date")}>Date</th>
                 <th onClick={() => handleSort("po_in_hand")}>PO in Hand</th>
@@ -265,13 +262,6 @@ const SavedList = () => {
               className="!text-[0.98vw] !flex !justify-start !gap-8 !py-[0.6rem] !px-4 !bg-blue-500 !text-white !capitalize"
             >
               Delete List
-            </button>
-            <button
-              type="button"
-              // onClick={""}
-              className="!text-[0.98vw] !flex !justify-start !gap-8 !py-[0.6rem] !px-4 !bg-blue-500 !text-white !capitalize"
-            >
-              ReRun BOM
             </button>
             <button
               type="button"

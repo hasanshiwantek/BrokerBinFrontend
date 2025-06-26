@@ -41,9 +41,7 @@ const CompanyPrimaryInfo = lazy(() =>
 const SalesInfo = lazy(() =>
   import("./components/Menu/Manage/Mycompany/SalesInfo/SalesInfo.jsx")
 );
-const CompanyRef = lazy(() =>
-  import("./components/Menu/Manage/Mycompany/Ref.jsx")
-);
+
 const CompanyPhotos = lazy(() =>
   import("./components/Menu/Manage/Mycompany/CompanyPhotos.jsx")
 );
@@ -344,16 +342,6 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <SalesInfo />
-            <Footer />
-          </Suspense>
-        ),
-      },
-      {
-        path: "/mycompany/References",
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Header />
-            <CompanyRef />
             <Footer />
           </Suspense>
         ),
