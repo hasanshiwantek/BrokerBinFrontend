@@ -19,6 +19,7 @@ import CompanyLogo from "./CompanyLogo";
 import {
   updateCompanyPrimaryInfo,
   updateCompanyBio,
+  updateCompanyOptions,
 } from "@/ReduxStore/SearchProductSlice";
 import { useRef } from "react";
 import { statesList, countriesList, regionsList } from "@/data/services";
@@ -36,6 +37,15 @@ const CompanyPrimaryInfo = () => {
   const [bio, setBio] = useState("");
   const [logoPreview, setLogoPreview] = useState(""); // for preview
   const [selectedLogoFile, setSelectedLogoFile] = useState(null); // actual file for submission
+  const [optionsFormData, setOptionsFormData] = useState({
+    listing: "",
+    locations: "",
+    openInventory: false,
+    receiveAlerts: false,
+    days: "",
+    mail: false,
+    email: "",
+  });
 
   console.log("BIO", bio);
 
@@ -288,15 +298,21 @@ const CompanyPrimaryInfo = () => {
         console.log("result: ", result);
 
         if (result?.payload?.status) {
-          toast.success(
+          toast.info(
             result?.payload?.message ||
-              "✅ Company primary info updated successfully"
+              "Company primary info updated successfully",
+            {
+              style: { fontSize: "15px", marginTop: "-10px" },
+            }
           );
           console.log("✅ Success Response:", result.payload);
         } else {
           toast.error(
             result?.payload?.message ||
-              "❌ Failed to update company primary info"
+              " Failed to update company primary info",
+            {
+              style: { fontSize: "15px", marginTop: "-10px" },
+            }
           );
           console.warn("❌ Failure Response:", result);
         }
@@ -315,10 +331,14 @@ const CompanyPrimaryInfo = () => {
         );
 
         if (result?.payload?.status) {
-          toast.success("✅ Company bio updated successfully");
+          toast.info("Company bio updated successfully", {
+            style: { fontSize: "15px", marginTop: "-10px" },
+          });
           console.log("✅ Bio Saved:", result.payload);
         } else {
-          toast.error("❌ Failed to update company bio");
+          toast.error("Failed to update company bio.Please Try Again.", {
+            style: { fontSize: "15px", marginTop: "-10px" },
+          });
           console.warn("❌ Failure Response:", result);
         }
       }
@@ -330,23 +350,59 @@ const CompanyPrimaryInfo = () => {
           console.log("Image result", result);
 
           if (result?.payload?.status && result.payload.image) {
-            toast.success("✅ Company logo uploaded successfully");
+            toast.info("Company logo uploaded successfully", {
+              style: { fontSize: "15px", marginTop: "-10px" },
+            });
 
             // ✅ Instantly show the new image
             setLogoPreview(result.payload.image);
           } else {
-            toast.error("❌ Failed to upload company logo");
+            toast.error("Failed to upload company logo", {
+              style: { fontSize: "15px", marginTop: "-10px" },
+            });
           }
         } else {
           toast.info("ℹ️ Please select a logo file before submitting.");
         }
-        //         setTimeout(() => {
-        //  window.location.reload(5000)
-        // })
+      }
+
+      if (activeTab === "options") {
+        const payload = {
+          ...optionsFormData,
+          companyId: companyId,
+        };
+        console.log("🚀 Submitting Company Primary Info:", payload);
+
+        const result = await dispatch(
+          updateCompanyOptions({ token, body: payload })
+        );
+
+        console.log("result: ", result);
+
+        if (result?.payload?.status) {
+          toast.info(
+            result?.payload?.message || "Company Options updated successfully",
+            {
+              style: { fontSize: "15px", marginTop: "-10px" },
+            }
+          );
+          console.log("✅ Success Response:", result.payload);
+        } else {
+          toast.error(
+            result?.payload?.message ||
+              " Failed to update company settings info",
+            {
+              style: { fontSize: "15px", marginTop: "-10px" },
+            }
+          );
+          console.warn("❌ Failure Response:", result);
+        }
       }
     } catch (error) {
       console.error("❌ Error during form submission:", error);
-      toast.error("❌ Something went wrong during submission");
+      toast.error(" Something went wrong during submission", {
+        style: { fontSize: "15px", marginTop: "-10px" },
+      });
     } finally {
       setLoading(false);
     }
@@ -379,6 +435,15 @@ const CompanyPrimaryInfo = () => {
           company,
         },
       }));
+      setOptionsFormData({
+        listing: company.listing || "",
+        locations: company.locations || "",
+        openInventory: company.openInventory || false,
+        receiveAlerts: company.receiveAlerts || false,
+        days: company.days || "",
+        mail: company.mail || false,
+        email: company.email || "",
+      });
     }
   }, [formData?.data?.company?.open_timing, formData?.data?.company?.close]);
 
@@ -436,15 +501,6 @@ const CompanyPrimaryInfo = () => {
                       className={({ isActive }) => (isActive ? css.active : "")}
                     >
                       <span>Sales Info</span>
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      to="/mycompany/References"
-                      end
-                      className={({ isActive }) => (isActive ? css.active : "")}
-                    >
-                      <span>Ref</span>
                     </NavLink>
                   </li>
                   <li>
@@ -648,8 +704,8 @@ const CompanyPrimaryInfo = () => {
               {activeTab === "options" && (
                 <div className={`${css.profileInfo_form}`}>
                   <CompanyInfoOptions
-                    formData={formData}
-                    setFormData={setFormData}
+                    formData={optionsFormData}
+                    setFormData={setOptionsFormData}
                   />
                 </div>
               )}

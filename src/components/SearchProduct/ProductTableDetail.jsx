@@ -28,6 +28,9 @@ import {
   submitUserSettings,
   fetchUserData,
 } from "@/ReduxStore/ProfleSlice";
+import Tooltip from "@mui/material/Tooltip";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
 const ProductTableDetail = React.memo(
   ({ partModel, partData, searchString }) => {
     const location = useLocation();
@@ -345,6 +348,24 @@ const ProductTableDetail = React.memo(
       }
     };
 
+    const theme = createTheme({
+      components: {
+        MuiTooltip: {
+          styleOverrides: {
+            tooltip: {
+              fontSize: "1rem", // Adjust font size
+              width: "13rem",
+              textAlign: "center",
+              backgroundColor: "var(--primary-color)",
+            },
+            arrow: {
+              color: "var(--primary-color)",
+            },
+          },
+        },
+      },
+    });
+
     return (
       <div className={css.productTableDetail}>
         <div className={css.tableContainer}>
@@ -368,21 +389,44 @@ const ProductTableDetail = React.memo(
                 className="cursor-pointer"
               >
                 {doubleVisionState ? (
-                  <img
-                    src="https://static.brokerbin.com/version/v8.4.2/images/double_vision_off.gif"
-                    alt="Remove Double Vision"
-                  />
+                  <ThemeProvider theme={theme}>
+                    <Tooltip title="Remove Double Vision" arrow placement="top">
+                      <img
+                        src="https://static.brokerbin.com/version/v8.4.2/images/double_vision_off.gif"
+                        alt="Remove Double Vision"
+                      />
+                    </Tooltip>
+                  </ThemeProvider>
                 ) : (
-                  <img
-                    src="https://static.brokerbin.com/version/v8.4.2/images/double_vision.gif"
-                    alt="Turn On Double Vision"
-                  />
+                  <ThemeProvider theme={theme}>
+                    <Tooltip
+                      title="Turn On  Double Vision"
+                      arrow
+                      placement="top"
+                    >
+                      <img
+                        src="https://static.brokerbin.com/version/v8.4.2/images/double_vision.gif"
+                        alt="Turn On Double Vision"
+                      />
+                    </Tooltip>
+                  </ThemeProvider>
                 )}
               </div>
               <div>
-                <Link to={"/myProfile/Options"}>
-                  <img src="https://static.brokerbin.com/version/v8.4.2/images/customize_display.gif" alt="/OptionsPage" />
-                </Link>
+                <ThemeProvider theme={theme}>
+                  <Tooltip
+                    title="Go To Customize Display"
+                    arrow
+                    placement="top"
+                  >
+                    <Link to={"/myProfile/Options"}>
+                      <img
+                        src="https://static.brokerbin.com/version/v8.4.2/images/customize_display.gif"
+                        alt="/OptionsPage"
+                      />
+                    </Link>
+                  </Tooltip>
+                </ThemeProvider>
               </div>
             </div>
           </div>

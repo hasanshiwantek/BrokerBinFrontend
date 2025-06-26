@@ -249,17 +249,7 @@ const MyCompany = () => {
                       <span>Sales Info</span>
                     </NavLink>
                   </li>
-                  <li>
-                    <NavLink
-                      to="/mycompany/References"
-                      end
-                      className={({ isActive }) =>
-                        isActive ? css.active : ""
-                      }
-                    >
-                      <span>Ref</span>
-                    </NavLink>
-                  </li>
+
                   <li>
                     <NavLink
                       to="/mycompany/Photos"

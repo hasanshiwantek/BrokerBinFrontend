@@ -105,7 +105,18 @@ const Options = () => {
       console.error("🔥 Unexpected Submission Error:", err);
     } finally {
       setLoader(false);
-      window.location.reload()
+      toast.warn("Please refresh the page to apply your changes.", {
+        position: "top-center",
+        autoClose: true,
+        draggable: true,
+        style: {
+          fontSize: "14px",
+          fontWeight: "bold",
+          backgroundColor: "#fffbdd",
+          color: "#8a6d3b",
+        },
+      });
+      // window.location.reload();
       dispatch(fetchUserData({ id: userId, token }));
     }
   };
@@ -215,15 +226,15 @@ const Options = () => {
               <div className={css.optionsBtnGroup}>
                 <div className={css.optionsBtnGroupSec}>
                   <div>
-                    <label>BroadCast</label>
+                    <label className="w-36">BroadCast</label>
                     <Link to={"/myprofile/broadcastfilter"}>
-                      <button style={{ marginLeft: "25px" }}>
+                      <button >
                         Options and Filters
                       </button>
                     </Link>
                   </div>
                   <div>
-                    <label>Email Reports</label>
+                    <label className="w-36">Email Reports</label>
                     <Link to={"/reports/email"}>
                       <button>Options and Filters</button>
                     </Link>
@@ -541,7 +552,7 @@ const Options = () => {
                         <option value="11.25">12 Point</option>
                       </select>
                     </li>
-                    <li>
+                    {/* <li>
                       <label htmlFor="extendedCompanyInfo">
                         Extended Company Info
                       </label>
@@ -554,7 +565,7 @@ const Options = () => {
                         <option value="0">Off</option>
                         <option value="1">On</option>
                       </select>
-                    </li>
+                    </li> */}
                     <li>
                       <label htmlFor="contactMethod">
                         Preferred Contact Method
@@ -673,7 +684,7 @@ const Options = () => {
       {togglePopUp && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
-      <ToastContainer position="top-center" autoClose={2000} />
+      <ToastContainer position="top-center" autoClose={3000} />
     </>
   );
 };

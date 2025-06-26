@@ -25,7 +25,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { HiUserRemove } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
-
+import { deleteCompanyPhotos } from "@/ReduxStore/ProfleSlice";
 const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
   // const [toggleTabs, setToggleTabs] = useState(1);
   // Loading state
@@ -55,12 +55,9 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
   );
   console.log("Profile Images: ", contactProfileImgs);
 
+  const companyImages = companyContactData?.data?.company?.imageGallery;
 
-
-  const companyImages=companyContactData?.data?.company?.imageGallery
-
-  console.log("Company images: ",companyImages);
-  
+  console.log("Company images: ", companyImages);
 
   const [visibleFeedbacks, setVisibleFeedbacks] = useState(10);
   const token = Cookies.get("token");
@@ -73,10 +70,6 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
   const compId = companyContactData.data.company.id;
   const companyName = companyContactData.data.company.name;
   console.log("COMPANYNAME", companyName);
-
-
-
-
 
   const companyUsersCount = companyContactData.data.contacts.length;
   useEffect(() => {
@@ -238,6 +231,30 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
 
   const loadMore = () => {
     setVisibleFeedbacks((prev) => prev + 10);
+  };
+
+  // DELETE IMAGE HANDLER
+
+  const deleteImageHandler = async (id) => {
+    console.log(id);
+    const confirmation = window.confirm(
+      "Are you sure you want to delete this image?"
+    );
+    if (!confirmation) return;
+    try {
+      const result = await dispatch(
+        deleteCompanyPhotos({ token, imageId: id })
+      ).unwrap();
+      if (result?.status) {
+        console.log("Image Deleted with id: ", id);
+        toast.info(result?.message || "Image Deleted From Company!");
+           fetchCompanyContacts(); 
+      } else {
+        toast.info(result?.message || "Failed to remove Image.");
+      }
+    } catch (err) {
+      toast.error("Error removing Image: " + err.message);
+    }
   };
 
   const theme = createTheme({
@@ -749,18 +766,22 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
           <div className={css.Popup_Info_Main_right_tabs_photos}>
             <h1>Company photos</h1>
             <div className={css.Popup_Info_Main_right_tabs_photos_img}>
-
-
-              {Array.isArray(companyImages) &&
-              companyImages.length > 0 ? (
-                companyImages.map((img, ind) => (
-                  <div key={ind}>
+              {Array.isArray(companyImages) && companyImages.length > 0 ? (
+                companyImages.map((img) => (
+                  <div key={img?.id} className="flex justify-start gap-2">
                     <img
-                      src={img || shadow} // Fallback if the image is empty/null
+                      src={img?.imageGallery || shadow} // Fallback if the image is empty/null
                       alt="Company Photos"
                       className="border rounded-xl p-2 w-44 h-44 object-cover"
-                      // className="!w-20 !h-20 !object-cover !rounded-md !border"
                     />
+                    <div>
+                      <button
+                        className=" text-4xl font-bold   text-gray-600 hover:text-red-500"
+                        onClick={() => deleteImageHandler(img?.id)}
+                      >
+                        &times;
+                      </button>
+                    </div>
                   </div>
                 ))
               ) : (
@@ -769,8 +790,6 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
                 </p>
               )}
             </div>
-
-
           </div>
         </div>
         <div className={toggleTabs === 3 ? css.showContent : css.content}>
@@ -807,7 +826,9 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
                   //   console.log("Icon clicked!");
                   //   setIsOpen(true);
                   // }}
-                  onClick={() => showFeedbackHandler(companyId, primaryContactId)}
+                  onClick={() =>
+                    showFeedbackHandler(companyId, primaryContactId)
+                  }
                   className={`hover:text-[#2c83ec] cursor-pointer ${
                     currentUserCompanyId === companyId
                       ? "opacity-50 pointer-events-none"
