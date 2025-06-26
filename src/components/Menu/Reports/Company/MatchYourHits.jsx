@@ -10,6 +10,7 @@ import Cookies from "js-cookie";
 import styles from "../../../Menu/Broadcast/BroadCast.module.css";
 import style from "@/styles/Menu/Manage/MyProfile.module.css";
 import { initialMFGs } from "@/data/services";
+
 const MatchYourHits = () => {
   const token = Cookies.get("token");
   const wrapperRef = useRef(null);
@@ -80,13 +81,16 @@ const MatchYourHits = () => {
     );
   }
 
-  if (error) return <p>Error: {error.message}</p>;
+  if (error)
+  return (
+    <div className="text-center text-red-600 py-10 mt-[13vw] font-semibold">
+      Something went wrong. Please try again later.
+    </div>
+  );
 
   return (
     <div>
       <div className={css.container}>
-        {/* Navigation Tabs */}
-
         <div className={style.profileInfo_links}>
           <ul>
             <li>
@@ -114,14 +118,6 @@ const MatchYourHits = () => {
                 <span>Email</span>
               </NavLink>
             </li>
-            {/* <li>
-              <NavLink
-                to={"/reports/serviceStats"}
-                className={({ isActive }) => (isActive ? css.active : "")}
-              >
-                <span>Stats</span>
-              </NavLink>
-            </li> */}
           </ul>
         </div>
 
@@ -183,7 +179,7 @@ const MatchYourHits = () => {
             </tr>
           </thead>
           <tbody className="bg-white">
-            {myhData?.length > 0 ? (
+            {(myhData || [])?.length > 0 ? (
               myhData?.map((item, index) => (
                 <tr key={index}>
                   <td
@@ -225,7 +221,7 @@ const MatchYourHits = () => {
               <tr>
                 <td
                   colSpan="15"
-                  className="!text-center !text-red-600 !font-semibold !py-4"
+                  className="!text-center !text-red-600 !font-semibold "
                 >
                   Part not in your inventory, please try our Site Wide Supply
                   And Demand!

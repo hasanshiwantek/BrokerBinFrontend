@@ -117,7 +117,7 @@ const ProductTableDetail = React.memo(
     const pageSize =
       searchResponseMatched[partModel]?.pageSize ||
       searchResponseMatched?.pageSize;
-    const keywordPage = parseInt(queryParams.get("page")) || 1;
+    const keywordPage = parseInt(queryParams.get("page")) || 1;  
     const keywordPageSize = searchResponseMatched?.pageSize || 20;
     const keywordTotalCount = searchResponseMatched?.totalCount || 0;
     const keywordTotalPages = Math.ceil(keywordTotalCount / keywordPageSize);
@@ -256,11 +256,7 @@ const ProductTableDetail = React.memo(
     //   ? allData.slice(itemsPerPage)
     //   : [];
 
-    const allData = (partData || searchResponseMatched?.data || []).slice(
-      0,
-      itemsPerPage
-    );
-
+    const allData = (partData || searchResponseMatched?.data || []).slice(0, itemsPerPage);
     const shouldSplit = doubleVision && itemsPerPage >= 20;
     const splitIndex = shouldSplit
       ? Math.ceil(allData.length / 2)

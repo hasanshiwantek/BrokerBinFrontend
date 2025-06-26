@@ -52,9 +52,6 @@ const Login = () => {
         localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("companyId", JSON.stringify(companyId));
         console.log("Company id : ",companyId);
-        
-
-
         navigate("/"); // Redirect the user
         // window.location.href = 'http://localhost:5173/';
       } else {
