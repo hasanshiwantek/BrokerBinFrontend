@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
-import css from "../../styles/SearchProducts.module.css"
+import css from "../../styles/SearchProducts.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import shieldImage from "@/assets/shield-img.png";
 import { countriesList } from "@/data/services";
 import { FaEye } from "react-icons/fa";
 import { BiBlock } from "react-icons/bi";
 import { IoCheckmarkCircle } from "react-icons/io5";
-import { searchProductQuery, searchByKeyword, } from "@/ReduxStore/SearchProductSlice";
+import {
+  searchProductQuery,
+  searchByKeyword,
+} from "@/ReduxStore/SearchProductSlice";
 import HoverDropdown from "@/HoverDropdown";
 import EyeDropdown from "@/EyeDropDown";
 import {
@@ -19,13 +22,14 @@ import {
 } from "@/ReduxStore/SearchProductSlice";
 import useDefaultSettings from "../hooks/UseDefaultSettings";
 import ProductTable from "./ProductTable";
-
+import {
+  fetchUserSettings,
+  setOptionFormData,
+  submitUserSettings,
+  fetchUserData,
+} from "@/ReduxStore/ProfleSlice";
 const ProductTableDetail = React.memo(
-  ({ partModel,
-    partData,
-    searchString
-  }) => {
-
+  ({ partModel, partData, searchString }) => {
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -33,7 +37,8 @@ const ProductTableDetail = React.memo(
     const sortBy = queryParams.get("sortBy");
     const sortOrder = queryParams.get("sortOrder") || "desc";
     const page = parseInt(queryParams.get("page")) || 1;
-    const { alternateRowColors, showBorders, doubleVision, itemsPerPage } = useDefaultSettings();
+    const { alternateRowColors, showBorders, doubleVision, itemsPerPage } =
+      useDefaultSettings();
 
     const {
       selectedProducts,
@@ -47,6 +52,7 @@ const ProductTableDetail = React.memo(
     const id = user?.user?.id || user_id;
     const token = Cookies.get("token");
     const loggedInUserCompany = initialData?.company?.name;
+    console.log("User: ", user);
 
     const handleShowPopupCompanyDetails = (event, companyId) => {
       event.stopPropagation();
@@ -133,11 +139,11 @@ const ProductTableDetail = React.memo(
       const sortOrder = queryParams.get("sortOrder");
       const url = currentQuery
         ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(
-          currentQuery
-        )}&sortBy=${sortBy}&sortOrder=${sortOrder}`
+            currentQuery
+          )}&sortBy=${sortBy}&sortOrder=${sortOrder}`
         : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(
-          currentPartModel
-        )}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
+            currentPartModel
+          )}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
       navigate(url, { replace: true });
       // ✅ Ensure pagination range updates when moving to the previous range
       if (newPage < visiblePages[0]) {
@@ -159,11 +165,11 @@ const ProductTableDetail = React.memo(
       const sortOrder = queryParams.get("sortOrder");
       const url = currentQuery
         ? `/inventory/search?page=${newPage}&query=${encodeURIComponent(
-          currentQuery
-        )}&sortBy=${sortBy}&sortOrder=${sortOrder}`
+            currentQuery
+          )}&sortBy=${sortBy}&sortOrder=${sortOrder}`
         : `/inventory/search?page=${newPage}&partModel=${encodeURIComponent(
-          currentPartModel
-        )}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
+            currentPartModel
+          )}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
       navigate(url, { replace: true });
       // ✅ Ensure pagination range updates when reaching the last page in the current range
       if (newPage > visiblePages[1] && newPage <= totalPagess) {
@@ -183,11 +189,11 @@ const ProductTableDetail = React.memo(
         const sortOrder = queryParams.get("sortOrder");
         const url = currentQuery
           ? `/inventory/search?page=${page}&query=${encodeURIComponent(
-            currentQuery
-          )}&sortBy=${sortBy}&sortOrder=${sortOrder}`
+              currentQuery
+            )}&sortBy=${sortBy}&sortOrder=${sortOrder}`
           : `/inventory/search?page=${page}&partModel=${encodeURIComponent(
-            currentPartModel
-          )}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
+              currentPartModel
+            )}&sortBy=${sortBy}&sortOrder=${sortOrder}`;
         navigate(url, { replace: true });
         // ✅ Ensure visible pagination updates when clicking on a new range
         if (page > visiblePages[1] && page <= totalPagess) {
@@ -210,8 +216,8 @@ const ProductTableDetail = React.memo(
             ? "desc"
             : "asc"
           : column === "price"
-            ? "asc"
-            : "desc";
+          ? "asc"
+          : "desc";
       const payload = {
         token,
         page: currentPage,
@@ -238,27 +244,146 @@ const ProductTableDetail = React.memo(
       setVisiblePages([start, end]);
     }, [currentPage, totalPagess]);
 
-    const allData = (partData || searchResponseMatched?.data || []).slice(0, itemsPerPage);
+    // const allData = (partData || searchResponseMatched?.data || []);
+    // const firstTableData = doubleVision && allData.length > 20
+    //   ? allData.slice(0, itemsPerPage)
+    //   : allData;
 
+    // const secondTableData = doubleVision && allData.length > itemsPerPage
+    //   ? allData.slice(itemsPerPage)
+    //   : [];
+
+    const allData = (partData || searchResponseMatched?.data || []).slice(0, itemsPerPage);
     const shouldSplit = doubleVision && itemsPerPage >= 20;
-    const splitIndex = shouldSplit ? Math.ceil(allData.length / 2) : allData.length;
+    const splitIndex = shouldSplit
+      ? Math.ceil(allData.length / 2)
+      : allData.length;
 
     const firstTableData = allData.slice(0, splitIndex);
     const secondTableData = shouldSplit ? allData.slice(splitIndex) : [];
+
+    // ITEMS PER PAGE LOGIC
+
+    const [itemPerPage, setItemPerPage] = useState(itemsPerPage);
+    const doubleVisionState =
+      user?.userSetting?.settings?.customPartDisplay?.doubleVision;
+
+    console.log("Double Vision State: ", doubleVisionState);
+
+    const { optionFormData, loading } = useSelector(
+      (state) => state.profileStore
+    );
+
+    const handlePageSelect = async (e) => {
+      const value = e.target.value;
+      setItemPerPage(value);
+      console.log("Selected ItemPerPage: ", value);
+      const updatedData = {
+        ...optionFormData,
+        displaySettings: {
+          ...optionFormData.displaySettings,
+          itemsPerPage: value, // or any dynamic value like from state
+        },
+      };
+      console.log(
+        "🚀 Sending partial Items Per Page settings  update:",
+        updatedData
+      );
+      try {
+        const resultAction = await dispatch(
+          submitUserSettings({ token, optionFormData: updatedData })
+        );
+        if (submitUserSettings.fulfilled.match(resultAction)) {
+          console.log("✅Double Vision setting updated!✅");
+          dispatch(fetchUserData({ id: user_id, token }));
+
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        } else {
+          console.error("🔥 Error submitting double vision:", err);
+        }
+      } catch (err) {
+        console.error("🔥 Error submitting double vision:", err);
+      }
+    };
+
+    useEffect(() => {
+      dispatch(fetchUserSettings({ token }));
+    }, []);
+
+    const handleToggleDoubleVision = async () => {
+      const newDoubleVisionValue = !doubleVisionState;
+
+      const updatedData = {
+        ...optionFormData,
+        customPartDisplay: {
+          ...optionFormData.customPartDisplay,
+          doubleVision: newDoubleVisionValue,
+        },
+      };
+
+      try {
+        const resultAction = await dispatch(
+          submitUserSettings({ token, optionFormData: updatedData })
+        );
+
+        if (submitUserSettings.fulfilled.match(resultAction)) {
+          console.log(
+            `Double Vision ${newDoubleVisionValue ? "Enabled" : "Disabled"}`
+          );
+          dispatch(fetchUserData({ id: user_id, token }));
+          dispatch(fetchUserSettings({ token }));
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        } else {
+          console.error("🔥 Failed to update Double Vision.");
+        }
+      } catch (err) {
+        console.error("🔥 Error submitting Double Vision setting:", err);
+      }
+    };
 
     return (
       <div className={css.productTableDetail}>
         <div className={css.tableContainer}>
           <div className={`flex justify-between items-center`}>
             <h3>Results for: {partModel}</h3>
-            <div>
-              <select value={itemsPerPage} className="border !text-[.90vw] rounded text-black">
+            <div className="flex justify-start items-center gap-2 p-1">
+              <select
+                onChange={handlePageSelect}
+                value={itemPerPage}
+                className="border !text-[.90vw] rounded text-black"
+              >
                 {[20, 30, 40, 50, 60].map((val) => (
                   <option key={val} value={val}>
                     {val}
                   </option>
                 ))}
               </select>
+
+              <div
+                onClick={handleToggleDoubleVision}
+                className="cursor-pointer"
+              >
+                {doubleVisionState ? (
+                  <img
+                    src="https://static.brokerbin.com/version/v8.4.2/images/double_vision_off.gif"
+                    alt="Remove Double Vision"
+                  />
+                ) : (
+                  <img
+                    src="https://static.brokerbin.com/version/v8.4.2/images/double_vision.gif"
+                    alt="Turn On Double Vision"
+                  />
+                )}
+              </div>
+              <div>
+                <Link to={"/myProfile/Options"}>
+                  <img src="https://static.brokerbin.com/version/v8.4.2/images/customize_display.gif" alt="/OptionsPage" />
+                </Link>
+              </div>
             </div>
           </div>
           <div className="flex">
@@ -268,8 +393,8 @@ const ProductTableDetail = React.memo(
                 showBorders={showBorders}
                 alternateRowColors={alternateRowColors}
                 doubleVision={doubleVision}
-                sortBy={sortBy}
                 itemsPerPage={itemsPerPage}
+                sortBy={sortBy}
                 sortOrder={sortOrder}
                 handleSort={handleSort}
                 selectProduct={selectProduct}
@@ -288,8 +413,8 @@ const ProductTableDetail = React.memo(
                   doubleVision={doubleVision}
                   showBorders={showBorders}
                   alternateRowColors={alternateRowColors}
-                  sortBy={sortBy}
                   itemsPerPage={itemsPerPage}
+                  sortBy={sortBy}
                   sortOrder={sortOrder}
                   handleSort={handleSort}
                   selectProduct={selectProduct}
@@ -303,7 +428,7 @@ const ProductTableDetail = React.memo(
             )}
           </div>
 
-          <div className="flex justify-between items-center p-1">
+          <div className="flex justify-between items-center ">
             <div className="flex space-x-2 text-lg font-semibold text-gray-700">
               <span className="text-orange-700 p-4 text-xl">
                 Page <span className="text-blue-800">{currentPage}</span> of
@@ -315,7 +440,7 @@ const ProductTableDetail = React.memo(
               {/* Previous Button */}
               <button
                 onClick={handlePrevPage}
-                className={`px-4 py-2 border rounded-md bg-blue-500 text-white  hover:bg-blue-600 transition-all duration-200 
+                className={`px-2 py-1 border rounded-md bg-blue-500 text-white  hover:bg-blue-600 transition-all duration-200 text-[8pt] 
             ${visiblePages[0] === 1 ? "opacity-50 cursor-not-allowed" : ""}`}
                 disabled={visiblePages[0] === 1}
               >
@@ -330,11 +455,12 @@ const ProductTableDetail = React.memo(
                   <button
                     key={page}
                     onClick={() => handlePageChange(page)}
-                    className={`px-4 py-2 border rounded-md transition-all duration-200 
-                    ${currentPage === page
+                    className={`px-2 py-2 border rounded-md transition-all duration-200 text-[8pt] 
+                    ${
+                      currentPage === page
                         ? "bg-blue-500 text-white"
                         : "bg-gray-100 text-gray-700 hover:bg-gray-300"
-                      }`}
+                    }`}
                   >
                     {page}
                   </button>
@@ -343,11 +469,12 @@ const ProductTableDetail = React.memo(
               {/* Next Button */}
               <button
                 onClick={handleNextPage}
-                className={`px-4 py-2 border rounded-md bg-blue-500 text-white  hover:bg-blue-600 transition-all duration-200 
-            ${visiblePages[1] === totalPagess
-                    ? "opacity-50 cursor-not-allowed"
-                    : ""
-                  }`}
+                className={`px-2  py-1  text-[8pt] border rounded-md bg-blue-500 text-white  hover:bg-blue-600 transition-all duration-200 
+            ${
+              visiblePages[1] === totalPagess
+                ? "opacity-50 cursor-not-allowed"
+                : ""
+            }`}
                 disabled={visiblePages[1] === totalPagess}
               >
                 Next
