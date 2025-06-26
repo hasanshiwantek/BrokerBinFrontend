@@ -23,6 +23,7 @@ const ProductTable = ({
   countriesList,
   alternateRowColors,
   showBorders,
+  itemsPerPage,
   doubleVision,
 }) => {
 
@@ -34,6 +35,10 @@ const ProductTable = ({
         appliedFilters,
       } = useSelector((store) => store.searchProductStore);
 
+      console.log("Items Per Page: ",itemsPerPage);
+      
+      console.log("Length",data.length);
+      
   const handleShowPopupCompanyDetails = (event, companyId) => {
     event.stopPropagation();
     // 1️⃣ First, search for the company in the 'data' object
@@ -284,7 +289,7 @@ const ProductTable = ({
             Product Description
             {sortBy === "productDescription" && (sortOrder === "asc" ? "↑" : "↓")}
           </th> */}
-          {!doubleVision && (
+          {!doubleVision &&(
             <th onClick={() => handleSort("productDescription")} style={{ cursor: "pointer" }}>
               Product Description
               {sortBy === "productDescription" && (sortOrder === "asc" ? "↑" : "↓")}

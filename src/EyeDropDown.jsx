@@ -5,16 +5,7 @@ import { FaEye, FaUserPlus, FaEyeSlash, FaStar } from "react-icons/fa";
 
 const EyeDropdown = ({ triggerElement, rowData }) => {
   const [show, setShow] = useState(false);
-  console.log("Row Data: ", rowData);
 
-  console.log({
-    showFirstCount: rowData?.addedBy?.company?.show_first,
-    neverShowCount: rowData?.addedBy?.company?.never_show || 0,
-    totalComments: 2,
-    newComments: 0,
-    ratingPercentage: 100,
-    ratingStars: Math.floor(rowData?.addedBy?.company?.rating),
-  });
 
   const showFirstCount = rowData?.addedBy?.company?.show_first || 0;
   const neverShowCount = rowData?.addedBy?.company?.never_show || 0;

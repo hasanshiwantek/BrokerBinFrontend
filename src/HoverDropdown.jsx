@@ -13,16 +13,13 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 
 const HoverDropdown = ({ type, id, triggerElement, company, rowData }) => {
-  console.log("Rendered: hoverdropdown")
   const [show, setShow] = useState(false);
   const [options, setOptions] = useState([]);
   const navigate = useNavigate();
-  console.log("Row Data: ",rowData);
   
 
   const dispatch = useDispatch();
   const token = Cookies.get("token");
-  // console.log("Selected Row Data: ", rowData);
 
   useEffect(() => {
     if (!type || !id) return;
