@@ -18,13 +18,17 @@ import {
   setHoverCompanyDetail,
 } from "@/ReduxStore/SearchProductSlice";
 import useDefaultSettings from "../hooks/UseDefaultSettings";
+import ProductTable from "./ProductTable";
 
 const ProductTableDetail = React.memo(
-  ({ partModel, partData, searchString }) => {
+  ({ partModel,
+    partData,
+    searchString
+  }) => {
+
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
     const queryParams = new URLSearchParams(location.search);
     const sortBy = queryParams.get("sortBy");
     const sortOrder = queryParams.get("sortOrder") || "desc";
@@ -46,12 +50,10 @@ const ProductTableDetail = React.memo(
 
     const handleShowPopupCompanyDetails = (event, companyId) => {
       event.stopPropagation();
-
       // 1️⃣ First, search for the company in the 'data' object
       let companyDetail = Object.values(searchResponseMatched || {}).flatMap(
         (item) => item?.data?.find((e) => e.addedBy?.company?.id === companyId)
       )[0];
-
       // 2️⃣ If not found in 'data', search in 'foundItems'
       if (!companyDetail) {
         companyDetail = searchResponseMatched?.foundItems?.find(
@@ -236,7 +238,22 @@ const ProductTableDetail = React.memo(
       setVisiblePages([start, end]);
     }, [currentPage, totalPagess]);
 
-    console.log("Show Borders:", showBorders);
+    // const allData = (partData || searchResponseMatched?.data || []);
+    // const firstTableData = doubleVision && allData.length > 20
+    //   ? allData.slice(0, itemsPerPage)
+    //   : allData;
+
+    // const secondTableData = doubleVision && allData.length > itemsPerPage
+    //   ? allData.slice(itemsPerPage)
+    //   : [];
+
+    const allData = (partData || searchResponseMatched?.data || []).slice(0, itemsPerPage);
+
+    const shouldSplit = doubleVision && itemsPerPage > 20;
+    const splitIndex = shouldSplit ? Math.ceil(allData.length / 2) : allData.length;
+
+    const firstTableData = allData.slice(0, splitIndex);
+    const secondTableData = shouldSplit ? allData.slice(splitIndex) : [];
 
     return (
       <div className={css.productTableDetail}>
@@ -244,7 +261,7 @@ const ProductTableDetail = React.memo(
           <div className={`flex justify-between items-center`}>
             <h3>Results for: {partModel}</h3>
             <div>
-              <select value={itemsPerPage}  className="border !text-[.90vw] rounded text-black">
+              <select value={itemsPerPage} className="border !text-[.90vw] rounded text-black">
                 {[20, 30, 40, 50, 60].map((val) => (
                   <option key={val} value={val}>
                     {val}
@@ -253,8 +270,8 @@ const ProductTableDetail = React.memo(
               </select>
             </div>
           </div>
-          <div>
-            <table className={showBorders ? css.withBorders : ""}>
+          <div className="flex">
+            {/* <table className={showBorders ? css.withBorders : ""}>
               <thead>
                 <tr>
                   <th>Cart</th>
@@ -405,7 +422,6 @@ const ProductTableDetail = React.memo(
                     </tr>
                   ))}
               </tbody>
-
               <tfoot>
                 <tr>
                   <th>Cart</th>
@@ -451,7 +467,44 @@ const ProductTableDetail = React.memo(
                   </th>
                 </tr>
               </tfoot>
-            </table>
+            </table> */}
+            <div className="w-1/2">
+              <ProductTable
+                data={firstTableData}
+                showBorders={showBorders}
+                alternateRowColors={alternateRowColors}
+                doubleVision={doubleVision}
+                sortBy={sortBy}
+                sortOrder={sortOrder}
+                handleSort={handleSort}
+                selectProduct={selectProduct}
+                isSelected={isSelected}
+                loggedInUserCompany={loggedInUserCompany}
+                handleShowPopupCompanyDetails={handleShowPopupCompanyDetails}
+                handleHoverCompanyDetail={handleHoverCompanyDetail}
+                countriesList={countriesList}
+              />
+            </div>
+
+            {doubleVision && secondTableData.length > 0 && (
+              <div className="w-1/2 border-l border-black ">
+                <ProductTable
+                  data={secondTableData}
+                  doubleVision={doubleVision}
+                  showBorders={showBorders}
+                  alternateRowColors={alternateRowColors}
+                  sortBy={sortBy}
+                  sortOrder={sortOrder}
+                  handleSort={handleSort}
+                  selectProduct={selectProduct}
+                  isSelected={isSelected}
+                  loggedInUserCompany={loggedInUserCompany}
+                  handleShowPopupCompanyDetails={handleShowPopupCompanyDetails}
+                  handleHoverCompanyDetail={handleHoverCompanyDetail}
+                  countriesList={countriesList}
+                />
+              </div>
+            )}
           </div>
 
           <div className="flex justify-between items-center p-1">
