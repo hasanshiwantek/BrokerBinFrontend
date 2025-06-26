@@ -461,6 +461,28 @@ export const submitCompanyPhotos = createAsyncThunk(
   }
 );
 
+export const deleteCompanyPhotos = createAsyncThunk(
+  "profileStore/deleteCompanyPhotos",
+  async ({ token, imageId }, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete(
+        `${brokerAPI}company/companyImages-delete/${imageId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("Delete Image Response:",response?.data);
+      
+      return response?.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
 export const createUser = createAsyncThunk(
   "profileStore/createUser",
   async ({ formData, token }, { rejectWithValue }) => {
@@ -633,7 +655,7 @@ const initialState = {
     },
     otherSettings: {
       fontSize: "8",
-      extendedCompanyInfo: "1",
+      // extendedCompanyInfo: "1",
       contactMethod: "1",
       showContactInfo: "1",
       receiveSiteEmails: "0",
@@ -757,8 +779,8 @@ const profileSlice = createSlice({
           newPassword: "",
           confirmNewPassword: "",
         };
-        console.log("👤User formdata:",state.formData);
-        
+        console.log("👤User formdata:", state.formData);
+
         localStorage.setItem("user", JSON.stringify(action.payload));
       })
       .addCase(fetchUserData.rejected, (state, action) => {

@@ -241,6 +241,32 @@ export const updateCompanyBio = createAsyncThunk(
   }
 );
 
+
+export const updateCompanyOptions = createAsyncThunk(
+  "toolstore/updateCompanyOptions",
+  async ({ token, body }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `${brokerAPI}company/company-options`,
+        body,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("Company Options Response From Redux:",response?.data);
+      
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+
+
 export const partCartNotes = createAsyncThunk(
   "toolstore/partCartNotes",
   async ({ token, notes }, { rejectWithValue }) => {

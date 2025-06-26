@@ -552,7 +552,7 @@ const Options = () => {
                         <option value="11.25">12 Point</option>
                       </select>
                     </li>
-                    <li>
+                    {/* <li>
                       <label htmlFor="extendedCompanyInfo">
                         Extended Company Info
                       </label>
@@ -565,7 +565,7 @@ const Options = () => {
                         <option value="0">Off</option>
                         <option value="1">On</option>
                       </select>
-                    </li>
+                    </li> */}
                     <li>
                       <label htmlFor="contactMethod">
                         Preferred Contact Method
