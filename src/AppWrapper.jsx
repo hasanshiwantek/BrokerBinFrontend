@@ -1,9 +1,9 @@
 // src/AppWrapper.jsx
 import { useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+// import { Outlet } from 'react-router-dom';
 import useDefaultSettings from './components/hooks/UseDefaultSettings';
 
-const AppWrapper = () => {
+const AppWrapper = ({children}) => {
   const { fontSize } = useDefaultSettings();
 
   useEffect(() => {
@@ -12,7 +12,7 @@ const AppWrapper = () => {
       document.body.style.fontSize = size;
   }, [fontSize]);
 
-  return <Outlet />;
+  return children;
 };
 
 export default AppWrapper;

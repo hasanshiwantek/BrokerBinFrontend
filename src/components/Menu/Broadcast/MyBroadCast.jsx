@@ -608,7 +608,7 @@ const BroadCast = () => {
                 <option value="selectedComputer">Computer</option>
                 <option value="selectedTelecom">Telecom</option>
                 <option value="selectedMobileDevices">Mobile Devices</option>
-                <option value="selectedScrap">Scrap/Recycle</option>
+                {/* <option value="selectedScrap">Scrap/Recycle</option> */}
 
                 {/* <option value="selectedCompanies">Companies</option> */}
                 {/* <option value="service">Services</option> */}
