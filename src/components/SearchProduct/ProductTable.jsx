@@ -1,5 +1,5 @@
 import React from "react";
-import css from "../../styles/searchProducts.module.css";
+import css from "../../styles/SearchProducts.module.css";
 import HoverDropdown from "@/HoverDropdown";
 import EyeDropdown from "@/EyeDropDown";
 import { IoCheckmarkCircle } from "react-icons/io5";
