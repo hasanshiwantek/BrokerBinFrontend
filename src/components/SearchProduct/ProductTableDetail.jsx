@@ -28,6 +28,9 @@ import {
   submitUserSettings,
   fetchUserData,
 } from "@/ReduxStore/ProfleSlice";
+import Tooltip from "@mui/material/Tooltip";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
 const ProductTableDetail = React.memo(
   ({ partModel, partData, searchString }) => {
     const location = useLocation();
@@ -349,6 +352,24 @@ const ProductTableDetail = React.memo(
       }
     };
 
+    const theme = createTheme({
+      components: {
+        MuiTooltip: {
+          styleOverrides: {
+            tooltip: {
+              fontSize: "1rem", // Adjust font size
+              width: "13rem",
+              textAlign: "center",
+              backgroundColor: "var(--primary-color)",
+            },
+            arrow: {
+              color: "var(--primary-color)",
+            },
+          },
+        },
+      },
+    });
+
     return (
       <div className={css.productTableDetail}>
         <div className={css.tableContainer}>
@@ -372,222 +393,48 @@ const ProductTableDetail = React.memo(
                 className="cursor-pointer"
               >
                 {doubleVisionState ? (
-                  <img
-                    src="https://static.brokerbin.com/version/v8.4.2/images/double_vision_off.gif"
-                    alt="Remove Double Vision"
-                  />
+                  <ThemeProvider theme={theme}>
+                    <Tooltip title="Remove Double Vision" arrow placement="top">
+                      <img
+                        src="https://static.brokerbin.com/version/v8.4.2/images/double_vision_off.gif"
+                        alt="Remove Double Vision"
+                      />
+                    </Tooltip>
+                  </ThemeProvider>
                 ) : (
-                  <img
-                    src="https://static.brokerbin.com/version/v8.4.2/images/double_vision.gif"
-                    alt="Turn On Double Vision"
-                  />
+                  <ThemeProvider theme={theme}>
+                    <Tooltip
+                      title="Turn On  Double Vision"
+                      arrow
+                      placement="top"
+                    >
+                      <img
+                        src="https://static.brokerbin.com/version/v8.4.2/images/double_vision.gif"
+                        alt="Turn On Double Vision"
+                      />
+                    </Tooltip>
+                  </ThemeProvider>
                 )}
               </div>
               <div>
-                <Link to={"/myProfile/Options"}>
-                  <img src="https://static.brokerbin.com/version/v8.4.2/images/customize_display.gif" alt="/OptionsPage" />
-                </Link>
+                <ThemeProvider theme={theme}>
+                  <Tooltip
+                    title="Go To Customize Display"
+                    arrow
+                    placement="top"
+                  >
+                    <Link to={"/myProfile/Options"}>
+                      <img
+                        src="https://static.brokerbin.com/version/v8.4.2/images/customize_display.gif"
+                        alt="/OptionsPage"
+                      />
+                    </Link>
+                  </Tooltip>
+                </ThemeProvider>
               </div>
             </div>
           </div>
           <div className="flex">
-            {/* <table className={showBorders ? css.withBorders : ""}>
-              <thead>
-                <tr>
-                  <th>Cart</th>
-                  <th onClick={() => handleSort("name")} style={{ cursor: "pointer" }} >
-                    Company
-                    {sortBy === "name" && (sortOrder === "asc" ? "↑" : "↓")}
-                  </th>
-                  <th>PVR</th>
-                  <th onClick={() => handleSort("company_country")} style={{ cursor: "pointer" }} >
-                    Ctry
-                    {sortBy === "company_country" && (sortOrder === "asc" ? "↑" : "↓")}
-                  </th>
-                  <th onClick={() => handleSort("partModel")} style={{ cursor: "pointer" }}>
-                    Part / Model
-                    {sortBy === "partModel" && (sortOrder === "asc" ? "↑" : "↓")}
-                  </th>
-                  <th>TS</th>
-                  <th onClick={() => handleSort("heciClei")} style={{ cursor: "pointer" }} >
-                    HECI / CLEI{" "}
-                    {sortBy === "heciClei" && (sortOrder === "asc" ? "↑" : "↓")}{" "}
-                  </th>
-                  <th onClick={() => handleSort("mfg")} style={{ cursor: "pointer" }} >
-                    Mfg {sortBy === "mfg" && (sortOrder === "asc" ? "↑" : "↓")}
-                  </th>
-                  <th onClick={() => handleSort("cond")} style={{ cursor: "pointer" }} >
-                    Cond{sortBy === "cond" && (sortOrder === "asc" ? "↑" : "↓")}
-                  </th>
-                  <th onClick={() => handleSort("price")} style={{ cursor: "pointer" }} >
-                    Price{" "}
-                    {sortBy === "price" && (sortOrder === "asc" ? "↑" : "↓")}
-                  </th>
-                  <th onClick={() => handleSort("quantity")} style={{ cursor: "pointer" }} >
-                    Qty{" "}
-                    {sortBy === "quantity" && (sortOrder === "asc" ? "↑" : "↓")}
-                  </th>
-                  <th onClick={() => handleSort("created_at")} style={{ cursor: "pointer" }} >
-                    Age{" "}
-                    {sortBy === "created_at" && (sortOrder === "asc" ? "↑" : "↓")}
-                  </th>
-                  <th onClick={() => handleSort("productDescription")} style={{ cursor: "pointer" }} >
-                    Product Description
-                    {sortBy === "productDescription" && (sortOrder === "asc" ? "↑" : "↓")}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {(partData || searchResponseMatched?.data || [])
-                  ?.slice() // Create a shallow copy of partData to avoid mutating the original array
-                  .sort((a, b) => {
-                    const isAUserCompany =
-                      a.addedBy?.company?.name?.toLowerCase() ===
-                      loggedInUserCompany?.toLowerCase();
-                    const isBUserCompany =
-                      b.addedBy?.company?.name?.toLowerCase() ===
-                      loggedInUserCompany?.toLowerCase();
-
-                    // Sort to prioritize logged-in user's company
-                    if (isAUserCompany && !isBUserCompany) return -1; // a comes before b
-                    if (!isAUserCompany && isBUserCompany) return 1; // b comes before a
-                    return 0; // Keep the same order for others
-                  })
-                  ?.map((e, i) => (
-                    <tr
-                      key={i}
-                      style={
-                        e?.addedBy?.company?.name?.toLowerCase() === loggedInUserCompany?.toLowerCase()
-                          ? { backgroundColor: "#ffb" }
-                          : alternateRowColors & i % 2 === 0
-                            ? { backgroundColor: "#f5f5f5" }
-                            : { backgroundColor: "#ffff" }
-                      }
-                    >
-                      <td>
-                        <input
-                          type="checkbox"
-                          checked={isSelected(e?.id)}
-                          onChange={() => selectProduct(e?.id)}
-                          style={{ cursor: "pointer" }}
-                        />
-                      </td>
-                      <td>
-                        <HoverDropdown
-                          type="company"
-                          id={e?.addedBy?.company?.id}
-                          company={e?.addedBy?.company}
-                          triggerElement={
-                            <a
-                              style={{ color: "#428bca", fontWeight: "600" }}
-                              onClick={(event) =>
-                                handleShowPopupCompanyDetails(
-                                  event,
-                                  e?.addedBy?.company?.id
-                                )
-                              }
-                              onMouseEnter={(event) =>
-                                handleHoverCompanyDetail(event, e.id)
-                              }
-                            >
-                              {e?.addedBy?.company?.name}
-                            </a>
-                          }
-                        />
-                      </td>
-
-                      <td className="cursor-pointer">
-                        <EyeDropdown
-                          rowData={e}
-                          triggerElement={
-                            <div>
-                              <FaEye />
-                            </div>
-                          }
-                        />
-                      </td>
-
-                      <td>
-                        {countriesList.find(
-                          (country) =>
-                            country.label.toLowerCase().trim() ===
-                            e?.addedBy?.company?.country?.toLowerCase().trim()
-                        )?.value ||
-                          e?.addedBy?.company?.country ||
-                          "N/A"}
-                      </td>
-
-                      <td className="cursor-pointer">
-                        <HoverDropdown
-                          type="part"
-                          id={e?.id}
-                          rowData={e}
-                          triggerElement={<div>{e?.partModel}</div>}
-                        />
-                      </td>
-                      <td>
-                        {e?.ts ? (
-                          <IoCheckmarkCircle style={{ color: "red" }} />
-                        ) : (
-                          <BiBlock style={{ color: "red" }} />
-                        )}
-                      </td>
-                      <td>{e?.heciClei}</td>
-                      <td>{e?.mfg}</td>
-                      <td>{e?.cond}</td>
-                      <td>{e?.price}</td>
-                      <td>{e?.quantity}</td>
-                      <td>{e?.age}</td>
-                      <td>{e?.productDescription}</td>
-                    </tr>
-                  ))}
-              </tbody>
-              <tfoot>
-                <tr>
-                  <th>Cart</th>
-                  <th onClick={() => handleSort("name")} style={{ cursor: "pointer" }} >
-                    Company
-                    {sortBy === "name" && (sortOrder === "asc" ? "↑" : "↓")}
-                  </th>
-                  <th>PVR</th>
-                  <th onClick={() => handleSort("company_country")} style={{ cursor: "pointer" }} >
-                    Ctry
-                    {sortBy === "company_country" && (sortOrder === "asc" ? "↑" : "↓")}
-                  </th>
-                  <th onClick={() => handleSort("partModel")} style={{ cursor: "pointer" }} >
-                    Part / Model
-                    {sortBy === "partModel" && (sortOrder === "asc" ? "↑" : "↓")}
-                  </th>
-                  <th>TS</th>
-                  <th onClick={() => handleSort("heciClei")} style={{ cursor: "pointer" }} >
-                    HECI / CLEI{" "}
-                    {sortBy === "heciClei" && (sortOrder === "asc" ? "↑" : "↓")}{" "}
-                  </th>
-                  <th onClick={() => handleSort("mfg")} style={{ cursor: "pointer" }} >
-                    Mfg {sortBy === "mfg" && (sortOrder === "asc" ? "↑" : "↓")}
-                  </th>
-                  <th onClick={() => handleSort("cond")} style={{ cursor: "pointer" }} >
-                    Cond{sortBy === "cond" && (sortOrder === "asc" ? "↑" : "↓")}
-                  </th>
-                  <th onClick={() => handleSort("price")} style={{ cursor: "pointer" }} >
-                    Price{" "}
-                    {sortBy === "price" && (sortOrder === "asc" ? "↑" : "↓")}
-                  </th>
-                  <th onClick={() => handleSort("quantity")} style={{ cursor: "pointer" }} >
-                    Qty{" "}
-                    {sortBy === "quantity" && (sortOrder === "asc" ? "↑" : "↓")}
-                  </th>
-                  <th onClick={() => handleSort("created_at")} style={{ cursor: "pointer" }} >
-                    Age{" "}
-                    {sortBy === "created_at" && (sortOrder === "asc" ? "↑" : "↓")}
-                  </th>
-                  <th onClick={() => handleSort("productDescription")} style={{ cursor: "pointer" }} >
-                    Product Description
-                    {sortBy === "productDescription" && (sortOrder === "asc" ? "↑" : "↓")}
-                  </th>
-                </tr>
-              </tfoot>
-            </table> */}
             <div className="w-1/2">
               <ProductTable
                 data={firstTableData}

@@ -33,7 +33,7 @@ const SiteMap = () => {
   return (
     <>
       <main className="main-sec ">
-        <nav className="menu-bar">
+        <nav className="menu-bar ">
           <div className={css.profileInfo_links}>
             <ul>
               <li>
