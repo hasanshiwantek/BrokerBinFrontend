@@ -235,7 +235,7 @@ const SavedList = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="15">
+                  <td colSpan="15" className="!bg-[#ffff]">
                     <h2 className="!text-red-700 !text-lg !text-center !font-bold">
                       No Result Found
                     </h2>
