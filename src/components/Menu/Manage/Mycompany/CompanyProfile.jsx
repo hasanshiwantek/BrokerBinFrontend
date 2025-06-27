@@ -21,12 +21,12 @@ import { brokerAPI } from "../../../api/BrokerEndpoint";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+
 const MyCompany = () => {
   const token = Cookies.get("token");
   const user_id = Cookies.get("user_id");
 
   const [formData, setFormData] = useState({});
-  const [fileBase64, setFileBase64] = useState("");
   const [loading, setLoading] = useState(true);
 
   const {
@@ -103,19 +103,6 @@ const MyCompany = () => {
         [name]: value, // Match the flat structure for Redux state
       })
     );
-  };
-
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    const extension = String(file.name).split(".").pop().toLowerCase();
-    const allowedExtensions = ["jpeg", "jpg", "png", "webp", "svg", "gif"];
-    if (allowedExtensions.includes(extension)) {
-      dispatch(clearLogo());
-      setFileBase64(file); // Store the actual file, not base64 string
-    } else {
-      alert("Format should be a jpeg, jpg, png, gif or webp");
-      event.target.value = "";
-    }
   };
 
   const handleSubmit = async (event) => {
@@ -386,27 +373,6 @@ const MyCompany = () => {
                   </div>
                 </div>
                 <div>
-                  {/* <div className={css.profileInfo_form_personalPhoto}>
-                      <h1>Company Logo</h1>
-                    <div className="!flex !justify-start !items-center">
-                      <div>
-                        <img
-                          src={image}
-                          alt="companyImage"
-                          className="object-fit"
-                        />
-                      </div>
-                      <div>
-                        <input
-                          type="file"
-                          name="image"
-                          id="image"
-                          onChange={handleFileChange}
-                        />
-                        <button type="submit">Submit Changes</button>
-                      </div>
-                    </div>
-                  </div> */}
                 </div>
                 <div className={`${css.profileInfo_form_IMScreenNames} pt-5`}>
                   <h1>IM Screen Names</h1>
