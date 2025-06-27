@@ -129,6 +129,31 @@ const SavedList = () => {
     }
   };
 
+  const updateDueDate = async ({ due_date, listId }) => {
+  try {
+    console.log("LISTID", listId);
+    const res = await axios.post(
+      `${brokerAPI}part-cart/update-duedate/${listId}`,
+      { due_date },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    toast.success("Date edit successfully", {
+        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+      });
+    fetchSavedLists();
+    // window.location.reload();
+  } catch (error) {
+      console.error("❌ Failed to delete list:", error);
+      toast.error("Failed to delete the list.Please Try Again.", {
+        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
+      });
+    }
+};
+
   if (loading) {
     return (
       <div className="flex justify-center items-center py-20">
@@ -197,7 +222,7 @@ const SavedList = () => {
                 <th onClick={() => handleSort("po_in_hand")}>PO in Hand</th>
                 <th onClick={() => handleSort("oem_quote")}>OEM Quote</th>
                 <th onClick={() => handleSort("due_date")}>Due Date</th>
-                <th>Items</th>
+                {/* <th>Items</th> */}
                 <th>Total Parts</th>
               </tr>
             </thead>
@@ -226,8 +251,24 @@ const SavedList = () => {
                     <td>{list?.created_at || ""}</td>
                     <td>{list?.po_in_hand ? "Yes" : "No"}</td>
                     <td>{list?.oem_quote ? "Yes" : "No"}</td>
-                    <td>{list?.due_date}</td>
-                    <td>{list?.parts?.filteredQty || ""}</td>
+                    <td onClick={() => setSelectedRowId(list.listId)}>
+                      {selectedRowId === list.listId ? (
+                        <input
+                          type="date"
+                          min={new Date().toISOString().split("T")[0]}
+                          defaultValue={list.due_date}
+                          onBlur={(e) => {
+                            const newDate = e.target.value;
+                            if (newDate && newDate !== list.due_date) {
+                              updateDueDate({ due_date: newDate, listId: list.listId }); 
+                            }
+                          }}
+                          // autoFocus
+                        />
+                      ) : (
+                        list?.due_date || "—"
+                      )}
+                    </td>
                     <td>{list?.parts?.length}</td>
                   </tr>
                 ))
@@ -249,7 +290,7 @@ const SavedList = () => {
                 <th onClick={() => handleSort("po_in_hand")}>PO in Hand</th>
                 <th onClick={() => handleSort("oem_quote")}>OEM Quote</th>
                 <th onClick={() => handleSort("due_date")}>Due Date</th>
-                <th>Items</th>
+                {/* <th>Items</th> */}
                 <th>Total Parts</th>
               </tr>
             </thead>

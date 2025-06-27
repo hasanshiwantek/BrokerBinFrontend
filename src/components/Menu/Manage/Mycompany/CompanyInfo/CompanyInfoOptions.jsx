@@ -4,11 +4,18 @@ import { countriesList, regionsList } from "@/data/services";
 import { useForm } from "react-hook-form";
 
 const companyInfoOptions = ({ formData, setFormData }) => {
+  
+  // const handleChange = (e) => {
+  //   const { name, type, checked, value } = e.target;
+  //   const newValue = type === "checkbox" ? checked : value;
+  //   setFormData((prev) => ({ ...prev, [name]: newValue }));
+  // };
+
   const handleChange = (e) => {
-    const { name, type, checked, value } = e.target;
-    const newValue = type === "checkbox" ? checked : value;
-    setFormData((prev) => ({ ...prev, [name]: newValue }));
-  };
+  const { name, type, checked, value } = e.target;
+  const newValue = type === "checkbox" ? checked : name === "days" ? Number(value) : value;
+  setFormData((prev) => ({ ...prev, [name]: newValue }));
+};
 
   return (
     <div className="min-w-[54vw]">
@@ -73,8 +80,6 @@ const companyInfoOptions = ({ formData, setFormData }) => {
           </div>
         </div>
 
-
-
         {/* 2nd Section */}
         <div className="flex flex-col gap-4 text-left ">
           <h2 className="text-md font-semibold">Inventory Alerts</h2>
@@ -99,7 +104,7 @@ const companyInfoOptions = ({ formData, setFormData }) => {
                 Days
               </label>
               <input
-                type="text"
+                type="number"
                 id="days"
                 name="days"
                 value={formData.days || ""}
@@ -112,12 +117,7 @@ const companyInfoOptions = ({ formData, setFormData }) => {
             </span>
           </div>
           </div>
-
-
         </div>
-
-
-
 
         {/* 3rd Section */}
         <div className="flex flex-col gap-4 text-left mt-6">

@@ -594,8 +594,8 @@ const Options = () => {
                         value={optionFormData.otherSettings.showContactInfo}
                         onChange={(e) => handleChange(e, "otherSettings")}
                       >
-                        <option value="show">Show</option>
-                        <option value="hide">Hide</option>
+                        <option value="0">Show</option>
+                        <option value="1">Hide</option>
                       </select>
                     </li>
 
