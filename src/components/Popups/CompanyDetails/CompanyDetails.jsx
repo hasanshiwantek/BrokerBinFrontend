@@ -15,10 +15,10 @@ import { FaExternalLinkAlt } from "react-icons/fa";
 import { IoPersonAdd, IoPersonRemove, IoEye } from "react-icons/io5";
 
 import { IoMdEyeOff } from "react-icons/io";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector,  } from "react-redux";
 import { getCompanyContact } from "../../../ReduxStore/SearchProductSlice";
 import Cookies from "js-cookie";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 import { brokerAPI } from "../../api/BrokerEndpoint";
 import axios from "axios";
@@ -38,9 +38,11 @@ import {
   handleVendorStatusUpdate,
   initializeStatus,
 } from "./HandleVendorStatusUpdate";
+import { inventorySearch } from "@/ReduxStore/InventorySlice";
 
 const CompanyDetails = ({ closeModal }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { popupCompanyDetail } = useSelector(
     (store) => store.searchProductStore
   );
@@ -76,7 +78,7 @@ const CompanyDetails = ({ closeModal }) => {
 
   // Handle empty company array or error
   if (!company || !companyId) {
-    return <h2>No company data available.</h2>; 
+    return <h2>No company data available.</h2>;
   }
 
   useEffect(() => {
@@ -297,6 +299,25 @@ const CompanyDetails = ({ closeModal }) => {
     }
   }, [companyContactData]);
 
+  const handleInventoryClick = async (companyName) => {
+  try {
+    const result = await dispatch(
+      inventorySearch({ data: { company: companyName, page: 1 }, token })
+    ).unwrap();
+
+    navigate(`/inventorysearch?company=${companyName}&page=1`, {
+      state: {
+        searchResults: result,
+        pagination: result.pagination,
+        filters: { company: companyName, page: 1 },
+      },
+    });
+    closeModal();
+  } catch (err) {
+    console.error("Inventory search failed", err);
+  }
+};
+
   // While loading, show loading indicator
   if (loading) {
     return (
@@ -474,7 +495,7 @@ const CompanyDetails = ({ closeModal }) => {
                               </div>
                             </Tooltip> */}
                             {companyContactData.data.company?.id ===
-                            currentUserCompanyId ? (
+                              currentUserCompanyId ? (
                               <Tooltip
                                 title="This is your company, Show Never toggle is disabled via the company profile viewer"
                                 arrow
@@ -565,8 +586,8 @@ const CompanyDetails = ({ closeModal }) => {
                                       isFilled
                                         ? "#FFD700"
                                         : isPartial
-                                        ? "rgba(255, 215, 0, 0.5)"
-                                        : "#CCC"
+                                          ? "rgba(255, 215, 0, 0.5)"
+                                          : "#CCC"
                                     } // Partial star is dim yellow
                                     style={{
                                       cursor: "pointer",
@@ -584,9 +605,9 @@ const CompanyDetails = ({ closeModal }) => {
                             <a href="#">
                               {feedbackData?.rating?.averageRating
                                 ? `${(
-                                    (feedbackData.rating.averageRating / 5) *
-                                    100
-                                  ).toFixed(1)}%`
+                                  (feedbackData.rating.averageRating / 5) *
+                                  100
+                                ).toFixed(1)}%`
                                 : "100%"}
                             </a>
                           </div>
@@ -667,25 +688,33 @@ const CompanyDetails = ({ closeModal }) => {
                       </ThemeProvider>
                     </span>
                   </div>
-                  <div className={css.inventorySecSvgs}>
-                    {/* <span>
-                    <FaMapMarkerAlt />
-                    map
-                  </span> */}
-                    <ThemeProvider theme={theme}>
+                  <div className={`${css.inventorySecSvgs}`}>
+                    <span>
+                      <FaMapMarkerAlt />
+                      Map
+                    </span>
+                    {companyContactData?.data?.company?.companyOptions?.openInventory && (<ThemeProvider theme={theme}>
                       <Tooltip title="Show Inventory" arrow placement="top">
-                        <span>
-                          <FaRegListAlt />
-                          <NavLink to={"/inventory"} className="cursor-pointer">
-                            inventory
+                        <span 
+                        className="cursor-pointer"
+                        onClick={() => handleInventoryClick(companyContactData?.data?.company?.name)}
+                        >
+                          <NavLink>
+                            <div className="flex flex-col items-center gap-1">
+                              <FaRegListAlt />
+                              <p className="capitalize">Inventory</p>
+                              <p>({companyContactData?.data?.total_inventory_count || 0})</p>
+                            </div>
                           </NavLink>
                         </span>
                       </Tooltip>
-                    </ThemeProvider>
-                    {/* <span>
-                    <FaEnvelope />
-                    email
-                  </span> */}
+                    </ThemeProvider>)}
+                    <span className="cursor-pointer  items-center gap-1 !capitalize">
+                      <a className="!capitalize" href={`mailto:${companyContactData?.data?.company?.primaryContact?.email}`}>
+                        <FaEnvelope />
+                        Email
+                      </a>
+                    </span>
                     <ThemeProvider theme={theme}>
                       <Tooltip title="Print Profile" arrow placement="top">
                         <span

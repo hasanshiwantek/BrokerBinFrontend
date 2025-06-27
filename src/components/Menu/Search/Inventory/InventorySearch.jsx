@@ -23,7 +23,7 @@ const InventorySearch = () => {
     country: "",
     region: "",
     shipDeadline: "",
-    deadlinePeriod: "PM",
+    deadlinePeriod: "",
     multiplePartSearch: "",
   });
 
@@ -49,7 +49,7 @@ const InventorySearch = () => {
       country: "",
       region: "",
       shipDeadline: "",
-      deadlinePeriod: "PM",
+      deadlinePeriod: "",
       multiplePartSearch: "",
     });
   };
