@@ -63,32 +63,58 @@ const Accordion = ({
 
   // const country = groupedData[company][0]?.company_country || "Unknown";
 
-  const companies = Object.entries(groupedData)
-    .sort((a, b) => {
-      const aParts = a[1];
-      const bParts = b[1];
+  // const companies = Object.entries(groupedData)
+  //   .sort((a, b) => {
+  //     const aParts = a[1];
+  //     const bParts = b[1];
 
-      switch (filterOption) {
-        case "cnt_ASC":
-          return aParts.length - bParts.length;
-        case "cnt_DESC":
-          return bParts.length - aParts.length;
-        case "maxprice":
-          return (
-            Math.max(...bParts.map((p) => p.price || 0)) -
-            Math.max(...aParts.map((p) => p.price || 0))
-          );
-        case "lowestprice":
-          return (
-            Math.min(...aParts.map((p) => p.price || 0)) -
-            Math.min(...bParts.map((p) => p.price || 0))
-          );
-        case "bestmatch":
-        default:
-          return 0;
-      }
-    })
-    .map(([company]) => company);
+  //     switch (filterOption) {
+  //       case "cnt_ASC":
+  //         return aParts.length - bParts.length;
+  //       case "cnt_DESC":
+  //         return bParts.length - aParts.length;
+  //       case "maxprice":
+  //         return (
+  //           Math.max(...bParts.map((p) => p.price || 0)) -
+  //           Math.max(...aParts.map((p) => p.price || 0))
+  //         );
+  //       case "lowestprice":
+  //         return (
+  //           Math.min(...aParts.map((p) => p.price || 0)) -
+  //           Math.min(...bParts.map((p) => p.price || 0))
+  //         );
+  //       case "bestmatch":
+  //       default:
+  //         return 0;
+  //     }
+  //   })
+  //   .map(([company]) => company);
+
+  const companies = Object.entries(groupedData)
+  .filter(([company, parts]) => 
+    company !== "Unknown Company" && 
+    Array.isArray(parts) && 
+    parts.length > 0 &&
+    parts[0]?.inventory?.addedBy?.company?.name // ensure valid company name
+  )
+  .sort((a, b) => {
+    const aParts = a[1];
+    const bParts = b[1];
+    switch (filterOption) {
+      case "cnt_ASC":
+        return aParts.length - bParts.length;
+      case "cnt_DESC":
+        return bParts.length - aParts.length;
+      case "maxprice":
+        return Math.max(...bParts.map((p) => p.price || 0)) - Math.max(...aParts.map((p) => p.price || 0));
+      case "lowestprice":
+        return Math.min(...aParts.map((p) => p.price || 0)) - Math.min(...bParts.map((p) => p.price || 0));
+      case "bestmatch":
+      default:
+        return 0;
+    }
+  })
+  .map(([company]) => company);
 
   console.log("Companies: ", companies);
 

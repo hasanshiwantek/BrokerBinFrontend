@@ -54,6 +54,9 @@ const Cart = () => {
     dispatch(setTogglePopUp()); // Show company modal
   };
 
+  // const groupedByCompany = selectedProducts.reduce((acc, item) => {
+  // const company = item?.inventory?.addedBy?.company?.name;
+  // if (!company) return acc;
   const groupedByCompany = selectedProducts.reduce((acc, item) => {
     const company =
       item?.inventory?.addedBy?.company?.name || "Unknown Company";
@@ -327,7 +330,7 @@ const Cart = () => {
   const groupedProducts = useMemo(() => {
     const map = {};
     selectedProducts.forEach((item) => {
-      const companyName = item.inventory?.addedBy?.company?.name || "Unknown";
+      const companyName = item.inventory?.addedBy?.company?.name || "";
       if (!map[companyName]) map[companyName] = [];
       map[companyName].push(item);
     });
@@ -491,9 +494,8 @@ const Cart = () => {
                       <img
                         src="https://static.brokerbin.com/version/v8.4.1/images/arrow_down.gif"
                         alt="showParts"
-                        className={`cursor-pointer transition-transform duration-300 relative group ${
-                          showParts ? "rotate-180" : ""
-                        }`}
+                        className={`cursor-pointer transition-transform duration-300 relative group ${showParts ? "rotate-180" : ""
+                          }`}
                       />
 
                       {/* Tailwind tooltip on hover */}
@@ -505,9 +507,8 @@ const Cart = () => {
 
                   {showParts && (
                     <div
-                      className={`transition-max-height duration-500 ease-in-out overflow-hidden mt-8 ${
-                        showParts ? "max-h-[1000px]" : "max-h-0"
-                      }`}
+                      className={`transition-max-height duration-500 ease-in-out overflow-hidden mt-8 ${showParts ? "max-h-[1000px]" : "max-h-0"
+                        }`}
                     >
                       <div className={css.cartList_parts_scroll}>
                         <table>
@@ -521,10 +522,9 @@ const Cart = () => {
                             </tr>
                           </thead>
                           <tbody>
-                            {Object.entries(groupedProducts).map(
+                            {/* {Object.entries(groupedProducts).map(
                               ([companyName, parts]) => (
                                 <React.Fragment key={companyName}>
-                                  {/* Company Header Row */}
                                   <tr className="bg-gray-200 text-left ">
                                     <td
                                       colSpan="6"
@@ -533,27 +533,108 @@ const Cart = () => {
                                       Company: {companyName}
                                     </td>
                                   </tr>
+                                  {parts
+                                    .filter((e) => e?.inventory?.partModel && e?.inventory?.addedBy?.company?.name)
+                                    .map((e) =>
+                                    (
+                                      <React.Fragment key={e.id}>
+                                        <tr className="tableData">
+                                          <td className="!gap-2 flex items-center">
+                                            <input
+                                              type="checkbox"
+                                              checked={selectedParts.some(
+                                                (p) => p.id === e.id
+                                              )}
+                                              onChange={() => handleToggle(e)}
+                                              className="h-4 w-4 ga-"
+                                            />
+                                            {e.inventory?.partModel}
+                                          </td>
+                                          <td>{e.inventory?.mfg}</td>
+                                          <td>{e.inventory?.cond}</td>
+                                          <td>
+                                            {e.notes
+                                              ?.map((note) => note.quantity)
+                                              .join(", ")}
+                                          </td>
+                                          <td>{e.inventory?.quantity}</td>
+                                        </tr>
 
-                                  {parts.map((e) => (
+                                        {e.notes?.length > 0 &&
+                                          e.notes.map((note) => (
+                                            <tr key={note.id}>
+                                              <td colSpan="6" className="pl-10">
+                                                <div className="flex items-center gap-2">
+                                                  <span
+                                                    onClick={() =>
+                                                      handleNotesDelete(note.id)
+                                                    }
+                                                    className="text-[10px] text-red-500 cursor-pointer ml-2"
+                                                  >
+                                                    <img
+                                                      src="https://static.brokerbin.com/version/v8.4.1/images/DeleteRedX.png"
+                                                      alt="deleteNote"
+                                                    />
+                                                  </span>
+                                                  <input
+                                                    type="text"
+                                                    defaultValue={note.note}
+                                                    className="text-[10px] border px-2 py-1 rounded m-1 w-full max-w-xs"
+                                                    onBlur={(ev) =>
+                                                      handleNoteUpdate(
+                                                        note.id, 
+                                                        ev.target.value, 
+                                                        note.quantity 
+                                                      )
+                                                    }
+                                                  />
+                                                </div>
+                                              </td>
+                                            </tr>
+                                          ))}
+                                      </React.Fragment>
+                                    ))}
+                                </React.Fragment>
+                              )
+                            )} */}
+                            {Object.entries(groupedProducts)
+                              .map(([companyName, parts]) => {
+                                const validParts = parts.filter(
+                                  (e) =>
+                                    e?.inventory?.partModel &&
+                                    e?.inventory?.addedBy?.company?.name
+                                );
+                                return { companyName, validParts };
+                              })
+                              .filter(({ validParts }) => validParts.length > 0)
+                              .map(({ companyName, validParts }) => (
+                                <React.Fragment key={companyName}>
+                                  {/* Company Header Row */}
+                                  <tr className="bg-gray-200 text-left">
+                                    <td
+                                      colSpan="6"
+                                      className="font-bold !text-[9pt] py-1 text-blue-600"
+                                    >
+                                      Company: {companyName}
+                                    </td>
+                                  </tr>
+
+                                  {validParts.map((e) => (
                                     <React.Fragment key={e.id}>
                                       <tr className="tableData">
                                         <td className="!gap-2 flex items-center">
                                           <input
                                             type="checkbox"
-                                            checked={selectedParts.some(
-                                              (p) => p.id === e.id
-                                            )}
+                                            checked={selectedParts.some((p) => p.id === e.id)}
                                             onChange={() => handleToggle(e)}
-                                            className="h-4 w-4 ga-"
+                                            className="h-4 w-4"
                                           />
                                           {e.inventory?.partModel}
                                         </td>
                                         <td>{e.inventory?.mfg}</td>
                                         <td>{e.inventory?.cond}</td>
                                         <td>
-                                          {e.notes
-                                            ?.map((note) => note.quantity)
-                                            .join(", ")}
+                                          {e.notes?.map((note) => note.quantity).join(", ")}
                                         </td>
                                         <td>{e.inventory?.quantity}</td>
                                       </tr>
@@ -565,9 +646,7 @@ const Cart = () => {
                                             <td colSpan="6" className="pl-10">
                                               <div className="flex items-center gap-2">
                                                 <span
-                                                  onClick={() =>
-                                                    handleNotesDelete(note.id)
-                                                  }
+                                                  onClick={() => handleNotesDelete(note.id)}
                                                   className="text-[10px] text-red-500 cursor-pointer ml-2"
                                                 >
                                                   <img
@@ -581,9 +660,9 @@ const Cart = () => {
                                                   className="text-[10px] border px-2 py-1 rounded m-1 w-full max-w-xs"
                                                   onBlur={(ev) =>
                                                     handleNoteUpdate(
-                                                      note.id, // partCartId
-                                                      ev.target.value, // newNote
-                                                      note.quantity // quantity
+                                                      note.id,
+                                                      ev.target.value,
+                                                      note.quantity
                                                     )
                                                   }
                                                 />
@@ -594,8 +673,8 @@ const Cart = () => {
                                     </React.Fragment>
                                   ))}
                                 </React.Fragment>
-                              )
-                            )}
+                              ))}
+
                           </tbody>
                         </table>
                       </div>
