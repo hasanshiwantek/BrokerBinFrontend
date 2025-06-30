@@ -164,6 +164,17 @@ const CompanyContacts = () => {
                     <span>Photos</span>
                   </NavLink>
                 </li>
+                <li>
+                                    <NavLink
+                                      to="/mycompany/Billing+Info"
+                                      end
+                                      className={({ isActive }) =>
+                                        isActive ? css.active : ""
+                                      }
+                                    > 
+                                      <span>Billing</span>
+                                    </NavLink>
+                                  </li>
               </ul>
             </div>
 

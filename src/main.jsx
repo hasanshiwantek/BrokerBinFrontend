@@ -35,6 +35,11 @@ const SavedList = lazy(() => import("./components/Menu/Manage/MyBom.jsx"))
 const CompanyProfile = lazy(() =>
   import("./components/Menu/Manage/Mycompany/CompanyProfile.jsx")
 );
+
+const Billing = lazy(() =>
+  import("./components/Menu/Manage/Mycompany/Billing.jsx")
+);
+
 const CompanyPrimaryInfo = lazy(() =>
   import("./components/Menu/Manage/Mycompany/CompanyInfo/PrimaryInfo.jsx")
 );
@@ -352,6 +357,16 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <CompanyPhotos />
+            <Footer />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/mycompany/Billing+Info",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <Billing />
             <Footer />
           </Suspense>
         ),
