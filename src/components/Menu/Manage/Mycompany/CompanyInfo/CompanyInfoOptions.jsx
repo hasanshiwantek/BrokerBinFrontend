@@ -1,21 +1,47 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import css from "../../../../../styles/Menu/Manage/MyProfile.module.css";
 import { countriesList, regionsList } from "@/data/services";
 import { useForm } from "react-hook-form";
+import { useSelector, useDispatch } from "react-redux";
+import { getCompanyContact } from "@/ReduxStore/SearchProductSlice";
+import Cookies from "js-cookie";
 
 const companyInfoOptions = ({ formData, setFormData }) => {
+
+  const dispatch = useDispatch();
+  const token = Cookies.get("token");
+  const companyId = Number(Cookies.get("companyId"));
   
-  // const handleChange = (e) => {
-  //   const { name, type, checked, value } = e.target;
-  //   const newValue = type === "checkbox" ? checked : value;
-  //   setFormData((prev) => ({ ...prev, [name]: newValue }));
-  // };
+  useEffect(() => {
+    dispatch(getCompanyContact({ token, id: companyId }));
+  }, [dispatch, token, companyId]);
+
+  const { companyContactData } = useSelector(
+      (state) => state.searchProductStore
+    );
 
   const handleChange = (e) => {
   const { name, type, checked, value } = e.target;
   const newValue = type === "checkbox" ? checked : name === "days" ? Number(value) : value;
   setFormData((prev) => ({ ...prev, [name]: newValue }));
 };
+
+useEffect(() => {
+  const options = companyContactData?.data?.company?.companyOptions;
+  if (options) {
+    setFormData((prev) => ({
+      ...prev,
+      listing: options?.listing || "",
+      locations: options?.locations || "",
+      mail: !!options?.mail,
+      openInventory: !!options?.openInventory,
+      receiveAlerts: !!options?.receiveAlerts,
+      email: options?.email || "",
+      days: options?.days || "", 
+    }));
+  }
+}, [companyContactData]);
+
 
   return (
     <div className="min-w-[54vw]">

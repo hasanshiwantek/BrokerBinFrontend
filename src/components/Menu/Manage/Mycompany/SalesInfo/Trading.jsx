@@ -5,6 +5,7 @@ import { useFormContext, Controller } from "react-hook-form";
 import Cookies from "js-cookie";
 import { useSelector, useDispatch } from "react-redux";
 import { getCompanyContact } from "@/ReduxStore/SearchProductSlice";
+
 const Trading = () => {
   const { register, setValue, getValues, reset, control } = useFormContext();
 

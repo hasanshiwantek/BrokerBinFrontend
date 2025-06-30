@@ -19,6 +19,7 @@ import ReturnPolicy from "./ReturnPolicy";
 import { useForm, FormProvider } from "react-hook-form";
 import {
   submitTradingData,
+  submitCompanyTerms,
   submitCompanyCategories,
   submitCompanyManufacturers,
   submitCompanyreturnPolicy,
@@ -30,6 +31,7 @@ const SalesInfo = () => {
 
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("trading"); // or 'bio', 'logo', etc.
+  const [getTermsFormData, setTermsFormData] = useState(() => () => null);
 
   const tabItems = [
     { key: "trading", label: "Trading" },
@@ -75,6 +77,14 @@ const SalesInfo = () => {
         console.log("✅ Trading Response:", result);
 
         toast.success(result?.data?.message || "Trading info updated!");
+      }
+
+      if (activeTab === "terms") {
+        console.log("📦 Submitting Trading Data:", data);
+        const formData = getTermsFormData();
+        const result = await dispatch(submitCompanyTerms({ data: formData, token, })).unwrap();
+        console.log("✅ Terms Response:", result);
+        toast.success(result?.data?.message || "Terms info updated!");
       }
 
       if (activeTab === "categories") {
@@ -259,7 +269,7 @@ const SalesInfo = () => {
 
                 {activeTab === "terms" && (
                   <div className={`${css.profileInfo_form}`}>
-                    <Terms />
+                    <Terms setTermsFormData={setTermsFormData}/>
                   </div>
                 )}
 

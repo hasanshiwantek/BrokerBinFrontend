@@ -327,6 +327,37 @@ export const submitTradingData = createAsyncThunk(
   }
 );
 
+export const submitCompanyTerms = createAsyncThunk(
+  "profileStore/submitCompanyTerms",
+  async ({ data, token }) => {
+    try {
+      const response = await axios.post(
+        `${brokerAPI}company/company-legal-info`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            // "Content-Type": "application/json",
+          },
+        }
+      );
+      const responseData = {
+        data: response.data,
+        message: response.data.message || "Update successful",
+      };
+
+      console.log("✅ Redux Thunk Response:", responseData);
+      return responseData; // return all 3 fields
+    } catch (error) {
+      console.error(
+        "Error while submitting Trading data:",
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  }
+);
+
 export const submitCompanyCategories = createAsyncThunk(
   "profileStore/submitCompanyCategories",
   async ({ data, token }) => {
