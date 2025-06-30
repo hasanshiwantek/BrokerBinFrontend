@@ -20,12 +20,14 @@ import {
   updateCompanyPrimaryInfo,
   updateCompanyBio,
   updateCompanyOptions,
+  getCompanyContact
 } from "@/ReduxStore/SearchProductSlice";
 import { useRef } from "react";
 import { statesList, countriesList, regionsList } from "@/data/services";
-import { submitCompanyLogo } from "@/ReduxStore/ProfleSlice";
+import { submitCompanyLogo, } from "@/ReduxStore/ProfleSlice";
 import CompanyInfoOptions from "./CompanyInfoOptions";
 import MapComponent from "./CompanyMapComponent";
+
 const CompanyPrimaryInfo = () => {
   const token = Cookies.get("token");
   const dispatch = useDispatch();
@@ -87,6 +89,10 @@ const CompanyPrimaryInfo = () => {
       fetchData();
     }
   }, [companyId, token, dispatch]);
+
+  useEffect(() => {
+      dispatch(getCompanyContact({ token, id: companyId }));
+    }, [dispatch, token, companyId]);
 
   const states = [
     { value: "", label: "N/A" },

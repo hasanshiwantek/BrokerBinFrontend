@@ -159,7 +159,7 @@ import { getCompanyContact } from "@/ReduxStore/SearchProductSlice";
 // };
 
 const Terms = ({setTermsFormData}) => {
-  const { register, getValues } = useFormContext();
+  const { register, getValues, reset } = useFormContext();
   const dispatch = useDispatch();
   const token = Cookies.get("token");
   const companyId = Number(Cookies.get("companyId"));
@@ -175,33 +175,57 @@ const Terms = ({setTermsFormData}) => {
     }, [dispatch, token, companyId]);
 
   useEffect(() => {
-  setTermsFormData(() => () => {
-    const values = getValues();
-    const formData = new FormData();
-    formData.append("companyId", companyId); // if available
-    formData.append("warrantyUrl", values.warrantyUrl);
-    formData.append("warrantyText", values.warrantyText);
-    if (values.warrantyPdf?.[0]) {
-      formData.append("warrantyPdf", values.warrantyPdf[0]);
-    }
-    formData.append("bankTradeUrl", values.bankTradeUrl);
-    if (values.bankTradePdf?.[0]) {
-      formData.append("bankTradePdf", values.bankTradePdf[0]);
-    }
-    formData.append("sellingMinOrder", values.sellingMinOrder);
-    formData.append("sellingUrl", values.sellingUrl)
-    if (values.sellingPdf?.[0]) {
-      formData.append("sellingPdf", values.sellingPdf[0]);
-    }
-    formData.append("buyingUrl", values.buyingUrl);
-    if (values.buyingPdf?.[0]) {
-      formData.append("buyingPdf", values.buyingPdf[0]);
-    }
-    formData.append("paymentOptions", values.paymentOptions);
-    formData.append("optionsOther", values.optionsOther);
-    return formData;
+    setTermsFormData(() => () => {
+      const values = getValues();
+      const formData = new FormData();
+      formData.append("companyId", companyId); // if available
+      formData.append("warrantyUrl", values.warrantyUrl);
+      formData.append("warrantyText", values.warrantyText);
+      if (values.warrantyPdf?.[0]) {
+        formData.append("warrantyPdf", values.warrantyPdf[0]);
+      }
+      formData.append("bankTradeUrl", values.bankTradeUrl);
+      if (values.bankTradePdf?.[0]) {
+        formData.append("bankTradePdf", values.bankTradePdf[0]);
+      }
+      formData.append("sellingMinOrder", values.sellingMinOrder);
+      formData.append("sellingUrl", values.sellingUrl)
+      if (values.sellingPdf?.[0]) {
+        formData.append("sellingPdf", values.sellingPdf[0]);
+      }
+      formData.append("buyingUrl", values.buyingUrl);
+      if (values.buyingPdf?.[0]) {
+        formData.append("buyingPdf", values.buyingPdf[0]);
+      }
+      // formData.append("paymentOptions", values.paymentOptions);
+      if (Array.isArray(values.paymentOptions)) {
+        values.paymentOptions.forEach((opt) =>
+          formData.append("paymentOptions[]", opt)
+        );
+      }
+      formData.append("optionsOther", values.optionsOther);
+      return formData;
+    });
+  }, []);
+
+useEffect(() => {
+  if (!companyContactData?.data?.company?.legalInfo) return;
+
+  const legal = companyContactData.data.company.legalInfo;
+
+  reset({
+    warrantyUrl: legal.warranty?.url || "",
+    warrantyText: legal.warranty?.text || "",
+    // skip file: cannot prefill file inputs
+    bankTradeUrl: legal.bankTrade?.url || "",
+    sellingMinOrder: legal.sellingTerms?.minOrder || "",
+    sellingUrl: legal.sellingTerms?.url || "",
+    buyingUrl: legal.buyingTerms?.url || "",
+    paymentOptions: legal.paymentOptions || [],
+    otherOptions: "", // backend doesn't send? leave empty or map if exists
   });
-}, []);
+}, [companyContactData]);
+
 
   const options = [
     "Credit Card",
