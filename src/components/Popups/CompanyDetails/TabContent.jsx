@@ -291,11 +291,9 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
             <div className={css.Popup_Info_header}>
               <h1>Loading company details...</h1>
             </div>
-            <div className={css.Popup_Info_Main}>
               <div className={css.Popup_Info_Main_left}>
                 <div className={css.loader}></div> {/* Spinner here */}
               </div>
-            </div>
           </div>
         </div>
       </div>

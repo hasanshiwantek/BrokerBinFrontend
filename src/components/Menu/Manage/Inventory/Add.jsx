@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import css from "../../../../styles/Menu/Manage/Inventory/Inventory.module.css";
 import TableAdd from "../../../Tables/TableAdd";
@@ -10,7 +9,6 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 
-
 const Add = () => {
   const token = Cookies.get("token");
   const { inventoryAddData } = useSelector((state) => state.inventoryStore);
@@ -19,7 +17,7 @@ const Add = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+
     const filteredAddInventory = inventoryAddData.filter(
       (e) =>
         e.mfg !== "" ||
@@ -28,25 +26,25 @@ const Add = () => {
         e.productDescription !== "" ||
         e.quantity !== ""
     );
-  
+
     if (filteredAddInventory.length > 0) {
       const incompleteRowExists = filteredAddInventory.some((item) =>
-        Object.entries(item).some(([key, value]) =>
-          key === "heciClei" ? false : value === "" // Skip heciClei field
+        Object.entries(item).some(
+          ([key, value]) => (key === "heciClei" ? false : value === "") // Skip heciClei field
         )
       );
-  
-      if (incompleteRowExists) {
-        alert("Please fill all fields in a whole row to add to an inventory.");
-        return;
-      }
+
+      // if (incompleteRowExists) {
+      //   alert("Please fill all fields in a whole row to add to an inventory.");
+      //   return;
+      // }
     } else {
       alert("Please fill in the inventory data.");
       return;
     }
-  
+
     setButtonText("Adding Your Inventory...");
-  
+
     try {
       const response = await fetch(
         "https://backend.brokercell.com/api/inventory/add",
@@ -59,19 +57,18 @@ const Add = () => {
           body: JSON.stringify({ addInventory: filteredAddInventory }),
         }
       );
-  
-      if (response.ok) {
-           // ✅ Show success toast with light blue color
-            toast.info("Inventory Added successfully!", {
-          style: { fontSize:"15px" ,marginTop:"-10px"} , // 
 
-           });
-       
+      if (response.ok) {
+        // ✅ Show success toast with light blue color
+        toast.info("Inventory Added successfully!", {
+          style: { fontSize: "15px", marginTop: "-10px" }, //
+        });
+
         dispatch(
           setInventoryAddData(
             inventoryAddData.map(() => ({
               partModel: "",
-              heciClei: "", // Reset heciClei as empty
+              heciClei: "", // Reset heciClei as empty 
               mfg: "",
               price: "",
               quantity: "",
@@ -82,8 +79,7 @@ const Add = () => {
           )
         );
       } else {
-        toast.error("Failed to Add Inventory.Please Try Again.", {
-        });
+        toast.error("Failed to Add Inventory.Please Try Again.", {});
       }
     } catch (error) {
       console.log(error);
@@ -91,7 +87,7 @@ const Add = () => {
       setButtonText("Save");
     }
   };
-  
+
   return (
     <div className={`${css.inventory} !min-w-fit`}>
       <InventoryButtons />
@@ -116,8 +112,7 @@ const Add = () => {
           </div>
         </form>
       </div>
-            <ToastContainer position="top-center" autoClose={1000} />
-      
+      <ToastContainer position="top-center" autoClose={1000} />
     </div>
   );
 };

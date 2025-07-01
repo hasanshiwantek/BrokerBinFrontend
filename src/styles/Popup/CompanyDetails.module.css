@@ -19,7 +19,6 @@
     width: 80vw;
     overflow: hidden;
 
-
     &_height {
       height: 100%;
       overflow-y: scroll;
@@ -36,7 +35,7 @@
       background: var(--primary-color);
       padding: 1rem;
       align-content: center !important;
-      flex-wrap: wrap ;
+      flex-wrap: wrap;
 
       svg {
         height: 2.5rem;
@@ -50,11 +49,11 @@
         font-size: 2.5rem;
       }
 
-      >div {
+      > div {
         display: flex;
         gap: 1rem;
 
-        >button {
+        > button {
           height: 2rem;
           fill: white;
           stroke: white;
@@ -91,7 +90,7 @@
           align-items: center;
           padding: 1rem 0;
 
-          >div {
+          > div {
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -127,7 +126,7 @@
               }
             }
 
-            >div {
+            > div {
               ul {
                 span {
                   /* width: 100%; */
@@ -139,11 +138,11 @@
           }
         }
 
-        >* {
+        > * {
           width: 100%;
         }
 
-        >*:not(:last-child) {
+        > *:not(:last-child) {
           border-bottom: 2px solid var(--box-shadow);
         }
 
@@ -159,12 +158,12 @@
         }
 
         &_actions {
-          >div {
+          > div {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             justify-items: center;
 
-            >div {
+            > div {
               padding: 2rem;
               display: flex;
               flex-direction: column;
@@ -172,7 +171,7 @@
               color: #444;
               cursor: pointer;
 
-              >svg {
+              > svg {
                 height: 3rem;
                 font-size: 3rem;
               }
@@ -193,7 +192,6 @@
         }
 
         &_tabs {
-
           /* &_layout {
           } */
           &_toggle {
@@ -231,7 +229,7 @@
               margin-left: 5rem;
               width: 100%;
 
-              >div:not(:last-child) {
+              > div:not(:last-child) {
                 border-top: 2px solid var(--box-shadow);
               }
 
@@ -281,7 +279,7 @@
                       font-weight: 600;
                     }
 
-                    >div {
+                    > div {
                       span {
                         display: grid;
                         grid-template-columns: repeat(2, 1fr);
@@ -320,7 +318,6 @@
                   }
 
                   > :nth-child(2) {
-
                     /* background: pink; */
                     textarea {
                       height: 11rem;
@@ -340,7 +337,7 @@
             &_img {
               border-top: 2px solid var(--box-shadow);
 
-              >div {
+              > div {
                 height: 15rem;
 
                 img {
@@ -363,15 +360,14 @@
               margin-left: 2rem;
             }
 
-            >div {
+            > div {
               padding: 2rem 0;
             }
           }
-
         }
 
         &_productInfo {
-          >div {
+          > div {
             display: grid;
             grid-template-columns: 15% 80%;
             margin-bottom: 0.5rem;
@@ -388,7 +384,7 @@
           }
 
           > :nth-child(1) {
-            >span {
+            > span {
               display: grid;
               grid-template-columns: 10rem 1fr;
             }
@@ -402,7 +398,7 @@
             display: flex;
 
             /* gap: 5rem; */
-            >span {
+            > span {
               padding: 0 3rem;
               display: flex;
               flex-direction: column;
@@ -452,58 +448,45 @@
   font-weight: 400;
 }
 
-
 .Popup_Info_Main_left_companySideInformation_tabs ul li {
-
   /* font-size: 9pt !important; */
   font-weight: 500;
   color: #444;
-
 }
 
+/* Scope all styles to the specific section */
+.Popup_Info_Main_right_tabs_contact_right_companies_list_details {
+  /* Apply base styles to all text inside this block */
+  h2,
+  strong,
+  p {
+    font-weight: 500;
+    color: #444;
+  }
 
-
-.Popup_Info_Main_left_companySideInformation .Popup_Info_Main_right_tabs_contact_right_companies_list_details h2,
-strong{
+  /* Set specific font size */
+  h2,
+  strong {
     font-size: 8pt !important;
-  font-weight: 500;
-  color: #444;
+  }
 }
-
-
-.Popup_Info_Main_left_companySideInformation .Popup_Info_Main_right_tabs_contact_right_companies_list_details h2,
-strong,
-p {
-  font-weight: 500;
-  color: #444;
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* HTML: <div class="loader"></div> */
 .loader {
-  width: 50px;
+  margin: 10% auto;
+  width: 60px;
   aspect-ratio: 1;
   display: grid;
   border-radius: 50%;
-  background:
-    linear-gradient(0deg, rgb(0 0 0/50%) 30%, #0000 0 70%, rgb(0 0 0/100%) 0) 50%/8% 100%,
-    linear-gradient(90deg, rgb(0 0 0/25%) 30%, #0000 0 70%, rgb(0 0 0/75%) 0) 50%/100% 8%;
+  background: linear-gradient(
+        0deg,
+        rgb(0 0 0/50%) 30%,
+        #0000 0 70%,
+        rgb(0 0 0/100%) 0
+      )
+      50%/8% 100%,
+    linear-gradient(90deg, rgb(0 0 0/25%) 30%, #0000 0 70%, rgb(0 0 0/75%) 0)
+      50%/100% 8%;
   background-repeat: no-repeat;
   animation: l23 1s infinite steps(12);
   /* margin-left: 600px; */
@@ -526,10 +509,9 @@ p {
 
 @keyframes l23 {
   100% {
-    transform: rotate(1turn)
+    transform: rotate(1turn);
   }
 }
-
 
 .Popup_Info_Main_left_companySideInformation_tabs_li svg {
   height: 1.8rem !important;
@@ -538,12 +520,10 @@ p {
 .Popup_Info_Main_right_tabs_contact_right_companies_list img {
   width: 10%;
   height: 10%;
-
 }
 
 .Popup_Info_Main_left_actions p:hover {
   border-bottom: 2px solid var(--primary-color);
-
 }
 
 .inventorySecSvgs {
@@ -552,16 +532,12 @@ p {
 
 .inventorySecSvgs span:hover {
   border-bottom: 2px solid var(--primary-color);
-
 }
-
-
-
 
 .Popup_Info_Main_right_tabs_terms h1 {
   border-bottom: 1px solid #bfbfbf;
   color: #c1521a;
-  padding-bottom: .75rem;
+  padding-bottom: 0.75rem;
   font-size: 2rem !important;
   font-weight: 600;
 }

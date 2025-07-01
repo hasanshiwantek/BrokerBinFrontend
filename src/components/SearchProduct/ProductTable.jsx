@@ -242,7 +242,6 @@ const ProductTable = ({
                   rowData={e}
                   triggerElement={<div>{e?.partModel}</div>}
                 />
-
                 {showDetails &&
                   (() => {
                     const skype =
@@ -265,25 +264,39 @@ const ProductTable = ({
                       fax ||
                       firstName ||
                       lastName;
-
                     if (!hasAnyInfo) return null;
 
                     return (
-                      <div className="flex justify-start items-center gap-4 p-2">
-                        {/* <div className="relative group cursor-pointer">
-                          <div className=" cursor-pointer ">
+                      <div className="grid grid-flow-col auto-cols-max items-center   gap-1 p-2">
+
+                        {/* Contact Person Hover Icon */}
+                        {firstName && lastName && (
+                          <div className="relative group cursor-pointer mr-1">
                             <img
                               src="https://static.brokerbin.com/version/v8.4.2/images/seller.png"
                               alt="Contact Person"
+                              onError={(e) => {
+                                e.target.src = `https://ui-avatars.com/api/?name=${firstName}+${lastName}`;
+                              }}
+                              onClick={(event) =>
+                                handleShowPopupCompanyDetails(
+                                  event,
+                                  e?.addedBy?.company?.id
+                                )
+                              }
                             />
-                            <div className="absolute top-0 left-0 z-50 hidden group-hover:flex flex-col bg-white border shadow-md p-2 rounded min-w-max">
-                              <span className="text-sm font-semibold text-gray-700">
+                            <div className="absolute left-1/2 -translate-x-1/2 top-8 z-50 hidden group-hover:flex flex-col items-center bg-white border shadow-md p-2 rounded min-w-max whitespace-nowrap">
+                              <span className="text-base font-semibold italic text-gray-700">
+                                Contact Person
+                              </span>
+                              <span className="text-base italic font-semibold text-gray-700">
                                 {firstName} {lastName}
                               </span>
                             </div>
                           </div>
-                        </div> */}
+                        )}
 
+                        {/* Skype */}
                         {skype && (
                           <div className="flex items-center gap-2 mr-4">
                             <img
@@ -302,6 +315,7 @@ const ProductTable = ({
                           </div>
                         )}
 
+                        {/* Trillian */}
                         {trillian && (
                           <div className="flex items-center gap-2 mr-4">
                             <img
@@ -312,7 +326,7 @@ const ProductTable = ({
                               }}
                             />
                             <a
-                              href={`#`}
+                              href="#"
                               className="!text-[#444] lowercase text-base font-semibold"
                             >
                               {trillian}
@@ -320,6 +334,7 @@ const ProductTable = ({
                           </div>
                         )}
 
+                        {/* Phone */}
                         {phone && (
                           <div className="flex items-center gap-1 mr-4">
                             <span className="text-base font-semibold">Ph:</span>
@@ -332,6 +347,7 @@ const ProductTable = ({
                           </div>
                         )}
 
+                        {/* Fax */}
                         {fax && (
                           <div className="flex items-center gap-1">
                             <span className="text-base font-semibold">Fx:</span>

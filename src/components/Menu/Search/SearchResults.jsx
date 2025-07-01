@@ -180,7 +180,7 @@ const SearchResults = () => {
       </nav>
 
       <div className="!flex !justify-end !items-center !gap-5 p-3">
-        <p className="!text-xl">view by</p>
+        <p className="!text-xl">View by</p>
         <select
           value={viewBy}
           onChange={(e) => {
@@ -232,7 +232,10 @@ const SearchResults = () => {
 
         <div>
           {loading ? (
-            <p className="text-center">Loading...</p>
+            <div className="!flex !justify-center !items-center py-10 ml-[20rem]" >
+              <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
+              <span className="ml-4 text-blue-600 text-lg font-medium"></span>
+            </div>
           ) : resultData.length > 0 ? (
             resultData.map((val, index) => {
               const profileImage = val.profileImage || profileImg;
