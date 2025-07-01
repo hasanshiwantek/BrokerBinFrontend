@@ -23,22 +23,16 @@ const ProductTable = ({
   countriesList,
   alternateRowColors,
   showBorders,
-  // itemsPerPage,
   doubleVision,
-  itemsPerPage
+  itemsPerPage,
+  forceDescriptions
 }) => {
 
   const dispatch = useDispatch();
 
-  const {
-        selectedProducts,
-        searchResponseMatched,
-        appliedFilters,
-      } = useSelector((store) => store.searchProductStore);
+  const { searchResponseMatched } = useSelector((store) => store.searchProductStore);
 
-      console.log("Items Per Page: ",itemsPerPage);
-      
-      console.log("Length",data.length);
+  console.log("Items Per Page: ",itemsPerPage);
       
   const handleShowPopupCompanyDetails = (event, companyId) => {
     event.stopPropagation();
@@ -77,6 +71,7 @@ const ProductTable = ({
     } else {
     }
   };
+
   return (
     <table className={showBorders ? css.withBorders : ""}>
       <thead>
@@ -130,7 +125,7 @@ const ProductTable = ({
           >
             Age {sortBy === "created_at" && (sortOrder === "asc" ? "↑" : "↓")}
           </th>
-          {!doubleVision && (
+          {(!doubleVision || (doubleVision && forceDescriptions)) && (
             <th onClick={() => handleSort("productDescription")} style={{ cursor: "pointer" }}>
               Product Description
               {sortBy === "productDescription" && (sortOrder === "asc" ? "↑" : "↓")}
@@ -221,7 +216,7 @@ const ProductTable = ({
             <td>{e?.price}</td>
             <td>{e?.quantity}</td>
             <td>{e?.age}</td>
-            {!doubleVision && <td>{e?.productDescription}</td>}
+            {(!doubleVision || (doubleVision && forceDescriptions)) && ( <td className="cursor-pointer">{e?.productDescription}</td>)}
           </tr>
         ))}
       </tbody>
@@ -276,7 +271,7 @@ const ProductTable = ({
           >
             Age {sortBy === "created_at" && (sortOrder === "asc" ? "↑" : "↓")}
           </th>
-          {!doubleVision && (
+          {(!doubleVision || (doubleVision && forceDescriptions)) && (
             <th onClick={() => handleSort("productDescription")} style={{ cursor: "pointer" }}>
               Product Description
               {sortBy === "productDescription" && (sortOrder === "asc" ? "↑" : "↓")}
