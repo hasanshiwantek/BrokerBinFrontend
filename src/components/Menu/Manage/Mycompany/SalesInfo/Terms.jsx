@@ -222,10 +222,9 @@ useEffect(() => {
     sellingUrl: legal.sellingTerms?.url || "",
     buyingUrl: legal.buyingTerms?.url || "",
     paymentOptions: legal.paymentOptions || [],
-    otherOptions: "", // backend doesn't send? leave empty or map if exists
+    optionsOther: legal.optionsOther || "", // backend doesn't send? leave empty or map if exists
   });
 }, [companyContactData]);
-
 
   const options = [
     "Credit Card",

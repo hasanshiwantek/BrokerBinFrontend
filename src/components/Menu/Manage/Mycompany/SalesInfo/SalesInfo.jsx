@@ -24,6 +24,7 @@ import {
   submitCompanyManufacturers,
   submitCompanyreturnPolicy,
 } from "../../../../../ReduxStore/ProfleSlice";
+
 const SalesInfo = () => {
   // const methods = useForm();
   const token = Cookies.get("token");
@@ -188,8 +189,8 @@ const SalesInfo = () => {
       console.error("❌ Submission Error:", err);
       toast.error(
         err?.response?.data?.message ||
-          err?.message ||
-          "Update failed. Please try again."
+        err?.message ||
+        "Update failed. Please try again."
       );
     } finally {
       setLoading(false);

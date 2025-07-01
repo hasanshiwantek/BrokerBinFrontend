@@ -5,15 +5,10 @@ import Cookies from "js-cookie";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import shieldImage from "@/assets/shield-img.png";
 import { countriesList } from "@/data/services";
-import { FaEye } from "react-icons/fa";
-import { BiBlock } from "react-icons/bi";
-import { IoCheckmarkCircle } from "react-icons/io5";
 import {
   searchProductQuery,
   searchByKeyword,
 } from "@/ReduxStore/SearchProductSlice";
-import HoverDropdown from "@/HoverDropdown";
-import EyeDropdown from "@/EyeDropDown";
 import {
   setSelectedProducts,
   setTogglePopUp,
@@ -40,7 +35,7 @@ const ProductTableDetail = React.memo(
     const sortBy = queryParams.get("sortBy");
     const sortOrder = queryParams.get("sortOrder") || "desc";
     const page = parseInt(queryParams.get("page")) || 1;
-    const { alternateRowColors, showBorders, doubleVision, itemsPerPage } =
+    const { alternateRowColors, showBorders, doubleVision, itemsPerPage, forceDescriptions } =
       useDefaultSettings();
 
     const {
@@ -247,21 +242,11 @@ const ProductTableDetail = React.memo(
       setVisiblePages([start, end]);
     }, [currentPage, totalPagess]);
 
-    // const allData = (partData || searchResponseMatched?.data || []);
-    // const firstTableData = doubleVision && allData.length > 20
-    //   ? allData.slice(0, itemsPerPage)
-    //   : allData;
-
-    // const secondTableData = doubleVision && allData.length > itemsPerPage
-    //   ? allData.slice(itemsPerPage)
-    //   : [];
-
     const allData = (partData || searchResponseMatched?.data || []).slice(0, itemsPerPage);
     const shouldSplit = doubleVision && itemsPerPage >= 20;
     const splitIndex = shouldSplit
       ? Math.ceil(allData.length / 2)
       : allData.length;
-
     const firstTableData = allData.slice(0, splitIndex);
     const secondTableData = shouldSplit ? allData.slice(splitIndex) : [];
 
@@ -325,7 +310,6 @@ const ProductTableDetail = React.memo(
           doubleVision: newDoubleVisionValue,
         },
       };
-
       try {
         const resultAction = await dispatch(
           submitUserSettings({ token, optionFormData: updatedData })
@@ -438,6 +422,7 @@ const ProductTableDetail = React.memo(
                 alternateRowColors={alternateRowColors}
                 doubleVision={doubleVision}
                 itemsPerPage={itemsPerPage}
+                forceDescriptions={forceDescriptions}
                 sortBy={sortBy}
                 sortOrder={sortOrder}
                 handleSort={handleSort}
@@ -458,6 +443,7 @@ const ProductTableDetail = React.memo(
                   showBorders={showBorders}
                   alternateRowColors={alternateRowColors}
                   itemsPerPage={itemsPerPage}
+                  forceDescriptions={forceDescriptions}
                   sortBy={sortBy}
                   sortOrder={sortOrder}
                   handleSort={handleSort}
