@@ -88,13 +88,8 @@ const SalesInfo = () => {
         };
 
         const result = await dispatch(
-          submitTradingData({
-            data: payload,
-            token,
-          })
+          submitTradingData({ data: payload, token, })
         ).unwrap();
-
-        console.log("✅ Trading Response:", result);
 
         toast.success(result?.data?.message || "Trading info updated!");
       }
