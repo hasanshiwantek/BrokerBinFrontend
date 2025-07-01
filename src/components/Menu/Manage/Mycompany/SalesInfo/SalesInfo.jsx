@@ -70,7 +70,7 @@ const SalesInfo = () => {
           submitTradingData({
             data,
             token,
-            company_id,
+            // company_id,
           })
         ).unwrap();
 

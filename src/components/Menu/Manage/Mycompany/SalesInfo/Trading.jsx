@@ -295,27 +295,3 @@ const Trading = () => {
 };
 
 export default Trading;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

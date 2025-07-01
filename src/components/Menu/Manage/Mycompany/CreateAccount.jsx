@@ -577,6 +577,7 @@ const CreateAccount = () => {
 
                 <span>
                   <p className="pt-4 italic text-gray-600 text-[7.5pt] leading-tight w-64">
+                    
                     (use the profile/url name, example 'brokercell' will result
                     in http://twitter.com/cell )
                   </p>
