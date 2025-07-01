@@ -470,15 +470,13 @@
   }
 }
 
-.compnaySearch {
+/* .compnaySearch {
   position: absolute;
   z-index: 2;
-  /* top: 64%; */
  
   ul {
     background: white;
     width: 20rem;
-    /* min-height: min-content; */
     max-height: 20rem;
     overflow-y: scroll;
     border: 1px solid rgb(85, 85, 85);
@@ -494,7 +492,7 @@
       cursor: pointer;
     }
   }
-}
+} */
 
 .companyItem {
   display: flex;

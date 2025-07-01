@@ -5,7 +5,7 @@ import {
   getMyVendors,
   searchMyVendors,
   addMyContacts,
-  searchMyFavouriteContacts, 
+  searchMyFavouriteContacts,
   setEmptySearchContacts,
   fetchMyContacts,
   setMyVendor,
@@ -25,9 +25,10 @@ const SearchMyFavouriteContact = () => {
   const listRef = useRef();
 
   const dispatch = useDispatch();
-  const { searchMyVendor, myVendor,searchMyContact} = useSelector((store) => store.toolsStore);
-  console.log("searchMyContact From Frontend",searchMyContact);
-  
+  const { searchMyVendor, myVendor, searchMyContact } = useSelector(
+    (store) => store.toolsStore
+  );
+  console.log("searchMyContact From Frontend", searchMyContact);
 
   function debounce(func, delay) {
     let timer;
@@ -76,7 +77,9 @@ const SearchMyFavouriteContact = () => {
   };
   const handleContactSelect = async (firstName, id) => {
     try {
-      const result = await dispatch(addMyContacts({ contact_id: id, token })).unwrap();
+      const result = await dispatch(
+        addMyContacts({ contact_id: id, token })
+      ).unwrap();
       toast.success(result.message || "Contact added successfully!");
       dispatch(fetchMyContacts({ token }));
       setSearchTerm("");
@@ -85,7 +88,7 @@ const SearchMyFavouriteContact = () => {
       toast.error(error.message || "Failed to add contact.");
     }
   };
-  
+
   const handleFocus = () => setShowList(true);
 
   const handleBlur = () => {
@@ -95,11 +98,13 @@ const SearchMyFavouriteContact = () => {
 
   return (
     <>
-      <span>
-        <label htmlFor="company">Quick Add:</label>
+      <span className="block mb-1">
+        <label htmlFor="company" className="font-semibold whitespace-nowrap">
+          Quick Add:
+        </label>
       </span>
-      <br />
-      <span ref={inputRef}>
+
+      <span ref={inputRef} className="relative inline-block w-full">
         <input
           type="search"
           name="company"
@@ -109,33 +114,46 @@ const SearchMyFavouriteContact = () => {
           onFocus={handleFocus}
           onBlur={handleBlur}
           required
-          className="p-1 outline-none focus:border-blue-500"
+          placeholder="Type contact name..."
+          className="p-2 w-full border border-gray-300 rounded outline-none focus:border-blue-500 focus:ring focus:ring-blue-200"
         />
-        <div className={css.compnaySearch} ref={listRef}>
-          {showList && (
-            <ul className="!w-fit">
+
+        {showList && (
+          <div
+            ref={listRef}
+            className={`${css.compnaySearch} absolute z-10 mt-1 max-h-52 overflow-y-auto bg-white border border-gray-300 rounded shadow-md w-fit`}
+          >
+            <ul>
               {searchMyContact?.length > 0 ? (
-                searchMyContact.map((company,index) => (
+                searchMyContact.map((company, index) => (
                   <li
                     key={index}
-                    onClick={() => handleContactSelect(company.firstName,company.id)}
-                    className={css.companyItem}
+                    onClick={() =>
+                      handleContactSelect(company.firstName, company.id)
+                    }
+                    className={`${css.companyItem} px-3 py-2 cursor-pointer hover:bg-blue-500 hover:text-white transition duration-150 ease-in-out`}
                   >
-                    <p className="!text-lg">{company.firstName} {company.lastName}</p>
-                      <p className="!lowercase">
-                        <span>{company.email},</span>
+                    <p className="text-base font-semibold">
+                      {company.firstName} {company.lastName}
+                    </p>
+                    {company.email && (
+                      <p className="text-sm !lowercase opacity-90">
+                        {company.email}
                       </p>
+                    )}
                   </li>
                 ))
               ) : (
-                <li key="no-results">No results found</li>
+                <li className="px-3 py-2 text-sm text-gray-500">
+                  No results found
+                </li>
               )}
             </ul>
-          )}
-        </div>
+          </div>
+        )}
       </span>
-                  <ToastContainer position="top-center" autoClose={2000} />
-      
+
+      <ToastContainer position="top-center" autoClose={2000} />
     </>
   );
 };
