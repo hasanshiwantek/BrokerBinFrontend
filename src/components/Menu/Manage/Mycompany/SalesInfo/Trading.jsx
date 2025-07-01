@@ -69,15 +69,6 @@ const Trading = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // const fetchTradingData = async () => {
-    //   const res = await axios.get("/your-trading-api-endpoint");
-    //   reset(res.data); // populate form fields
-    // };
-    // fetchTradingData();
-    // reset with existing data if needed
-    // reset(res.data); ← skip if no GET
-
-    // cleanup old fields
     reset(getValues());
   }, []);
 
@@ -108,7 +99,7 @@ const Trading = () => {
         : [...prev.shipping, value],
     }));
   };
-
+  
   useEffect(() => {
     if (!companyData) return;
 
@@ -295,27 +286,3 @@ const Trading = () => {
 };
 
 export default Trading;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
