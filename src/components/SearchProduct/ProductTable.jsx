@@ -10,7 +10,9 @@ import {
   setTogglePopUp,
   setPopupCompanyDetail,
   setHoverCompanyDetail,
+  searchProductQuery
 } from "@/ReduxStore/SearchProductSlice";
+import Cookies from "js-cookie";
 
 const ProductTable = ({
   data = [],
@@ -29,7 +31,7 @@ const ProductTable = ({
 }) => {
 
   const dispatch = useDispatch();
-
+  const token = Cookies.get("token")
   const { searchResponseMatched } = useSelector((store) => store.searchProductStore);
 
   console.log("Items Per Page: ",itemsPerPage);
@@ -70,6 +72,15 @@ const ProductTable = ({
       dispatch(setHoverCompanyDetail(companyDetail.addedBy.company));
     } else {
     }
+  };
+
+  const handleDescriptionClick = (desc) => {
+    dispatch(
+      searchProductQuery({
+        token,
+        search: desc,
+      })
+    );
   };
 
   return (
@@ -216,7 +227,12 @@ const ProductTable = ({
             <td>{e?.price}</td>
             <td>{e?.quantity}</td>
             <td>{e?.age}</td>
-            {(!doubleVision || (doubleVision && forceDescriptions)) && ( <td className="cursor-pointer">{e?.productDescription}</td>)}
+            {(!doubleVision || (doubleVision && forceDescriptions)) && ( 
+              <td className="cursor-pointer"
+              onClick={() => handleDescriptionClick(e?.productDescription)}
+              >
+                {e?.productDescription}
+              </td>)}
           </tr>
         ))}
       </tbody>
