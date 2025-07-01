@@ -35,8 +35,14 @@ const ProductTableDetail = React.memo(
     const sortBy = queryParams.get("sortBy");
     const sortOrder = queryParams.get("sortOrder") || "desc";
     const page = parseInt(queryParams.get("page")) || 1;
-    const { alternateRowColors, showBorders, doubleVision, itemsPerPage, forceDescriptions } =
-      useDefaultSettings();
+    const {
+      alternateRowColors,
+      showBorders,
+      doubleVision,
+      itemsPerPage,
+      forceDescriptions,
+      showDetails,
+    } = useDefaultSettings();
 
     const {
       selectedProducts,
@@ -112,7 +118,7 @@ const ProductTableDetail = React.memo(
     const pageSize =
       searchResponseMatched[partModel]?.pageSize ||
       searchResponseMatched?.pageSize;
-    const keywordPage = parseInt(queryParams.get("page")) || 1;  
+    const keywordPage = parseInt(queryParams.get("page")) || 1;
     const keywordPageSize = searchResponseMatched?.pageSize || 20;
     const keywordTotalCount = searchResponseMatched?.totalCount || 0;
     const keywordTotalPages = Math.ceil(keywordTotalCount / keywordPageSize);
@@ -242,7 +248,10 @@ const ProductTableDetail = React.memo(
       setVisiblePages([start, end]);
     }, [currentPage, totalPagess]);
 
-    const allData = (partData || searchResponseMatched?.data || []).slice(0, itemsPerPage);
+    const allData = (partData || searchResponseMatched?.data || []).slice(
+      0,
+      itemsPerPage
+    );
     const shouldSplit = doubleVision && itemsPerPage >= 20;
     const splitIndex = shouldSplit
       ? Math.ceil(allData.length / 2)
@@ -423,6 +432,7 @@ const ProductTableDetail = React.memo(
                 doubleVision={doubleVision}
                 itemsPerPage={itemsPerPage}
                 forceDescriptions={forceDescriptions}
+                showDetails={showDetails}
                 sortBy={sortBy}
                 sortOrder={sortOrder}
                 handleSort={handleSort}
@@ -441,6 +451,7 @@ const ProductTableDetail = React.memo(
                   data={secondTableData}
                   doubleVision={doubleVision}
                   showBorders={showBorders}
+                  showDetails={showDetails}
                   alternateRowColors={alternateRowColors}
                   itemsPerPage={itemsPerPage}
                   forceDescriptions={forceDescriptions}
