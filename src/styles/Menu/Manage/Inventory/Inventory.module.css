@@ -180,7 +180,7 @@
     gap: 1rem;
     select {
       padding: 0.5rem 0;
-      font-size: 9pt !important;
+      /* font-size: 9pt !important; */
       color: #444;
     }
     &_div {
@@ -454,6 +454,7 @@
       font-size: 9pt !important;
       font-weight: 400;
       text-transform: capitalize;
+      width: fit-content;
     }
   }
 
