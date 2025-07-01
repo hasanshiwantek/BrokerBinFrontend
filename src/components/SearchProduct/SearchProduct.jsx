@@ -15,7 +15,6 @@ import CompanyListingTable from "./Table";
 import { searchProductQuery, setTogglePopUp, searchProductHistory, searchByKeyword, clearSearchResponseMatched } from "@/ReduxStore/SearchProductSlice";
 
 const SearchProduct = () => {
-  console.log("Rendered: searchProduct")
   const token = Cookies.get("token");
   const location = useLocation();
   const dispatch = useDispatch();
@@ -37,6 +36,8 @@ const SearchProduct = () => {
     togglePopUp,
     appliedFilters,
   } = useSelector((store) => store.searchProductStore);
+
+  console.log("searchResponseMatched", searchResponseMatched)
 
   useEffect(() => {
     dispatch(clearSearchResponseMatched());
@@ -77,12 +78,37 @@ const SearchProduct = () => {
   const sortPageSize = 20;
   const isKeywordSearch = Boolean(partModel) && !!searchResponseMatched?.foundItems;
 
+  const noResults =
+  (!searchString && !partModel) ||
+  (partModel
+    ? !(searchResponseMatched?.foundItems?.length > 0)
+    : Object.entries(searchResponseMatched || {})
+        .filter(([key]) => key !== "filters")
+        .every(([, entry]) => !entry?.data?.length)
+  );
+
   return (
-    <div className={`${css.layout}`}>
-      {filterToggle &&
+    <div className={`${css.layout} ${noResults ? css.layoutColumnCenter : ""}`}>
+
+      {/* {filterToggle &&
         Object.values(searchResponseMatched).some(
           (part) => part?.data?.length || part?.length > 0
-        ) && <Filter currentQuery={currentQuery} />}
+        ) && <Filter currentQuery={currentQuery} />} */}
+
+        {filterToggle &&
+  (
+    (Array.isArray(searchResponseMatched?.foundItems) && searchResponseMatched.foundItems.length > 0) ||
+    Object.entries(searchResponseMatched || {})
+      .filter(([key, val]) =>
+        key !== "notFoundPartModels" &&
+        key !== "filters" &&
+        key !== "foundItems" &&
+        typeof val === "object" &&
+        val !== null &&
+        "data" in val
+      )
+      .some(([, part]) => Array.isArray(part.data) && part.data.length > 0)
+  ) && <Filter currentQuery={currentQuery} />}
 
       <div
         className={`${css.layoutTables} `}

@@ -140,6 +140,7 @@ const SaveListModal = ({ onClose, selectedParts }) => {
               value={formData.dueDate}
               onChange={(e) => handleChange("dueDate", e.target.value)}
               className="border w-72 p-2 text-[8pt]"
+              min={new Date(Date.now() + 86400000).toISOString().split("T")[0]}
             />
           </div>
 
