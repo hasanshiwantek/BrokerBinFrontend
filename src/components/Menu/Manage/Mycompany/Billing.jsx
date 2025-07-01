@@ -241,56 +241,146 @@ const Billing = () => {
                     <NavLink
                       to="/mycompany/Photos"
                       end
-                      className={({ isActive }) =>
-                        isActive ? css.active : ""
-                      }
+                      className={({ isActive }) => (isActive ? css.active : "")}
                     >
                       <span>Photos</span>
                     </NavLink>
                   </li>
                   <li>
                     <NavLink
-                        to="/mycompany/Billing+Info"
-                        end
-                        className={({ isActive }) =>
-                            isActive ? css.active : ""
-                        }
-                    > 
-                        <span>Billing</span>
+                      to="/mycompany/Billing+Info"
+                      end
+                      className={({ isActive }) => (isActive ? css.active : "")}
+                    >
+                      <span>Billing</span>
                     </NavLink>
-                    </li>
+                  </li>
                 </ul>
               </div>
-              <div className={`${css.profileInfo_form} flex space-x-20`}>
-              <div>Left</div>
-              <div className={`rightdiv !space-y-6`}>
-                <div>
-                <h1>Invoice Email</h1>
-                <input
-                type="text"
-                className="w-[30vw]"
 
-                />
-                <h1>Payment Info</h1>
-                <select className="w-[30vw] border border-gray-300 rounded px-2 py-2 ">
-                    <option>Wire Transfer</option>
-                    <option>Card Payment</option>
-                </select>
-                <h1>Contact Us</h1>
-                <a href="/feedback"> Questions? Concerns? Please contact us.</a>
-                <p className="italic text-sm text-center ">
-                    * To update your credit card or other billing information, please download and complete the appropriate billing form from above and return to BrokerCell.
-                </p>
-                <p className="italic text-sm text-left ">
-                    * To request your invoice sent by US mail, please contact us at Help.
-                </p>
-                <p className="italic text-sm text-left ">
-                    * Invoices are updated four days after your billing period
-                </p>
-                <h1> <a href="https://brokercell.com/membership/"> Membership Plans & Prices may be viewed here.</a></h1>
+              <div className={`${css.profileInfo_form} flex space-x-20`}>
+                <div>
+                  <div className="p-4 text-sm">
+                    <p className="mb-1">
+                      Past Due Balance:
+                      <span className="font-semibold ml-2">$0.00</span>
+                    </p>
+                    <p className="mb-4">
+                      Billing Cycle:
+                      <span className="font-semibold ml-2">15th of the month</span>
+                    </p>
+
+                    <table className="table-auto border-collapse border border-gray-400">
+                      <thead className="bg-[#44565b] text-white">
+                        <tr>
+                          <th className="px-3 py-1 border border-gray-400">
+                            Invoice #
+                          </th>
+                          <th className="px-3 py-1 border border-gray-400">
+                            Cycle Date
+                          </th>
+                          <th className="px-3 py-1 border border-gray-400"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {[
+                          { invoice: "1668273", date: "2025-06-22" },
+                          { invoice: "1567924", date: "2024-08-22" },
+                          { invoice: "1555943", date: "2024-07-22" },
+                          { invoice: "1458000", date: "2023-08-22" },
+                        ].map((row, i) => (
+                          <tr key={i}>
+                            <td className="px-3 py-1 border border-gray-400">
+                              {row.invoice}
+                            </td>
+                            <td className="px-3 py-1 border border-gray-400">
+                              {row.date}
+                            </td>
+                            <td className="px-3 py-1 border border-gray-400  underline cursor-pointer">
+                              View
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div className={`rightdiv !space-y-6`}>
+                  <div>
+                    <div>
+                      <h1>Invoice Email</h1>
+                      <input type="text" className="w-[30vw]" />
+                      <p className="italic text-base text-left ">
+                        For multiple emails, separate with a comma.
+                      </p>
+                    </div>
+
+                    <div className="mt-5">
+                      <h1>Payment Info</h1>
+                      <select className="w-[30vw] border border-gray-300 rounded px-2 py-2 ">
+                        <option>Wire Transfer</option>
+                        <option>Card Payment</option>
+                      </select>
+                    </div>
+
+                    <div className="mt-5">
+                      <h1>Contact Us</h1>
+                      <a href="/feedback" className="font-semibold ml-4">
+                        Questions? Concerns? Please contact us.
+                      </a>
+                    </div>
+
+                    <div className="mt-5">
+                      <h1>Billing Forms</h1>
+                      <div className="flex flex-col ml-4 ">
+                        <a href="" className="font-semibold">
+                          Credit Card Authorization Form
+                        </a>
+                        <a href="" className="font-semibold">
+                          USA Domestic Wire Instructions
+                        </a>
+                        <a href="" className="font-semibold">
+                          International Wire Instructions
+                        </a>
+                        <a href="" className="font-semibold">
+                          ACH Authorization Form
+                        </a>
+                      </div>
+                    </div>
+
+                    <div className="mt-6">
+                      <p className="italic text-base   w-[50rem]">
+                        * To update your credit card or other billing
+                        information, please download and complete the
+                        appropriate billing form from above and return to
+                        BrokerCell.
+                      </p>
+                      <p className="italic text-base text-left ">
+                        * To request your invoice sent by US mail, please
+                        contact us at Help.
+                      </p>
+                      <p className="italic text-base text-left ">
+                        * Invoices are updated four days after your billing
+                        period
+                      </p>
+                    </div>
+                    <div className="mt-5">
+                      <h1 className="text-[#444] ">
+                        <a
+                          href="https://brokercell.com/membership/"
+                          target="blank"
+                          className="text-2xl font-semibold"
+                        >
+                          Membership Plans & Prices
+                          <span className="ml-2">may be viewed here.</span>
+                        </a>
+                      </h1>
+                    </div>
+                  </div>
                 </div>
               </div>
-              </div>
+
               <div className="pt-2 flex justify-between">
                 <button
                   className={
