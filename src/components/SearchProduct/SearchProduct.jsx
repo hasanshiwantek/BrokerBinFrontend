@@ -78,14 +78,24 @@ const SearchProduct = () => {
   const sortPageSize = 20;
   const isKeywordSearch = Boolean(partModel) && !!searchResponseMatched?.foundItems;
 
+  // const noResults =
+  // (!searchString && !partModel) ||
+  // (partModel
+  //   ? !(searchResponseMatched?.foundItems?.length > 0)
+  //   : Object.entries(searchResponseMatched || {})
+  //       .filter(([key]) => key !== "filters")
+  //       .every(([, entry]) => !entry?.data?.length)
+  // );
+
   const noResults =
-  (!searchString && !partModel) ||
-  (partModel
+  partModel
     ? !(searchResponseMatched?.foundItems?.length > 0)
     : Object.entries(searchResponseMatched || {})
-        .filter(([key]) => key !== "filters")
-        .every(([, entry]) => !entry?.data?.length)
-  );
+        .filter(([key]) => key !== "filters" && key !== "foundItems" && key !== "notFoundPartModels")
+        .every(([, part]) =>
+          Array.isArray(part?.data) ? part.data.length === 0 :
+          Array.isArray(part) ? part.length === 0 : true
+        );
 
   return (
     <div className={`${css.layout} ${noResults ? css.layoutColumnCenter : ""}`}>

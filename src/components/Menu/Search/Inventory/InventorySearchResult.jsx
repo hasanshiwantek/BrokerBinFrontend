@@ -343,7 +343,7 @@ const InventorySearchResult = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="15">
+                    <td colSpan="15" className="bg-[#ffff]">
                       <h1 className="text-red-700 text-center font-bold">
                         No Result Found
                       </h1>
