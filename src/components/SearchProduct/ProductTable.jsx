@@ -10,7 +10,10 @@ import {
   setTogglePopUp,
   setPopupCompanyDetail,
   setHoverCompanyDetail,
+  searchProductQuery,
 } from "@/ReduxStore/SearchProductSlice";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const ProductTable = ({
   data = [],
@@ -29,12 +32,11 @@ const ProductTable = ({
   forceDescriptions,
 }) => {
   const dispatch = useDispatch();
-
+  const token = Cookies.get("token");
+  const navigate = useNavigate();
   const { searchResponseMatched } = useSelector(
     (store) => store.searchProductStore
   );
-
-  console.log("Items Per Page: ", itemsPerPage);
 
   const handleShowPopupCompanyDetails = (event, companyId) => {
     event.stopPropagation();
@@ -72,6 +74,22 @@ const ProductTable = ({
       dispatch(setHoverCompanyDetail(companyDetail.addedBy.company));
     } else {
     }
+  };
+
+  const handleDescriptionClick = (desc) => {
+    const newSearchParams = new URLSearchParams(location.search);
+    newSearchParams.delete("query"); // remove old part
+    newSearchParams.set("search", desc); // optionally, add new param to reflect current state
+    navigate({
+      pathname: location.pathname,
+      search: newSearchParams.toString(),
+    });
+    dispatch(
+      searchProductQuery({
+        token,
+        search: desc,
+      })
+    );
   };
 
   return (
@@ -343,7 +361,12 @@ const ProductTable = ({
               <td>{e?.quantity}</td>
               <td>{e?.age}</td>
               {(!doubleVision || (doubleVision && forceDescriptions)) && (
-                <td className="cursor-pointer">{e?.productDescription}</td>
+                <td
+                  className="cursor-pointer"
+                  onClick={() => handleDescriptionClick(e?.productDescription)}
+                >
+                  {e?.productDescription}
+                </td>
               )}
             </tr>
           ))}
