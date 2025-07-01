@@ -15,7 +15,7 @@ import { FaExternalLinkAlt } from "react-icons/fa";
 import { IoPersonAdd, IoPersonRemove, IoEye } from "react-icons/io5";
 
 import { IoMdEyeOff } from "react-icons/io";
-import { useDispatch, useSelector,  } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getCompanyContact } from "../../../ReduxStore/SearchProductSlice";
 import Cookies from "js-cookie";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -300,23 +300,23 @@ const CompanyDetails = ({ closeModal }) => {
   }, [companyContactData]);
 
   const handleInventoryClick = async (companyName) => {
-  try {
-    const result = await dispatch(
-      inventorySearch({ data: { company: companyName, page: 1 }, token })
-    ).unwrap();
+    try {
+      const result = await dispatch(
+        inventorySearch({ data: { company: companyName, page: 1 }, token })
+      ).unwrap();
 
-    navigate(`/inventorysearch?company=${companyName}&page=1`, {
-      state: {
-        searchResults: result,
-        pagination: result.pagination,
-        filters: { company: companyName, page: 1 },
-      },
-    });
-    closeModal();
-  } catch (err) {
-    console.error("Inventory search failed", err);
-  }
-};
+      navigate(`/inventorysearch?company=${companyName}&page=1`, {
+        state: {
+          searchResults: result,
+          pagination: result.pagination,
+          filters: { company: companyName, page: 1 },
+        },
+      });
+      closeModal();
+    } catch (err) {
+      console.error("Inventory search failed", err);
+    }
+  };
 
   // While loading, show loading indicator
   if (loading) {
@@ -495,7 +495,7 @@ const CompanyDetails = ({ closeModal }) => {
                               </div>
                             </Tooltip> */}
                             {companyContactData.data.company?.id ===
-                              currentUserCompanyId ? (
+                            currentUserCompanyId ? (
                               <Tooltip
                                 title="This is your company, Show Never toggle is disabled via the company profile viewer"
                                 arrow
@@ -586,8 +586,8 @@ const CompanyDetails = ({ closeModal }) => {
                                       isFilled
                                         ? "#FFD700"
                                         : isPartial
-                                          ? "rgba(255, 215, 0, 0.5)"
-                                          : "#CCC"
+                                        ? "rgba(255, 215, 0, 0.5)"
+                                        : "#CCC"
                                     } // Partial star is dim yellow
                                     style={{
                                       cursor: "pointer",
@@ -605,9 +605,9 @@ const CompanyDetails = ({ closeModal }) => {
                             <a href="#">
                               {feedbackData?.rating?.averageRating
                                 ? `${(
-                                  (feedbackData.rating.averageRating / 5) *
-                                  100
-                                ).toFixed(1)}%`
+                                    (feedbackData.rating.averageRating / 5) *
+                                    100
+                                  ).toFixed(1)}%`
                                 : "100%"}
                             </a>
                           </div>
@@ -645,16 +645,22 @@ const CompanyDetails = ({ closeModal }) => {
                     </strong>
                     <p className="ml-1">
                       {companyContactData.data?.company?.companyCategories
-                        ? Object.entries(companyContactData.data.company.companyCategories)
-                          .filter(([key]) => key !== "other")        // exclude 'other'
-                          .flatMap(([, values]) => values)           // flatten the arrays
-                          .join(", ")
+                        ? Object.entries(
+                            companyContactData.data.company.companyCategories
+                          )
+                            .filter(([key]) => key !== "other") // exclude 'other'
+                            .flatMap(([, values]) => values) // flatten the arrays
+                            .join(", ")
                         : ""}
                     </p>
                   </div>
                   <div>
                     <strong className="font-semibold">Mfg(s) We Carry:</strong>
-                    <p>{companyContactData.data?.company?.manufacturer?.join(", ")}</p>
+                    <p>
+                      {companyContactData.data?.company?.manufacturer?.join(
+                        ", "
+                      )}
+                    </p>
                   </div>
                 </div>
                 <div className={css.Popup_Info_Main_right_contact}>
@@ -688,33 +694,59 @@ const CompanyDetails = ({ closeModal }) => {
                       </ThemeProvider>
                     </span>
                   </div>
+
                   <div className={`${css.inventorySecSvgs}`}>
                     <span>
                       <FaMapMarkerAlt />
                       Map
                     </span>
-                    {companyContactData?.data?.company?.companyOptions?.openInventory && (<ThemeProvider theme={theme}>
-                      <Tooltip title="Show Inventory" arrow placement="top">
-                        <span 
-                        className="cursor-pointer"
-                        onClick={() => handleInventoryClick(companyContactData?.data?.company?.name)}
-                        >
-                          <NavLink>
-                            <div className="flex flex-col items-center gap-1">
-                              <FaRegListAlt />
-                              <p className="capitalize">Inventory</p>
-                              <p>({companyContactData?.data?.total_inventory_count || 0})</p>
-                            </div>
-                          </NavLink>
+
+                    {companyContactData?.data?.company?.companyOptions
+                      ?.openInventory && (
+                      <ThemeProvider theme={theme}>
+                        <Tooltip title="Show Inventory" arrow placement="top">
+                          <span
+                            className="cursor-pointer !mt-8"
+                            onClick={() =>
+                              handleInventoryClick(
+                                companyContactData?.data?.company?.name
+                              )
+                            }
+                          >
+                            <NavLink>
+                              <div className="flex flex-col items-center  gap-1">
+                                <div >
+                                <FaRegListAlt  />
+                                </div>
+                                <div className="flex flex-col items-center ">
+                                  <p className="capitalize">Inventory </p>
+                                  <p>
+                                    (
+                                    {companyContactData?.data
+                                      ?.total_inventory_count || 0}
+                                    )
+                                  </p>
+                                </div>
+                              </div>
+                            </NavLink>
+                          </span>
+                        </Tooltip>
+                      </ThemeProvider>
+                    )}
+
+                    <ThemeProvider theme={theme}>
+                      <Tooltip title="Email Company" arrow placement="top">
+                        <span className="cursor-pointer  items-center gap-1 !capitalize">
+                          <a
+                            className="!capitalize"
+                            href={`mailto:${companyContactData?.data?.company?.primaryContact?.email}`}
+                          >
+                            <FaEnvelope />
+                            Email
+                          </a>
                         </span>
                       </Tooltip>
-                    </ThemeProvider>)}
-                    <span className="cursor-pointer  items-center gap-1 !capitalize">
-                      <a className="!capitalize" href={`mailto:${companyContactData?.data?.company?.primaryContact?.email}`}>
-                        <FaEnvelope />
-                        Email
-                      </a>
-                    </span>
+                    </ThemeProvider>
                     <ThemeProvider theme={theme}>
                       <Tooltip title="Print Profile" arrow placement="top">
                         <span

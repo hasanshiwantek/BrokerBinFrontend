@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { regionsList } from "@/data/services";
 import css from "../../../../../styles/Menu/Manage/MyProfile.module.css";
-import { useFormContext, Controller } from "react-hook-form";
+import { useFormContext, Controller ,useController} from "react-hook-form";
 import Cookies from "js-cookie";
 import { useSelector, useDispatch } from "react-redux";
 import { getCompanyContact } from "@/ReduxStore/SearchProductSlice";
@@ -13,6 +13,13 @@ const Trading = () => {
     regions: [],
     shipping: [],
   });
+
+    const {
+      field: { value = "", onChange },
+    } = useController({
+      name: "trading",
+      control,
+    });
 
   const regions = [
     { label: "North America", value: "North America", id: "NorthAmerica" },
@@ -99,7 +106,7 @@ const Trading = () => {
         : [...prev.shipping, value],
     }));
   };
-  
+ 
   useEffect(() => {
     if (!companyData) return;
 
