@@ -1,7 +1,19 @@
-.layout {
+/* .layout {
   display: flex;
   margin: 4rem 3rem;
   padding: 1rem;
+} */
+
+.layout {
+  display: flex;
+  flex-direction: row; /* default is horizontal layout */
+  margin: 4rem 3rem;
+  padding: 1rem;
+}
+
+.layoutColumnCenter {
+  flex-direction: column;
+  align-items: center;
 }
 
 .layoutTables {

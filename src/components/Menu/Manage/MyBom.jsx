@@ -255,7 +255,7 @@ const SavedList = () => {
                       {selectedRowId === list.listId ? (
                         <input
                           type="date"
-                          min={new Date().toISOString().split("T")[0]}
+                          min={new Date(Date.now() + 86400000).toISOString().split("T")[0]}
                           defaultValue={list.due_date}
                           onBlur={(e) => {
                             const newDate = e.target.value;
