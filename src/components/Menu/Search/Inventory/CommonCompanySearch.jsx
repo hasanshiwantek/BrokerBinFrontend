@@ -39,7 +39,10 @@ const CommonCompanySearch = ({ formData, setFormData }) => {
       style={{ position: "relative" }}
       className="flex items-center justify-start space-x-5 gap-5"
     >
-      <label htmlFor="Company" className="w-[24%]">Company</label>
+      <label htmlFor="Company" className="w-[24%]">
+        Company
+      </label>
+
       <input
         type="text"
         name="company"
@@ -48,6 +51,7 @@ const CommonCompanySearch = ({ formData, setFormData }) => {
         value={formData.company || ""}
         className="!w-[19rem]"
       />
+
       {dropdownVisible && (
         <div
           style={{
@@ -55,7 +59,7 @@ const CommonCompanySearch = ({ formData, setFormData }) => {
             maxHeight: "150px",
             overflowY: "auto",
             position: "absolute",
-            left: "7vw",
+            left: "7.7rem",
             background: "#fff",
             zIndex: 1,
             top: "100%",
@@ -67,25 +71,16 @@ const CommonCompanySearch = ({ formData, setFormData }) => {
             <div
               key={index}
               onClick={() => handleSelect(company.name)}
-              onMouseEnter={(e) => (e.target.style.backgroundColor = "#2c83ec")}
-              onMouseLeave={(e) =>
-                (e.target.style.backgroundColor = "transparent")
-              }
-              style={{
-                padding: "3px 5px",
-                cursor: "pointer",
-                borderBottom: "1px solid #f0f0f0",
-                textAlign: "left",
-              }}
-              className="hover:text-white hover:bg-[#2c83ec] leading-[1vw]"
+              className="px-3 py-2 border-b border-gray-100 text-based text-[#444] cursor-pointer hover:bg-[#2c83ec] hover:text-white leading-[1vw]"
             >
               {company.name}
-              {/* {company.state || company.country && ( */}
-                <p >
-                  <span>{company.state},</span>
+              {(company.state || company.country) && (
+                <p className="text-xs">
+                  <span>{company.state}</span>
+                  {company.state && company.country && ", "}
                   <span>{company.country}</span>
                 </p>
-              {/* )} */}
+              )}
             </div>
           ))}
         </div>

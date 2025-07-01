@@ -1,7 +1,7 @@
-import React from "react";
+import React,{useEffect} from "react";
 import css from "../../../../styles/Menu/Reports/Company.module.css";
 import { Link, useNavigate, NavLink } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch ,useSelector} from "react-redux";
 import {
   searchProductHistory,
   setSelectedProducts,
@@ -12,8 +12,12 @@ import {
   getSupplyAndDemand,
 } from "../../../../ReduxStore/Reports";
 import myProfile from "../../../../styles/Menu/Manage/MyProfile.module.css";
+import { fetchBroadCastCount } from "@/ReduxStore/BroadCast";
 
 const Company = () => {
+  const { broadcastCount } = useSelector(
+      (state) => state.broadcastStore
+    );
   const token = Cookies.get("token");
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -61,6 +65,14 @@ const Company = () => {
     );
   };
 
+
+  useEffect(() => {
+    dispatch(fetchBroadCastCount({ token }));
+  }, []);
+
+  console.log("Broadcast Count From  Company page: ",broadcastCount);
+  
+
   return (
     <div>
       <div className={css.container}>
@@ -107,20 +119,20 @@ const Company = () => {
           <div className={css.overview}>
             <div className={css.overviewItem}>
               <ul>
-                <li>Our Inventory Count: 0</li>
+                <li>Our Inventory Count: {broadcastCount?.data?.companyCount}</li>
                 <li>Last Uploaded: Today</li>
                 <li>Will Expire In: 9 Days</li>
-                <li>Want To Sell: 0</li>
-                <li>Want To Buy: 0</li>
+                <li>Want To Sell: {broadcastCount?.data?.wtsCount}</li>
+                <li>Want To Buy: {broadcastCount?.data?.wtbCount}</li>
               </ul>
             </div>
             <div className={css.overviewItem}>
               <ul>
-                <li>Inventory Count: 0</li>
-                <li>Last Uploaded: Today</li>
+                <li>My Inventory Count: {broadcastCount?.data?.inventoryCount}</li>
+                <li>Last Uploaded: {broadcastCount?.data?.lastUploaded ? "Today" : 0}</li>
                 <li>Will Expire In: 9 Days</li>
-                <li>Want To Sell: 0</li>
-                <li>Want To Buy: 0</li>
+                <li>Want To Sell: {broadcastCount?.data?.wtsUser}</li>
+                <li>Want To Buy: {broadcastCount?.data?.wtbUser}</li>
               </ul>
             </div>
           </div>

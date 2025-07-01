@@ -85,10 +85,10 @@ const SearchMyContact = () => {
   return (
     <>
       <span>
-        <label htmlFor="company">Quick Add:</label>
+        <label htmlFor="company" className="whitespace-nowrap">Quick Add:</label>
       </span>
       <br />
-      <span ref={inputRef}>
+      <span ref={inputRef} className="relative inline-block w-full ">
         <input
           type="search"
           name="company"
@@ -98,33 +98,44 @@ const SearchMyContact = () => {
           onFocus={handleFocus}
           onBlur={handleBlur}
           required
-          className="p-1 outline-none focus:border-blue-500"
+          placeholder="Search company..."
+          className="  w-full p-2 border border-gray-300 rounded shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200"
         />
-        <div className={css.compnaySearch} ref={listRef}>
-          {showList && (
-            <ul>
+
+        {showList && (
+          <div
+            ref={listRef}
+            className={`${css.compnaySearch} absolute z-10 mt-1 w-full overflow-x-auto  bg-white border border-gray-300 rounded shadow-md`}
+          >
+            <ul  className="max-h-72 overflow-y-auto">
               {searchMyVendor?.length > 0 ? (
                 searchMyVendor.map((company) => (
                   <li
                     key={company.id}
                     onClick={() => handleCompanySelect(company)}
-                    className={css.companyItem}
+                    className={`${css.companyItem} px-3 py-2  cursor-pointer hover:bg-blue-500 hover:text-white transition duration-150 ease-in-out`}
                   >
-                    <p>{company.name}</p>
-                    {/* {company.state && company.country && ( */}
-                    <p>
-                      <span>{company.state},</span>
-                      <span>{company.country}</span>
-                    </p>
-                    {/* )} */}
+                    <p className="font-semibold">{company.name}</p>
+                    {(company.state || company.country) && (
+                      <p className="text-sm opacity-80">
+                        <span>{company.state}</span>
+                        {company.state && company.country && <span>, </span>}
+                        <span>{company.country}</span>
+                      </p>
+                    )}
                   </li>
                 ))
               ) : (
-                <li key="no-results">No results found</li>
+                <li
+                  className="px-3 py-2 text-sm text-gray-500"
+                  key="no-results"
+                >
+                  No results found
+                </li>
               )}
             </ul>
-          )}
-        </div>
+          </div>
+        )}
       </span>
     </>
   );
