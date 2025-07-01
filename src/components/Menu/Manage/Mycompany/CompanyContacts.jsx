@@ -57,7 +57,7 @@ const CompanyContacts = () => {
 
   const handleDeleteClick = () => {
     if (selectedIds.length === 0) {
-      toast.warning("Please select at least one contact to delete.");
+      alert("Please select at least one contact to delete.");
       return;
     }
     setShowConfirmModal(true);
@@ -93,7 +93,7 @@ const CompanyContacts = () => {
   const navigate = useNavigate();
   const handleEditContact = () => {
     if (selectedIds.length !== 1) {
-      toast.warn("Please select exactly one contact to edit.");
+      alert("Please select exactly one contact to edit.");
       return;
     }
 

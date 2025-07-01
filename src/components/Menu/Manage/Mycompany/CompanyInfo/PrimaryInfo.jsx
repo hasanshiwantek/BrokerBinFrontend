@@ -20,11 +20,11 @@ import {
   updateCompanyPrimaryInfo,
   updateCompanyBio,
   updateCompanyOptions,
-  getCompanyContact
+  getCompanyContact,
 } from "@/ReduxStore/SearchProductSlice";
 import { useRef } from "react";
 import { statesList, countriesList, regionsList } from "@/data/services";
-import { submitCompanyLogo, } from "@/ReduxStore/ProfleSlice";
+import { submitCompanyLogo } from "@/ReduxStore/ProfleSlice";
 import CompanyInfoOptions from "./CompanyInfoOptions";
 import MapComponent from "./CompanyMapComponent";
 
@@ -91,8 +91,8 @@ const CompanyPrimaryInfo = () => {
   }, [companyId, token, dispatch]);
 
   useEffect(() => {
-      dispatch(getCompanyContact({ token, id: companyId }));
-    }, [dispatch, token, companyId]);
+    dispatch(getCompanyContact({ token, id: companyId }));
+  }, [dispatch, token, companyId]);
 
   const states = [
     { value: "", label: "N/A" },
@@ -519,16 +519,14 @@ const CompanyPrimaryInfo = () => {
                     </NavLink>
                   </li>
                   <li>
-                                      <NavLink
-                                        to="/mycompany/Billing+Info"
-                                        end
-                                        className={({ isActive }) =>
-                                          isActive ? css.active : ""
-                                        }
-                                      > 
-                                        <span>Billing</span>
-                                      </NavLink>
-                                    </li>
+                    <NavLink
+                      to="/mycompany/Billing+Info"
+                      end
+                      className={({ isActive }) => (isActive ? css.active : "")}
+                    >
+                      <span>Billing</span>
+                    </NavLink>
+                  </li>
                 </ul>
               </div>
               <div
@@ -570,7 +568,7 @@ const CompanyPrimaryInfo = () => {
                               value={
                                 formData?.data?.company?.[field.name] || ""
                               }
-                              className="border-[1px] border-gray-300 p-2 w-[17.51rem] "
+                              className="border-[1px] border-gray-300 p-2 w-[16rem] "
                             >
                               <option value="">Select {field.label}</option>
                               {field.options.map((opt) => (

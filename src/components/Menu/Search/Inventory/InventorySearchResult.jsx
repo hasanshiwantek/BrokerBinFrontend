@@ -17,12 +17,11 @@ import { setHoverCompanyDetail } from "@/ReduxStore/SearchProductSlice";
 import LoadingState from "../../../../LoadingState";
 import { setBlurWhileLoading } from "@/ReduxStore/ProfleSlice";
 import useDefaultSettings from "@/components/hooks/UseDefaultSettings";
-
 const InventorySearchResult = () => {
   const { togglePopUp } = useSelector((store) => store.searchProductStore);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { alternateRowColors } = useDefaultSettings();
+  const { alternateRowColors, showBorders } = useDefaultSettings();
 
   const { blurWhileLoading } = useSelector((state) => state.profileStore);
 
@@ -255,19 +254,12 @@ const InventorySearchResult = () => {
                 </NavLink>
               </li>
               <li>
-                <NavLink
-                  to="/search/Company"
-                  end
-                  className={({ isActive }) => (isActive ? styles.active : "")}
-                >
+                <NavLink to="/search/Company" end className={"text-[#444]"}>
                   <span>Company</span>
                 </NavLink>
               </li>
               <li>
-                <NavLink
-                  to="/person"
-                  className={({ isActive }) => (isActive ? styles.active : "")}
-                >
+                <NavLink to="/person" className={"text-[#444]"}>
                   <span>Person</span>
                 </NavLink>
               </li>
@@ -276,7 +268,7 @@ const InventorySearchResult = () => {
 
           <div className={`${css.tableContainer} !bg-[#bfbfbf]`}>
             <h3 className=" p-2 text-2xl text-white">Inventory Search</h3>
-            <table>
+            <table className={showBorders ? css.withBorders : ""}>
               <thead>
                 <tr>
                   <th>Cart</th>

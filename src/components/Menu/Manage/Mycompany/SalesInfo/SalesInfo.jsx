@@ -31,7 +31,7 @@ const SalesInfo = () => {
 
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("trading"); // or 'bio', 'logo', etc.
-  const [getTermsFormData, setTermsFormData] = useState(() => () => null);
+  const [getTermsFormData, setTermsFormData] = useState({});
 
   const tabItems = [
     { key: "trading", label: "Trading" },
@@ -46,7 +46,7 @@ const SalesInfo = () => {
   );
 
   const company_id = Number(Cookies.get("companyId"));
-  console.log("Company ID", company_id);
+  console.log("Company ID...", company_id);
   console.log("TOKEN", token);
 
   const methods = useForm({
@@ -62,29 +62,57 @@ const SalesInfo = () => {
     setLoading(true);
     try {
       if (activeTab === "trading") {
+  const {
+    blind_shipping,
+    lease_program,
+    rental_program,
+    trade_program,
+    shipping_hour,
+    shipping_ampm,
+    trading_region,
+    shipping_options,
+    shippingOther,
+  } = data;
+
+  const payload = {
+    blind_shipping: blind_shipping === "yes",
+    lease_program,
+    rental_program,
+    trade_program,
+    shipping_deadline: `${shipping_hour} ${shipping_ampm}`,
+    trading_region,
+    shipping_options,
+    shippingOther,
+    company_id
+  };
         console.log("📦 Submitting Trading Data:", data);
 
-        data.blind_shipping = data.blind_shipping === "yes";
-        data.shipping_deadline = `${data.shipping_hour} ${data.shipping_ampm}`;
+        // data.blind_shipping = data.blind_shipping === "yes";
+        // data.shipping_deadline = `${data.shipping_hour} ${data.shipping_ampm}`;
         const result = await dispatch(
           submitTradingData({
-            data,
+            data:payload,
             token,
-            company_id,
           })
         ).unwrap();
 
         console.log("✅ Trading Response:", result);
 
-        toast.success(result?.data?.message || "Trading info updated!");
+        toast.info(result?.data?.message || "Trading info updated!", {
+          style: { fontSize: "15px", marginTop: "-10px" },
+        });
       }
 
       if (activeTab === "terms") {
         console.log("📦 Submitting Trading Data:", data);
         const formData = getTermsFormData();
-        const result = await dispatch(submitCompanyTerms({ data: formData, token, })).unwrap();
+        const result = await dispatch(
+          submitCompanyTerms({ data: formData, token })
+        ).unwrap();
         console.log("✅ Terms Response:", result);
-        toast.success(result?.data?.message || "Terms info updated!");
+        toast.info(result?.data?.message || "Terms info updated!", {
+          style: { fontSize: "15px", marginTop: "-10px" },
+        });
       }
 
       if (activeTab === "categories") {
@@ -104,7 +132,9 @@ const SalesInfo = () => {
 
         console.log("✅ Categories Response:", result);
 
-        toast.success(result?.data?.message || "Company Categories updated!");
+        toast.info(result?.data?.message || "Company Categories updated!", {
+          style: { fontSize: "15px", marginTop: "-10px" },
+        });
       }
 
       if (activeTab === "manufacturers") {
@@ -124,9 +154,9 @@ const SalesInfo = () => {
 
         console.log("✅ Categories Response:", result);
 
-        toast.success(
-          result?.data?.message || "Company Manufacturers updated!"
-        );
+        toast.info(result?.data?.message || "Company Manufacturers updated!", {
+          style: { fontSize: "15px", marginTop: "-10px" },
+        });
       }
 
       if (activeTab === "returnPolicy") {
@@ -146,8 +176,12 @@ const SalesInfo = () => {
 
         console.log("✅ Return Policy Response:", result);
 
-        toast.success(
-          result?.data?.message || "Company Return Policy updated!"
+        toast.info(
+          result?.data?.message || "Company Return Policy updated!",
+
+          {
+            style: { fontSize: "15px", marginTop: "-10px" },
+          }
         );
       }
     } catch (err) {
@@ -240,16 +274,16 @@ const SalesInfo = () => {
                       </NavLink>
                     </li>
                     <li>
-                                        <NavLink
-                                          to="/mycompany/Billing+Info"
-                                          end
-                                          className={({ isActive }) =>
-                                            isActive ? css.active : ""
-                                          }
-                                        > 
-                                          <span>Billing</span>
-                                        </NavLink>
-                                      </li>
+                      <NavLink
+                        to="/mycompany/Billing+Info"
+                        end
+                        className={({ isActive }) =>
+                          isActive ? css.active : ""
+                        }
+                      >
+                        <span>Billing</span>
+                      </NavLink>
+                    </li>
                   </ul>
                 </div>
                 <div
@@ -280,7 +314,7 @@ const SalesInfo = () => {
 
                 {activeTab === "terms" && (
                   <div className={`${css.profileInfo_form}`}>
-                    <Terms setTermsFormData={setTermsFormData}/>
+                    <Terms setTermsFormData={setTermsFormData} />
                   </div>
                 )}
 

@@ -350,7 +350,7 @@ export const submitCompanyTerms = createAsyncThunk(
       return responseData; // return all 3 fields
     } catch (error) {
       console.error(
-        "Error while submitting Trading data:",
+        "Error while submitting Terms data:",
         error.response?.data || error.message
       );
       throw error;
