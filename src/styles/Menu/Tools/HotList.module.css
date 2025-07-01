@@ -97,8 +97,8 @@
   color: white;
 }
 
-input[type="text"],
-select {
+.table input[type="text"],
+.table select {
   width: 100%;
   padding: 5px;
   box-sizing: border-box;

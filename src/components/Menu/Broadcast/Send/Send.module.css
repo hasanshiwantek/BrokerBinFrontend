@@ -314,8 +314,12 @@ input {
   transition: all 0.5s ease-in-out;
 
   span {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    /* display: grid;
+    grid-template-columns: repeat(2, 1fr); */
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: start;
+    align-items: center;
   }
 }
 
@@ -325,6 +329,12 @@ input {
   overflow-y: scroll;
 }
 
+.serviceItem label {
+  padding: 4px;
+  /* font-size: 9pt; */
+  color: #444;
+  white-space: nowrap;
+}
 
 
 .broadcastEmail {
@@ -387,6 +397,7 @@ input {
   text-align: center;
   height: 60px;
   cursor: pointer;
+
 }
 
 
@@ -402,12 +413,6 @@ input {
   align-items: center;
 }
 
-.serviceItem label {
-  padding: 4px;
-  /* font-size: 9pt; */
-  color: #444;
-  white-space: nowrap;
-}
 
 
 
@@ -415,8 +420,8 @@ input {
 
 .serviceItem input {
   width: 15px;
-  padding: 15px;
-  margin-right: 20px;
+  padding: 10px;
+  /* margin-right: 20px; */
 }
 
 .file_upload_container label:hover {
