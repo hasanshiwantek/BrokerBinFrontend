@@ -24,6 +24,7 @@ import {
   submitCompanyManufacturers,
   submitCompanyreturnPolicy,
 } from "../../../../../ReduxStore/ProfleSlice";
+
 const SalesInfo = () => {
   // const methods = useForm();
   const token = Cookies.get("token");
@@ -62,15 +63,34 @@ const SalesInfo = () => {
     setLoading(true);
     try {
       if (activeTab === "trading") {
-        console.log("📦 Submitting Trading Data:", data);
+        const {
+          blind_shipping,
+          lease_program,
+          rental_program,
+          trade_program,
+          shipping_hour,
+          shipping_ampm,
+          trading_region,
+          shipping_options,
+          shippingOther,
+        } = data;
 
-        data.blind_shipping = data.blind_shipping === "yes";
-        data.shipping_deadline = `${data.shipping_hour} ${data.shipping_ampm}`;
+        const payload = {
+          blind_shipping: blind_shipping === "yes",
+          lease_program,
+          rental_program,
+          trade_program,
+          shipping_deadline: `${shipping_hour} ${shipping_ampm}`,
+          trading_region,
+          shipping_options,
+          shippingOther,
+          company_id
+        };
+
         const result = await dispatch(
           submitTradingData({
-            data,
+            data: payload,
             token,
-            // company_id,
           })
         ).unwrap();
 
@@ -154,8 +174,8 @@ const SalesInfo = () => {
       console.error("❌ Submission Error:", err);
       toast.error(
         err?.response?.data?.message ||
-          err?.message ||
-          "Update failed. Please try again."
+        err?.message ||
+        "Update failed. Please try again."
       );
     } finally {
       setLoading(false);
