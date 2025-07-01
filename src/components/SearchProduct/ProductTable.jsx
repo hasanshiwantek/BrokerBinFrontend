@@ -5,13 +5,14 @@ import EyeDropdown from "@/EyeDropDown";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { BiBlock } from "react-icons/bi";
 import { FaEye } from "react-icons/fa";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, } from "react-redux";
 import {
   setTogglePopUp,
   setPopupCompanyDetail,
   setHoverCompanyDetail,
   searchProductQuery
 } from "@/ReduxStore/SearchProductSlice";
+import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
 const ProductTable = ({
@@ -27,11 +28,12 @@ const ProductTable = ({
   showBorders,
   doubleVision,
   itemsPerPage,
-  forceDescriptions
+  forceDescriptions,
 }) => {
 
   const dispatch = useDispatch();
   const token = Cookies.get("token")
+  const navigate = useNavigate();
   const { searchResponseMatched } = useSelector((store) => store.searchProductStore);
 
   console.log("Items Per Page: ",itemsPerPage);
@@ -75,13 +77,19 @@ const ProductTable = ({
   };
 
   const handleDescriptionClick = (desc) => {
-    dispatch(
-      searchProductQuery({
-        token,
-        search: desc,
-      })
-    );
-  };
+  const newSearchParams = new URLSearchParams(location.search);
+  newSearchParams.delete('query'); // remove old part
+  newSearchParams.set('search', desc); // optionally, add new param to reflect current state
+  navigate({
+    pathname: location.pathname,
+    search: newSearchParams.toString(),
+  });
+  dispatch(searchProductQuery({
+    token,
+    search: desc,
+  }));
+};
+
 
   return (
     <table className={showBorders ? css.withBorders : ""}>
