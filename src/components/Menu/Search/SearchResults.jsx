@@ -103,11 +103,6 @@ const SearchResults = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (!searchResults) return; 
-  //   setResultData(searchResults);
-  // }, [searchResults]);
-
   useEffect(() => {
   if (searchResults?.length) {
     setResultData(searchResults);
@@ -122,7 +117,6 @@ const SearchResults = () => {
       fetchPersonViewBy();
     }
   }, [viewBy, clicked]);
-  const user_id = Cookies.get("user_id");
 
   const token = Cookies.get("token");
   const addToContacts = async (id) => {
