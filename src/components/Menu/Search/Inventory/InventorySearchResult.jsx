@@ -17,6 +17,7 @@ import { setHoverCompanyDetail } from "@/ReduxStore/SearchProductSlice";
 import LoadingState from "../../../../LoadingState";
 import { setBlurWhileLoading } from "@/ReduxStore/ProfleSlice";
 import useDefaultSettings from "@/components/hooks/UseDefaultSettings";
+
 const InventorySearchResult = () => {
   const { togglePopUp } = useSelector((store) => store.searchProductStore);
   const dispatch = useDispatch();
@@ -61,65 +62,6 @@ const InventorySearchResult = () => {
       setFilters(fallbackFilters);
     }
   }, []);
-
-  // Fetch data when pagination changes
-
-  // const fetchPageData = async (newPage) => {
-  //   setLoading(true);
-  //   try {
-  //     const updatedFilters = { ...filters, page: newPage }; // Include the new page
-  //     const result = await dispatch(
-  //       inventorySearch({ data: updatedFilters, token })
-  //     ).unwrap();
-
-  //     setSearchResults(result.data || []);
-  //     setPagination(result.pagination || {});
-  //     setFilters(updatedFilters); // Update filters for future requests
-
-  //     const params = new URLSearchParams();
-  //   if (updatedFilters.company) params.append("company", updatedFilters.company);
-  //   params.append("page", newPage);
-  //   navigate(`/inventorysearch?${params.toString()}`, {
-  //     state: {
-  //       searchResults: result,
-  //       pagination: result.pagination,
-  //       filters: updatedFilters,
-  //     },
-  //   });
-  //   }
-  //    catch (error) {
-  //     console.error("Error fetching paginated data:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  //   const fetchPageData = async (newPage, customFilters = filters) => {
-  //   setLoading(true);
-  //   try {
-  //     const updatedFilters = { ...customFilters, page: newPage };
-
-  //     const result = await dispatch(
-  //       inventorySearch({ data: updatedFilters, token })
-  //     ).unwrap();
-
-  //     setSearchResults(result.data || []);
-  //     setPagination(result.pagination || {});
-  //     setFilters(updatedFilters);
-  //     setCurrentPage(newPage);
-
-  //     const params = new URLSearchParams();
-  //     if (updatedFilters.company) params.append("company", updatedFilters.company);
-  //     params.append("page", newPage);
-  //     navigate(`/inventorysearch?${params.toString()}`, {
-  //       replace: true,
-  //     });
-  //   } catch (error) {
-  //     console.error("Error fetching paginated data:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   const fetchPageData = async (newPage, customFilters = filters) => {
     dispatch(setBlurWhileLoading(false));

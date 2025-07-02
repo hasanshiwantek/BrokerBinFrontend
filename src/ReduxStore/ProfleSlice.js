@@ -99,8 +99,6 @@ export const submitUserSearch = createAsyncThunk(
           },
         }
       );
-      console.log("Search response data from front-end:", response.data);
-
       return response.data.data;
     } catch (error) {
       console.error("Request failed with error from front-end:", error);
@@ -848,13 +846,11 @@ const profileSlice = createSlice({
       })
       .addCase(submitUserSearch.pending, (state) => {
         state.blurWhileLoading = false;
-        console.log("Pending....");
       })
       .addCase(submitUserSearch.fulfilled, (state, action) => {
         // state.searchUserData = action.payload,
         state.blurWhileLoading = true;
         state.searchUserData = action.payload;
-        console.log("Fulfilled....");
       })
       .addCase(submitUserSearch.rejected, (state, action) => {
         console.log(action.error.message);
