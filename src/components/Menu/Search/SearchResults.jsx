@@ -102,11 +102,6 @@ const SearchResults = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (!searchResults) return;
-  //   setResultData(searchResults);
-  // }, [searchResults]);
-
   useEffect(() => {
     if (searchResults?.length) {
       setResultData(searchResults);
