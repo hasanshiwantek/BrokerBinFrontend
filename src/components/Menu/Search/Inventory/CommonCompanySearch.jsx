@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 const CommonCompanySearch = ({ formData, setFormData }) => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [companies, setCompanies] = useState([]); // Local state for companies
+  const [highlightIndex, setHighlightIndex] = useState(-1);
   const dispatch = useDispatch();
   const token = Cookies.get("token");
 
@@ -19,6 +20,7 @@ const CommonCompanySearch = ({ formData, setFormData }) => {
           .then((results) => {
             setCompanies(results); // Limit results to 3
             setDropdownVisible(true);
+            setHighlightIndex(-1);
           })
           .catch(() => setDropdownVisible(false)); // Handle errors
       } else {
@@ -32,6 +34,25 @@ const CommonCompanySearch = ({ formData, setFormData }) => {
   const handleSelect = (company) => {
     setFormData({ ...formData, company });
     setDropdownVisible(false);
+  };
+
+  const handleKeyDown = (e) => {
+    if (!dropdownVisible || companies.length === 0) return;
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setHighlightIndex((prev) => (prev + 1) % companies.length);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setHighlightIndex(
+        (prev) => (prev - 1 + companies.length) % companies.length
+      );
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      if (highlightIndex >= 0 && highlightIndex < companies.length) {
+        handleSelect(companies[highlightIndex].name);
+      }
+    }
   };
 
   return (
@@ -50,6 +71,7 @@ const CommonCompanySearch = ({ formData, setFormData }) => {
         onChange={(e) => setFormData({ ...formData, company: e.target.value })}
         value={formData.company || ""}
         className="!w-[19rem]"
+        onKeyDown={handleKeyDown}
       />
 
       {dropdownVisible && (
@@ -63,7 +85,7 @@ const CommonCompanySearch = ({ formData, setFormData }) => {
             background: "#fff",
             zIndex: 1,
             top: "100%",
-            width: "65%",
+            width: "66%",
             boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
           }}
         >
@@ -71,7 +93,9 @@ const CommonCompanySearch = ({ formData, setFormData }) => {
             <div
               key={index}
               onClick={() => handleSelect(company.name)}
-              className="px-3 py-2 border-b border-gray-100 text-based text-[#444] cursor-pointer hover:bg-[#2c83ec] hover:text-white leading-[1vw]"
+              className={`px-3 py-2 border-b border-gray-100 text-based text-[#444] cursor-pointer hover:bg-[#2c83ec] hover:text-white leading-[1vw] ${
+                index === highlightIndex ? "bg-[#2c83ec] text-white" : ""
+              }`}
             >
               {company.name}
               {(company.state || company.country) && (
