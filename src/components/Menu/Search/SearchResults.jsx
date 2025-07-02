@@ -26,7 +26,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 
 const SearchResults = () => {
-
   const location = useLocation();
   const { searchResults = [] } = location.state || {};
   const dispatch = useDispatch();
@@ -34,10 +33,10 @@ const SearchResults = () => {
   const [loading, setLoading] = useState(false);
   const [resultData, setResultData] = useState(searchResults);
 
-  const { togglePopUp } = useSelector(
-    (state) => state.searchProductStore
+  const { togglePopUp } = useSelector((state) => state.searchProductStore);
+  const searchUserData = useSelector(
+    (state) => state.profileStore.searchUserData
   );
-  const searchUserData = useSelector((state) => state.profileStore.searchUserData);
 
   const openCompanyModal = (company) => {
     dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
@@ -104,17 +103,17 @@ const SearchResults = () => {
   };
 
   // useEffect(() => {
-  //   if (!searchResults) return; 
+  //   if (!searchResults) return;
   //   setResultData(searchResults);
   // }, [searchResults]);
 
   useEffect(() => {
-  if (searchResults?.length) {
-    setResultData(searchResults);
-  } else if (searchUserData?.length) {
-    setResultData(searchUserData);
-  }
-}, [searchResults, searchUserData]);
+    if (searchResults?.length) {
+      setResultData(searchResults);
+    } else if (searchUserData?.length) {
+      setResultData(searchUserData);
+    }
+  }, [searchResults, searchUserData]);
 
   useEffect(() => {
     if (viewBy && clicked) {
@@ -155,7 +154,7 @@ const SearchResults = () => {
   const userId = noteData?.notes?.map((val) => val.user.id);
 
   return (
-    <main className="mainSec w-[60%]">
+    <main className="mainSec w-[68rem]">
       <nav className="menu-bar">
         <ul>
           <li>
@@ -173,14 +172,14 @@ const SearchResults = () => {
       </nav>
 
       <div className="!flex !justify-end !items-center !gap-5 p-3">
-        <p className="!text-xl">View by</p>
+        <p className="!text-xl">View by:</p>
         <select
           value={viewBy}
           onChange={(e) => {
             setClicked(true);
             setViewBy(e.target.value);
           }}
-          className="border-2"
+          className="border-2 p-1"
         >
           <option value="last">Contact: Last</option>
           <option value="first">Contact: First</option>
@@ -225,7 +224,7 @@ const SearchResults = () => {
 
         <div>
           {loading ? (
-            <div className="!flex !justify-center !items-center py-10 ml-[20rem]" >
+            <div className="!flex !justify-center !items-center py-10 ml-[20rem]">
               <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
               <span className="ml-4 text-blue-600 text-lg font-medium"></span>
             </div>
@@ -268,24 +267,34 @@ const SearchResults = () => {
                         { label: "Phone", value: val.phoneNumber },
                         { label: "Specialty", value: val.specialty },
                         { label: "Toll", value: val.tollFree },
-                        { label: "Fax", value: val.company?.primaryContact?.faxNumber },
+                        {
+                          label: "Fax",
+                          value: val.company?.primaryContact?.faxNumber,
+                        },
                         { label: "Email", value: val.email },
                         { label: "City", value: val.city },
                         { label: "State", value: val.state },
                         { label: "Country", value: val.country },
                       ].map((item, index) => (
-                        <div key={index} className="flex justify-start gap-10">
+                        <div
+                          key={index}
+                          className="flex justify-start gap-10 leading-[1.1rem]"
+                        >
                           <span className=" w-16">{item.label}:</span>
                           {item.label === "Company" ? (
                             <span
                               className="font-semibold cursor-pointer"
                               onClick={() => openCompanyModal(val.company)}
-                              onMouseEnter={() => handleHoverCompanyDetail(val.company)}
+                              onMouseEnter={() =>
+                                handleHoverCompanyDetail(val.company)
+                              }
                             >
                               {item.value || ""}
                             </span>
                           ) : (
-                            <span className="text-[8pt]">{item.value || ""}</span>
+                            <span className="text-[8pt]">
+                              {item.value || ""}
+                            </span>
                           )}
                         </div>
                       ))}
@@ -294,7 +303,7 @@ const SearchResults = () => {
 
                   <div className="notes-rating">
                     <div className="notes">
-                      <h3>My Notes:</h3>
+                      <h3 className="font-semibold">My Notes:</h3>
                       <p>
                         {userId?.includes(val.id)
                           ? noteData?.notes?.find(
@@ -304,7 +313,7 @@ const SearchResults = () => {
                       </p>
                     </div>
                     <div className=" flex  gap-5 items-center">
-                      <h3>My Rating:</h3>
+                      <h3 className="font-semibold">My Rating:</h3>
                       <p>
                         {userId?.includes(val.id)
                           ? Number(
