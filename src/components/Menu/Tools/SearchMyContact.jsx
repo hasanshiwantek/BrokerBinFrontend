@@ -9,7 +9,9 @@ import {
 } from "../../../ReduxStore/ToolsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 const SearchMyContact = () => {
   const token = Cookies.get("token");
   const [searchTerm, setSearchTerm] = useState("");
@@ -66,11 +68,24 @@ const SearchMyContact = () => {
     setSearchTerm(newSearchTerm);
     setShowList(true);
   };
-
-  const handleCompanySelect = (company) => {
-    // dispatch(setMyVendor(company));
+  const handleCompanySelect = async (company) => {
     const companyId = { company_id: company.id };
-    dispatch(addMyVendors({ companyId, token }));
+
+    try {
+      const res = await dispatch(addMyVendors({ companyId, token })).unwrap();
+      console.log("res", res);
+      toast.info(res?.message, {
+        style: { fontSize: "15px", fontWeight: "bold" },
+      });
+    } catch (err) {
+      console.log("Error", err);
+      toast.info(err?.message || "An error occurred", {
+        style: { fontSize: "15px", fontWeight: "bold" },
+      });
+    } finally {
+      dispatch(getMyVendors({ token }));
+    }
+
     setSearchTerm(company.name);
     setShowList(false);
   };
@@ -85,7 +100,9 @@ const SearchMyContact = () => {
   return (
     <>
       <span>
-        <label htmlFor="company" className="whitespace-nowrap">Quick Add:</label>
+        <label htmlFor="company" className="whitespace-nowrap">
+          Quick Add:
+        </label>
       </span>
       <br />
       <span ref={inputRef} className="relative inline-block w-full ">
@@ -107,7 +124,7 @@ const SearchMyContact = () => {
             ref={listRef}
             className={`${css.compnaySearch} absolute z-10 mt-1 w-full overflow-x-auto  bg-white border border-gray-300 rounded shadow-md`}
           >
-            <ul  className="max-h-72 overflow-y-auto">
+            <ul className="max-h-72 overflow-y-auto">
               {searchMyVendor?.length > 0 ? (
                 searchMyVendor.map((company) => (
                   <li
@@ -127,7 +144,7 @@ const SearchMyContact = () => {
                 ))
               ) : (
                 <li
-                  className="px-3 py-2 text-sm text-gray-500"
+                  className="px-3 py-2 text-base text-gray-500"
                   key="no-results"
                 >
                   No results found

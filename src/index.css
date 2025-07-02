@@ -214,7 +214,7 @@ html {
 
 /* Firefox Custom Scrollbar */
 * {
-  scrollbar-width: initial; /* Thin scrollbar */
+  scrollbar-width: thin; /* Thin scrollbar */
   scrollbar-color: #888 #f1f1f1; /* Thumb color | Track color */
 }
 

@@ -295,10 +295,10 @@ nav > ul > li:hover {
   display: flex;
   align-items: center;
   max-height: 100%;
-  width: 30rem;
+  width: fit-content;
   background: #f0f0f0;
   gap: 3rem;
-  margin-left: 5rem;
+  margin-left: 2rem;
   /* padding: 0.1rem .6rem; */
   /* border-radius: 0.5rem; */
 
@@ -308,10 +308,12 @@ nav > ul > li:hover {
     line-height: 2vh;
     padding-right: 7px;
     padding-left: 7px;
+    /* height: 10vh; */
 
     > span {
       display: flex;
       gap: 0.5rem;
+      white-space: nowrap;
     }
   }
 

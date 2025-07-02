@@ -16,8 +16,8 @@
   border-bottom: 1px solid gray;
   background-color: #efefef;
   border-right: 1px solid gray;
-  padding: 10px 15px;
-  width: 50rem;
+  padding: 7px 7px 0px 7px;
+  width: 42rem;
 }
 
 .profile-image img {
@@ -37,7 +37,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-width: 20rem;
+width: 13rem;
 }
 
 .notes textarea {
