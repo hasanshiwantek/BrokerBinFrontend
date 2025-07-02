@@ -70,7 +70,7 @@ const SalesInfo = () => {
     shipping_ampm,
     trading_region,
     shipping_options,
-    shippingOther,
+    shipping_other,
   } = data;
 
   const payload = {
@@ -81,7 +81,7 @@ const SalesInfo = () => {
     shipping_deadline: `${shipping_hour} ${shipping_ampm}`,
     trading_region,
     shipping_options,
-    shippingOther,
+    shipping_other,
     company_id
   };
         console.log("📦 Submitting Trading Data:", data);
