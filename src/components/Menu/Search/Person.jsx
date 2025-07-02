@@ -39,17 +39,9 @@ const Person = () => {
     });
   };
 
-  // Handle form submission
-  // const data=formData
-  // const handleSubmit = (e) => {
-  //     e.preventDefault();
-  //     console.log("Form Data Submitted:", data);
-  //     dispatch(submitUserSearch({data,token}))
-  // };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("Form Data Submitted:", formData); // Check the values being sent
     setButtonText("Processing..."); // Set the button text to "Processing..."
     setLoading(true); // Start loading
 
@@ -58,7 +50,6 @@ const Person = () => {
         submitUserSearch({ data: formData, token })
       ).unwrap();
 
-      console.log("API Result:", result);
       if (result.length === 0) {
         // ✅ Show success toast with light blue color
         toast.error("No Matching records found!", {

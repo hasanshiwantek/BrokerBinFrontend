@@ -26,25 +26,20 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 
 const SearchResults = () => {
-  const results = useSelector((state) => state.profileStore);
-  console.log(results);
 
   const location = useLocation();
-  const { searchResults } = location.state;
-  console.log("Search Results: ", searchResults);
-  const profileImage = searchResults?.map((val) => val?.profileImage);
-
+  const { searchResults = [] } = location.state || {};
   const dispatch = useDispatch();
   const [clicked, setClicked] = useState(false);
   const [loading, setLoading] = useState(false);
   const [resultData, setResultData] = useState(searchResults);
 
-  const { togglePopUp, popupCompanyDetail } = useSelector(
+  const { togglePopUp } = useSelector(
     (state) => state.searchProductStore
   );
+  const searchUserData = useSelector((state) => state.profileStore.searchUserData);
 
   const openCompanyModal = (company) => {
-    console.log("Opening Company Modal with Company:", company);
     dispatch(setPopupCompanyDetail([company])); // Dispatch company details to Redux store
     dispatch(setTogglePopUp()); // Show company modal
   };
@@ -87,7 +82,6 @@ const SearchResults = () => {
         viewBy
       )
     ) {
-      console.log("Fetching from API with viewBy:", viewBy);
       setLoading(true);
       dispatch(
         submitUserSearchViewBy({
@@ -98,11 +92,8 @@ const SearchResults = () => {
       )
         .unwrap()
         .then((response) => {
-          console.log("Response from API:", response);
           let data = response;
-          console.log("API response:", data);
           setResultData(data || []);
-          console.log("Result Data:", resultData);
         })
         .catch((error) => {
           console.error("API error:", error);
@@ -111,10 +102,19 @@ const SearchResults = () => {
         .finally(() => setLoading(false));
     }
   };
+
+  // useEffect(() => {
+  //   if (!searchResults) return; 
+  //   setResultData(searchResults);
+  // }, [searchResults]);
+
   useEffect(() => {
-    if (!searchResults) return; // If nothing was passed, don't override
-    setResultData(searchResults); // Initial load from navigation
-  }, [searchResults]);
+  if (searchResults?.length) {
+    setResultData(searchResults);
+  } else if (searchUserData?.length) {
+    setResultData(searchUserData);
+  }
+}, [searchResults, searchUserData]);
 
   useEffect(() => {
     if (viewBy && clicked) {
@@ -123,7 +123,6 @@ const SearchResults = () => {
     }
   }, [viewBy, clicked]);
   const user_id = Cookies.get("user_id");
-  console.log("user_id", user_id);
 
   const token = Cookies.get("token");
   const addToContacts = async (id) => {
@@ -146,10 +145,6 @@ const SearchResults = () => {
     }
   };
 
-  useEffect(() => {
-    console.log("Updated resultData:", resultData);
-  }, [resultData]);
-
   // NOTE DATA LOGIC
   useEffect(() => {
     dispatch(fetchMyNotes({ token }));
@@ -157,9 +152,7 @@ const SearchResults = () => {
 
   const { noteData } = useSelector((store) => store.toolsStore);
 
-  console.log("NOTE DATA", noteData);
   const userId = noteData?.notes?.map((val) => val.user.id);
-  console.log("USER ID", userId);
 
   return (
     <main className="mainSec w-[60%]">
