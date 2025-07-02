@@ -408,7 +408,6 @@ export const fetchMyNotes = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("User Notes Fetched: ", response.data);
       return response.data;
     } catch (error) {
       throw new Error(response?.data?.message);
@@ -859,21 +858,17 @@ const ToolsSlice = createSlice({
         state.loading = true;
       })
       .addCase(fetchMyNotes.pending, (state) => {
-        console.log("FETCHING  NOTES....");
       })
       .addCase(fetchMyNotes.fulfilled, (state, action) => {
         state.noteData = action.payload;
-        console.log("REQUEST FULFILLED: ", action.payload);
       })
       .addCase(fetchMyNotes.rejected, (state, action) => {
         console.error("Error Fetching Notes", action.error);
       })
       .addCase(fetchMyVendorNotes.pending, (state) => {
-        console.log("FETCHING  NOTES....");
       })
       .addCase(fetchMyVendorNotes.fulfilled, (state, action) => {
         state.vendorNoteData = action.payload;
-        console.log("REQUEST FULFILLED: ", action.payload);
       })
       .addCase(fetchMyVendorNotes.rejected, (state, action) => {
         console.error("Error Fetching Notes", action.error);
