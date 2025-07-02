@@ -268,18 +268,25 @@ const SearchResults = () => {
                         { label: "Phone", value: val.phoneNumber },
                         { label: "Specialty", value: val.specialty },
                         { label: "Toll", value: val.tollFree },
-                        {
-                          label: "Fax",
-                          value: val.company?.primaryContact?.faxNumber,
-                        },
+                        { label: "Fax", value: val.company?.primaryContact?.faxNumber },
                         { label: "Email", value: val.email },
                         { label: "City", value: val.city },
                         { label: "State", value: val.state },
                         { label: "Country", value: val.country },
                       ].map((item, index) => (
                         <div key={index} className="flex justify-start gap-10">
-                          <span className="text-[8pt] w-16">{item.label}:</span>
-                          <span className="text-[8pt]">{item.value || ""}</span>
+                          <span className=" w-16">{item.label}:</span>
+                          {item.label === "Company" ? (
+                            <span
+                              className="font-semibold cursor-pointer"
+                              onClick={() => openCompanyModal(val.company)}
+                              onMouseEnter={() => handleHoverCompanyDetail(val.company)}
+                            >
+                              {item.value || ""}
+                            </span>
+                          ) : (
+                            <span className="text-[8pt]">{item.value || ""}</span>
+                          )}
                         </div>
                       ))}
                     </div>
