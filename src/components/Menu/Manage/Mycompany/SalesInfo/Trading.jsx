@@ -116,7 +116,7 @@ const Trading = () => {
       lease_program: !!companyData.lease_program,
       rental_program: !!companyData.rental_program,
       trade_program: !!companyData.trade_program,
-      shippingOther: companyData.shipping_other || "",
+      shipping_other: companyData.shipping_other || "",
     };
 
     Object.entries(basicMap).forEach(([key, val]) => setValue(key, val));
@@ -277,7 +277,7 @@ const Trading = () => {
         />
         <div className="my-5">
           <label> Other</label>
-          <input className="ml-5" type="text" {...register("shippingOther")} />
+          <input className="ml-5" type="text" {...register("shipping_other")} />
         </div>
         <div className="flex justify-end gap-4 mt-6 font-bold cursor-pointer">
           <span onClick={() => handleCheckAll("shipping", true)}>

@@ -196,7 +196,10 @@ const InventorySearch = () => {
           </div>
 
           <div className={styles.formRow}>
-            <CommonCompanySearch setFormData={setFormData} formData={formData} />
+            <CommonCompanySearch
+              setFormData={setFormData}
+              formData={formData}
+            />
           </div>
 
           <div className={styles.formRow}>

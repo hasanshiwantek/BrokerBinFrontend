@@ -38,6 +38,14 @@ const Cart = () => {
   const selectedProducts = useSelector(
     (state) => state.searchProductStore.selectedProductsForCart
   );
+  console.log("Selected Products: ", selectedProducts);
+
+  let count = 0;
+  for (let i = 0; i < selectedProducts.length; i++) {
+    if (selectedProducts[i]?.inventory != null) {
+      count++;
+    }
+  }
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -417,7 +425,7 @@ const Cart = () => {
               <Link to="/bomarchive/list">Saved list(s)</Link>
               <div className={css.cartList}>
                 <div className={css.cartList_list}>
-                  <h1>Part List ({selectedProducts.length} items listed)</h1>
+                  <h1>Part List ({count} items listed)</h1>
                   <span className={css.cartList_list_btn}>
                     <button type="button" onClick={handleCartPdfExport}>
                       PDF
@@ -447,7 +455,7 @@ const Cart = () => {
                   </span>
                 </div>
                 <div className={css.cartList_key}>
-                  <h1>key</h1>
+                  <h1>Key</h1>
                   <div className={css.cartList_key_details}>
                     <div>
                       <div>
@@ -494,8 +502,9 @@ const Cart = () => {
                       <img
                         src="https://static.brokerbin.com/version/v8.4.1/images/arrow_down.gif"
                         alt="showParts"
-                        className={`cursor-pointer transition-transform duration-300 relative group ${showParts ? "rotate-180" : ""
-                          }`}
+                        className={`cursor-pointer transition-transform duration-300 relative group ${
+                          showParts ? "rotate-180" : ""
+                        }`}
                       />
 
                       {/* Tailwind tooltip on hover */}
@@ -507,8 +516,9 @@ const Cart = () => {
 
                   {showParts && (
                     <div
-                      className={`transition-max-height duration-500 ease-in-out overflow-hidden mt-8 ${showParts ? "max-h-[1000px]" : "max-h-0"
-                        }`}
+                      className={`transition-max-height duration-500 ease-in-out overflow-hidden mt-8 ${
+                        showParts ? "max-h-[1000px]" : "max-h-0"
+                      }`}
                     >
                       <div className={css.cartList_parts_scroll}>
                         <table>
@@ -625,7 +635,9 @@ const Cart = () => {
                                         <td className="!gap-2 flex items-center">
                                           <input
                                             type="checkbox"
-                                            checked={selectedParts.some((p) => p.id === e.id)}
+                                            checked={selectedParts.some(
+                                              (p) => p.id === e.id
+                                            )}
                                             onChange={() => handleToggle(e)}
                                             className="h-4 w-4"
                                           />
@@ -634,7 +646,9 @@ const Cart = () => {
                                         <td>{e.inventory?.mfg}</td>
                                         <td>{e.inventory?.cond}</td>
                                         <td>
-                                          {e.notes?.map((note) => note.quantity).join(", ")}
+                                          {e.notes
+                                            ?.map((note) => note.quantity)
+                                            .join(", ")}
                                         </td>
                                         <td>{e.inventory?.quantity}</td>
                                       </tr>
@@ -646,7 +660,9 @@ const Cart = () => {
                                             <td colSpan="6" className="pl-10">
                                               <div className="flex items-center gap-2">
                                                 <span
-                                                  onClick={() => handleNotesDelete(note.id)}
+                                                  onClick={() =>
+                                                    handleNotesDelete(note.id)
+                                                  }
                                                   className="text-[10px] text-red-500 cursor-pointer ml-2"
                                                 >
                                                   <img
@@ -674,7 +690,6 @@ const Cart = () => {
                                   ))}
                                 </React.Fragment>
                               ))}
-
                           </tbody>
                         </table>
                       </div>
