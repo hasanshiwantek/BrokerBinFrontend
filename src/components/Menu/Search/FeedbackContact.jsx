@@ -11,7 +11,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { useLocation } from "react-router-dom";
 import { brokerAPI } from "@/components/api/BrokerEndpoint";
-import axios from "axios";
 
 const Contact = () => {
   const location = useLocation();
