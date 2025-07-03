@@ -74,6 +74,10 @@
   color: #444;
 }
 
+/* .table tbody tr {
+  white-space: nowrap;
+} */
+
 .table th {
   /* background-color: #f2f2f2; */
   background-color: #4a575a;
