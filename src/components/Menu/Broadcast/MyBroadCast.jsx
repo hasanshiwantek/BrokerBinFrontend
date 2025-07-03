@@ -23,7 +23,8 @@ import { useLocation } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import SortableTableHeader from "@/components/Tables/SortableHeader";
 import HoverDropdown from "@/HoverDropdown";
-
+import { Tooltip } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 const BroadCast = () => {
   const broadcastItems = useSelector(
     (state) => state.broadcastStore.broadCastData
@@ -536,6 +537,27 @@ const BroadCast = () => {
     }
   };
 
+  const theme = createTheme({
+    components: {
+      MuiTooltip: {
+        styleOverrides: {
+          tooltip: {
+            fontSize: "1.15rem",
+            textAlign: "center",
+            backgroundColor: "white",
+            color: "black",
+            whiteSpace: "nowrap",
+            maxWidth: "unset",
+            boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.2)",
+          },
+          arrow: {
+            color: "white",
+          },
+        },
+      },
+    },
+  });
+
   return (
     <main className={styles.mainSec}>
       <nav className="menu-bar !text-sm">
@@ -731,7 +753,10 @@ const BroadCast = () => {
                   style={
                     item.user_id && String(item.user_id.id) === currentUserID
                       ? { backgroundColor: "#ffb" }
-                      : {backgroundColor: index % 2 === 0 ? "#f5f5f5" : "#ffff",}
+                      : {
+                          backgroundColor:
+                            index % 2 === 0 ? "#f5f5f5" : "#ffff",
+                        }
                   }
                 >
                   <td>
@@ -741,7 +766,20 @@ const BroadCast = () => {
                       onChange={() => handleCheckboxChange(item)}
                     />
                   </td>
-                  <td>{item.created_at}</td>
+                  <td>
+                    {new Date(item.created_at.replace(" ", "T")).toLocaleString(
+                      "en-US",
+                      {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                        hour: "numeric",
+                        minute: "numeric",
+                        hour12: true,
+                      }
+                    )}
+                  </td>
+
                   <td></td>
                   <td>
                     <HoverDropdown
@@ -749,17 +787,19 @@ const BroadCast = () => {
                       id={item.user_id.company?.id}
                       company={item.user_id.company}
                       triggerElement={
-                        <div className="flex justify-start items-center gap-3 ">
+                        <div className="flex !items-center mt-1 ">
                           <i>
                             <img
                               src="https://static.brokerbin.com/version/v8.4.1/images/seller.png"
                               alt="company"
+                              className="!w-6 !h-7 !object-contain !mr-1"
                             />
                           </i>
                           <span
                             onClick={() =>
                               openCompanyModal(item.user_id.company)
                             }
+                            className=""
                           >
                             {item.user_id.company.name}
                           </span>
@@ -793,7 +833,7 @@ const BroadCast = () => {
                         style={{
                           width: "15px",
                           height: "22px",
-                          ontWeight: "bold",
+                          fontWeight: "bold",
                         }}
                       />
                       {item.file && (
@@ -814,7 +854,7 @@ const BroadCast = () => {
                       id={item?.id}
                       rowData={item}
                       triggerElement={
-                        <td className="!uppercase !border-none">
+                        <td className="!uppercase !border-none ">
                           {item.partModel}
                         </td>
                       }
@@ -825,7 +865,15 @@ const BroadCast = () => {
                   <td>{item.cond}</td>
                   <td style={{ color: "blue" }}>{item.price}</td>
                   <td>{item.quantity}</td>
-                  <td>{item.description}</td>
+                  <ThemeProvider theme={theme}>
+                    <Tooltip
+                      title={item?.description || ""}
+                      arrow
+                      placement="top"
+                    >
+                      <td>{item?.description?.slice(0, 100)}...</td>
+                    </Tooltip>
+                  </ThemeProvider>
                 </tr>
               ) : null
             )
