@@ -12,6 +12,7 @@ import Cookies from "js-cookie";
 import SearchCompanyInventory from "./SearchCompanyInventory";
 import myProfile from "../../../../styles/Menu/Manage/MyProfile.module.css";
 import { initialMFGs } from "@/data/services";
+
 const SiteWide = () => {
   const [selectedManufacturer, setSelectedManufacturer] = useState("");
   console.log(selectedManufacturer);
@@ -60,6 +61,7 @@ const SiteWide = () => {
       { replace: true }
     );
   };
+
 
   return (
     <>

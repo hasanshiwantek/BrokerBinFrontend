@@ -10,7 +10,7 @@ import { brokerAPI } from "../api/BrokerEndpoint";
 const SavedListExport = ({ onClose, selectedRowId, savedLists }) => {
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem("user"));
-  const userEmail = user.user.email;
+  const userEmail = user?.user?.email;
   const token = Cookies.get("token");
   console.log("User Email: ", userEmail);
   const [loading, setLoading] = useState(false);
@@ -50,7 +50,7 @@ const SavedListExport = ({ onClose, selectedRowId, savedLists }) => {
       toast.info("Export request sent successfully!", {
         style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
       });
-      setTimeout(() => onClose(), 2000);
+      // setTimeout(() => onClose(), 2000);
     } catch (error) {
       console.error("Export error:", error);
       toast.error("Failed to export.Please Try Again.", {

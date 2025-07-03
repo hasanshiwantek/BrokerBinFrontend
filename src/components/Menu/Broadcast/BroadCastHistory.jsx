@@ -16,6 +16,8 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import SortableTableHeader from "@/components/Tables/SortableHeader";
+import { Tooltip } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 const BroadCastHistory = () => {
   const broadcastItems = useSelector(
     (state) => state.broadcastStore.broadCastData
@@ -93,7 +95,7 @@ const BroadCastHistory = () => {
         style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
       });
     } else {
-       toast.warning("Select broadcast for Deletion", {
+      toast.warning("Select broadcast for Deletion", {
         style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
       });
     }
@@ -191,6 +193,27 @@ const BroadCastHistory = () => {
     );
   };
 
+  const theme = createTheme({
+    components: {
+      MuiTooltip: {
+        styleOverrides: {
+          tooltip: {
+            fontSize: "1.15rem",
+            textAlign: "center",
+            backgroundColor: "white",
+            color: "black",
+            whiteSpace: "nowrap",
+            maxWidth: "unset",
+            boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.2)",
+          },
+          arrow: {
+            color: "white",
+          },
+        },
+      },
+    },
+  });
+
   return (
     <div>
       <div className={`${css.container}`}>
@@ -226,7 +249,7 @@ const BroadCastHistory = () => {
               <NavLink
                 to="/broadcasthistory"
                 className={({ isActive }) => (isActive ? myProfile.active : "")}
-                onClick={()=>window.location.reload(200)}
+                onClick={() => window.location.reload(200)}
               >
                 <span>History</span>
               </NavLink>
@@ -292,7 +315,18 @@ const BroadCastHistory = () => {
                         onChange={() => handleCheckboxChange(item.id)}
                       />
                     </td>
-                    <td>{item.created_at}</td>
+                    <td>
+                      {new Date(
+                        item.created_at.replace(" ", "T")
+                      ).toLocaleString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                        hour: "numeric",
+                        minute: "numeric",
+                        hour12: true,
+                      })}
+                    </td>
                     <td
                       className={
                         item.type === "wtb"
@@ -333,12 +367,22 @@ const BroadCastHistory = () => {
                     <td>{item.mfg}</td>
                     <td style={{ color: "blue" }}>{item.price}</td>
                     <td>{item.quantity}</td>
-                    <td>{item.description}</td>
+                    <ThemeProvider theme={theme}>
+                      <Tooltip
+                        title={item?.description || ""}
+                        arrow
+                        placement="top"
+                      >
+                        <td>{item?.description?.slice(0, 100)}...</td>
+                      </Tooltip>
+                    </ThemeProvider>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <p colSpan="9">No broadcasts found.</p>
+                  <td colSpan="9" className="!text-center  !text-red-500">
+                    No broadcasts found.
+                  </td>
                 </tr>
               )}
             </tbody>

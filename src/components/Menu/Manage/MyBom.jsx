@@ -197,7 +197,7 @@ const SavedList = () => {
           <div className="flex justify-between items-center px-2 py-0 bg-[#bfbfbf]">
             <h3 className="text-2xl text-white">Saved List(s)</h3>
             <div className="flex items-center gap-2">
-              <label className="text-white text-sm font-semibold">
+              <label className="text-white text-base font-semibold">
                 Name Search:
               </label>
               <input

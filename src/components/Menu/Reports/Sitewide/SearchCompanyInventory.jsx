@@ -104,12 +104,15 @@ const SearchCompanyInventory = () => {
 
   return (
     <div className={css.searchCompanyInventory}>
-      <div>
-        <span>
-          <label htmlFor="company">Company Search:</label>
-        </span>
-        <br />
-        <span ref={inputRef}>
+      <div className="w-full max-w-md">
+        <label
+          htmlFor="company"
+          className="block mb-1 font-medium text-gray-700"
+        >
+          Company Search:
+        </label>
+
+        <div className="relative" ref={inputRef}>
           <input
             type="search"
             name="company"
@@ -119,35 +122,45 @@ const SearchCompanyInventory = () => {
             onFocus={handleFocus}
             onBlur={handleBlur}
             required
-            className="p-2"
+            className="w-full px-4 py-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <div className={css.compnaySearch} ref={listRef}>
-            {showList && (
-              <ul>
+
+          {showList && (
+            <div
+              className="absolute z-10 mt-2 w-full bg-white border border-gray-300 rounded shadow-lg max-h-60 overflow-y-auto"
+              ref={listRef}
+            >
+              <ul className="divide-y divide-gray-200">
                 {searchCompanyData?.length > 0 ? (
                   searchCompanyData.map((company) => (
                     <li
                       key={company.id}
                       onClick={() => handleCompanySelect(company)}
-                      className={`${css.companyItem}`}
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                     >
-                      <p>{company.name}</p>
-                      {company.region && company.region && (
-                        <p>
-                          <span>{company.region},</span>
+                      <p className="font-medium">{company.name}</p>
+                      {company.region && company.country && (
+                        <p className="text-sm text-gray-500">
+                          <span>{company.region}, </span>
                           <span>{company.country}</span>
                         </p>
                       )}
                     </li>
                   ))
                 ) : (
-                  <li key="no-results">No results found</li>
+                  <li
+                    key="no-results"
+                    className="px-4 py-2 text-gray-500 italic"
+                  >
+                    No results found
+                  </li>
                 )}
               </ul>
-            )}
-          </div>
-        </span>
+            </div>
+          )}
+        </div>
       </div>
+
       <div className={css.Searchbutton}>
         <button
           className={`${css.orangeButton} !m-5`}
