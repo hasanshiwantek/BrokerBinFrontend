@@ -9,6 +9,34 @@ import NotFound from "./components/LoginRegister/Authentication/NotFound.jsx";
 import LoadingState from "./LoadingState.jsx";
 import LoadingState2 from "./LoadingState2.jsx";
 import AppWrapper from "./AppWrapper";
+import axios from "axios";
+import { clearUserDetails } from "./ReduxStore/UserSlice";
+import { resetProfileState } from "./ReduxStore/ProfleSlice";
+import Cookies from "js-cookie";
+import store from "./ReduxStore/Store.js";
+
+axios.interceptors.response.use(
+  res => res,
+  err => {
+    if (err.response?.status === 401) {
+      // Manual logout logic here (no navigate)
+      store.dispatch(clearUserDetails());
+      store.dispatch(resetProfileState?.());
+
+      localStorage.removeItem("token");
+      localStorage.removeItem("token_expiry");
+      localStorage.removeItem("user");
+      localStorage.removeItem("companyId");
+
+      Cookies.remove("token");
+      Cookies.remove("user_id");
+      Cookies.remove("companyId");
+
+      window.location.href = "/login"; // ✅ safe in Axios context
+    }
+    return Promise.reject(err);
+  }
+);
 
 // Lazy load components
 const Login = lazy(() => import("./components/LoginRegister/Login.jsx"));
@@ -187,13 +215,14 @@ const HotListEdit = lazy(() =>
 const SafeTrading = lazy(() => import("./components/ui/SafeTrading.jsx"));
 import Crousel from "./Crousel.jsx";
 import { Provider } from "react-redux";
-import store from "./ReduxStore/Store.js";
 import Contact from "./components/Menu/Main/Contact.jsx";
 import Ethics from "./components/Menu/Main/Ethics.jsx";
 import Help from "./components/Menu/Main/Help.jsx";
 import SvgMap from "./components/SvgMap.jsx";
 import Badges from "./components/Menu/Main/Badges.jsx";
 import SiteMap from "./components/Menu/Main/SiteMap.jsx";
+
+
 
 const router = createBrowserRouter([
   {

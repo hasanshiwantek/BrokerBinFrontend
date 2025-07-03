@@ -5,6 +5,8 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Cookies from "js-cookie";
 import brokerLogo from "../../imgs/logo/BrokerCell Logo.svg";
 import { NavLink } from "react-router-dom";
+import { brokerAPI } from "../api/BrokerEndpoint";
+import { setAutoLogout, logoutUser } from "@/lib/authUtils";
 
 const Login = () => {
   const [passwordShown, setPasswordShown] = useState(false);
@@ -28,7 +30,7 @@ const Login = () => {
 
     try {
       const response = await fetch(
-        "https://backend.brokercell.com/api/user/login",
+        `${brokerAPI}user/login`,
         {
           method: "POST",
           headers: {
@@ -41,17 +43,29 @@ const Login = () => {
       const result = await response.json();
       if (response.ok) {
         const user = result.data;
-        const { access_token } = result.data;
-        const { id } = result.data.user;
-        const companyId=result.data.user.company_id
+        const { access_token, expires_at } = result.data;
+        const { id } = user.user;
+        const companyId = user.user.company_id
 
         Cookies.set("token", access_token, { expires: 1, secure: true });
         Cookies.set("user_id", id, { expires: 1, secure: true });
         Cookies.set("companyId", companyId, { expires: 1, secure: true });
 
+        localStorage.setItem("token", JSON.stringify(access_token));
         localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("companyId", JSON.stringify(companyId));
-        console.log("Company id : ",companyId);
+        const expiryTime = new Date(expires_at).getTime();
+        localStorage.setItem("token_expiry", expiryTime.toString());
+
+        // Set auto logout
+        const delay = expiryTime - Date.now();
+        if (delay > 0) {
+          setAutoLogout(delay);
+        } else {
+          logoutUser();
+        }
+
+        console.log("Company id : ", companyId);
         navigate("/"); // Redirect the user
         // window.location.href = 'http://localhost:5173/';
       } else {
@@ -65,7 +79,6 @@ const Login = () => {
   };
 
   const arrow = "<"
-
 
   const submitHandle = (e) => {
     console.log(e)
