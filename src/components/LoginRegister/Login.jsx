@@ -7,6 +7,7 @@ import brokerLogo from "../../imgs/logo/BrokerCell Logo.svg";
 import { NavLink } from "react-router-dom";
 import { brokerAPI } from "../api/BrokerEndpoint";
 import { setAutoLogout, logoutUser } from "@/lib/authUtils";
+import axios from "axios";
 
 const Login = () => {
   const [passwordShown, setPasswordShown] = useState(false);
@@ -21,42 +22,88 @@ const Login = () => {
     setPasswordShown(!passwordShown);
   };
   
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setLoading(true); // Start loading
+
+  //   const formData = new FormData(e.currentTarget);
+  //   const data = Object.fromEntries(formData.entries());
+
+  //   try {
+  //     const response = await fetch(
+  //       `${brokerAPI}user/login`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify(data),
+  //       }
+  //     );
+
+  //     const result = await response.json();
+  //     if (response.ok) {
+  //       const user = result.data;
+  //       const { access_token, expires_at } = result.data;
+  //       const { id } = user.user;
+  //       const companyId = user.user.company_id
+
+  //       Cookies.set("token", access_token, { expires: 1, secure: true });
+  //       Cookies.set("user_id", id, { expires: 1, secure: true });
+  //       Cookies.set("companyId", companyId, { expires: 1, secure: true });
+
+  //       localStorage.setItem("token", JSON.stringify(access_token));
+  //       localStorage.setItem("user", JSON.stringify(user));
+  //       localStorage.setItem("companyId", JSON.stringify(companyId));
+  //       const expiryTime = new Date(expires_at).getTime();
+  //       localStorage.setItem("token_expiry", expiryTime.toString());
+
+  //       // Set auto logout
+  //       const delay = expiryTime - Date.now();
+  //       if (delay > 0) {
+  //         setAutoLogout(delay);
+  //       } else {
+  //         logoutUser();
+  //       }
+
+  //       console.log("Company id : ", companyId);
+  //       navigate("/"); // Redirect the user
+  //       // window.location.href = 'http://localhost:5173/';
+  //     } else {
+  //       setErrorMessage(result.message || "Login failed, please try again.");
+  //     }
+  //   } catch (error) {
+  //     setErrorMessage("An error occurred, please try again later.");
+  //   } finally {
+  //     setLoading(false); // Stop loading
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true); // Start loading
-
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
-
     try {
-      const response = await fetch(
-        `${brokerAPI}user/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
-
-      const result = await response.json();
-      if (response.ok) {
+      const response = await axios.post(`${brokerAPI}user/login`, data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const result = response.data;
+      if (response.status === 200) {
         const user = result.data;
         const { access_token, expires_at } = result.data;
         const { id } = user.user;
-        const companyId = user.user.company_id
-
+        const companyId = user.user.company_id;
         Cookies.set("token", access_token, { expires: 1, secure: true });
         Cookies.set("user_id", id, { expires: 1, secure: true });
         Cookies.set("companyId", companyId, { expires: 1, secure: true });
-
         localStorage.setItem("token", JSON.stringify(access_token));
         localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("companyId", JSON.stringify(companyId));
         const expiryTime = new Date(expires_at).getTime();
         localStorage.setItem("token_expiry", expiryTime.toString());
-
         // Set auto logout
         const delay = expiryTime - Date.now();
         if (delay > 0) {
@@ -64,7 +111,6 @@ const Login = () => {
         } else {
           logoutUser();
         }
-
         console.log("Company id : ", companyId);
         navigate("/"); // Redirect the user
         // window.location.href = 'http://localhost:5173/';
@@ -72,7 +118,9 @@ const Login = () => {
         setErrorMessage(result.message || "Login failed, please try again.");
       }
     } catch (error) {
-      setErrorMessage("An error occurred, please try again later.");
+      setErrorMessage(
+        error.response?.data?.message || "An error occurred, please try again later."
+      );
     } finally {
       setLoading(false); // Stop loading
     }

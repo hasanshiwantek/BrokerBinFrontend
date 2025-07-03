@@ -6,10 +6,46 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { brokerAPI } from "../api/BrokerEndpoint";
+import axios from "axios";
 
 const ForgotEmail = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [loading, setLoading] = useState(false);
+
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     setLoading(true); // Start loading
+    //     const formData = new FormData(e.currentTarget);
+    //     const data = Object.fromEntries(formData.entries());
+
+    //     try {
+    //         console.log("Submitting forgot password request", data);
+    //         const response = await fetch(`${brokerAPI}user/forgot-username`, {
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //             body: JSON.stringify(data),
+    //         });
+
+    //         const result = await response.json();
+    //         console.log("Response received:", result);
+
+    //         if (response.ok) {
+    //             toast.success("Email sent successfully! Check your inbox.");
+    //             console.log("Forgot password email sent successfully");
+    //         } else {
+    //             setErrorMessage(result.message || "Request failed, please try again.");
+    //             console.log("Error response:", result);
+    //         }
+    //     } catch (error) {
+    //         setErrorMessage("An error occurred, please try again later.");
+    //         console.log("Error occurred:", error);
+    //     } finally {
+    //         setLoading(false); // Stop loading
+    //         console.log("Loading state set to false");
+    //     }
+    // };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -19,43 +55,39 @@ const ForgotEmail = () => {
 
         try {
             console.log("Submitting forgot password request", data);
-            const response = await fetch(`${brokerAPI}user/forgot-username`, {
-                method: "POST",
+            const response = await axios.post(`${brokerAPI}user/forgot-username`, data, {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(data),
             });
 
-            const result = await response.json();
-            console.log("Response received:", result);
+            console.log("Response received:", response.data);
 
-            if (response.ok) {
+            if (response.status === 200) {
                 toast.success("Email sent successfully! Check your inbox.");
                 console.log("Forgot password email sent successfully");
             } else {
-                setErrorMessage(result.message || "Request failed, please try again.");
-                console.log("Error response:", result);
+                setErrorMessage(response.data.message || "Request failed, please try again.");
+                console.log("Error response:", response.data);
             }
         } catch (error) {
-            setErrorMessage("An error occurred, please try again later.");
+            setErrorMessage(
+                error.response?.data?.message || "An error occurred, please try again later."
+            );
             console.log("Error occurred:", error);
         } finally {
             setLoading(false); // Stop loading
             console.log("Loading state set to false");
         }
     };
-    
+
     const arrow = "<"
     return (
         <div className={css.bg}>
 
             <div className="!flex !items-center !justify-evenly !gap-5 space-x-40 p-10 space-y-40">
                 <div className={`${css.logoSec} `}>
-
                     <img src={brokerLogo} alt="BrokerLogo" srcset="" />
-
-
                 </div>
 
 

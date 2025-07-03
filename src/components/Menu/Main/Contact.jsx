@@ -9,6 +9,8 @@ import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import { brokerAPI } from "@/components/api/BrokerEndpoint";
+import axios from "axios";
 
 const Contact = () => {
   const token = Cookies.get("token");
@@ -57,7 +59,7 @@ const handleSubmit = async (e) => {
     };
 
     const response = await fetch(
-      "https://backend.brokercell.com/api/contactadmin/contact-us",
+      `${brokerAPI}contactadmin/contact-us`,
       {
         method: "POST",
         headers: {
@@ -86,6 +88,43 @@ const handleSubmit = async (e) => {
     setLoading(false);
   }
 };
+
+// const handleSubmit = async (e) => {
+//   e.preventDefault();
+//   setLoading(true);
+
+//   try {
+//     const data = {
+//       contact_method: formData.contact_method,
+//       subject: formData.subject,
+//       comments: formData.comments,
+//     };
+
+//     const response = await axios.post(`${brokerAPI}contactadmin/contact-us`, data, {
+//       headers: {
+//         "Content-Type": "application/json",
+//         Authorization: `Bearer ${token}`,
+//       },
+//     });
+
+//     if (response.ok) {
+//       handleReset();
+//       toast.info("Contact form Submitted successfully!", {
+//         style: { fontSize: "14px", marginTop: "-10px" },
+//       });
+//     } else {
+//       toast.info("Error submitting contact form. Please try again!", {
+//         style: { fontSize: "14px", marginTop: "-10px" },
+//       });
+//     }
+//   } catch (error) {
+//     toast.info("❌ Network error. Please try again later.", {
+//       style: { fontSize: "14px", marginTop: "-10px" },
+//     });
+//   } finally {
+//     setLoading(false);
+//   }
+// };
 
   if (loading) {
     return <LoadingState2 />;
