@@ -5,7 +5,10 @@ import { companySideInformation } from "../../../data/tableData";
 import { useSelector, useDispatch } from "react-redux";
 import Cookies from "js-cookie";
 import { getCompanyContact } from "../../../ReduxStore/SearchProductSlice";
-
+import { FaPencilAlt } from "react-icons/fa";
+import { Tooltip } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { NavLink } from "react-router-dom";
 const TabInformation = ({ companyId }) => {
   const [toggleTabOne, setToggleTabOne] = useState(true);
   const [toggleTabTwo, setToggleTabTwo] = useState(true);
@@ -45,6 +48,24 @@ const TabInformation = ({ companyId }) => {
     }
   }, [dispatch, companyId, token]);
 
+  const theme = createTheme({
+    components: {
+      MuiTooltip: {
+        styleOverrides: {
+          tooltip: {
+            fontSize: "1.1rem", // Adjust font size
+            width: "fitContent",
+            textAlign: "center",
+            backgroundColor: "var(--primary-color)",
+          },
+          arrow: {
+            color: "var(--primary-color)",
+          },
+        },
+      },
+    },
+  });
+
   // While loading, show loading indicator
   if (loading) {
     return (
@@ -54,9 +75,9 @@ const TabInformation = ({ companyId }) => {
             <div className={css.Popup_Info_header}>
               <h1>Loading company details...</h1>
             </div>
-              <div className={css.Popup_Info_Main_left}>
-                <div className={css.loader}></div> {/* Spinner here */}
-              </div>
+            <div className={css.Popup_Info_Main_left}>
+              <div className={css.loader}></div> {/* Spinner here */}
+            </div>
           </div>
         </div>
       </div>
@@ -70,10 +91,22 @@ const TabInformation = ({ companyId }) => {
           <li
             className={css.Popup_Info_Main_left_companySideInformation_tabs_li}
           >
-            <h3>Company Information</h3>
+            <div className="flex justify-start items-center gap-4">
+              <h3>Company Information</h3>
+              <ThemeProvider theme={theme}>
+                <Tooltip
+                  title={`Edit Your Company Information `}
+                  arrow placement="top"
+                >
+                  <NavLink to={"/mycompany/CompanyInfo"}>
+                  <FaPencilAlt size={15} className="cursor-pointer" />
+                  </NavLink>
+                </Tooltip>
+              </ThemeProvider>
+            </div>
             <span
               onClick={() => setToggleTabOne((prev) => !prev)}
-              className="cursor-pointer"
+              className="cursor-pointer flex justify-between gap-2 items-center"
             >
               <PlusSquare />
             </span>
@@ -111,7 +144,19 @@ const TabInformation = ({ companyId }) => {
           <li
             className={css.Popup_Info_Main_left_companySideInformation_tabs_li}
           >
-            <h3>Primary Contact Information</h3>
+            <div className="flex justify-start items-center gap-4">
+              <h3 className="whitespace-nowrap">Primary Contact Information</h3>
+              <ThemeProvider theme={theme}>
+                <Tooltip
+                  title={`Edit Your Primary Contact Information`}
+                  arrow placement="top"
+                >
+                  <NavLink to={"/mycompany"}>
+                  <FaPencilAlt size={15} className="cursor-pointer" />
+                  </NavLink>
+                </Tooltip>
+              </ThemeProvider>
+            </div>
             <span
               onClick={() => setToggleTabTwo((prev) => !prev)}
               className="cursor-pointer"
@@ -169,10 +214,22 @@ const TabInformation = ({ companyId }) => {
           <li
             className={css.Popup_Info_Main_left_companySideInformation_tabs_li}
           >
-            <h3>Sales Information</h3>
+            <div className="flex justify-start items-center gap-4">
+              <h3>Sales Information</h3>
+              <ThemeProvider theme={theme}>
+                <Tooltip
+                  title={`Edit Your Sales Information`}
+                  arrow placement="top"
+                >
+                  <NavLink to={"/mycompany/SalesInfo"}>
+                  <FaPencilAlt size={15} className="cursor-pointer" />
+                  </NavLink>
+                </Tooltip>
+              </ThemeProvider>
+            </div>
             <span
               onClick={() => setToggleTabThree((prev) => !prev)}
-              className="cursor-pointer"
+              className="cursor-pointer "
             >
               <PlusSquare />
             </span>
@@ -184,15 +241,23 @@ const TabInformation = ({ companyId }) => {
               <span>
                 <li className="!font-semibold"> Trading Region:</li>
                 <li>
-                  {(typeof companyContactData.data?.company?.trading_region === "string"
-                    ? companyContactData.data.company.trading_region.replace(/[\[\]']/g, '').trim()
-                    : "N/A")}
+                  {(
+                    companyContactData?.data?.company?.trading_region || []
+                  ).map((region, idx) => (
+                    <p key={idx}>
+                      {region}
+                      {idx <
+                        companyContactData?.data?.company?.trading_region
+                          .length -
+                          1 && ","}
+                    </p>
+                  ))}
                 </li>
               </span>
               <span>
                 <li className="!font-semibold">Trade Program:</li>
                 <li>
-                  {companyContactData.data?.company?.trade_program === "1"
+                  {companyContactData.data?.company?.trade_program == 1
                     ? "Yes"
                     : "No"}
                 </li>
@@ -200,7 +265,7 @@ const TabInformation = ({ companyId }) => {
               <span>
                 <li className="!font-semibold">Rental Programs:</li>
                 <li>
-                  {companyContactData.data?.company?.rental_program === "1"
+                  {companyContactData.data?.company?.rental_program == 1
                     ? "Yes"
                     : "No"}
                 </li>
@@ -208,7 +273,7 @@ const TabInformation = ({ companyId }) => {
               <span>
                 <li className="!font-semibold">Blind Shipping:</li>
                 <li>
-                  {companyContactData.data?.company?.blind_shipping === "1"
+                  {companyContactData.data?.company?.blind_shipping == 1
                     ? "Yes"
                     : "No"}
                 </li>

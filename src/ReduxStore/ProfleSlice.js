@@ -596,6 +596,33 @@ export const fetchUserSettings = createAsyncThunk(
   }
 );
 
+
+
+export const submitBillingInfo = createAsyncThunk(
+  "profileStore/submitBillingInfo",
+  async ({ data, token }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `${brokerAPI}invoices/invoice-store`,
+        data ,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Response From Redux: ",response?.data);
+      
+      return response?.data;
+    } catch (error) {
+      console.error("Request failed with error from front-end:", error);
+      return rejectWithValue(error.toString());
+    }
+  }
+);
+
+
 const initialState = {
   user: JSON.parse(localStorage.getItem("user")),
   formData: {
