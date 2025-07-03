@@ -450,7 +450,7 @@ const Cart = () => {
                         setShowSaveListModal(true);
                       }}
                     >
-                      save
+                      Save
                     </button>
                   </span>
                 </div>
