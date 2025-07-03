@@ -248,7 +248,7 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
       if (result?.status) {
         console.log("Image Deleted with id: ", id);
         toast.info(result?.message || "Image Deleted From Company!");
-           fetchCompanyContacts(); 
+        fetchCompanyContacts();
       } else {
         toast.info(result?.message || "Failed to remove Image.");
       }
@@ -291,9 +291,9 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
             <div className={css.Popup_Info_header}>
               <h1>Loading company details...</h1>
             </div>
-              <div className={css.Popup_Info_Main_left}>
-                <div className={css.loader}></div> {/* Spinner here */}
-              </div>
+            <div className={css.Popup_Info_Main_left}>
+              <div className={css.loader}></div> {/* Spinner here */}
+            </div>
           </div>
         </div>
       </div>
@@ -800,11 +800,14 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
               <p>Pofile Incomplete</p>
             </div>
             <div>
-              <h1>return policy</h1>
-              <p>Profile Incomplete</p>
+              <h1>Return Policy</h1>
+              <p>
+                {companyContactData?.data?.company?.returnPolicy ||
+                  "Profile Incomplete"}
+              </p>
             </div>
             <div>
-              <h1>legal files</h1>
+              <h1>Legal Files</h1>
               <p>Profile Incomplete</p>
             </div>
           </div>
