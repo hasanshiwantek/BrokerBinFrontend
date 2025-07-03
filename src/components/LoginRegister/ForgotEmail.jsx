@@ -45,6 +45,7 @@ const ForgotEmail = () => {
             console.log("Loading state set to false");
         }
     };
+    
     const arrow = "<"
     return (
         <div className={css.bg}>

@@ -1,6 +1,4 @@
-// src/AppWrapper.jsx
 import { useEffect } from 'react';
-// import { Outlet } from 'react-router-dom';
 import useDefaultSettings from './components/hooks/UseDefaultSettings';
 
 const AppWrapper = ({children}) => {
