@@ -18,7 +18,6 @@ const Billing = () => {
   });
 
   const companyId = Number(Cookies.get("companyId"));
-  console.log(companyId);
 
   const {
     user,
@@ -61,15 +60,21 @@ const Billing = () => {
       company_id: companyId,
     };
 
-    console.log("Payload : ", payload);
-
     try {
       const resultAction = await dispatch(
         submitBillingInfo({ data: payload, token })
       );
-      if (resultAction?.status) {
-        console.log(resultAction);
-        toast.success("Billing info updated successfully.");
+
+      if (resultAction?.payload?.status === true) {
+        toast.info(
+          resultAction?.payload?.message || "Billing info updated successfully.",
+          { style: { fontSize: "12px", fontWeight: "bold" } }
+        );
+        setBillingInfo({
+          invoiceEmail: [],
+          invoiceEmailText: "",
+          paymentMethod: "Wire Transfer",
+        });
       } else {
         toast.error("Failed to update billing info.");
       }
@@ -77,6 +82,14 @@ const Billing = () => {
       toast.error("Something went wrong while submitting billing info.");
       console.error(error);
     }
+  };
+
+  const handleReset = () => {
+    setBillingInfo({
+      invoiceEmail: [],
+      invoiceEmailText: "",
+      paymentMethod: "Wire Transfer",
+    });
   };
 
   return (
@@ -284,6 +297,7 @@ const Billing = () => {
                   "!bg-[#2c83ec] !h-[1.5vw] items-center flex !rounded-[.2vw] !px-4 !py-6 "
                 }
                 type="button"
+                onClick={handleReset}
               >
                 Reset
               </button>
