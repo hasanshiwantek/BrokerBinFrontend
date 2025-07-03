@@ -23,7 +23,7 @@ export const sendBroadcast = createAsyncThunk(
       return response.data;
     } catch (error) {
       console.error(
-        "Error while fetching user data:",
+        "Error while fetching send data:",
         error.response?.data || error.message
       );
       throw new Error(

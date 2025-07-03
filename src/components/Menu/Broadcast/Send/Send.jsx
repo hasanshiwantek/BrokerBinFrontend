@@ -19,11 +19,9 @@ import { RiNumber3 } from "react-icons/ri";
 import { FaCheck } from "react-icons/fa6";
 import { useSearchParams } from "react-router-dom";
 
-
-
 const BroadcastForm = () => {
   const token = Cookies.get("token");
-   const user = JSON.parse(localStorage.getItem("user"))
+  const user = JSON.parse(localStorage.getItem("user"));
   const service = useSelector((state) => state.broadcastStore.serviceData);
   const [params] = useSearchParams();
 
@@ -237,22 +235,39 @@ const BroadcastForm = () => {
 
     // Dispatch the data with token
     dispatch(sendBroadcast({ token, data }))
-      .then(() => {
-        // ✅ Show success toast with light blue color
-        toast.info("Your Broadcast Has Been Sent Successfully", {
-          style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
-        });
+      .then((resultAction) => {
+        if (sendBroadcast.fulfilled.match(resultAction)) {
+          console.log(
+            "%c✅ Broadcast sent successfully:",
+            "color: green;",
+            resultAction
+          );
 
-        // Clear serviceData after submission
-        dispatch(clearAllSelections());
-        // Clear the form fields after successful submission
-        cancelAllActions();
-        setFileName("");
+          toast.info("Your Broadcast Has Been Sent Successfully", {
+            style: {
+              fontSize: "12px",
+              marginTop: "-10px",
+              fontWeight: "bold",
+            },
+          });
+
+          // Clear serviceData after submission
+          dispatch(clearAllSelections());
+
+          // Clear the form fields after successful submission
+          cancelAllActions();
+          setFileName("");
+        } else {
+          console.error("❌ Broadcast dispatch failed:", resultAction);
+          toast.error("Failed Sending Broadcast. Please Try Again", {
+            style: { fontSize: "12px", marginTop: "-10px" , fontWeight: "bold",},
+          });
+        }
       })
       .catch((error) => {
-        console.error("Error storing data:", error);
-        toast.error("Failed Sending Broadcast.Please Try Again", {
-          style: { fontSize: "15px", marginTop: "-10px" }, //
+        console.error("💥 Unexpected error storing data:", error);
+        toast.error("An unexpected error occurred while sending broadcast.", {
+          style: { fontSize: "15px", marginTop: "-10px" },
         });
       });
 
@@ -267,29 +282,28 @@ const BroadcastForm = () => {
   };
 
   useEffect(() => {
-  const type = params.get("type");
-  const category = params.get("category");
-  const prefill = {
-    partModel: params.get("partModel") || "",
-    mfg: params.get("mfg") || "",
-    cond: params.get("cond") || "",
-    heciClei: params.get("heciClei") || "",
-    price: params.get("price") || "",
-    quantity: params.get("quantity") || "",
-    description: params.get("description") || "",
-  };
-  if (type && category) {
-    setBroadcastType(type);
-    setCategory(category);
-    setFormData((prev) => ({ ...prev, ...prefill }));
-    setFormTypes((prev) => ({
-      ...prev,
-      [type]: true,
-      hideFormOne: false
-    }));
-  }
-}, []);
-
+    const type = params.get("type");
+    const category = params.get("category");
+    const prefill = {
+      partModel: params.get("partModel") || "",
+      mfg: params.get("mfg") || "",
+      cond: params.get("cond") || "",
+      heciClei: params.get("heciClei") || "",
+      price: params.get("price") || "",
+      quantity: params.get("quantity") || "",
+      description: params.get("description") || "",
+    };
+    if (type && category) {
+      setBroadcastType(type);
+      setCategory(category);
+      setFormData((prev) => ({ ...prev, ...prefill }));
+      setFormTypes((prev) => ({
+        ...prev,
+        [type]: true,
+        hideFormOne: false,
+      }));
+    }
+  }, []);
 
   return (
     <div className={css.outerPadding}>
@@ -598,7 +612,7 @@ const BroadcastForm = () => {
                   {/* Always show MFG and radio buttons ONLY for multiple parts */}
                   {category === "multiple parts / items" && (
                     <>
-                      <div >
+                      <div>
                         <label htmlFor="mfg">MFG</label>
                         <input
                           type="text"
@@ -659,29 +673,29 @@ const BroadcastForm = () => {
 
                 <div className={css.createABroadcast}>
                   <h3>Create a Broadcast</h3>
-                      <div>
-                        <label htmlFor="description">Description</label>
-                        <textarea
-                          name="description"
-                          value={formData.description}
-                          onChange={handleInputChange}
-                          placeholder="Description"
-                          required
-                        ></textarea>
-                      </div>
-                      <div>
-                        <label htmlFor="additional_comments">Comments</label>
-                        <textarea
-                          type="text"
-                          name="additional_comments"
-                          value={formData.additional_comments}
-                          onChange={handleInputChange}
-                          placeholder="Message , Comments"
-                          cols={10}
-                          rows={5}
-                          required
-                        ></textarea>
-                      </div>
+                  <div>
+                    <label htmlFor="description">Description</label>
+                    <textarea
+                      name="description"
+                      value={formData.description}
+                      onChange={handleInputChange}
+                      placeholder="Description"
+                      required
+                    ></textarea>
+                  </div>
+                  <div>
+                    <label htmlFor="additional_comments">Comments</label>
+                    <textarea
+                      type="text"
+                      name="additional_comments"
+                      value={formData.additional_comments}
+                      onChange={handleInputChange}
+                      placeholder="Message , Comments"
+                      cols={10}
+                      rows={5}
+                      required
+                    ></textarea>
+                  </div>
 
                   <div className="!flex !flex-row">
                     <label htmlFor="sendCopy">Send a copy to myself</label>

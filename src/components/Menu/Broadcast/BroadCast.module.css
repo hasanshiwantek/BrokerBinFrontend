@@ -4,6 +4,7 @@
 
 .mainSec {
   width: 95vw;
+
 }
 
 .header {
@@ -59,6 +60,12 @@
   margin-top: -10px;
 }
 
+.table tbody tr{
+  /* white-space: nowrap; */
+
+}
+
+
 .table tr:hover {
   background-color: #f1f1f1;
   cursor: pointer;
@@ -67,14 +74,43 @@
 .table th,
 .table td {
   border: 1px solid #bfbfbf;
-  padding: 0px 2px;
+  padding: 1px 2px;
   text-align: left;
   /* font-size: 8pt !important; */
   font-weight: 600;
   color: #444;
 }
 
+
+.tooltip-container {
+  position: relative;
+  cursor: pointer;
+}
+
+.tooltip-box {
+  visibility: hidden;
+  width: 300px;
+  background-color: #333;
+  color: #fff;
+  text-align: left;
+  padding: 10px;
+  border-radius: 4px;
+  position: absolute;
+  z-index: 10;
+  top: 120%;
+  left: 0;
+  font-size: 12px;
+  white-space: normal;
+}
+
+.tooltip-container:hover .tooltip-box {
+  visibility: visible;
+}
+
+
 .table th {
+  /* white-space: nowrap; */
+
   /* background-color: #f2f2f2; */
   background-color: #4a575a;
   color: white;

@@ -119,20 +119,20 @@ const Company = () => {
           <div className={css.overview}>
             <div className={css.overviewItem}>
               <ul>
-                <li>Our Inventory Count: {broadcastCount?.data?.companyCount}</li>
-                <li>Last Uploaded: Today</li>
+                <li>Our Inventory Count: {broadcastCount?.data?.inventoryCount}</li>
+                <li>Last Uploaded: {broadcastCount?.data?.lastUploaded} days ago</li>
                 <li>Will Expire In: 9 Days</li>
-                <li>Want To Sell: {broadcastCount?.data?.wtsCount}</li>
-                <li>Want To Buy: {broadcastCount?.data?.wtbCount}</li>
+                <li onClick={()=>navigate("/broadcasts?type=wts")} className="cursor-pointer">Want To Sell: {broadcastCount?.data?.wtsCount}</li>
+                <li onClick={()=>navigate("/broadcasts?type=wtb")} className="cursor-pointer">Want To Buy: {broadcastCount?.data?.wtbCount}</li>
               </ul>
             </div>
             <div className={css.overviewItem}>
               <ul>
-                <li>My Inventory Count: {broadcastCount?.data?.inventoryCount}</li>
-                <li>Last Uploaded: {broadcastCount?.data?.lastUploaded ? "Today" : 0}</li>
+                <li>My Inventory Count: {broadcastCount?.data?.inventoryUser}</li>
+                <li>Last Uploaded: {broadcastCount?.data?.lastUploaded} days ago</li>
                 <li>Will Expire In: 9 Days</li>
-                <li>Want To Sell: {broadcastCount?.data?.wtsUser}</li>
-                <li>Want To Buy: {broadcastCount?.data?.wtbUser}</li>
+                <li onClick={()=>navigate("/broadcasthistory?type=wts")} className="cursor-pointer">Want To Sell: {broadcastCount?.data?.wtsUser}</li>
+                <li onClick={()=>navigate("/broadcasthistory?type=wtb")} className="cursor-pointer">Want To Buy: {broadcastCount?.data?.wtbUser}</li>
               </ul>
             </div>
           </div>

@@ -140,7 +140,7 @@ const FiltersSearchCompanyInventory = () => {
         ))}
       </div>
 
-      <div>
+      {/* <div>
         <span>
           <label htmlFor="company">Company Search:</label>
         </span>
@@ -189,6 +189,71 @@ const FiltersSearchCompanyInventory = () => {
           </div>
         </span>
       </div>
+ */}
+
+
+<div className="w-full max-w-md">
+  <span className="block mb-1 font-medium whitespace-nowrap text-gray-700">
+    <label htmlFor="company">Company Search:</label>
+  </span>
+
+  <span className="relative block">
+    <div className="flex justify-start gap-2 items-center">
+
+    <input
+      type="search"
+      name="company"
+      id="company"
+      value={searchTerm}
+      onChange={handleInputChange}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      className="w-[15rem] px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+
+    <button
+      type="button"
+      onClick={handleAddCompany}
+      className="ml-2 inline-flex items-center px-3 py-2 bg-blue-600 text-white text-base font-medium rounded hover:bg-blue-700 transition"
+      >
+      Add
+    </button>
+      </div>
+
+    {showList && (
+      <div
+        ref={listRef}
+        className="absolute z-10 mt-2 w-[15rem] bg-white border border-gray-300 rounded shadow-lg max-h-60 overflow-y-auto"
+      >
+        <ul className="divide-y divide-gray-200">
+          {searchCompanyData?.length > 0 ? (
+            searchCompanyData.map((company) => (
+              <li
+                key={company.id}
+                onClick={() => handleCompanySelect(company)}
+                className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+              >
+                <p className="font-medium">{company.name}</p>
+                {company.region && company.country && (
+                  <p className="text-sm text-gray-500">
+                    <span>{company.region}, </span>
+                    <span>{company.country}</span>
+                  </p>
+                )}
+              </li>
+            ))
+          ) : (
+            <li key="no-results" className="px-4 py-2 text-gray-500 italic">
+              No results found
+            </li>
+          )}
+        </ul>
+      </div>
+    )}
+  </span>
+</div>
+
+
     </div>
   );
 };
