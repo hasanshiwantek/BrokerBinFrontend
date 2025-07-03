@@ -554,6 +554,7 @@ const BroadcastForm = () => {
                             <option value="">Select</option>
                             <option value="any">Any</option>
                             <option value="new">New</option>
+                            <option value="f/s">F/S</option>
                             <option value="used">Used</option>
                             <option value="repaired">Repaired</option>
                           </select>
