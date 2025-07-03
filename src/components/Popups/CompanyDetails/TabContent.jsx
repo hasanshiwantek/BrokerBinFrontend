@@ -801,10 +801,13 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
             </div>
             <div>
               <h1>Return Policy</h1>
-              <p>
-                {companyContactData?.data?.company?.returnPolicy ||
-                  "Profile Incomplete"}
-              </p>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html:
+                    companyContactData?.data?.company?.returnPolicy ||
+                    "<p>Profile Incomplete</p>",
+                }}
+              />
             </div>
             <div>
               <h1>Legal Files</h1>

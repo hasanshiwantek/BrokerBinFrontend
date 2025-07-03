@@ -7,6 +7,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { getCompanyContact } from "@/ReduxStore/SearchProductSlice";
 
 const Trading = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
   const { register, setValue, getValues, reset, control } = useFormContext();
 
   const [selected, setSelected] = useState({
@@ -151,7 +153,20 @@ const Trading = () => {
     } catch (e) {
       console.warn("⚠️ Invalid shipping_options format:", e);
     }
+    setIsLoading(false); // ✅ Data loaded
   }, [companyData, setValue]);
+
+
+    if (isLoading) {
+    return (
+      <div className="flex justify-center items-center py-20">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
+        <span className="ml-4 text-blue-600 text-lg font-medium">
+        </span>
+      </div>
+    );
+  }
+
 
   return (
     <>

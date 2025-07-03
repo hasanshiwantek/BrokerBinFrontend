@@ -338,7 +338,7 @@ const BroadCastHistory = () => {
                 ))
               ) : (
                 <tr>
-                  <p colSpan="9">No broadcasts found.</p>
+                  <td colSpan="9" className="!text-center  !text-red-500">No broadcasts found.</td>
                 </tr>
               )}
             </tbody>

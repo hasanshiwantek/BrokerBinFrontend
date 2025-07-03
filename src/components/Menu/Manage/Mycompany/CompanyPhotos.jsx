@@ -52,25 +52,25 @@ const CompanyPhotos = () => {
   }, []);
 
   const handleUpload = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const trimmedUrl = imageUrlInput.trim();
-  let updatedImageUrls = [...imageUrlsArray];
+    const trimmedUrl = imageUrlInput.trim();
+    let updatedImageUrls = [...imageUrlsArray];
 
-  if (trimmedUrl) {
-    updatedImageUrls.push(trimmedUrl);
-    console.log("🌐 Auto-added typed URL before submit:", trimmedUrl);
-  }
+    if (trimmedUrl) {
+      updatedImageUrls.push(trimmedUrl);
+      console.log("🌐 Auto-added typed URL before submit:", trimmedUrl);
+    }
 
-  if (selectedFilesArray.length === 0 && updatedImageUrls.length === 0) {
-    toast.error("Please select at least one file or image URL.");
-    return;
-  }
+    if (selectedFilesArray.length === 0 && updatedImageUrls.length === 0) {
+      toast.error("Please select at least one file or image URL.");
+      return;
+    }
     try {
       setLoading(true);
       console.log("🚀 Uploading:");
       console.log("📁 Files:", selectedFilesArray);
-       console.log("🔗 URLs:", updatedImageUrls);
+      console.log("🔗 URLs:", updatedImageUrls);
 
       const result = await dispatch(
         submitCompanyPhotos({
@@ -82,9 +82,12 @@ const CompanyPhotos = () => {
       ).unwrap();
 
       if (result?.status) {
-        toast.success(
-          result?.image?.message || "Photos uploaded successfully!"
-        );
+        toast.info(result?.image?.message || "Photos uploaded successfully!", {
+          style: {
+            fontSize: "13px",
+            fontWeight: "bold",
+          },
+        });
         console.log("✅ Server Response:", result?.image);
         setSelectedFilesArray([]);
         setImageUrlsArray([]);
@@ -92,7 +95,13 @@ const CompanyPhotos = () => {
       }
     } catch (err) {
       console.error("❌ Upload failed:", err);
-      toast.error(err?.message || "Upload failed. Please try again.");
+      toast.error(err?.message || "Upload failed. Please try again."),
+        {
+          style: {
+            fontSize: "13px",
+            fontWeight: "bold",
+          },
+        };
     } finally {
       setLoading(false);
     }
@@ -162,16 +171,14 @@ const CompanyPhotos = () => {
                     </NavLink>
                   </li>
                   <li>
-                                      <NavLink
-                                        to="/mycompany/Billing+Info"
-                                        end
-                                        className={({ isActive }) =>
-                                          isActive ? css.active : ""
-                                        }
-                                      > 
-                                        <span>Billing</span>
-                                      </NavLink>
-                                    </li>
+                    <NavLink
+                      to="/mycompany/Billing+Info"
+                      end
+                      className={({ isActive }) => (isActive ? css.active : "")}
+                    >
+                      <span>Billing</span>
+                    </NavLink>
+                  </li>
                 </ul>
               </div>
 
@@ -247,7 +254,7 @@ const CompanyPhotos = () => {
 
                   <div className="flex items-center gap-3 mb-6 justify-center mx-auto my-auto">
                     <button
-                      type="button"
+                      type="submit"
                       className="bg-[#2c83ec] text-white rounded px-4 py-2 "
                     >
                       Upload Photos
