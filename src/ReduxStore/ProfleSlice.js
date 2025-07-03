@@ -614,7 +614,7 @@ export const submitBillingInfo = createAsyncThunk(
       );
       console.log("Response From Redux: ",response?.data);
       
-      return response.data;
+      return response?.data;
     } catch (error) {
       console.error("Request failed with error from front-end:", error);
       return rejectWithValue(error.toString());
