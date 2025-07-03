@@ -8,6 +8,7 @@ import { setInventoryAddData } from "../../../../ReduxStore/InventorySlice";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import { brokerAPI } from "@/components/api/BrokerEndpoint";
 
 const Add = () => {
   const token = Cookies.get("token");
@@ -47,7 +48,7 @@ const Add = () => {
 
     try {
       const response = await fetch(
-        "https://backend.brokercell.com/api/inventory/add",
+        `${brokerAPI}inventory/add`,
         {
           method: "POST",
           headers: {
