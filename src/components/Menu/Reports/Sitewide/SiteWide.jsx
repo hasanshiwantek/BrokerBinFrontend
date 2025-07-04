@@ -132,7 +132,7 @@ const SiteWide = () => {
 
           {/* Top 200 Searched Parts For with Manufacturer Search */}
           <div className={css.section}>
-            <h3>Top 200 Searched Parts For with Manufacturer Search</h3>
+            <h3>Top 200 Searched Parts For </h3>
             <div className={css.display}>
               <label htmlFor="manufacturer">Manufacturer Search</label>
               <select

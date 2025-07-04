@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { setInventoryAddData } from "../../../../ReduxStore/InventorySlice";
 import PopupAlert from "@/components/Popups/PopupAlert";
+import { brokerAPI } from "@/components/api/BrokerEndpoint";
 
 const Add = () => {
   const token = Cookies.get("token");
@@ -58,7 +59,7 @@ const Add = () => {
 
     try {
       const response = await fetch(
-        "https://backend.brokercell.com/api/inventory/add",
+        `${brokerAPI}inventory/add`,
         {
           method: "POST",
           headers: {

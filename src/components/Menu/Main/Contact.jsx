@@ -7,6 +7,9 @@ import { Link } from "react-router-dom";
 import styles from "../../../styles/Menu/Manage/MyProfile.module.css";
 import { NavLink } from "react-router-dom";
 import PopupAlert from "@/components/Popups/PopupAlert";
+import "react-toastify/dist/ReactToastify.css";
+import { brokerAPI } from "@/components/api/BrokerEndpoint";
+import axios from "axios";
 
 const Contact = () => {
   const token = Cookies.get("token");
@@ -67,24 +70,17 @@ const Contact = () => {
         comments: formData.comments,
       };
 
-      const response = await fetch(
-        "https://backend.brokercell.com/api/contactadmin/contact-us",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(data),
-        }
-      );
-
-      if (response.ok) {
-        handleReset();
-        showPopup("success", "Contact form Submitted successfully!");
-      } else {
-        showPopup("error", "Error submitting contact form. Please try again!");
+    const response = await fetch(
+      `${brokerAPI}contactadmin/contact-us`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
       }
+    )
     } catch (error) {
       showPopup(
         "error",
@@ -94,6 +90,43 @@ const Contact = () => {
       setLoading(false);
     }
   };
+
+// const handleSubmit = async (e) => {
+//   e.preventDefault();
+//   setLoading(true);
+
+//   try {
+//     const data = {
+//       contact_method: formData.contact_method,
+//       subject: formData.subject,
+//       comments: formData.comments,
+//     };
+
+//     const response = await axios.post(`${brokerAPI}contactadmin/contact-us`, data, {
+//       headers: {
+//         "Content-Type": "application/json",
+//         Authorization: `Bearer ${token}`,
+//       },
+//     });
+
+//     if (response.ok) {
+//       handleReset();
+//       toast.info("Contact form Submitted successfully!", {
+//         style: { fontSize: "14px", marginTop: "-10px" },
+//       });
+//     } else {
+//       toast.info("Error submitting contact form. Please try again!", {
+//         style: { fontSize: "14px", marginTop: "-10px" },
+//       });
+//     }
+//   } catch (error) {
+//     toast.info("❌ Network error. Please try again later.", {
+//       style: { fontSize: "14px", marginTop: "-10px" },
+//     });
+//   } finally {
+//     setLoading(false);
+//   }
+// };
 
   if (loading) {
     return <LoadingState2 />;

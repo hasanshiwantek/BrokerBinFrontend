@@ -4,7 +4,7 @@ import brokerLogo from "../../imgs/logo/BrokerCell Logo.svg";
 import { NavLink } from "react-router-dom";
 import { brokerAPI } from "../api/BrokerEndpoint";
 import PopupAlert from "@/components/Popups/PopupAlert";
-
+import axios from "axios";
 const ForgotEmail = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -21,6 +21,42 @@ const ForgotEmail = () => {
       setPopup((prev) => ({ ...prev, show: false }));
     }, 2000);
   };
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setLoading(true); // Start loading
+  //   const formData = new FormData(e.currentTarget);
+  //   const data = Object.fromEntries(formData.entries());
+
+  //   try {
+  //     console.log("Submitting forgot password request", data);
+  //     const response = await fetch(`${brokerAPI}user/forgot-username`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(data),
+  //     });
+
+  //     const result = await response.json();
+  //     console.log("Response received:", result);
+
+  //     if (response.ok) {
+  //       showPopup("success", "Email sent successfully! Check your inbox.");
+
+  //       console.log("Forgot password email sent successfully");
+  //     } else {
+  //       setErrorMessage(result.message || "Request failed, please try again.");
+  //       console.log("Error response:", result);
+  //     }
+  //   } catch (error) {
+  //     setErrorMessage("An error occurred, please try again later.");
+  //     console.log("Error occurred:", error);
+  //   } finally {
+  //     setLoading(false); // Stop loading
+  //     console.log("Loading state set to false");
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true); // Start loading
@@ -29,27 +65,32 @@ const ForgotEmail = () => {
 
     try {
       console.log("Submitting forgot password request", data);
-      const response = await fetch(`${brokerAPI}user/forgot-username`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await axios.post(
+        `${brokerAPI}user/forgot-username`,
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-      const result = await response.json();
-      console.log("Response received:", result);
+      console.log("Response received:", response.data);
 
-      if (response.ok) {
+      if (response.status === 200) {
         showPopup("success", "Email sent successfully! Check your inbox.");
-
         console.log("Forgot password email sent successfully");
       } else {
-        setErrorMessage(result.message || "Request failed, please try again.");
-        console.log("Error response:", result);
+        setErrorMessage(
+          response.data.message || "Request failed, please try again."
+        );
+        console.log("Error response:", response.data);
       }
     } catch (error) {
-      setErrorMessage("An error occurred, please try again later.");
+      setErrorMessage(
+        error.response?.data?.message ||
+          "An error occurred, please try again later."
+      );
       console.log("Error occurred:", error);
     } finally {
       setLoading(false); // Stop loading
