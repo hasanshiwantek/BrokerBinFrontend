@@ -171,7 +171,7 @@ const SearchProduct = () => {
               <div key={`${partModel}-${index}`}>
                 {details?.data?.length > 0 ? (
                   // ✅ Render table for available parts
-                  <div className={css.tableArea}>
+                  <div className={css.tableArea} style={index > 0 ? { marginTop: "2rem" } : {}}>
                     {graphToggle && <ProductsPieChart />}
                     <div className={css.productTable}>
                       <ProductTableBtn />

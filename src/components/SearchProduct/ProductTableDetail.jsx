@@ -35,6 +35,7 @@ const ProductTableDetail = React.memo(
     const sortBy = queryParams.get("sortBy");
     const sortOrder = queryParams.get("sortOrder") || "desc";
     const page = parseInt(queryParams.get("page")) || 1;
+    
     const {
       alternateRowColors,
       showBorders,
