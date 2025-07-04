@@ -22,7 +22,8 @@ button {
 .header {
   display: flex;
   align-items: center;
-  padding: 1rem;
+  /* padding: 1rem; */
+  padding: 0 1rem;
   border-top: 0.5rem solid var(--primary-color);
   min-height: 8rem;
 
