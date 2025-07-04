@@ -151,3 +151,16 @@
   padding: 2px 8px;
 
 }
+
+.filterTop {
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: start;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.filterLeft {
+  flex-direction: column;
+  align-items: center;
+}

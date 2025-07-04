@@ -11,6 +11,10 @@
   padding: 1rem;
 }
 
+.layoutFilterTop {
+  flex-direction: column;
+}
+
 .layoutColumnCenter {
   flex-direction: column;
   align-items: center;
@@ -246,6 +250,15 @@
   font-weight: 600;
   /* font-size: 8pt; */
   white-space: nowrap;
+}
+
+.filterTopWrapper {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.filterLeftWrapper {
+  margin-right: 2rem;
 }
 
 

@@ -38,7 +38,7 @@ const SearchProduct = () => {
     appliedFilters,
   } = useSelector((store) => store.searchProductStore);
 
-  const { showFilters } = useDefaultSettings();
+  const { showFilters, displayFiltersPosition } = useDefaultSettings();
 
   console.log("searchResponseMatched", searchResponseMatched)
 
@@ -105,7 +105,7 @@ const SearchProduct = () => {
     : showFilters === "1";
 
   return (
-    <div className={`${css.layout} ${noResults ? css.layoutColumnCenter : ""}`}>
+    <div className={`${css.layout} ${noResults ? css.layoutColumnCenter : ""} ${displayFiltersPosition === '0' ? css.layoutFilterTop : ''}`}>
 
       {/* {filterToggle &&
         Object.values(searchResponseMatched).some(
@@ -125,7 +125,11 @@ const SearchProduct = () => {
               "data" in val
             )
             .some(([, part]) => Array.isArray(part.data) && part.data.length > 0)
-        ) && <Filter currentQuery={currentQuery} />}
+        ) && (
+  <div className={displayFiltersPosition === "0" ? css.filterTopWrapper : css.filterLeftWrapper}>
+    <Filter currentQuery={currentQuery} />
+  </div>
+)}
 
       <div
         className={`${css.layoutTables} `}
