@@ -12,6 +12,7 @@ import ProductTableBtn from "./ProductTableBtn";
 import ProductTableDetail from "./ProductTableDetail";
 import Filter from "./Filter";
 import CompanyListingTable from "./Table";
+import useDefaultSettings from "../hooks/UseDefaultSettings";
 import { searchProductQuery, setTogglePopUp, searchProductHistory, searchByKeyword, clearSearchResponseMatched } from "@/ReduxStore/SearchProductSlice";
 
 const SearchProduct = () => {
@@ -36,6 +37,8 @@ const SearchProduct = () => {
     togglePopUp,
     appliedFilters,
   } = useSelector((store) => store.searchProductStore);
+
+  const { showFilters } = useDefaultSettings();
 
   console.log("searchResponseMatched", searchResponseMatched)
 
@@ -88,14 +91,18 @@ const SearchProduct = () => {
   // );
 
   const noResults =
-  partModel
-    ? !(searchResponseMatched?.foundItems?.length > 0)
-    : Object.entries(searchResponseMatched || {})
+    partModel
+      ? !(searchResponseMatched?.foundItems?.length > 0)
+      : Object.entries(searchResponseMatched || {})
         .filter(([key]) => key !== "filters" && key !== "foundItems" && key !== "notFoundPartModels")
         .every(([, part]) =>
           Array.isArray(part?.data) ? part.data.length === 0 :
-          Array.isArray(part) ? part.length === 0 : true
+            Array.isArray(part) ? part.length === 0 : true
         );
+
+  const shouldShowFilters = typeof filterToggle === "boolean"
+    ? filterToggle
+    : showFilters === "1";
 
   return (
     <div className={`${css.layout} ${noResults ? css.layoutColumnCenter : ""}`}>
@@ -105,20 +112,20 @@ const SearchProduct = () => {
           (part) => part?.data?.length || part?.length > 0
         ) && <Filter currentQuery={currentQuery} />} */}
 
-        {filterToggle &&
-  (
-    (Array.isArray(searchResponseMatched?.foundItems) && searchResponseMatched.foundItems.length > 0) ||
-    Object.entries(searchResponseMatched || {})
-      .filter(([key, val]) =>
-        key !== "notFoundPartModels" &&
-        key !== "filters" &&
-        key !== "foundItems" &&
-        typeof val === "object" &&
-        val !== null &&
-        "data" in val
-      )
-      .some(([, part]) => Array.isArray(part.data) && part.data.length > 0)
-  ) && <Filter currentQuery={currentQuery} />}
+      {shouldShowFilters && 
+        (
+          (Array.isArray(searchResponseMatched?.foundItems) && searchResponseMatched.foundItems.length > 0) ||
+          Object.entries(searchResponseMatched || {})
+            .filter(([key, val]) =>
+              key !== "notFoundPartModels" &&
+              key !== "filters" &&
+              key !== "foundItems" &&
+              typeof val === "object" &&
+              val !== null &&
+              "data" in val
+            )
+            .some(([, part]) => Array.isArray(part.data) && part.data.length > 0)
+        ) && <Filter currentQuery={currentQuery} />}
 
       <div
         className={`${css.layoutTables} `}
@@ -149,9 +156,9 @@ const SearchProduct = () => {
                   searchString={searchString}
                   sortBy={sortBy}
                   sortOrder={sortOrder}
-                  // sortPage={sortPage}
-                  // sortPageSize={sortPageSize}
-                  
+                // sortPage={sortPage}
+                // sortPageSize={sortPageSize}
+
                 />
               </div>
             </div>

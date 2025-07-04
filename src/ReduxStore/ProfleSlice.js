@@ -66,7 +66,6 @@ export const submitUserOptions = createAsyncThunk(
       const response = await axios.put(
         `${brokerAPI}user/edit/${id}`,
         JSON.stringify(data),
-        console.log(data),
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -596,8 +595,6 @@ export const fetchUserSettings = createAsyncThunk(
   }
 );
 
-
-
 export const submitBillingInfo = createAsyncThunk(
   "profileStore/submitBillingInfo",
   async ({ data, token }, { rejectWithValue }) => {
@@ -621,7 +618,6 @@ export const submitBillingInfo = createAsyncThunk(
     }
   }
 );
-
 
 const initialState = {
   user: JSON.parse(localStorage.getItem("user")),
@@ -688,8 +684,8 @@ const initialState = {
     customPartDisplay: {
       alternateRowColors: false,
       showBorders: false,
-      showFilters: "2",
-      displayFiltersPosition: "2",
+      showFilters: "",
+      displayFiltersPosition: "",
       showDetails: false,
       forceDescriptions: false,
       doubleVision: false,

@@ -8,8 +8,13 @@ import {
   setAppliedFilters,
   partVariance,
   searchProductQuery,
+  searchByKeyword,
 } from "@/ReduxStore/SearchProductSlice";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { BsToggleOn, BsToggleOff } from "react-icons/bs";
+import useDefaultSettings from "../hooks/UseDefaultSettings";
+import { setFilterMode } from "@/ReduxStore/SearchProductSlice";
+
 
 const Filter = ({ currentQuery }) => {
   console.log("rendered: Filter")
@@ -36,11 +41,17 @@ const Filter = ({ currentQuery }) => {
   const query = queryParams.get("partModel") || queryParams.get("query");
 
   // const searchString = location.state || {};
-  const { searchResponseMatched, searchHistory, appliedFilters,partVarianceState } = useSelector(
+  const { searchResponseMatched, searchHistory, appliedFilters,partVarianceState, } = useSelector(
     (store) => store.searchProductStore
   );
 
-// console.log("partSearchVarianceState", partVarianceState)
+  const filterMode = useSelector((state) => state.searchProductStore.filterMode);
+  const isAdvanced = filterMode === "advanced"
+
+  const {
+    showFilters,
+  } = useDefaultSettings();
+  
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -94,7 +105,6 @@ const handleSearchFromVariance = (partModel) => {
   });
 };
 
-
 useEffect(() => {
   if (appliedFilters && Object.keys(appliedFilters).length > 0) {
     setFilters(appliedFilters);
@@ -105,16 +115,6 @@ useEffect(()=>{
   dispatch(partVariance({token, part: query}))
 
 },[])
-
-  // const handleClearFilters = (event) => {
-  //   event.preventDefault();
-  //   dispatch(clearSearchResponseMatched());
-  //   dispatch(setAppliedFilters({})); // reset Filters..
-  //   navigate(
-  //     `/inventory/search?page=1&query=${encodeURIComponent(currentQuery)}`
-  //   ); // Reset to initial query
-  //   dispatch(searchProductQuery({ token, page: 1, search: currentQuery })); // Fetch initial query data
-  // };
 
   const handleCheckboxChange = (key, value) => {
   setFilters((prev) => {
@@ -138,18 +138,61 @@ const {
   countries = {},
 } = filtersFromApi
 
+const toggleMode = () => {
+  dispatch(setFilterMode(isAdvanced ? "standard" : "advanced"));
+};
+
+const applySingleFilter = (key, value) => {
+  const newFilters = { mfg: [], cond: [], country: [], region: [], [key]: [value] };
+  setFilters(newFilters);
+  
+  const queryParams = new URLSearchParams(location.search);
+  const searchString = queryParams.get("query") || "";
+  const partModel = queryParams.get("partModel") || "";
+  const sortBy = queryParams.get("sortBy") || "";
+  const sortOrder = queryParams.get("sortOrder") || "";
+
+  const payload = {
+    token,
+    page: 1,
+    filters: newFilters, // ✅ updated filters
+    sortBy,
+    sortOrder,
+  };
+
+  if (searchString) {
+    dispatch(searchProductQuery({ ...payload, search: searchString }));
+  } else if (partModel) {
+    dispatch(searchByKeyword({ ...payload, partModel }));
+  }
+};
+
+
   return (
     <div className={css.filterSection}>
       <div id={css.advancedFilters}>
-        <div>
-          <button
-            type="button"
-            style={{ color: "#428bca", fontWeight: "600", fontSize: "14px" }}
-            onClick={() => dispatch(setFilterToggle())}
-          >
-            Advanced Filters
-            <FaWindowClose style={{ color: "#444" }} />
-          </button>
+        <div className="!flex !justify-between">
+            <button
+              type="button"
+              style={{ color: "#428bca", fontWeight: "600", fontSize: "14px" }}
+              onClick={() => dispatch(setFilterToggle(false))} // hide filter
+            >
+              {isAdvanced ? "Advanced Filters" : "Filters"}
+              <FaWindowClose style={{ color: "#444" }} />
+            </button>
+
+            <button
+              type="button"
+              className={`${css.tools_toggle} text-black`}
+              onClick={toggleMode}
+            >
+              {isAdvanced ? "Adv" : "Std"}
+              {isAdvanced ? (
+                <BsToggleOn style={{ color: "black" }} />
+              ) : (
+                <BsToggleOff style={{ color: "black" }} />
+              )}
+            </button>
         </div>
       </div>
       <>
@@ -163,7 +206,7 @@ const {
           </div>
           {!collapsedSections.manufacturer && (
             <div>
-              {Object.entries(manufacturers).map(([label, count]) => (
+              {/* {Object.entries(manufacturers).map(([label, count]) => (
                 <div key={label}>
                   <input
                     type="checkbox"
@@ -176,6 +219,24 @@ const {
                   <label htmlFor={label}>
                     {label} ({count})
                   </label>
+                </div>
+              ))} */}
+              {Object.entries(manufacturers).map(([label, count]) => (
+                <div key={label}>
+                  {isAdvanced ? (
+                    <>
+                      <input
+                        type="checkbox"
+                        checked={filters.mfg.includes(label)}
+                        onChange={() => handleCheckboxChange("mfg", label)}
+                      />
+                      <label>{label} ({count})</label>
+                    </>
+                  ) : (
+                    <p onClick={() => applySingleFilter("mfg", label)} style={{ cursor: "pointer" }}>
+                      {label} ({count})
+                    </p>
+                  )}
                 </div>
               ))}
             </div>
@@ -192,7 +253,7 @@ const {
           </div>
           {!collapsedSections.condition && (
             <div>
-              {Object.entries(conditions).map(([label, count]) => (
+              {/* {Object.entries(conditions).map(([label, count]) => (
                 <div key={label}>
                   <input 
                   type="checkbox" 
@@ -205,6 +266,24 @@ const {
                   <label htmlFor={label}>
                     {label} ({count})
                   </label>
+                </div>
+              ))} */}
+              {Object.entries(conditions).map(([label, count]) => (
+                <div key={label}>
+                  {isAdvanced ? (
+                    <>
+                      <input
+                        type="checkbox"
+                        checked={filters.cond.includes(label)}
+                        onChange={() => handleCheckboxChange("cond", label)}
+                      />
+                      <label>{label} ({count})</label>
+                    </>
+                  ) : (
+                    <p onClick={() => applySingleFilter("cond", label)} style={{ cursor: "pointer" }}>
+                      {label} ({count})
+                    </p>
+                  )}
                 </div>
               ))}
             </div>
@@ -220,7 +299,7 @@ const {
           </div>
           {!collapsedSections.region && (
             <div>
-              {Object.entries(regions).map(([label, count]) => (
+              {/* {Object.entries(regions).map(([label, count]) => (
                 <div key={label}>
                   <input
                     type="checkbox"
@@ -234,7 +313,26 @@ const {
                     {label} ({count})
                   </label>
                 </div>
+              ))} */}
+              {Object.entries(regions).map(([label, count]) => (
+                <div key={label}>
+                  {isAdvanced ? (
+                    <>
+                      <input
+                        type="checkbox"
+                        checked={filters.region.includes(label)}
+                        onChange={() => handleCheckboxChange("region", label)}
+                      />
+                      <label>{label} ({count})</label>
+                    </>
+                  ) : (
+                    <p onClick={() => applySingleFilter("region", label)} style={{ cursor: "pointer" }}>
+                      {label} ({count})
+                    </p>
+                  )}
+                </div>
               ))}
+
             </div>
           )}
         </div>
@@ -249,7 +347,7 @@ const {
           </div>
           {!collapsedSections.country && (
             <div>
-              {Object.entries(countries).map(([label, count]) => (
+              {/* {Object.entries(countries).map(([label, count]) => (
                 <div key={countries}>
                   <input
                     type="checkbox"
@@ -263,23 +361,40 @@ const {
                     {label} ({count})
                   </label>
                 </div>
+              ))} */}
+              {Object.entries(countries).map(([label, count]) => (
+                <div key={label}>
+                  {isAdvanced ? (
+                    <>
+                      <input
+                        type="checkbox"
+                        checked={filters.country.includes(label)}
+                        onChange={() => handleCheckboxChange("country", label)}
+                      />
+                      <label>{label} ({count})</label>
+                    </>
+                  ) : (
+                    <p onClick={() => applySingleFilter("country", label)} style={{ cursor: "pointer" }}>
+                      {label} ({count})
+                    </p>
+                  )}
+                </div>
               ))}
+
             </div>
           )}
         </div>
 
-        <input
-          type="submit"
-          id={css.applyFilter}
-          value="Apply Filters"
-          className={css.applyFilterBtn}
-          onClick={applyFilters}
-        />
-        {/* <button 
-          className={`${css.applyFilterBtn}   !bg-[#f06622] !rounded`}
-          onClick={handleClearFilters}>Clear filters</button> */}
+        {isAdvanced && (
+          <input
+            type="submit"
+            id={css.applyFilter}
+            value="Apply Filters"
+            className={css.applyFilterBtn}
+            onClick={applyFilters}
+          />
+        )}
       </>
-
       {/* Search History Section */}
       <div className={css.interSection}>
         <div>

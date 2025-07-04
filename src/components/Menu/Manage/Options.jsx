@@ -444,7 +444,6 @@ const Options = () => {
                       >
                         <option value="0">Hidden</option>
                         <option value="1">Advanced</option>
-                        <option value="2">Basic</option>
                       </select>
 
                       <select
@@ -456,8 +455,8 @@ const Options = () => {
                         }
                         onChange={(e) => handleChange(e, "customPartDisplay")}
                       >
-                        <option value="1">Top</option>
-                        <option value="2">Left</option>
+                        <option value="0">Top</option>
+                        <option value="1">Left</option>
                       </select>
                     </li>
                   </ul>
