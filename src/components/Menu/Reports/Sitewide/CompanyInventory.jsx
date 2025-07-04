@@ -11,15 +11,16 @@ import {
 import Cookies from "js-cookie";
 import styles from "@/styles/Menu/Manage/MyProfile.module.css";
 import PaginationControls from "@/components/pagination/PaginationControls";
-import { addToCart, setTogglePopUp } from "../../../../ReduxStore/SearchProductSlice";
+import {
+  addToCart,
+  setTogglePopUp,
+} from "../../../../ReduxStore/SearchProductSlice";
 // import { setTogglePopUp } from "../../../../ReduxStore/SearchProductSlice";
 import CompanyDetails from "../../../Popups/CompanyDetails/CompanyDetails";
 import { setPopupCompanyDetail } from "../../../../ReduxStore/SearchProductSlice";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import { useSearchParams } from "react-router-dom";
 import SortableTableHeader from "@/components/Tables/SortableHeader";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const CompanyInventory = () => {
   const token = Cookies.get("token");
@@ -30,12 +31,24 @@ const CompanyInventory = () => {
   const [selectedProducts, setSelectedProducts] = useState([]);
   const { searchedCompanyInventory, pageSize, totalCount, loading, error } =
     useSelector((store) => store.reports);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
 
   // Extract 'query' from URL
   const queryParams = new URLSearchParams(location.search);
   const id = parseInt(queryParams.get("id")) || "";
   const page = parseInt(queryParams.get("page")) || 1;
-
 
   const totalPages = Math.ceil(totalCount / pageSize);
   console.log("Id: " + id);
@@ -54,8 +67,6 @@ const CompanyInventory = () => {
   }
 
   const visiblePages = [start, end];
-
-
 
   const handlePrevPage = () => {
     if (page > 1) {
@@ -96,13 +107,8 @@ const CompanyInventory = () => {
     console.log(inventoryIds);
 
     if (inventoryIds.length === 0) {
-      toast.warning("Please select at least one part.", {
-        style: {
-          fontSize: "12px",
-          marginTop: "-10px",
-          fontWeight: "bold",
-        },
-      });
+      showPopup("warning", "Please select at least one part.");
+
       return;
     }
 
@@ -112,13 +118,7 @@ const CompanyInventory = () => {
       navigate("/cartpart");
     } catch (error) {
       console.error("Add to cart failed:", error);
-      toast.error("Failed to add items to cart.", {
-        style: {
-          fontSize: "12px",
-          marginTop: "-10px",
-          fontWeight: "bold",
-        },
-      });
+      showPopup("error", "Failed to add items to cart.");
       navigate("/cartpart");
     }
   };
@@ -166,8 +166,6 @@ const CompanyInventory = () => {
     });
   };
 
-
-  
   // Fetch data whenever 'page' or 'searchString' changes
   useEffect(() => {
     if (isSorted && sortBy) {
@@ -185,8 +183,7 @@ const CompanyInventory = () => {
     }
   }, [token, page, id, isSorted, sortBy, sortOrder, dispatch]);
 
-
-    // Handle pagination
+  // Handle pagination
 
   const handlePageChange = (selectedPage) => {
     const params = new URLSearchParams({
@@ -238,14 +235,14 @@ const CompanyInventory = () => {
                 <span>Email</span>
               </NavLink>
             </li>
-            <li>
+            {/* <li>
               <NavLink
                 to={"/reports/serviceStats"}
                 className={({ isActive }) => (isActive ? css.active : "")}
               >
                 <span>Stats</span>
               </NavLink>
-            </li>
+            </li> */}
           </ul>
         </div>
 
@@ -351,7 +348,13 @@ const CompanyInventory = () => {
       {togglePopUp && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
-      <ToastContainer position="top-center" autoClose={2000} />
+
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

@@ -10,12 +10,11 @@ import "react-quill/dist/quill.snow.css";
 import { useDispatch, useSelector } from "react-redux";
 import { sendBroadcastReply } from "../../../ReduxStore/BroadCast";
 import { fetchUserData } from "../../../ReduxStore/ProfleSlice";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import { setTogglePopUp } from "@/ReduxStore/SearchProductSlice";
 import CompanyDetails from "@/components/Popups/CompanyDetails/CompanyDetails";
 import { setPopupCompanyDetail } from "@/ReduxStore/SearchProductSlice";
+import PopupAlert from "@/components/Popups/PopupAlert";
+
 const ReplyBroad = () => {
   const dispatch = useDispatch();
   const location = useLocation();
@@ -25,7 +24,19 @@ const ReplyBroad = () => {
       JSON.parse(localStorage.getItem("broadcastData"))
   );
   const [loading, setLoading] = useState(false); // To track API call status
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
 
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
   const recipientEmail = broadcast?.user_id?.email || "";
   const currentUserID = Cookies.get("user_id");
   const token = Cookies.get("token");
@@ -146,33 +157,28 @@ const ReplyBroad = () => {
         console.log("📥 Response:", res);
 
         if (res.meta.requestStatus === "fulfilled") {
-          toast.info("Email sent successfully!", {
-            style: { fontSize: "12px", fontWeight: "bold" },
-          });
-          setTimeout(()=>{
+          showPopup("success", "Email sent successfully!");
+
+          setTimeout(() => {
             navigate("/broadcasts");
-          },3000)
+          }, 3000);
         } else {
           const errorPayload = res.payload;
           console.error("❌ Backend Rejected Response:", errorPayload);
-
-          toast.error(
-            `❌ Failed to send email: ${
+          showPopup(
+            "error",
+            `Failed to send email: ${
               typeof errorPayload === "string"
                 ? errorPayload
                 : errorPayload?.message || "Unknown error"
-            }`,
-            {
-              style: { fontSize: "12px", fontWeight: "bold" },
-            }
+            }`
           );
         }
       })
       .catch((err) => {
         console.error("❗Unexpected error during dispatch:", err);
-        toast.error("⚠️ Unexpected error. Please try again later.", {
-          style: { fontSize: "12px", fontWeight: "bold" },
-        });
+
+        showPopup("error", "Unexpected error. Please try again later.");
       })
       .finally(() => {
         setLoading(false); // Stop loading
@@ -299,7 +305,12 @@ const ReplyBroad = () => {
       {togglePopUp && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
-      <ToastContainer position="top-center" autoClose={2000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </div>
   );
 };

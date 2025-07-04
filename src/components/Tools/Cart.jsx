@@ -18,14 +18,12 @@ import Note from "../partCart/Note";
 import Export from "../partCart/Export";
 import SaveListModal from "../partCart/SaveListModal";
 import Cookies from "js-cookie";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import axios from "axios";
 import { brokerAPI } from "../api/BrokerEndpoint";
 import { setTogglePopUp } from "@/ReduxStore/SearchProductSlice";
 import { setPopupCompanyDetail } from "@/ReduxStore/SearchProductSlice";
 import { AiOutlineClose } from "react-icons/ai";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const Cart = () => {
   const [selectedParts, setSelectedParts] = useState([]);
@@ -34,7 +32,19 @@ const Cart = () => {
   const [loading, setLoading] = useState(false);
   const [showSaveListModal, setShowSaveListModal] = useState(false);
   const [showParts, setShowParts] = useState(false);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
 
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
   const selectedProducts = useSelector(
     (state) => state.searchProductStore.selectedProductsForCart
   );
@@ -81,23 +91,18 @@ const Cart = () => {
         const result = await dispatch(clearCartItems({ token })).unwrap();
 
         if (result?.status) {
-          toast.success(result?.message || "Cart cleared successfully!", {
-            style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
-          });
+          showPopup("success", result?.message || "Cart cleared successfully!");
+
           window.location.reload(300);
           // Optional: refresh UI or state if needed
         } else {
-          toast.warning("Cart clear action didn't succeed.", {
-            style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
-          });
+          showPopup("warning", "Cart clear action didn't succeed.");
         }
       } catch (error) {
         console.error("Failed to clear cart:", error);
-        toast.error(
-          error?.message || "Failed to clear cart. Please try again.",
-          {
-            style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
-          }
+        showPopup(
+          "error",
+          error?.message || "Failed to clear cart. Please try again."
         );
       }
     }
@@ -105,13 +110,8 @@ const Cart = () => {
 
   const handleRemove = async () => {
     if (!selectedParts.length) {
-      toast.warning("You must select at least one part!", {
-        style: {
-          fontSize: "12px",
-          marginTop: "-10px",
-          fontWeight: "bold",
-        },
-      });
+      showPopup("warning", "You must select at least one part!");
+
       return;
     }
     setLoading(true);
@@ -129,31 +129,14 @@ const Cart = () => {
       console.log("Delete result:", result);
 
       if (result?.status) {
-        toast.info("Selected parts removed from cart!", {
-          style: {
-            fontSize: "12px",
-            marginTop: "-10px",
-            fontWeight: "bold",
-          },
-        });
+        showPopup("success", "Selected parts removed from cart!");
       } else {
-        toast.warning("Some parts may not have been removed.", {
-          style: {
-            fontSize: "12px",
-            marginTop: "-10px",
-            fontWeight: "bold",
-          },
-        });
+        showPopup("warning", "Some parts may not have been removed.");
       }
     } catch (error) {
       console.error("Error while removing parts:", error);
-      toast.error("Failed to remove selected parts. Please try again.", {
-        style: {
-          fontSize: "12px",
-          marginTop: "-10px",
-          fontWeight: "bold",
-        },
-      });
+
+      showPopup("error", "Failed to remove selected parts. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -161,9 +144,8 @@ const Cart = () => {
 
   const createRfq = () => {
     if (!selectedParts.length) {
-      toast.warning("You must select at least one part!", {
-        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
-      });
+      showPopup("warning", "You must select at least one part!");
+
       return;
     }
     const normalizedParts = selectedParts.map((item) => ({
@@ -280,13 +262,8 @@ const Cart = () => {
 
   const handleRemoveNonSelected = async () => {
     if (selectedParts.length === selectedProducts.length) {
-      toast.info("All parts are selected, nothing to remove.", {
-        style: {
-          fontSize: "12px",
-          marginTop: "-10px",
-          fontWeight: "bold",
-        },
-      });
+      showPopup("info", "All parts are selected, nothing to remove.");
+
       return;
     }
     setLoading(true);
@@ -305,31 +282,13 @@ const Cart = () => {
       ).unwrap();
       console.log("Delete non-selected result:", result);
       if (result?.status) {
-        toast.info("Non-selected parts removed from cart!", {
-          style: {
-            fontSize: "12px",
-            marginTop: "-10px",
-            fontWeight: "bold",
-          },
-        });
+        showPopup("success", "Non-selected parts removed from cart!");
       } else {
-        toast.warning("Some parts may not have been removed.", {
-          style: {
-            fontSize: "12px",
-            marginTop: "-10px",
-            fontWeight: "bold",
-          },
-        });
+        showPopup("warning", "Some parts may not have been removed.");
       }
     } catch (error) {
       console.error("Error while removing non-selected parts:", error);
-      toast.error("Failed to remove non-selected parts.", {
-        style: {
-          fontSize: "12px",
-          marginTop: "-10px",
-          fontWeight: "bold",
-        },
-      });
+      showPopup("error", "Failed to remove non-selected parts.");
     } finally {
       setLoading(false);
     }
@@ -361,15 +320,9 @@ const Cart = () => {
       .unwrap()
       .then((res) => {
         console.log("✅ Note update response:", res);
-        // toast.success("Note updated!", {
-        //   style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
-        // });
       })
       .catch((err) => {
         console.error("❌ Note update error:", err);
-        // toast.error("Failed to update note.", {
-        //   style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
-        // });
       });
   };
 
@@ -435,16 +388,11 @@ const Cart = () => {
                       onClick={(e) => {
                         e.preventDefault();
                         if (!selectedParts.length) {
-                          toast.warning(
-                            "Please select atleast one part to save a list.",
-                            {
-                              style: {
-                                fontSize: "12px",
-                                marginTop: "-10px",
-                                fontWeight: "bold",
-                              },
-                            }
+                          showPopup(
+                            "warning",
+                            "Please select atleast one part to save a list."
                           );
+
                           return;
                         }
                         setShowSaveListModal(true);
@@ -532,81 +480,6 @@ const Cart = () => {
                             </tr>
                           </thead>
                           <tbody>
-                            {/* {Object.entries(groupedProducts).map(
-                              ([companyName, parts]) => (
-                                <React.Fragment key={companyName}>
-                                  <tr className="bg-gray-200 text-left ">
-                                    <td
-                                      colSpan="6"
-                                      className="font-bold !text-[9pt]  py-1 text-blue-600 "
-                                    >
-                                      Company: {companyName}
-                                    </td>
-                                  </tr>
-                                  {parts
-                                    .filter((e) => e?.inventory?.partModel && e?.inventory?.addedBy?.company?.name)
-                                    .map((e) =>
-                                    (
-                                      <React.Fragment key={e.id}>
-                                        <tr className="tableData">
-                                          <td className="!gap-2 flex items-center">
-                                            <input
-                                              type="checkbox"
-                                              checked={selectedParts.some(
-                                                (p) => p.id === e.id
-                                              )}
-                                              onChange={() => handleToggle(e)}
-                                              className="h-4 w-4 ga-"
-                                            />
-                                            {e.inventory?.partModel}
-                                          </td>
-                                          <td>{e.inventory?.mfg}</td>
-                                          <td>{e.inventory?.cond}</td>
-                                          <td>
-                                            {e.notes
-                                              ?.map((note) => note.quantity)
-                                              .join(", ")}
-                                          </td>
-                                          <td>{e.inventory?.quantity}</td>
-                                        </tr>
-
-                                        {e.notes?.length > 0 &&
-                                          e.notes.map((note) => (
-                                            <tr key={note.id}>
-                                              <td colSpan="6" className="pl-10">
-                                                <div className="flex items-center gap-2">
-                                                  <span
-                                                    onClick={() =>
-                                                      handleNotesDelete(note.id)
-                                                    }
-                                                    className="text-[10px] text-red-500 cursor-pointer ml-2"
-                                                  >
-                                                    <img
-                                                      src="https://static.brokerbin.com/version/v8.4.1/images/DeleteRedX.png"
-                                                      alt="deleteNote"
-                                                    />
-                                                  </span>
-                                                  <input
-                                                    type="text"
-                                                    defaultValue={note.note}
-                                                    className="text-[10px] border px-2 py-1 rounded m-1 w-full max-w-xs"
-                                                    onBlur={(ev) =>
-                                                      handleNoteUpdate(
-                                                        note.id, 
-                                                        ev.target.value, 
-                                                        note.quantity 
-                                                      )
-                                                    }
-                                                  />
-                                                </div>
-                                              </td>
-                                            </tr>
-                                          ))}
-                                      </React.Fragment>
-                                    ))}
-                                </React.Fragment>
-                              )
-                            )} */}
                             {Object.entries(groupedProducts)
                               .map(([companyName, parts]) => {
                                 const validParts = parts.filter(
@@ -788,13 +661,7 @@ const Cart = () => {
                     type="button"
                     onClick={() => {
                       if (selectedParts.length === 0) {
-                        toast.warning("You must select at least one part.", {
-                          style: {
-                            fontSize: "12px",
-                            marginTop: "-10px",
-                            fontWeight: "bold",
-                          },
-                        });
+                        showPopup("warning", "Please select atleast one part.");
                         return;
                       }
                       setShowNoteModal(true);
@@ -857,7 +724,12 @@ const Cart = () => {
           onClose={() => setShowSaveListModal(false)}
         />
       )}
-      <ToastContainer position="top-center" autoClose={2000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

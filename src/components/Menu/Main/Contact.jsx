@@ -6,16 +6,28 @@ import LoadingState2 from "../../../LoadingState2";
 import { Link } from "react-router-dom";
 import styles from "../../../styles/Menu/Manage/MyProfile.module.css";
 import { NavLink } from "react-router-dom";
-import { toast } from "react-toastify";
+import PopupAlert from "@/components/Popups/PopupAlert";
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import { brokerAPI } from "@/components/api/BrokerEndpoint";
 import axios from "axios";
 
 const Contact = () => {
   const token = Cookies.get("token");
   const user_id = Cookies.get("user_id");
-  const user = JSON.parse(localStorage.getItem("user"))
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
+  const user = JSON.parse(localStorage.getItem("user"));
   console.log(user);
   const [formData, setFormData] = useState({
     companyName: user.firstName,
@@ -47,16 +59,16 @@ const Contact = () => {
     });
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
 
-  try {
-    const data = {
-      contact_method: formData.contact_method,
-      subject: formData.subject,
-      comments: formData.comments,
-    };
+    try {
+      const data = {
+        contact_method: formData.contact_method,
+        subject: formData.subject,
+        comments: formData.comments,
+      };
 
     const response = await fetch(
       `${brokerAPI}contactadmin/contact-us`,
@@ -68,26 +80,16 @@ const handleSubmit = async (e) => {
         },
         body: JSON.stringify(data),
       }
-    );
-
-    if (response.ok) {
-      handleReset();
-      toast.info("Contact form Submitted successfully!", {
-        style: { fontSize: "14px", marginTop: "-10px" },
-      });
-    } else {
-      toast.info("Error submitting contact form. Please try again!", {
-        style: { fontSize: "14px", marginTop: "-10px" },
-      });
+    )
+    } catch (error) {
+      showPopup(
+        "error",
+        error || "Error submitting contact form. Please try again!"
+      );
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    toast.info("❌ Network error. Please try again later.", {
-      style: { fontSize: "14px", marginTop: "-10px" },
-    });
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
 // const handleSubmit = async (e) => {
 //   e.preventDefault();
@@ -140,8 +142,10 @@ const handleSubmit = async (e) => {
                 <li>
                   <NavLink
                     to="/help"
-                    end  // This ensures the exact match for /myprofile
-                    className={({ isActive }) => (isActive ? styles.active : '')}
+                    end // This ensures the exact match for /myprofile
+                    className={({ isActive }) =>
+                      isActive ? styles.active : ""
+                    }
                   >
                     <span>Help</span>
                   </NavLink>
@@ -149,7 +153,9 @@ const handleSubmit = async (e) => {
                 <li>
                   <NavLink
                     to="/feedback"
-                    className={({ isActive }) => (isActive ? styles.active : '')}
+                    className={({ isActive }) =>
+                      isActive ? styles.active : ""
+                    }
                   >
                     <span>Contact</span>
                   </NavLink>
@@ -157,7 +163,9 @@ const handleSubmit = async (e) => {
                 <li>
                   <NavLink
                     to="/ethics"
-                    className={({ isActive }) => (isActive ? styles.active : '')}
+                    className={({ isActive }) =>
+                      isActive ? styles.active : ""
+                    }
                   >
                     <span>Ethics</span>
                   </NavLink>
@@ -165,7 +173,9 @@ const handleSubmit = async (e) => {
                 <li>
                   <NavLink
                     to="/sitemap"
-                    className={({ isActive }) => (isActive ? styles.active : '')}
+                    className={({ isActive }) =>
+                      isActive ? styles.active : ""
+                    }
                   >
                     <span>Site Map</span>
                   </NavLink>
@@ -173,7 +183,7 @@ const handleSubmit = async (e) => {
                 <li>
                   <NavLink
                     to="/badges"
-                    className={({ isActive }) => (isActive ? css.active : '')}
+                    className={({ isActive }) => (isActive ? css.active : "")}
                   >
                     <span>Badges</span>
                   </NavLink>
@@ -247,7 +257,9 @@ const handleSubmit = async (e) => {
                     <option value="Suggest Custom Reports">
                       Suggest Custom Reports
                     </option>
-                    <option value="Suggested Features">Suggested Features</option>
+                    <option value="Suggested Features">
+                      Suggested Features
+                    </option>
                     <option value="Report Feedback Abuse">
                       Report Feedback Abuse
                     </option>
@@ -273,18 +285,25 @@ const handleSubmit = async (e) => {
               </div>
             </div>
             <div className={css.feedback_btn}>
-              <button type="button" onClick={handleReset}  >
+              <button type="button" onClick={handleReset}>
                 Reset
               </button>
-              <input type="submit" value="Submit" className="cursor-pointer hover:bg-blue-600" />
+              <input
+                type="submit"
+                value="Submit"
+                className="cursor-pointer hover:bg-blue-600"
+              />
             </div>
           </div>
         </form>
       </div>
-      <ToastContainer position="top-center" autoClose={2000} />
-
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
-
   );
 };
 

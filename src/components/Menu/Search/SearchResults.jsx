@@ -21,9 +21,7 @@ import {
   submitUserSearchViewBy,
 } from "../../../ReduxStore/ProfleSlice";
 import Cookies from "js-cookie";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const SearchResults = () => {
   const location = useLocation();
@@ -32,7 +30,19 @@ const SearchResults = () => {
   const [clicked, setClicked] = useState(false);
   const [loading, setLoading] = useState(false);
   const [resultData, setResultData] = useState(searchResults);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
 
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
   const { togglePopUp } = useSelector((state) => state.searchProductStore);
   const searchUserData = useSelector(
     (state) => state.profileStore.searchUserData
@@ -123,18 +133,15 @@ const SearchResults = () => {
       const result = await dispatch(
         addMyContacts({ contact_id: id, token })
       ).unwrap();
-      toast.success(result?.message || "Contact marked as Favourite!", {
-        style: { fontSize: "17px", marginTop: "-10px" },
-      });
+      showPopup("success", result?.message || "Contact marked as Favourite!");
     } catch (err) {
       console.error("Error adding contact:", err);
       const errorMessage =
         err?.response?.data?.message ||
         err?.message ||
         "Failed to add contact.";
-      toast.error(errorMessage, {
-        style: { fontSize: "17px", marginTop: "-10px" },
-      });
+
+      showPopup("error", errorMessage);
     }
   };
 
@@ -340,7 +347,12 @@ const SearchResults = () => {
       {togglePopUp && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
-      <ToastContainer position="top-center" autoClose={2000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </main>
   );
 };

@@ -25,9 +25,7 @@ import { filterDropdown } from "@/data/services";
 import buildingIcon from "@/assets/building.svg";
 import userIcon from "@/assets/user.svg";
 import locationIcon from "@/assets/pin.svg";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const RightSidebar = ({ company, filteredData, setFilteredData }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -38,6 +36,19 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [scrollToSection, setScrollToSection] = useState(null);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
 
   const dropdownRef = useRef(null);
   const token = Cookies.get("token");
@@ -97,10 +108,14 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
   console.log("Selected Filters", selectedFiltersCount);
 
   const hasCompanyCategories =
-  (filters.computers?.length || 0) ||
-  (filters.telecom?.length || 0) ||
-  (filters.mobile?.length || 0) ||
-  (filters.other?.length || 0);
+    filters.computers?.length ||
+    0 ||
+    filters.telecom?.length ||
+    0 ||
+    filters.mobile?.length ||
+    0 ||
+    filters.other?.length ||
+    0;
 
   const applyFilters = async () => {
     try {
@@ -114,11 +129,13 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
           myVendors: filters.myVendors,
           ...(hasCompanyCategories && {
             companyCategories: {
-              ...(filters.computers?.length && { computers: filters.computers }),
+              ...(filters.computers?.length && {
+                computers: filters.computers,
+              }),
               ...(filters.telecom?.length && { telecom: filters.telecom }),
               ...(filters.mobile?.length && { mobileDevice: filters.mobile }),
               ...(filters.other?.length && { other: filters.other }),
-            }
+            },
           }),
           show: filters.show,
           hasInventory: filters.hasInventory,
@@ -166,14 +183,11 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
     try {
       const companyId = { company_id: compId };
       dispatch(addMyVendors({ companyId, token }));
-      toast.info(`Vendor Added Succesfully!`, {
-        style: { fontSize: "17px", marginTop: "-10px" }, //
-      });
+      showPopup("success", `Vendor Added Succesfully!`);
     } catch (error) {
       console.log("ERROR while adding vendor, please try again later", error);
-      toast.error("Error while adding vendor, please try again later", {
-        style: { fontSize: "17px", marginTop: "-10px" }, //
-      });
+
+      showPopup("error", "Error while adding vendor, please try again later");
     }
   };
 
@@ -225,43 +239,45 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
   //Counts Logics ...
 
   const regionCountsMap = Object.fromEntries(
-    company?.regionCounts.map(item => [item.region, item.count])
-  )
+    company?.regionCounts.map((item) => [item.region, item.count])
+  );
 
   const stateCountsMap = Object.fromEntries(
-    company?.stateCounts.map(item => [item.state, item.count])
-  )
+    company?.stateCounts.map((item) => [item.state, item.count])
+  );
 
   const countryCountsMap = Object.fromEntries(
-    company?.countryCounts.map(item => [item.country, item.count] )
-  )
+    company?.countryCounts.map((item) => [item.country, item.count])
+  );
 
   const categoryCountsMap = {};
-  (company?.categoryCounts || []).forEach(item => {
+  (company?.categoryCounts || []).forEach((item) => {
     if (Array.isArray(item.categories)) {
-      item.categories.forEach(cat => {
+      item.categories.forEach((cat) => {
         categoryCountsMap[cat] = (categoryCountsMap[cat] || 0) + item.count;
-      })
+      });
     }
-  })
+  });
 
   const manufacturerCountsMap = {};
-  (company?.manufacturerCounts || []).forEach(item => {
+  (company?.manufacturerCounts || []).forEach((item) => {
     if (Array.isArray(item.manufacturer)) {
-      item.manufacturer.forEach(mfg => {
-        manufacturerCountsMap[mfg] = (manufacturerCountsMap[mfg] || 0) + item.count;
-      })
+      item.manufacturer.forEach((mfg) => {
+        manufacturerCountsMap[mfg] =
+          (manufacturerCountsMap[mfg] || 0) + item.count;
+      });
     }
-  })
+  });
 
   const companyCategoriesCountMap = {};
-  (company?.companyCategoryCounts || []).forEach(item => {
+  (company?.companyCategoryCounts || []).forEach((item) => {
     if (Array.isArray(item.subcategory)) {
-      item.subcategory.forEach(count => {
-        companyCategoriesCountMap[count] = (companyCategoriesCountMap[count] || 0) + item.count;
-      })
+      item.subcategory.forEach((count) => {
+        companyCategoriesCountMap[count] =
+          (companyCategoriesCountMap[count] || 0) + item.count;
+      });
     }
-  })
+  });
 
   const feedbackCompanies = company?.feedbackCount;
   const inventoryCompanies = company?.hasInventoryCount;
@@ -269,8 +285,6 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
   const neverShowCount = company?.neverShowCount;
 
   console.log("FC & IC", feedbackCompanies, inventoryCompanies);
-  
-
 
   return (
     <div className=" !w-[50rem] border-[1px] border-l-gray-500 2xl:h-[70vh] md:max-h-[102vh]  overflow-y-scroll  overflow-x-hidden relative ">
@@ -553,11 +567,7 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
                   onClick={() => handleAddVendor(comp.id)}
                 >
                   <span>
-                    <img
-                      className="w-7 h-7 "
-                      src={addVendorIcon}
-                      alt="Email"
-                    />{" "}
+                    <img className="w-7 h-7 " src={addVendorIcon} alt="Email" />{" "}
                   </span>{" "}
                   Add Vendor
                 </button>
@@ -618,7 +628,12 @@ const RightSidebar = ({ company, filteredData, setFilteredData }) => {
       {togglePopUp && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
-      <ToastContainer position="top-center" autoClose={2000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </div>
   );
 };

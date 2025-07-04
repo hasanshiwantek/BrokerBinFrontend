@@ -11,19 +11,15 @@ import {
 } from "../../../../ReduxStore/InventorySlice";
 import Cookies from "js-cookie";
 import { useSelector, useDispatch } from "react-redux";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import { triggerSearchFocus } from "@/ReduxStore/focusSlice";
 import SortableTableHeader from "@/components/Tables/SortableHeader";
 import { useSearchParams } from "react-router-dom";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const EditDelete = () => {
-      const {  user } = useSelector(
-        (state) => state.profileStore
-      );
-      console.log("User: ",user);
-      
+  const { user } = useSelector((state) => state.profileStore);
+  console.log("User: ", user);
+
   const token = Cookies.get("token");
   const dispatch = useDispatch();
   const { inventoryData, filteredInventoryData, fetchFilterBroadcastData } =
@@ -58,7 +54,19 @@ const EditDelete = () => {
   const [editedItems, setEditedItems] = useState([]); // Track editable rows
   console.log("✅EDITED ITEMS:✅", editedItems);
   const [visiblePages, setVisiblePages] = useState([1, 10]); // Start with pages 1 to 10
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
 
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
   useEffect(() => {
     const pageFromURL = parseInt(searchParams.get("page")) || 1;
     const filtersFromURL = {
@@ -70,7 +78,6 @@ const EditDelete = () => {
 
     setCurrentPage(pageFromURL);
     setFilters(filtersFromURL);
-
   }, []);
 
   // Fetch inventory data (default)
@@ -181,9 +188,7 @@ const EditDelete = () => {
     dispatch(updateInventoryData({ token, inventories: dataToSave }))
       .unwrap()
       .then(() => {
-        toast.info("Inventory Updated successfully", {
-          style: { fontSize: "15px", marginTop: "-10px" }, //
-        });
+        showPopup("success", "Inventory Updated successfully");
         console.log("Inventory updated successfully");
         // fetchFilteredData();
         // fetchInventoryData();
@@ -212,9 +217,9 @@ const EditDelete = () => {
         .unwrap()
         .then(() => {
           // ✅ Show success toast with light blue color
-          toast.info("Inventory deleted successfully", {
-            style: { fontSize: "15px", marginTop: "-10px" }, //
-          });
+
+          showPopup("success", "Inventory deleted successfully");
+
           setSelectedInventories([]);
           // fetchInventoryData();
           selectedType === "inventory"
@@ -223,9 +228,8 @@ const EditDelete = () => {
         })
         .catch((error) => {
           console.error("Error deleting inventory:", error);
-          toast.info("Failed to delete inventory. Please try again.", {
-            style: { fontSize: "15px", marginTop: "-10px" }, //
-          });
+
+          showPopup("error", "Failed to delete inventory. Please try again.");
         })
         .finally(() => setLoading(false));
     } else {
@@ -614,9 +618,8 @@ const EditDelete = () => {
                 setSelectedInventories([]);
                 setVisiblePages([1, 10]);
                 setSearchParams({ page: "1" }); // Reset query params to page 1
-                window.location.reload()
+                window.location.reload();
               }}
-              
               className="transform active:scale-90 transition-all duration-100"
             >
               Refresh
@@ -677,7 +680,12 @@ const EditDelete = () => {
           </div>
         </div>
       </div>
-      <ToastContainer position="top-center" autoClose={1000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </div>
   );
 };

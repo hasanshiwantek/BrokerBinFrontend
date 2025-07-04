@@ -134,8 +134,10 @@
   background-color: #fff !important;
 } */
 
+
+
 .actions button,
-input {
+.actions input {
   padding: 10px 20px;
   /* font-size: 9pt; */
   font-weight: 500;

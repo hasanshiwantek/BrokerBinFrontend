@@ -8,11 +8,9 @@ import {
 import { Link, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import PaginationControls from "@/components/pagination/PaginationControls";
 import SortableTableHeader from "@/components/Tables/SortableHeader";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const HotListEdit = () => {
   const token = Cookies.get("token");
@@ -34,6 +32,19 @@ const HotListEdit = () => {
 
   // State to hold the editable hot list items
   const [editableItems, setEditableItems] = useState([]);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
 
   // Fetch data on mount or when page/sort params change
   useEffect(() => {
@@ -89,13 +100,11 @@ const HotListEdit = () => {
     dispatch(editHotListItem({ token, hotlists }))
       .then(() => {
         console.log("Hotlist Edit Succesfully");
-        toast.info("Hotlists Updated successfully!", {
-          style: { fontSize: "15px", marginTop: "-10px" }, //
-        });
+        showPopup("success", "Hotlists Updated successfully!");
       })
       .catch((error) => {
         console.log("Error Updating", error);
-        toast.error("Error Updating Hotlist. Try again.", {});
+        showPopup("error", "Error Updating Hotlist. Try again.", {});
       });
   };
 
@@ -277,7 +286,12 @@ const HotListEdit = () => {
           </form>
         </div>
       </div>
-      <ToastContainer position="top-center" autoClose={2000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

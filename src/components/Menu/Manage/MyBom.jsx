@@ -9,10 +9,8 @@ import axios from "axios";
 import { brokerAPI } from "@/components/api/BrokerEndpoint";
 import ListDetailModal from "@/components/partCart/ListDetailModal";
 import SavedListExportModal from "@/components/partCart/SavedListExportModal";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import useDefaultSettings from "@/components/hooks/UseDefaultSettings";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const SavedList = () => {
   const { togglePopUp } = useSelector((store) => store.searchProductStore);
@@ -20,8 +18,8 @@ const SavedList = () => {
   const navigate = useNavigate();
   const token = Cookies.get("token");
   const [selectedRowId, setSelectedRowId] = useState(null);
-  console.log("Selected Row id: ",selectedRowId);
-  
+  console.log("Selected Row id: ", selectedRowId);
+
   const [sortBy, setSortBy] = useState("");
   const [sortOrder, setSortOrder] = useState("");
   const [savedLists, setSavedLists] = useState([]);
@@ -30,14 +28,26 @@ const SavedList = () => {
   const [showExportModal, setShowExportModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const { fontSize } = useDefaultSettings();
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
 
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
   const { blurWhileLoading, initialData, user, optionFormData } = useSelector(
-      (state) => state.profileStore
-    );
-  
-  console.log("USER", user, "initialData", initialData,)
-  console.log("Saved Lists: ",savedLists);
-  
+    (state) => state.profileStore
+  );
+
+  console.log("USER", user, "initialData", initialData);
+  console.log("Saved Lists: ", savedLists);
+
   const fetchSavedLists = async () => {
     try {
       setLoading(true);
@@ -74,9 +84,7 @@ const SavedList = () => {
 
   const handleDeleteList = async () => {
     if (!selectedRowId) {
-      toast.warning("Please select a list to delete.", {
-        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
-      });
+      showPopup("warning", "Please select a list to delete.");
       return;
     }
     const confirmDelete = window.confirm(
@@ -92,16 +100,13 @@ const SavedList = () => {
           },
         }
       );
-      toast.info("List deleted successfully.", {
-        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
-      });
+      showPopup("success", "List deleted successfully.");
+
       setSelectedRowId(null);
       setTimeout(() => [fetchSavedLists()], 2000);
     } catch (error) {
       console.error("❌ Failed to delete list:", error);
-      toast.error("Failed to delete the list.Please Try Again.", {
-        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
-      });
+      showPopup("error", "Failed to delete the list.Please Try Again.");
     }
   };
 
@@ -130,29 +135,27 @@ const SavedList = () => {
   };
 
   const updateDueDate = async ({ due_date, listId }) => {
-  try {
-    console.log("LISTID", listId);
-    const res = await axios.post(
-      `${brokerAPI}part-cart/update-duedate/${listId}`,
-      { due_date },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    toast.success("Date edit successfully", {
-        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
-      });
-    fetchSavedLists();
-    // window.location.reload();
-  } catch (error) {
+    try {
+      console.log("LISTID", listId);
+      const res = await axios.post(
+        `${brokerAPI}part-cart/update-duedate/${listId}`,
+        { due_date },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      showPopup("success", "Date edit successfully");
+
+      fetchSavedLists();
+      // window.location.reload();
+    } catch (error) {
       console.error("❌ Failed to delete list:", error);
-      toast.error("Failed to delete the list.Please Try Again.", {
-        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
-      });
+
+      showPopup("error", "Failed to delete the list.Please Try Again.");
     }
-};
+  };
 
   if (loading) {
     return (
@@ -215,7 +218,7 @@ const SavedList = () => {
 
           <table>
             <thead>
-              <tr >
+              <tr>
                 <th></th>
                 <th onClick={() => handleSort("name")}>Name</th>
                 <th onClick={() => handleSort("date")}>Date</th>
@@ -228,10 +231,14 @@ const SavedList = () => {
             </thead>
             <tbody>
               {savedLists?.length > 0 ? (
-                savedLists?.map((list,id) => (
-                  <tr key={id} className="!whitespace-normal" style={{
-                    backgroundColor: id % 2 === 0 ? "#f5f5f5" : "#ffff",
-                  }}>
+                savedLists?.map((list, id) => (
+                  <tr
+                    key={id}
+                    className="!whitespace-normal"
+                    style={{
+                      backgroundColor: id % 2 === 0 ? "#f5f5f5" : "#ffff",
+                    }}
+                  >
                     <td>
                       <input
                         type="radio"
@@ -255,12 +262,19 @@ const SavedList = () => {
                       {selectedRowId === list.listId ? (
                         <input
                           type="date"
-                          min={new Date(Date.now() + 86400000).toISOString().split("T")[0]}
+                          min={
+                            new Date(Date.now() + 86400000)
+                              .toISOString()
+                              .split("T")[0]
+                          }
                           defaultValue={list.due_date}
                           onBlur={(e) => {
                             const newDate = e.target.value;
                             if (newDate && newDate !== list.due_date) {
-                              updateDueDate({ due_date: newDate, listId: list.listId }); 
+                              updateDueDate({
+                                due_date: newDate,
+                                listId: list.listId,
+                              });
                             }
                           }}
                           // autoFocus
@@ -334,7 +348,12 @@ const SavedList = () => {
           onClose={() => setShowExportModal(false)}
         />
       )}
-      <ToastContainer position="top-center" autoClose={2000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </div>
   );
 };

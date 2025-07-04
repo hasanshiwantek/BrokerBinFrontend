@@ -10,20 +10,32 @@ import {
 } from "../../../../ReduxStore/BroadCast";
 import Services from "./Field Components/Services";
 import { clearAllSelections } from "../../../../ReduxStore/BroadCast";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
+
 import { MdModeEditOutline } from "react-icons/md";
 import { RiNumber2 } from "react-icons/ri";
 import { RiNumber3 } from "react-icons/ri";
 import { FaCheck } from "react-icons/fa6";
 import { useSearchParams } from "react-router-dom";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const BroadcastForm = () => {
   const token = Cookies.get("token");
   const user = JSON.parse(localStorage.getItem("user"));
   const service = useSelector((state) => state.broadcastStore.serviceData);
   const [params] = useSearchParams();
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
 
   // console.log(service);
 
@@ -242,14 +254,7 @@ const BroadcastForm = () => {
             "color: green;",
             resultAction
           );
-
-          toast.info("Your Broadcast Has Been Sent Successfully", {
-            style: {
-              fontSize: "12px",
-              marginTop: "-10px",
-              fontWeight: "bold",
-            },
-          });
+          showPopup("success", "Your Broadcast Has Been Sent Successfully");
 
           // Clear serviceData after submission
           dispatch(clearAllSelections());
@@ -259,16 +264,15 @@ const BroadcastForm = () => {
           setFileName("");
         } else {
           console.error("❌ Broadcast dispatch failed:", resultAction);
-          toast.error("Failed Sending Broadcast. Please Try Again", {
-            style: { fontSize: "12px", marginTop: "-10px" , fontWeight: "bold",},
-          });
+          showPopup("error", "Failed Sending Broadcast. Please Try Again");
         }
       })
       .catch((error) => {
         console.error("💥 Unexpected error storing data:", error);
-        toast.error("An unexpected error occurred while sending broadcast.", {
-          style: { fontSize: "15px", marginTop: "-10px" },
-        });
+        showPopup(
+          "error",
+          "An unexpected error occurred while sending broadcast."
+        );
       });
 
     // Set email format
@@ -622,7 +626,7 @@ const BroadcastForm = () => {
                           onChange={handleInputChange}
                           placeholder="MFG"
                           required
-                          className="ml-5"
+                          className="ml-5 p-2"
                         />
                       </div>
 
@@ -844,7 +848,12 @@ const BroadcastForm = () => {
           )}
         </form>
       </div>
-      <ToastContainer position="top-center" autoClose={2000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </div>
   );
 };

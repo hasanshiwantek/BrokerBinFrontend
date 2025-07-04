@@ -26,13 +26,12 @@ import { AiOutlineUserDelete, AiOutlineUserAdd } from "react-icons/ai";
 import { Tooltip } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { alphabets } from "@/data/services";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import emailIcon from "@/assets/email-icon.svg";
 import webIcon from "@/assets/web.svg";
 import defaultCompanyLogo from "@/assets/defaultComp.png";
 import PaginationControls from "@/components/pagination/PaginationControls";
+import PopupAlert from "@/components/Popups/PopupAlert";
+
 const MyVendors = () => {
   const token = Cookies.get("token");
   let [viewAsCompany, setViewAsCompany] = useState(true);
@@ -46,6 +45,19 @@ const MyVendors = () => {
   );
 
   const [currentPage, setCurrentPage] = useState(1);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
 
   console.log("My Vendors: ", myVendor);
   console.log("My Vendor Pagination: ", vendorPagination);
@@ -141,12 +153,15 @@ const MyVendors = () => {
       const result = resultAction.payload;
 
       if (result?.success) {
-        toast.info(result?.message || "Vendor Removed From Favourites!");
+        showPopup(
+          "success",
+          result?.message || "Vendor Removed From Favourites!"
+        );
       } else {
-        toast.info(result?.message || "Failed to remove vendor.");
+        showPopup("error", result?.message || "Failed to remove vendor");
       }
     } catch (err) {
-      toast.error("Error removing vendor: " + err.message);
+      showPopup("error", err.message || "Error removing vendor: ");
     }
   };
 
@@ -203,13 +218,14 @@ const MyVendors = () => {
         addMyVendorNotes({ company_id: vendorId, note, token })
       );
       const payload = result?.payload;
-      if (payload?.success) {
-        toast.success("Note saved!");
+
+      if (payload?.status) {
+        showPopup("success", "Note saved!");
       } else {
-        toast.info(payload?.message || "Failed to save note .");
+        showPopup("error", "Failed to save Note");
       }
     } catch (err) {
-      toast.error("Error saving: " + err.message);
+      showPopup("error", err.message);
     }
   };
 
@@ -274,18 +290,23 @@ const MyVendors = () => {
         console.log("Server Result:", result);
 
         if (result?.status === "success") {
-          toast.success(result?.message || "Vendor status updated!");
+          showPopup("success", result?.message || "Vendor status updated!");
           setVendorStatus((prev) => ({
             ...prev,
             [companyId]: newStatus,
           }));
         } else {
-          toast.info(result?.message || "Failed to update vendor status.");
+          showPopup(
+            "success",
+            result?.message || "Failed to update vendor status."
+          );
         }
       })
       .catch((error) => {
         console.error("Block error:", error);
-        toast.error(
+
+        showPopup(
+          "success",
           error?.message || "Something went wrong. Please try again."
         );
       })
@@ -419,12 +440,13 @@ const MyVendors = () => {
                   setViewBy(e.target.value);
                   setHeadingWord(e.target.selectedOptions[0].dataset.label);
                 }}
+                className="px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700 bg-white hover:cursor-pointer transition duration-150 ease-in-out"
               >
                 <option value="company" data-label="Company:">
                   Company
                 </option>
                 <option value="show" data-label="Show:">
-                  Display
+                  Displays
                 </option>
                 <option value="country" data-label="Country:">
                   Country
@@ -815,7 +837,12 @@ const MyVendors = () => {
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
 
-      <ToastContainer position="top-center" autoClose={2000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

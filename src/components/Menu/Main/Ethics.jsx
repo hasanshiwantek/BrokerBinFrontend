@@ -7,17 +7,28 @@ import { sendEthics } from "../../../ReduxStore/ToolsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import SearchCompany from "./SearchCompany";
 import { fetchUserData } from "../../../ReduxStore/ProfleSlice";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import styles from "../../../styles/Menu/Manage/MyProfile.module.css";
 import { NavLink } from "react-router-dom";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const Ethics = () => {
   const token = Cookies.get("token");
   const dispatch = useDispatch();
   const user_id = Cookies.get("user_id");
   const { initialData, user } = useSelector((state) => state.profileStore);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
 
   console.log("User Data: ", initialData);
   const companyId = initialData?.company?.id;
@@ -141,15 +152,11 @@ const Ethics = () => {
     dispatch(sendEthics({ data, token }))
       .then(() => {
         handleReset();
-        // ✅ Show success toast with light blue color
-        toast.info("Your Complaint Has Been Sent Successfully", {
-          style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
-        });
+
+        showPopup("success", "Your Complaint Has Been Sent Successfully!");
       })
       .catch((error) => {
-        toast.error("Failed Sending Complain.Please Try Again", {
-          style: { fontSize: "15px", marginTop: "-10px" }, //
-        });
+        showPopup("success", "Failed Sending Complain.Please Try Again");
       });
   };
 
@@ -524,7 +531,12 @@ const Ethics = () => {
           </div>
         </form>
       </div>
-      <ToastContainer position="top-center" autoClose={2000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

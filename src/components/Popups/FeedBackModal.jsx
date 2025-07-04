@@ -3,14 +3,25 @@ import styles from "../../styles/Menu/Search/FeedBackProfile.module.css";
 import { brokerAPI } from "../api/BrokerEndpoint";
 import Cookies from "js-cookie";
 import axios from "axios";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const FeedbackModal = ({ isOpen, onClose, company, onSucces }) => {
   if (!isOpen) return null; // Don't render the modal if it's not open
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
   const [formData, setFormData] = useState({
     to: company.id || "",
     poNumber: "",
@@ -50,11 +61,9 @@ const FeedbackModal = ({ isOpen, onClose, company, onSucces }) => {
       }
     } catch (error) {
       console.log("ERROR:", error);
-      toast.error(
-        response.data.message || "Error submitting feedback. Please try again.",
-        {
-          style: { fontSize: "17px", marginTop: "-10px" },
-        }
+      showPopup(
+        "error",
+        response.data.message || "Error submitting feedback. Please try again."
       );
     }
 
@@ -251,7 +260,12 @@ const FeedbackModal = ({ isOpen, onClose, company, onSucces }) => {
         </div>
       )}
 
-      <ToastContainer position="top-center" autoClose={2000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </div>
   );
 };

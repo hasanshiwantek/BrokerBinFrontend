@@ -1,13 +1,9 @@
 import React, { useState } from "react";
 import styles from "../../styles/Menu/Search/FeedBackProfile.module.css";
-import { brokerAPI } from "../api/BrokerEndpoint";
 import Cookies from "js-cookie";
-import axios from "axios";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import { updateFeedback, getCompanyFeedback } from "@/ReduxStore/ProfleSlice";
 import { useDispatch } from "react-redux";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const UpdateFeedbackModal = ({
   isOpen,
@@ -19,6 +15,19 @@ const UpdateFeedbackModal = ({
   if (!isOpen || !feedbackData) return null;
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
 
   const [formData, setFormData] = useState({
     id: feedbackData.id || "",
@@ -59,13 +68,13 @@ const UpdateFeedbackModal = ({
         setShowSuccessModal(true);
         dispatch(getCompanyFeedback({ id: companyId, token }));
       } else {
-        toast.error(result.error?.message || "❌ Feedback update failed.");
+        showPopup("error", result.error?.message || "Feedback update failed.");
       }
     } catch (error) {
       console.error("Update error:", error);
-      toast.error(
-        error.response?.data?.message ||
-          "❌ An error occurred. Please try again."
+      showPopup(
+        "error",
+        error.response?.data?.message || "An error occurred. Please try again."
       );
     }
 
@@ -249,7 +258,12 @@ const UpdateFeedbackModal = ({
         </div>
       )}
 
-      <ToastContainer position="top-center" autoClose={2000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </div>
   );
 };

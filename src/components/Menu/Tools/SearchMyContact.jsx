@@ -9,13 +9,25 @@ import {
 } from "../../../ReduxStore/ToolsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
+import PopupAlert from "@/components/Popups/PopupAlert";
+
 const SearchMyContact = () => {
   const token = Cookies.get("token");
   const [searchTerm, setSearchTerm] = useState("");
   const [showList, setShowList] = useState(false);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
 
   const inputRef = useRef();
   const listRef = useRef();
@@ -74,14 +86,11 @@ const SearchMyContact = () => {
     try {
       const res = await dispatch(addMyVendors({ companyId, token })).unwrap();
       console.log("res", res);
-      toast.info(res?.message, {
-        style: { fontSize: "15px", fontWeight: "bold" },
-      });
+
+      showPopup("success", res?.message);
     } catch (err) {
       console.log("Error", err);
-      toast.info(err?.message || "An error occurred", {
-        style: { fontSize: "15px", fontWeight: "bold" },
-      });
+      showPopup("error", err?.message);
     } finally {
       dispatch(getMyVendors({ token }));
     }
@@ -154,6 +163,13 @@ const SearchMyContact = () => {
           </div>
         )}
       </span>
+
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

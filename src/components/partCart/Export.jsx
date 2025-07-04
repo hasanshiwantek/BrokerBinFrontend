@@ -3,15 +3,28 @@ import { IoClose } from "react-icons/io5";
 import { exportPartcart } from "@/ReduxStore/SearchProductSlice";
 import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
-import { toast } from "react-toastify";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const ExportModal = ({ onClose }) => {
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem("user"));
-  const userEmail = user.user.email;
+  const userEmail = user?.user?.email;
   const token = Cookies.get("token");
   console.log("User Email: ", userEmail);
   const [loading, setLoading] = useState(false);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
   const [exportData, setExportData] = useState({
     format: "excel",
     sortBy: "cnt_DESC",
@@ -33,17 +46,13 @@ const ExportModal = ({ onClose }) => {
         exportPartcart({ token, body: exportData })
       ).unwrap();
       if (result?.status) {
-        toast.info(result?.message || "Export request sent!", {
-          style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
-        });
         console.log("Export result: ", result);
+        showPopup("success", result?.message || "Export request sent!");
         setTimeout(() => onClose(), 3000);
       }
     } catch (error) {
       console.error("Export error:", error);
-      toast.error(error?.message || "Failed to export part cart.", {
-        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
-      });
+      showPopup("error", error?.message || "Failed to export part cart.");
     } finally {
       setLoading(false);
     }
@@ -144,6 +153,12 @@ const ExportModal = ({ onClose }) => {
           </button>
         </div>
       </div>
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </div>
   );
 };

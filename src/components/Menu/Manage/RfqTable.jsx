@@ -26,13 +26,11 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { setPopupCompanyDetail } from "../../../ReduxStore/SearchProductSlice.js";
 import CompanyDetails from "../../Popups/CompanyDetails/CompanyDetails.jsx";
 import { setTogglePopUp as setTogglePopUpCompany } from "../../../ReduxStore/SearchProductSlice";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import SortableTableHeader from "@/components/Tables/SortableHeader";
 import usePagination from "@/components/hooks/usePagination";
 import PaginationControls from "@/components/pagination/PaginationControls";
 import { useSearchParams } from "react-router-dom";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const RfqTable = () => {
   const {
@@ -77,7 +75,19 @@ const RfqTable = () => {
 
   const [filteredData, setFilteredData] = useState(receivedData);
   const [resetTrigger, setResetTrigger] = useState(false);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
 
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
   const applyFilters = (filters) => {
     let filtered = [...receivedData];
     console.log("Filters Applied:", filters);
@@ -305,7 +315,8 @@ const RfqTable = () => {
 
   const handleReply = () => {
     if (rfqMail.length === 0) {
-      toast.warning("Please select at least one RFQ to reply.");
+      showPopup("warning", "Please select at least one RFQ to reply.");
+
       return;
     }
 
@@ -314,7 +325,7 @@ const RfqTable = () => {
 
   const handleForward = () => {
     if (rfqMail.length === 0) {
-      toast.warning("Please select at least one RFQ to forward.");
+      showPopup("warning", "Please select at least one RFQ to forward.");
       return;
     }
 
@@ -328,7 +339,7 @@ const RfqTable = () => {
 
   const handleArchive = async (action) => {
     if (rfqMail.length === 0) {
-      toast.warning("Please select at least one RFQ.");
+      showPopup("warning", "Please select at least one RFQ.");
       return;
     }
 
@@ -358,20 +369,21 @@ const RfqTable = () => {
       const response = await dispatch(
         rfqArchive({ token, data: payload })
       ).unwrap();
-      toast.success(`RFQ(s) ${action} successfully!`);
-      setTimeout(()=>{
-        window.location.reload(); 
-      },1000)
+      showPopup("success", "RFQ(s) ${action} successfully!");
+      return;
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (error) {
       console.error("Error handling action:", error);
-      toast.error(`Failed to ${action} RFQ(s).`);
+      showPopup("error", `Failed to ${action} RFQ(s).`);
     }
     dispatch(receivedRfq({ token, page: currPage })); // Re-fetch received RFQs
   };
 
   const handleAction = async (action) => {
     if (rfqMail.length === 0) {
-      toast.warning("Please select at least one RFQ.");
+      showPopup("warning", "Please select at least one RFQ.");
       return;
     }
 
@@ -394,48 +406,45 @@ const RfqTable = () => {
       const response = await dispatch(
         statusRfq({ token, data: payload })
       ).unwrap();
-      console.log("result : ",response);
-      
-      toast.success(`RFQ(s) ${action} successfully!`);
+      console.log("result : ", response);
+
+      showPopup("success", `RFQ(s) ${action} successfully!`);
       console.log(`RFQ(s) ${action} successfully!`);
-      
+
       window.location.reload();
     } catch (error) {
       console.error("Error handling action:", error);
-      toast.error(`Failed to ${action} RFQ(s).`);
+      showPopup("error", `Failed to ${action} RFQ(s).`);
     }
     dispatch(receivedRfq({ token, page: currPage })); // Re-fetch received RFQs
   };
 
-
-
   // QUERY PARAMS LOGIC
   const [searchParams, setSearchParams] = useSearchParams();
 
-useEffect(() => {
-  const pageParam = Number(searchParams.get("page"));
-  const sortByParam = searchParams.get("sort");
-  const sortOrderParam = searchParams.get("order");
+  useEffect(() => {
+    const pageParam = Number(searchParams.get("page"));
+    const sortByParam = searchParams.get("sort");
+    const sortOrderParam = searchParams.get("order");
 
-  const hasParams = searchParams.has("page") || searchParams.has("sort");
+    const hasParams = searchParams.has("page") || searchParams.has("sort");
 
-  if (hasParams) {
-    // Reset the URL silently
-    setSearchParams({}); // removes ?page & ?sort
+    if (hasParams) {
+      // Reset the URL silently
+      setSearchParams({}); // removes ?page & ?sort
 
-    // Reset local state
-    setSortBy("");
-    setSortOrder("asc");
-    setIsSorted(false);
+      // Reset local state
+      setSortBy("");
+      setSortOrder("asc");
+      setIsSorted(false);
 
-    // Fetch fresh unfiltered, unsorted data (page 1)
-    dispatch(receivedRfq({ token, page: currPage }));
-  } else {
-    // No URL params — normal behavior
-    dispatch(receivedRfq({ token, page: currPage }));
-  }
-}, [token]);
-
+      // Fetch fresh unfiltered, unsorted data (page 1)
+      dispatch(receivedRfq({ token, page: currPage }));
+    } else {
+      // No URL params — normal behavior
+      dispatch(receivedRfq({ token, page: currPage }));
+    }
+  }, [token]);
 
   // SORTING FUNCTION LOGIC
 
@@ -466,26 +475,26 @@ useEffect(() => {
   const [sortOrder, setSortOrder] = useState("asc");
   const [isSorted, setIsSorted] = useState(false);
 
-const handleSort = (columnKey) => {
-  const newSortOrder =
-    sortBy === columnKey && sortOrder === "asc" ? "desc" : "asc";
+  const handleSort = (columnKey) => {
+    const newSortOrder =
+      sortBy === columnKey && sortOrder === "asc" ? "desc" : "asc";
 
-  setSortBy(columnKey);
-  setSortOrder(newSortOrder);
-  setIsSorted(true);
+    setSortBy(columnKey);
+    setSortOrder(newSortOrder);
+    setIsSorted(true);
 
-  // Update the URL query parameters
-  setSearchParams({ sort: columnKey, order: newSortOrder });
+    // Update the URL query parameters
+    setSearchParams({ sort: columnKey, order: newSortOrder });
 
-  dispatch(
-    receivedSortRfq({
-      token,
-      sortBy: columnKey,
-      sortOrder: newSortOrder,
-      page: currPage,
-    })
-  );
-};
+    dispatch(
+      receivedSortRfq({
+        token,
+        sortBy: columnKey,
+        sortOrder: newSortOrder,
+        page: currPage,
+      })
+    );
+  };
 
   const {
     curr_Page,
@@ -732,7 +741,12 @@ const handleSort = (columnKey) => {
       {togglePopUpCompany && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUpCompany())} />
       )}
-      <ToastContainer position="top-center" autoClose={1000} />
+       <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

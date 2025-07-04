@@ -43,7 +43,7 @@ const Trading = () => {
     { name: "fedex", label: "FedEx" },
     { name: "dhl", label: "DHL" },
     { name: "ups", label: "UPS" },
-    { name: "willShipOnOtherAcct", label: "Will Ship on Other Acct#s" },
+    { name: "willShipOnOtherAcct", label: "Will Ship on Other acct#s" },
     { name: "other", label: "Other" },
   ];
 

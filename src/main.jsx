@@ -638,7 +638,7 @@ const router = createBrowserRouter([
           <Suspense fallback={<LoadingState />}>
             <Header />
             <RfqReply />
-            <Footer />
+            {/* <Footer /> */}
           </Suspense>
         ),
       },

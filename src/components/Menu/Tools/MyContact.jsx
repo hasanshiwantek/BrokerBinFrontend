@@ -24,10 +24,8 @@ import { alphabets } from "@/data/services";
 import SearchMyFavouriteContact from "./SearchMyFavouriteContacts";
 import { Tooltip } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import shadowImage from "../../../imgs/logo/shadow.png";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const MyContact = () => {
   const token = Cookies.get("token");
@@ -36,6 +34,19 @@ const MyContact = () => {
   let [viewAsCountry, setViewAsCountry] = useState(false);
   let [viewAsState, setViewAsState] = useState(false);
   const [loadingData, setLoadingData] = useState(false);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
   const { myVendor, loading, myContactsData, noteData } = useSelector(
     (store) => store.toolsStore
   );
@@ -91,12 +102,15 @@ const MyContact = () => {
         const result = resultAction.payload;
 
         if (result?.success) {
-          toast.info(result?.message || "Contact Removed From Favourites!");
+          showPopup(
+            "success",
+            result?.message || "Contact Removed From Favourites!"
+          );
         } else {
-          toast.info(result?.message || "Failed to remove contact.");
+          showPopup("error", result?.message || "Failed to remove contact.");
         }
       } catch (err) {
-        toast.error("Error removing contact: " + err.message);
+        showPopup("error", err?.message || "Failed to remove contact.");
       }
     }
   };
@@ -197,12 +211,15 @@ const MyContact = () => {
       );
       const payload = result?.payload;
       if (payload?.success) {
-        toast.success("Note and rating saved!");
+        showPopup("success", "Note and rating saved!");
       } else {
-        toast.info(payload?.message || "Failed to save note and rating.");
+        showPopup(
+          "success",
+          payload?.message || "Failed to save note and rating."
+        );
       }
     } catch (err) {
-      toast.error("Error saving: " + err.message);
+      showPopup("error", err.message || "Failed to save note and rating.");
     }
   };
 
@@ -336,6 +353,7 @@ const MyContact = () => {
                   setViewBy(e.target.value);
                   setHeadingWord(e.target.selectedOptions[0].dataset.label);
                 }}
+                className="px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700 bg-white hover:cursor-pointer transition duration-150 ease-in-out"
               >
                 <option value="last" data-label="last">
                   Contact Last
@@ -774,7 +792,12 @@ const MyContact = () => {
       {togglePopUp && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
-      <ToastContainer position="top-center" autoClose={2000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

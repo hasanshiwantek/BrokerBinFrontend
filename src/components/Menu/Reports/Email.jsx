@@ -10,9 +10,8 @@ import {
   fetchEmailReportSettings,
 } from "@/ReduxStore/Reports";
 import Cookies from "js-cookie";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
+import PopupAlert from "@/components/Popups/PopupAlert";
+
 const Email = () => {
   const [mfg, setIncludedMFGs] = useState([]);
   const { vendorListData, loading, error, emailSettingsData } = useSelector(
@@ -24,6 +23,19 @@ const Email = () => {
   console.log("Vendor List Data From Email Page: ", vendorListData);
   const token = Cookies.get("token");
   const [loader, setLoading] = useState(false);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
 
   // Handler to update the included manufacturers
   const handleIncludedMFGsChange = (newIncludedMFGs) => {
@@ -113,25 +125,17 @@ const Email = () => {
 
       if (res?.status) {
         console.log("✅ Success:", res);
-        toast.info(
-          res?.message || "Email report settings updated successfully!",
-          {
-            style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
-          }
+        showPopup(
+          "success",
+          res?.message || "Email report settings updated successfully!"
         );
       } else {
         console.warn("⚠️ Unexpected response format:", res?.message);
-        toast.warning("Something went wrong, please try again."),
-          {
-            style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
-          };
+        showPopup("error", "Something went wrong, please try again.");
       }
     } catch (err) {
       console.error("❌ Submission failed:", err);
-      toast.error("Failed to update email report settings."),
-        {
-          style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
-        };
+      showPopup("error", "Failed to update email report settings.");
     } finally {
       setLoading(false);
     }
@@ -566,7 +570,13 @@ const Email = () => {
           </div>
         </div>
       </div>
-      <ToastContainer position="top-center" autoClose={2000} />
+
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

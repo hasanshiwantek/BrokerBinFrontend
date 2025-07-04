@@ -1,16 +1,26 @@
-import React from "react";
+import React,{useState} from "react";
 import css from "../../../styles/Menu/Tools/HotList.module.css";
 import { addHotListItem } from "../../../ReduxStore/ToolsSlice";
 import { useDispatch } from "react-redux";
 import Cookies from "js-cookie";
 import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const HotListAdd = () => {
   const token = Cookies.get("token");
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
 
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
   const dispatch = useDispatch();
 
   const formSubmitHandler = (e) => {
@@ -39,15 +49,12 @@ const HotListAdd = () => {
 
     dispatch(addHotListItem({ hotlists, token }))
       .then(() => {
-        toast.info("Hotlists Added successfully!", {
-          style: { fontSize: "15px", marginTop: "-10px" }, //
-        });
+        showPopup("success", "Hotlists Added successfully!");
         console.log("Hotlist Saved SuccesFully");
-
       })
       .catch((error) => {
         console.log("Error Saving Hotlists", error);
-        toast.error("Failed to Add Hotlist. Try again.", {});
+        showPopup("error", "Failed to Add Hotlist. Try again.", {});
       });
   };
 
@@ -100,8 +107,8 @@ const HotListAdd = () => {
                     <td>
                       <input type="text" name={`mfg_${index}`} />
                     </td>
-                    <td >
-                      <select name={`cond_${index}`}  className="border-2">
+                    <td>
+                      <select name={`cond_${index}`} className="border-2">
                         <option value="New">New</option>
                         <option value="Used">Used</option>
                       </select>
@@ -125,7 +132,12 @@ const HotListAdd = () => {
           </form>
         </div>
       </div>
-      <ToastContainer position="top-center" autoClose={2000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

@@ -11,9 +11,7 @@ import Cookies from "js-cookie";
 import { submitRfq, clearSearchResults } from "../../ReduxStore/RfqSlice";
 import AddParts from "./AddParts";
 import { fetchUserData } from "../../ReduxStore/ProfleSlice";
-import { ToastContainer } from "react-toastify";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const MyRFQNew = () => {
   const { selectedProducts } = useSelector((store) => store.searchProductStore);
@@ -30,7 +28,19 @@ const MyRFQNew = () => {
   const validParts = useRef({}); // Use a ref to track validity of each part
   const token = Cookies.get("token");
   const modalRef = useRef(null); // Create a reference to the modal
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
 
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
   const { initialData, user } = useSelector((state) => state.profileStore);
   const id = user?.user?.id;
 
@@ -369,25 +379,23 @@ const MyRFQNew = () => {
       clearFields();
       // ✅ Show success toast with light blue color
       if (result?.status === 201) {
-        toast.info(result?.data?.message || "RFQ submitted Succesfully!", {
-          style: { fontSize: "12px", marginTop: "-20px", fontWeight: "bold" }, //
-        });
-        setTimeout(()=>{
+        showPopup(
+          "info",
+          result?.data?.message || "RFQ submitted Succesfully!"
+        );
+
+        setTimeout(() => {
           dispatch(setPopUpRfq(false));
-        },3000)
+        }, 3000);
       } else {
-        toast.info(
-          result?.data?.message || "Failed to send RFQ.Please try again!",
-          {
-            style: { fontSize: "12px", marginTop: "-20px", fontWeight: "bold" },
-          }
+        showPopup(
+          "info",
+          result?.data?.message || "Failed to send RFQ.Please try again!"
         );
       }
     } catch (error) {
       console.error("Error submitting RFQ:", error);
-      toast.error("Error submitting RFQ.Please try Again.", {
-        style: { fontSize: "12px", marginTop: "-20px", fontWeight: "bold" }, //
-      });
+      showPopup("error", "Error submitting RFQ.Please try Again.");
     }
   };
 
@@ -776,7 +784,12 @@ const MyRFQNew = () => {
         </form>
       </div>
 
-      <ToastContainer position="top-center" autoClose={2000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

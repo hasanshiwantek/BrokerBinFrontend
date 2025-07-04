@@ -18,19 +18,26 @@ import { setTogglePopUp } from "../../../ReduxStore/SearchProductSlice";
 import CompanyDetails from "../../Popups/CompanyDetails/CompanyDetails";
 import { setPopupCompanyDetail } from "../../../ReduxStore/SearchProductSlice";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import UpdateFeedbackModal from "../../Popups/UpdateFeedbackModal";
-
-
-
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const LeaveFeedBack = () => {
   const [activeTab, setActiveTab] = useState("received"); // default to received
   const [isOpen, setIsOpen] = useState(false);
   const [selectedFeedback, setSelectedFeedback] = useState(null);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
 
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
   const { companyFeedbackData, feedbackGivenData } = useSelector(
     (state) => state.profileStore
   );
@@ -113,20 +120,28 @@ const LeaveFeedBack = () => {
         console.log("Result:", result);
 
         if (result?.meta?.requestStatus === "fulfilled") {
-          toast.info(
-            result.payload?.message || "✅ Feedback deleted successfully"
+          showPopup(
+            "info",
+            result.payload?.message || "Feedback deleted successfully"
           );
+          showPopup(
+            "success",
+            result.payload?.message || "Feedback deleted successfully"
+          );
+
           dispatch(getCompanyFeedback({ id: companyId, token }));
         } else {
-          toast.warning(
-            result.error?.message || "⚠️ Failed to delete feedback."
+          showPopup(
+            "warning",
+            result.error?.message || "Failed to delete feedback."
           );
         }
       })
       .catch((err) => {
         console.error("Delete error:", err);
-        toast.error(
-          `❌ Error deleting feedback. Please try again. ${err.message}`
+        showPopup(
+          "error",
+          `Error deleting feedback. Please try again. ${err.message}`
         );
       });
   };
@@ -141,7 +156,6 @@ const LeaveFeedBack = () => {
   const compId = Number(Cookies.get("companyId"));
   console.log("Company id: ", compId);
 
-  
   return (
     <>
       <main className={styles.mainLeaveFeedback}>
@@ -355,7 +369,6 @@ const LeaveFeedBack = () => {
         </div>
       </main>
 
-
       {isOpen && selectedFeedback && (
         <UpdateFeedbackModal
           company={{
@@ -371,8 +384,12 @@ const LeaveFeedBack = () => {
       {togglePopUp && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
-      <ToastContainer position="top-center" autoClose={2000} />
-
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

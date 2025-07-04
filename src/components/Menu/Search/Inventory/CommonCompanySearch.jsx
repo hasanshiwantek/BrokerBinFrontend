@@ -7,33 +7,14 @@ const CommonCompanySearch = ({ formData, setFormData }) => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [companies, setCompanies] = useState([]); // Local state for companies
   const [highlightIndex, setHighlightIndex] = useState(-1);
+  const [searchInput, setSearchInput] = useState("");
   const dispatch = useDispatch();
   const token = Cookies.get("token");
-
-  useEffect(() => {
-    const debounce = setTimeout(() => {
-      if (formData.company && !dropdownVisible) {
-        dispatch(
-          searchCompany({ name: formData.company, token: token }) // Pass "name" and "token"
-        )
-          .unwrap()
-          .then((results) => {
-            setCompanies(results); // Limit results to 3
-            setDropdownVisible(true);
-            setHighlightIndex(-1);
-          })
-          .catch(() => setDropdownVisible(false)); // Handle errors
-      } else {
-        setDropdownVisible(false);
-      }
-    }, 300); // Debounce for API calls
-
-    return () => clearTimeout(debounce);
-  }, [formData.company, dispatch, token]);
-
   const handleSelect = (company) => {
     setFormData({ ...formData, company });
+    setSearchInput(""); // clear input trigger
     setDropdownVisible(false);
+    setCompanies([]); // clear suggestion list
   };
 
   const handleKeyDown = (e) => {
@@ -54,6 +35,21 @@ const CommonCompanySearch = ({ formData, setFormData }) => {
       }
     }
   };
+  useEffect(() => {
+    const debounce = setTimeout(() => {
+      if (searchInput && !dropdownVisible) {
+        dispatch(searchCompany({ name: searchInput, token }))
+          .unwrap()
+          .then((results) => {
+            setCompanies(results);
+            setDropdownVisible(true);
+            setHighlightIndex(-1);
+          });
+      }
+    }, 300);
+
+    return () => clearTimeout(debounce);
+  }, [searchInput]);
 
   return (
     <span
@@ -68,7 +64,10 @@ const CommonCompanySearch = ({ formData, setFormData }) => {
         type="text"
         name="company"
         id="specialty"
-        onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+        onChange={(e) => {
+          setSearchInput(e.target.value);
+          setFormData({ ...formData, company: e.target.value });
+        }}
         value={formData.company || ""}
         className="!w-[19rem]"
         onKeyDown={handleKeyDown}
