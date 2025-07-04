@@ -12,14 +12,25 @@ import {
 } from "../../../ReduxStore/ToolsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const SearchMyFavouriteContact = () => {
   const token = Cookies.get("token");
   const [searchTerm, setSearchTerm] = useState("");
   const [showList, setShowList] = useState(false);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
 
   const inputRef = useRef();
   const listRef = useRef();
@@ -80,12 +91,13 @@ const SearchMyFavouriteContact = () => {
       const result = await dispatch(
         addMyContacts({ contact_id: id, token })
       ).unwrap();
-      toast.success(result.message || "Contact added successfully!");
+      showPopup("success", result.message || "Contact added successfully!");
+
       dispatch(fetchMyContacts({ token }));
       setSearchTerm("");
       setShowList(false);
     } catch (error) {
-      toast.error(error.message || "Failed to add contact.");
+      showPopup("error", error.message || "Failed to add contact.");
     }
   };
 
@@ -153,7 +165,12 @@ const SearchMyFavouriteContact = () => {
         )}
       </span>
 
-      <ToastContainer position="top-center" autoClose={2000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

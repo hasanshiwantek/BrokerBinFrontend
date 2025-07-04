@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { brokerAPI } from "../api/BrokerEndpoint";
-import { toast } from "react-toastify";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const SaveListModal = ({ onClose, selectedParts }) => {
   const navigate = useNavigate();
@@ -12,7 +12,19 @@ const SaveListModal = ({ onClose, selectedParts }) => {
   const token = Cookies.get("token");
   console.log("token frommodal", token);
   const [loading, setLoading] = useState(false);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
 
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
   const [formData, setFormData] = useState({
     name: "",
     poInHand: false,
@@ -24,7 +36,7 @@ const SaveListModal = ({ onClose, selectedParts }) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  console.log("SelectedPARTs", selectedParts)
+  console.log("SelectedPARTs", selectedParts);
   const trimmedParts = selectedParts.map((p) => ({
     // id: p.id,
     partModel: p.inventory?.partModel,
@@ -36,7 +48,7 @@ const SaveListModal = ({ onClose, selectedParts }) => {
   }));
 
   const handleSubmit = async () => {
-    const partCartIds = selectedParts.map(p => p.id);
+    const partCartIds = selectedParts.map((p) => p.id);
     const payload = {
       name: formData.name,
       poInHand: formData.poInHand,
@@ -61,18 +73,14 @@ const SaveListModal = ({ onClose, selectedParts }) => {
         navigate("/bomarchive/list");
         console.log("Mock response:", response?.data);
       } else {
-        toast.info(
-          response?.data?.message || "Failed Saving Parts.Please Try Again!",
-          {
-            style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
-          }
+        showPopup(
+          "info",
+          response?.data?.message || "Failed Saving Parts.Please Try Again!"
         );
       }
     } catch (error) {
       console.error("Mock submit failed:", error);
-      toast.error(error || "Failed Saving Parts.Please Try Again!", {
-        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
-      });
+      showPopup("error", error || "Failed Saving Parts.Please Try Again!");
     } finally {
       setLoading(false);
     }
@@ -159,6 +167,12 @@ const SaveListModal = ({ onClose, selectedParts }) => {
           </div>
         </div>
       </div>
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </div>
   );
 };

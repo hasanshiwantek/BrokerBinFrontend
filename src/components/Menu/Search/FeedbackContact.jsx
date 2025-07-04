@@ -3,19 +3,16 @@ import css from "@/styles/Menu/Main/Contact.module.css";
 import basic from "@/styles/Menu/Basic.module.css";
 import Cookies from "js-cookie";
 import LoadingState2 from "@/LoadingState2";
-import { Link } from "react-router-dom";
 import styles from "@/styles/Menu/Manage/MyProfile.module.css";
 import { NavLink } from "react-router-dom";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import { useLocation } from "react-router-dom";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const Contact = () => {
   const location = useLocation();
   const feedbackData = location.state?.feedbackData;
   console.log("Navigated Feedback Data:", feedbackData);
-    const user = JSON.parse(localStorage.getItem("user"))
+  const user = JSON.parse(localStorage.getItem("user"));
   console.log(user);
 
   const [navigatedPayloadData, setNavigatedPayloadData] = useState({
@@ -29,6 +26,19 @@ const Contact = () => {
   });
 
   console.log("Navigated Payload : ", navigatedPayloadData);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
 
   const token = Cookies.get("token");
   const user_id = Cookies.get("user_id");
@@ -90,18 +100,13 @@ const Contact = () => {
 
       if (response.ok) {
         handleReset();
-        toast.info("Contact form Submitted successfully!", {
-          style: { fontSize: "14px", marginTop: "-10px" },
-        });
+
+        showPopup("success", "Contact form Submitted successfully!");
       } else {
-        toast.info("Error submitting contact form. Please try again!", {
-          style: { fontSize: "14px", marginTop: "-10px" },
-        });
+        showPopup("info", "Error submitting contact form. Please try again!");
       }
     } catch (error) {
-      toast.info("❌ Network error. Please try again later.", {
-        style: { fontSize: "14px", marginTop: "-10px" },
-      });
+      showPopup("info", "Network error. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -285,7 +290,13 @@ const Contact = () => {
           </div>
         </form>
       </div>
-      <ToastContainer position="top-center" autoClose={2000} />
+
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

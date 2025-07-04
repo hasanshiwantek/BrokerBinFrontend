@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import { partCartNotes } from "@/ReduxStore/SearchProductSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
-import { toast } from "react-toastify";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const Note = ({ selectedParts, onClose }) => {
   const dispatch = useDispatch();
@@ -10,7 +10,19 @@ const Note = ({ selectedParts, onClose }) => {
   console.log(token);
   const [loading, setLoading] = useState(false);
   console.log("Selected parts from Notes page: ", selectedParts);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
 
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
   // Group by company name
   const grouped = useMemo(() => {
     const map = {};
@@ -32,7 +44,7 @@ const Note = ({ selectedParts, onClose }) => {
       initial[partId] = {
         id: partId,
         quantity: 0,
-        note:"",
+        note: "",
       };
     });
     return initial;
@@ -50,9 +62,8 @@ const Note = ({ selectedParts, onClose }) => {
   const handleSave = async () => {
     const finalNotes = Object.values(noteData);
     if (finalNotes.length === 0) {
-      toast.warning("No parts selected to save notes.", {
-        style: { fontSize: "16px" },
-      });
+      showPopup("warning", "No parts selected to save notes.");
+
       return;
     }
     try {
@@ -60,22 +71,18 @@ const Note = ({ selectedParts, onClose }) => {
         token,
         notes: finalNotes, // Make sure backend expects an array
       };
-      console.log("Payload: ",payload); 
+      console.log("Payload: ", payload);
       setLoading(true);
       const result = await dispatch(partCartNotes(payload)).unwrap();
       console.log("Saved Notes to Backend:", result);
-      toast.info(result?.message || "Notes saved successfully!", {
-         style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, 
-      });
+      showPopup("success", result?.message || "Notes saved successfully!");
       onClose();
-      setTimeout(()=>{
-        window.location.reload(100)
-      },2000)
+      setTimeout(() => {
+        window.location.reload(100);
+      }, 2000);
     } catch (error) {
       console.error("Note save error:", error);
-      toast.error(error?.message || "Failed to save notes.", {
-        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
-      });
+      showPopup("error", error?.message || "Failed to save notes.");
     } finally {
       setLoading(false);
     }
@@ -130,11 +137,7 @@ const Note = ({ selectedParts, onClose }) => {
                             className="border px-2 py-1 w-16 text-[8pt] rounded"
                             value={noteData[item.id]?.quantity || 0}
                             onChange={(e) =>
-                              handleChange(
-                                item.id,
-                                "quantity",
-                                e.target.value
-                              )
+                              handleChange(item.id, "quantity", e.target.value)
                             }
                           />
                         </td>
@@ -144,11 +147,7 @@ const Note = ({ selectedParts, onClose }) => {
                             className="border px-2 py-3 w-full rounded text-[8pt]"
                             value={noteData[item.id]?.note}
                             onChange={(e) =>
-                              handleChange(
-                                item.id,
-                                "note",
-                                e.target.value
-                              )
+                              handleChange(item.id, "note", e.target.value)
                             }
                           />
                         </td>
@@ -176,6 +175,12 @@ const Note = ({ selectedParts, onClose }) => {
           </button>
         </div>
       </div>
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </div>
   );
 };

@@ -82,31 +82,6 @@
 }
 
 
-.tooltip-container {
-  position: relative;
-  cursor: pointer;
-}
-
-.tooltip-box {
-  visibility: hidden;
-  width: 300px;
-  background-color: #333;
-  color: #fff;
-  text-align: left;
-  padding: 10px;
-  border-radius: 4px;
-  position: absolute;
-  z-index: 10;
-  top: 120%;
-  left: 0;
-  font-size: 12px;
-  white-space: normal;
-}
-
-.tooltip-container:hover .tooltip-box {
-  visibility: visible;
-}
-
 
 .table th {
   /* white-space: nowrap; */

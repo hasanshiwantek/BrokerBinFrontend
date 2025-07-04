@@ -5,15 +5,26 @@ import InventoryButtons from "./InventoryButtons";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { setInventoryAddData } from "../../../../ReduxStore/InventorySlice";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const Add = () => {
   const token = Cookies.get("token");
   const { inventoryAddData } = useSelector((state) => state.inventoryStore);
   const dispatch = useDispatch();
   const [buttonText, setButtonText] = useState("Save");
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -59,16 +70,13 @@ const Add = () => {
       );
 
       if (response.ok) {
-        // ✅ Show success toast with light blue color
-        toast.info("Inventory Added successfully!", {
-          style: { fontSize: "15px", marginTop: "-10px" }, //
-        });
+        showPopup("success", "Inventory Added successfully!");
 
         dispatch(
           setInventoryAddData(
             inventoryAddData.map(() => ({
               partModel: "",
-              heciClei: "", // Reset heciClei as empty 
+              heciClei: "", // Reset heciClei as empty
               mfg: "",
               price: "",
               quantity: "",
@@ -79,7 +87,7 @@ const Add = () => {
           )
         );
       } else {
-        toast.error("Failed to Add Inventory.Please Try Again.", {});
+        showPopup("error", "Failed to Add Inventory.Please Try Again.", {});
       }
     } catch (error) {
       console.log(error);
@@ -112,7 +120,12 @@ const Add = () => {
           </div>
         </form>
       </div>
-      <ToastContainer position="top-center" autoClose={1000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </div>
   );
 };

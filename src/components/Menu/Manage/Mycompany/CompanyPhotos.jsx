@@ -4,12 +4,10 @@ import LoadingState from "../../../../LoadingState";
 import { useDispatch, useSelector } from "react-redux";
 import ErrorStatus from "../../../Error/ErrorStatus";
 import Cookies from "js-cookie";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import { NavLink } from "react-router-dom";
 import { submitCompanyPhotos } from "@/ReduxStore/ProfleSlice";
 import { setBlurWhileLoading } from "@/ReduxStore/ProfleSlice";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const CompanyPhotos = () => {
   const token = Cookies.get("token");
@@ -19,6 +17,19 @@ const CompanyPhotos = () => {
   const [imageUrlsArray, setImageUrlsArray] = useState([]);
   const [imageUrlInput, setImageUrlInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
 
   const {
     // formData,
@@ -43,7 +54,7 @@ const CompanyPhotos = () => {
       setImageUrlInput("");
       console.log("🌐 Added Image URL:", trimmedUrl);
     } else {
-      toast.warning("Please enter a valid image URL.");
+      showPopup("warning", "Please enter a valid image URL.");
     }
   };
 
@@ -63,7 +74,8 @@ const CompanyPhotos = () => {
     }
 
     if (selectedFilesArray.length === 0 && updatedImageUrls.length === 0) {
-      toast.error("Please select at least one file or image URL.");
+      showPopup("error", "Please select at least one file or image URL.");
+
       return;
     }
     try {
@@ -82,12 +94,11 @@ const CompanyPhotos = () => {
       ).unwrap();
 
       if (result?.status) {
-        toast.info(result?.image?.message || "Photos uploaded successfully!", {
-          style: {
-            fontSize: "13px",
-            fontWeight: "bold",
-          },
-        });
+        showPopup(
+          "success",
+          result?.image?.message || "Photos uploaded successfully!"
+        );
+
         console.log("✅ Server Response:", result?.image);
         setSelectedFilesArray([]);
         setImageUrlsArray([]);
@@ -95,13 +106,7 @@ const CompanyPhotos = () => {
       }
     } catch (err) {
       console.error("❌ Upload failed:", err);
-      toast.error(err?.message || "Upload failed. Please try again."),
-        {
-          style: {
-            fontSize: "13px",
-            fontWeight: "bold",
-          },
-        };
+      showPopup("error", err?.message || "Upload failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -308,7 +313,12 @@ const CompanyPhotos = () => {
         </div>
       )}
 
-      <ToastContainer position="top-center" autoClose={2000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

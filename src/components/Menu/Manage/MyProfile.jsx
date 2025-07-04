@@ -18,11 +18,9 @@ import Footer from "../../Footer/Footer";
 import { setTogglePopUp } from "../../../ReduxStore/SearchProductSlice";
 import CompanyDetails from "../../Popups/CompanyDetails/CompanyDetails";
 import { setPopupCompanyDetail } from "../../../ReduxStore/SearchProductSlice";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { HiEye, HiEyeOff } from "react-icons/hi";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const MyProfile = () => {
   const token = Cookies.get("token");
@@ -42,7 +40,19 @@ const MyProfile = () => {
   const navigate = useNavigate();
 
   const [fileBase64, setFileBase64] = useState("");
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
 
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
   const [passwords, setPasswords] = useState({
     currentPassword: "",
     newPassword: "",
@@ -184,32 +194,44 @@ const MyProfile = () => {
       };
 
       if (!passwordRegex.length.test(newPassword)) {
-        toast.error("Password must be between 8–24 characters.");
+        showPopup("error", "Password must be between 8–24 characters.");
+
         dispatch(setBlurWhileLoading(true)); // ✅ Turn loader back off
         return;
       }
       if (!passwordRegex.uppercase.test(newPassword)) {
-        toast.error("Password must include at least one uppercase letter.");
+        showPopup(
+          "error",
+          "Password must include at least one uppercase letter."
+        );
+
         dispatch(setBlurWhileLoading(true)); // ✅ Turn loader back off
         return;
       }
       if (!passwordRegex.lowercase.test(newPassword)) {
-        toast.error("Password must include at least one lowercase letter.");
+        showPopup(
+          "error",
+          "Password must include at least one lowercase letter."
+        );
+
         dispatch(setBlurWhileLoading(true)); // ✅ Turn loader back off
         return;
       }
       if (!passwordRegex.digit.test(newPassword)) {
-        toast.error("Password must include at least one digit.");
+        showPopup("error", "Password must include at least one digit.");
+
         dispatch(setBlurWhileLoading(true)); // ✅ Turn loader back off
         return;
       }
       if (!passwordRegex.noLoginName.test(newPassword)) {
-        toast.error("Password cannot contain your login name.");
+        showPopup("error", "Password cannot contain your login name.");
+
         dispatch(setBlurWhileLoading(true)); // ✅ Turn loader back off
         return;
       }
       if (newPassword !== confirmNewPassword) {
-        toast.error("New password and confirm password must match.");
+        showPopup("error", "New password and confirm password must match.");
+
         dispatch(setBlurWhileLoading(true)); // ✅ Turn loader back off
         return;
       }
@@ -262,17 +284,16 @@ const MyProfile = () => {
       });
 
       // Success toast
-      toast.info(message, {
-        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
-      });
+
+      showPopup("success", message);
 
       if (passwordChanged) {
         Cookies.remove("token");
         Cookies.remove("user_id");
         console.log("🔐 Password updated. Logging out...");
-        toast.info("Navigating to Login Page", {
-          style: { fontSize: "17px", marginTop: "-10px" },
-        });
+
+        showPopup("info", "Navigating to Login Page");
+
         setTimeout(() => {
           navigate("/login");
         }, 2000);
@@ -285,9 +306,7 @@ const MyProfile = () => {
         "Failed to update profile. Try again.";
 
       console.error("❌ Submission error:", errMsg);
-      toast.error(errMsg, {
-        style: { fontSize: "17px", marginTop: "-10px"  },
-      });
+      showPopup("error", errMsg);
     }
   };
 
@@ -376,16 +395,13 @@ const MyProfile = () => {
       setFileBase64("");
 
       // Feedback
-      toast.success("Form reset successfully!", {
-        style: { fontSize: "17px", marginTop: "-10px" },
-      });
+
+      showPopup("success", "Form reset successfully!");
 
       console.log("✅ Form Reset Successfully");
     } catch (error) {
       console.error("❌ Error resetting form:", error);
-      toast.error("Failed to reset form. Try again.", {
-        style: { backgroundColor: "#FFCCCC", color: "#000" },
-      });
+      showPopup("error", "Failed to reset form. Try again.");
     }
   };
 
@@ -643,10 +659,13 @@ const MyProfile = () => {
                           <span
                             className="text-base text-[#444] cursor-pointer hover:underline hover:text-red-500"
                             onClick={() => {
-                              const name = formData?.socialNetworking?.facebook?.trim();
-                              const base = 'https://www.facebook.com/';
-                              const url = name ? `${base}${encodeURIComponent(name)}` : base;
-                              window.open(url, '_blank');
+                              const name =
+                                formData?.socialNetworking?.facebook?.trim();
+                              const base = "https://www.facebook.com/";
+                              const url = name
+                                ? `${base}${encodeURIComponent(name)}`
+                                : base;
+                              window.open(url, "_blank");
                             }}
                           >
                             Test
@@ -677,10 +696,13 @@ const MyProfile = () => {
                           <span
                             className="text-base text-[#444] cursor-pointer hover:underline hover:text-red-500"
                             onClick={() => {
-                              const name = formData?.socialNetworking?.twitter?.trim();
-                              const base = 'https://www.x.com/';
-                              const url = name ? `${base}${encodeURIComponent(name)}` : base;
-                              window.open(url, '_blank');
+                              const name =
+                                formData?.socialNetworking?.twitter?.trim();
+                              const base = "https://www.x.com/";
+                              const url = name
+                                ? `${base}${encodeURIComponent(name)}`
+                                : base;
+                              window.open(url, "_blank");
                             }}
                           >
                             Test
@@ -711,10 +733,13 @@ const MyProfile = () => {
                           <span
                             className="text-base text-[#444] cursor-pointer hover:underline hover:text-red-500"
                             onClick={() => {
-                              const name = formData?.socialNetworking?.linkedin?.trim();
-                              const base = 'https://www.linkedin.com/';
-                              const url = name ? `${base}in/${encodeURIComponent(name)}` : base;
-                              window.open(url, '_blank');
+                              const name =
+                                formData?.socialNetworking?.linkedin?.trim();
+                              const base = "https://www.linkedin.com/";
+                              const url = name
+                                ? `${base}in/${encodeURIComponent(name)}`
+                                : base;
+                              window.open(url, "_blank");
                             }}
                           >
                             Test
@@ -968,7 +993,7 @@ const MyProfile = () => {
                         className="w-full pr-10"
                       />
                       <span
-                        className="absolute right-2 top-[25px] cursor-pointer text-gray-500"
+                        className="absolute right-2 top-[20px] cursor-pointer text-gray-500"
                         onClick={() =>
                           setShowPassword((prev) => ({
                             ...prev,
@@ -996,7 +1021,7 @@ const MyProfile = () => {
                         className="w-full pr-10"
                       />
                       <span
-                        className="absolute right-2 top-[25px] cursor-pointer text-gray-500"
+                        className="absolute right-2 top-[20px] cursor-pointer text-gray-500"
                         onClick={() =>
                           setShowPassword((prev) => ({
                             ...prev,
@@ -1026,7 +1051,7 @@ const MyProfile = () => {
                         className="w-full pr-10"
                       />
                       <span
-                        className="absolute right-2 top-[25px] cursor-pointer text-gray-500"
+                        className="absolute right-2 top-[20px] cursor-pointer text-gray-500"
                         onClick={() =>
                           setShowPassword((prev) => ({
                             ...prev,
@@ -1087,7 +1112,13 @@ const MyProfile = () => {
       {togglePopUp && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
-      <ToastContainer position="top-center" autoClose={2000} />
+
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

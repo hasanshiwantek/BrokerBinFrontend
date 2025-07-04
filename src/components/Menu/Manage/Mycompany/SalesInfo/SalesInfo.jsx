@@ -6,9 +6,6 @@ import { setBlurWhileLoading } from "../../../../../ReduxStore/ProfleSlice";
 import ErrorStatus from "../../../../Error/ErrorStatus";
 import Cookies from "js-cookie";
 import { NavLink } from "react-router-dom";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import Trading from "./Trading";
 import Terms from "./Terms";
 import Categories from "./Categories";
@@ -22,6 +19,7 @@ import {
   submitCompanyManufacturers,
   submitCompanyreturnPolicy,
 } from "../../../../../ReduxStore/ProfleSlice";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const SalesInfo = () => {
   // const methods = useForm();
@@ -31,6 +29,19 @@ const SalesInfo = () => {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("trading"); // or 'bio', 'logo', etc.
   const [getTermsFormData, setTermsFormData] = useState({});
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
 
   const tabItems = [
     { key: "trading", label: "Trading" },
@@ -61,45 +72,43 @@ const SalesInfo = () => {
     setLoading(true);
     try {
       if (activeTab === "trading") {
-  const {
-    blind_shipping,
-    lease_program,
-    rental_program,
-    trade_program,
-    shipping_hour,
-    shipping_ampm,
-    trading_region,
-    shipping_options,
-    shipping_other,
-  } = data;
+        const {
+          blind_shipping,
+          lease_program,
+          rental_program,
+          trade_program,
+          shipping_hour,
+          shipping_ampm,
+          trading_region,
+          shipping_options,
+          shipping_other,
+        } = data;
 
-  const payload = {
-    blind_shipping: blind_shipping === "yes",
-    lease_program,
-    rental_program,
-    trade_program,
-    shipping_deadline: `${shipping_hour} ${shipping_ampm}`,
-    trading_region,
-    shipping_options,
-    shipping_other,
-    company_id
-  };
+        const payload = {
+          blind_shipping: blind_shipping === "yes",
+          lease_program,
+          rental_program,
+          trade_program,
+          shipping_deadline: `${shipping_hour} ${shipping_ampm}`,
+          trading_region,
+          shipping_options,
+          shipping_other,
+          company_id,
+        };
         console.log("📦 Submitting Trading Data:", data);
 
         // data.blind_shipping = data.blind_shipping === "yes";
         // data.shipping_deadline = `${data.shipping_hour} ${data.shipping_ampm}`;
         const result = await dispatch(
           submitTradingData({
-            data:payload,
+            data: payload,
             token,
           })
         ).unwrap();
 
         console.log("✅ Trading Response:", result);
 
-        toast.info(result?.data?.message || "Trading info updated!", {
-          style: { fontSize: "15px", marginTop: "-10px" },
-        });
+        showPopup("success", result?.data?.message || "Trading info updated!");
       }
 
       if (activeTab === "terms") {
@@ -109,9 +118,7 @@ const SalesInfo = () => {
           submitCompanyTerms({ data: formData, token })
         ).unwrap();
         console.log("✅ Terms Response:", result);
-        toast.info(result?.data?.message || "Terms info updated!", {
-          style: { fontSize: "15px", marginTop: "-10px" },
-        });
+        showPopup("success", result?.data?.message || "Terms info updated!");
       }
 
       if (activeTab === "categories") {
@@ -131,9 +138,10 @@ const SalesInfo = () => {
 
         console.log("✅ Categories Response:", result);
 
-        toast.info(result?.data?.message || "Company Categories updated!", {
-          style: { fontSize: "15px", marginTop: "-10px" },
-        });
+        showPopup(
+          "success",
+          result?.data?.message || "Company Categories updated!"
+        );
       }
 
       if (activeTab === "manufacturers") {
@@ -152,10 +160,10 @@ const SalesInfo = () => {
         ).unwrap();
 
         console.log("✅ Categories Response:", result);
-
-        toast.info(result?.data?.message || "Company Manufacturers updated!", {
-          style: { fontSize: "15px", marginTop: "-10px" },
-        });
+        showPopup(
+          "success",
+          result?.data?.message || "Company Manufacturers updated!"
+        );
       }
 
       if (activeTab === "returnPolicy") {
@@ -174,21 +182,18 @@ const SalesInfo = () => {
         ).unwrap();
 
         console.log("✅ Return Policy Response:", result);
-
-        toast.info(
-          result?.data?.message || "Company Return Policy updated!",
-
-          {
-            style: { fontSize: "15px", marginTop: "-10px" },
-          }
+        showPopup(
+          "success",
+          result?.data?.message || "Company Return Policy updated!"
         );
       }
     } catch (err) {
       console.error("❌ Submission Error:", err);
-      toast.error(
+      showPopup(
+        "error",
         err?.response?.data?.message ||
-        err?.message ||
-        "Update failed. Please try again."
+          err?.message ||
+          "Update failed. Please try again."
       );
     } finally {
       setLoading(false);
@@ -384,7 +389,12 @@ const SalesInfo = () => {
         </div>
       )}
 
-      <ToastContainer position="top-center" autoClose={2000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

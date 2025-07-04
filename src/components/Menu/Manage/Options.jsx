@@ -13,14 +13,17 @@ import {
   fetchUserData,
 } from "../../../ReduxStore/ProfleSlice";
 import { Link, NavLink } from "react-router-dom";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import Cookies from "js-cookie";
 import LoadingState from "@/LoadingState";
 import { setTogglePopUp } from "@/ReduxStore/SearchProductSlice";
 import CompanyDetails from "@/components/Popups/CompanyDetails/CompanyDetails";
 import { setPopupCompanyDetail } from "@/ReduxStore/SearchProductSlice";
+import PopupAlert from "@/components/Popups/PopupAlert";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+
+
 
 const Options = () => {
   const { optionFormData, loading, initialData } = useSelector(
@@ -28,6 +31,20 @@ const Options = () => {
   );
   const [loader, setLoader] = useState(false);
   const dispatch = useDispatch();
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 4000);
+  };
+
   const token = Cookies.get("token");
   console.log("Token: ", token);
 
@@ -89,17 +106,14 @@ const Options = () => {
 
       if (submitUserSettings.fulfilled.match(resultAction)) {
         console.log("✅ Submission Success:", resultAction.payload);
-        toast.info(
-          resultAction?.payload?.message || "User Options Updated Successfully",
-          {
-            style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
-          }
+        showPopup(
+          "success",
+          resultAction?.payload?.message || "User Options Updated Successfully"
         );
       } else {
         console.error("❌ Submission Failed:", resultAction.error.message);
-        toast.error("Submission Failed.Please Try Again", {
-          style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
-        });
+
+        showPopup("error", "Submission Failed.Please Try Again");
       }
     } catch (err) {
       console.error("🔥 Unexpected Submission Error:", err);
@@ -112,6 +126,7 @@ const Options = () => {
         style: {
           fontSize: "14px",
           fontWeight: "bold",
+          marginTop:"45px",
           backgroundColor: "#fffbdd",
           color: "#8a6d3b",
         },
@@ -124,9 +139,7 @@ const Options = () => {
   const handleReset = () => {
     try {
       dispatch(resetOptionData());
-      toast.info("Form Reset Successfully", {
-        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
-      });
+      showPopup("success", "Form Reset Successfully");
     } catch (err) {
       console.error("🔥 Unexpected Submission Error:", err);
     }
@@ -228,9 +241,7 @@ const Options = () => {
                   <div>
                     <label className="w-36">BroadCast</label>
                     <Link to={"/myprofile/broadcastfilter"}>
-                      <button >
-                        Options and Filters
-                      </button>
+                      <button>Options and Filters</button>
                     </Link>
                   </div>
                   <div>
@@ -685,6 +696,12 @@ const Options = () => {
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
       <ToastContainer position="top-center" autoClose={3000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

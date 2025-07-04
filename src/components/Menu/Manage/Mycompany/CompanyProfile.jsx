@@ -18,9 +18,8 @@ import { Link, NavLink } from "react-router-dom";
 import Footer from "../../../Footer/Footer";
 import axios from "axios";
 import { brokerAPI } from "../../../api/BrokerEndpoint";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
+
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const MyCompany = () => {
   const token = Cookies.get("token");
@@ -28,6 +27,19 @@ const MyCompany = () => {
 
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(true);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
 
   const {
     user,
@@ -152,17 +164,14 @@ const MyCompany = () => {
       // If required, update Redux state here
       dispatch(updateFormData(data));
       // ✅ Show success toast with light blue color
-      toast.info("Company Data Updated Successfully", {
-        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
-      });
+
+      showPopup("success", "Company Data Updated Successfully");
     } catch (error) {
       console.error(
         "Error updating Company Data:",
         error.response?.data || error.message
       );
-      toast.error("Error Updating  Company Data", {
-        style: { fontSize: "15px", marginTop: "-10px", fontWeight: "bold" }, //
-      });
+      showPopup("error", "Error Updating Company Data");
     } finally {
       console.log("Setting loading to false");
       dispatch(setBlurWhileLoading(true)); // Reset blur loading state
@@ -241,10 +250,8 @@ const MyCompany = () => {
                     <NavLink
                       to="/mycompany/Photos"
                       end
-                      className={({ isActive }) =>
-                        isActive ? css.active : ""
-                      }
-                    > 
+                      className={({ isActive }) => (isActive ? css.active : "")}
+                    >
                       <span>Photos</span>
                     </NavLink>
                   </li>
@@ -252,10 +259,8 @@ const MyCompany = () => {
                     <NavLink
                       to="/mycompany/Billing+Info"
                       end
-                      className={({ isActive }) =>
-                        isActive ? css.active : ""
-                      }
-                    > 
+                      className={({ isActive }) => (isActive ? css.active : "")}
+                    >
                       <span>Billing</span>
                     </NavLink>
                   </li>
@@ -383,8 +388,7 @@ const MyCompany = () => {
                     </span>
                   </div>
                 </div>
-                <div>
-                </div>
+                <div></div>
                 <div className={`${css.profileInfo_form_IMScreenNames} pt-5`}>
                   <h1>IM Screen Names</h1>
                   <div className="!text-left">
@@ -593,7 +597,12 @@ const MyCompany = () => {
         </div>
       )}
 
-      <ToastContainer position="top-center" autoClose={2000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

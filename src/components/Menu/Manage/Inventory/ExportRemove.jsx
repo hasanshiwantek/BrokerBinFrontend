@@ -4,9 +4,7 @@ import InventoryButtons from "./InventoryButtons";
 import css from "../../../../styles/Menu/Manage/Inventory/Inventory.module.css";
 import { exportRemoveInventory } from "../../../../ReduxStore/InventorySlice";
 import Cookies from "js-cookie";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const ExportRemove = () => {
   const [loading, setLoading] = useState(false); // To track API call status
@@ -16,6 +14,20 @@ const ExportRemove = () => {
     remove: "off",
     exportRemove: "inventory only",
   });
+    const [popup, setPopup] = useState({
+      show: false,
+      type: "success",
+      message: "",
+    });
+  
+    const showPopup = (type, message) => {
+      setPopup({ show: true, type, message });
+  
+      setTimeout(() => {
+        setPopup((prev) => ({ ...prev, show: false }));
+      }, 4000);
+    };
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -43,8 +55,8 @@ const ExportRemove = () => {
       exportRemove.exportRemove === "inventory only"
         ? "Inventory"
         : exportRemove.exportRemove === "broadcasts only"
-          ? "Broadcast"
-          : "Both";
+        ? "Broadcast"
+        : "Both";
 
     const payload = {
       actionType,
@@ -56,13 +68,13 @@ const ExportRemove = () => {
     try {
       setLoading(true); // Start loading
       await dispatch(exportRemoveInventory({ token, ...payload })).unwrap();
-                toast.info(`Your ${actionType} request for ${exportType} has been submitted to your admin.`, {
-                style: { fontSize:"14px" ,marginTop:"-10px" ,fontWeight:"bold",padding:"5px"} , // 
-      
-                 });
+      showPopup(
+        "success",
+        `Your ${actionType} request for ${exportType} has been submitted to your admin.`
+      );
     } catch (error) {
       console.error("Error during export/remove request:", error);
-         toast.error(error.message)
+      showPopup("error", `${error.message}`);
     } finally {
       setLoading(false); // End loading
     }
@@ -98,7 +110,7 @@ const ExportRemove = () => {
                     value="remove"
                     checked={exportRemove.remove === "on"}
                   />
-                  <label>Remove</label>
+                  <label >Remove</label>
                 </div>
               </div>
               <p>*An export link will be emailed to admins on the account</p>
@@ -115,7 +127,7 @@ const ExportRemove = () => {
               <select
                 name="exportRemove"
                 onChange={handleChange}
-                className="p-2"
+                className="p-2 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700 bg-white hover:cursor-pointer transition duration-150 ease-in-out"
               >
                 <option value="inventory only">Inventory Only</option>
                 <option value="all items">All Items</option>
@@ -127,16 +139,24 @@ const ExportRemove = () => {
         <div className={css.inventory_exportRemove_btn}>
           <button
             type="submit"
-            disabled={loading || (exportRemove.export === "off" && exportRemove.remove === "off")} // Disable if no option selected
-            className={loading ? "opacity-50 cursor-not-allowed" : " !p-3 rounded-md "}
+            disabled={
+              loading ||
+              (exportRemove.export === "off" && exportRemove.remove === "off")
+            } // Disable if no option selected
+            className={
+              loading ? "opacity-50 cursor-not-allowed" : " !p-3 rounded-md "
+            }
           >
             {loading ? "Processing..." : "Submit"}
           </button>
-
         </div>
       </form>
-                  <ToastContainer position="top-center" autoClose={3000} />
-      
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </div>
   );
 };

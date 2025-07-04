@@ -6,9 +6,7 @@ import { submitUserSearch } from "../../../ReduxStore/ProfleSlice";
 import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
 import css from "../../../styles/Menu/Manage/MyProfile.module.css";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const Person = () => {
   const [loading, setLoading] = useState(false); // To track API call status
@@ -25,6 +23,19 @@ const Person = () => {
     region: "",
     email: "",
   });
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
 
   const dispatch = useDispatch();
   const token = Cookies.get("token");
@@ -52,9 +63,8 @@ const Person = () => {
 
       if (result.length === 0) {
         // ✅ Show success toast with light blue color
-        toast.error("No Matching records found!", {
-          style: { fontSize: "12px", marginTop: "-20px", fontWeight: "bold" }, //
-        });
+
+        showPopup("error", "No Matching records found!");
 
         setFormData({
           firstName: "",
@@ -292,7 +302,12 @@ const Person = () => {
         </div>
       </main>
 
-      <ToastContainer position="top-center" autoClose={2000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

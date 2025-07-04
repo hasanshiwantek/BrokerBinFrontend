@@ -21,18 +21,29 @@ import {
 import RfqAddPart from "./RfqAddPart";
 import { fetchUserData } from "../../../../ReduxStore/ProfleSlice";
 import { useLocation } from "react-router-dom"; // Add this import
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import Header from "@/components/Header";
 import myProfile from "../../../../styles/Menu/Manage/MyProfile.module.css";
 import { NavLink } from "react-router-dom";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const RfqReply = () => {
   const location = useLocation(); // To get data passed via navigate
   // const selectedRfqs = location.state?.selectedRfqs || [];
   const { selectedRfqs = [], type = "reply" } = location.state || {};
   const { selectedRows = [] } = location.state || {};
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
 
   console.log("SELECTEDRFQ", selectedRfqs);
 
@@ -408,9 +419,8 @@ const RfqReply = () => {
       await dispatch(submitRfq({ token, data: formData }));
       // alert("RFQ submitted successfully!");
       // ✅ Show success toast with light blue color
-      toast.info("RFQ submitted successfully!", {
-        style: { fontSize: "15px", marginTop: "-10px", fontWeight: "bold" }, //
-      });
+      showPopup("success", "RFQ submitted successfully!");
+
       // Check if the RFQ was forwarded and update its status
       if (type === "forward") {
         const payload = {
@@ -426,9 +436,10 @@ const RfqReply = () => {
       clearFields();
     } catch (error) {
       console.error("Error submitting RFQ", error);
-      toast.error("Error  submitting RFQ.PLease Try Again!" || error.message, {
-        style: { fontSize: "15px", marginTop: "-10px", fontWeight: "bold" }, //
-      });
+      showPopup(
+        "error",
+        "Error  submitting RFQ.PLease Try Again!" || error.message
+      );
     }
   };
 
@@ -636,7 +647,9 @@ const RfqReply = () => {
                           <label htmlFor="text">HECI / CLEI</label>
                           <label htmlFor="select">Mfg</label>
                           <label htmlFor="select">Cond</label>
-                          <label htmlFor="number">Qty <span className="text-red-600">*</span></label>
+                          <label htmlFor="number">
+                            Qty <span className="text-red-600">*</span>
+                          </label>
                           <label htmlFor="number">Target Price </label>
                           <label htmlFor="text">Terms</label>
                         </div>
@@ -1002,7 +1015,12 @@ const RfqReply = () => {
           </div>
         </form>
       </div>
-      <ToastContainer position="top-center" autoClose={1000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };
