@@ -5,6 +5,7 @@ import { BiMinus, BiPlus } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import { setAddAnotherFiles } from "../../../../ReduxStore/InventorySlice";
 
+
 const AddAnotherFile = ({ onFileChange, fileInputRefs }) => {
   const dispatch = useDispatch();
   const fileMetadata = useSelector(
@@ -13,7 +14,13 @@ const AddAnotherFile = ({ onFileChange, fileInputRefs }) => {
   // Redux state for file metadata
   const { addAnotherFiles } = useSelector((state) => state.inventoryStore);
   const [selectedFiles, setSelectedFiles] = useState([]);
-
+    const [popup, setPopup] = useState({
+      show: false,
+      type: "success",
+      message: "",
+    });
+  
+ 
   // ✅ Handle file selection
   const handleFileChange = (e, index) => {
     const file = e.target.files[0];
@@ -85,6 +92,7 @@ const AddAnotherFile = ({ onFileChange, fileInputRefs }) => {
               type="file"
               ref={(el) => (fileInputRefs.current[i] = el)}
               onChange={(e) => handleFileChange(e, i)}
+              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700 bg-white hover:cursor-pointer transition duration-150 ease-in-out"
             />
             <select
               value={file.status}
@@ -97,6 +105,7 @@ const AddAnotherFile = ({ onFileChange, fileInputRefs }) => {
                   )
                 )
               }
+              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700 bg-white hover:cursor-pointer transition duration-150 ease-in-out"
             >
               <option value="error">Select a Status</option>
               <option value="NA">Auto Detect</option>

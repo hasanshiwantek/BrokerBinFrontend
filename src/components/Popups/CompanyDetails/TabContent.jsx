@@ -20,12 +20,11 @@ import {
   fetchMyNotes,
   removeMyFavouriteContacts,
 } from "../../../ReduxStore/ToolsSlice";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import { HiUserRemove } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import { deleteCompanyPhotos } from "@/ReduxStore/ProfleSlice";
+import PopupAlert from "@/components/Popups/PopupAlert";
+
 const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
   // const [toggleTabs, setToggleTabs] = useState(1);
   // Loading state
@@ -37,7 +36,19 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
   const [feedbacks, setFeedbacks] = useState([]);
   const { noteData } = useSelector((store) => store.toolsStore);
   console.log("MY Notes Data From Frontend", noteData);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
 
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
   const dispatch = useDispatch();
   const { companyContactData } = useSelector(
     (store) => store.searchProductStore
@@ -189,12 +200,15 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
       );
       const payload = result?.payload;
       if (payload?.success) {
-        toast.success("Note and rating saved!");
+        showPopup("success", "Note and rating saved!");
       } else {
-        toast.info(payload?.message || "Failed to save note and rating.");
+        showPopup(
+          "info",
+          payload?.message || "Failed to save note and rating."
+        );
       }
     } catch (err) {
-      toast.error("Error saving: " + err.message);
+      showPopup("error", "Error saving: " + err.message);
     }
   };
 
@@ -219,13 +233,15 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
 
       if (result?.status) {
         console.log("User Deleted with id: ", id);
-        toast.info(result?.message || "User Deleted From Company!");
+
+        showPopup("info", result?.message || "User Deleted From Company!");
+
         fetchCompanyContacts(); // Optional refresh
       } else {
-        toast.info(result?.message || "Failed to remove contact.");
+        showPopup("info", result?.message || "Failed to remove contact.");
       }
     } catch (err) {
-      toast.error("Error removing contact: " + err.message);
+      showPopup("error", "Error removing contact: " + err.message);
     }
   };
 
@@ -247,13 +263,14 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
       ).unwrap();
       if (result?.status) {
         console.log("Image Deleted with id: ", id);
-        toast.info(result?.message || "Image Deleted From Company!");
+        showPopup("info", result?.message || "Image Deleted From Company!");
+
         fetchCompanyContacts();
       } else {
-        toast.info(result?.message || "Failed to remove Image.");
+        showPopup("info", result?.message || "Failed to remove Image.");
       }
     } catch (err) {
-      toast.error("Error removing Image: " + err.message);
+      showPopup("error", "Error removing Image: " + err.message);
     }
   };
 
@@ -910,6 +927,12 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
           </div>
         </div>
       </div>
+            <PopupAlert
+              show={popup.show}
+              type={popup.type}
+              message={popup.message}
+              onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+            />
     </>
   );
 };

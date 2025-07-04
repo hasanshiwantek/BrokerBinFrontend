@@ -27,15 +27,26 @@ import FiltersSearchCompanyInventory from "../../Reports/FiltersSearchCompanyInv
 import { setTogglePopUp } from "../../../../ReduxStore/SearchProductSlice";
 import CompanyDetails from "../../../Popups/CompanyDetails/CompanyDetails";
 import { setPopupCompanyDetail } from "../../../../ReduxStore/SearchProductSlice";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const Options = () => {
   const { filters } = useSelector((state) => state.broadcastStore);
   console.log("bfilters ", filters);
   // Existing states and handlers...
   const [mfg, setIncludedMFGs] = useState([]);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
 
   // Handler to update the included manufacturers
   const handleIncludedMFGsChange = (newIncludedMFGs) => {
@@ -299,17 +310,14 @@ const Options = () => {
       dispatch(broadCastFilters({ data: transformedData, token }));
       // alert("Broadcast filters submitted successfully!");
       // ✅ Show success toast with light blue color
-      toast.info("Broadcast filters submitted successfully!", {
-        style: { fontSize: "13px", marginTop: "-10px", fontWeight: "bold" }, //
-      });
+      showPopup("success", "Broadcast filters submitted successfully!");
 
       console.log("Broadcast filters submitted successfully.");
       setSelectedCompanyNames([]);
     } catch (error) {
       console.error("Error during broadcast filter submission: ", error);
-      toast.error("Failed Submitting Broadcast Filters!Try Again Later", {
-        style: { fontSize: "13px", marginTop: "-10px", fontWeight: "bold" }, //
-      });
+      showPopup("error", "Failed Submitting Broadcast Filters!Try Again Later");
+
       // alert("An error occurred while submitting the broadcast filters. Please try again.");
     }
   };
@@ -387,7 +395,9 @@ const Options = () => {
                 <li>
                   <NavLink
                     to="/myprofile/Options"
-                    className={({ isActive }) => (isActive ? myProfile.active : '')}
+                    className={({ isActive }) =>
+                      isActive ? myProfile.active : ""
+                    }
                   >
                     <span>Options</span>
                   </NavLink>
@@ -435,7 +445,7 @@ const Options = () => {
                       name="daily_broadcast"
                       value={broadcastFilterState.dailyBroadcast ? "1" : "0"}
                       onChange={handleSelectChange}
-                      className="!w-24"
+                      className="!w-24 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700 bg-white hover:cursor-pointer transition duration-150 ease-in-out"
                     >
                       <option value="0">Off</option>
                       <option value="1">On</option>
@@ -447,7 +457,7 @@ const Options = () => {
                       name="broadcasts"
                       value={broadcastFilterState.broadcasts ? "1" : "0"}
                       onChange={handleSelectChange}
-                      className="!w-24"
+                      className="!w-24 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700 bg-white hover:cursor-pointer transition duration-150 ease-in-out"
                     >
                       <option value="0">Off</option>
                       <option value="1">On</option>
@@ -459,7 +469,7 @@ const Options = () => {
                       name="multicast"
                       value={broadcastFilterState.multicast ? "1" : "0"}
                       onChange={handleSelectChange}
-                      className="!w-24"
+                      className="!w-24 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700 bg-white hover:cursor-pointer transition duration-150 ease-in-out"
                     >
                       <option value="0">Off</option>
                       <option value="1">On</option>
@@ -745,7 +755,10 @@ const Options = () => {
                   </ul>
                 </div>
                 <div className={css.broadcastFilters_companyFilter}>
-                  <h1> Company Filters (Max of 25/Overrides My Vendor settings.) </h1>
+                  <h1>
+                    {" "}
+                    Company Filters (Max of 25/Overrides My Vendor settings.){" "}
+                  </h1>
                   <div className={css.section} style={{ margin: "10px" }}>
                     <div className={css.display}>
                       <FiltersSearchCompanyInventory />
@@ -799,7 +812,13 @@ const Options = () => {
       {togglePopUp && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
-      <ToastContainer position="top-center" autoClose={1000} />
+
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

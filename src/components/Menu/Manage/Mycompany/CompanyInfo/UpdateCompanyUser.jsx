@@ -3,10 +3,9 @@ import css from "@/styles/Menu/Manage/MyProfile.module.css";
 import { useDispatch } from "react-redux";
 import Cookies from "js-cookie";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { updateCompanyUserData } from "@/ReduxStore/ProfleSlice";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const UpdateCompanyUser = () => {
   const token = Cookies.get("token");
@@ -15,6 +14,19 @@ const UpdateCompanyUser = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
 
   const [form, setForm] = useState({});
   const [showPassword, setShowPassword] = useState(false);
@@ -98,13 +110,14 @@ const UpdateCompanyUser = () => {
       ).unwrap();
 
       if (result?.status === 200) {
-        toast.success(result.message || "✅ Contact updated successfully!");
+        showPopup("success", result.message || "Contact updated successfully!");
         setTimeout(() => navigate("/companyContacts"), 1500);
       } else {
-        toast.error(result.message || "❌ Failed to update contact.");
+        showPopup("error", result.message || "Failed to update contact.");
       }
     } catch (error) {
-      toast.error("❌ Error while updating contact. Please try again.");
+      showPopup("error", "Error while updating contact. Please try again.");
+
       console.error("Submission error:", error);
     }
     setLoading(false);
@@ -152,7 +165,7 @@ const UpdateCompanyUser = () => {
                   end
                   className={({ isActive }) => (isActive ? css.active : "")}
                 >
-               Billing
+                  Billing
                 </NavLink>
               </li>
             </ul>
@@ -408,7 +421,13 @@ const UpdateCompanyUser = () => {
           </div>
         </div>
       </form>
-      <ToastContainer position="top-center" autoClose={2000} />
+
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </div>
   );
 };

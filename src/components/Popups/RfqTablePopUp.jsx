@@ -7,13 +7,24 @@ import { fetchUserData } from "../../ReduxStore/ProfleSlice";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { useReactToPrint } from "react-to-print";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const RfqTablePopUp = ({ type }) => {
   const { rfqPopBoxInfo } = useSelector((state) => state.rfqStore);
   console.log("RFQ Pop Box Info", rfqPopBoxInfo);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -86,23 +97,26 @@ const RfqTablePopUp = ({ type }) => {
 
   const archiveRfq = async (rfq) => {
     const token = Cookies.get("token");
-    const payload = [{
-      rfq_id: rfq.rfqId, 
-      status: 1, 
-      user_id: id
-    }];
+    const payload = [
+      {
+        rfq_id: rfq.rfqId,
+        status: 1,
+        user_id: id,
+      },
+    ];
     console.log("Payload", payload);
-  
+
     try {
       await dispatch(rfqArchive({ token, data: payload }));
-      toast.success("RFQ archived successfully!");
+      showPopup("success", "RFQ archived successfully!");
+
       closeModal(); // optional
     } catch (err) {
       console.error(err);
-      toast.error("Failed to archive RFQ.");
+      showPopup("error", "Failed to archive RFQ.");
     }
   };
-  
+
   return (
     <div className={css.RfqTablePopUp}>
       <div className={css.RfqTablePopUp_body}>
@@ -143,7 +157,7 @@ const RfqTablePopUp = ({ type }) => {
                 {type === "sent" && Array.isArray(item.to)
                   ? item.to.map((user, idx) => (
                       <span key={idx}>
-                        {user.firstName} -  {user.company.name}
+                        {user.firstName} - {user.company.name}
                         {idx < item.to.length - 1 && ", "}
                       </span>
                     ))
@@ -287,7 +301,12 @@ const RfqTablePopUp = ({ type }) => {
           </button>
         </div>
       </div>
-      <ToastContainer position="top-center" autoClose={1000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </div>
   );
 };

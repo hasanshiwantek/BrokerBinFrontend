@@ -10,11 +10,9 @@ import { Tooltip } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { blockMyVendor, addMyVendors } from "@/ReduxStore/ToolsSlice";
 import { FaUserXmark, FaUserCheck } from "react-icons/fa6";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import { IoPersonAdd } from "react-icons/io5";
 import Cookies from "js-cookie";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const Accordion = ({
   groupedData,
@@ -42,6 +40,19 @@ const Accordion = ({
   });
 
   const [activePanel, setActivePanel] = useState([]);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
   // const dispatch = useDispatch();
 
   const togglePanel = (index) => {
@@ -59,62 +70,39 @@ const Accordion = ({
   };
 
   const dispatch = useDispatch();
-  // const navigate = useNavigate();
-
-  // const country = groupedData[company][0]?.company_country || "Unknown";
-
-  // const companies = Object.entries(groupedData)
-  //   .sort((a, b) => {
-  //     const aParts = a[1];
-  //     const bParts = b[1];
-
-  //     switch (filterOption) {
-  //       case "cnt_ASC":
-  //         return aParts.length - bParts.length;
-  //       case "cnt_DESC":
-  //         return bParts.length - aParts.length;
-  //       case "maxprice":
-  //         return (
-  //           Math.max(...bParts.map((p) => p.price || 0)) -
-  //           Math.max(...aParts.map((p) => p.price || 0))
-  //         );
-  //       case "lowestprice":
-  //         return (
-  //           Math.min(...aParts.map((p) => p.price || 0)) -
-  //           Math.min(...bParts.map((p) => p.price || 0))
-  //         );
-  //       case "bestmatch":
-  //       default:
-  //         return 0;
-  //     }
-  //   })
-  //   .map(([company]) => company);
 
   const companies = Object.entries(groupedData)
-  .filter(([company, parts]) => 
-    company !== "Unknown Company" && 
-    Array.isArray(parts) && 
-    parts.length > 0 &&
-    parts[0]?.inventory?.addedBy?.company?.name // ensure valid company name
-  )
-  .sort((a, b) => {
-    const aParts = a[1];
-    const bParts = b[1];
-    switch (filterOption) {
-      case "cnt_ASC":
-        return aParts.length - bParts.length;
-      case "cnt_DESC":
-        return bParts.length - aParts.length;
-      case "maxprice":
-        return Math.max(...bParts.map((p) => p.price || 0)) - Math.max(...aParts.map((p) => p.price || 0));
-      case "lowestprice":
-        return Math.min(...aParts.map((p) => p.price || 0)) - Math.min(...bParts.map((p) => p.price || 0));
-      case "bestmatch":
-      default:
-        return 0;
-    }
-  })
-  .map(([company]) => company);
+    .filter(
+      ([company, parts]) =>
+        company !== "Unknown Company" &&
+        Array.isArray(parts) &&
+        parts.length > 0 &&
+        parts[0]?.inventory?.addedBy?.company?.name // ensure valid company name
+    )
+    .sort((a, b) => {
+      const aParts = a[1];
+      const bParts = b[1];
+      switch (filterOption) {
+        case "cnt_ASC":
+          return aParts.length - bParts.length;
+        case "cnt_DESC":
+          return bParts.length - aParts.length;
+        case "maxprice":
+          return (
+            Math.max(...bParts.map((p) => p.price || 0)) -
+            Math.max(...aParts.map((p) => p.price || 0))
+          );
+        case "lowestprice":
+          return (
+            Math.min(...aParts.map((p) => p.price || 0)) -
+            Math.min(...bParts.map((p) => p.price || 0))
+          );
+        case "bestmatch":
+        default:
+          return 0;
+      }
+    })
+    .map(([company]) => company);
 
   console.log("Companies: ", companies);
 
@@ -147,18 +135,13 @@ const Accordion = ({
         ...prev,
         [companyId]: newStatus,
       }));
-
-      toast.info(
-        `Vendor ${newStatus === 1 ? "blocked" : "unblocked"} successfully!`,
-        {
-          style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
-        }
+      showPopup(
+        "info",
+        `Vendor ${newStatus === 1 ? "blocked" : "unblocked"} successfully!`
       );
     } catch (error) {
       console.error("Error toggling vendor status", error);
-      toast.error("Failed to update vendor status.", {
-        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
-      });
+      showPopup("error", "Failed to update vendor status.");
     }
   };
 
@@ -171,16 +154,13 @@ const Accordion = ({
       ).unwrap();
 
       // Show backend message
-      toast.info(response.message || "Vendor updated successfully!", {
-        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
-      });
+      showPopup("info", response.message || "Vendor updated successfully!");
 
       console.log("Add Vendor Response:", response);
     } catch (error) {
       console.error("Error adding vendor", error);
-      toast.error(error?.message || "Failed to update vendor.", {
-        style: { fontSize: "16px" },
-      });
+
+      showPopup("error", error?.message || "Failed to update vendor.");
     }
   };
 
@@ -201,7 +181,6 @@ const Accordion = ({
 
   return (
     <>
-
       <div className={css.accordion}>
         {companies.length > 0 && (
           <div className=" px-4 py-2">
@@ -237,10 +216,7 @@ const Accordion = ({
           console.log(effectiveStatus);
 
           return (
-            
-            
             <div className={css.accordionPanel} key={index}>
-
               <div ref={pdfRef}>
                 <h2 id={`panel${index + 1}-title`}>
                   <button
@@ -391,7 +367,12 @@ const Accordion = ({
         <CompanyDetails closeModal={() => dispatch(setTogglePopUp())} />
       )}
 
-      <ToastContainer position="top-center" autoClose={2000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

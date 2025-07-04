@@ -9,21 +9,17 @@ import {
   showSortHotListItem,
   showHotListItemMfg,
 } from "../../../ReduxStore/ToolsSlice";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import PaginationControls from "@/components/pagination/PaginationControls";
 import SortableTableHeader from "@/components/Tables/SortableHeader";
 import { triggerSearchFocus } from "@/ReduxStore/focusSlice";
 import { initialMFGs } from "@/data/services";
+import PopupAlert from "@/components/Popups/PopupAlert";
+
 const HotListView = () => {
   // const [selectedItems, setSelectedItems] = useState([]);
-    const {  user } = useSelector(
-      (state) => state.profileStore
-    );
-    console.log("User: ",user);
-    
-  
+  const { user } = useSelector((state) => state.profileStore);
+  console.log("User: ", user);
+
   const items = useSelector((state) => state.toolsStore.myHotListItems);
   const loading = useSelector((state) => state.toolsStore.loading);
   const pagination = useSelector(
@@ -45,7 +41,19 @@ const HotListView = () => {
   const sortBy = searchParams.get("sortBy") || "";
   const sortOrder = searchParams.get("sortOrder") || "asc";
   const isSorted = !!sortBy;
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
 
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
   const dispatch = useDispatch();
   const token = Cookies.get("token");
 
@@ -75,28 +83,24 @@ const HotListView = () => {
   // Handle delete button click
   const handleDelete = () => {
     if (selectedIds.length === 0) {
-      toast.error("No items selected for Deletion", {
-        // Light red error
-      });
+      showPopup("error", "No items selected for Deletion");
       return;
     }
     const payload = selectedIds; // Only send an array of IDs
     console.log("Payload for Backend:", payload);
-    toast.info("Hotlists Deleted successfully!", {
-      style: { fontSize: "15px", marginTop: "-10px" }, //
-    });
+    showPopup("success", "Hotlists Deleted successfully!");
     dispatch(deleteHotlists({ token, ids: payload }))
       .then(() => {
         console.log("Deletion successful.");
         setSelectedIds([]);
-        setTimeout(()=>{
+        setTimeout(() => {
           dispatch(showHotListItem({ token, pageNumber: currentPage })); // Refresh the list
-        },2000)
+        }, 2000);
       })
       .catch((error) => {
         console.error("Error during deletion:", error);
         alert("Error deleting hotlist,Please try again");
-        toast.error("Failed to Delete Hotlist. Try again.", {});
+        showPopup("error", "Failed to Delete Hotlist. Try again.", {});
       });
   };
 
@@ -357,7 +361,12 @@ const HotListView = () => {
         </div>
       </div>
 
-      <ToastContainer position="top-center" autoClose={1000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

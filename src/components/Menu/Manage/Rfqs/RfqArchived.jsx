@@ -29,13 +29,11 @@ import { setPopupCompanyDetail } from "../../../../ReduxStore/SearchProductSlice
 import CompanyDetails from "../../../Popups/CompanyDetails/CompanyDetails.jsx";
 import { setTogglePopUp as setTogglePopUpCompany } from "../../../../ReduxStore/SearchProductSlice";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import SortableTableHeader from "@/components/Tables/SortableHeader";
 import usePagination from "@/components/hooks/usePagination";
 import PaginationControls from "@/components/pagination/PaginationControls";
 import { useSearchParams } from "react-router-dom";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const RfqTableSent = () => {
   const navigate = useNavigate();
@@ -48,7 +46,19 @@ const RfqTableSent = () => {
   } = useSelector((state) => state.rfqStore);
 
   const [resetTrigger, setResetTrigger] = useState(false);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
 
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
   const { togglePopUp: togglePopUpCompany } = useSelector(
     (state) => state.searchProductStore
   );
@@ -156,7 +166,6 @@ const RfqTableSent = () => {
   const companyData = sentData?.map((item) => {
     return item.to?.map((recipient) => recipient.company?.name);
   });
-
 
   console.log("Sent Data Received", sentData);
 
@@ -283,7 +292,8 @@ const RfqTableSent = () => {
 
   const handleReply = () => {
     if (rfqMail.length === 0) {
-      toast.warning("Please select at least one RFQ to reply.");
+      showPopup("warning", "Please select at least one RFQ to reply.");
+
       return;
     }
 
@@ -292,30 +302,31 @@ const RfqTableSent = () => {
 
   const handleDelete = () => {
     if (rfqMail.length === 0) {
-      toast.warning("Please select at least one RFQ to delete.");
+      showPopup("warning", "Please select at least one RFQ to delete.");
       return;
     }
 
     const rfqIdsToDelete = rfqMail.map((rfq) => rfq.rfqId); // Collect RFQ IDs
     const token = Cookies.get("token"); // Get token
 
-    const result=dispatch(deleteArchiveRfq({ token, ids: rfqIdsToDelete })).unwrap()
+    const result = dispatch(deleteArchiveRfq({ token, ids: rfqIdsToDelete }))
+      .unwrap()
       .then(() => {
-        console.log("Delete RFQ result: ",result);
-        
+        console.log("Delete RFQ result: ", result);
+
         console.log("Selected RGQs Deleted");
-        toast.info("Selected RFQs deleted successfully!");
+        showPopup("success", "Selected RFQs deleted successfully!");
         dispatch(getRfqArchived({ token, page: currPage })); // Refresh the data
       })
       .catch((error) => {
         console.error("Error deleting RFQs:", error);
-        toast.error("Failed to delete RFQs. Please try again.");
+        showPopup("error", "Failed to delete RFQs. Please try again.");
       });
   };
 
   const handleForward = () => {
     if (rfqMail.length === 0) {
-      toast.warning("Please select at least one RFQ to forward.");
+      showPopup("warning", "Please select at least one RFQ to forward.");
       return;
     }
 
@@ -343,11 +354,11 @@ const RfqTableSent = () => {
 
     try {
       await dispatch(rfqArchive({ token, data: payload }));
-      toast.success("RFQ restored successfully!");
+      showPopup("success", "RFQ restored successfully!");
       window.location.reload(); // Reload the page to reflect changes
     } catch (err) {
       console.error(err);
-      toast.error("Failed to restore RFQ.");
+      showPopup("error", "Failed to restore RFQ.");
     }
   };
 
@@ -643,7 +654,12 @@ const RfqTableSent = () => {
             </div>
           </div>
         </div>
-        <ToastContainer position="top-center" autoClose={1000} />
+        <PopupAlert
+          show={popup.show}
+          type={popup.type}
+          message={popup.message}
+          onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+        />
       </div>
       {togglePopUpRfq && <RfqTablePopUp type="sent" />}
       {togglePopUpCompany && (

@@ -11,9 +11,6 @@ import Cookies from "js-cookie";
 import { Link, NavLink } from "react-router-dom";
 import axios from "axios";
 import { brokerAPI } from "../../../../api/BrokerEndpoint";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import CompanyBio from "./CompanyBio";
 import CompanyLogo from "./CompanyLogo";
 import {
@@ -27,6 +24,7 @@ import { statesList, countriesList, regionsList } from "@/data/services";
 import { submitCompanyLogo } from "@/ReduxStore/ProfleSlice";
 import CompanyInfoOptions from "./CompanyInfoOptions";
 import MapComponent from "./CompanyMapComponent";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const CompanyPrimaryInfo = () => {
   const token = Cookies.get("token");
@@ -48,6 +46,19 @@ const CompanyPrimaryInfo = () => {
     mail: false,
     email: "",
   });
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
 
   console.log("BIO", bio);
 
@@ -304,21 +315,15 @@ const CompanyPrimaryInfo = () => {
         console.log("result: ", result);
 
         if (result?.payload?.status) {
-          toast.info(
-            result?.payload?.message ||
-              "Company primary info updated successfully",
-            {
-              style: { fontSize: "15px", marginTop: "-10px" },
-            }
+          showPopup(
+            "success",
+            result?.payload?.message || "Company info updated"
           );
           console.log("✅ Success Response:", result.payload);
         } else {
-          toast.error(
-            result?.payload?.message ||
-              " Failed to update company primary info",
-            {
-              style: { fontSize: "15px", marginTop: "-10px" },
-            }
+          showPopup(
+            "error",
+            result?.payload?.message || "Failed to update info"
           );
           console.warn("❌ Failure Response:", result);
         }
@@ -337,14 +342,17 @@ const CompanyPrimaryInfo = () => {
         );
 
         if (result?.payload?.status) {
-          toast.info("Company bio updated successfully", {
-            style: { fontSize: "15px", marginTop: "-10px" },
-          });
+          showPopup(
+            "success",
+            result?.payload?.message || "Company bio updated"
+          );
           console.log("✅ Bio Saved:", result.payload);
         } else {
-          toast.error("Failed to update company bio.Please Try Again.", {
-            style: { fontSize: "15px", marginTop: "-10px" },
-          });
+          showPopup(
+            "error",
+            result?.payload?.message ||
+              "Failed to update company bio. Please try again."
+          );
           console.warn("❌ Failure Response:", result);
         }
       }
@@ -356,19 +364,15 @@ const CompanyPrimaryInfo = () => {
           console.log("Image result", result);
 
           if (result?.payload?.status && result.payload.image) {
-            toast.info("Company logo uploaded successfully", {
-              style: { fontSize: "15px", marginTop: "-10px" },
-            });
+            showPopup("success", "Company logo uploaded successfully");
 
             // ✅ Instantly show the new image
             setLogoPreview(result.payload.image);
           } else {
-            toast.error("Failed to upload company logo", {
-              style: { fontSize: "15px", marginTop: "-10px" },
-            });
+            showPopup("error", "Failed to upload company logo");
           }
         } else {
-          toast.info("ℹ️ Please select a logo file before submitting.");
+          showPopup("error", "Please select a logo file before submitting.");
         }
       }
 
@@ -386,29 +390,22 @@ const CompanyPrimaryInfo = () => {
         console.log("result: ", result);
 
         if (result?.payload?.status) {
-          toast.info(
-            result?.payload?.message || "Company Options updated successfully",
-            {
-              style: { fontSize: "15px", marginTop: "-10px" },
-            }
+          showPopup(
+            "success",
+            result?.payload?.message || "Company options updated successfully"
           );
           console.log("✅ Success Response:", result.payload);
         } else {
-          toast.error(
-            result?.payload?.message ||
-              " Failed to update company settings info",
-            {
-              style: { fontSize: "15px", marginTop: "-10px" },
-            }
+          showPopup(
+            "error",
+            result?.payload?.message || "Failed to update company settings"
           );
           console.warn("❌ Failure Response:", result);
         }
       }
     } catch (error) {
       console.error("❌ Error during form submission:", error);
-      toast.error(" Something went wrong during submission", {
-        style: { fontSize: "15px", marginTop: "-10px" },
-      });
+      showPopup("error", "Something went wrong during submission");
     } finally {
       setLoading(false);
     }
@@ -772,8 +769,13 @@ const CompanyPrimaryInfo = () => {
           </form>
         </div>
       )}
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
 
-      <ToastContainer position="top-center" autoClose={2000} />
     </>
   );
 };

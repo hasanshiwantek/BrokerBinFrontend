@@ -1,19 +1,32 @@
-import React, { useState } from "react";
+import React, { useState ,useRef} from "react";
 import css from "../../../../styles/Menu/Manage/Inventory/Inventory.module.css";
 import { BiMinus, BiPlus } from "react-icons/bi";
 import Tooltip from "@mui/material/Tooltip";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { scheduleUpload } from "@/ReduxStore/InventorySlice";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { useDispatch } from "react-redux";
 import Cookies from "js-cookie";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const ScheduleNewUpload = () => {
   const [showSchedule, setShowSchedule] = useState(false);
   const [toggleAddFile, setToggleAddFile] = useState(true);
   const [selectedFile, setSelectedFile] = useState(null);
   const [formKey, setFormKey] = useState(Date.now());
+  const fileInputRefs = useRef([]);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 4000);
+  };
 
   const dispatch = useDispatch();
   const token = Cookies.get("token");
@@ -21,7 +34,7 @@ const ScheduleNewUpload = () => {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) {
-      toast.error("❗ Please select a file.");
+      showPopup("error", " Please select a file.");
       return;
     }
 
@@ -31,12 +44,15 @@ const ScheduleNewUpload = () => {
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     ];
     if (!allowedTypes.includes(file.type)) {
-      toast.error("❌ Invalid file type. Only CSV or Excel files are allowed.");
+      showPopup(
+        "error",
+        " Invalid file type. Only CSV or Excel files are allowed."
+      );
       return;
     }
 
     setSelectedFile(file);
-    toast.success(`✅ File selected: ${file.name}`);
+    showPopup("success","File selected: ${file.name}");
   };
 
   const handleSubmit = (e) => {
@@ -44,7 +60,7 @@ const ScheduleNewUpload = () => {
     const form = new FormData(e.target);
 
     if (!selectedFile) {
-      toast.error("❗ File is required to proceed.");
+      showPopup("info", " File is required to proceed.");
       console.log("File is Required");
 
       return;
@@ -55,7 +71,10 @@ const ScheduleNewUpload = () => {
     const uploader = form.get("uploader");
 
     if (!scheduleTime || !uploader) {
-      toast.error("❗ Please fill all required fields (Time, Uploader, File).");
+      showPopup(
+        "error",
+        " Please fill all required fields (Time, Uploader, File)."
+      );
       console.log("❗ Please fill all required fields (Time, Uploader, File).");
 
       return;
@@ -64,18 +83,19 @@ const ScheduleNewUpload = () => {
     form.append("file", selectedFile);
     form.set("useSSHKey", form.get("useSSHKey") === "on" ? 1 : 0);
 
-    toast.info("⏳ Uploading...");
+    showPopup("success", "⏳ Uploading...");
 
     dispatch(scheduleUpload({ formData: form, token })).then((res) => {
       console.log("📥 Backend Response:", res);
 
       if (res.meta.requestStatus === "fulfilled") {
-        toast.success(res.payload.message || " Upload successful!");
+        showPopup("success", res.payload.message || " Upload successful!");
         console.log("✅ Payload returned:", res.payload);
         setSelectedFile(null);
         setFormKey(Date.now()); // Reset form
       } else {
-        toast.error(res.payload.message || "❌ Upload failed.");
+        showPopup("error", res.payload.message || "Upload failed.");
+
         console.error("❌ Backend Error Payload:", res.payload);
       }
     });
@@ -206,6 +226,12 @@ const ScheduleNewUpload = () => {
           </form>
         </>
       )}
+                <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </div>
   );
 };

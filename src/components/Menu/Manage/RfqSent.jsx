@@ -30,9 +30,7 @@ import SortableTableHeader from "@/components/Tables/SortableHeader";
 import usePagination from "@/components/hooks/usePagination";
 import PaginationControls from "@/components/pagination/PaginationControls";
 import { useSearchParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const RfqTableSent = () => {
   const navigate = useNavigate();
@@ -46,7 +44,19 @@ const RfqTableSent = () => {
 
   const [resetTrigger, setResetTrigger] = useState(false);
   const [readRfqs, setReadRfqs] = useState(new Set());
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
 
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
   const { togglePopUp: togglePopUpCompany } = useSelector(
     (state) => state.searchProductStore
   );
@@ -298,7 +308,7 @@ const RfqTableSent = () => {
 
   const handleForward = () => {
     if (rfqMail.length === 0) {
-      toast.warning("Please select at least one RFQ to forward.");
+      showPopup("warning", "Please select at least one RFQ to reply.");
       return;
     }
 
@@ -312,7 +322,7 @@ const RfqTableSent = () => {
 
   const handleDelete = () => {
     if (rfqMail.length === 0) {
-      toast.warning("Please select at least one RFQ to delete.");
+      showPopup("warning", "Please select at least one RFQ to delete.");
       return;
     }
 
@@ -322,12 +332,12 @@ const RfqTableSent = () => {
     dispatch(deleteArchiveRfq({ token, ids: rfqIdsToDelete }))
       .then(() => {
         console.log("Selected RGQs Deleted");
-        toast.info("Selected RFQs deleted successfully!");
+        showPopup("success", "Selected RFQs deleted successfully!");
         dispatch(sentRfq({ token, page: currPage })); // Refresh the data
       })
       .catch((error) => {
         console.error("Error deleting RFQs:", error);
-        toast.error("Failed to delete RFQs. Please try again.");
+        showPopup("error", "Failed to delete RFQs. Please try again.");
       });
   };
 
@@ -675,7 +685,12 @@ const RfqTableSent = () => {
       {togglePopUpCompany && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUpCompany())} />
       )}
-      <ToastContainer position="top-center" autoClose={2000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

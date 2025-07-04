@@ -5,19 +5,29 @@ import { brokerAPI } from "../../../api/BrokerEndpoint";
 import Cookies from "js-cookie";
 import css from "../../../../styles/Menu/Manage/MyProfile.module.css";
 import { Link, NavLink } from "react-router-dom";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { createUser } from "@/ReduxStore/ProfleSlice";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const CreateAccount = () => {
   const token = Cookies.get("token");
   console.log(token);
-  
+
   const [showPassword, setShowPassword] = useState(false);
   const [showRetype, setShowRetype] = useState(false);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
 
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
   const [formData, setFormData] = useState({
     userId: "",
     lastName: "",
@@ -53,7 +63,7 @@ const CreateAccount = () => {
 
     setFormData((prevFormData) => {
       // For `imScreenNames` nested updates
-      if (["skype", "whatsapp", "trillian","teams"].includes(name)) {
+      if (["skype", "whatsapp", "trillian", "teams"].includes(name)) {
         return {
           ...prevFormData,
           imScreenNames: {
@@ -87,11 +97,13 @@ const CreateAccount = () => {
     }
 
     try {
-      const result = await dispatch(createUser({formData, token}));
+      const result = await dispatch(createUser({ formData, token }));
       if (createUser.fulfilled.match(result)) {
-      toast.info(result.payload.message || "Account Created Successfully", {
-        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
-      });  ;
+        showPopup(
+          "success",
+          result.payload.message || "Account Created Successfully"
+        );
+
         // Reset formData to initial values
         setFormData({
           userId: "",
@@ -120,18 +132,12 @@ const CreateAccount = () => {
           retypePassword: "",
           preferredUse: "",
         });
-      console.log("✅ User created:", result.payload.data);
+        console.log("✅ User created:", result.payload.data);
       } else {
-      toast.error(result.payload || "Error creating account", {
-        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" },
-      });
-    }
+        showPopup("error", result.payload || "Error creating account");
+      }
     } catch (error) {
-      // alert('Unexpected error occurred!');
-      toast.error(error || "Error Creating Account.Please Try Again.", {
-        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
-      });
-
+      showPopup("error", error || "Error Creating Account.Please Try Again.");
       console.error(error);
     }
   };
@@ -178,38 +184,32 @@ const CreateAccount = () => {
                 </NavLink>
               </li>
               <li>
-                                    <NavLink
-                                      to="/mycompany/SalesInfo"
-                                      end
-                                      className={({ isActive }) =>
-                                        isActive ? css.active : ""
-                                      }
-                                    >
-                                      <span>Sales Info</span>
-                                    </NavLink>
-                                  </li>
-                                  <li>
-                                    <NavLink
-                                      to="/mycompany/Photos"
-                                      end
-                                      className={({ isActive }) =>
-                                        isActive ? css.active : ""
-                                      }
-                                    >
-                                      <span>Photos</span>
-                                    </NavLink>
-                                  </li>
+                <NavLink
+                  to="/mycompany/SalesInfo"
+                  end
+                  className={({ isActive }) => (isActive ? css.active : "")}
+                >
+                  <span>Sales Info</span>
+                </NavLink>
+              </li>
               <li>
-                                  <NavLink
-                                    to="/mycompany/Billing+Info"
-                                    end
-                                    className={({ isActive }) =>
-                                      isActive ? css.active : ""
-                                    }
-                                  > 
-                                    <span>Billing</span>
-                                  </NavLink>
-                                </li>
+                <NavLink
+                  to="/mycompany/Photos"
+                  end
+                  className={({ isActive }) => (isActive ? css.active : "")}
+                >
+                  <span>Photos</span>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/mycompany/Billing+Info"
+                  end
+                  className={({ isActive }) => (isActive ? css.active : "")}
+                >
+                  <span>Billing</span>
+                </NavLink>
+              </li>
             </ul>
           </div>
 
@@ -577,7 +577,6 @@ const CreateAccount = () => {
 
                 <span>
                   <p className="pt-4 italic text-gray-600 text-[7.5pt] leading-tight w-64">
-                    
                     (use the profile/url name, example 'brokercell' will result
                     in http://twitter.com/cell )
                   </p>

@@ -12,12 +12,11 @@ import {
 import { FaFileAlt } from "react-icons/fa";
 import BroadcastFileModal from "./Send/Field Components/BroadcastFileModal";
 import bullImage from "../../../assets/bullhornn.png";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import SortableTableHeader from "@/components/Tables/SortableHeader";
 import { Tooltip } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import PopupAlert from "@/components/Popups/PopupAlert";
+
 const BroadCastHistory = () => {
   const broadcastItems = useSelector(
     (state) => state.broadcastStore.broadCastData
@@ -35,7 +34,19 @@ const BroadCastHistory = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newselectedBroadcast, newsetSelectedBroadcast] = useState(null);
   const [selectedBroadcast, setSelectedBroadcast] = useState({});
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
 
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
   useEffect(() => {
     setLoading(true);
     dispatch(fetchBroadCastData({ token }))
@@ -90,14 +101,9 @@ const BroadCastHistory = () => {
         }
       );
       setSelectedBroadcasts([]); // Clear selections after dispatch
-      // ✅ Show success toast with light blue color
-      toast.info("Broadcast Deleted Successfully!", {
-        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
-      });
+      showPopup("success", "Broadcast Deleted Successfully!");
     } else {
-      toast.warning("Select broadcast for Deletion", {
-        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
-      });
+      showPopup("warning", "Select broadcast for Deletion");
     }
   };
 
@@ -409,7 +415,12 @@ const BroadCastHistory = () => {
         broadcast={newselectedBroadcast}
         handleReply={handleReplyClick}
       />
-      <ToastContainer position="top-center" autoClose={1000} />
+          <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </div>
   );
 };

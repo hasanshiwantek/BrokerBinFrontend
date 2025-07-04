@@ -10,11 +10,11 @@ import {
   fetchCurrentUploads,
 } from "../../../../ReduxStore/InventorySlice";
 import Cookies from "js-cookie";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import ScheduleNewUpload from "./ScheduleNewUpload";
 import UploadInventoryContent from "./UploadInventoryContent";
 import UploadsTable from "./UploadsTable";
+import PopupAlert from "@/components/Popups/PopupAlert";
+
 
 const Inventory = () => {
   const token = Cookies.get("token");
@@ -32,6 +32,20 @@ const Inventory = () => {
 
   // ✅ Create a reference to multiple file inputs
   const fileInputRefs = useRef([]);
+    const [popup, setPopup] = useState({
+      show: false,
+      type: "success",
+      message: "",
+    });
+  
+    const showPopup = (type, message) => {
+      setPopup({ show: true, type, message });
+  
+      setTimeout(() => {
+        setPopup((prev) => ({ ...prev, show: false }));
+      }, 4000);
+    };
+  
 
   // ✅ Handle file selection and update both Redux & Local State
   const handleFileChange = (file, index) => {
@@ -64,7 +78,7 @@ const Inventory = () => {
     console.log("🚀 Submitting files:", selectedFiles);
 
     if (selectedFiles.length === 0 || selectedFiles.every((file) => !file)) {
-      toast.error("❌ Please select at least one file to upload.");
+       showPopup("warning", "Please select at least one file to upload!");
       setLoading(false);
       return;
     }
@@ -84,21 +98,16 @@ const Inventory = () => {
       ).unwrap();
 
       console.log("✅ Upload success:", response);
-      toast.info(response.message || " Files uploaded successfully!", {
-        style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
-      });
+
+       showPopup("success",response.message || " Files uploaded successfully!");
+
 
       // ✅ Clear both Redux and local state
       setSelectedFiles([]);
       dispatch(resetFiles());
     } catch (error) {
       console.error("❌ Upload failed:", error);
-      toast.error(
-        error.message || "Failed to upload files. Please try again.",
-        {
-          style: { fontSize: "12px", marginTop: "-10px", fontWeight: "bold" }, //
-        }
-      );
+       showPopup("success",  error.message || "Failed to upload files. Please try again.");
     } finally {
       setLoading(false);
       // ✅ Reset all file input fields dynamically
@@ -123,7 +132,7 @@ const Inventory = () => {
       console.log("CURRENTUPLOADSDATA", currentUploads);
     } catch (error) {
       console.error("❌ Error fetching current uploads:", error);
-      toast.error("Failed to fetch current uploads.");
+      showPopup("success",  "Failed to fetch current uploads.");
     }
   };
 
@@ -208,7 +217,12 @@ const Inventory = () => {
       <div className="flex  justify-center -mt-10 items-center ">
         <UploadInventoryContent />
       </div>
-      <ToastContainer position="top-center" autoClose={2000} />
+          <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

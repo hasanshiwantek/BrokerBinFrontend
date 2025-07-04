@@ -1,12 +1,5 @@
-import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { brokerAPI } from "@/components/api/BrokerEndpoint";
-import axios from "axios";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 
 const CompanyLogo = ({ logoPreview, setLogoPreview, setSelectedLogoFile }) => {
   const handleFileChange = (e) => {

@@ -8,9 +8,6 @@ import {
   addHotListItem,
 } from "./ReduxStore/ToolsSlice";
 import { replace, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 
 const HoverDropdown = ({ type, id, triggerElement, company, rowData }) => {
   const [show, setShow] = useState(false);
@@ -149,7 +146,6 @@ const HoverDropdown = ({ type, id, triggerElement, company, rowData }) => {
           </div>
         </div>
       )}
-      <ToastContainer position="top-center" autoClose={2000} />
     </div>
   );
 };

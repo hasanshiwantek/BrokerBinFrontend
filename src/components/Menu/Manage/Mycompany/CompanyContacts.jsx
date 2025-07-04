@@ -6,14 +6,25 @@ import { getCompanyContact } from "@/ReduxStore/SearchProductSlice";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCompanyContact } from "@/ReduxStore/SearchProductSlice";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import PopupAlert from "@/components/Popups/PopupAlert";
+
 const CompanyContacts = () => {
   const [loading, setLoading] = useState(true);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
 
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
   const dispatch = useDispatch();
   // const navigate = useNavigate();
   const token = Cookies.get("token");
@@ -70,7 +81,8 @@ const CompanyContacts = () => {
       ).unwrap();
 
       if (result?.status) {
-        toast.info(
+        showPopup(
+          "success",
           result?.message || "Selected contacts deleted successfully!"
         );
         setSelectedIds([]);
@@ -78,10 +90,11 @@ const CompanyContacts = () => {
           window.location.reload();
         }, 2000);
       } else {
-        toast.info(result?.message || "Failed to delete contacts.");
+        showPopup("error", result?.message || "Failed to delete contacts.");
       }
     } catch (err) {
-      toast.error("❌ Error deleting contacts: " + err.message);
+      showPopup("error", `Error deleting contacts: ${err.message}`);
+
       console.error("Error during deletion or reload:", err);
     } finally {
       setShowConfirmModal(false);
@@ -99,7 +112,8 @@ const CompanyContacts = () => {
 
     const contactToEdit = contacts.find((c) => c.id === selectedIds[0]);
     if (!contactToEdit) {
-      toast.error("Selected contact not found.");
+      showPopup("error", "Selected contact not found.");
+
       return;
     }
 
@@ -165,16 +179,14 @@ const CompanyContacts = () => {
                   </NavLink>
                 </li>
                 <li>
-                                    <NavLink
-                                      to="/mycompany/Billing+Info"
-                                      end
-                                      className={({ isActive }) =>
-                                        isActive ? css.active : ""
-                                      }
-                                    > 
-                                      <span>Billing</span>
-                                    </NavLink>
-                                  </li>
+                  <NavLink
+                    to="/mycompany/Billing+Info"
+                    end
+                    className={({ isActive }) => (isActive ? css.active : "")}
+                  >
+                    <span>Billing</span>
+                  </NavLink>
+                </li>
               </ul>
             </div>
 
@@ -186,8 +198,7 @@ const CompanyContacts = () => {
                   {loading ? (
                     <div className="flex justify-center  items-center py-20">
                       <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
-                      <span className="ml-4 text-blue-600 text-lg font-medium">
-                      </span>
+                      <span className="ml-4 text-blue-600 text-lg font-medium"></span>
                     </div>
                   ) : (
                     <table className="border cursor-pointer">
@@ -342,7 +353,12 @@ const CompanyContacts = () => {
         </div>
       )}
 
-      <ToastContainer position="top-center" autoClose={2000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

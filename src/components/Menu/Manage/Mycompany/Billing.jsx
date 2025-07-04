@@ -5,9 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { submitBillingInfo } from "../../../../ReduxStore/ProfleSlice";
 import Cookies from "js-cookie";
 import { Link, NavLink } from "react-router-dom";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const Billing = () => {
   const token = Cookies.get("token");
@@ -16,18 +14,23 @@ const Billing = () => {
     invoiceEmailText: "",
     paymentMethod: "Wire Transfer",
   });
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 3000);
+  };
 
   const companyId = Number(Cookies.get("companyId"));
 
-  const {
-    user,
-    // formData,
-    initialData,
-    blurWhileLoading,
-    customSignature,
-    error,
-    companyLogo,
-  } = useSelector((state) => state.profileStore);
+
 
   const dispatch = useDispatch();
 
@@ -66,9 +69,9 @@ const Billing = () => {
       );
 
       if (resultAction?.payload?.status === true) {
-        toast.info(
-          resultAction?.payload?.message || "Billing info updated successfully.",
-          { style: { fontSize: "12px", fontWeight: "bold" } }
+        showPopup(
+          "success",
+          resultAction?.payload?.message || "Billing info updated successfully."
         );
         setBillingInfo({
           invoiceEmail: [],
@@ -76,10 +79,11 @@ const Billing = () => {
           paymentMethod: "Wire Transfer",
         });
       } else {
-        toast.error("Failed to update billing info.");
+        showPopup("error", "Failed to update billing info.");
       }
     } catch (error) {
-      toast.error("Something went wrong while submitting billing info.");
+      showPopup("Something went wrong while submitting billing info.");
+
       console.error(error);
     }
   };
@@ -314,7 +318,12 @@ const Billing = () => {
         </form>
       </div>
 
-      <ToastContainer position="top-center" autoClose={2000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

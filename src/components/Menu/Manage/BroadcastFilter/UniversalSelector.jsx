@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import css from "../../../../styles/Menu/Manage/BroadcastFilters/BroadcastFilters.module.css";
 
 const UniversalSelector = ({
@@ -18,7 +18,7 @@ const UniversalSelector = ({
   return (
     <div>
       <h3>{title}</h3>
-      {selectType === 'checkbox' && (
+      {selectType === "checkbox" && (
         <ul>
           {items.map((item) => (
             <li key={item.value || item}>
@@ -29,7 +29,9 @@ const UniversalSelector = ({
                   name={name}
                   value={item.value || item}
                   checked={selectedItems.includes(item.value || item)} // Ensure selectedItems matches item.value
-                  onChange={() => handleCheckboxChange(name, item.value || item)} // Use item.value or item consistently
+                  onChange={() =>
+                    handleCheckboxChange(name, item.value || item)
+                  } // Use item.value or item consistently
                   id={item.value || item}
                   disabled={disabled}
                 />
@@ -39,13 +41,14 @@ const UniversalSelector = ({
         </ul>
       )}
 
-      {selectType === 'dropdown' && (
+      {selectType === "dropdown" && (
         <select
           name="dropdown"
           id="dropdown"
           value={selectedDropdownValue || ""}
           onChange={(e) => handleDropdownChange(e.target.value)}
           disabled={disabled}
+          className=" border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700 bg-white hover:cursor-pointer transition duration-150 ease-in-out"
         >
           {dropdownOptions.map((option) => (
             <option key={option.value} value={option.value}>
@@ -57,8 +60,18 @@ const UniversalSelector = ({
 
       {showCheckAll && (
         <div className={css.checkBtn}>
-          <button type="button" onClick={() => toggleAllCheckboxes(name, items, true)}>Check All</button>
-          <button type="button" onClick={() => toggleAllCheckboxes(name, items, false)}>Uncheck All</button>
+          <button
+            type="button"
+            onClick={() => toggleAllCheckboxes(name, items, true)}
+          >
+            Check All
+          </button>
+          <button
+            type="button"
+            onClick={() => toggleAllCheckboxes(name, items, false)}
+          >
+            Uncheck All
+          </button>
         </div>
       )}
     </div>
