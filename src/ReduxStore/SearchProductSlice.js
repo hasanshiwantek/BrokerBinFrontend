@@ -458,6 +458,7 @@ const initialState = {
   companiesListingParts: true,
   graphToggle: false,
   filterToggle: true,
+  filterMode: "advanced",
   popUpRfq: false,
   togglePopUp: false,
   searchResponseMatched: {},
@@ -498,6 +499,9 @@ const searchProductSlice = createSlice({
     },
     setPopUpRfq: (state, action) => {
       state.popUpRfq = !state.popUpRfq;
+    },
+    setFilterMode: (state, action) => {
+      state.filterMode = action.payload; // "advanced" or "standard"
     },
 
     // setTogglePopUp: (state, action) => {
@@ -697,6 +701,7 @@ export const {
   // setFilteredSearchResponse,
   clearSearchResponseMatched,
   setAppliedFilters,
+  setFilterMode,
   setSearchPartType,
   setSelectedProductsForCart,
 } = searchProductSlice.actions;
