@@ -35,7 +35,6 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [feedbacks, setFeedbacks] = useState([]);
   const { noteData } = useSelector((store) => store.toolsStore);
-  console.log("MY Notes Data From Frontend", noteData);
   const [popup, setPopup] = useState({
     show: false,
     type: "success",
@@ -53,10 +52,8 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
   const { companyContactData } = useSelector(
     (store) => store.searchProductStore
   );
-  console.log("Company Contact Data From Tab Content Page", companyContactData);
 
   const { initialData } = useSelector((state) => state.profileStore);
-  console.log(`initialData`, initialData);
 
   const currentUserCompanyId = initialData?.company?.id;
 
@@ -64,23 +61,15 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
   const contactProfileImgs = contactInfo?.map(
     (contact) => contact.profileImage
   );
-  console.log("Profile Images: ", contactProfileImgs);
 
   const companyImages = companyContactData?.data?.company?.imageGallery;
-
-  console.log("Company images: ", companyImages);
 
   const [visibleFeedbacks, setVisibleFeedbacks] = useState(10);
   const token = Cookies.get("token");
 
-  console.log("CompanyId From Tab Content Page", companyId);
-
   const companyUserId = companyContactData.data.contacts.map((item) => item.id);
-  console.log("User Id from Comapny Modal", companyUserId);
-
   const compId = companyContactData.data.company.id;
   const companyName = companyContactData.data.company.name;
-  console.log("COMPANYNAME", companyName);
 
   const companyUsersCount = companyContactData.data.contacts.length;
   useEffect(() => {
@@ -134,12 +123,8 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
   }, [searchQuery, companyContactData]);
 
   const loggedInUserId = Cookies.get("user_id");
-  console.log("Logged In User Id", Number(loggedInUserId));
-
   const primaryContactId =
     companyContactData?.data?.company?.primaryContact?.id;
-  console.log("Primary Contact Id: ", primaryContactId);
-
   const userDeleteHandler = (id) => {
     const isConfirmed = window.confirm(
       "Are you sure you want to delete this user?"
@@ -155,7 +140,7 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
           console.error("Error deleting user:", error);
         });
     } else {
-      console.log(`User with ID ${id} was not deleted.`);
+      console.error(`User with ID ${id} was not deleted.`);
     }
   };
 
@@ -177,10 +162,9 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
         }
       );
       const data = response.data;
-      console.log("DATA", data);
       setFeedbacks(data.feedbacks);
     } catch (error) {
-      console.log("Error", error);
+      console.error("Error", error);
     }
   };
 
@@ -188,8 +172,6 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
 
   const [notes, setNotes] = useState({});
   const [ratings, setRatings] = useState({});
-  console.log("Notes ", notes);
-
   const handleNotes = async (contactId) => {
     const note = notes[contactId] || "";
     const rating = ratings[contactId] || 0;
@@ -229,11 +211,7 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
         deleteCompanyContact({ ids: [id], token })
       ).unwrap();
 
-      console.log(result); // { status: true, message: 'Contact deleted successfully.' }
-
       if (result?.status) {
-        console.log("User Deleted with id: ", id);
-
         showPopup("info", result?.message || "User Deleted From Company!");
 
         fetchCompanyContacts(); // Optional refresh
@@ -252,7 +230,6 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
   // DELETE IMAGE HANDLER
 
   const deleteImageHandler = async (id) => {
-    console.log(id);
     const confirmation = window.confirm(
       "Are you sure you want to delete this image?"
     );
@@ -262,7 +239,6 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
         deleteCompanyPhotos({ token, imageId: id })
       ).unwrap();
       if (result?.status) {
-        console.log("Image Deleted with id: ", id);
         showPopup("info", result?.message || "Image Deleted From Company!");
 
         fetchCompanyContacts();
@@ -814,8 +790,22 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
           <div className={css.Popup_Info_Main_right_tabs_terms}>
             <div>
               <h1>Terms</h1>
-              <p>Pofile Incomplete</p>
+              <div>
+                {companyContactData?.data?.company?.legalInfo?.paymentOptions
+                  ?.length > 0 ? (
+                  companyContactData.data.company.legalInfo.paymentOptions.map(
+                    (val, ind) => (
+                      <ul key={ind}>
+                        <li>{val}</li>
+                      </ul>
+                    )
+                  )
+                ) : (
+                  <p>Profile Incomplete</p>
+                )}
+              </div>
             </div>
+
             <div>
               <h1>Return Policy</h1>
               <div
@@ -927,12 +917,12 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
           </div>
         </div>
       </div>
-            <PopupAlert
-              show={popup.show}
-              type={popup.type}
-              message={popup.message}
-              onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
-            />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

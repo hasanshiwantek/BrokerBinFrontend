@@ -5,7 +5,6 @@ import {
   Info,
   AlertTriangle,
 } from "lucide-react";
-
 const PopupAlert = ({ show, type = "success", message, onClose }) => {
   if (!show) return null;
 
