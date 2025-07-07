@@ -11,9 +11,6 @@
     width: 20rem;
     background-color: white;
   }
-  /* @media only screen and (max-width:54.375em) {
-    display: none;
-  } */
 }
 
 .interSection {
@@ -128,8 +125,6 @@
   font-weight: 600;
 }
 
-
-
 .applyFilterBtn{
   margin-top: 10px !important;
   padding: 5px !important; 
@@ -153,11 +148,24 @@
 }
 
 .filterTop {
+  display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: start;
+  /* flex-wrap: wrap; */
+  /* justify-content: start; */
   align-items: flex-start;
-  gap: 1rem;
+  padding: 0.7rem;
+  height: fit-content;
+
+  /* gap: 1rem; */
+  background-color: var(--secondary-bgColor);
+  /* border-bottom: 0.2rem solid var(--table-bg-color); */
+    > div,
+  > form > div {
+    margin: 1rem auto;
+    width: 20rem;
+    background-color: white;
+    
+  }
 }
 
 .filterLeft {
