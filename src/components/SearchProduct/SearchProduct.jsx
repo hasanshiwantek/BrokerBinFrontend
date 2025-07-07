@@ -58,6 +58,7 @@ const SearchProduct = () => {
 
   const [currentQuery, setCurrentQuery] = useState(searchString || partModel);
 
+  
   useEffect(() => {
     if (searchString || partModel) {
       setCurrentQuery(searchString || partModel); // Update with latest search or partModel

@@ -150,6 +150,7 @@ const Cart = () => {
     }
     const normalizedParts = selectedParts.map((item) => ({
       id: item.inventory.id,
+      inventoryId:item.inventory_id,
       partModel: item.inventory.partModel,
       heciClei: item.inventory.heciClei || "",
       mfg: item.inventory.mfg || "",

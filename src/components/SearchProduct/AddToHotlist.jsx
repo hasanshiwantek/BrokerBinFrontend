@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import css from "@/styles/SearchProducts.module.css";
 import { addToHotList } from "../../ReduxStore/SearchProductSlice";
 import { useDispatch } from "react-redux";
