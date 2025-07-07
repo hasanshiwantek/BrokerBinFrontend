@@ -10,19 +10,29 @@ import {
 import css from "@/styles/SearchProducts.module.css";
 import { FaUserPlus } from "react-icons/fa";
 import { FaUserXmark, FaUserCheck } from "react-icons/fa6";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
 import { Tooltip } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { addMyVendors, blockMyVendor } from "@/ReduxStore/ToolsSlice";
 import Cookies from "js-cookie";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const CompanyListingTable = ({ entries }) => {
-  console.log("REndered: table")
+  console.log("REndered: table");
   const dispatch = useDispatch();
   const token = Cookies.get("token");
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
 
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
   const renderedCompanies = new Set(); // Track unique companies
 
   const handleHoverCompanyDetail = (company) => {
@@ -33,7 +43,7 @@ const CompanyListingTable = ({ entries }) => {
     dispatch(setPopupCompanyDetail([company]));
     dispatch(setTogglePopUp());
   };
-  
+
   // ADD VENDOR LOGIC
   const addVendorHandler = async (id) => {
     try {
@@ -42,14 +52,14 @@ const CompanyListingTable = ({ entries }) => {
       const result = response.payload;
       if (response?.error) {
         // console.error("Add vendor error:", result?.message);
-        toast.error(result?.message || "Vendor already added.");
+        showPopup("error", result?.message || "Vendor already added.");
       } else {
         // console.log("Vendor Added Successfully", result?.message);
-        toast.success(result?.message || "Vendor added successfully.");
+        showPopup("success", result?.message || "Vendor added successfully.");
       }
     } catch (error) {
       // console.error("Unexpected error adding vendor:", error);
-      toast.error("Something went wrong. Please try again.");
+      showPopup("error", "Something went wrong. Please try again.");
     }
   };
 
@@ -84,18 +94,22 @@ const CompanyListingTable = ({ entries }) => {
       .then((result) => {
         // console.log("Server Result:", result);
         if (result?.status === "success") {
-          toast.success(result?.message || "Vendor status updated!");
+          showPopup("success", result?.message || "Vendor status updated!");
+
           setVendorStatus((prev) => ({
             ...prev,
             [companyId]: newStatus,
           }));
         } else {
-          toast.info(result?.message || "Failed to update vendor status.");
+          showPopup(
+            "info",
+            result?.message || "Failed to update vendor status."
+          );
         }
       })
       .catch((error) => {
-        // console.error("Block error:", error);
-        toast.error(
+        showPopup(
+          "error",
           error?.message || "Something went wrong. Please try again."
         );
       });
@@ -235,8 +249,9 @@ const CompanyListingTable = ({ entries }) => {
                                     blockVendorHandler(row.addedBy?.company?.id)
                                   }
                                 >
-                                  {vendorStatus[row.addedBy?.company?.id] === 1 ? (
-                                    < FaUserCheck  size={15} />
+                                  {vendorStatus[row.addedBy?.company?.id] ===
+                                  1 ? (
+                                    <FaUserCheck size={15} />
                                   ) : (
                                     <FaUserXmark size={15} />
                                   )}
@@ -252,7 +267,12 @@ const CompanyListingTable = ({ entries }) => {
           </table>
         </div>
       </div>
-      <ToastContainer position="top-center" autoClose={2000} />
+      <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

@@ -619,7 +619,12 @@ const CreateAccount = () => {
           </div>
         </div>
       </form>
-      <ToastContainer position="top-center" autoClose={2000} />
+           <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </div>
   );
 };
