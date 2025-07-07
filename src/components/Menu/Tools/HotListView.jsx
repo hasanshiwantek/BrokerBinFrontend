@@ -47,6 +47,8 @@ const HotListView = () => {
     message: "",
   });
 
+
+  
   const showPopup = (type, message) => {
     setPopup({ show: true, type, message });
 

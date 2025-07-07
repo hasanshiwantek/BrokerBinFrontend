@@ -4,35 +4,53 @@ import { addToHotList } from "../../ReduxStore/SearchProductSlice";
 import { useDispatch } from "react-redux";
 import Cookies from "js-cookie";
 import InventorySearch from "../Menu/Search/Inventory/InventorySearch";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
+import PopupAlert from "@/components/Popups/PopupAlert";
 
 const AddToHotList = ({ item }) => {
   console.log("Rendered... Hotlist");
 
   const dispatch = useDispatch();
   const token = Cookies.get("token");
+  const [popup, setPopup] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
 
+  const showPopup = (type, message) => {
+    setPopup({ show: true, type, message });
+
+    setTimeout(() => {
+      setPopup((prev) => ({ ...prev, show: false }));
+    }, 2000);
+  };
   const itemAddToHotList = (e) => {
     e.preventDefault();
     // Add item to hotlist here
     console.log("Item added to hotlist:", item);
     // ✅ Show success toast with light blue color
-    toast.info("Item Added to Hotlist!", {
-      style: { fontSize: "15px", marginTop: "-10px" }, // 
-    });
-    const hotlists = [{ partModel: item }]
+    showPopup("success", "Item Added to Hotlist!");
+    const hotlists = [{ partModel: item }];
     dispatch(addToHotList({ token, hotlists }));
   };
 
   return (
     <>
-
-      <div className={`${css.hotlistContainer} !flex !flex-col !justify-center !items-center mt-5`}>
-
+      <div
+        className={`${css.hotlistContainer} !flex !flex-col !justify-center !items-center mt-5`}
+      >
         <div className={`${css.searchProductAddToHotList}  `}>
-          <p style={{ fontSize: "12pt", fontWeight: "600" }} className="!text-xl"> <span className="text-red-500 font-extrabold"> No Match Found, Try an </span>Advanced Search or Send a Broadcast!</p>
+          <p
+            style={{ fontSize: "12pt", fontWeight: "600" }}
+            className="!text-xl"
+          >
+            {" "}
+            <span className="text-red-500 font-extrabold">
+              {" "}
+              No Match Found, Try an{" "}
+            </span>
+            Advanced Search or Send a Broadcast!
+          </p>
           <div className={css.searchProductAddToHotList_main}>
             <form onSubmit={itemAddToHotList}>
               <div className={`${css.searchProductAddToHotList_main_bg}`}>
@@ -55,9 +73,7 @@ const AddToHotList = ({ item }) => {
                       name="addToHotlist"
                       id="addToHotlist"
                     />
-                    <label htmlFor="addToHotlist">
-                      Add item to Hot List!
-                    </label>
+                    <label htmlFor="addToHotlist">Add item to Hot List!</label>
                   </span>
                   {/* <span>
                 <input type="checkbox" name={item} id={item} />
@@ -81,7 +97,12 @@ const AddToHotList = ({ item }) => {
           <InventorySearch />
         </div>
       </div>
-      <ToastContainer position="top-center" autoClose={2000} />
+         <PopupAlert
+        show={popup.show}
+        type={popup.type}
+        message={popup.message}
+        onClose={() => setPopup((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

@@ -28,8 +28,6 @@ const TabInformation = ({ companyId }) => {
   // Loading state
   const [loading, setLoading] = useState(true);
   const [companyData, setCompanyData] = useState(null);
-  console.log("Company Contact Data From ");
-  console.log("CompanyId From TabInformation Page", companyId);
   useEffect(() => {
     if (companyId && token) {
       setLoading(true); // Set loading to true when fetching data
@@ -43,7 +41,7 @@ const TabInformation = ({ companyId }) => {
           setLoading(false); // Set loading to false on error
         });
     } else {
-      console.log("Company ID or Token is missing");
+      console.error("Company ID or Token is missing");
       setLoading(false); // In case no company ID or token is found
     }
   }, [dispatch, companyId, token]);

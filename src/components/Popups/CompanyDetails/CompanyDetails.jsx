@@ -59,22 +59,19 @@ const CompanyDetails = ({ closeModal }) => {
   }
 
   const { initialData } = useSelector((state) => state.profileStore);
-  console.log(`initialData`, initialData);
 
   const currentUserCompanyId = initialData?.company?.id;
   // Get the first company object passed to the modal
   const company = popupCompanyDetail ? popupCompanyDetail[0] : null;
 
-  // Log the company to check the details
-  console.log("Company Data in Modal:", company);
   const companyId = company?.id;
   const { companyContactData } = useSelector(
     (store) => store.searchProductStore
   );
+  console.log("Company Contact Data: ",companyContactData);
+  
   const token = Cookies.get("token");
 
-  console.log("CompanyId ", companyId);
-  console.log("COMPANY CONTACT DATA FROM FRONTEND", companyContactData);
 
   // Handle empty company array or error
   if (!company || !companyId) {
@@ -94,7 +91,6 @@ const CompanyDetails = ({ closeModal }) => {
           setLoading(false); // Set loading to false on error
         });
     } else {
-      console.log("Company ID or Token is missing");
       setLoading(false); // In case no company ID or token is found
     }
   }, [dispatch, companyId, token]);
@@ -111,12 +107,10 @@ const CompanyDetails = ({ closeModal }) => {
             },
           }
         );
-        console.log("Rating Response: ", response?.data);
         const data = response?.data;
         setFeedbackData(data);
-        console.log("RATINGDATA", feedbackData);
       } catch (error) {
-        console.log("ERRORRATIMG", error);
+        console.error("ERRORRATIMG", error);
       }
     };
     fetchData();
@@ -204,7 +198,6 @@ const CompanyDetails = ({ closeModal }) => {
 
   // BLOCK VENDOR FUNCTION
   const [vendorStatus, setVendorStatus] = useState({});
-  console.log("Vendor status", vendorStatus);
   const blockVendorHandler = (companyId) => {
     const currentStatus =
       typeof vendorStatus[companyId] !== "undefined"
@@ -226,7 +219,6 @@ const CompanyDetails = ({ closeModal }) => {
 
   // SHOW FIRST FUNCTION
   const [showFirstStatus, setShowFirstStatus] = useState({});
-  console.log("Show First status", showFirstStatus);
 
   const showFirstHandler = (companyId) => {
     const currentStatus =
@@ -252,8 +244,10 @@ const CompanyDetails = ({ closeModal }) => {
     fetchVendorCount();
   };
 
+
+  // SHOW FIRST FUNCTION
+
   const [neverShowStatus, setneverShowStatus] = useState({});
-  console.log("Never Show status", neverShowStatus);
 
   const neverShowHandler = (companyId) => {
     const currentStatus =
