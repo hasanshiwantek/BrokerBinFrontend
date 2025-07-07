@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import css from "../../styles/Popup/RfqTablePopUp.module.css";
 import { rfqArchive, setTogglePopUp } from "../../ReduxStore/RfqSlice";
 import { useDispatch, useSelector } from "react-redux";

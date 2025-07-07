@@ -684,8 +684,8 @@ const initialState = {
     customPartDisplay: {
       alternateRowColors: false,
       showBorders: false,
-      showFilters: "",
-      displayFiltersPosition: "",
+      showFilters: "1",
+      displayFiltersPosition: "1",
       showDetails: false,
       forceDescriptions: false,
       doubleVision: false,

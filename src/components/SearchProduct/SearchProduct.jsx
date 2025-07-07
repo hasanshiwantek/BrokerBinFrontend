@@ -100,19 +100,24 @@ const SearchProduct = () => {
             Array.isArray(part) ? part.length === 0 : true
         );
 
+  //Overriding filterToggle explicitly....
+  // const shouldShowFilters = filterToggle !== null && filterToggle !== undefined
+  // ? filterToggle
+  // : showFilters === "1";
+
   const shouldShowFilters = typeof filterToggle === "boolean"
     ? filterToggle
     : showFilters === "1";
 
   return (
-    <div className={`${css.layout} ${noResults ? css.layoutColumnCenter : ""} ${displayFiltersPosition === '0' ? css.layoutFilterTop : ''}`}>
+    <div className={`${css.layout} ${noResults ? css.layoutColumnCenter : ""} ${shouldShowFilters && displayFiltersPosition === '0' ? css.layoutFilterTop : ''}`}>
 
       {/* {filterToggle &&
         Object.values(searchResponseMatched).some(
           (part) => part?.data?.length || part?.length > 0
         ) && <Filter currentQuery={currentQuery} />} */}
 
-      {shouldShowFilters && 
+      {shouldShowFilters &&
         (
           (Array.isArray(searchResponseMatched?.foundItems) && searchResponseMatched.foundItems.length > 0) ||
           Object.entries(searchResponseMatched || {})
@@ -126,10 +131,13 @@ const SearchProduct = () => {
             )
             .some(([, part]) => Array.isArray(part.data) && part.data.length > 0)
         ) && (
-  <div className={displayFiltersPosition === "0" ? css.filterTopWrapper : css.filterLeftWrapper}>
-    <Filter currentQuery={currentQuery} />
-  </div>
-)}
+          <div className={shouldShowFilters
+            ? (displayFiltersPosition === "0" ? css.filterTopWrapper : css.filterLeftWrapper)
+            : ""}
+          >
+            <Filter currentQuery={currentQuery} />
+          </div>
+        )}
 
       <div
         className={`${css.layoutTables} `}
