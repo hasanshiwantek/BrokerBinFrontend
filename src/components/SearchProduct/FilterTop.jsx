@@ -209,7 +209,7 @@ const FilterTop = ({ currentQuery }) => {
                 {isAdvanced ? (
                   <BsToggleOn style={{ color: "black" }} size={15} />
                 ) : (
-                  <BsToggleOff style={{ color: "black" }} size={15}  />
+                  <BsToggleOff style={{ color: "black" }} size={15} />
                 )}
               </button>
             </div>
@@ -229,7 +229,7 @@ const FilterTop = ({ currentQuery }) => {
               </button>
             </div>
             {!collapsedSections.manufacturer && (
-              <div  className="h-[20rem]">
+              <div className="h-[20rem]">
                 {Object.entries(manufacturers).map(([label, count]) => (
                   <div key={label}>
                     {isAdvanced ? (
@@ -266,7 +266,7 @@ const FilterTop = ({ currentQuery }) => {
               </button>
             </div>
             {!collapsedSections.condition && (
-              <div  className="h-[20rem]">
+              <div className="h-[20rem]">
                 {Object.entries(conditions).map(([label, count]) => (
                   <div key={label}>
                     {isAdvanced ? (
@@ -302,7 +302,7 @@ const FilterTop = ({ currentQuery }) => {
               </button>
             </div>
             {!collapsedSections.region && (
-              <div  className="h-[20rem]">
+              <div className="h-[20rem]">
                 {Object.entries(regions).map(([label, count]) => (
                   <div key={label}>
                     {isAdvanced ? (
@@ -339,7 +339,7 @@ const FilterTop = ({ currentQuery }) => {
               </button>
             </div>
             {!collapsedSections.country && (
-              <div  className="h-[20rem]">
+              <div className="h-[20rem]">
                 {Object.entries(countries).map(([label, count]) => (
                   <div key={label}>
                     {isAdvanced ? (

@@ -258,7 +258,7 @@ const ReplyBroad = () => {
                     onChange={(value) =>
                       setEmail((prev) => ({ ...prev, comments: value }))
                     }
-                    className={`${styles.textarea} !block !text-[8pt]`}
+                    className={`${styles.textarea} !block !text-[8pt] !font-medium`}
                     theme="snow"
                     modules={{
                       toolbar: [["bold", "italic", "underline"]],
