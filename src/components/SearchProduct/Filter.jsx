@@ -231,21 +231,6 @@ const Filter = ({ currentQuery }) => {
           </div>
           {!collapsedSections.manufacturer && (
             <div>
-              {/* {Object.entries(manufacturers).map(([label, count]) => (
-                <div key={label}>
-                  <input
-                    type="checkbox"
-                    name="mfg"
-                    value={label}
-                    id={label}
-                    checked={filters.mfg.includes(label)}
-                    onChange={() => handleCheckboxChange("mfg", label)}
-                  />
-                  <label htmlFor={label}>
-                    {label} ({count})
-                  </label>
-                </div>
-              ))} */}
               {Object.entries(manufacturers).map(([label, count]) => (
                 <div key={label}>
                   {isAdvanced ? (
@@ -283,21 +268,6 @@ const Filter = ({ currentQuery }) => {
           </div>
           {!collapsedSections.condition && (
             <div>
-              {/* {Object.entries(conditions).map(([label, count]) => (
-                <div key={label}>
-                  <input 
-                  type="checkbox" 
-                  name="cond"
-                  value={label} 
-                  id={label}
-                  checked={filters.cond.includes(label)}
-                  onChange={() => handleCheckboxChange("cond", label)}  
-                  />
-                  <label htmlFor={label}>
-                    {label} ({count})
-                  </label>
-                </div>
-              ))} */}
               {Object.entries(conditions).map(([label, count]) => (
                 <div key={label}>
                   {isAdvanced ? (
@@ -334,21 +304,6 @@ const Filter = ({ currentQuery }) => {
           </div>
           {!collapsedSections.region && (
             <div>
-              {/* {Object.entries(regions).map(([label, count]) => (
-                <div key={label}>
-                  <input
-                    type="checkbox"
-                    name="region"
-                    value={label}
-                    id={label}
-                    checked={filters.region.includes(label)}
-                    onChange={() => handleCheckboxChange("region", label)}
-                  />
-                  <label htmlFor={label}>
-                    {label} ({count})
-                  </label>
-                </div>
-              ))} */}
               {Object.entries(regions).map(([label, count]) => (
                 <div key={label}>
                   {isAdvanced ? (
@@ -386,21 +341,6 @@ const Filter = ({ currentQuery }) => {
           </div>
           {!collapsedSections.country && (
             <div>
-              {/* {Object.entries(countries).map(([label, count]) => (
-                <div key={countries}>
-                  <input
-                    type="checkbox"
-                    name="country"
-                    value={label}
-                    id={countries}
-                    checked={filters.country.includes(label)}
-                    onChange={() => handleCheckboxChange("country", label)}
-                  />
-                  <label htmlFor={label}>
-                    {label} ({count})
-                  </label>
-                </div>
-              ))} */}
               {Object.entries(countries).map(([label, count]) => (
                 <div key={label}>
                   {isAdvanced ? (

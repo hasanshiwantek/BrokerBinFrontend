@@ -28,6 +28,7 @@ import { setTogglePopUp } from "../../../../ReduxStore/SearchProductSlice";
 import CompanyDetails from "../../../Popups/CompanyDetails/CompanyDetails";
 import { setPopupCompanyDetail } from "../../../../ReduxStore/SearchProductSlice";
 import PopupAlert from "@/components/Popups/PopupAlert";
+import useDefaultSettings from "@/components/hooks/UseDefaultSettings";
 
 const Options = () => {
   const { filters } = useSelector((state) => state.broadcastStore);
@@ -39,6 +40,8 @@ const Options = () => {
     type: "success",
     message: "",
   });
+
+  const { user } = useDefaultSettings();
 
   const showPopup = (type, message) => {
     setPopup({ show: true, type, message });
@@ -348,8 +351,11 @@ const Options = () => {
   const { togglePopUp, popupCompanyDetail } = useSelector(
     (state) => state.searchProductStore
   );
-  const company = filters?.data?.[0]?.user_id?.company;
+  // const company = filters?.data?.[0]?.user_id?.company;
+  const company = user?.company;
   console.log("COMPANY ", company);
+
+
 
   // Company Modal Logic
   const openCompanyModal = (company) => {
