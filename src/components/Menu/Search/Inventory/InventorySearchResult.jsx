@@ -17,6 +17,9 @@ import { setHoverCompanyDetail } from "@/ReduxStore/SearchProductSlice";
 import LoadingState from "../../../../LoadingState";
 import { setBlurWhileLoading } from "@/ReduxStore/ProfleSlice";
 import useDefaultSettings from "@/components/hooks/UseDefaultSettings";
+import HoverDropdown from "@/HoverDropdown";
+import EyeDropdown from "@/EyeDropDown";
+import { FaEye } from "react-icons/fa";
 
 const InventorySearchResult = () => {
   const { togglePopUp } = useSelector((store) => store.searchProductStore);
@@ -173,6 +176,7 @@ const InventorySearchResult = () => {
   };
 
   console.log("CURRENT PAGE", currentPage);
+  console.log("searchResults", searchResults)
 
   return (
     <>
@@ -213,17 +217,10 @@ const InventorySearchResult = () => {
               <thead>
                 <tr>
                   <th>Cart</th>
-                  <th>
-                    <img
-                      src={sheildImage}
-                      alt="Shield"
-                      style={{ width: "18px", fontWeight: "bold" }}
-                    />
-                  </th>
                   <th onClick={() => handleSort("company")}>Company</th>
+                  <th onClick={() => handleSort("company")}>PVR</th>
                   <th onClick={() => handleSort("company_country")}>Ctry</th>
                   <th onClick={() => handleSort("partModel")}>Part / Model</th>
-                  <th onClick={() => handleSort("")}>TS</th>
                   <th onClick={() => handleSort("heciClei")}>HECI / CLEI</th>
                   <th onClick={() => handleSort("mfg")}>Mfg</th>
                   <th onClick={() => handleSort("cond")}>Cond</th>
@@ -256,23 +253,45 @@ const InventorySearchResult = () => {
                           )}
                         />
                       </td>
-                      <td></td>
                       <td>
-                        <a
-                          style={{ color: "#428bca", fontWeight: "600" }}
-                          onClick={() =>
-                            handleShowPopupCompanyDetails(val.addedBy.company)
+                        <HoverDropdown
+                          type="company"
+                          id={val?.addedBy?.company?.id}
+                          company={val?.addedBy?.company}
+                          triggerElement={
+                            <a
+                              style={{ color: "#428bca", fontWeight: "600" }}
+                              onClick={() =>
+                                handleShowPopupCompanyDetails(val?.addedBy?.company)
+                              }
+                              onMouseEnter={() =>
+                                handleHoverCompanyDetail(val.addedBy.company)
+                              }
+                            >
+                              {val?.addedBy?.company?.name}
+                            </a>
                           }
-                          onMouseEnter={() =>
-                            handleHoverCompanyDetail(val.addedBy.company)
+                        />
+                      </td>
+                      <td className="cursor-pointer">
+                        <EyeDropdown
+                          rowData={val}
+                          triggerElement={
+                            <div>
+                              <FaEye />
+                            </div>
                           }
-                        >
-                          {val.addedBy.company.name}
-                        </a>
+                        />
                       </td>
                       <td>{val.company_region}</td>
-                      <td>{val.partModel}</td>
-                      <td>No</td>
+                      <td className="cursor-pointer">
+                        <HoverDropdown
+                          type="part"
+                          id={val?.id}
+                          rowData={val}
+                          triggerElement={<div>{val?.partModel}</div>}
+                        />
+                      </td>
                       <td>{val.heciClei}</td>
                       <td>{val.mfg}</td>
                       <td>{val.cond}</td>
@@ -295,17 +314,10 @@ const InventorySearchResult = () => {
               <thead>
                 <tr>
                   <th>Cart</th>
-                  <th>
-                    <img
-                      src={sheildImage}
-                      alt="Shield"
-                      style={{ width: "18px", fontWeight: "bold" }}
-                    />
-                  </th>
                   <th>Company</th>
+                  <th>PVR</th>
                   <th>Ctry</th>
                   <th>Part / Model</th>
-                  <th>TS</th>
                   <th>HECI / CLEI</th>
                   <th>Mfg</th>
                   <th>Cond</th>
