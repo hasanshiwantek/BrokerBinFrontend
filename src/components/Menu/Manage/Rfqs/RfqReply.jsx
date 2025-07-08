@@ -173,8 +173,6 @@ const RfqReply = () => {
         if (!uniqueParts.has(partNumber)) {
           uniqueParts.set(partNumber, {
             id: rfq.partId[index] || Date.now() + Math.random(), // Use `partId` or generate a unique ID
-            inventoryId: row.inventoryId,
-
             partModel: partNumber,
             heciClei: rfq.heciCleis[index] || "", // Use corresponding index
             mfg: rfq.mfgs[index] || "",
@@ -193,7 +191,6 @@ const RfqReply = () => {
       if (!uniqueParts.has(row.partModel)) {
         uniqueParts.set(row.partModel, {
           id: row.id,
-          inventoryId: row.inventoryId,
           partModel: row.partModel,
           heciClei: row.heciClei || "",
           mfg: row.mfg,
@@ -244,7 +241,6 @@ const RfqReply = () => {
       ...parts,
       {
         id: Date.now(),
-        inventoryId: selectedRows?.inventoryId,
         partModel: " ",
         heciClei: " ",
         mfg: "",
@@ -374,7 +370,6 @@ const RfqReply = () => {
     // Add parts
     parts.forEach((part, index) => {
       formData.append(`parts[${index}][id]`, part.id || index + 1); // Ensure id is present
-      formData.append(`parts[${index}][inventoryId]`, part.inventoryId); // Ensure id is present
       formData.append(`parts[${index}][partNumber]`, part.partModel);
       formData.append(`parts[${index}][quantity]`, part.quantity);
       formData.append(`parts[${index}][heciClei]`, part.heciClei || "");

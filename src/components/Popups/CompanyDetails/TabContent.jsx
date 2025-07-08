@@ -366,7 +366,7 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
             </div>
 
             <div className={css.Popup_Info_Main_right_tabs_contact_right}>
-              <h1>Company Contacts</h1>
+              <h1 className="text-xl">Company Contacts</h1>
               <div
                 className={css.Popup_Info_Main_right_tabs_contact_right_search}
               >
@@ -376,7 +376,7 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
                   placeholder="Search Contacts"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="focus:ring-1 focus:ring-blue-500 focus:border-blue-500 border border-gray-300 rounded-lg p-2 w-full focus:outline-none transition text-lg"
+                  className="focus:ring-1 focus:ring-blue-500 focus:border-blue-500 border border-gray-300 rounded-lg !p-3 w-full focus:outline-none transition text-lg "
                 />
               </div>
               {/* <h1>Contact: O</h1> */}
@@ -476,7 +476,7 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
                       >
                         <div>
                           <div className="flex items-center justify-center">
-                            <strong className="p-2 text-lg">My Notes:</strong>
+                            <strong className="p-2 text-lg font-medium">My Notes:</strong>
                             <button
                               className="text-blue-500 hover:underline text-base"
                               onClick={() => handleNotes(user.id)}
@@ -485,7 +485,7 @@ const TabContent = ({ companyId, setToggleTabs, toggleTabs }) => {
                             </button>
                           </div>
                           <span>
-                            <strong>My Rating</strong>
+                            <strong className="p-2 text-lg font-medium">My Rating</strong>
                             <div className="columns">
                               <div className="column">
                                 <div className="vue-rate-it-rating vue-rate-it-rating-container">
