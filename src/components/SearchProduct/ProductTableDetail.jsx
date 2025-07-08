@@ -425,7 +425,7 @@ const ProductTableDetail = React.memo(
             </div>
           </div>
           <div className="flex">
-            <div className="w-1/2">
+            <div className=" w-[100%]">
               <ProductTable
                 data={firstTableData}
                 showBorders={showBorders}
@@ -447,7 +447,7 @@ const ProductTableDetail = React.memo(
             </div>
 
             {doubleVision && secondTableData.length > 0 && (
-              <div className="w-1/2 border-l border-black ">
+              <div className=" w-[100%] border-l border-black ">
                 <ProductTable
                   data={secondTableData}
                   doubleVision={doubleVision}

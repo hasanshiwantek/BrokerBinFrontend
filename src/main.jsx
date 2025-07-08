@@ -212,6 +212,10 @@ const HotListEdit = lazy(() =>
   import("./components/Menu/Tools/HotListEdit.jsx")
 );
 
+
+const FilterTop = lazy(() =>
+  import("./components/SearchProduct/FilterTop.jsx")
+);
 const SafeTrading = lazy(() => import("./components/ui/SafeTrading.jsx"));
 import Crousel from "./Crousel.jsx";
 import { Provider } from "react-redux";
@@ -320,6 +324,18 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
+
+            {
+        path: "/filterTop",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Header />
+            <FilterTop />
+            <Footer />
+          </Suspense>
+        ),
+      },
+
       {
         path: "/myprofile",
         element: (
