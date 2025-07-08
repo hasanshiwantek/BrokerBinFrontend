@@ -39,7 +39,7 @@ import {
   initializeStatus,
 } from "./HandleVendorStatusUpdate";
 import { inventorySearch } from "@/ReduxStore/InventorySlice";
-
+import MapComponent from "@/components/Menu/Manage/Mycompany/CompanyInfo/CompanyMapComponent";
 const CompanyDetails = ({ closeModal }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -68,10 +68,9 @@ const CompanyDetails = ({ closeModal }) => {
   const { companyContactData } = useSelector(
     (store) => store.searchProductStore
   );
-  console.log("Company Contact Data: ",companyContactData);
-  
-  const token = Cookies.get("token");
+  console.log("Company Contact Data: ", companyContactData);
 
+  const token = Cookies.get("token");
 
   // Handle empty company array or error
   if (!company || !companyId) {
@@ -244,7 +243,6 @@ const CompanyDetails = ({ closeModal }) => {
     fetchVendorCount();
   };
 
-
   // SHOW FIRST FUNCTION
 
   const [neverShowStatus, setneverShowStatus] = useState({});
@@ -312,6 +310,10 @@ const CompanyDetails = ({ closeModal }) => {
     }
   };
 
+  // RENDER MAP COMPONENT
+
+  const [showMap, setShowMap] = useState(false);
+
   // While loading, show loading indicator
   if (loading) {
     return (
@@ -321,20 +323,14 @@ const CompanyDetails = ({ closeModal }) => {
             <div className={css.Popup_Info_header}>
               <h1>Loading company details...</h1>
             </div>
-              <div className={css.Popup_Info_Main_left}>
-                <div className={css.loader}></div> {/* Spinner here */}
-              </div>
+            <div className={css.Popup_Info_Main_left}>
+              <div className={css.loader}></div> {/* Spinner here */}
+            </div>
           </div>
         </div>
       </div>
     );
   }
-
-
-
-
-
-
 
   return (
     <>
@@ -461,37 +457,6 @@ const CompanyDetails = ({ closeModal }) => {
                       <div>
                         <div className="cursor-pointer">
                           <ThemeProvider theme={theme}>
-                            {/* <Tooltip
-                              title={
-                                neverShowStatus[
-                                  companyContactData.data.company?.id
-                                ] === 1
-                                  ? "Show this vendor in search results"
-                                  : "Never Show this vendor in search result"
-                              }
-                              arrow
-                              placement="top"
-                            >
-                              <div
-                                className="flex flex-col items-center justify-center"
-                                onClick={() =>
-                                  neverShowHandler(
-                                    companyContactData.data.company?.id
-                                  )
-                                }
-                              >
-                                {neverShowStatus[
-                                  companyContactData.data.company?.id
-                                ] === 1 ? (
-                                  <IoEye size={30} />
-                                ) : (
-                                  <IoMdEyeOff size={30} />
-                                )}
-                                <p className="whitespace-nowrap">
-                                  {`Never Show (${vendorCount?.never_show_count})`}
-                                </p>
-                              </div>
-                            </Tooltip> */}
                             {companyContactData.data.company?.id ===
                             currentUserCompanyId ? (
                               <Tooltip
@@ -694,7 +659,10 @@ const CompanyDetails = ({ closeModal }) => {
                   </div>
 
                   <div className={`${css.inventorySecSvgs}`}>
-                    <span>
+                    <span
+                      className="cursor-pointer"
+                      onMouseEnter={() => setShowMap(true)}
+                    >
                       <FaMapMarkerAlt />
                       Map
                     </span>
@@ -713,8 +681,8 @@ const CompanyDetails = ({ closeModal }) => {
                           >
                             <NavLink>
                               <div className="flex flex-col items-center  gap-1">
-                                <div >
-                                <FaRegListAlt  />
+                                <div>
+                                  <FaRegListAlt />
                                 </div>
                                 <div className="flex flex-col items-center ">
                                   <p className="capitalize">Inventory </p>
@@ -764,6 +732,8 @@ const CompanyDetails = ({ closeModal }) => {
                     companyId={companyId}
                     toggleTabs={toggleTabs}
                     setToggleTabs={setToggleTabs}
+                    showMap={showMap}
+                    setShowMap={setShowMap}
                   />
                 </div>
               </div>

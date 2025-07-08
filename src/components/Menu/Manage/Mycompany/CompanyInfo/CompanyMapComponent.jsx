@@ -18,6 +18,8 @@ import "../../../Search/Company/CompanySearchResults.css";
 const MapComponent = ({ company }) => {
   const dispatch = useDispatch();
 
+  console.log("Company From Map Component",company);
+  
   // Normalize input
   const companiesArray = Array.isArray(company)
     ? company
@@ -26,7 +28,7 @@ const MapComponent = ({ company }) => {
     : [company];
 
   const containerStyle = {
-    width: "80%",
+    width: "95%",
     height: "350px",
     border: "2px solid #ccc",
     borderRadius: "5px",
@@ -105,15 +107,6 @@ const MapComponent = ({ company }) => {
             <Marker
               key={index}
               position={{ lat: comp.latitude, lng: comp.longitude }}
-              // onClick={() => {
-              //   setSelectedCompany(null);
-              //   setTimeout(() => setSelectedCompany(comp), 0);
-              //   mapRef.current?.setZoom(18);
-              //   mapRef.current?.panTo({
-              //     lat: comp.latitude,
-              //     lng: comp.longitude,
-              //   });
-              // }}
             />
           ))}
 
@@ -128,49 +121,6 @@ const MapComponent = ({ company }) => {
             >
               <ThemeProvider theme={theme}>
                 <Tooltip title="View Company Profile" arrow placement="top">
-                  {/* <div
-                  className="p-4 max-w-[270px] font-sans text-gray-800 rounded-lg shadow-lg overflow-hidden bg-white text-center cursor-pointer"
-                  onClick={() => openCompanyModal(selectedCompany)}
-                >
-                  <img
-                    src={selectedCompany.image}
-                    alt="Company Logo"
-                    className="w-40 rounded-md mb-2 m-auto"
-                  />
-                  <h3 className="text-2xl font-semibold text-black mb-1">
-                    {selectedCompany.name}
-                  </h3>
-                  <p className="text-lg">{selectedCompany.address}</p>
-                  <p className="text-lg">
-                    <strong>Contact:</strong>{" "}
-                    {selectedCompany.contactPerson || "N/A"}
-                  </p>
-                  <div className="flex justify-center items-center mt-2">
-                    {[...Array(5)].map((_, i) => {
-                      const rating = selectedCompany.rating || 0;
-                      const isFilled = i + 1 <= Math.floor(rating);
-                      const isHalf =
-                        i < rating && i + 1 > Math.floor(rating);
-                      return (
-                        <FaStar
-                          key={i}
-                          size={20}
-                          color={
-                            isFilled
-                              ? "#FFD700"
-                              : isHalf
-                              ? "rgba(255, 215, 0, 0.5)"
-                              : "#CCC"
-                          }
-                          style={{ marginRight: 2 }}
-                        />
-                      );
-                    })}
-                  </div>
-                  <p className="text-sm mt-1">
-                    ({selectedCompany.ratingCount || 0} Comments)
-                  </p>
-                </div> */}
                 </Tooltip>
               </ThemeProvider>
             </InfoWindow>
