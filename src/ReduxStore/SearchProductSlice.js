@@ -253,8 +253,8 @@ export const updateCompanyOptions = createAsyncThunk(
           },
         }
       );
-      console.log("Company Options Response From Redux:",response?.data);
-      
+      console.log("Company Options Response From Redux:", response?.data);
+
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -316,6 +316,24 @@ export const fetchCartItems = createAsyncThunk(
         },
       });
       return response.data.data; // Make sure API returns items array
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+export const fetchCartItemsAgain = createAsyncThunk(
+  "toolstore/fetchCartItemsAgain",
+  async ({ token }, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${brokerAPI}part-cart`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("From Redux Cart:", response.data);
+
+      return response.data; // Make sure API returns items array
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
     }
@@ -394,7 +412,7 @@ export const exportPartcart = createAsyncThunk(
     try {
       const response = await axios.post(
         `${brokerAPI}part-cart/export`,
-        body , // API expects an object
+        body, // API expects an object
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -435,15 +453,18 @@ export const partVariance = createAsyncThunk(
   "searchProductStore/partVariance",
   async ({ token, part }) => {
     try {
-      const response = await axios.get(`${brokerAPI}inventory/inventory-variant?query=${part}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `${brokerAPI}inventory/inventory-variant?query=${part}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       console.log("RESPONSE VARIANT", response.data.variants);
       return response.data.variants || []; // Make sure API returns items array
     } catch (error) {
-      console.error(error)
+      console.error(error);
       return [];
     }
   }
@@ -464,6 +485,7 @@ const initialState = {
   selectedProductsForCart: [],
   searchHistory: [],
   companyContactData: [],
+  cartItems: [],
   // filteredSearchResponse: {},
   appliedFilters: {},
   error: null,
@@ -676,6 +698,19 @@ const searchProductSlice = createSlice({
       })
       .addCase(partVariance.rejected, (state, action) => {
         state.error = action.error.message;
+      })
+      .addCase(fetchCartItemsAgain.pending, (state) => {
+        console.log("PENDING");
+        
+      })
+      .addCase(fetchCartItemsAgain.fulfilled, (state, action) => {
+        console.log("Case Fulfilled: ",action);
+        
+        state.cartItems = action.payload;
+      })
+      .addCase(fetchCartItemsAgain.rejected, (state, action) => {
+        console.log("REJECTED");
+
       });
   },
 });

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React, { useEffect, useState, useRef } from "react";
+=======
+import React, { useEffect, useRef,useState } from "react";
+>>>>>>> 4f69c337348ce8e934b89324bc8d8b93abc69f58
 import css from "../../styles/Popup/RfqTablePopUp.module.css";
 import { rfqArchive, setTogglePopUp } from "../../ReduxStore/RfqSlice";
 import { useDispatch, useSelector } from "react-redux";

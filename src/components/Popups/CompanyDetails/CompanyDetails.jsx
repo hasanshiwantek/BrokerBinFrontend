@@ -610,7 +610,7 @@ const CompanyDetails = ({ closeModal }) => {
                             </a>
                           </div>
                           <h1
-                            className="text-center pt-2 cursor-pointer"
+                            className="text-center pt-2 cursor-pointer text-xl"
                             onClick={() => setToggleTabs(5)}
                           >
                             ({feedbackData?.rating?.totalFeedbacks || 0})

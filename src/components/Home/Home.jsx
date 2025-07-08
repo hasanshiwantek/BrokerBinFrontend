@@ -190,7 +190,7 @@ const Home = () => {
               <div className={`mailSection ${css.mailSection}`}>
                 <div className={css.gridHome1_Bar}>
                   <FaAddressBook />
-                  <p>Manage</p>
+                  <p className="font-medium">Manage</p>
                   <div style={{ color: "var(--primary-color)" }}>
                     <BiDotsHorizontalRounded />
                   </div>
@@ -436,7 +436,7 @@ const Home = () => {
                 <div className={`mailSection ${css.mailSection}`}>
                   <FaHandshake />
                   <Link to={"/safe_trading"}>
-                    <p>Safe Trading Center</p>
+                    <p className="font-medium">Safe Trading Center</p>
                   </Link>
                   <div style={{ color: "var(--primary-color)" }}>
                     <BiDotsHorizontalRounded />
