@@ -149,8 +149,6 @@ export const addToHotList = createAsyncThunk(
   }
 );
 
-// COMPANY CONTACT THUNK
-
 export const getCompanyContact = createAsyncThunk(
   "searchProductStore/getCompanyContact ",
   async ({ id, token }) => {
@@ -475,7 +473,7 @@ export const partVariance = createAsyncThunk(
 const initialState = {
   companiesListingParts: true,
   graphToggle: false,
-  filterToggle: true,
+  filterToggle: null,
   filterMode: "advanced",
   popUpRfq: false,
   togglePopUp: false,

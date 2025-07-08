@@ -50,6 +50,7 @@ const Filter = ({ currentQuery }) => {
 
   const {
     showFilters,
+    displayFiltersPosition,
   } = useDefaultSettings();
   
 
@@ -169,7 +170,9 @@ const applySingleFilter = (key, value) => {
 
 
   return (
-    <div className={css.filterSection}>
+    <div className={`${css.filterSection} ${
+      displayFiltersPosition === '0' ? css.filterTop : css.filterLeft
+    }`}>
       <div id={css.advancedFilters}>
         <div className="!flex !justify-between">
             <button
