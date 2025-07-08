@@ -14,10 +14,10 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { BsToggleOn, BsToggleOff } from "react-icons/bs";
 import useDefaultSettings from "../hooks/UseDefaultSettings";
 import { setFilterMode } from "@/ReduxStore/SearchProductSlice";
-
+import FilterTop from "./FilterTop";
 
 const Filter = ({ currentQuery }) => {
-  console.log("rendered: Filter")
+  console.log("rendered: Filter");
 
   const [collapsedSections, setCollapsedSections] = useState({
     manufacturer: false,
@@ -29,11 +29,11 @@ const Filter = ({ currentQuery }) => {
   });
 
   const [filters, setFilters] = useState({
-  mfg: [],
-  cond: [],
-  country: [],
-  region: [],
-});
+    mfg: [],
+    cond: [],
+    country: [],
+    region: [],
+  });
 
   const token = Cookies.get("token");
   const location = useLocation();
@@ -41,18 +41,19 @@ const Filter = ({ currentQuery }) => {
   const query = queryParams.get("partModel") || queryParams.get("query");
 
   // const searchString = location.state || {};
-  const { searchResponseMatched, searchHistory, appliedFilters,partVarianceState, } = useSelector(
-    (store) => store.searchProductStore
-  );
-
-  const filterMode = useSelector((state) => state.searchProductStore.filterMode);
-  const isAdvanced = filterMode === "advanced"
-
   const {
-    showFilters,
-    displayFiltersPosition,
-  } = useDefaultSettings();
-  
+    searchResponseMatched,
+    searchHistory,
+    appliedFilters,
+    partVarianceState,
+  } = useSelector((store) => store.searchProductStore);
+
+  const filterMode = useSelector(
+    (state) => state.searchProductStore.filterMode
+  );
+  const isAdvanced = filterMode === "advanced";
+
+  const { showFilters, displayFiltersPosition } = useDefaultSettings();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -65,137 +66,158 @@ const Filter = ({ currentQuery }) => {
     }));
   };
 
-    // ✅ Merge `data` and `foundItems` to handle both cases correctly
+  // ✅ Merge `data` and `foundItems` to handle both cases correctly
   const allItems = [
     ...(searchResponseMatched?.test?.data || []),
     ...(searchResponseMatched?.foundItems || []),
   ];
 
   const applyFilters = () => {
-  const queryParams = new URLSearchParams(location.search);
-  const searchString = queryParams.get("query") || "";
-  const partModel = queryParams.get("partModel") || "";
-  const sortBy = queryParams.get("sortBy") || "";
-  const sortOrder = queryParams.get("sortOrder") || "";
-  dispatch(setAppliedFilters(filters));
-  const payload = {
-    token,
-    page: 1,
-    filters,
-    sortBy,
-    sortOrder,
+    const queryParams = new URLSearchParams(location.search);
+    const searchString = queryParams.get("query") || "";
+    const partModel = queryParams.get("partModel") || "";
+    const sortBy = queryParams.get("sortBy") || "";
+    const sortOrder = queryParams.get("sortOrder") || "";
+    dispatch(setAppliedFilters(filters));
+    const payload = {
+      token,
+      page: 1,
+      filters,
+      sortBy,
+      sortOrder,
+    };
+    if (searchString) {
+      dispatch(searchProductQuery({ ...payload, search: searchString }));
+    } else if (partModel) {
+      dispatch(searchByKeyword({ ...payload, partModel }));
+    }
   };
-  if (searchString) {
-    dispatch(searchProductQuery({ ...payload, search: searchString }));
-  } else if (partModel) {
-    dispatch(searchByKeyword({ ...payload, partModel }));
-  }
-};
 
-const handleSearchFromHistory = (partModel) => {
-  dispatch(setAppliedFilters({})); // Optional: clear filters for fresh search
-  navigate(`/inventory/search?page=1&query=${encodeURIComponent(partModel)}`, {
-    replace: true,
-  });
-};
+  const handleSearchFromHistory = (partModel) => {
+    dispatch(setAppliedFilters({})); // Optional: clear filters for fresh search
+    navigate(
+      `/inventory/search?page=1&query=${encodeURIComponent(partModel)}`,
+      {
+        replace: true,
+      }
+    );
+  };
 
-const handleSearchFromVariance = (partModel) => {
-  dispatch(setAppliedFilters({})); // Optional: clear filters for fresh search
-  navigate(`/inventory/search?page=1&partModel=${encodeURIComponent(partModel)}`, {
-    replace: true,
-  });
-};
+  const handleSearchFromVariance = (partModel) => {
+    dispatch(setAppliedFilters({})); // Optional: clear filters for fresh search
+    navigate(
+      `/inventory/search?page=1&partModel=${encodeURIComponent(partModel)}`,
+      {
+        replace: true,
+      }
+    );
+  };
 
-useEffect(() => {
-  if (appliedFilters && Object.keys(appliedFilters).length > 0) {
-    setFilters(appliedFilters);
-  }
-}, []);
+  useEffect(() => {
+    if (appliedFilters && Object.keys(appliedFilters).length > 0) {
+      setFilters(appliedFilters);
+    }
+  }, []);
 
-useEffect(()=>{
-  dispatch(partVariance({token, part: query}))
-
-},[])
+  useEffect(() => {
+    dispatch(partVariance({ token, part: query }));
+  }, []);
 
   const handleCheckboxChange = (key, value) => {
-  setFilters((prev) => {
-    const alreadySelected = prev[key].includes(value);
-    return {
-      ...prev,
-      [key]: alreadySelected
-        ? prev[key].filter((v) => v !== value)
-        : [...prev[key], value],
-    };
-  });
-};
-
-const filtersFromApi = searchResponseMatched?.filters || {};
-// console.log("Filters partmodel", filtersFromApi);
-
-const {
-  manufacturers = {},
-  conditions = {},
-  regions = {},
-  countries = {},
-} = filtersFromApi
-
-const toggleMode = () => {
-  dispatch(setFilterMode(isAdvanced ? "standard" : "advanced"));
-};
-
-const applySingleFilter = (key, value) => {
-  const newFilters = { mfg: [], cond: [], country: [], region: [], [key]: [value] };
-  setFilters(newFilters);
-  
-  const queryParams = new URLSearchParams(location.search);
-  const searchString = queryParams.get("query") || "";
-  const partModel = queryParams.get("partModel") || "";
-  const sortBy = queryParams.get("sortBy") || "";
-  const sortOrder = queryParams.get("sortOrder") || "";
-
-  const payload = {
-    token,
-    page: 1,
-    filters: newFilters, // ✅ updated filters
-    sortBy,
-    sortOrder,
+    setFilters((prev) => {
+      const alreadySelected = prev[key].includes(value);
+      return {
+        ...prev,
+        [key]: alreadySelected
+          ? prev[key].filter((v) => v !== value)
+          : [...prev[key], value],
+      };
+    });
   };
 
-  if (searchString) {
-    dispatch(searchProductQuery({ ...payload, search: searchString }));
-  } else if (partModel) {
-    dispatch(searchByKeyword({ ...payload, partModel }));
-  }
-};
+  const filtersFromApi = searchResponseMatched?.filters || {};
+  // console.log("Filters partmodel", filtersFromApi);
 
+  const {
+    manufacturers = {},
+    conditions = {},
+    regions = {},
+    countries = {},
+  } = filtersFromApi;
+
+  const toggleMode = () => {
+    dispatch(setFilterMode(isAdvanced ? "standard" : "advanced"));
+  };
+
+  const applySingleFilter = (key, value) => {
+    const newFilters = {
+      mfg: [],
+      cond: [],
+      country: [],
+      region: [],
+      [key]: [value],
+    };
+    setFilters(newFilters);
+
+    const queryParams = new URLSearchParams(location.search);
+    const searchString = queryParams.get("query") || "";
+    const partModel = queryParams.get("partModel") || "";
+    const sortBy = queryParams.get("sortBy") || "";
+    const sortOrder = queryParams.get("sortOrder") || "";
+
+    const payload = {
+      token,
+      page: 1,
+      filters: newFilters, // ✅ updated filters
+      sortBy,
+      sortOrder,
+    };
+
+    if (searchString) {
+      dispatch(searchProductQuery({ ...payload, search: searchString }));
+    } else if (partModel) {
+      dispatch(searchByKeyword({ ...payload, partModel }));
+    }
+  };
+
+  if (displayFiltersPosition === "0") {
+    return <FilterTop currentQuery={currentQuery} />;
+  }
 
   return (
-    <div className={`${css.filterSection} ${
-      displayFiltersPosition === '0' ? css.filterTop : css.filterLeft
-    }`}>
-      <div id={css.advancedFilters}>
-        <div className="!flex !justify-between">
+    <div className={`${css.filterSection} ${css.filterLeft}`}>
+      <div>
+        <div className="flex justify-between gap-5 items-center bg-[var(--secondary-bgColor)] border-b-2 border-[#9b9a9a] p-2 ">
+          <div>
             <button
               type="button"
-              style={{ color: "#428bca", fontWeight: "600", fontSize: "14px" }}
+              className="flex justify-start items-center gap-1"
+              style={{
+                color: "#428bca",
+                fontWeight: "600",
+                fontSize: "14px",
+              }}
               onClick={() => dispatch(setFilterToggle(false))} // hide filter
             >
               {isAdvanced ? "Advanced Filters" : "Filters"}
-              <FaWindowClose style={{ color: "#444" }} />
+              <FaWindowClose style={{ color: "#444" }}  />
             </button>
+          </div>
 
+          <div>
             <button
               type="button"
-              className={`${css.tools_toggle} text-black`}
+              className={`${css.tools_toggle} text-black !text-lg flex gap-1 justify-start  items-center`}
               onClick={toggleMode}
             >
               {isAdvanced ? "Adv" : "Std"}
               {isAdvanced ? (
-                <BsToggleOn style={{ color: "black" }} />
+                <BsToggleOn style={{ color: "black" }} size={15} />
               ) : (
-                <BsToggleOff style={{ color: "black" }} />
+                <BsToggleOff style={{ color: "black" }} size={15} />
               )}
             </button>
+          </div>
         </div>
       </div>
       <>
@@ -233,10 +255,15 @@ const applySingleFilter = (key, value) => {
                         checked={filters.mfg.includes(label)}
                         onChange={() => handleCheckboxChange("mfg", label)}
                       />
-                      <label>{label} ({count})</label>
+                      <label>
+                        {label} ({count})
+                      </label>
                     </>
                   ) : (
-                    <p onClick={() => applySingleFilter("mfg", label)} style={{ cursor: "pointer" }}>
+                    <p
+                      onClick={() => applySingleFilter("mfg", label)}
+                      style={{ cursor: "pointer" }}
+                    >
                       {label} ({count})
                     </p>
                   )}
@@ -280,10 +307,15 @@ const applySingleFilter = (key, value) => {
                         checked={filters.cond.includes(label)}
                         onChange={() => handleCheckboxChange("cond", label)}
                       />
-                      <label>{label} ({count})</label>
+                      <label>
+                        {label} ({count})
+                      </label>
                     </>
                   ) : (
-                    <p onClick={() => applySingleFilter("cond", label)} style={{ cursor: "pointer" }}>
+                    <p
+                      onClick={() => applySingleFilter("cond", label)}
+                      style={{ cursor: "pointer" }}
+                    >
                       {label} ({count})
                     </p>
                   )}
@@ -326,16 +358,20 @@ const applySingleFilter = (key, value) => {
                         checked={filters.region.includes(label)}
                         onChange={() => handleCheckboxChange("region", label)}
                       />
-                      <label>{label} ({count})</label>
+                      <label>
+                        {label} ({count})
+                      </label>
                     </>
                   ) : (
-                    <p onClick={() => applySingleFilter("region", label)} style={{ cursor: "pointer" }}>
+                    <p
+                      onClick={() => applySingleFilter("region", label)}
+                      style={{ cursor: "pointer" }}
+                    >
                       {label} ({count})
                     </p>
                   )}
                 </div>
               ))}
-
             </div>
           )}
         </div>
@@ -374,16 +410,20 @@ const applySingleFilter = (key, value) => {
                         checked={filters.country.includes(label)}
                         onChange={() => handleCheckboxChange("country", label)}
                       />
-                      <label>{label} ({count})</label>
+                      <label>
+                        {label} ({count})
+                      </label>
                     </>
                   ) : (
-                    <p onClick={() => applySingleFilter("country", label)} style={{ cursor: "pointer" }}>
+                    <p
+                      onClick={() => applySingleFilter("country", label)}
+                      style={{ cursor: "pointer" }}
+                    >
                       {label} ({count})
                     </p>
                   )}
                 </div>
               ))}
-
             </div>
           )}
         </div>
@@ -417,10 +457,12 @@ const applySingleFilter = (key, value) => {
 
               return (
                 <div key={e.id} className={css.querySec}>
-                  <span 
-                  className="cursor-pointer"
-                  onClick={() => handleSearchFromHistory(e.query)}
-                  >{e.query}</span>
+                  <span
+                    className="cursor-pointer"
+                    onClick={() => handleSearchFromHistory(e.query)}
+                  >
+                    {e.query}
+                  </span>
                   {isToday && <span>today</span>}
                   {!isToday && <span>{notToday} days ago</span>}
                 </div>
@@ -443,12 +485,12 @@ const applySingleFilter = (key, value) => {
             {partVarianceState?.map((e, i) => (
               <div key={i}>
                 <p
-                className="cursor-pointer"
-                onClick={() => handleSearchFromVariance(e)}
+                  className="cursor-pointer"
+                  onClick={() => handleSearchFromVariance(e)}
                 >
                   {e}
                 </p>
-                </div>
+              </div>
             ))}
           </div>
         )}
