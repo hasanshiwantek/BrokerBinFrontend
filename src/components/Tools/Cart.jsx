@@ -4,7 +4,6 @@ import Accordion from "../Accordion";
 import LearnMore from "./LearnMore";
 import { useDispatch, useSelector } from "react-redux";
 import Tick from "../../svgs/Tick";
-import { setSelectedProducts } from "@/ReduxStore/SearchProductSlice";
 import { useNavigate, Link } from "react-router-dom";
 import {
   setSelectedProductsForCart,
@@ -13,6 +12,7 @@ import {
   clearCartItems,
   updatePartcartNote,
   deletePartCartNotes,
+  fetchCartItemsAgain
 } from "@/ReduxStore/SearchProductSlice";
 import Note from "../partCart/Note";
 import Export from "../partCart/Export";
@@ -22,7 +22,6 @@ import axios from "axios";
 import { brokerAPI } from "../api/BrokerEndpoint";
 import { setTogglePopUp } from "@/ReduxStore/SearchProductSlice";
 import { setPopupCompanyDetail } from "@/ReduxStore/SearchProductSlice";
-import { AiOutlineClose } from "react-icons/ai";
 import PopupAlert from "@/components/Popups/PopupAlert";
 
 const Cart = () => {
@@ -48,6 +47,11 @@ const Cart = () => {
   const selectedProducts = useSelector(
     (state) => state.searchProductStore.selectedProductsForCart
   );
+    const cartItems = useSelector(
+    (state) => state.searchProductStore.cartItems
+  );
+  console.log("Cart Items: ",cartItems);
+  
   console.log("Selected Products: ", selectedProducts);
 
   let count = 0;
@@ -150,7 +154,6 @@ const Cart = () => {
     }
     const normalizedParts = selectedParts.map((item) => ({
       id: item.inventory.id,
-      inventoryId:item.inventory_id,
       partModel: item.inventory.partModel,
       heciClei: item.inventory.heciClei || "",
       mfg: item.inventory.mfg || "",
@@ -363,6 +366,11 @@ const Cart = () => {
     }
   };
 
+  useEffect(()=>{
+
+    dispatch(fetchCartItemsAgain({token}))
+  },[])
+
   return (
     <>
       {loading ? (
@@ -409,16 +417,16 @@ const Cart = () => {
                     <div>
                       <div>
                         <Tick />
-                        <span>RFQ sent</span>
+                        <span>RFQ Sent</span>
                       </div>
-                      <span>(0)</span>
+                      <span>{cartItems?.rfqSentCount}</span>
                     </div>
                     <div>
                       <div>
                         <Tick />
                         <span>Action Needed</span>
                       </div>
-                      <span>(0)</span>
+                      <span>{cartItems?.actionNeededCount}</span>
                     </div>
                   </div>
                   <div className={css.cartList_key_details_pp}>

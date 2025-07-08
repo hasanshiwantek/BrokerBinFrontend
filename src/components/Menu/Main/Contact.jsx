@@ -91,42 +91,7 @@ const Contact = () => {
     }
   };
 
-// const handleSubmit = async (e) => {
-//   e.preventDefault();
-//   setLoading(true);
 
-//   try {
-//     const data = {
-//       contact_method: formData.contact_method,
-//       subject: formData.subject,
-//       comments: formData.comments,
-//     };
-
-//     const response = await axios.post(`${brokerAPI}contactadmin/contact-us`, data, {
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: `Bearer ${token}`,
-//       },
-//     });
-
-//     if (response.ok) {
-//       handleReset();
-//       toast.info("Contact form Submitted successfully!", {
-//         style: { fontSize: "14px", marginTop: "-10px" },
-//       });
-//     } else {
-//       toast.info("Error submitting contact form. Please try again!", {
-//         style: { fontSize: "14px", marginTop: "-10px" },
-//       });
-//     }
-//   } catch (error) {
-//     toast.info("❌ Network error. Please try again later.", {
-//       style: { fontSize: "14px", marginTop: "-10px" },
-//     });
-//   } finally {
-//     setLoading(false);
-//   }
-// };
 
   if (loading) {
     return <LoadingState2 />;

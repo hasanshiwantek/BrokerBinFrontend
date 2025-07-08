@@ -82,19 +82,20 @@ const SearchMyContact = () => {
   };
   const handleCompanySelect = async (company) => {
     const companyId = { company_id: company.id };
-
     try {
       const res = await dispatch(addMyVendors({ companyId, token })).unwrap();
       console.log("res", res);
-
-      showPopup("success", res?.message);
+      if (res?.status?.toLowerCase() === "success") {
+        showPopup("success", res?.message || "Action successful!");
+      } else {
+        showPopup("error", res?.message || "Something went wrong.");
+      }
     } catch (err) {
       console.log("Error", err);
-      showPopup("error", err?.message);
+      showPopup("error", err?.message || "Server error occurred.");
     } finally {
       dispatch(getMyVendors({ token }));
     }
-
     setSearchTerm(company.name);
     setShowList(false);
   };

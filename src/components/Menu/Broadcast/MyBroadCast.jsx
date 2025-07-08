@@ -869,7 +869,7 @@ const BroadCast = () => {
                     <Tooltip
                       title={item?.description || ""}
                       arrow
-                      placement="top"
+                      placement="bottom"
                     >
                       <td>{item?.description?.slice(0, 100)}...</td>
                     </Tooltip>
