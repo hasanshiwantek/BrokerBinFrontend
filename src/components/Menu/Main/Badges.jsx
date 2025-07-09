@@ -15,6 +15,7 @@ import { brokerAPI } from "@/components/api/BrokerEndpoint";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { fetchUserData } from "@/ReduxStore/ProfleSlice";
+
 const Badges = () => {
   const [badgesData, setBadgesData] = useState({});
   console.log("Badges Data: ", badgesData);
