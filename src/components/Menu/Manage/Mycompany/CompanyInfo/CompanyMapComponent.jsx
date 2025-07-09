@@ -165,7 +165,7 @@ const MapComponent = ({ company }) => {
   const companiesArray = Array.isArray(company)
     ? company
     : company?.companies
-    ? company.companies
+    ? company.companies 
     : [company];
 
   const containerStyle = {

@@ -381,7 +381,8 @@ const TabContent = ({
                     </h1>
                     <button
                       style={{ border: "2px solid gray" }}
-                      className="text-black hover:text-red-700 font-bold rounded-lg p-[2px]"
+                      title="Close Map"
+                      className="text-black hover:text-gray-700  font-bold rounded-lg p-[2px]"
                       onClick={() => setShowMap(false)}
                     >
                       ✖

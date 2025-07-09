@@ -12,12 +12,8 @@ import css from "../../../styles/Menu/Manage/MyProfile.module.css";
 import { NavLink } from "react-router-dom";
 const SiteMap = () => {
   const year = new Date().getFullYear();
-  console.log(year);
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const token = Cookies.get("token");
-
   const handleLogout = () => {
     const isConfirmed = window.confirm("Confirm Logout?");
     if (isConfirmed) {
@@ -32,7 +28,7 @@ const SiteMap = () => {
 
   return (
     <>
-      <main className="main-sec ">
+      <main className="main-sec p-2">
         <nav className="menu-bar ">
           <div className={css.profileInfo_links}>
             <ul>
