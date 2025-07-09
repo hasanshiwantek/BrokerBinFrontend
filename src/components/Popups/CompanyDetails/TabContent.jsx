@@ -380,14 +380,15 @@ const TabContent = ({
                     </h1>
                     <button
                       style={{ border: "2px solid gray" }}
-                      className="text-black hover:text-red-700 font-bold rounded-lg p-[2px]"
+                      title="Close Map"
+                      className="text-black hover:text-gray-700  font-bold rounded-lg p-[2px]"
                       onClick={() => setShowMap(false)}
                     >
                       ✖
                     </button>
                   </div>
                   <hr className="border-t-2 border-gray-600 my-1" />
-                  <div className="relative z-[999]">
+                  <div className="relative z-[999] mt-2">
                     <MapComponent company={companyContactData.data.company} />
                   </div>
                 </div>
