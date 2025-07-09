@@ -25,6 +25,7 @@ import { useNavigate } from "react-router-dom";
 import { deleteCompanyPhotos } from "@/ReduxStore/ProfleSlice";
 import PopupAlert from "@/components/Popups/PopupAlert";
 import MapComponent from "@/components/Menu/Manage/Mycompany/CompanyInfo/CompanyMapComponent";
+
 const TabContent = ({
   companyId,
   setToggleTabs,
@@ -371,9 +372,9 @@ const TabContent = ({
               </ul>
             </div>
 
-            <div className={`${css.Popup_Info_Main_right_tabs_contact_right}`}>
+            <div className={`${css.Popup_Info_Main_right_tabs_contact_right} `}>
               {showMap ? (
-                <div className="my-2 relative z-[999] animate-fade-in">
+                <div className="my-2 animate-fade-in">
                   <div className="flex justify-between items-center">
                     <h1 className="text-2xl p-1 font-semibold text-[var(--primary-color)]">
                       Company Location
@@ -388,7 +389,7 @@ const TabContent = ({
                     </button>
                   </div>
                   <hr className="border-t-2 border-gray-600 my-1" />
-                  <div className="relative z-[999] mt-2">
+                  <div className=" ">
                     <MapComponent company={companyContactData.data.company} />
                   </div>
                 </div>

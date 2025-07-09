@@ -337,7 +337,7 @@ const CompanyDetails = ({ closeModal }) => {
       <div className={css.Popup}>
         <div className={css.Popup_Info} onClick={(e) => e.stopPropagation()}>
           <div className={css.Popup_Info_height}>
-            <div className={css.Popup_Info_header}>
+            <div className={`${css.Popup_Info_header} z-[1000]`}>
               <h1>{companyContactData.data?.company?.name}</h1>
               <div className="!-mt-2 ">
                 {/* <button type="button" className="">
