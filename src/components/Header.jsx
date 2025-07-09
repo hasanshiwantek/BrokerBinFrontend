@@ -31,7 +31,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import feedbackIcon from "../assets/icon 2.svg";
 import hotlistIcon from "../assets/icon 3.svg";
 import inventoryIcon from "../assets/icon 4.svg";
-import reportsIcon from "../assets/reportsIcon.svg";
+import reportsIcon from "../assets/reportArrowIcon.svg";
 import broadcastHistoryIcon from "../assets/ICON 6.svg";
 import EmailIcon from "../assets/Email Icon.svg";
 import { FaTools, FaSignOutAlt } from "react-icons/fa";
@@ -760,9 +760,8 @@ const Header = () => {
                 <ThemeProvider theme={theme}>
                   <Tooltip title="Company Reports" arrow placement="bottom">
                     <li>
-                      <Link to={"/reports/Company"} className="w-7">
-                        {/* <img src={inventoryIcon} alt="Vendor logo" /> */}
-                        <FiTarget />
+                      <Link to={"/reports/Company"} className="w-10 ">
+                        <img src={reportsIcon} alt="Report logo" />
                       </Link>
                     </li>
                   </Tooltip>

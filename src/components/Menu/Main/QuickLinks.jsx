@@ -1,21 +1,23 @@
 import React from "react";
 import "./QuickLinks.css";
-import icon1 from "../../../assets/broadcast.svg";
+import icon1 from "../../../assets/broadcastTermsIcon.svg";
 import icon2 from "../../../assets/cart.svg";
 import icon3 from "../../../assets/condition-icon.svg";
 import icon4 from "../../../assets/contacts.svg";
-import icon5 from "../../../assets/email.svg";
+import icon5 from "../../../assets/emailIcon.svg";
 import icon6 from "../../../assets/faq-icon.svg";
-import icon7 from "../../../assets/hotlist.svg";
-import icon8 from "../../../assets/my-vendors.svg";
-import icon9 from "../../../assets/profile-icon.svg";
-import icon10 from "../../../assets/reports-icon.svg";
-import icon11 from "../../../assets/search.svg";
-import icon12 from "../../../assets/site-colors img.svg";
-import icon13 from "../../../assets/star.svg";
+import icon7 from "../../../assets/hotlistIcon.svg";
+import icon8 from "../../../assets/vendorHelpIcon.svg";
+import icon9 from "../../../assets/profileIcon.svg";
+import icon10 from "../../../assets/reportIcon.svg";
+import icon11 from "../../../assets/searching.svg";
+import icon12 from "../../../assets/siteColorIcon.svg";
+import icon13 from "../../../assets/feedbackStarIcon.svg";
 import icon14 from "../../../assets/tools-icon.svg";
-import icon15 from "../../../assets/unlock-icon.svg";
-import icon16 from "../../../assets/upload.svg";
+import icon15 from "../../../assets/unlockIcon.svg";
+import icon16 from "../../../assets/uploadingPart.svg";
+import icon17 from "../../../assets/partCartIcon.svg";
+
 
 const QuickLinks = () => {
   return (
@@ -68,6 +70,13 @@ const QuickLinks = () => {
               <img src={icon5} alt="Email" />
               <a href="#reports">
                 <span>Email</span>
+              </a>
+            </div>
+            
+            <div className="link-sec1-sec">
+              <img src={icon17} alt="partCart" />
+              <a href="#partcart">
+                <span>PartCart</span>
               </a>
             </div>
 

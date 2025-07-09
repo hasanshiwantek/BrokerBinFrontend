@@ -1,15 +1,17 @@
 import React from "react";
 import "./Icons.css";
-import icon2 from "../../../assets/cart.svg";
-import icon7 from "../../../assets/hotlist.svg";
-import icon16 from "../../../assets/upload.svg";
-import icon4 from "../../../assets/contacts.svg";
+import icon2 from "../../../assets/partCartIcon.svg";
+import icon7 from "../../../assets/hotlistIcon.svg";
+import icon16 from "../../../assets/uploadingPart.svg";
+import icon4 from "../../../assets/vendorHelpIcon.svg";
 import icon8 from "../../../assets/my-vendors.svg";
-import icon10 from "../../../assets/reports-icon.svg";
-import icon13 from "../../../assets/star.svg";
+import icon10 from "../../../assets/broadcastHistory.svg";
+import icon13 from "../../../assets/feedbackStarIcon.svg";
 import icon5 from "../../../assets/email.svg";
-import icon15 from "../../../assets/unlock-icon.svg";
-import icon11 from "../../../assets/search.svg";
+import icon15 from "../../../assets/emailIcon.svg";
+import icon11 from "../../../assets/Telecom.svg";
+import icon12 from "../../../assets/addContactIcon.svg";
+import { IoAddOutline } from "react-icons/io5";
 
 const Icons = () => {
   return (
@@ -46,14 +48,14 @@ const Icons = () => {
           </div>
 
           <div className="icons-link-sec">
-            <img src={icon8} alt="Vendors" />
+            <img src={icon4} alt="Vendors" />
             <span>
               Allows you to add or remove companies from your MyVendors List
             </span>
           </div>
 
           <div className="icons-link-sec">
-            <img src={icon4} alt="Contacts" />
+            <img src={icon12} alt="Contacts" />
             <span>
               Allows you to add or remove individuals from your My Contacts List
             </span>
@@ -77,12 +79,24 @@ const Icons = () => {
           </div>
 
           <div className="icons-link-sec">
-            <img src={icon5} alt="Smart Bar" />
+            {/* <img src={icon5} alt="Smart Bar" /> */}
+            <i>
+              <IoAddOutline size={25} color="blue" />
+            </i>
             <span>Allows you to manage your Smart Bar</span>
           </div>
 
           <div className="icons-link-sec">
             <img src={icon15} alt="MFG Filter" />
+            <span>Allows you to filter your searches by mfg, no 3rd party</span>
+          </div>
+
+          <div className="icons-link-sec">
+            <img
+              src="https://members.brokerbin.com/images/termsmfg.gif"
+              className="!w-28 !object-contain"
+              alt="MFG Filter"
+            />
             <span>Allows you to filter your searches by mfg, no 3rd party</span>
           </div>
         </div>

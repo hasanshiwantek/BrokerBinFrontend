@@ -5,8 +5,8 @@
     left: 4%;
     font-family: "Roboto", sans-serif;
     padding: 14px 18px;
-    border-radius: 5px;
-    width: 13%;
+    border-radius: 2px;
+    width: 18rem;
 
 }
 
@@ -16,23 +16,23 @@
     margin: 8px;
     text-align: right;
     white-space: nowrap;
+    border-bottom: 1px solid #000;
 
 
 } 
 
-.nav-bar li a:hover{
+.nav-bar li:hover{
     background-color: lightgray;
     border: 1px solid #444;
     /* margin-bottom: 5px; */
-    padding: 5px 10px;
+    padding: 2px 8px;
 
 } 
 
 .nav-bar li a{
     text-decoration: none;
     color: black;
-    border-top: 1px solid #fff;
-    border-bottom: 1px solid #000;
+    /* border-top: 1px solid #fff; */
     color: #000;
     line-height: 20px;
     margin: 0 auto;

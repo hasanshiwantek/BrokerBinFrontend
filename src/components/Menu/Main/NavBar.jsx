@@ -4,7 +4,7 @@ const NavBar=()=>{
     return(
     <>
 
-<header className="header ">
+<header className="header fixed left-0 right-0">
 <nav className="nav-bar">
     <ul>
         <li><a href="#reports">Email</a></li>
