@@ -545,7 +545,7 @@ const RfqTableSent = () => {
                             rfqMailCheckAll
                           }
                         />
-                        <span>(0|1)</span>
+                        <span>(1|0)</span>
 
                         {/* Dynamic image based on isRead */}
                         {e.isRead === 1 || readRfqs.has(e.id) ? (

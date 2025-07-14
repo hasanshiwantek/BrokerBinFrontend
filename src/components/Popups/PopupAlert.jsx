@@ -36,7 +36,7 @@ const PopupAlert = ({ show, type = "success", message, onClose }) => {
   if (!visible) return null;
 
   return (
-    <div className="fixed top-8 left-1/2 -translate-x-1/2 z-50 w-full px-4 flex justify-center">
+    <div className="fixed top-8 left-1/2 -translate-x-1/2 z-[2000] w-full px-4 flex justify-center">
       <div
         className={`w-fit sm:w-fit border ${variant.styles}
           px-6 py-5 rounded-xl shadow-2xl flex items-center gap-4
