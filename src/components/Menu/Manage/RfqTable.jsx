@@ -343,7 +343,6 @@ const RfqTable = () => {
       return;
     }
 
-    // Mapping actions to payload fields
     const actionMap = {
       archive: { key: "status", value: 1 },
       unarchive: { key: "status", value: 0 },
@@ -357,28 +356,26 @@ const RfqTable = () => {
       user_id: userId,
     }));
 
-    // const payload = {
-    //   rfq_id: rfqMail[0].rfqId,
-    //   status: value,
-    //   user_id: userId,
-    // };
-
     console.log("Payload being sent:", payload);
+
     try {
       const token = Cookies.get("token");
+
       const response = await dispatch(
         rfqArchive({ token, data: payload })
       ).unwrap();
-      showPopup("success", "RFQ(s) ${action} successfully!");
-      return;
+
+      showPopup("success", `RFQ(s) ${action}d successfully!`);
+
+      // Re-fetch updated RFQ list after archiving/unarchiving
       setTimeout(() => {
         window.location.reload();
       }, 1000);
+      await dispatch(receivedRfq({ token, page: currPage }));
     } catch (error) {
       console.error("Error handling action:", error);
       showPopup("error", `Failed to ${action} RFQ(s).`);
     }
-    dispatch(receivedRfq({ token, page: currPage })); // Re-fetch received RFQs
   };
 
   const handleAction = async (action) => {
@@ -741,7 +738,7 @@ const RfqTable = () => {
       {togglePopUpCompany && (
         <CompanyDetails closeModal={() => dispatch(setTogglePopUpCompany())} />
       )}
-       <PopupAlert
+      <PopupAlert
         show={popup.show}
         type={popup.type}
         message={popup.message}

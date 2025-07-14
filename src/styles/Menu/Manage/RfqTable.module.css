@@ -299,8 +299,8 @@ rfqTableBtn_bottom button {
   background-color: var(--primary-color);
   border-radius: 5px;
   border: 1px solid var(--primary-color);
-  font-size: 7pt;
-  padding: 2px 6px !important;
+  font-size: 8pt;
+  padding: 4px 6px !important;
 }
 
 .paginationSec {
@@ -310,6 +310,7 @@ rfqTableBtn_bottom button {
 }
 .pagination {
   text-align: end;
+  align-items: baseline;
 }
 
 .pageButton {
